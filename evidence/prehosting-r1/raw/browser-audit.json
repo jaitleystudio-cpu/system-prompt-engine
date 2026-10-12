@@ -1,0 +1,744 @@
+{
+ "browser": "131.0.6778.33",
+ "results": [
+  {
+   "vp": "desktop",
+   "p": "/",
+   "status": 200,
+   "loadMs": 554,
+   "meta": {
+    "title": "SPE — System Prompt Engine | Free System Prompt Generator",
+    "desc": "Free system prompt generator and AI prompt builder. Turn an idea into meaning, structure, and a precise prompt — privately on this device.",
+    "canonical": "https://systempromptengine.com/",
+    "robots": "index, follow",
+    "h1": [],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 13
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 17
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/create",
+   "status": 200,
+   "loadMs": 546,
+   "meta": {
+    "title": "Create a Prompt — SPE Free Prompt Builder",
+    "desc": "Shape text, speech, image, video, or a website into a clear system prompt. Your brief stays on this device.",
+    "canonical": "https://systempromptengine.com/create",
+    "robots": "index, follow",
+    "h1": [
+     "Build a clearer prompt"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 3
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/code",
+   "status": 200,
+   "loadMs": 547,
+   "meta": {
+    "title": "Screenshot to Code Prompt — SPE Prompt Engineering Tool",
+    "desc": "Upload a UI screenshot and get an implementation prompt plus starter scaffolds for HTML, React, SwiftUI, Flutter, and more — for use with a coding AI, not an in-product compiler.",
+    "canonical": "https://systempromptengine.com/code",
+    "robots": "index, follow",
+    "h1": [
+     "Screenshot to code"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 3
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 2
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/capabilities",
+   "status": 200,
+   "loadMs": 547,
+   "meta": {
+    "title": "SPE Capabilities — Local Prompt Engine Features",
+    "desc": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Independent comparative ranking has not been established; human preference ratings have not yet been collected.",
+    "canonical": "https://systempromptengine.com/capabilities",
+    "robots": "index, follow",
+    "h1": [
+     "What SPE can do on this device"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 29
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 2
+    },
+    {
+     "id": "label",
+     "impact": "critical",
+     "n": 1
+    },
+    {
+     "id": "target-size",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/privacy",
+   "status": 200,
+   "loadMs": 590,
+   "meta": {
+    "title": "Privacy & Proof — Local System Prompt Engine | SPE",
+    "desc": "How SPE prepares prompts on this device, with honest privacy claims for this release.",
+    "canonical": "https://systempromptengine.com/privacy",
+    "robots": "index, follow",
+    "h1": [
+     "Your thinking stays with you"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 2
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/pricing",
+   "status": 200,
+   "loadMs": 590,
+   "meta": {
+    "title": "Plans & Pricing — System Prompt Engine | SPE",
+    "desc": "Simple, honest pricing. The core deterministic compiler will always be 100% free and on-device. Upgrade to Developer Pro or Team for advanced workflow automation and team gates.",
+    "canonical": "https://systempromptengine.com/pricing",
+    "robots": "index, follow",
+    "h1": [
+     "Transparent Introductory Pricing. Reproducible Evidence."
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 2
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/daily-lab",
+   "status": 200,
+   "loadMs": 614,
+   "meta": {
+    "title": "Daily Lab — SPE AI Prompt Generator Ideas",
+    "desc": "Browse daily prompt engineering specimens and open them in SPE’s free prompt builder.",
+    "canonical": "https://systempromptengine.com/daily-lab",
+    "robots": "index, follow",
+    "h1": [
+     "Daily Recipes: Today's Tested Prompts, Monday, October 12, 2"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 50
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 2
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/studio",
+   "status": 200,
+   "loadMs": 550,
+   "meta": {
+    "title": "Page not found — SPE",
+    "desc": "That address is not a page in this preview.",
+    "robots": "noindex, nofollow",
+    "h1": [
+     "Page not found"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 2
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/evidence-pages/privacy.html",
+   "status": 200,
+   "loadMs": 572,
+   "meta": {
+    "title": "Zero-Egress Privacy & Cryptographic Integrity | SPE Ω",
+    "desc": "100% air-gapped execution verification with local WASM compilation and zero network telemetry.",
+    "canonical": "https://systempromptengine.com/privacy",
+    "robots": "index, follow",
+    "h1": [
+     "Zero-Egress Privacy & Cryptographic Integrity"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 2
+    },
+    {
+     "id": "link-in-text-block",
+     "impact": "serious",
+     "n": 1
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "desktop",
+   "p": "/nonexistent-xyz",
+   "status": 200,
+   "loadMs": 561,
+   "meta": {
+    "title": "Page not found — SPE",
+    "desc": "That address is not a page in this preview.",
+    "robots": "noindex, nofollow",
+    "h1": [
+     "Page not found"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 2
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/",
+   "status": 200,
+   "loadMs": 557,
+   "meta": {
+    "title": "SPE — System Prompt Engine | Free System Prompt Generator",
+    "desc": "Free system prompt generator and AI prompt builder. Turn an idea into meaning, structure, and a precise prompt — privately on this device.",
+    "canonical": "https://systempromptengine.com/",
+    "robots": "index, follow",
+    "h1": [],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 13
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 15
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/create",
+   "status": 200,
+   "loadMs": 548,
+   "meta": {
+    "title": "Create a Prompt — SPE Free Prompt Builder",
+    "desc": "Shape text, speech, image, video, or a website into a clear system prompt. Your brief stays on this device.",
+    "canonical": "https://systempromptengine.com/create",
+    "robots": "index, follow",
+    "h1": [
+     "Build a clearer prompt"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 3
+    },
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "n": 1
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/code",
+   "status": 200,
+   "loadMs": 546,
+   "meta": {
+    "title": "Screenshot to Code Prompt — SPE Prompt Engineering Tool",
+    "desc": "Upload a UI screenshot and get an implementation prompt plus starter scaffolds for HTML, React, SwiftUI, Flutter, and more — for use with a coding AI, not an in-product compiler.",
+    "canonical": "https://systempromptengine.com/code",
+    "robots": "index, follow",
+    "h1": [
+     "Screenshot to code"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/capabilities",
+   "status": 200,
+   "loadMs": 550,
+   "meta": {
+    "title": "SPE Capabilities — Local Prompt Engine Features",
+    "desc": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Independent comparative ranking has not been established; human preference ratings have not yet been collected.",
+    "canonical": "https://systempromptengine.com/capabilities",
+    "robots": "index, follow",
+    "h1": [
+     "What SPE can do on this device"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 23
+    },
+    {
+     "id": "label",
+     "impact": "critical",
+     "n": 1
+    },
+    {
+     "id": "target-size",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/privacy",
+   "status": 200,
+   "loadMs": 548,
+   "meta": {
+    "title": "Privacy & Proof — Local System Prompt Engine | SPE",
+    "desc": "How SPE prepares prompts on this device, with honest privacy claims for this release.",
+    "canonical": "https://systempromptengine.com/privacy",
+    "robots": "index, follow",
+    "h1": [
+     "Your thinking stays with you"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/pricing",
+   "status": 200,
+   "loadMs": 586,
+   "meta": {
+    "title": "Plans & Pricing — System Prompt Engine | SPE",
+    "desc": "Simple, honest pricing. The core deterministic compiler will always be 100% free and on-device. Upgrade to Developer Pro or Team for advanced workflow automation and team gates.",
+    "canonical": "https://systempromptengine.com/pricing",
+    "robots": "index, follow",
+    "h1": [
+     "Transparent Introductory Pricing. Reproducible Evidence."
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/daily-lab",
+   "status": 200,
+   "loadMs": 597,
+   "meta": {
+    "title": "Daily Lab — SPE AI Prompt Generator Ideas",
+    "desc": "Browse daily prompt engineering specimens and open them in SPE’s free prompt builder.",
+    "canonical": "https://systempromptengine.com/daily-lab",
+    "robots": "index, follow",
+    "h1": [
+     "Daily Recipes: Today's Tested Prompts, Monday, October 12, 2"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok",
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 50
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/studio",
+   "status": 200,
+   "loadMs": 549,
+   "meta": {
+    "title": "Page not found — SPE",
+    "desc": "That address is not a page in this preview.",
+    "robots": "noindex, nofollow",
+    "h1": [
+     "Page not found"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/evidence-pages/privacy.html",
+   "status": 200,
+   "loadMs": 506,
+   "meta": {
+    "title": "Zero-Egress Privacy & Cryptographic Integrity | SPE Ω",
+    "desc": "100% air-gapped execution verification with local WASM compilation and zero network telemetry.",
+    "canonical": "https://systempromptengine.com/privacy",
+    "robots": "index, follow",
+    "h1": [
+     "Zero-Egress Privacy & Cryptographic Integrity"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": true,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 2
+    },
+    {
+     "id": "link-in-text-block",
+     "impact": "serious",
+     "n": 1
+    }
+   ],
+   "ext": [],
+   "errs": []
+  },
+  {
+   "vp": "mobile",
+   "p": "/nonexistent-xyz",
+   "status": 200,
+   "loadMs": 561,
+   "meta": {
+    "title": "Page not found — SPE",
+    "desc": "That address is not a page in this preview.",
+    "robots": "noindex, nofollow",
+    "h1": [
+     "Page not found"
+    ],
+    "lang": "en",
+    "og": true,
+    "jsonld": [
+     "ok"
+    ],
+    "imgsNoAlt": 0,
+    "overflowX": false,
+    "buttonsNoName": 0
+   },
+   "axe": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 4
+    }
+   ],
+   "ext": [],
+   "errs": []
+  }
+ ]
+}
