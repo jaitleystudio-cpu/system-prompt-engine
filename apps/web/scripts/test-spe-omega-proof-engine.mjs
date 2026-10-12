@@ -252,6 +252,30 @@ assert.strictEqual(
   "Receipt with empty producerKeyId must be rejected by verifyProofReceiptAuthenticity",
 );
 
+// Unpinned producer key registry when requireAuthenticatedProducer: true MUST be rejected
+const unpinnedProducerReport = verifyProofReceiptAuthenticity(signedObservedReceipt, {
+  requireAuthenticatedProducer: true,
+});
+assert.strictEqual(
+  unpinnedProducerReport.producerAuthenticated,
+  false,
+  "Signed receipt without trustedProducerKeys registry must be rejected when requireAuthenticatedProducer is true",
+);
+assert(
+  unpinnedProducerReport.reasons.some((r) => r.includes("REJECTED_UNPINNED_PRODUCER_REGISTRY")),
+  "Must report REJECTED_UNPINNED_PRODUCER_REGISTRY when trustedProducerKeys is missing",
+);
+
+const emptyProducerRegistryReport = verifyProofReceiptAuthenticity(signedObservedReceipt, {
+  requireAuthenticatedProducer: true,
+  trustedProducerKeys: {},
+});
+assert.strictEqual(
+  emptyProducerRegistryReport.producerAuthenticated,
+  false,
+  "Signed receipt with empty trustedProducerKeys map must be rejected",
+);
+
 // Audit 4727aa62 Finding C Remediation: Unpinned or missing observer/evaluator keys MUST be rejected
 const unpinnedObsMissing = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash);
 assert.strictEqual(unpinnedObsMissing.verified, false, "verifyNetworkObservationAttestation without trustedObserverKeys must reject");

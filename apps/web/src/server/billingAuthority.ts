@@ -84,6 +84,9 @@ export class FileBillingStorageAdapter implements BillingStorageAdapter {
     }
     try {
       const raw = readFileSync(this.filePath, "utf8");
+      if (!raw || !raw.trim()) {
+        return { records: {}, processedEventIds: [] };
+      }
       const parsed = JSON.parse(raw);
       return {
         records: (parsed && typeof parsed.records === "object" ? parsed.records : {}) as Record<
@@ -274,7 +277,12 @@ export class AuthoritativeBillingAuthority {
     }
 
     // Idempotent webhook replay deduplication: safe replay without state corruption
-    if (this.#processedEventIds.has(event.eventId)) {
+    const isReplay =
+      this.#processedEventIds.has(event.eventId) ||
+      (typeof event.eventNonce === "string" &&
+        event.eventNonce.trim() !== "" &&
+        this.#processedEventIds.has(event.eventNonce.trim()));
+    if (isReplay) {
       const existing = this.#receiptLedger.get(event.paymentReceiptId);
       if (existing) {
         return { ...existing };
@@ -305,6 +313,9 @@ export class AuthoritativeBillingAuthority {
       };
       this.#receiptLedger.set(event.paymentReceiptId, record);
       this.#processedEventIds.add(event.eventId);
+      if (typeof event.eventNonce === "string" && event.eventNonce.trim() !== "") {
+        this.#processedEventIds.add(event.eventNonce.trim());
+      }
       this.#saveLedger();
       return { ...record };
     }
@@ -340,10 +351,15 @@ export class AuthoritativeBillingAuthority {
     } else if (event.eventType === "entitlement.revoked") {
       existing.subscriptionStatus = "REVOKED";
       existing.revoked = true;
+    } else {
+      throw new Error(`UNRECOGNIZED_WEBHOOK_EVENT_TYPE:${event.eventType}`);
     }
 
     this.#receiptLedger.set(event.paymentReceiptId, existing);
     this.#processedEventIds.add(event.eventId);
+    if (typeof event.eventNonce === "string" && event.eventNonce.trim() !== "") {
+      this.#processedEventIds.add(event.eventNonce.trim());
+    }
     this.#saveLedger();
     return { ...existing };
   }
@@ -510,6 +526,18 @@ export class AuthoritativeBillingAuthority {
     existing.paid = false;
     existing.paymentStatus = "DISPUTED";
     existing.subscriptionStatus = "REVOKED";
+    existing.revoked = true;
+    this.#receiptLedger.set(paymentReceiptId, existing);
+    this.#saveLedger();
+  }
+
+  markExpired(paymentReceiptId: string, expiredAtMs: number = Date.now()): void {
+    const existing = this.#receiptLedger.get(paymentReceiptId);
+    if (!existing) {
+      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
+    }
+    existing.subscriptionStatus = "EXPIRED";
+    existing.expiresAtMs = Math.min(existing.expiresAtMs, expiredAtMs);
     existing.revoked = true;
     this.#receiptLedger.set(paymentReceiptId, existing);
     this.#saveLedger();

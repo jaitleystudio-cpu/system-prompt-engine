@@ -37,14 +37,20 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
 
 export interface AgentFormatOptions {
   subscriptionTier?: "free" | "pro" | "team";
-  entitlement?: EntitlementVerificationResult | null;
+  entitlement?: EntitlementVerificationResult | string | null;
   /**
    * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
    * enforced at production boundaries and cannot be bypassed via options.
    */
   enforceTierLimit?: never;
+  token?: string;
   currentEpochMs?: number;
   trustedIssuerPublicKeys?: Record<string, string>;
+  authoritativeReceiptVerifier?: (
+    paymentReceiptId: string,
+    payload: any,
+  ) => any;
+  signedReceiptAttestation?: any;
 }
 
 export function formatForAgent(
@@ -59,6 +65,8 @@ export function formatForAgent(
     entitlement: resolvedEntitlement,
     currentEpochMs: options.currentEpochMs,
     trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
+    authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
+    signedReceiptAttestation: options.signedReceiptAttestation,
   };
   const boundedPrompt = enforceTierOutputLimit(rawPrompt, effectiveOptions);
 

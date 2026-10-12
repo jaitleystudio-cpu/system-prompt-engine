@@ -533,7 +533,7 @@ export function verifySignedEntitlementToken(
         rejectionReason: `UNKNOWN_PAYMENT_RECEIPT_ID:${parsed.paymentReceiptId}`,
       };
     }
-    if (!record.paid) {
+    if (!record.paid || record.paymentStatus === "REFUNDED" || record.paymentStatus === "DISPUTED") {
       return {
         verified: false,
         tier: null,
@@ -686,19 +686,42 @@ export function clearBrowserVerifiedEntitlement(): void {
 
 export function resolveExportEntitlement(options: {
   subscriptionTier?: "free" | "pro" | "team";
-  entitlement?: EntitlementVerificationResult | null;
+  entitlement?: EntitlementVerificationResult | string | null;
+  token?: string;
   currentEpochMs?: number;
   trustedIssuerPublicKeys?: Record<string, string>;
+  authoritativeReceiptVerifier?: EntitlementVerificationOptions["authoritativeReceiptVerifier"];
+  signedReceiptAttestation?: SignedReceiptStatusAttestation | string;
 } = {}): EntitlementVerificationResult | null {
   if (options.subscriptionTier === "free") {
     return null;
   }
-  if (options.entitlement !== undefined) {
-    return options.entitlement;
+  if (options.entitlement !== undefined && options.entitlement !== null) {
+    if (typeof options.entitlement === "string") {
+      const verified = verifySignedEntitlementToken(options.entitlement, {
+        currentEpochMs: options.currentEpochMs,
+        trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
+        authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
+        signedReceiptAttestation: options.signedReceiptAttestation,
+      });
+      return verified.verified ? verified : null;
+    }
+    return options.entitlement.verified ? options.entitlement : null;
+  }
+  if (options.token) {
+    const verified = verifySignedEntitlementToken(options.token, {
+      currentEpochMs: options.currentEpochMs,
+      trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
+      authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
+      signedReceiptAttestation: options.signedReceiptAttestation,
+    });
+    return verified.verified ? verified : null;
   }
   return resolveBrowserVerifiedEntitlement({
     currentEpochMs: options.currentEpochMs,
     trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
+    authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
+    signedReceiptAttestation: options.signedReceiptAttestation,
   });
 }
 

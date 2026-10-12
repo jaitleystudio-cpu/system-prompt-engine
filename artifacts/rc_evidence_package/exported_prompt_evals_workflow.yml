@@ -28,7 +28,7 @@ jobs:
           echo "Running SPE offline static verification and JCS receipt binding check..."
           test -f promptfooconfig.yaml || exit 1
           grep -q 'spe_prompt_sha256: "230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc"' promptfooconfig.yaml || (echo "ERROR: Prompt SHA-256 mismatch" && exit 1)
-          grep -q 'spe_receipt_digest: "1237d20ec760c1c48532a9cc743a98fabbdfc6524cd17c7f90d48b258699990e"' promptfooconfig.yaml || (echo "ERROR: JCS Receipt Digest mismatch" && exit 1)
+          grep -q 'spe_receipt_digest: "5cb4e2eb82cce2ee217cb312ebdabb1e863c144aaf5ce406def7e750e61f4a61"' promptfooconfig.yaml || (echo "ERROR: JCS Receipt Digest mismatch" && exit 1)
           grep -q 'spe_measured_errors: 0' promptfooconfig.yaml || (echo "ERROR: Prompt has unresolved static type errors (0)" && exit 1)
           node --experimental-strip-types apps/web/scripts/test-promptfoo-exporter.mjs
 

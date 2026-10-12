@@ -3,6 +3,7 @@ export {
   FREE_TIER_MAX_OUTPUT_CHARS,
   PRO_TIER_MAX_OUTPUT_CHARS,
   isVerifiedPaidEntitlementResult,
+  resolveVerifiedEntitlementTier,
   enforceTierOutputLimit,
   compilePromptWithTierEnforcement,
 } from "./promptSynthesizer.mjs";

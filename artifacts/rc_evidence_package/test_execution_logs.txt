@@ -8,7 +8,7 @@ collected 20 items
 tests/unit/test_unified_release_candidate_pipeline.py .......            [ 35%]
 tests/research/rec2/test_rec2_capability_passport.py .............       [100%]
 
-============================= 20 passed in 24.26s ==============================
+============================= 20 passed in 25.16s ==============================
 
 === 2. WEB PROOF ENGINE & PRODUCER SIGNATURE TESTS ===
 ================================================================================
@@ -30,7 +30,7 @@ tests/research/rec2/test_rec2_capability_passport.py .............       [100%]
   ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
 
 [5/5] Validating Proof Receipt Protocol, Cryptographic Attestations & JCS Canonicalization...
-  ✓ Proof Receipt verified: Digest = dc4fcae7183cb2b725132009ea8bb0a7f2eb948c62f9ee7229b5763adaf9fb65
+  ✓ Proof Receipt verified: Digest = 2577564f201e3a83b250be41c7ca40a3d6b240fa101baefe6016660c27b61e76
   ✓ Signed NetworkObservationAttestation, LiveEvaluationAttestation & Ed25519 Producer Verification passed.
   ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
 
@@ -89,7 +89,6 @@ tests/research/rec2/test_rec2_capability_passport.py .............       [100%]
 ==================================================================
 
 === 5. COPY CHECK GATE ===
-
 > spe-web@0.3.0 spe:copy-check
 > node ../../tools/copy-check.mjs
 

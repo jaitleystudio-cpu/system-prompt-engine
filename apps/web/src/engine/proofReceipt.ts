@@ -663,6 +663,14 @@ export function verifyProofReceiptAuthenticity(
       if (!prov.producerKeyId || typeof prov.producerKeyId !== "string" || !prov.producerKeyId.trim()) {
         keyTrusted = false;
         reasons.push("Missing producerKeyId in receipt evidenceProvenance.");
+      } else if (
+        mustAuthenticateProducer &&
+        (!options.trustedProducerKeys || Object.keys(options.trustedProducerKeys).length === 0)
+      ) {
+        keyTrusted = false;
+        reasons.push(
+          "REJECTED_UNPINNED_PRODUCER_REGISTRY: Missing or empty trustedProducerKeys registry. Authenticated producer evidence requires explicitly pinned producer keys.",
+        );
       } else if (options.trustedProducerKeys) {
         const pinnedKey = options.trustedProducerKeys[prov.producerKeyId];
         if (!pinnedKey) {

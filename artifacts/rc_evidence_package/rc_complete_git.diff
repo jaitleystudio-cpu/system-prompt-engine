@@ -110,7 +110,7 @@ index d1ae9258..69a78906 100644
  // Risk B Closure: Write & Validate the Customer's Actual Exported Artifact Files
  console.log("\n[7/7] Risk B Closure: Writing & executing assertions from the actual exported promptfooconfig.yaml file...");
 diff --git a/apps/web/scripts/test-rc-customer-journey.mjs b/apps/web/scripts/test-rc-customer-journey.mjs
-index d962848a..bd62eac0 100644
+index d962848a..d7f4feef 100644
 --- a/apps/web/scripts/test-rc-customer-journey.mjs
 +++ b/apps/web/scripts/test-rc-customer-journey.mjs
 @@ -17,17 +17,28 @@
@@ -293,7 +293,7 @@ index d962848a..bd62eac0 100644
    });
    assert.equal(forgedCheck.verified, false, "Forged entitlement token signature must be rejected");
    assert.equal(forgedCheck.rejectionReason, "INVALID_ENTITLEMENT_SIGNATURE");
-@@ -144,17 +245,253 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
+@@ -144,17 +245,305 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
    const expiredCheck = verifySignedEntitlementToken(validProToken, {
      expectedEmail: "dev@example.com",
      currentEpochMs: 1_991_760_000_000,
@@ -538,6 +538,58 @@ index d962848a..bd62eac0 100644
 +  assert.equal(disputedRecord?.subscriptionStatus, "REVOKED");
 +  assert.equal(disputedRecord?.revoked, true);
 +
++  // 4. Transition: Expired via Authority Mutator
++  const expiredEvent = {
++    ...baseLifecycleEvent,
++    eventId: "evt_lifecycle_expired_001",
++    paymentReceiptId: "pay_rcpt_lifecycle_expired_001",
++    subscriptionId: "sub_lifecycle_expired_001",
++  };
++  lifecycleAuthority.processVerifiedPaymentWebhook(
++    expiredEvent,
++    lifecycleAuthority.signWebhookPayload(expiredEvent),
++  );
++  const expiredToken = lifecycleAuthority.issueSignedEntitlementTokenForPaidReceipt(
++    "pay_rcpt_lifecycle_expired_001",
++    1_791_750_000_000,
++  );
++  lifecycleAuthority.markExpired("pay_rcpt_lifecycle_expired_001", 1_791_770_000_000);
++  const expiredRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_expired_001");
++  assert.equal(expiredRecord?.subscriptionStatus, "EXPIRED");
++  assert.equal(expiredRecord?.revoked, true);
++  const expiredVerify = verifySignedEntitlementToken(expiredToken, {
++    expectedEmail: "lifecycle@example.com",
++    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: lifecycleKeys,
++    authoritativeReceiptVerifier: lifecycleAuthority.createAuthoritativeReceiptVerifier(),
++  });
++  assert.equal(expiredVerify.verified, false, "Expired subscription must not verify");
++  assert(expiredVerify.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:EXPIRED"));
++
++  // 5. Deduplication via eventNonce
++  const nonceEvent = {
++    ...baseLifecycleEvent,
++    eventId: "evt_nonce_primary",
++    eventNonce: "nonce_unique_99",
++  };
++  lifecycleAuthority.processVerifiedPaymentWebhook(nonceEvent, lifecycleAuthority.signWebhookPayload(nonceEvent));
++  const nonceReplayEvent = {
++    ...baseLifecycleEvent,
++    eventId: "evt_nonce_secondary_alternate",
++    eventNonce: "nonce_unique_99",
++  };
++  const nonceReplayResult = lifecycleAuthority.processVerifiedPaymentWebhook(nonceReplayEvent, lifecycleAuthority.signWebhookPayload(nonceReplayEvent));
++  assert.equal(nonceReplayResult.paymentReceiptId, "pay_rcpt_lifecycle_001");
++
++  // 6. Unknown event type throws
++  assert.throws(
++    () => {
++      const unknownEvent = { ...baseLifecycleEvent, eventId: "evt_unknown_type", eventType: "unknown.lifecycle.event" };
++      lifecycleAuthority.processVerifiedPaymentWebhook(unknownEvent, lifecycleAuthority.signWebhookPayload(unknownEvent));
++    },
++    /UNRECOGNIZED_WEBHOOK_EVENT_TYPE/,
++  );
++
 +  console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.");
  }
  
@@ -550,7 +602,7 @@ index d962848a..bd62eac0 100644
  {
    const bundle = await build({
      entryPoints: [join(webRoot, "src/components/AgentExportTabs.tsx")],
-@@ -171,6 +508,149 @@ console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent(
+@@ -171,6 +560,205 @@ console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent(
      `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`
    );
  
@@ -627,6 +679,34 @@ index d962848a..bd62eac0 100644
 +    `Forged complete entitlement with dummy signature (${forgedCompleteEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
 +  );
 +
++  // Forged entitlement object with verified: false MUST still be capped at <= 5,000 chars
++  const verifiedFalseAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
++    category: "Backend",
++    depthTier: "deep",
++    entitlement: {
++      verified: false,
++      tier: "pro",
++      signatureHex: "00".repeat(64),
++      payload: {
++        schema: "spe.entitlement.v1",
++        tier: "pro",
++        planName: "Developer Pro",
++        email: "hacker@example.com",
++        paymentReceiptId: "pay_rcpt_fake",
++        subscriptionId: "sub_fake",
++        paymentStatus: "PAID",
++        subscriptionStatus: "ACTIVE",
++        issuedAtMs: 1_791_750_000_000,
++        expiresAtMs: 1_891_750_000_000,
++        issuerKeyId: "spe-billing-authority-ed25519-prod-v1",
++      },
++    },
++  });
++  assert(
++    verifiedFalseAttempt.length <= 5000,
++    `Entitlement object with verified: false must be capped at <= 5,000 chars`,
++  );
++
 +  // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
 +  const directFreePrompt = synthesizeSystemPrompt(oneLakhContextInput, {
 +    category: "Backend",
@@ -676,6 +756,34 @@ index d962848a..bd62eac0 100644
 +    `Verified Pro output length (${proTierCompiled.length}) must exceed 5,000 and be <= 30,000 chars`,
 +  );
 +
++  // Raw signed token string passed directly to compilePromptWithTierEnforcement unlocks Pro tier (> 5,000 chars)
++  const rawTokenCompiled = compilePromptWithTierEnforcement(oneLakhContextInput, {
++    category: "Backend",
++    depthTier: "deep",
++    entitlement: proToken,
++    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
++    authoritativeReceiptVerifier: proBilling.createAuthoritativeReceiptVerifier(),
++  });
++  assert(
++    rawTokenCompiled.length > 5000 && rawTokenCompiled.length <= 30000,
++    `Raw token string (${rawTokenCompiled.length}) must unlock Pro tier (> 5,000 and <= 30,000 chars)`,
++  );
++
++  // Revoked receipt in revokedReceiptIds MUST be capped at <= 5,000 chars even with a valid signed token/object
++  const revokedViaListAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
++    category: "Backend",
++    depthTier: "deep",
++    entitlement: verifiedProEnt,
++    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
++    revokedReceiptIds: ["pay_rcpt_pro_deep_002"],
++  });
++  assert(
++    revokedViaListAttempt.length <= 5000,
++    `Entitlement revoked via revokedReceiptIds must be capped at <= 5,000 chars`,
++  );
++
 +  // Verify formatForAgent enforces <= 5,000 chars by default (even when options are omitted!) and across promptfoo YAML
 +  const defaultExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend");
 +  assert(
@@ -700,7 +808,7 @@ index d962848a..bd62eac0 100644
    const customerPrompt = `# System Role & Persona
  You are a fortified enterprise AI specialist: Backend API Architect.
  
-@@ -207,12 +687,16 @@ Design and validate REST APIs returning strict JSON schemas.
+@@ -207,12 +795,29 @@ Design and validate REST APIs returning strict JSON schemas.
    ];
  
    for (const fmt of expectedFormats) {
@@ -715,12 +823,25 @@ index d962848a..bd62eac0 100644
      writeFileSync(join(customerExportsDir, out.filename), out.content, "utf8");
    }
 -  console.log("✓ All 6 customer export artifacts generated, verified, and saved to artifacts/rc_evidence_package/customer_exports/.");
++
++  // Verify formatForAgent directly with raw token string unlocks Pro tier
++  const rawTokenExport = exportMod.formatForAgent(proTierCompiled, "standard", "Backend", {
++    entitlement: proToken,
++    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
++    authoritativeReceiptVerifier: proBilling.createAuthoritativeReceiptVerifier(),
++  });
++  assert(
++    rawTokenExport.content.length > 5000,
++    `formatForAgent with raw token string (${rawTokenExport.content.length}) must allow Pro output (> 5,000 chars)`,
++  );
++
 +  console.log("✓ All 6 customer export artifacts and 5,000-char Free vs 30,000-char Pro runtime limits verified.");
  }
  
  // -----------------------------------------------------------------------------
 diff --git a/apps/web/scripts/test-spe-omega-proof-engine.mjs b/apps/web/scripts/test-spe-omega-proof-engine.mjs
-index b22a42e4..e0c78b00 100644
+index b22a42e4..e6d7e2f7 100644
 --- a/apps/web/scripts/test-spe-omega-proof-engine.mjs
 +++ b/apps/web/scripts/test-spe-omega-proof-engine.mjs
 @@ -3,7 +3,17 @@ import { typeCheckPrompt, DIAGNOSTIC_CODES } from "../src/engine/promptTypeSyste
@@ -753,7 +874,7 @@ index b22a42e4..e0c78b00 100644
  const receipt = generateProofReceipt(vulnerablePrompt, fortifiedPrompt, twinReport, gymReport);
  assert(receipt.receiptDigest.length === 64, "Receipt digest must be valid SHA-256 hex string");
  assert.strictEqual(receipt.hardGates.protectedIntentPreserved, true, "Hard gates: intent preserved");
-@@ -110,24 +120,172 @@ assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zer
+@@ -110,24 +120,196 @@ assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zer
  assert.strictEqual(receipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Hard gates: honest static unobserved status");
  assert.strictEqual(receipt.evidenceProvenance.selfGeneratedAssertionOnly, true, "Unsigned local receipt must mark selfGeneratedAssertionOnly: true");
  
@@ -891,6 +1012,30 @@ index b22a42e4..e0c78b00 100644
 +  "Receipt with empty producerKeyId must be rejected by verifyProofReceiptAuthenticity",
 +);
 +
++// Unpinned producer key registry when requireAuthenticatedProducer: true MUST be rejected
++const unpinnedProducerReport = verifyProofReceiptAuthenticity(signedObservedReceipt, {
++  requireAuthenticatedProducer: true,
++});
++assert.strictEqual(
++  unpinnedProducerReport.producerAuthenticated,
++  false,
++  "Signed receipt without trustedProducerKeys registry must be rejected when requireAuthenticatedProducer is true",
++);
++assert(
++  unpinnedProducerReport.reasons.some((r) => r.includes("REJECTED_UNPINNED_PRODUCER_REGISTRY")),
++  "Must report REJECTED_UNPINNED_PRODUCER_REGISTRY when trustedProducerKeys is missing",
++);
++
++const emptyProducerRegistryReport = verifyProofReceiptAuthenticity(signedObservedReceipt, {
++  requireAuthenticatedProducer: true,
++  trustedProducerKeys: {},
++});
++assert.strictEqual(
++  emptyProducerRegistryReport.producerAuthenticated,
++  false,
++  "Signed receipt with empty trustedProducerKeys map must be rejected",
++);
++
 +// Audit 4727aa62 Finding C Remediation: Unpinned or missing observer/evaluator keys MUST be rejected
 +const unpinnedObsMissing = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash);
 +assert.strictEqual(unpinnedObsMissing.verified, false, "verifyNetworkObservationAttestation without trustedObserverKeys must reject");
@@ -929,7 +1074,7 @@ index b22a42e4..e0c78b00 100644
  console.log("================================================================================");
 +
 diff --git a/apps/web/src/components/AgentExportTabs.tsx b/apps/web/src/components/AgentExportTabs.tsx
-index 4e3c61b6..a8cf83b1 100644
+index 4e3c61b6..cc8a943f 100644
 --- a/apps/web/src/components/AgentExportTabs.tsx
 +++ b/apps/web/src/components/AgentExportTabs.tsx
 @@ -1,6 +1,15 @@
@@ -948,20 +1093,26 @@ index 4e3c61b6..a8cf83b1 100644
  
  export type AgentFormatId =
    | "standard"
-@@ -26,34 +35,83 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
+@@ -26,34 +35,91 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
    { id: "promptfoo", label: "promptfoo.yaml", filename: "promptfooconfig.yaml", badge: "CI/CD Eval" },
  ];
  
 +export interface AgentFormatOptions {
 +  subscriptionTier?: "free" | "pro" | "team";
-+  entitlement?: EntitlementVerificationResult | null;
++  entitlement?: EntitlementVerificationResult | string | null;
 +  /**
 +   * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
 +   * enforced at production boundaries and cannot be bypassed via options.
 +   */
 +  enforceTierLimit?: never;
++  token?: string;
 +  currentEpochMs?: number;
 +  trustedIssuerPublicKeys?: Record<string, string>;
++  authoritativeReceiptVerifier?: (
++    paymentReceiptId: string,
++    payload: any,
++  ) => any;
++  signedReceiptAttestation?: any;
 +}
 +
  export function formatForAgent(
@@ -977,6 +1128,8 @@ index 4e3c61b6..a8cf83b1 100644
 +    entitlement: resolvedEntitlement,
 +    currentEpochMs: options.currentEpochMs,
 +    trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
++    authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
++    signedReceiptAttestation: options.signedReceiptAttestation,
 +  };
 +  const boundedPrompt = enforceTierOutputLimit(rawPrompt, effectiveOptions);
 +
@@ -1436,7 +1589,7 @@ index 00000000..abbe458d
 +  return lhs[0] === rhs[0] && lhs[1] === rhs[1];
 +}
 diff --git a/apps/web/src/engine/entitlementVerifier.ts b/apps/web/src/engine/entitlementVerifier.ts
-index 29f983dd..0ce94580 100644
+index 29f983dd..7a099530 100644
 --- a/apps/web/src/engine/entitlementVerifier.ts
 +++ b/apps/web/src/engine/entitlementVerifier.ts
 @@ -1,16 +1,23 @@
@@ -1880,7 +2033,7 @@ index 29f983dd..0ce94580 100644
  
    if (
      options.expectedEmail &&
-@@ -202,33 +423,285 @@ export function verifySignedEntitlementToken(
+@@ -202,33 +423,308 @@ export function verifySignedEntitlementToken(
        verified: false,
        tier: null,
        payload: null,
@@ -1997,7 +2150,7 @@ index 29f983dd..0ce94580 100644
 +        rejectionReason: `UNKNOWN_PAYMENT_RECEIPT_ID:${parsed.paymentReceiptId}`,
 +      };
 +    }
-+    if (!record.paid) {
++    if (!record.paid || record.paymentStatus === "REFUNDED" || record.paymentStatus === "DISPUTED") {
 +      return {
 +        verified: false,
 +        tier: null,
@@ -2150,26 +2303,49 @@ index 29f983dd..0ce94580 100644
 +
 +export function resolveExportEntitlement(options: {
 +  subscriptionTier?: "free" | "pro" | "team";
-+  entitlement?: EntitlementVerificationResult | null;
++  entitlement?: EntitlementVerificationResult | string | null;
++  token?: string;
 +  currentEpochMs?: number;
 +  trustedIssuerPublicKeys?: Record<string, string>;
++  authoritativeReceiptVerifier?: EntitlementVerificationOptions["authoritativeReceiptVerifier"];
++  signedReceiptAttestation?: SignedReceiptStatusAttestation | string;
 +} = {}): EntitlementVerificationResult | null {
 +  if (options.subscriptionTier === "free") {
 +    return null;
 +  }
-+  if (options.entitlement !== undefined) {
-+    return options.entitlement;
++  if (options.entitlement !== undefined && options.entitlement !== null) {
++    if (typeof options.entitlement === "string") {
++      const verified = verifySignedEntitlementToken(options.entitlement, {
++        currentEpochMs: options.currentEpochMs,
++        trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
++        authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
++        signedReceiptAttestation: options.signedReceiptAttestation,
++      });
++      return verified.verified ? verified : null;
++    }
++    return options.entitlement.verified ? options.entitlement : null;
++  }
++  if (options.token) {
++    const verified = verifySignedEntitlementToken(options.token, {
++      currentEpochMs: options.currentEpochMs,
++      trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
++      authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
++      signedReceiptAttestation: options.signedReceiptAttestation,
++    });
++    return verified.verified ? verified : null;
 +  }
 +  return resolveBrowserVerifiedEntitlement({
 +    currentEpochMs: options.currentEpochMs,
 +    trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
++    authoritativeReceiptVerifier: options.authoritativeReceiptVerifier,
++    signedReceiptAttestation: options.signedReceiptAttestation,
 +  });
 +}
 +
  /**
   * Records a Public Beta checkout waitlist reservation without granting paid tier entitlements.
   */
-@@ -239,7 +712,9 @@ export function createPublicBetaWaitlistReservation(
+@@ -239,7 +735,9 @@ export function createPublicBetaWaitlistReservation(
    const lowerPlan = selectedPlan.toLowerCase();
    const requestedTier: "pro" | "team" =
      lowerPlan.includes("team") || lowerPlan.includes("company") ? "team" : "pro";
@@ -2282,7 +2458,7 @@ index 96848c40..0999dba2 100644
        const timestamp = new Date().toISOString().slice(0, 10);
        downloadMarkdownFile(`spe-system-prompt-${timestamp}.md`, mdContent);
 diff --git a/apps/web/src/engine/promptSynthesizer.mjs b/apps/web/src/engine/promptSynthesizer.mjs
-index 4d65939c..fadf9828 100644
+index 4d65939c..9f2919cc 100644
 --- a/apps/web/src/engine/promptSynthesizer.mjs
 +++ b/apps/web/src/engine/promptSynthesizer.mjs
 @@ -31,7 +31,20 @@
@@ -2306,7 +2482,7 @@ index 4d65939c..fadf9828 100644
  
  const CATEGORY_RECIPES = {
    "AI Assistant": {
-@@ -756,7 +769,57 @@ export function synthesizeSystemPrompt(raw, opts) {
+@@ -756,7 +769,55 @@ export function synthesizeSystemPrompt(raw, opts) {
  
    const target = typeof opts === "string" ? opts : (opts && opts.target ? opts.target : "any");
    const depthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
@@ -2322,7 +2498,7 @@ index 4d65939c..fadf9828 100644
 +    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
 +      ? opts.currentEpochMs
 +      : Date.now();
-+  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
++  const verifiedPaidTier = resolveVerifiedEntitlementTier(
 +    opts && typeof opts === "object" ? opts.entitlement : null,
 +    currentEpochMs,
 +    opts,
@@ -2330,9 +2506,7 @@ index 4d65939c..fadf9828 100644
 +  const subscriptionTier = hasTierOption
 +    ? opts && typeof opts === "object" && opts.subscriptionTier === "free"
 +      ? "free"
-+      : hasVerifiedPaidEntitlement
-+        ? opts.entitlement.tier
-+        : "free"
++      : verifiedPaidTier ?? "free"
 +    : null;
 +  const isFreeTier =
 +    subscriptionTier === "free" ||
@@ -2365,7 +2539,7 @@ index 4d65939c..fadf9828 100644
  
    const sections = {};
    const effectList = [];
-@@ -776,13 +839,23 @@ export function synthesizeSystemPrompt(raw, opts) {
+@@ -776,13 +837,23 @@ export function synthesizeSystemPrompt(raw, opts) {
      }
    }
  
@@ -2391,7 +2565,7 @@ index 4d65939c..fadf9828 100644
  
    const is3D = /3d|three\.js|webgl|shader|canvas|depth_composite|2_5d|css_motion/i.test(objective);
    const isTeaching = /curious|14-year-old|teach|explain.*to.*(?:child|kid|teen|student|curious|learner)|analogy.*worked example|questions to check understanding/i.test(objective);
-@@ -1024,3 +1097,188 @@ Follow the explicit brief wherever it differs from these default working suggest
+@@ -1024,3 +1095,254 @@ Follow the explicit brief wherever it differs from these default working suggest
  
    return padToTarget(md.trim(), targetChars, false, false);
  }
@@ -2442,6 +2616,7 @@ index 4d65939c..fadf9828 100644
 +
 +  // Case 2: EntitlementVerificationResult object
 +  if (typeof entitlement !== "object") return false;
++  if (entitlement.verified !== true) return false;
 +  if (entitlement.tier !== "pro" && entitlement.tier !== "team") return false;
 +  if (
 +    typeof entitlement.signatureHex !== "string" ||
@@ -2464,7 +2639,20 @@ index 4d65939c..fadf9828 100644
 +  if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= effectiveEpochMs) {
 +    return false;
 +  }
++  if (typeof payload.issuedAtMs === "number" && payload.issuedAtMs > effectiveEpochMs + 60_000) {
++    return false;
++  }
 +  if (typeof payload.issuerKeyId !== "string" || !payload.issuerKeyId.trim()) {
++    return false;
++  }
++
++  // Check explicit revocation lists if provided
++  const revokedReceipts = new Set(options.revokedReceiptIds ?? []);
++  const revokedSubs = new Set(options.revokedSubscriptionIds ?? []);
++  if (
++    revokedReceipts.has(payload.paymentReceiptId) ||
++    (payload.subscriptionId && revokedSubs.has(payload.subscriptionId))
++  ) {
 +    return false;
 +  }
 +
@@ -2488,7 +2676,63 @@ index 4d65939c..fadf9828 100644
 +      )
 +    : verifyEd25519Signature(canonicalPayload, entitlement.signatureHex, normalizedPinnedKey);
 +
-+  return sigValid === true;
++  if (sigValid !== true) return false;
++
++  // Authoritative receipt verification if verifier provided
++  if (typeof options.authoritativeReceiptVerifier === "function") {
++    const authRec = options.authoritativeReceiptVerifier(payload.paymentReceiptId, payload);
++    if (
++      !authRec ||
++      !authRec.exists ||
++      !authRec.paid ||
++      authRec.paymentStatus === "REFUNDED" ||
++      authRec.paymentStatus === "DISPUTED" ||
++      authRec.revoked ||
++      authRec.subscriptionStatus !== "ACTIVE" ||
++      authRec.expiresAtMs <= effectiveEpochMs
++    ) {
++      return false;
++    }
++  }
++
++  return true;
++}
++
++/**
++ * Resolves the verified paid entitlement tier ("pro" | "team" | null) across both
++ * raw signed token strings (spe_entitlement.v1...) and EntitlementVerificationResult objects.
++ */
++export function resolveVerifiedEntitlementTier(
++  entitlement,
++  currentEpochMs = Date.now(),
++  opts = {},
++) {
++  if (!entitlement) return null;
++  const verified = isVerifiedPaidEntitlementResult(entitlement, currentEpochMs, opts);
++  if (!verified) return null;
++  if (typeof entitlement === "string") {
++    const options =
++      typeof currentEpochMs === "object" && currentEpochMs !== null
++        ? currentEpochMs
++        : typeof opts === "object" && opts !== null
++          ? opts
++          : {};
++    const effectiveEpochMs =
++      typeof currentEpochMs === "number"
++        ? currentEpochMs
++        : typeof options.currentEpochMs === "number"
++          ? options.currentEpochMs
++          : Date.now();
++    const tokenCheck = verifySignedEntitlementToken(entitlement.trim(), {
++      ...options,
++      currentEpochMs: effectiveEpochMs,
++    });
++    return tokenCheck.verified ? tokenCheck.tier : null;
++  }
++  if (typeof entitlement === "object") {
++    return entitlement.tier ?? entitlement.payload?.tier ?? null;
++  }
++  return null;
 +}
 +
 +/**
@@ -2504,7 +2748,7 @@ index 4d65939c..fadf9828 100644
 +    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
 +      ? opts.currentEpochMs
 +      : Date.now();
-+  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
++  const verifiedPaidTier = resolveVerifiedEntitlementTier(
 +    entitlement,
 +    currentEpochMs,
 +    opts,
@@ -2512,9 +2756,7 @@ index 4d65939c..fadf9828 100644
 +  const subscriptionTier =
 +    opts && typeof opts === "object" && opts.subscriptionTier === "free"
 +      ? "free"
-+      : hasVerifiedPaidEntitlement
-+        ? entitlement.tier
-+        : "free";
++      : verifiedPaidTier ?? "free";
 +  const maxAllowed =
 +    subscriptionTier === "pro" || subscriptionTier === "team"
 +      ? PRO_TIER_MAX_OUTPUT_CHARS
@@ -2546,7 +2788,7 @@ index 4d65939c..fadf9828 100644
 +    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
 +      ? opts.currentEpochMs
 +      : Date.now();
-+  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
++  const verifiedPaidTier = resolveVerifiedEntitlementTier(
 +    entitlement,
 +    currentEpochMs,
 +    opts,
@@ -2554,9 +2796,7 @@ index 4d65939c..fadf9828 100644
 +  const effectiveSubscriptionTier =
 +    opts && typeof opts === "object" && opts.subscriptionTier === "free"
 +      ? "free"
-+      : hasVerifiedPaidEntitlement
-+        ? entitlement.tier
-+        : "free";
++      : verifiedPaidTier ?? "free";
 +  const effectiveDepthTier =
 +    effectiveSubscriptionTier === "free"
 +      ? "free"
@@ -2581,10 +2821,10 @@ index 4d65939c..fadf9828 100644
 +}
 +
 diff --git a/apps/web/src/engine/promptSynthesizer.ts b/apps/web/src/engine/promptSynthesizer.ts
-index 3d27c40d..fc2f6397 100644
+index 3d27c40d..f9e70848 100644
 --- a/apps/web/src/engine/promptSynthesizer.ts
 +++ b/apps/web/src/engine/promptSynthesizer.ts
-@@ -1,3 +1,10 @@
+@@ -1,3 +1,11 @@
 -export { synthesizeSystemPrompt } from "./promptSynthesizer.mjs";
 -export type DepthTier = "normal" | "mid" | "deep";
 +export {
@@ -2592,6 +2832,7 @@ index 3d27c40d..fc2f6397 100644
 +  FREE_TIER_MAX_OUTPUT_CHARS,
 +  PRO_TIER_MAX_OUTPUT_CHARS,
 +  isVerifiedPaidEntitlementResult,
++  resolveVerifiedEntitlementTier,
 +  enforceTierOutputLimit,
 +  compilePromptWithTierEnforcement,
 +} from "./promptSynthesizer.mjs";
@@ -2678,7 +2919,7 @@ index f8e8f31c..8ee267c0 100644
      },
    );
 diff --git a/apps/web/src/engine/proofReceipt.ts b/apps/web/src/engine/proofReceipt.ts
-index 4f03357b..76ebcb7d 100644
+index 4f03357b..cdac67e8 100644
 --- a/apps/web/src/engine/proofReceipt.ts
 +++ b/apps/web/src/engine/proofReceipt.ts
 @@ -2,10 +2,15 @@
@@ -3182,7 +3423,7 @@ index 4f03357b..76ebcb7d 100644
   */
  export function verifyProofReceiptAuthenticity(
    receipt: ProofReceiptPayload,
-@@ -264,36 +643,119 @@ export function verifyProofReceiptAuthenticity(
+@@ -264,36 +643,127 @@ export function verifyProofReceiptAuthenticity(
    }
  
    let producerAuthenticated = false;
@@ -3223,6 +3464,14 @@ index 4f03357b..76ebcb7d 100644
 +      if (!prov.producerKeyId || typeof prov.producerKeyId !== "string" || !prov.producerKeyId.trim()) {
 +        keyTrusted = false;
 +        reasons.push("Missing producerKeyId in receipt evidenceProvenance.");
++      } else if (
++        mustAuthenticateProducer &&
++        (!options.trustedProducerKeys || Object.keys(options.trustedProducerKeys).length === 0)
++      ) {
++        keyTrusted = false;
++        reasons.push(
++          "REJECTED_UNPINNED_PRODUCER_REGISTRY: Missing or empty trustedProducerKeys registry. Authenticated producer evidence requires explicitly pinned producer keys.",
++        );
 +      } else if (options.trustedProducerKeys) {
 +        const pinnedKey = options.trustedProducerKeys[prov.producerKeyId];
 +        if (!pinnedKey) {
@@ -3324,7 +3573,7 @@ index 4f03357b..76ebcb7d 100644
    if (!receipt.hardGates.protectedIntentPreserved || !receipt.hardGates.authorityNotExpanded) {
      experimentalValidityVerified = false;
      reasons.push("Hard gates failed on receipt (intent or authority violation).");
-@@ -321,4 +783,3 @@ export function verifyProofReceiptAuthenticity(
+@@ -321,4 +791,3 @@ export function verifyProofReceiptAuthenticity(
      reasons,
    };
  }
@@ -3460,10 +3709,10 @@ index b5b08515..098b10fb 100644
      } catch {
 diff --git a/apps/web/src/server/billingAuthority.ts b/apps/web/src/server/billingAuthority.ts
 new file mode 100644
-index 00000000..e6fe5143
+index 00000000..2a55eff0
 --- /dev/null
 +++ b/apps/web/src/server/billingAuthority.ts
-@@ -0,0 +1,539 @@
+@@ -0,0 +1,567 @@
 +/**
 + * SPE Ω Authoritative Server-Side Billing Webhook & Ed25519 Entitlement Issuer
 + *
@@ -3550,6 +3799,9 @@ index 00000000..e6fe5143
 +    }
 +    try {
 +      const raw = readFileSync(this.filePath, "utf8");
++      if (!raw || !raw.trim()) {
++        return { records: {}, processedEventIds: [] };
++      }
 +      const parsed = JSON.parse(raw);
 +      return {
 +        records: (parsed && typeof parsed.records === "object" ? parsed.records : {}) as Record<
@@ -3740,7 +3992,12 @@ index 00000000..e6fe5143
 +    }
 +
 +    // Idempotent webhook replay deduplication: safe replay without state corruption
-+    if (this.#processedEventIds.has(event.eventId)) {
++    const isReplay =
++      this.#processedEventIds.has(event.eventId) ||
++      (typeof event.eventNonce === "string" &&
++        event.eventNonce.trim() !== "" &&
++        this.#processedEventIds.has(event.eventNonce.trim()));
++    if (isReplay) {
 +      const existing = this.#receiptLedger.get(event.paymentReceiptId);
 +      if (existing) {
 +        return { ...existing };
@@ -3771,6 +4028,9 @@ index 00000000..e6fe5143
 +      };
 +      this.#receiptLedger.set(event.paymentReceiptId, record);
 +      this.#processedEventIds.add(event.eventId);
++      if (typeof event.eventNonce === "string" && event.eventNonce.trim() !== "") {
++        this.#processedEventIds.add(event.eventNonce.trim());
++      }
 +      this.#saveLedger();
 +      return { ...record };
 +    }
@@ -3806,10 +4066,15 @@ index 00000000..e6fe5143
 +    } else if (event.eventType === "entitlement.revoked") {
 +      existing.subscriptionStatus = "REVOKED";
 +      existing.revoked = true;
++    } else {
++      throw new Error(`UNRECOGNIZED_WEBHOOK_EVENT_TYPE:${event.eventType}`);
 +    }
 +
 +    this.#receiptLedger.set(event.paymentReceiptId, existing);
 +    this.#processedEventIds.add(event.eventId);
++    if (typeof event.eventNonce === "string" && event.eventNonce.trim() !== "") {
++      this.#processedEventIds.add(event.eventNonce.trim());
++    }
 +    this.#saveLedger();
 +    return { ...existing };
 +  }
@@ -3976,6 +4241,18 @@ index 00000000..e6fe5143
 +    existing.paid = false;
 +    existing.paymentStatus = "DISPUTED";
 +    existing.subscriptionStatus = "REVOKED";
++    existing.revoked = true;
++    this.#receiptLedger.set(paymentReceiptId, existing);
++    this.#saveLedger();
++  }
++
++  markExpired(paymentReceiptId: string, expiredAtMs: number = Date.now()): void {
++    const existing = this.#receiptLedger.get(paymentReceiptId);
++    if (!existing) {
++      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
++    }
++    existing.subscriptionStatus = "EXPIRED";
++    existing.expiresAtMs = Math.min(existing.expiresAtMs, expiredAtMs);
 +    existing.revoked = true;
 +    this.#receiptLedger.set(paymentReceiptId, existing);
 +    this.#saveLedger();

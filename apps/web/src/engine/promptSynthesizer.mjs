@@ -780,7 +780,7 @@ export function synthesizeSystemPrompt(raw, opts) {
     opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
       ? opts.currentEpochMs
       : Date.now();
-  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
+  const verifiedPaidTier = resolveVerifiedEntitlementTier(
     opts && typeof opts === "object" ? opts.entitlement : null,
     currentEpochMs,
     opts,
@@ -788,9 +788,7 @@ export function synthesizeSystemPrompt(raw, opts) {
   const subscriptionTier = hasTierOption
     ? opts && typeof opts === "object" && opts.subscriptionTier === "free"
       ? "free"
-      : hasVerifiedPaidEntitlement
-        ? opts.entitlement.tier
-        : "free"
+      : verifiedPaidTier ?? "free"
     : null;
   const isFreeTier =
     subscriptionTier === "free" ||
@@ -1144,6 +1142,7 @@ export function isVerifiedPaidEntitlementResult(
 
   // Case 2: EntitlementVerificationResult object
   if (typeof entitlement !== "object") return false;
+  if (entitlement.verified !== true) return false;
   if (entitlement.tier !== "pro" && entitlement.tier !== "team") return false;
   if (
     typeof entitlement.signatureHex !== "string" ||
@@ -1166,7 +1165,20 @@ export function isVerifiedPaidEntitlementResult(
   if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= effectiveEpochMs) {
     return false;
   }
+  if (typeof payload.issuedAtMs === "number" && payload.issuedAtMs > effectiveEpochMs + 60_000) {
+    return false;
+  }
   if (typeof payload.issuerKeyId !== "string" || !payload.issuerKeyId.trim()) {
+    return false;
+  }
+
+  // Check explicit revocation lists if provided
+  const revokedReceipts = new Set(options.revokedReceiptIds ?? []);
+  const revokedSubs = new Set(options.revokedSubscriptionIds ?? []);
+  if (
+    revokedReceipts.has(payload.paymentReceiptId) ||
+    (payload.subscriptionId && revokedSubs.has(payload.subscriptionId))
+  ) {
     return false;
   }
 
@@ -1190,7 +1202,63 @@ export function isVerifiedPaidEntitlementResult(
       )
     : verifyEd25519Signature(canonicalPayload, entitlement.signatureHex, normalizedPinnedKey);
 
-  return sigValid === true;
+  if (sigValid !== true) return false;
+
+  // Authoritative receipt verification if verifier provided
+  if (typeof options.authoritativeReceiptVerifier === "function") {
+    const authRec = options.authoritativeReceiptVerifier(payload.paymentReceiptId, payload);
+    if (
+      !authRec ||
+      !authRec.exists ||
+      !authRec.paid ||
+      authRec.paymentStatus === "REFUNDED" ||
+      authRec.paymentStatus === "DISPUTED" ||
+      authRec.revoked ||
+      authRec.subscriptionStatus !== "ACTIVE" ||
+      authRec.expiresAtMs <= effectiveEpochMs
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Resolves the verified paid entitlement tier ("pro" | "team" | null) across both
+ * raw signed token strings (spe_entitlement.v1...) and EntitlementVerificationResult objects.
+ */
+export function resolveVerifiedEntitlementTier(
+  entitlement,
+  currentEpochMs = Date.now(),
+  opts = {},
+) {
+  if (!entitlement) return null;
+  const verified = isVerifiedPaidEntitlementResult(entitlement, currentEpochMs, opts);
+  if (!verified) return null;
+  if (typeof entitlement === "string") {
+    const options =
+      typeof currentEpochMs === "object" && currentEpochMs !== null
+        ? currentEpochMs
+        : typeof opts === "object" && opts !== null
+          ? opts
+          : {};
+    const effectiveEpochMs =
+      typeof currentEpochMs === "number"
+        ? currentEpochMs
+        : typeof options.currentEpochMs === "number"
+          ? options.currentEpochMs
+          : Date.now();
+    const tokenCheck = verifySignedEntitlementToken(entitlement.trim(), {
+      ...options,
+      currentEpochMs: effectiveEpochMs,
+    });
+    return tokenCheck.verified ? tokenCheck.tier : null;
+  }
+  if (typeof entitlement === "object") {
+    return entitlement.tier ?? entitlement.payload?.tier ?? null;
+  }
+  return null;
 }
 
 /**
@@ -1206,7 +1274,7 @@ export function enforceTierOutputLimit(promptText, opts = {}) {
     opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
       ? opts.currentEpochMs
       : Date.now();
-  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
+  const verifiedPaidTier = resolveVerifiedEntitlementTier(
     entitlement,
     currentEpochMs,
     opts,
@@ -1214,9 +1282,7 @@ export function enforceTierOutputLimit(promptText, opts = {}) {
   const subscriptionTier =
     opts && typeof opts === "object" && opts.subscriptionTier === "free"
       ? "free"
-      : hasVerifiedPaidEntitlement
-        ? entitlement.tier
-        : "free";
+      : verifiedPaidTier ?? "free";
   const maxAllowed =
     subscriptionTier === "pro" || subscriptionTier === "team"
       ? PRO_TIER_MAX_OUTPUT_CHARS
@@ -1248,7 +1314,7 @@ export function compilePromptWithTierEnforcement(raw, opts = {}) {
     opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
       ? opts.currentEpochMs
       : Date.now();
-  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
+  const verifiedPaidTier = resolveVerifiedEntitlementTier(
     entitlement,
     currentEpochMs,
     opts,
@@ -1256,9 +1322,7 @@ export function compilePromptWithTierEnforcement(raw, opts = {}) {
   const effectiveSubscriptionTier =
     opts && typeof opts === "object" && opts.subscriptionTier === "free"
       ? "free"
-      : hasVerifiedPaidEntitlement
-        ? entitlement.tier
-        : "free";
+      : verifiedPaidTier ?? "free";
   const effectiveDepthTier =
     effectiveSubscriptionTier === "free"
       ? "free"

@@ -485,6 +485,58 @@ console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security,
   assert.equal(disputedRecord?.subscriptionStatus, "REVOKED");
   assert.equal(disputedRecord?.revoked, true);
 
+  // 4. Transition: Expired via Authority Mutator
+  const expiredEvent = {
+    ...baseLifecycleEvent,
+    eventId: "evt_lifecycle_expired_001",
+    paymentReceiptId: "pay_rcpt_lifecycle_expired_001",
+    subscriptionId: "sub_lifecycle_expired_001",
+  };
+  lifecycleAuthority.processVerifiedPaymentWebhook(
+    expiredEvent,
+    lifecycleAuthority.signWebhookPayload(expiredEvent),
+  );
+  const expiredToken = lifecycleAuthority.issueSignedEntitlementTokenForPaidReceipt(
+    "pay_rcpt_lifecycle_expired_001",
+    1_791_750_000_000,
+  );
+  lifecycleAuthority.markExpired("pay_rcpt_lifecycle_expired_001", 1_791_770_000_000);
+  const expiredRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_expired_001");
+  assert.equal(expiredRecord?.subscriptionStatus, "EXPIRED");
+  assert.equal(expiredRecord?.revoked, true);
+  const expiredVerify = verifySignedEntitlementToken(expiredToken, {
+    expectedEmail: "lifecycle@example.com",
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: lifecycleKeys,
+    authoritativeReceiptVerifier: lifecycleAuthority.createAuthoritativeReceiptVerifier(),
+  });
+  assert.equal(expiredVerify.verified, false, "Expired subscription must not verify");
+  assert(expiredVerify.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:EXPIRED"));
+
+  // 5. Deduplication via eventNonce
+  const nonceEvent = {
+    ...baseLifecycleEvent,
+    eventId: "evt_nonce_primary",
+    eventNonce: "nonce_unique_99",
+  };
+  lifecycleAuthority.processVerifiedPaymentWebhook(nonceEvent, lifecycleAuthority.signWebhookPayload(nonceEvent));
+  const nonceReplayEvent = {
+    ...baseLifecycleEvent,
+    eventId: "evt_nonce_secondary_alternate",
+    eventNonce: "nonce_unique_99",
+  };
+  const nonceReplayResult = lifecycleAuthority.processVerifiedPaymentWebhook(nonceReplayEvent, lifecycleAuthority.signWebhookPayload(nonceReplayEvent));
+  assert.equal(nonceReplayResult.paymentReceiptId, "pay_rcpt_lifecycle_001");
+
+  // 6. Unknown event type throws
+  assert.throws(
+    () => {
+      const unknownEvent = { ...baseLifecycleEvent, eventId: "evt_unknown_type", eventType: "unknown.lifecycle.event" };
+      lifecycleAuthority.processVerifiedPaymentWebhook(unknownEvent, lifecycleAuthority.signWebhookPayload(unknownEvent));
+    },
+    /UNRECOGNIZED_WEBHOOK_EVENT_TYPE/,
+  );
+
   console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.");
 }
 
@@ -581,6 +633,34 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     `Forged complete entitlement with dummy signature (${forgedCompleteEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
   );
 
+  // Forged entitlement object with verified: false MUST still be capped at <= 5,000 chars
+  const verifiedFalseAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    entitlement: {
+      verified: false,
+      tier: "pro",
+      signatureHex: "00".repeat(64),
+      payload: {
+        schema: "spe.entitlement.v1",
+        tier: "pro",
+        planName: "Developer Pro",
+        email: "hacker@example.com",
+        paymentReceiptId: "pay_rcpt_fake",
+        subscriptionId: "sub_fake",
+        paymentStatus: "PAID",
+        subscriptionStatus: "ACTIVE",
+        issuedAtMs: 1_791_750_000_000,
+        expiresAtMs: 1_891_750_000_000,
+        issuerKeyId: "spe-billing-authority-ed25519-prod-v1",
+      },
+    },
+  });
+  assert(
+    verifiedFalseAttempt.length <= 5000,
+    `Entitlement object with verified: false must be capped at <= 5,000 chars`,
+  );
+
   // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
   const directFreePrompt = synthesizeSystemPrompt(oneLakhContextInput, {
     category: "Backend",
@@ -628,6 +708,34 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
   assert(
     proTierCompiled.length > 5000 && proTierCompiled.length <= 30000,
     `Verified Pro output length (${proTierCompiled.length}) must exceed 5,000 and be <= 30,000 chars`,
+  );
+
+  // Raw signed token string passed directly to compilePromptWithTierEnforcement unlocks Pro tier (> 5,000 chars)
+  const rawTokenCompiled = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    entitlement: proToken,
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
+    authoritativeReceiptVerifier: proBilling.createAuthoritativeReceiptVerifier(),
+  });
+  assert(
+    rawTokenCompiled.length > 5000 && rawTokenCompiled.length <= 30000,
+    `Raw token string (${rawTokenCompiled.length}) must unlock Pro tier (> 5,000 and <= 30,000 chars)`,
+  );
+
+  // Revoked receipt in revokedReceiptIds MUST be capped at <= 5,000 chars even with a valid signed token/object
+  const revokedViaListAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    entitlement: verifiedProEnt,
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
+    revokedReceiptIds: ["pay_rcpt_pro_deep_002"],
+  });
+  assert(
+    revokedViaListAttempt.length <= 5000,
+    `Entitlement revoked via revokedReceiptIds must be capped at <= 5,000 chars`,
   );
 
   // Verify formatForAgent enforces <= 5,000 chars by default (even when options are omitted!) and across promptfoo YAML
@@ -696,6 +804,19 @@ Design and validate REST APIs returning strict JSON schemas.
     assert(out.content.includes(fmt.mustContain), `Export ${fmt.id} missing expected content: ${fmt.mustContain}`);
     writeFileSync(join(customerExportsDir, out.filename), out.content, "utf8");
   }
+
+  // Verify formatForAgent directly with raw token string unlocks Pro tier
+  const rawTokenExport = exportMod.formatForAgent(proTierCompiled, "standard", "Backend", {
+    entitlement: proToken,
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
+    authoritativeReceiptVerifier: proBilling.createAuthoritativeReceiptVerifier(),
+  });
+  assert(
+    rawTokenExport.content.length > 5000,
+    `formatForAgent with raw token string (${rawTokenExport.content.length}) must allow Pro output (> 5,000 chars)`,
+  );
+
   console.log("✓ All 6 customer export artifacts and 5,000-char Free vs 30,000-char Pro runtime limits verified.");
 }
 
