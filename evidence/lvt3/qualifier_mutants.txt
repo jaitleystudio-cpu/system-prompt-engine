@@ -1,0 +1,5 @@
+M1_skip_reverify => 5 failed, 9 passed in 1.40s
+M2_skip_signature => 2 failed, 12 passed in 0.77s
+M3_ignore_revoked => 1 failed, 13 passed in 0.71s
+M4_no_guard_envelope => 1 failed, 13 passed in 0.62s
+M5_trust_claims => 1 failed, 13 passed in 0.68s
