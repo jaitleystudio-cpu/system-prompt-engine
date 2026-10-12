@@ -32,6 +32,8 @@
  */
 
 export const DEFAULT_DEPTH_TIER = "normal";
+export const FREE_TIER_MAX_OUTPUT_CHARS = 5000;
+export const PRO_TIER_MAX_OUTPUT_CHARS = 30000;
 
 const CATEGORY_RECIPES = {
   "AI Assistant": {
@@ -756,7 +758,48 @@ export function synthesizeSystemPrompt(raw, opts) {
 
   const target = typeof opts === "string" ? opts : (opts && opts.target ? opts.target : "any");
   const depthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
-  const targetChars = depthTier === "deep" ? 30000 : depthTier === "mid" ? 15000 : 5555;
+  const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
+  const hasVerifiedPaidEntitlement = Boolean(
+    entitlement &&
+      entitlement.verified === true &&
+      (entitlement.tier === "pro" || entitlement.tier === "team"),
+  );
+  const subscriptionTier =
+    opts && typeof opts === "object" && opts.subscriptionTier
+      ? opts.subscriptionTier
+      : entitlement
+        ? hasVerifiedPaidEntitlement
+          ? entitlement.tier
+          : "free"
+        : null;
+  const isFreeTier =
+    subscriptionTier === "free" ||
+    depthTier === "free" ||
+    Boolean(opts && typeof opts === "object" && opts.enforceFreeTierLimit);
+  const explicitMaxOutputChars =
+    opts && typeof opts === "object" && typeof opts.maxOutputChars === "number" && opts.maxOutputChars > 0
+      ? Math.floor(opts.maxOutputChars)
+      : null;
+  const baseTargetChars =
+    depthTier === "deep"
+      ? PRO_TIER_MAX_OUTPUT_CHARS
+      : depthTier === "mid"
+        ? 15000
+        : depthTier === "free"
+          ? FREE_TIER_MAX_OUTPUT_CHARS
+          : 5555;
+  const effectiveMaxOutputChars =
+    explicitMaxOutputChars !== null
+      ? isFreeTier
+        ? Math.min(explicitMaxOutputChars, FREE_TIER_MAX_OUTPUT_CHARS)
+        : explicitMaxOutputChars
+      : isFreeTier
+        ? FREE_TIER_MAX_OUTPUT_CHARS
+        : null;
+  const targetChars =
+    effectiveMaxOutputChars !== null
+      ? Math.min(baseTargetChars, effectiveMaxOutputChars)
+      : baseTargetChars;
 
   const sections = {};
   const effectList = [];
@@ -776,13 +819,23 @@ export function synthesizeSystemPrompt(raw, opts) {
     }
   }
 
-  const objective = sections["Objective"] || "";
+  const rawObjective = sections["Objective"] || "";
+  const maxObjectiveChars = Math.max(400, targetChars - 3600);
+  const objective =
+    rawObjective.length > maxObjectiveChars
+      ? rawObjective.slice(0, maxObjectiveChars - 3).trimEnd() + "..."
+      : rawObjective;
   let category = sections["Category presentation"] || (opts && opts.category ? opts.category : "") || "AI Assistant";
   const suppliedRole = sections["Supplied role"] || "";
   const hardConstraints = sections["Hard constraints"] || "";
   const preferences = sections["Preferences"] || "";
   const deliverable = sections["Deliverable"] || "";
-  const facts = sections["Facts"] || "";
+  const rawFacts = sections["Facts"] || "";
+  const maxFactsChars = Math.max(200, Math.floor(targetChars * 0.15));
+  const facts =
+    rawFacts.length > maxFactsChars
+      ? rawFacts.slice(0, maxFactsChars - 3).trimEnd() + "..."
+      : rawFacts;
 
   const is3D = /3d|three\.js|webgl|shader|canvas|depth_composite|2_5d|css_motion/i.test(objective);
   const isTeaching = /curious|14-year-old|teach|explain.*to.*(?:child|kid|teen|student|curious|learner)|analogy.*worked example|questions to check understanding/i.test(objective);
@@ -1024,3 +1077,80 @@ Follow the explicit brief wherever it differs from these default working suggest
 
   return padToTarget(md.trim(), targetChars, false, false);
 }
+
+/**
+ * Runtime tier output boundary enforcement.
+ * Guarantees that Free-tier users (or any caller without a verified Pro/Team entitlement)
+ * never receive an output exceeding FREE_TIER_MAX_OUTPUT_CHARS (5,000 characters),
+ * while verified Pro/Team entitlements can emit up to PRO_TIER_MAX_OUTPUT_CHARS (30,000 characters).
+ */
+export function enforceTierOutputLimit(promptText, opts = {}) {
+  if (!promptText || typeof promptText !== "string") return "";
+  const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
+  const hasVerifiedPaidEntitlement = Boolean(
+    entitlement &&
+      entitlement.verified === true &&
+      (entitlement.tier === "pro" || entitlement.tier === "team"),
+  );
+  const subscriptionTier =
+    opts && typeof opts === "object" && opts.subscriptionTier
+      ? opts.subscriptionTier
+      : hasVerifiedPaidEntitlement
+        ? entitlement.tier
+        : "free";
+  const maxAllowed =
+    subscriptionTier === "pro" || subscriptionTier === "team"
+      ? PRO_TIER_MAX_OUTPUT_CHARS
+      : FREE_TIER_MAX_OUTPUT_CHARS;
+
+  if (promptText.length <= maxAllowed) {
+    return promptText;
+  }
+
+  const xmlClosing = "\n</system_prompt>";
+  const localClosing = "\n<</SYS>>\n\nExecute the objective according to the above instructions. [/INST]";
+  if (promptText.endsWith(xmlClosing) && maxAllowed > xmlClosing.length) {
+    return promptText.slice(0, maxAllowed - xmlClosing.length) + xmlClosing;
+  }
+  if (promptText.endsWith(localClosing) && maxAllowed > localClosing.length) {
+    return promptText.slice(0, maxAllowed - localClosing.length) + localClosing;
+  }
+  return promptText.slice(0, maxAllowed);
+}
+
+/**
+ * Compiles a system prompt with strict runtime Free-vs-Pro tier output enforcement.
+ * By default (when no verified Pro/Team entitlement is supplied), enforces the
+ * 5,000-character Free tier ceiling even when given 100,000+ character context inputs.
+ */
+export function compilePromptWithTierEnforcement(raw, opts = {}) {
+  const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
+  const hasVerifiedPaidEntitlement = Boolean(
+    entitlement &&
+      entitlement.verified === true &&
+      (entitlement.tier === "pro" || entitlement.tier === "team"),
+  );
+  const effectiveSubscriptionTier = hasVerifiedPaidEntitlement
+    ? entitlement.tier
+    : (opts && typeof opts === "object" && (opts.subscriptionTier === "pro" || opts.subscriptionTier === "team") && !entitlement)
+      ? opts.subscriptionTier
+      : "free";
+  const effectiveDepthTier =
+    effectiveSubscriptionTier === "free"
+      ? "free"
+      : (opts && typeof opts === "object" && opts.depthTier) || "deep";
+  const synthesized = synthesizeSystemPrompt(raw, {
+    ...(opts && typeof opts === "object" ? opts : {}),
+    subscriptionTier: effectiveSubscriptionTier,
+    depthTier: effectiveDepthTier,
+    maxOutputChars:
+      effectiveSubscriptionTier === "free"
+        ? FREE_TIER_MAX_OUTPUT_CHARS
+        : PRO_TIER_MAX_OUTPUT_CHARS,
+  });
+  return enforceTierOutputLimit(synthesized, {
+    subscriptionTier: effectiveSubscriptionTier,
+    entitlement,
+  });
+}
+

@@ -32,7 +32,6 @@ from .passport import (
     REC0DriftTrigger,
     REC0EnvelopeValidityState,
     REC2_DEFAULT_ORACLE_ID,
-    REC2_DEFAULT_ORACLE_PK_HEX,
     REC2EQualificationMatrixRunner,
     REC2EQualificationReport,
     RecipientEnvironmentContext,
@@ -44,7 +43,7 @@ from .passport import (
     UntrustedMCPImportAdapter,
     canonical_sha256,
     compute_wilson_interval_95,
-    derive_deterministic_ed25519_keypair,
+    generate_keypair,
     sign_passport_evaluator_attestation,
     verify_passport_evaluator_attestation,
 )
@@ -79,7 +78,6 @@ __all__ = [
     "REC0DriftTrigger",
     "REC0EnvelopeValidityState",
     "REC2_DEFAULT_ORACLE_ID",
-    "REC2_DEFAULT_ORACLE_PK_HEX",
     "REC2EQualificationMatrixRunner",
     "REC2EQualificationReport",
     "RecipientEnvironmentContext",
@@ -91,7 +89,7 @@ __all__ = [
     "UntrustedMCPImportAdapter",
     "canonical_sha256",
     "compute_wilson_interval_95",
-    "derive_deterministic_ed25519_keypair",
+    "generate_keypair",
     "sign_passport_evaluator_attestation",
     "verify_passport_evaluator_attestation",
 ]

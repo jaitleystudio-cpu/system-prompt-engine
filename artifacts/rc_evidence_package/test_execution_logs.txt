@@ -1,32 +1,33 @@
 === 1. PYTHON UNIFIED RELEASE-CANDIDATE & REC-2E ED25519 PASSPORT TESTS ===
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python3
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python
 cachedir: .pytest_cache
 rootdir: /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine
 configfile: pyproject.toml
-collecting ... collected 19 items
+collecting ... collected 20 items
 
 tests/unit/test_unified_release_candidate_pipeline.py::test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline PASSED [  5%]
 tests/unit/test_unified_release_candidate_pipeline.py::test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature PASSED [ 10%]
 tests/unit/test_unified_release_candidate_pipeline.py::test_default_wire_proxy_rejects_unsigned_grant PASSED [ 15%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_default_learning_validator_rejects_unregistered_oracle PASSED [ 21%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_rfc8785_canonicalize_published_standard_vectors PASSED [ 26%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_promptfoo_exporter_measured_proofs PASSED [ 31%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_customer_journey_suite PASSED [ 36%]
-tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_1_valid_hash_untrusted_authority_or_privilege_escalation_rejected PASSED [ 42%]
-tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_2_no_inherited_success_across_models_without_requalification PASSED [ 47%]
-tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_3_canarybench_blocks_private_material_and_planted_secrets PASSED [ 52%]
-tests/research/rec2/test_rec2_capability_passport.py::test_untrusted_mcp_import_containment_and_digest_verification PASSED [ 57%]
-tests/research/rec2/test_rec2_capability_passport.py::test_protected_intent_preservation_and_offline_revocation_horizon PASSED [ 63%]
-tests/research/rec2/test_rec2_capability_passport.py::test_expected_cost_gate_abstains_on_trivial_and_identifies_10x_workload PASSED [ 68%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p0_security_real_activation_prompt_injection_nested_skills_manifest_and_post_qual_drift PASSED [ 73%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p0_privacy_bounded_threat_model_encoded_transformed_paraphrased_multistep_and_unapproved_hold PASSED [ 78%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_firewall PASSED [ 84%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p1_cost_model_projected_vs_measured_lifecycle_and_rec0_rec2e_qualification PASSED [ 89%]
-tests/research/rec2/test_rec2_capability_passport.py::test_edge_cases_boundary_values_and_error_paths PASSED [ 94%]
-tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_audit_regressions PASSED [100%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_default_learning_validator_rejects_unregistered_oracle PASSED [ 20%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_rfc8785_canonicalize_published_standard_vectors PASSED [ 25%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_promptfoo_exporter_measured_proofs PASSED [ 30%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_customer_journey_suite PASSED [ 35%]
+tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_1_valid_hash_untrusted_authority_or_privilege_escalation_rejected PASSED [ 40%]
+tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_2_no_inherited_success_across_models_without_requalification PASSED [ 45%]
+tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_3_canarybench_blocks_private_material_and_planted_secrets PASSED [ 50%]
+tests/research/rec2/test_rec2_capability_passport.py::test_untrusted_mcp_import_containment_and_digest_verification PASSED [ 55%]
+tests/research/rec2/test_rec2_capability_passport.py::test_protected_intent_preservation_and_offline_revocation_horizon PASSED [ 60%]
+tests/research/rec2/test_rec2_capability_passport.py::test_expected_cost_gate_abstains_on_trivial_and_identifies_10x_workload PASSED [ 65%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p0_security_real_activation_prompt_injection_nested_skills_manifest_and_post_qual_drift PASSED [ 70%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p0_privacy_bounded_threat_model_encoded_transformed_paraphrased_multistep_and_unapproved_hold PASSED [ 75%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_firewall PASSED [ 80%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p1_cost_model_projected_vs_measured_lifecycle_and_rec0_rec2e_qualification PASSED [ 85%]
+tests/research/rec2/test_rec2_capability_passport.py::test_edge_cases_boundary_values_and_error_paths PASSED [ 90%]
+tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_audit_regressions PASSED [ 95%]
+tests/research/rec2/test_rec2_capability_passport.py::test_audit_finding_b_rec2_key_hygiene_pinning_and_envelope_field_binding PASSED [100%]
 
-============================= 19 passed in 20.18s ==============================
+============================= 20 passed in 19.73s ==============================
 
 === 2. WEB PROOF ENGINE & PRODUCER SIGNATURE TESTS ===
 ================================================================================
@@ -47,8 +48,9 @@ tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_au
   ✓ Hostile Gym Ω verified: Fortified Mutation Kill Rate = 1024/1024 (100.0%) across 16 attack families.
   ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
 
-[5/5] Validating Proof Receipt Protocol & JCS Canonicalization...
-  ✓ Proof Receipt verified: Digest = b4eab3672f6496087add9fee97630eb04578e0012b4f752981cb0bdd7e9f9e55
+[5/5] Validating Proof Receipt Protocol, Cryptographic Attestations & JCS Canonicalization...
+  ✓ Proof Receipt verified: Digest = 2edd6c8c615f5a7bb6f673dbad59d2d40df5f38a43f8e7fcf940a1f296130d92
+  ✓ Signed NetworkObservationAttestation, LiveEvaluationAttestation & Ed25519 Producer Verification passed.
   ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
 
 ================================================================================
@@ -74,8 +76,8 @@ tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_au
 [5/7] Validating invalid receipt halts downstream evaluation before any provider call...
 ✓ Invalid receipt stops downstream evaluation with 0 provider calls; valid receipt passes each input to model.
 
-[6/7] Risk A Closure: Validating Ed25519 producer authentication & static-vs-live experimental validity...
-✓ Ed25519 producer signature verification and static-vs-live experimental validity separation verified.
+[6/7] Risk A & Finding C Closure: Validating Ed25519 producer authentication & signed attestations...
+✓ Ed25519 producer signature verification, signed NetworkObservationAttestation, and static-vs-live validity separation verified.
 
 [7/7] Risk B Closure: Writing & executing assertions from the actual exported promptfooconfig.yaml file...
 ✓ Exported promptfooconfig.yaml written to disk, parsed, and verified against passing and failing model outputs.
@@ -89,11 +91,11 @@ tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_au
 🧭 TESTING: SPE Ω Full Web-App Customer Journey (Risk C Closure)
 ==================================================================
 
-[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist & 100k/5k Copy Reconciliation...
-✓ Pricing tiers ($0 / $1->$9 / $9->$99), signed entitlement token security, and 100k/5k copy verified.
+[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security, Server Webhook Authority & 5,000-Char Free Output Cap...
+✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.
 
-[2/4] Verifying all 6 customer export formats via formatForAgent()...
-✓ All 6 customer export artifacts generated, verified, and saved to artifacts/rc_evidence_package/customer_exports/.
+[2/4] Verifying all 6 customer export formats and runtime 5,000-char Free-tier output limit...
+✓ All 6 customer export artifacts and 5,000-char Free vs 30,000-char Pro runtime limits verified.
 
 [3/4] Verifying Canonical WebAssembly Zero-Import Sandbox & Live Execution...
 ✓ Canonical WASM verified (1,339,691 bytes, imports=0, sha256=ac3f0c3ecb19a756...).
@@ -106,7 +108,6 @@ tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_au
 ==================================================================
 
 === 5. COPY CHECK GATE ===
-
 > spe-web@0.3.0 spe:copy-check
 > node ../../tools/copy-check.mjs
 

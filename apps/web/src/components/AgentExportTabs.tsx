@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { copyTextSafe } from "../engine/workflows/clipboard";
 import { generatePromptfooConfig } from "../engine/promptfooExporter";
+import { enforceTierOutputLimit } from "../engine/promptSynthesizer.mjs";
 
 export type AgentFormatId =
   | "standard"
@@ -26,34 +27,58 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
   { id: "promptfoo", label: "promptfoo.yaml", filename: "promptfooconfig.yaml", badge: "CI/CD Eval" },
 ];
 
+export interface AgentFormatOptions {
+  subscriptionTier?: "free" | "pro" | "team";
+  entitlement?: { verified: boolean; tier: "free" | "pro" | "team" } | null;
+  enforceTierLimit?: boolean;
+}
+
 export function formatForAgent(
   rawPrompt: string,
   format: AgentFormatId,
-  category = "General"
+  category = "General",
+  options: AgentFormatOptions = {},
 ): { content: string; filename: string } {
+  const shouldEnforceLimit =
+    Boolean(options.enforceTierLimit) ||
+    Boolean(options.subscriptionTier) ||
+    Boolean(options.entitlement);
+  const boundedPrompt = shouldEnforceLimit
+    ? enforceTierOutputLimit(rawPrompt, options)
+    : rawPrompt;
+
   switch (format) {
     case "claude": {
-      const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\n## Role & Core Guidelines\n${rawPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
-      return { content, filename: "CLAUDE.md" };
+      const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\n## Role & Core Guidelines\n${boundedPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
+      return {
+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
+        filename: "CLAUDE.md",
+      };
     }
     case "cursor": {
-      const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\nYou are an expert developer operating under strict zero-drift guidelines.\n\n${rawPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
-      return { content, filename: ".cursorrules" };
+      const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\nYou are an expert developer operating under strict zero-drift guidelines.\n\n${boundedPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
+      return {
+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
+        filename: ".cursorrules",
+      };
     }
     case "windsurf": {
-      const content = `# .windsurfrules — Cascade Agent Directives\n# Compiled by System Prompt Engine (SPE Ω)\n\n${rawPrompt}\n`;
-      return { content, filename: ".windsurfrules" };
+      const content = `# .windsurfrules — Cascade Agent Directives\n# Compiled by System Prompt Engine (SPE Ω)\n\n${boundedPrompt}\n`;
+      return {
+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
+        filename: ".windsurfrules",
+      };
     }
     case "chatgpt": {
-      return { content: rawPrompt, filename: "custom-gpt-instructions.txt" };
+      return { content: boundedPrompt, filename: "custom-gpt-instructions.txt" };
     }
     case "promptfoo": {
-      const bundle = generatePromptfooConfig(rawPrompt, { projectName: `spe-${category.toLowerCase()}-eval` });
+      const bundle = generatePromptfooConfig(boundedPrompt, { projectName: `spe-${category.toLowerCase()}-eval` });
       return { content: bundle.yamlConfig, filename: "promptfooconfig.yaml" };
     }
     case "standard":
     default: {
-      return { content: rawPrompt, filename: "system-prompt.md" };
+      return { content: boundedPrompt, filename: "system-prompt.md" };
     }
   }
 }

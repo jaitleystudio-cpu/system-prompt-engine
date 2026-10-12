@@ -23,11 +23,18 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "../node_modules/esbuild/lib/main.js";
 
+import * as entitlementVerifierMod from "../src/engine/entitlementVerifier.ts";
 import {
-  issueSignedEntitlementToken,
   verifySignedEntitlementToken,
   createPublicBetaWaitlistReservation,
 } from "../src/engine/entitlementVerifier.ts";
+import { AuthoritativeBillingAuthority } from "../src/server/billingAuthority.ts";
+import {
+  FREE_TIER_MAX_OUTPUT_CHARS,
+  PRO_TIER_MAX_OUTPUT_CHARS,
+  synthesizeSystemPrompt,
+  compilePromptWithTierEnforcement,
+} from "../src/engine/promptSynthesizer.mjs";
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = join(webRoot, "../..");
@@ -41,10 +48,33 @@ console.log("=================================================================="
 // -----------------------------------------------------------------------------
 // 1. Pricing, Signed Entitlement Verification & Waitlist Security Journey
 // -----------------------------------------------------------------------------
-console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist & 100k/5k Copy Reconciliation...");
+console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security, Server Webhook Authority & 5,000-Char Free Output Cap...");
 {
   const pricingSource = readFileSync(join(webRoot, "src/pages/Pricing.tsx"), "utf8");
   const deckSource = readFileSync(join(webRoot, "src/landing/SpeCapabilityDeck.tsx"), "utf8");
+  const verifierSource = readFileSync(join(webRoot, "src/engine/entitlementVerifier.ts"), "utf8");
+
+  // Finding A Closure: Verify client bundle has NO signing secret or token-issuance functions
+  assert.equal(
+    "issueSignedEntitlementToken" in entitlementVerifierMod,
+    false,
+    "entitlementVerifier.ts must NOT export issueSignedEntitlementToken to client code",
+  );
+  assert.equal(
+    "computeEntitlementCommitmentSignature" in entitlementVerifierMod,
+    false,
+    "entitlementVerifier.ts must NOT export computeEntitlementCommitmentSignature to client code",
+  );
+  assert.equal(
+    "DEFAULT_DEV_AUTHORITY_DOMAIN_SALT" in entitlementVerifierMod,
+    false,
+    "entitlementVerifier.ts must NOT export DEFAULT_DEV_AUTHORITY_DOMAIN_SALT",
+  );
+  assert(
+    !verifierSource.includes("DEFAULT_DEV_AUTHORITY_DOMAIN_SALT") &&
+      !verifierSource.includes("issueSignedEntitlementToken"),
+    "entitlementVerifier.ts source must contain zero signing secrets or client token minting functions",
+  );
 
   // Finding 1 Closure: Ensure Pricing.tsx NEVER self-mints paid licenses via Math.random()
   assert(
@@ -105,7 +135,7 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist & 
   assert.equal(reservation.status, "PUBLIC_BETA_WAITLIST_RESERVED");
   assert.equal(reservation.paidEntitlementGranted, false, "Waitlist reservation must never grant paid entitlement");
 
-  // Step B: Self-minted browser random string (`SPE-PRO-XXXX-XXXX-XXXX`) MUST be rejected
+  // Step B: Self-minted browser random string (`SPE-PRO-XXXX-XXXX-XXXX`) or legacy V1 token MUST be rejected
   const selfMintedCheck = verifySignedEntitlementToken("SPE-PRO-9A8B-7C6D-5E4F");
   assert.equal(selfMintedCheck.verified, false, "Self-minted random license string must be rejected");
   assert(
@@ -113,29 +143,81 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist & 
     "Rejection reason must identify self-minted unverified key",
   );
 
-  // Step C: Valid server-issued signed entitlement token for Developer Pro verifies cleanly
-  const validProToken = issueSignedEntitlementToken({
-    schema: "spe.entitlement.v1",
+  // Step C: Server-side AuthoritativeBillingAuthority webhook verification & Ed25519 token issuance
+  const billingAuthority = new AuthoritativeBillingAuthority();
+  const authorityPubKeys = { [billingAuthority.issuerKeyId]: billingAuthority.publicKeyHex };
+
+  // Attempt to issue token BEFORE payment webhook confirmation MUST throw
+  assert.throws(
+    () =>
+      billingAuthority.issueSignedEntitlementTokenForPaidReceipt(
+        "pay_rcpt_unconfirmed_999",
+        1_791_750_000_000,
+      ),
+    /CANNOT_ISSUE_ENTITLEMENT_FOR_UNKNOWN_RECEIPT/,
+    "Server authority must refuse to mint entitlement token without confirmed payment receipt",
+  );
+
+  // Tampered payment webhook signature MUST be rejected
+  const paymentEvent = {
+    eventId: "evt_pay_001",
+    eventType: "payment.succeeded",
+    paymentReceiptId: "pay_rcpt_2026_pro_001",
+    subscriptionId: "sub_2026_pro_001",
     tier: "pro",
     planName: "Developer Pro ($1 First Month · then $9/mo)",
     email: "dev@example.com",
-    paymentReceiptId: "pay_rcpt_2026_pro_001",
-    issuedAtMs: 1_791_750_000_000,
+    amountCents: 100,
+    currency: "USD",
+    occurredAtMs: 1_791_750_000_000,
     expiresAtMs: 1_891_750_000_000,
-    issuerKeyId: "spe-billing-authority-v1",
+  };
+  assert.throws(
+    () => billingAuthority.processVerifiedPaymentWebhook(paymentEvent, "00".repeat(32)),
+    /INVALID_PAYMENT_WEBHOOK_SIGNATURE/,
+    "Tampered webhook signature must be rejected by server billing authority",
+  );
+
+  // Valid payment webhook registers active payment receipt and enables Ed25519 token issuance
+  const validWebhookSig = billingAuthority.signWebhookPayload(paymentEvent);
+  const receiptRecord = billingAuthority.processVerifiedPaymentWebhook(paymentEvent, validWebhookSig);
+  assert.equal(receiptRecord.paid, true);
+  assert.equal(receiptRecord.subscriptionStatus, "ACTIVE");
+
+  const validProToken = billingAuthority.issueSignedEntitlementTokenForPaidReceipt(
+    "pay_rcpt_2026_pro_001",
+    1_791_750_000_000,
+  );
+
+  // Verifying WITHOUT authoritativeReceiptVerifier callback MUST fail (prevents offline replay without receipt check)
+  const missingReceiptVerifierCheck = verifySignedEntitlementToken(validProToken, {
+    expectedEmail: "dev@example.com",
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: authorityPubKeys,
   });
+  assert.equal(missingReceiptVerifierCheck.verified, false, "Must reject token when authoritativeReceiptVerifier is not provided");
+  assert(
+    missingReceiptVerifierCheck.rejectionReason?.includes("AUTHORITATIVE_RECEIPT_VERIFICATION_REQUIRED"),
+    "Must require authoritative receipt verification",
+  );
+
+  // Verifying WITH Ed25519 public key + authoritativeReceiptVerifier succeeds
   const verifiedPro = verifySignedEntitlementToken(validProToken, {
     expectedEmail: "dev@example.com",
     currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: authorityPubKeys,
+    authoritativeReceiptVerifier: billingAuthority.createAuthoritativeReceiptVerifier(),
   });
-  assert.equal(verifiedPro.verified, true, "Valid server-signed Pro token must verify");
+  assert.equal(verifiedPro.verified, true, "Valid server-signed Ed25519 Pro token with active payment receipt must verify");
   assert.equal(verifiedPro.tier, "pro");
 
-  // Step D: Forged signature on entitlement token MUST be rejected
+  // Step D: Forged signature on entitlement token MUST be rejected by Ed25519 verifier
   const forgedToken = validProToken.slice(0, -4) + (validProToken.endsWith("0000") ? "ffff" : "0000");
   const forgedCheck = verifySignedEntitlementToken(forgedToken, {
     expectedEmail: "dev@example.com",
     currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: authorityPubKeys,
+    authoritativeReceiptVerifier: billingAuthority.createAuthoritativeReceiptVerifier(),
   });
   assert.equal(forgedCheck.verified, false, "Forged entitlement token signature must be rejected");
   assert.equal(forgedCheck.rejectionReason, "INVALID_ENTITLEMENT_SIGNATURE");
@@ -144,17 +226,42 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist & 
   const expiredCheck = verifySignedEntitlementToken(validProToken, {
     expectedEmail: "dev@example.com",
     currentEpochMs: 1_991_760_000_000,
+    trustedIssuerPublicKeys: authorityPubKeys,
+    authoritativeReceiptVerifier: billingAuthority.createAuthoritativeReceiptVerifier(),
   });
   assert.equal(expiredCheck.verified, false, "Expired entitlement token must be rejected");
   assert.equal(expiredCheck.rejectionReason, "EXPIRED_ENTITLEMENT_TOKEN");
 
-  console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), signed entitlement token security, and 100k/5k copy verified.");
+  // Step F: Canceled or revoked subscription via webhook immediately invalidates previously issued token
+  const cancelEvent = {
+    ...paymentEvent,
+    eventId: "evt_cancel_002",
+    eventType: "subscription.canceled",
+    occurredAtMs: 1_791_755_000_000,
+  };
+  billingAuthority.processVerifiedPaymentWebhook(
+    cancelEvent,
+    billingAuthority.signWebhookPayload(cancelEvent),
+  );
+  const canceledCheck = verifySignedEntitlementToken(validProToken, {
+    expectedEmail: "dev@example.com",
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: authorityPubKeys,
+    authoritativeReceiptVerifier: billingAuthority.createAuthoritativeReceiptVerifier(),
+  });
+  assert.equal(canceledCheck.verified, false, "Canceled subscription must immediately invalidate token");
+  assert(
+    canceledCheck.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED"),
+    "Canceled subscription rejection reason must be explicit",
+  );
+
+  console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.");
 }
 
 // -----------------------------------------------------------------------------
-// 2. Customer 6-Format Export Journey (`AgentExportTabs.tsx`)
+// 2. Customer 6-Format Export Journey & Runtime 5,000-Char Free Cap (`AgentExportTabs.tsx`)
 // -----------------------------------------------------------------------------
-console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent()...");
+console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-char Free-tier output limit...");
 {
   const bundle = await build({
     entryPoints: [join(webRoot, "src/components/AgentExportTabs.tsx")],
@@ -169,6 +276,85 @@ console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent(
   });
   const exportMod = await import(
     `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`
+  );
+
+  // Finding D Closure: Verify 100,000+ character context input is accepted, while Free tier output is capped at <= 5,000 chars
+  assert.equal(FREE_TIER_MAX_OUTPUT_CHARS, 5000, "FREE_TIER_MAX_OUTPUT_CHARS must be 5,000");
+  assert.equal(PRO_TIER_MAX_OUTPUT_CHARS, 30000, "PRO_TIER_MAX_OUTPUT_CHARS must be 30,000");
+
+  const oneLakhContextInput =
+    "Build a zero-trust distributed payment ledger microservice in Rust and TypeScript. " +
+    "Include strict schema validation, idempotency keys, dead-letter queue recovery, and audit logging.\n" +
+    "Context Specification Block:\n" +
+    "A".repeat(105_000);
+  assert(oneLakhContextInput.length >= 100_000, "Input context must exceed 100,000 characters (1 Lakh+)");
+
+  // Unauthenticated / Free-tier synthesis MUST cap output at <= 5,000 characters even when depthTier='deep' is requested
+  const freeTierCompiled = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    entitlement: null,
+  });
+  assert.equal(typeof freeTierCompiled, "string");
+  assert(
+    freeTierCompiled.length <= 5000,
+    `Free-tier compiled output length (${freeTierCompiled.length}) must be <= 5,000 chars`,
+  );
+
+  // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
+  const directFreePrompt = synthesizeSystemPrompt(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    subscriptionTier: "free",
+  });
+  assert(
+    directFreePrompt.length <= 5000,
+    `synthesizeSystemPrompt with subscriptionTier='free' (${directFreePrompt.length}) must be <= 5,000 chars`,
+  );
+
+  // Verified Pro entitlement unlocks up to 30,000-char deep synthesis output
+  const proBilling = new AuthoritativeBillingAuthority();
+  const proEvent = {
+    eventId: "evt_pay_pro_002",
+    eventType: "payment.succeeded",
+    paymentReceiptId: "pay_rcpt_pro_deep_002",
+    subscriptionId: "sub_pro_deep_002",
+    email: "architect@example.com",
+    tier: "pro",
+    planName: "Developer Pro ($1 First Month · then $9/mo)",
+    amountCents: 900,
+    currency: "USD",
+    occurredAtMs: 1_791_750_000_000,
+    expiresAtMs: 1_891_750_000_000,
+  };
+  proBilling.processVerifiedPaymentWebhook(proEvent, proBilling.signWebhookPayload(proEvent));
+  const proToken = proBilling.issueSignedEntitlementTokenForPaidReceipt(
+    "pay_rcpt_pro_deep_002",
+    1_791_750_000_000,
+  );
+  const verifiedProEnt = verifySignedEntitlementToken(proToken, {
+    expectedEmail: "architect@example.com",
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
+    authoritativeReceiptVerifier: proBilling.createAuthoritativeReceiptVerifier(),
+  });
+  const proTierCompiled = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    entitlement: verifiedProEnt,
+  });
+  assert(
+    proTierCompiled.length > 5000 && proTierCompiled.length <= 30000,
+    `Verified Pro output length (${proTierCompiled.length}) must exceed 5,000 and be <= 30,000 chars`,
+  );
+
+  // Verify formatForAgent also enforces <= 5,000 chars on Free tier when given an oversized prompt
+  const oversizedExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend", {
+    subscriptionTier: "free",
+  });
+  assert(
+    oversizedExportOnFree.content.length <= 5000,
+    `formatForAgent with subscriptionTier='free' (${oversizedExportOnFree.content.length}) must be <= 5,000 chars`,
   );
 
   const customerPrompt = `# System Role & Persona
@@ -207,12 +393,12 @@ Design and validate REST APIs returning strict JSON schemas.
   ];
 
   for (const fmt of expectedFormats) {
-    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend");
+    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend", { subscriptionTier: "pro" });
     assert.equal(out.filename, fmt.filename, `Filename mismatch for ${fmt.id}`);
     assert(out.content.includes(fmt.mustContain), `Export ${fmt.id} missing expected content: ${fmt.mustContain}`);
     writeFileSync(join(customerExportsDir, out.filename), out.content, "utf8");
   }
-  console.log("✓ All 6 customer export artifacts generated, verified, and saved to artifacts/rc_evidence_package/customer_exports/.");
+  console.log("✓ All 6 customer export artifacts and 5,000-char Free vs 30,000-char Pro runtime limits verified.");
 }
 
 // -----------------------------------------------------------------------------

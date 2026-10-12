@@ -3,7 +3,7 @@
 # Spec: https://www.promptfoo.dev/docs/configuration/guide/
 # Zero-Egress Upstream Compiler: System Prompt Engine (SPE)
 # spe_prompt_sha256: "982b11cab95dd5846d7abcd94c3d9a7f06509ade6661af1d04eaae3a8b246b8b"
-# spe_receipt_digest: "5025f77ae38a50f0a783bd095b99f4f197082362a58cc996227adcdfbe4cdd79"
+# spe_receipt_digest: "b7003d7722fee548f03e43c8ef36239d2c9d1f908f178fd31129a6a39986b968"
 # spe_receipt_authenticity: "SELF_GENERATED_SHA256_DIGEST"
 # spe_type_check_passed: true
 # spe_measured_errors: 0

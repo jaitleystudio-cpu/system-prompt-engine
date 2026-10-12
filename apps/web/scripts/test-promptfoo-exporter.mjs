@@ -19,6 +19,8 @@ import {
 import {
   attachProducerSignature,
   verifyProofReceiptAuthenticity,
+  issueNetworkObservationAttestation,
+  issueLiveEvaluationAttestation,
 } from "../src/engine/proofReceipt.ts";
 import { immunizeAgainstHostileGrammar } from "../src/engine/hostileGymOmega.ts";
 
@@ -151,8 +153,8 @@ assert.equal(validEval.providerCallsCount, 2, "Valid receipt must execute all 2 
 assert.equal(providerInvocations, 2, "Provider callback invoked once per test input");
 console.log("✓ Invalid receipt stops downstream evaluation with 0 provider calls; valid receipt passes each input to model.");
 
-// Risk A Closure: Producer Authentication (Ed25519) & Experimental Validity Classification
-console.log("\n[6/7] Risk A Closure: Validating Ed25519 producer authentication & static-vs-live experimental validity...");
+// Risk A & Finding C Closure: Producer Authentication (Ed25519), Signed Attestations & Experimental Validity Classification
+console.log("\n[6/7] Risk A & Finding C Closure: Validating Ed25519 producer authentication & signed attestations...");
 assert.equal(bundle.proofReceipt.evidenceProvenance.selfGeneratedAssertionOnly, true, "Unsigned local receipt must mark selfGeneratedAssertionOnly: true");
 assert.equal(bundle.proofReceipt.hardGates.zeroEgressObserved, false, "Unsigned static receipt without telemetry observer must mark zeroEgressObserved: false");
 assert.equal(bundle.proofReceipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Static unobserved status must be explicit");
@@ -185,12 +187,34 @@ const signedReceipt = attachProducerSignature(
 );
 assert.equal(signedReceipt.evidenceProvenance.selfGeneratedAssertionOnly, false, "Producer-signed receipt transitions selfGeneratedAssertionOnly to false");
 
+// Finding C1: Bare zeroEgressNetworkObserved boolean without signed NetworkObservationAttestation MUST NOT set zeroEgressObserved
+const bareBooleanExportBundle = generatePromptfooConfig(fortifiedPrompt, {
+  projectName: "spe-unit-test-eval",
+  zeroEgressNetworkObserved: true,
+});
+assert.equal(bareBooleanExportBundle.proofReceipt.hardGates.zeroEgressObserved, false, "Bare boolean zeroEgressNetworkObserved must NOT set zeroEgressObserved");
+
+// Issue signed NetworkObservationAttestation for the compiled prompt
+const netAttestation = issueNetworkObservationAttestation(
+  {
+    harnessId: "spe-wire-proxy-observer-v1",
+    observerPublicKeyHex: pubDerHex,
+    candidateHash: bundle.promptHash,
+    observedOutboundConnections: 0,
+    observedOutboundBytes: 0,
+    captureWindowStartIso: "2026-10-12T00:00:00Z",
+    captureWindowEndIso: "2026-10-12T00:00:05Z",
+  },
+  signDigestFn,
+);
+
 const signedExportBundle = generatePromptfooConfig(fortifiedPrompt, {
   projectName: "spe-unit-test-eval",
   providers: ["openai:gpt-4o", "anthropic:claude-3-5-sonnet"],
   maxLatencyMs: 2000,
   includeRedteam: true,
-  zeroEgressNetworkObserved: true,
+  networkObservationAttestation: netAttestation,
+  trustedObserverKeys: { "spe-wire-proxy-observer-v1": pubDerHex },
   producerSigner: {
     producerKeyId: "spe-ci-authority-ed25519",
     producerPublicKeyHex: pubDerHex,
@@ -201,15 +225,34 @@ assert.equal(signedExportBundle.proofReceipt.evidenceProvenance.selfGeneratedAss
 assert.equal(signedExportBundle.proofReceipt.hardGates.zeroEgressObserved, true);
 assert(signedExportBundle.yamlConfig.includes('spe_receipt_authenticity: "PRODUCER_SIGNED_AUTHENTICATED"'));
 
-const verifyEd25519Fn = (canonicalDigestHex, signatureHex, publicKeyHex) => {
-  const pubObj = createPublicKey({ key: Buffer.from(publicKeyHex, "hex"), format: "der", type: "spki" });
-  return verify(null, Buffer.from(canonicalDigestHex, "utf8"), pubObj, Buffer.from(signatureHex, "hex"));
+// Finding C3: verifyPromptfooExportBundle MUST verify producer signature & attestation authenticity
+const verifiedSignedBundle = verifyPromptfooExportBundle(signedExportBundle, fortifiedPrompt, {
+  requireAuthenticatedProducer: true,
+  trustedProducerKeys: { "spe-ci-authority-ed25519": pubDerHex },
+  trustedObserverKeys: { "spe-wire-proxy-observer-v1": pubDerHex },
+});
+assert.equal(verifiedSignedBundle.verified, true, `Signed bundle must pass verifyPromptfooExportBundle: ${verifiedSignedBundle.reasons.join(", ")}`);
+
+// Tamper with producerSignatureHex inside signedExportBundle and verify verifyPromptfooExportBundle rejects it
+const forgedSigBundle = {
+  ...signedExportBundle,
+  proofReceipt: {
+    ...signedExportBundle.proofReceipt,
+    evidenceProvenance: {
+      ...signedExportBundle.proofReceipt.evidenceProvenance,
+      producerSignatureHex: "00".repeat(64),
+    },
+  },
 };
+const forgedBundleCheck = verifyPromptfooExportBundle(forgedSigBundle, fortifiedPrompt, {
+  requireAuthenticatedProducer: true,
+  trustedProducerKeys: { "spe-ci-authority-ed25519": pubDerHex },
+});
+assert.equal(forgedBundleCheck.verified, false, "verifyPromptfooExportBundle must reject forged producer signature");
 
 const trustedAuthCheck = verifyProofReceiptAuthenticity(signedReceipt, {
   requireAuthenticatedProducer: true,
   trustedProducerKeys: { "spe-ci-authority-ed25519": pubDerHex },
-  verifySignatureFn: verifyEd25519Fn,
 });
 assert.equal(trustedAuthCheck.integrityVerified, true, "Signed receipt SHA-256 JCS digest must verify");
 assert.equal(trustedAuthCheck.producerAuthenticated, true, "Ed25519 signature from trusted producer must verify");
@@ -220,10 +263,9 @@ const untrustedPubHex = untrustedKeyPair.publicKey.export({ type: "spki", format
 const untrustedAuthCheck = verifyProofReceiptAuthenticity(signedReceipt, {
   requireAuthenticatedProducer: true,
   trustedProducerKeys: { "spe-ci-authority-ed25519": untrustedPubHex },
-  verifySignatureFn: verifyEd25519Fn,
 });
 assert.equal(untrustedAuthCheck.producerAuthenticated, false, "Key mismatch must reject producer authentication");
-console.log("✓ Ed25519 producer signature verification and static-vs-live experimental validity separation verified.");
+console.log("✓ Ed25519 producer signature verification, signed NetworkObservationAttestation, and static-vs-live validity separation verified.");
 
 // Risk B Closure: Write & Validate the Customer's Actual Exported Artifact Files
 console.log("\n[7/7] Risk B Closure: Writing & executing assertions from the actual exported promptfooconfig.yaml file...");

@@ -3,7 +3,15 @@ import { typeCheckPrompt, DIAGNOSTIC_CODES } from "../src/engine/promptTypeSyste
 import { buildSandboxedRetrievalBlock } from "../src/engine/retrievalFirewall.ts";
 import { evaluateCounterfactualTwin } from "../src/engine/counterfactualTwin.ts";
 import { runHostileGymOmega, immunizeAgainstHostileGrammar } from "../src/engine/hostileGymOmega.ts";
-import { generateProofReceipt, canonicalizeJson } from "../src/engine/proofReceipt.ts";
+import {
+  generateProofReceipt,
+  canonicalizeJson,
+  issueNetworkObservationAttestation,
+  issueLiveEvaluationAttestation,
+  attachProducerSignature,
+  verifyProofReceiptAuthenticity,
+} from "../src/engine/proofReceipt.ts";
+import { generateKeyPairSync, sign, createPrivateKey } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -100,8 +108,8 @@ assert.strictEqual(gymReport.criticalFailures, 0, "Hardened prompt must have 0 c
 console.log(`  ✓ Hostile Gym Ω verified: Fortified Mutation Kill Rate = ${gymReport.totalKilledCount}/${gymReport.totalAttacksEvaluated} (${(gymReport.mutationKillRate * 100).toFixed(1)}%) across 16 attack families.`);
 console.log(`  ✓ Metamorphic Lab verified: ${gymReport.metamorphicPassCount}/31 relations satisfied (0 critical failures).`);
 
-// 5. Proof Receipt Protocol & JCS Canonicalization
-console.log("\n[5/5] Validating Proof Receipt Protocol & JCS Canonicalization...");
+// 5. Proof Receipt Protocol, Signed Attestations & JCS Canonicalization
+console.log("\n[5/5] Validating Proof Receipt Protocol, Cryptographic Attestations & JCS Canonicalization...");
 const receipt = generateProofReceipt(vulnerablePrompt, fortifiedPrompt, twinReport, gymReport);
 assert(receipt.receiptDigest.length === 64, "Receipt digest must be valid SHA-256 hex string");
 assert.strictEqual(receipt.hardGates.protectedIntentPreserved, true, "Hard gates: intent preserved");
@@ -110,24 +118,120 @@ assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zer
 assert.strictEqual(receipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Hard gates: honest static unobserved status");
 assert.strictEqual(receipt.evidenceProvenance.selfGeneratedAssertionOnly, true, "Unsigned local receipt must mark selfGeneratedAssertionOnly: true");
 
+// Finding C1 & C2: Bare boolean zeroEgressNetworkObserved or bare liveModelCallsExecuted MUST be ignored without signed attestations
+const bareSpoofReceipt = generateProofReceipt(
+  vulnerablePrompt,
+  fortifiedPrompt,
+  twinReport,
+  gymReport,
+  "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  {
+    zeroEgressNetworkObserved: true,
+    liveModelCallsExecuted: 10,
+    liveProvidersEvaluated: ["openai:gpt-4o"],
+  },
+);
+assert.strictEqual(bareSpoofReceipt.hardGates.zeroEgressObserved, false, "Bare boolean zeroEgressNetworkObserved must NOT set zeroEgressObserved without signed NetworkObservationAttestation");
+assert.strictEqual(bareSpoofReceipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Bare boolean must remain STATIC_IN_PROCESS_ONLY_UNOBSERVED");
+assert.strictEqual(bareSpoofReceipt.evidenceProvenance.measurementClass, "DETERMINISTIC_STATIC_AND_RULE_MATRIX", "Bare numbers/arrays must NOT set LIVE_MODEL_EMPIRICAL_EVAL without signed LiveEvaluationAttestation");
+
+// Issue cryptographically signed Ed25519 NetworkObservationAttestation and LiveEvaluationAttestation
+const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+const pubDerHex = publicKey.export({ type: "spki", format: "der" }).toString("hex");
+const privDerHex = privateKey.export({ type: "pkcs8", format: "der" }).toString("hex");
+const signDigestFn = (canonicalDigestHex) => {
+  const keyObj = createPrivateKey({ key: Buffer.from(privDerHex, "hex"), format: "der", type: "pkcs8" });
+  return sign(null, Buffer.from(canonicalDigestHex, "utf8"), keyObj).toString("hex");
+};
+
+const netAttestation = issueNetworkObservationAttestation(
+  {
+    harnessId: "spe-wire-proxy-observer-v1",
+    observerPublicKeyHex: pubDerHex,
+    candidateHash: receipt.candidateHash,
+    observedOutboundConnections: 0,
+    observedOutboundBytes: 0,
+    captureWindowStartIso: "2026-10-12T00:00:00Z",
+    captureWindowEndIso: "2026-10-12T00:00:05Z",
+  },
+  signDigestFn,
+);
+
+const liveAttestation = issueLiveEvaluationAttestation(
+  {
+    harnessId: "spe-live-eval-harness-v1",
+    evaluatorPublicKeyHex: pubDerHex,
+    candidateHash: receipt.candidateHash,
+    transcriptEntries: [
+      {
+        caseId: "case-01",
+        providerId: "openai:gpt-4o",
+        promptSha256: receipt.candidateHash,
+        responseSha256: "a".repeat(64),
+        latencyMs: 112,
+      },
+      {
+        caseId: "case-02",
+        providerId: "anthropic:claude-3-7-sonnet",
+        promptSha256: receipt.candidateHash,
+        responseSha256: "b".repeat(64),
+        latencyMs: 138,
+      },
+    ],
+  },
+  signDigestFn,
+);
+
 const observedReceipt = generateProofReceipt(
   vulnerablePrompt,
   fortifiedPrompt,
   twinReport,
   gymReport,
   "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
-  { zeroEgressNetworkObserved: true },
+  {
+    networkObservationAttestation: netAttestation,
+    trustedObserverKeys: { "spe-wire-proxy-observer-v1": pubDerHex },
+    liveEvaluationAttestation: liveAttestation,
+    trustedEvaluatorKeys: { "spe-live-eval-harness-v1": pubDerHex },
+  },
 );
-assert.strictEqual(observedReceipt.hardGates.zeroEgressObserved, true, "Hard gates: zero egress observed when telemetry observer confirms");
+assert.strictEqual(observedReceipt.hardGates.zeroEgressObserved, true, "Hard gates: zero egress observed when signed NetworkObservationAttestation verifies");
 assert.strictEqual(observedReceipt.hardGates.zeroEgressStatus, "OBSERVED_ZERO_EGRESS", "Hard gates: observed zero egress status");
+assert.strictEqual(observedReceipt.evidenceProvenance.measurementClass, "LIVE_MODEL_EMPIRICAL_EVAL", "Signed LiveEvaluationAttestation transitions measurementClass to LIVE_MODEL_EMPIRICAL_EVAL");
+
+// Finding C3: attachProducerSignature MUST reject forged non-Ed25519 signatures
+assert.throws(
+  () => attachProducerSignature(observedReceipt, "spe-ci-authority", pubDerHex, () => "00".repeat(64)),
+  /signature failed RFC 8032 Ed25519/,
+  "attachProducerSignature must throw on forged signature",
+);
+
+const signedObservedReceipt = attachProducerSignature(
+  observedReceipt,
+  "spe-ci-authority",
+  pubDerHex,
+  signDigestFn,
+);
+const fullAuthReport = verifyProofReceiptAuthenticity(signedObservedReceipt, {
+  requireAuthenticatedProducer: true,
+  requireLiveModelEmpiricalEval: true,
+  trustedProducerKeys: { "spe-ci-authority": pubDerHex },
+  trustedObserverKeys: { "spe-wire-proxy-observer-v1": pubDerHex },
+  trustedEvaluatorKeys: { "spe-live-eval-harness-v1": pubDerHex },
+});
+assert.strictEqual(fullAuthReport.integrityVerified, true);
+assert.strictEqual(fullAuthReport.producerAuthenticated, true);
+assert.strictEqual(fullAuthReport.experimentalValidityVerified, true);
 
 // Verify JCS Canonicalization key sorting
 const testObj1 = { z: 1, a: 2, m: { y: 3, b: 4 } };
 const testObj2 = { a: 2, z: 1, m: { b: 4, y: 3 } };
 assert.strictEqual(canonicalizeJson(testObj1), canonicalizeJson(testObj2), "JCS must produce bit-identical serializations regardless of key insertion order");
 console.log(`  ✓ Proof Receipt verified: Digest = ${receipt.receiptDigest}`);
+console.log(`  ✓ Signed NetworkObservationAttestation, LiveEvaluationAttestation & Ed25519 Producer Verification passed.`);
 console.log(`  ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.`);
 
 console.log("\n================================================================================");
 console.log("🌟 ALL SPE Ω PROOF-CENTRIC MODULES PASSED WITH 100% SUCCESS!");
 console.log("================================================================================");
+

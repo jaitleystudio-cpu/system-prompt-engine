@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { synthesizeSystemPrompt } from "./promptSynthesizer.mjs";
+import type { DepthTier } from "./promptSynthesizer";
 import { constructMarkdownSystemPrompt, downloadMarkdownFile } from "./markdownExport";
 import type { TargetId } from "@spe/web-runtime";
 import { GeneticEvolverStudio } from "./GeneticEvolverStudio";
@@ -14,9 +15,9 @@ export interface PromptRadarInspectorProps {
   promptText: string;
   rawIrPrompt?: unknown;
   activeTarget?: TargetId;
-  activeDepthTier?: "normal" | "mid" | "deep";
+  activeDepthTier?: DepthTier;
   onSelectTarget?: (target: TargetId) => void;
-  onSelectDepthTier?: (tier: "normal" | "mid" | "deep") => void;
+  onSelectDepthTier?: (tier: DepthTier) => void;
   onNavigate?: (view: any) => void;
   onAutoOptimize?: (optimizedPrompt: string) => void;
 }

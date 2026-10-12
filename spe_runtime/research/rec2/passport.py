@@ -41,12 +41,10 @@ import urllib.parse
 from typing import Any, Callable, Dict, FrozenSet, List, Optional, Sequence, Set, Tuple, Union
 
 from spe_runtime.ci_gate.receipt import (
-    B,
     ed25519_sign,
     ed25519_verify,
-    encodepoint,
+    generate_keypair,
     rfc8785_canonicalize,
-    scalarmult,
 )
 from spe_runtime.research.exchange.merit_ranker import compute_wilson_lower_bound
 from spe_runtime.research.lvt.types import OracleAttestation
@@ -185,22 +183,7 @@ def canonical_sha256(payload: Dict[str, Any]) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def derive_deterministic_ed25519_keypair(seed_phrase: bytes) -> Tuple[bytes, bytes]:
-    """Derives a deterministic RFC 8032 Ed25519 (secret_key_32B, public_key_32B) from a seed."""
-    sk = hashlib.sha256(seed_phrase).digest()
-    h = hashlib.sha512(sk).digest()
-    a = int.from_bytes(h[:32], "little")
-    a &= (1 << 254) - 8
-    a |= (1 << 254)
-    pk = encodepoint(scalarmult(B, a))
-    return sk, pk
-
-
 REC2_DEFAULT_ORACLE_ID = "spe-independent-oracle-v1"
-REC2_DEFAULT_ORACLE_SK, REC2_DEFAULT_ORACLE_PK = derive_deterministic_ed25519_keypair(
-    b"spe-rec2-independent-oracle-v1-authority-key"
-)
-REC2_DEFAULT_ORACLE_PK_HEX = REC2_DEFAULT_ORACLE_PK.hex()
 
 
 def sign_passport_evaluator_attestation(
@@ -211,9 +194,25 @@ def sign_passport_evaluator_attestation(
     signing_key: Optional[bytes] = None,
     public_key: Optional[bytes] = None,
 ) -> OracleAttestation:
-    """Generates a real RFC 8032 Ed25519-signed OracleAttestation over RFC 8785 canonical JSON."""
-    sk = signing_key if signing_key is not None else REC2_DEFAULT_ORACLE_SK
-    pk = public_key if public_key is not None else REC2_DEFAULT_ORACLE_PK
+    """
+    Generates a real RFC 8032 Ed25519-signed OracleAttestation over RFC 8785 canonical JSON.
+    Requires an explicit 32-byte Ed25519 signing_key and 32-byte public_key; no default
+    signing key or deterministic seed exists in source code.
+    """
+    if (
+        signing_key is None
+        or public_key is None
+        or not isinstance(signing_key, (bytes, bytearray))
+        or not isinstance(public_key, (bytes, bytearray))
+        or len(signing_key) != 32
+        or len(public_key) != 32
+    ):
+        raise ValueError(
+            "Explicit 32-byte Ed25519 signing_key and public_key are required; "
+            "no default or hardcoded signing key is permitted."
+        )
+    sk = bytes(signing_key)
+    pk = bytes(public_key)
     pk_hex = pk.hex()
     attestation_payload = {
         "evidence_hash": evidence_hash,
@@ -241,8 +240,10 @@ def verify_passport_evaluator_attestation(
 ) -> Tuple[bool, str]:
     """
     Cryptographically verifies an evaluator's Ed25519 attestation signature over the canonical
-    RFC 8785 attestation dictionary and enforces pinned authority public keys.
-    Rejects truncated strings, malformed hex, unpinned keys, or forged signatures.
+    RFC 8785 attestation dictionary and enforces mandatory public-key pinning for EVERY
+    trusted evaluator authority.
+    Rejects truncated strings, malformed hex, unpinned authority IDs, mismatched public keys,
+    or forged signatures.
     """
     if attestation.verdict != "APPROVED":
         return False, f"UNAPPROVED_EVALUATOR_VERDICT:{attestation.oracle_id}:{attestation.verdict}"
@@ -263,14 +264,18 @@ def verify_passport_evaluator_attestation(
     except ValueError:
         return False, f"INVALID_EVALUATOR_SIGNATURE_FORMAT:{attestation.oracle_id}"
 
-    pinned_keys: Dict[str, str] = {REC2_DEFAULT_ORACLE_ID: REC2_DEFAULT_ORACLE_PK_HEX}
+    pinned_keys: Dict[str, str] = {}
     if trusted_evaluator_public_keys:
         for k_id, k_val in trusted_evaluator_public_keys.items():
-            pinned_keys[k_id] = k_val[8:] if k_val.startswith("ed25519:") else k_val
+            if isinstance(k_val, str) and k_val.strip():
+                cleaned = k_val.strip()
+                pinned_keys[k_id] = cleaned[8:] if cleaned.startswith("ed25519:") else cleaned
 
-    if attestation.oracle_id in pinned_keys:
-        if pk_hex.lower() != pinned_keys[attestation.oracle_id].lower():
-            return False, f"UNPINNED_EVALUATOR_PUBLIC_KEY:{attestation.oracle_id}"
+    if attestation.oracle_id not in pinned_keys:
+        return False, f"UNPINNED_EVALUATOR_AUTHORITY:{attestation.oracle_id}"
+
+    if pk_hex.lower() != pinned_keys[attestation.oracle_id].lower():
+        return False, f"UNPINNED_EVALUATOR_PUBLIC_KEY:{attestation.oracle_id}"
 
     attestation_payload = {
         "evidence_hash": attestation.evidence_hash,
@@ -393,10 +398,21 @@ class CapabilityPassportEnvelope:
 
     def compute_canonical_content_hash(self) -> str:
         payload: Dict[str, Any] = {
+            "passport_id": self.passport_id,
             "skill_identifier": self.skill_identifier,
             "schema_version": self.schema_version,
             "skill_instructions": self.skill_instructions,
             "deterministic_schemas": self.deterministic_schemas,
+            "origin_model_id": self.origin_model_id,
+            "origin_model_digest": self.origin_model_digest,
+            "origin_environment": self.origin_environment,
+            "origin_network_policy": self.origin_network_policy,
+            "origin_tool_surface_digest": self.origin_tool_surface_digest,
+            "issued_at_epoch": float(self.issued_at_epoch),
+            "evidence_origin": self.evidence_origin.value,
+            "is_synthetic": bool(self.is_synthetic),
+            "requested_permissions": list(self.requested_permissions),
+            "obligation_claims": [c.to_dict() for c in self.obligation_claims],
         }
         if self.nested_skills:
             payload["nested_skill_hashes"] = [ns.compute_canonical_content_hash() for ns in self.nested_skills]
@@ -654,11 +670,12 @@ class REC0CompatibilityAdapter:
             "model_revision_binding": {
                 "model_id": passport.origin_model_id,
                 "model_or_runtime_digest": model_digest,
+                "raw_origin_model_digest": passport.origin_model_digest,
                 "model_digest_type": "VERIFIED_MODEL_REVISION",
             },
             "environment_binding": {
                 "runtime_id": passport.origin_environment,
-                "tool_permissions": sorted(passport.requested_permissions),
+                "tool_permissions": list(passport.requested_permissions),
                 "network_policy": passport.origin_network_policy,
                 "schema_version": passport.schema_version,
                 "assumption_predicates": {
@@ -878,7 +895,9 @@ class REC0CompatibilityAdapter:
             ),
             revocation_state=revocation_state,
             issued_at_epoch=issued_at_epoch,
-            origin_model_digest=str(model_bind.get("model_or_runtime_digest", "")),
+            origin_model_digest=str(
+                model_bind.get("raw_origin_model_digest", model_bind.get("model_or_runtime_digest", ""))
+            ),
             origin_network_policy=network_policy,
             origin_tool_surface_digest=tool_surface,
             evidence_origin=ev_origin,
@@ -1097,24 +1116,6 @@ class UntrustedMCPImportAdapter:
         skill_identifier = str(raw_package["skill_identifier"])
         schema_version = str(raw_package.get("schema_version", "rec2-0.1"))
 
-        hash_payload: Dict[str, Any] = {
-            "skill_identifier": skill_identifier,
-            "schema_version": schema_version,
-            "skill_instructions": instructions,
-            "deterministic_schemas": deterministic_schemas,
-        }
-        if nested_envelopes:
-            hash_payload["nested_skill_hashes"] = [ne.content_sha256 for ne in nested_envelopes]
-        local_digest = canonical_sha256(hash_payload)
-
-        declared_digest = str(raw_package.get("content_sha256", ""))
-        if declared_digest and declared_digest != local_digest:
-            raise OriginDigestMismatchError(
-                f"Local SHA-256 ({local_digest}) does not match origin-supplied digest ({declared_digest})"
-            )
-
-        cls._verify_manifest_consistency(raw_package, local_digest, path_prefix=path_label)
-
         attestation_raw = raw_package.get("evaluator_attestation", {})
         attestation = OracleAttestation(
             oracle_id=str(attestation_raw.get("oracle_id", "unverified-origin")),
@@ -1168,7 +1169,7 @@ class UntrustedMCPImportAdapter:
                 )
             )
 
-        envelope = CapabilityPassportEnvelope(
+        draft_envelope = CapabilityPassportEnvelope(
             passport_id=str(raw_package["passport_id"]),
             skill_identifier=skill_identifier,
             schema_version=schema_version,
@@ -1179,7 +1180,7 @@ class UntrustedMCPImportAdapter:
             obligation_claims=tuple(claims),
             requested_permissions=parent_perms,
             evaluator_attestation=attestation,
-            content_sha256=local_digest,
+            content_sha256="",
             revocation_state=str(raw_package.get("revocation_state", "ACTIVE")),
             issued_at_epoch=float(raw_package.get("issued_at_epoch", 0.0)),
             origin_model_digest=str(raw_package.get("origin_model_digest", "")),
@@ -1189,6 +1190,17 @@ class UntrustedMCPImportAdapter:
             is_synthetic=pkg_is_synthetic,
             nested_skills=tuple(nested_envelopes),
         )
+        local_digest = draft_envelope.compute_canonical_content_hash()
+
+        declared_digest = str(raw_package.get("content_sha256", ""))
+        if declared_digest and declared_digest != local_digest:
+            raise OriginDigestMismatchError(
+                f"Local SHA-256 ({local_digest}) does not match origin-supplied digest ({declared_digest})"
+            )
+
+        cls._verify_manifest_consistency(raw_package, local_digest, path_prefix=path_label)
+
+        envelope = draft_envelope.with_computed_hash()
         return envelope, PassportQualificationStatus.UNTRUSTED_CANDIDATE
 
 
@@ -1322,7 +1334,7 @@ class ObligationRequalificationEngine:
             c_att = child.evaluator_attestation
             c_sig_ok, c_sig_reason = verify_passport_evaluator_attestation(
                 c_att,
-                child.content_sha256,
+                child.compute_canonical_content_hash(),
                 context.trusted_evaluator_public_keys,
             )
             child_trusted = (
@@ -1339,7 +1351,7 @@ class ObligationRequalificationEngine:
 
         root_sig_ok, root_sig_reason = verify_passport_evaluator_attestation(
             att,
-            passport.content_sha256,
+            expected_hash,
             context.trusted_evaluator_public_keys,
         )
         evaluator_authority_trusted = (
@@ -2993,6 +3005,8 @@ class REC2EQualificationMatrixRunner:
     def run_qualification_matrix(cls) -> REC2EQualificationReport:
         det_schemas = {"output_schema": {"type": "object", "required": ["html", "aria_landmarks"]}}
         det_hash = canonical_sha256(det_schemas)
+        oracle_sk, oracle_pk = generate_keypair()
+        pinned_oracle_keys = {REC2_DEFAULT_ORACLE_ID: oracle_pk.hex()}
 
         # Build canonical source passport on Model A
         draft = CapabilityPassportEnvelope(
@@ -3041,6 +3055,8 @@ class REC2EQualificationMatrixRunner:
                 oracle_id=REC2_DEFAULT_ORACLE_ID,
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
+                signing_key=oracle_sk,
+                public_key=oracle_pk,
             ),
             issued_at_epoch=1_791_755_000.0,
         ).with_computed_hash()
@@ -3053,6 +3069,8 @@ class REC2EQualificationMatrixRunner:
                     oracle_id=REC2_DEFAULT_ORACLE_ID,
                     timestamp=1_791_755_000.0,
                     verdict="APPROVED",
+                    signing_key=oracle_sk,
+                    public_key=oracle_pk,
                 ),
             }
         )
@@ -3063,6 +3081,7 @@ class REC2EQualificationMatrixRunner:
             recipient_host="macOS-15-AppleSilicon-WebKit",
             allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
             trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+            trusted_evaluator_public_keys=pinned_oracle_keys,
             expected_deterministic_Hashes={"ob_json_schema": det_hash},
         )
         insp_b = ObligationRequalificationEngine.inspect_passport(source_passport, ctx_model_b)
@@ -3126,6 +3145,7 @@ class REC2EQualificationMatrixRunner:
             recipient_host="macOS-15-AppleSilicon-WebKit",
             allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
             trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+            trusted_evaluator_public_keys=pinned_oracle_keys,
             revoked_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
             expected_deterministic_Hashes={"ob_json_schema": det_hash},
         )
@@ -3138,6 +3158,7 @@ class REC2EQualificationMatrixRunner:
             recipient_host="macOS-15-AppleSilicon-WebKit",
             allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
             trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+            trusted_evaluator_public_keys=pinned_oracle_keys,
             expected_deterministic_Hashes={"ob_json_schema": det_hash},
             distribution_shift_distance=0.35,
             max_distribution_shift_tolerance=0.15,

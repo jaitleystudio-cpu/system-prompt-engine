@@ -207,6 +207,8 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
     assert verify_receipt_signature(cert.authenticated_receipt, cert.public_key_hex) is True
 
     # Stage 4: Package into REC-2E CapabilityPassportEnvelope and verify cross-model requalification
+    oracle_sk, oracle_pk = generate_keypair()
+    pinned_keys = {"spe-independent-oracle-v1": oracle_pk.hex()}
     det_schemas = {"plan_digest": plan.plan_digest, "cert_digest": cert.digest_sha256}
     det_hash = canonical_sha256(det_schemas)
     draft_passport = CapabilityPassportEnvelope(
@@ -244,6 +246,8 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
             oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
+            signing_key=oracle_sk,
+            public_key=oracle_pk,
         ),
         revocation_state="ACTIVE",
         issued_at_epoch=1_791_755_000.0,
@@ -264,6 +268,8 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
             oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
+            signing_key=oracle_sk,
+            public_key=oracle_pk,
         ),
         content_sha256=draft_passport.content_sha256,
         revocation_state=draft_passport.revocation_state,
@@ -277,6 +283,7 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
         recipient_host="macOS-15-AppleSilicon",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=pinned_keys,
         expected_deterministic_Hashes={"ob_security": det_hash},
     )
     inspection = ObligationRequalificationEngine.inspect_passport(passport, recipient_ctx)
@@ -289,7 +296,14 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
 
 
 def test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature() -> None:
-    """Proves REC-2 inspect_passport cryptographically verifies Ed25519 evaluator signatures and rejects truncated/forged/unpinned signatures."""
+    """Proves REC-2 inspect_passport cryptographically verifies Ed25519 evaluator signatures, requires explicit keys/pinning, and binds all envelope fields."""
+    # Calling sign_passport_evaluator_attestation without explicit CSPRNG keys MUST raise ValueError
+    with pytest.raises(ValueError, match="Explicit 32-byte Ed25519 signing_key and public_key are required"):
+        sign_passport_evaluator_attestation(evidence_hash="")
+
+    oracle_sk, oracle_pk = generate_keypair()
+    pinned_keys = {"spe-independent-oracle-v1": oracle_pk.hex()}
+
     det_schemas = {"schema": "v1"}
     det_hash = canonical_sha256(det_schemas)
     draft = CapabilityPassportEnvelope(
@@ -313,7 +327,11 @@ def test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature(
             ),
         ),
         requested_permissions=("FILESYSTEM_SCOPED_READ",),
-        evaluator_attestation=sign_passport_evaluator_attestation(evidence_hash=""),
+        evaluator_attestation=sign_passport_evaluator_attestation(
+            evidence_hash="",
+            signing_key=oracle_sk,
+            public_key=oracle_pk,
+        ),
         revocation_state="ACTIVE",
         issued_at_epoch=1_791_755_000.0,
     ).with_computed_hash()
@@ -323,6 +341,7 @@ def test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature(
         recipient_host="macOS-15-AppleSilicon",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=pinned_keys,
         expected_deterministic_Hashes={"ob_det": det_hash},
     )
 
@@ -332,7 +351,7 @@ def test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature(
             **draft.__dict__,
             "evaluator_attestation": OracleAttestation(
                 oracle_id="spe-independent-oracle-v1",
-                oracle_public_key="ed25519:" + ("a" * 64),
+                oracle_public_key="ed25519:" + oracle_pk.hex(),
                 evidence_hash=draft.content_sha256,
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
@@ -346,7 +365,11 @@ def test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature(
     assert any("INVALID_EVALUATOR_SIGNATURE_FORMAT" in r for r in rep_trunc.rejection_reasons)
 
     # 2. Forged 64-byte (128-hex-char) signature with valid pinned public key MUST be rejected
-    valid_att = sign_passport_evaluator_attestation(evidence_hash=draft.content_sha256)
+    valid_att = sign_passport_evaluator_attestation(
+        evidence_hash=draft.content_sha256,
+        signing_key=oracle_sk,
+        public_key=oracle_pk,
+    )
     flipped_last_nibble = "0" if valid_att.signature[-1] != "0" else "1"
     forged_sig = valid_att.signature[:-1] + flipped_last_nibble
     forged_passport = CapabilityPassportEnvelope(
@@ -385,6 +408,38 @@ def test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature(
     assert rep_rogue.evaluator_authority_trusted is False
     assert rep_rogue.status == PassportQualificationStatus.REJECTED
     assert any("UNPINNED_EVALUATOR_PUBLIC_KEY" in r for r in rep_rogue.rejection_reasons)
+
+    # 4. Authority in trusted_evaluator_ids without an entry in trusted_evaluator_public_keys MUST be rejected
+    ctx_no_pin = RecipientEnvironmentContext(
+        recipient_model_id="local-qwen-coder",
+        recipient_host="macOS-15-AppleSilicon",
+        allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
+        trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys={},
+        expected_deterministic_Hashes={"ob_det": det_hash},
+    )
+    valid_passport = CapabilityPassportEnvelope(
+        **{
+            **draft.__dict__,
+            "evaluator_attestation": valid_att,
+        }
+    )
+    rep_no_pin = ObligationRequalificationEngine.inspect_passport(valid_passport, ctx_no_pin)
+    assert rep_no_pin.evaluator_authority_trusted is False
+    assert rep_no_pin.status == PassportQualificationStatus.REJECTED
+    assert any("UNPINNED_EVALUATOR_AUTHORITY" in r for r in rep_no_pin.rejection_reasons)
+
+    # 5. Mutating origin_model_id or requested_permissions after signing invalidates content_sha256
+    tampered_model_passport = CapabilityPassportEnvelope(
+        **{
+            **valid_passport.__dict__,
+            "origin_model_id": "forged-recipient-model",
+        }
+    )
+    rep_tampered_model = ObligationRequalificationEngine.inspect_passport(tampered_model_passport, ctx)
+    assert rep_tampered_model.content_hash_valid is False
+    assert rep_tampered_model.status == PassportQualificationStatus.REJECTED
+    assert any("CONTENT_HASH_MISMATCH" in r for r in rep_tampered_model.rejection_reasons)
 
 
 def test_default_wire_proxy_rejects_unsigned_grant() -> None:

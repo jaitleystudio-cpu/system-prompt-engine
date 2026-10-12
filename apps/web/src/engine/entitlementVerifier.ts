@@ -1,16 +1,23 @@
 /**
- * SPE Ω Paid Entitlement & Public Beta Waitlist Verifier
+ * SPE Ω Paid Entitlement & Public Beta Waitlist Verifier (Client Public-Key Boundary)
  *
- * Security Invariant (Finding 1 Closure):
- * Browser clients MUST NEVER self-mint paid `pro` or `team` licenses via `Math.random()`.
- * Paid tier activation requires a server-issued, cryptographically signed entitlement token
- * (`spe_entitlement.v1.<canonical_payload_hex>.<signature_hex>`) bound to a verified payment
- * receipt ID and expiration timestamp. Submitting an email without a signed token records only
- * a `PUBLIC_BETA_WAITLIST_RESERVED` status and does not grant paid tier entitlements.
+ * Security Invariants (Audit Finding A Closure):
+ * 1. Browser clients MUST NEVER self-mint paid `pro` or `team` licenses, and client-accessible
+ *    code MUST NEVER contain any signing secret, shared salt, or Ed25519 private key.
+ * 2. This module performs ONLY asymmetric RFC 8032 Ed25519 public-key signature verification
+ *    against explicitly pinned authority public keys (`trustedIssuerPublicKeys`).
+ * 3. Token issuance is restricted exclusively to the server-side billing authority
+ *    (`src/server/billingAuthority.ts`) after payment webhook verification.
+ * 4. A claimed `paymentReceiptId` is NEVER accepted on client assertion alone: verification
+ *    enforces authoritative payment status, active subscription status, expiration, and revocation.
  */
 
 import { computeSha256 } from "./hashUtils.ts";
 import { canonicalizeJson } from "./proofReceipt.ts";
+import {
+  normalizeEd25519PublicKeyHex,
+  verifyEd25519Signature,
+} from "./ed25519Verifier.ts";
 
 export interface EntitlementTokenPayload {
   schema: "spe.entitlement.v1";
@@ -18,9 +25,57 @@ export interface EntitlementTokenPayload {
   planName: string;
   email: string;
   paymentReceiptId: string;
+  subscriptionId?: string;
+  paymentStatus?: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
+  subscriptionStatus?: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
   issuedAtMs: number;
   expiresAtMs: number;
   issuerKeyId: string;
+}
+
+export interface AuthoritativeReceiptRecord {
+  exists: boolean;
+  paid: boolean;
+  subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
+  tier: "pro" | "team";
+  email: string;
+  expiresAtMs: number;
+  revoked: boolean;
+}
+
+export interface EntitlementVerificationOptions {
+  expectedEmail?: string;
+  currentEpochMs?: number;
+  /**
+   * Explicit map of `issuerKeyId -> ed25519_public_key_hex` (64-hex raw or 88-hex SPKI DER).
+   * Every trusted issuer MUST have a pinned Ed25519 public key.
+   */
+  trustedIssuerPublicKeys?: Record<string, string>;
+  revokedReceiptIds?: Iterable<string>;
+  revokedSubscriptionIds?: Iterable<string>;
+  /**
+   * Authoritative server receipt & subscription status verifier.
+   * Confirms that `paymentReceiptId` exists, was actually paid, is currently ACTIVE,
+   * has not expired, and has not been revoked or canceled.
+   */
+  authoritativeReceiptVerifier?: (
+    paymentReceiptId: string,
+    payload: EntitlementTokenPayload,
+  ) => AuthoritativeReceiptRecord | null | undefined;
+  /**
+   * Defaults to `true`. When `true`, `verifySignedEntitlementToken` rejects any token
+   * whose `paymentReceiptId` is not confirmed by `authoritativeReceiptVerifier`.
+   */
+  requireAuthoritativeReceiptCheck?: boolean;
+  /**
+   * Optional custom asymmetric verifier override (defaults to RFC 8032 `verifyEd25519Signature`).
+   */
+  verifySignatureFn?: (
+    canonicalPayloadJson: string,
+    signatureHex: string,
+    pinnedPublicKeyHex: string,
+    issuerKeyId: string,
+  ) => boolean;
 }
 
 export interface EntitlementVerificationResult {
@@ -39,8 +94,14 @@ export interface PublicBetaReservationRecord {
   paidEntitlementGranted: false;
 }
 
-const DEFAULT_DEV_AUTHORITY_KEY_ID = "spe-billing-authority-v1";
-const DEFAULT_DEV_AUTHORITY_DOMAIN_SALT = "spe.entitlement.v1.authority.domain.2026";
+/**
+ * Production billing authority Ed25519 public key (32-byte RFC 8032 point).
+ * The corresponding private key is held exclusively by the offline/server billing authority
+ * and does NOT exist anywhere in client code or repository source.
+ */
+export const SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID = "spe-billing-authority-ed25519-prod-v1";
+export const SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX =
+  "27fca5b9bbcf0d8036e3e98cd47bcdcaf29f9a3bb6bc8307606584a55d7b4489";
 
 function hexToUtf8(hex: string): string {
   if (hex.length % 2 !== 0 || !/^[0-9a-fA-F]+$/.test(hex)) {
@@ -53,7 +114,7 @@ function hexToUtf8(hex: string): string {
   return new TextDecoder().decode(bytes);
 }
 
-function utf8ToHex(text: string): string {
+export function utf8ToHex(text: string): string {
   const bytes = new TextEncoder().encode(text);
   return Array.from(bytes)
     .map((b) => b.toString(16).padStart(2, "0"))
@@ -61,47 +122,12 @@ function utf8ToHex(text: string): string {
 }
 
 /**
- * Default deterministic signature verifier used when no external asymmetric verifier callback
- * is injected. Uses domain-separated SHA-256 commitment over the RFC 8785 canonical JSON payload
- * and pinned authority secret (for server/test issuance).
- */
-export function computeEntitlementCommitmentSignature(
-  canonicalPayloadJson: string,
-  authoritySecret: string = DEFAULT_DEV_AUTHORITY_DOMAIN_SALT,
-): string {
-  return computeSha256(`${authoritySecret}:${canonicalPayloadJson}`);
-}
-
-/**
- * Issues a signed entitlement token (used by server-side billing webhooks and verification suites).
- */
-export function issueSignedEntitlementToken(
-  payload: EntitlementTokenPayload,
-  signFn?: (canonicalPayloadJson: string) => string,
-): string {
-  const canonical = canonicalizeJson(payload);
-  const payloadHex = utf8ToHex(canonical);
-  const sigHex = signFn ? signFn(canonical) : computeEntitlementCommitmentSignature(canonical);
-  return `spe_entitlement.v1.${payloadHex}.${sigHex}`;
-}
-
-/**
- * Verifies a server-issued signed entitlement token.
- * Explicitly rejects self-minted random strings (`SPE-PRO-XXXX...`), tampered payloads,
- * expired tokens, missing payment receipt IDs, or invalid signatures.
+ * Verifies a server-issued, Ed25519-signed entitlement token using ONLY pinned public keys
+ * and authoritative payment/subscription status verification.
  */
 export function verifySignedEntitlementToken(
   rawToken: string,
-  options: {
-    expectedEmail?: string;
-    currentEpochMs?: number;
-    trustedIssuerKeyIds?: string[];
-    verifySignatureFn?: (
-      canonicalPayloadJson: string,
-      signatureHex: string,
-      issuerKeyId: string,
-    ) => boolean;
-  } = {},
+  options: EntitlementVerificationOptions = {},
 ): EntitlementVerificationResult {
   const trimmed = (rawToken || "").trim();
   if (!trimmed) {
@@ -129,17 +155,18 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
-      rejectionReason: "INVALID_TOKEN_ENVELOPE: Expected spe_entitlement.v1.<payload_hex>.<signature_hex>",
+      rejectionReason:
+        "INVALID_TOKEN_ENVELOPE: Expected spe_entitlement.v1.<payload_hex>.<ed25519_signature_hex>",
     };
   }
 
   const [, , payloadHex, signatureHex] = parts;
-  if (!signatureHex || signatureHex.length < 64 || !/^[0-9a-fA-F]+$/.test(signatureHex)) {
+  if (!signatureHex || signatureHex.length !== 128 || !/^[0-9a-fA-F]{128}$/.test(signatureHex)) {
     return {
       verified: false,
       tier: null,
       payload: null,
-      rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE_FORMAT",
+      rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE_FORMAT: Expected 64-byte (128-hex) Ed25519 signature",
     };
   }
 
@@ -174,13 +201,35 @@ export function verifySignedEntitlementToken(
     };
   }
 
-  const allowedIssuers = options.trustedIssuerKeyIds ?? [DEFAULT_DEV_AUTHORITY_KEY_ID];
-  if (!allowedIssuers.includes(parsed.issuerKeyId)) {
+  if (parsed.paymentStatus !== undefined && parsed.paymentStatus !== "PAID") {
     return {
       verified: false,
       tier: null,
       payload: null,
-      rejectionReason: `UNTRUSTED_ENTITLEMENT_ISSUER:${parsed.issuerKeyId}`,
+      rejectionReason: `UNPAID_OR_INVALID_PAYMENT_STATUS:${parsed.paymentStatus}`,
+    };
+  }
+
+  if (parsed.subscriptionStatus !== undefined && parsed.subscriptionStatus !== "ACTIVE") {
+    return {
+      verified: false,
+      tier: null,
+      payload: null,
+      rejectionReason: `INACTIVE_SUBSCRIPTION_STATUS:${parsed.subscriptionStatus}`,
+    };
+  }
+
+  const revokedReceipts = new Set(options.revokedReceiptIds ?? []);
+  const revokedSubs = new Set(options.revokedSubscriptionIds ?? []);
+  if (
+    revokedReceipts.has(parsed.paymentReceiptId) ||
+    (parsed.subscriptionId && revokedSubs.has(parsed.subscriptionId))
+  ) {
+    return {
+      verified: false,
+      tier: null,
+      payload: null,
+      rejectionReason: "REVOKED_ENTITLEMENT_TOKEN",
     };
   }
 
@@ -191,6 +240,14 @@ export function verifySignedEntitlementToken(
       tier: null,
       payload: null,
       rejectionReason: "EXPIRED_ENTITLEMENT_TOKEN",
+    };
+  }
+  if (parsed.issuedAtMs > nowMs + 60_000) {
+    return {
+      verified: false,
+      tier: null,
+      payload: null,
+      rejectionReason: "INVALID_ISSUANCE_TIMESTAMP",
     };
   }
 
@@ -206,11 +263,26 @@ export function verifySignedEntitlementToken(
     };
   }
 
+  // Enforce explicit public-key pinning for the claiming issuerKeyId
+  const pinnedKeyMap: Record<string, string> = options.trustedIssuerPublicKeys ?? {
+    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
+  };
+  const rawPinnedKey = pinnedKeyMap[parsed.issuerKeyId];
+  const normalizedPinnedKey = rawPinnedKey ? normalizeEd25519PublicKeyHex(rawPinnedKey) : null;
+  if (!normalizedPinnedKey) {
+    return {
+      verified: false,
+      tier: null,
+      payload: null,
+      rejectionReason: `UNTRUSTED_ENTITLEMENT_ISSUER:${parsed.issuerKeyId}`,
+    };
+  }
+
+  // Cryptographically verify RFC 8032 Ed25519 signature over RFC 8785 canonical JSON payload
   const canonicalPayload = canonicalizeJson(parsed);
   const sigValid = options.verifySignatureFn
-    ? options.verifySignatureFn(canonicalPayload, signatureHex, parsed.issuerKeyId)
-    : computeEntitlementCommitmentSignature(canonicalPayload).toLowerCase() ===
-      signatureHex.toLowerCase();
+    ? options.verifySignatureFn(canonicalPayload, signatureHex, normalizedPinnedKey, parsed.issuerKeyId)
+    : verifyEd25519Signature(canonicalPayload, signatureHex, normalizedPinnedKey);
 
   if (!sigValid) {
     return {
@@ -219,6 +291,64 @@ export function verifySignedEntitlementToken(
       payload: null,
       rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE",
     };
+  }
+
+  // Enforce authoritative payment receipt, subscription status, expiration, and revocation check
+  const requireAuthoritative = options.requireAuthoritativeReceiptCheck ?? true;
+  if (requireAuthoritative) {
+    if (!options.authoritativeReceiptVerifier) {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        rejectionReason:
+          "AUTHORITATIVE_RECEIPT_VERIFICATION_REQUIRED: Claimed paymentReceiptId cannot be accepted without authoritative server confirmation.",
+      };
+    }
+    const record = options.authoritativeReceiptVerifier(parsed.paymentReceiptId, parsed);
+    if (!record || !record.exists) {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        rejectionReason: `UNKNOWN_PAYMENT_RECEIPT_ID:${parsed.paymentReceiptId}`,
+      };
+    }
+    if (!record.paid) {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        rejectionReason: `UNPAID_PAYMENT_RECEIPT:${parsed.paymentReceiptId}`,
+      };
+    }
+    if (record.revoked || record.subscriptionStatus !== "ACTIVE") {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        rejectionReason: `REVOKED_OR_CANCELED_SUBSCRIPTION:${record.subscriptionStatus}`,
+      };
+    }
+    if (record.expiresAtMs <= nowMs) {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        rejectionReason: "EXPIRED_AUTHORITATIVE_SUBSCRIPTION",
+      };
+    }
+    if (
+      record.tier !== parsed.tier ||
+      record.email.trim().toLowerCase() !== parsed.email.trim().toLowerCase()
+    ) {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        rejectionReason: "AUTHORITATIVE_RECEIPT_CLAIM_MISMATCH",
+      };
+    }
   }
 
   return {
@@ -239,7 +369,9 @@ export function createPublicBetaWaitlistReservation(
   const lowerPlan = selectedPlan.toLowerCase();
   const requestedTier: "pro" | "team" =
     lowerPlan.includes("team") || lowerPlan.includes("company") ? "team" : "pro";
-  const digest = computeSha256(`waitlist:${requestedTier}:${email.trim().toLowerCase()}`).slice(0, 12).toUpperCase();
+  const digest = computeSha256(`waitlist:${requestedTier}:${email.trim().toLowerCase()}`)
+    .slice(0, 12)
+    .toUpperCase();
   return {
     status: "PUBLIC_BETA_WAITLIST_RESERVED",
     requestedPlan: selectedPlan,

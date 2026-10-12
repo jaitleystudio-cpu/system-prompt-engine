@@ -15,8 +15,10 @@ import { evaluateCounterfactualTwin } from "./counterfactualTwin.ts";
 import {
   generateProofReceipt,
   canonicalizeJson,
+  verifyProofReceiptAuthenticity,
   type ProofReceiptPayload,
   type GenerateProofReceiptOptions,
+  type ProofReceiptAuthOptions,
 } from "./proofReceipt.ts";
 
 export interface PromptfooExportOptions {
@@ -27,6 +29,10 @@ export interface PromptfooExportOptions {
   outputFormat?: "json" | "markdown" | "text";
   baselinePrompt?: string;
   zeroEgressNetworkObserved?: boolean;
+  networkObservationAttestation?: GenerateProofReceiptOptions["networkObservationAttestation"];
+  trustedObserverKeys?: GenerateProofReceiptOptions["trustedObserverKeys"];
+  liveEvaluationAttestation?: GenerateProofReceiptOptions["liveEvaluationAttestation"];
+  trustedEvaluatorKeys?: GenerateProofReceiptOptions["trustedEvaluatorKeys"];
   producerSigner?: GenerateProofReceiptOptions["producerSigner"];
 }
 
@@ -44,7 +50,11 @@ export interface PromptfooExportBundle {
 
 const DEFAULT_NAIVE_BASELINE = "You are a helpful assistant. Help the user with whatever they ask.";
 
-export function verifyPromptfooExportBundle(bundle: PromptfooExportBundle, expectedPromptText: string): {
+export function verifyPromptfooExportBundle(
+  bundle: PromptfooExportBundle,
+  expectedPromptText: string,
+  authOptions: ProofReceiptAuthOptions = {},
+): {
   verified: boolean;
   reasons: string[];
 } {
@@ -67,6 +77,29 @@ export function verifyPromptfooExportBundle(bundle: PromptfooExportBundle, expec
   if (!bundle.yamlConfig.includes("{{user_input}}")) {
     reasons.push("YAML config prompt template missing {{user_input}} interpolation variable.");
   }
+
+  const requireAuth =
+    Boolean(authOptions.requireAuthenticatedProducer) ||
+    bundle.proofReceipt?.evidenceProvenance?.selfGeneratedAssertionOnly === false;
+  const authResult = verifyProofReceiptAuthenticity(bundle.proofReceipt, {
+    ...authOptions,
+    requireAuthenticatedProducer: requireAuth,
+  });
+  if (
+    !authResult.integrityVerified ||
+    !authResult.experimentalValidityVerified ||
+    (requireAuth && !authResult.producerAuthenticated)
+  ) {
+    for (const r of authResult.reasons) {
+      if (!reasons.includes(r)) {
+        reasons.push(r);
+      }
+    }
+    if (reasons.length === 0) {
+      reasons.push("ProofReceipt authenticity or experimental validity verification failed.");
+    }
+  }
+
   return {
     verified: reasons.length === 0,
     reasons,
@@ -328,6 +361,10 @@ export function generatePromptfooConfig(
     "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
     {
       zeroEgressNetworkObserved: options.zeroEgressNetworkObserved,
+      networkObservationAttestation: options.networkObservationAttestation,
+      trustedObserverKeys: options.trustedObserverKeys,
+      liveEvaluationAttestation: options.liveEvaluationAttestation,
+      trustedEvaluatorKeys: options.trustedEvaluatorKeys,
       producerSigner: options.producerSigner,
     },
   );

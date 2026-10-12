@@ -35,6 +35,7 @@ import base64
 import codecs
 import pytest
 
+from spe_runtime.ci_gate.receipt import generate_keypair
 from spe_runtime.research.lvt.types import OracleAttestation
 from spe_runtime.research.rec2 import (
     CanaryBenchPrivacyExporter,
@@ -70,6 +71,10 @@ from spe_runtime.research.rec2 import (
 )
 from spe_runtime.research.wdes.types import PredicateValue
 
+_TEST_ORACLE_SK, _TEST_ORACLE_PK = generate_keypair()
+_TEST_ORACLE_PK_HEX = _TEST_ORACLE_PK.hex()
+_TEST_PINNED_KEYS = {"spe-independent-oracle-v1": _TEST_ORACLE_PK_HEX}
+
 
 def _make_sample_passport(
     oracle_id: str = "spe-independent-oracle-v1",
@@ -78,6 +83,8 @@ def _make_sample_passport(
     requested_permissions: tuple[str, ...] = ("FILESYSTEM_SCOPED_READ",),
     instructions: str = "Generate responsive 3D scrolling layout with prefers-reduced-motion fallback.",
     revocation_state: str = "ACTIVE",
+    signing_key: bytes = _TEST_ORACLE_SK,
+    public_key: bytes = _TEST_ORACLE_PK,
 ) -> CapabilityPassportEnvelope:
     det_schemas = {"output_schema": {"type": "object", "required": ["html", "aria_landmarks"]}}
     det_contract_hash = canonical_sha256(det_schemas)
@@ -144,6 +151,8 @@ def _make_sample_passport(
             oracle_id=oracle_id,
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
+            signing_key=signing_key,
+            public_key=public_key,
         ),
         revocation_state=revocation_state,
         issued_at_epoch=1_791_755_000.0,
@@ -165,6 +174,8 @@ def _make_sample_passport(
             oracle_id=oracle_id,
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
+            signing_key=signing_key,
+            public_key=public_key,
         ),
         content_sha256=draft.content_sha256,
         revocation_state=draft.revocation_state,
@@ -190,6 +201,7 @@ def test_falsification_target_1_valid_hash_untrusted_authority_or_privilege_esca
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
 
@@ -228,6 +240,7 @@ def test_falsification_target_2_no_inherited_success_across_models_without_requa
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
 
@@ -409,6 +422,7 @@ def test_protected_intent_preservation_and_offline_revocation_horizon() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
         protected_intent_negative_constraints=("offline_airgap",),
     )
@@ -423,6 +437,7 @@ def test_protected_intent_preservation_and_offline_revocation_horizon() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
         is_offline=True,
         risk_sensitive=True,
@@ -440,6 +455,7 @@ def test_protected_intent_preservation_and_offline_revocation_horizon() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
         revoked_passport_ids=frozenset({clean_passport.passport_id}),
     )
@@ -563,6 +579,7 @@ def test_p0_security_real_activation_prompt_injection_nested_skills_manifest_and
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
     qual_report = ObligationRequalificationEngine.inspect_passport(passport, qual_context)
@@ -610,6 +627,7 @@ def test_p0_security_real_activation_prompt_injection_nested_skills_manifest_and
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         revoked_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
@@ -635,6 +653,7 @@ def test_p0_security_real_activation_prompt_injection_nested_skills_manifest_and
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset(),  # FILESYSTEM_SCOPED_READ removed by host admin
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
     narrowed_activation = ConstrainedSkillActivationSandbox.activate_and_execute(
@@ -822,6 +841,8 @@ def test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_fi
             oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
+            signing_key=_TEST_ORACLE_SK,
+            public_key=_TEST_ORACLE_PK,
         ),
     ).with_computed_hash()
 
@@ -833,6 +854,8 @@ def test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_fi
                 oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
+                signing_key=_TEST_ORACLE_SK,
+                public_key=_TEST_ORACLE_PK,
             ),
         }
     )
@@ -846,6 +869,7 @@ def test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_fi
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_priv_static_schema": det_hash},
         recipient_network_policy="LOCAL_ONLY",
     )
@@ -863,6 +887,7 @@ def test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_fi
         recipient_host="Linux-Container-PublicNet",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_priv_static_schema": det_hash},
         recipient_network_policy="PUBLIC_EGRESS",
     )
@@ -1036,6 +1061,7 @@ def test_edge_cases_boundary_values_and_error_paths() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         revoked_evidence_hashes=frozenset({passport.content_sha256}),
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
@@ -1049,6 +1075,7 @@ def test_edge_cases_boundary_values_and_error_paths() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
         distribution_shift_distance=0.40,
         max_distribution_shift_tolerance=0.15,
@@ -1100,6 +1127,7 @@ def test_adversarial_round2_audit_regressions() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
     rt_report = ObligationRequalificationEngine.inspect_passport(rt_passport, ctx_model_b)
@@ -1161,6 +1189,8 @@ def test_adversarial_round2_audit_regressions() -> None:
                 oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
+                signing_key=_TEST_ORACLE_SK,
+                public_key=_TEST_ORACLE_PK,
             ),
         }
     )
@@ -1185,6 +1215,7 @@ def test_adversarial_round2_audit_regressions() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": "sha256:wrong_contract_hash"},
     )
     rep_wrong_det = ObligationRequalificationEngine.inspect_passport(ref_passport, ctx_wrong_det_hash)
@@ -1222,6 +1253,8 @@ def test_adversarial_round2_audit_regressions() -> None:
             oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
+            signing_key=_TEST_ORACLE_SK,
+            public_key=_TEST_ORACLE_PK,
         ),
     ).with_computed_hash()
     grandchild = CapabilityPassportEnvelope(
@@ -1232,6 +1265,8 @@ def test_adversarial_round2_audit_regressions() -> None:
                 oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
+                signing_key=_TEST_ORACLE_SK,
+                public_key=_TEST_ORACLE_PK,
             ),
         }
     )
@@ -1250,6 +1285,8 @@ def test_adversarial_round2_audit_regressions() -> None:
             oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
+            signing_key=_TEST_ORACLE_SK,
+            public_key=_TEST_ORACLE_PK,
         ),
         nested_skills=(grandchild,),
     ).with_computed_hash()
@@ -1261,6 +1298,8 @@ def test_adversarial_round2_audit_regressions() -> None:
                 oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
+                signing_key=_TEST_ORACLE_SK,
+                public_key=_TEST_ORACLE_PK,
             ),
         }
     )
@@ -1278,6 +1317,8 @@ def test_adversarial_round2_audit_regressions() -> None:
                 oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
+                signing_key=_TEST_ORACLE_SK,
+                public_key=_TEST_ORACLE_PK,
             ),
         }
     )
@@ -1286,6 +1327,7 @@ def test_adversarial_round2_audit_regressions() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         revoked_passport_ids=frozenset({"passport-grandchild-revoked"}),
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
     )
@@ -1299,6 +1341,7 @@ def test_adversarial_round2_audit_regressions() -> None:
         recipient_host="macOS-15-AppleSilicon-WebKit",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
         recipient_network_policy="LOCAL_ONLY",
     )
@@ -1310,6 +1353,7 @@ def test_adversarial_round2_audit_regressions() -> None:
         recipient_host="Linux-Container-PublicNet",
         allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
         trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
         expected_deterministic_Hashes={"ob_json_schema": det_hash},
         recipient_network_policy="PUBLIC_EGRESS",
     )
@@ -1413,5 +1457,113 @@ def test_adversarial_round2_audit_regressions() -> None:
     assert verbal_default.evidence_class == CostEvidenceClass.UNVERIFIED_CONFIDENCE_REJECTED
     assert verbal_default.decision == CostGateDecision.ABSTAIN_DIRECT_EXECUTION
     assert verbal_default.production_qualified is False
+
+
+def test_audit_finding_b_rec2_key_hygiene_pinning_and_envelope_field_binding() -> None:
+    """
+    Audit Finding B Closure Verification:
+    1. No default private key or deterministic seed derivation exists in spe_runtime.research.rec2.
+    2. sign_passport_evaluator_attestation requires explicit 32-byte CSPRNG signing_key and public_key.
+    3. Every authority in trusted_evaluator_ids MUST be explicitly pinned in trusted_evaluator_public_keys;
+       unpinned authorities are rejected with UNPINNED_EVALUATOR_AUTHORITY.
+    4. CapabilityPassportEnvelope.compute_canonical_content_hash() cryptographically binds all
+       security-relevant and qualification-relevant fields (origin_model_id, origin_environment,
+       requested_permissions, obligation_claims trials_n/successes_k, evidence_origin, is_synthetic,
+       origin_network_policy, origin_tool_surface_digest, nested_skills).
+    """
+    import spe_runtime.research.rec2 as rec2_mod
+    import spe_runtime.research.rec2.passport as passport_mod
+
+    # 1. Verify no hardcoded default private key or deterministic seed helper exists
+    for forbidden_symbol in (
+        "REC2_DEFAULT_ORACLE_SK",
+        "REC2_DEFAULT_ORACLE_PK",
+        "REC2_DEFAULT_ORACLE_PK_HEX",
+        "derive_deterministic_ed25519_keypair",
+    ):
+        assert not hasattr(rec2_mod, forbidden_symbol), f"{forbidden_symbol} must not be exported"
+        assert not hasattr(passport_mod, forbidden_symbol), f"{forbidden_symbol} must not exist in passport.py"
+
+    # 2. Verify sign_passport_evaluator_attestation rejects missing or invalid keys
+    with pytest.raises(ValueError, match="Explicit 32-byte Ed25519 signing_key and public_key are required"):
+        sign_passport_evaluator_attestation(evidence_hash="a" * 64)
+
+    # 3. Verify unpinned trusted evaluator authority is rejected even with a valid self-signed keypair
+    unpinned_sk, unpinned_pk = generate_keypair()
+    unpinned_passport = _make_sample_passport(
+        oracle_id="spe-secondary-oracle-v1",
+        signing_key=unpinned_sk,
+        public_key=unpinned_pk,
+    )
+    det_hash = unpinned_passport.obligation_claims[0].deterministic_contract_hash or ""
+    ctx_unpinned = RecipientEnvironmentContext(
+        recipient_model_id="claude-3-7-sonnet",
+        recipient_host="macOS-15-AppleSilicon-WebKit",
+        allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
+        trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1", "spe-secondary-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,  # spe-secondary-oracle-v1 is NOT pinned!
+        expected_deterministic_Hashes={"ob_json_schema": det_hash},
+    )
+    rep_unpinned = ObligationRequalificationEngine.inspect_passport(unpinned_passport, ctx_unpinned)
+    assert rep_unpinned.evaluator_authority_trusted is False
+    assert rep_unpinned.status == PassportQualificationStatus.REJECTED
+    assert any("UNPINNED_EVALUATOR_AUTHORITY" in r for r in rep_unpinned.rejection_reasons)
+
+    # 4. Verify mutating any security-relevant or qualification-relevant field after signing breaks content_sha256
+    valid_passport = _make_sample_passport()
+    ctx_valid = RecipientEnvironmentContext(
+        recipient_model_id="claude-3-7-sonnet",
+        recipient_host="macOS-15-AppleSilicon-WebKit",
+        allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
+        trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        trusted_evaluator_public_keys=_TEST_PINNED_KEYS,
+        expected_deterministic_Hashes={"ob_json_schema": det_hash},
+    )
+    assert ObligationRequalificationEngine.inspect_passport(valid_passport, ctx_valid).status == (
+        PassportQualificationStatus.QUALIFIED_FOR_RECIPIENT
+    )
+
+    mutated_envelopes = [
+        # Mutate origin_model_id
+        CapabilityPassportEnvelope(**{**valid_passport.__dict__, "origin_model_id": "forged-model-x"}),
+        # Mutate origin_environment
+        CapabilityPassportEnvelope(**{**valid_passport.__dict__, "origin_environment": "forged-env-y"}),
+        # Mutate requested_permissions
+        CapabilityPassportEnvelope(
+            **{
+                **valid_passport.__dict__,
+                "requested_permissions": ("FILESYSTEM_SCOPED_READ", "UNRESTRICTED_SHELL_EXEC"),
+            }
+        ),
+        # Mutate obligation_claims (inflate trials_n / successes_k)
+        CapabilityPassportEnvelope(
+            **{
+                **valid_passport.__dict__,
+                "obligation_claims": (
+                    ObligationEvidenceClaim(
+                        **{
+                            **valid_passport.obligation_claims[0].__dict__,
+                            "trials_n": 9999,
+                            "successes_k": 9999,
+                        }
+                    ),
+                    *valid_passport.obligation_claims[1:],
+                ),
+            }
+        ),
+        # Mutate evidence_origin
+        CapabilityPassportEnvelope(
+            **{**valid_passport.__dict__, "evidence_origin": EvidenceOrigin.CALLER_DECLARED}
+        ),
+        # Mutate is_synthetic
+        CapabilityPassportEnvelope(**{**valid_passport.__dict__, "is_synthetic": True}),
+    ]
+
+    for mutated in mutated_envelopes:
+        rep_mut = ObligationRequalificationEngine.inspect_passport(mutated, ctx_valid)
+        assert rep_mut.content_hash_valid is False
+        assert rep_mut.status == PassportQualificationStatus.REJECTED
+        assert any("CONTENT_HASH_MISMATCH" in r for r in rep_mut.rejection_reasons)
+
 
 
