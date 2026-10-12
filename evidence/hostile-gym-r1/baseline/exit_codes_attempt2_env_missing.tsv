@@ -1,0 +1,8 @@
+eval_pos	0	env SPE_FIXTURE_ID=POS-001 node apps/web/scripts/eval-fixture.mjs
+eval_neg	0	env SPE_FIXTURE_ID=NEG-001 node apps/web/scripts/eval-fixture.mjs
+egress_proof	0	env SPE_PROOF_OUT=/Volumes/4TB-WD/spe-worktrees/spe-hostile-gym-r1/evidence/hostile-gym-r1/baseline/egress_proof.json node apps/web/scripts/egress-proof.mjs
+copy_golden	0	node tests/copy/golden-and-adversarial.mjs
+validate_repo	1	python3 tools/validate_repo.py
+pytest	1	python3 -m pytest -q tests
+cargo_core	1	cargo test --manifest-path portable/spe-core-rs/Cargo.toml -q
+cargo_wasm	1	cargo test --manifest-path portable/spe-wasm/Cargo.toml -q

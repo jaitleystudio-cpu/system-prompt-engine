@@ -1,0 +1,2 @@
+PASS: worker message errors reject promptly; request IDs isolate results and phase notifications.
+PASS: timeout terminates worker, rejects all pending requests and blocks reuse.

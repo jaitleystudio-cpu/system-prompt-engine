@@ -1,0 +1,1 @@
+{"error":null,"result":{"disposition":"INVALID","output":{},"reason_code":"P_PROVENANCE_REMOVED","status":"INVALID"},"phases":["loading_wasm","verifying_integrity","instantiating","ready","evaluating"],"used_ts_fallback":false,"sha256":"95cf51ceab7b51ab2a459ec8a32d51e182749f8f3b51cf29c69de675a2fd0a80","imports":0}

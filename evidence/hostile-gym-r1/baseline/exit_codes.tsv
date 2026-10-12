@@ -1,0 +1,31 @@
+eval_pos	0	env SPE_FIXTURE_ID=POS-001 node apps/web/scripts/eval-fixture.mjs
+eval_neg	0	env SPE_FIXTURE_ID=NEG-001 node apps/web/scripts/eval-fixture.mjs
+egress_proof	0	env SPE_PROOF_OUT=/Volumes/4TB-WD/spe-worktrees/spe-hostile-gym-r1/evidence/hostile-gym-r1/baseline/egress_proof.json node apps/web/scripts/egress-proof.mjs
+copy_golden	0	node tests/copy/golden-and-adversarial.mjs
+validate_repo	1	python3 tools/validate_repo.py
+pytest	1	python3 -m pytest -q tests
+cargo_core	1	cargo test --manifest-path portable/spe-core-rs/Cargo.toml -q
+cargo_wasm	1	cargo test --manifest-path portable/spe-wasm/Cargo.toml -q
+# attempt 2026-10-12T23:58:19+0530
+eval_pos	0	env SPE_FIXTURE_ID=POS-001 node apps/web/scripts/eval-fixture.mjs
+eval_neg	0	env SPE_FIXTURE_ID=NEG-001 node apps/web/scripts/eval-fixture.mjs
+egress_proof	0	env SPE_PROOF_OUT=/Volumes/4TB-WD/spe-worktrees/spe-hostile-gym-r1/evidence/hostile-gym-r1/baseline/egress_proof.json node apps/web/scripts/egress-proof.mjs
+# attempt 2026-10-13T00:01:09+0530
+eval_pos	0	env SPE_FIXTURE_ID=POS-001 node apps/web/scripts/eval-fixture.mjs
+eval_neg	0	env SPE_FIXTURE_ID=NEG-001 node apps/web/scripts/eval-fixture.mjs
+egress_proof	0	env SPE_PROOF_OUT=/Volumes/4TB-WD/spe-worktrees/spe-hostile-gym-r1/evidence/hostile-gym-r1/baseline/egress_proof.json node apps/web/scripts/egress-proof.mjs
+copy_golden	0	node tests/copy/golden-and-adversarial.mjs
+validate_repo	1	python3 tools/validate_repo.py
+pytest	2	env CARGO_TARGET_DIR=/tmp/hg-r1-target RUSTUP_TOOLCHAIN=stable /Volumes/4TB-WD/spe-egac-venv/bin/python -m pytest -q tests
+cargo_core	0	env RUSTUP_TOOLCHAIN=stable CARGO_TARGET_DIR=/tmp/hg-r1-target cargo test --manifest-path portable/spe-core-rs/Cargo.toml -q
+cargo_wasm	0	env RUSTUP_TOOLCHAIN=stable CARGO_TARGET_DIR=/tmp/hg-r1-target cargo test --manifest-path portable/spe-wasm/Cargo.toml -q
+web04_prompt	0	node tools/web04-prompt-regression.mjs
+web04_worker	0	node tools/web04-worker-client-regression.mjs
+web_integrity	0	node tools/web-integrity-regression.mjs
+web_sw	0	node tools/web-service-worker-regression.mjs
+conformance_s5	1	/Volumes/4TB-WD/spe-egac-venv/bin/python tools/sprint5_conformance.py
+# attempt 2026-10-13T00:05:48+0530 python-only, own venv hg-r1-venv (pytest jsonschema hypothesis), PYTHONPATH=.
+pytest	1	PYTHONPATH=. hg-r1-venv python -m pytest -q tests
+conformance_s5	0	PYTHONPATH=. hg-r1-venv python tools/sprint5_conformance.py
+pytest	1	RUSTUP_TOOLCHAIN=stable PYTHONPATH=. hg-r1-venv python -m pytest -q tests
+pytest	1	RUSTUP_TOOLCHAIN=1.98.1 PYTHONPATH=. hg-r1-venv python -m pytest -q tests

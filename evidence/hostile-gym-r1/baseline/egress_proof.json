@@ -1,0 +1,12 @@
+{
+  "not_a_release": true,
+  "new_implementation": true,
+  "network_mode": "NONE",
+  "fixture_id": "POS-001",
+  "fetch_during_evaluate": 0,
+  "websocket_during_evaluate": 0,
+  "external_hosts": [],
+  "zero_egress": true,
+  "engine_error": null,
+  "used_ts_fallback": false
+}

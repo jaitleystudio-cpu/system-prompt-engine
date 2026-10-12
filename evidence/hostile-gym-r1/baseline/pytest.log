@@ -1,0 +1,45 @@
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 43%]
+........................................................................ [ 57%]
+........................................................................ [ 71%]
+........................................................................ [ 86%]
+..................................F...................................   [100%]
+=================================== FAILURES ===================================
+____________ test_shipped_release_wasm_matches_kernel_artifact_hash ____________
+
+    def test_shipped_release_wasm_matches_kernel_artifact_hash():
+        public_wasm = WEB / "public" / "spe_wasm.wasm"
+        meta_path = WEB / "public" / "spe_wasm.sha256.json"
+        assert public_wasm.is_file(), "release WASM not shipped into web public/"
+        assert meta_path.is_file()
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        import hashlib
+    
+        digest = hashlib.sha256(public_wasm.read_bytes()).hexdigest()
+        assert meta["sha256"] == digest
+        assert meta["bytes"] == public_wasm.stat().st_size
+        assert public_wasm.stat().st_size > 100_000
+        # Prefer matching the Sprint-5 release artifact when present.
+        rust_wasm = (
+            REPO
+            / "portable"
+            / "spe-wasm"
+            / "target"
+            / "wasm32-unknown-unknown"
+            / "release"
+            / "spe_wasm.wasm"
+        )
+        if rust_wasm.is_file():
+            rust_digest = hashlib.sha256(rust_wasm.read_bytes()).hexdigest()
+>           assert digest == rust_digest, "web WASM is not the spe-wasm release artifact"
+E           AssertionError: web WASM is not the spe-wasm release artifact
+E           assert '95cf51ceab7b...de675a2fd0a80' == 'f3b2e3f2c5f9...f49f7c9d94584'
+E             
+E             - f3b2e3f2c5f95d8dfe998c95c8f5cf6fa2e27d62d13b45b2678f49f7c9d94584
+E             + 95cf51ceab7b51ab2a459ec8a32d51e182749f8f3b51cf29c69de675a2fd0a80
+
+tests/web/test_web_architecture_gates.py:72: AssertionError
+=========================== short test summary info ============================
+FAILED tests/web/test_web_architecture_gates.py::test_shipped_release_wasm_matches_kernel_artifact_hash
+1 failed, 501 passed in 134.35s (0:02:14)
