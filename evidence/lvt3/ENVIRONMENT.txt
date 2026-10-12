@@ -1,0 +1,16 @@
+# Environment capture 2026-10-12 21:28 IST
+uname: Darwin Prawins-Mac-mini.local 27.2.0 Darwin Kernel Version 27.2.0: Tue Sep 29 21:45:37 PDT 2026; root:xnu-13432.40.177.0.3~56/RELEASE_ARM64_T8112 arm64
+python: Python 3.12.13
+git HEAD at capture: 8dfb09fd0fc99b63ac26b513f87dd95a87ca7897
+## pip freeze (venv /tmp/lvt3/venv, created with: python3.12 -m venv; pip install -e '.[dev]')
+attrs==26.1.0
+iniconfig==2.3.1
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+packaging==26.3
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==9.1.1
+referencing==0.37.0
+rpds-py==2026.9.1
+typing_extensions==4.16.0
