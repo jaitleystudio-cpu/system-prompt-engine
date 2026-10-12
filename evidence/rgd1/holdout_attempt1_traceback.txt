@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Volumes/4TB-WD/spe-worktrees/spe-rgd1-r0/spe_runtime/research/rgd1/run.py", line 74, in <module>
+    main()
+  File "/Volumes/4TB-WD/spe-worktrees/spe-rgd1-r0/spe_runtime/research/rgd1/run.py", line 53, in main
+    t0 = time.time(); j = oa.get("/works", search=t["query_title"], per_page=K, select="id,type")
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/4TB-WD/spe-worktrees/spe-rgd1-r0/spe_runtime/research/rgd1/openalex.py", line 37, in get
+    with urllib.request.urlopen(req, timeout=60) as r:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/prawinpalisetty/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/prawinpalisetty/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/prawinpalisetty/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/prawinpalisetty/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/prawinpalisetty/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/prawinpalisetty/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+EXIT=1

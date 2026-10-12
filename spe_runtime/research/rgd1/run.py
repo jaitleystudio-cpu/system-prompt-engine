@@ -7,7 +7,7 @@ Arms (local arms: identical frozen corpus, K=10, <=3 index queries/task):
   R03T   template ablation: 'retraction|contradicts|failed replication' + title, BM25 each, RRF
   OA     OpenAlex live relevance search (title, 1 call, top 10). Secondary; first N retracted tasks only (keyless budget)"""
 from __future__ import annotations
-import hashlib, json, os, subprocess, sys, time
+import hashlib, json, os, re, subprocess, sys, time, urllib.error
 from .retrieval import BM25, EmbedCache, cos, gen_queries, rrf
 from .openalex import OpenAlex
 
@@ -50,8 +50,18 @@ def main():
         t0 = time.time(); r = rrf([[d for d, _ in bm.search(q, K)] for q in tq], K)
         res["R03T"] = (r, 3, time.time() - t0, 0)
         if oa and t["kind"] == "retracted" and n_oa < oa_n:
-            t0 = time.time(); j = oa.get("/works", search=t["query_title"], per_page=K, select="id,type")
-            res["OA"] = ([w["id"] for w in j["results"]][:K], 1, time.time() - t0, j.get("_rgd1_fetch", {}).get("credits_used", 0))
+            # Post-freeze fix (disclosed in PREREG_ADDENDUM_INTERRUPTION.md): OpenAlex returned HTTP 400 for some raw
+            # titles; on 400 retry once with punctuation removed; if that fails too, score the OA task as a miss (error).
+            t0 = time.time(); calls = 0
+            try:
+                j = oa.get("/works", search=t["query_title"], per_page=K, select="id,type"); calls = 1
+            except urllib.error.HTTPError as e:
+                if e.code != 400: raise
+                try:
+                    j = oa.get("/works", search=re.sub(r"[^A-Za-z0-9 ]+", " ", t["query_title"]), per_page=K, select="id,type"); calls = 2
+                except urllib.error.HTTPError:
+                    j = {"results": [], "_rgd1_fetch": {"credits_used": 0}, "_error": True}; calls = 2
+            res["OA"] = ([w["id"] for w in j["results"]][:K], calls, time.time() - t0, j.get("_rgd1_fetch", {}).get("credits_used", 0))
             n_oa += 1
         gold = set(t["gold_ids"])
         for arm, v in res.items():
