@@ -1,0 +1,41 @@
+{
+ "retrieved_at_utc": "2026-10-12T16:48:22Z",
+ "source": "api.openalex.org (keyless, mailto polite pool)",
+ "works_total": 326806755,
+ "by_type": {
+  "article": 200991172,
+  "dataset": 28039486,
+  "book-chapter": 22152754,
+  "conference-paper": 16241904,
+  "other": 11695172,
+  "dissertation": 11374537,
+  "paratext": 6350844,
+  "book": 6309246,
+  "preprint": 5131553,
+  "conference-abstract": 3345419,
+  "reference-entry": 3316184,
+  "report": 2368753,
+  "book-review": 2118942,
+  "libguides": 1705267,
+  "peer-review": 1359543,
+  "editorial": 1116379,
+  "review": 1046998,
+  "erratum": 602209,
+  "letter": 527015,
+  "standard": 435124,
+  "supplementary-materials": 349823,
+  "software": 149088,
+  "retraction": 49066,
+  "data-paper": 25175,
+  "software-paper": 5102
+ },
+ "by_is_retracted": {
+  "false": 325028442,
+  "true": 136530
+ },
+ "by_has_fulltext": {
+  "false": 270850067,
+  "true": 55956688
+ },
+ "retraction_type_works": 49066
+}
