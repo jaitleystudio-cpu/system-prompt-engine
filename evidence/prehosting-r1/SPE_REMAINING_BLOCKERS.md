@@ -1,0 +1,2 @@
+# Blockers needing owner
+1. Copy rewrite for PH-001 claims (human copy review). 2. Decide /pricing + ad slot (PH-009, D-10). 3. Decide /studio: ship route or remove Studio line from onboarding. 4. Define production host/CDN so headers, 404s, and load can be tested. 5. Human usability + screen-reader testers. 6. Real devices. 7. Independent replay agent (Bro). 8. Re-supply full untruncated brief (Phases 1–13 deliverable list) for exact fidelity.
