@@ -1,0 +1,115 @@
+{
+  "decisions": {
+    "H1_spe_wm_beats_cegis_quality": false,
+    "H2_spe_wm_beats_plain_quality": false,
+    "H3_cegis_beats_plain_quality": false,
+    "correctness_all_claims_valid": true,
+    "programme_status": "RESEARCH_PROPOSAL - NOT AGI_PROVEN",
+    "provisional_verdict": "NO_ADVANTAGE_OVER_ESTABLISHED_CEGIS (NOT_PROVEN)"
+  },
+  "endpoints": {
+    "quality": {
+      "cegis-plain": {
+        "boot95": [
+          0.0006267806267806319,
+          0.0028490028490028908
+        ],
+        "mean": 0.0017378917378917612,
+        "p_holm": 0.1875,
+        "p_signflip": 0.0625,
+        "t95": [
+          0.0004051739787565207,
+          0.0030706094970270018
+        ]
+      },
+      "spe_wm-cegis": {
+        "boot95": [
+          -0.001994301994302017,
+          0.0
+        ],
+        "mean": -0.0009971509971510085,
+        "p_holm": 0.5,
+        "p_signflip": 0.25,
+        "t95": [
+          -0.0021668566217785718,
+          0.00017255462747655477
+        ]
+      },
+      "spe_wm-plain": {
+        "boot95": [
+          0.0,
+          0.0018518518518518823
+        ],
+        "mean": 0.000740740740740753,
+        "p_holm": 0.5,
+        "p_signflip": 0.5,
+        "t95": [
+          -0.0003762962962963023,
+          0.0018577777777778082
+        ]
+      }
+    },
+    "success": {
+      "cegis-plain": {
+        "boot95": [
+          0.02,
+          0.08
+        ],
+        "mean": 0.05,
+        "p_holm": 0.1875,
+        "p_signflip": 0.0625,
+        "t95": [
+          0.012299999999999998,
+          0.0877
+        ]
+      },
+      "spe_wm-cegis": {
+        "boot95": [
+          -0.060000000000000005,
+          0.0
+        ],
+        "mean": -0.030000000000000002,
+        "p_holm": 0.5,
+        "p_signflip": 0.25,
+        "t95": [
+          -0.06455262073996704,
+          0.004552620739967036
+        ]
+      },
+      "spe_wm-plain": {
+        "boot95": [
+          0.0,
+          0.05
+        ],
+        "mean": 0.02,
+        "p_holm": 0.5,
+        "p_signflip": 0.5,
+        "t95": [
+          -0.010159999999999999,
+          0.050159999999999996
+        ]
+      }
+    }
+  },
+  "means": {
+    "cegis": {
+      "correct": 1,
+      "cpu": 81.2942,
+      "quality": 1.0032193732193733,
+      "success": 0.09000000000000001
+    },
+    "plain": {
+      "correct": 1,
+      "cpu": 81.2125,
+      "quality": 1.0014814814814814,
+      "success": 0.04
+    },
+    "spe_wm": {
+      "correct": 1,
+      "cpu": 81.4459,
+      "quality": 1.0022222222222223,
+      "success": 0.060000000000000005
+    }
+  },
+  "runtime_wall_sec": 791.5
+}
