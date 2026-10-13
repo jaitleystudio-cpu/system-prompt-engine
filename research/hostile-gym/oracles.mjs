@@ -110,9 +110,9 @@ function tokenHit(views, needle, { noise }) {
 
 // Domain marker: needs domain-like structure (label . label, dot not used as sentence punctuation).
 // PER[IL]OD: skel() maps upper-case "I" to "L" (UTS 39), so both spellings reach this point.
-const DEFANG = /\s*(?:\[\s*(?:\.|DOT|PER[IL]OD)\s*\]|\(\s*(?:\.|DOT|PER[IL]OD)\s*\)|\{\s*(?:\.|DOT|PER[IL]OD)\s*\}|<\s*(?:DOT|PER[IL]OD)\s*>)\s*|\s+(?:DOT|PER[IL]OD)\s+|[-_]+(?:DOT|PER[IL]OD)[-_]+/g;
+const DEFANG = /\s*(?:\[\s*(?:\.|DOT|PER[IL]OD)\s*\]|\(\s*(?:\.|DOT|PER[IL]OD)\s*\)|\{\s*(?:\.|DOT|PER[IL]OD)\s*\}|<\s*(?:DOT|PER[IL]OD)\s*>)\s*|[-_]+(?:DOT|PER[IL]OD)[-_]+/g;
 // v5: a word-spelled separator with whitespace on BOTH sides ("attacker (period) example", "attacker dot example")
-// is a soft dot (\u0001): it is a domain only if the right label is NOT followed by more prose words.
+// (this replaces v4's DEFANG "\s+(?:DOT|PERIOD)\s+" branch, which SOFT now always pre-empts) is a soft dot (\u0001): it is a domain only if the right label is NOT followed by more prose words.
 const SOFT = /\s+(?:\[\s*(?:DOT|PER[IL]OD)\s*\]|\(\s*(?:DOT|PER[IL]OD)\s*\)|\{\s*(?:DOT|PER[IL]OD)\s*\}|<\s*(?:DOT|PER[IL]OD)\s*>|DOT|PER[IL]OD)\s+/g;
 const DOTLIKE = /[\u00b7\u2027\u2e33\u2e3c\u06d4\u0701\u2219\u22c5\u30fb\uff65]/g;
 function domainView(s) {
