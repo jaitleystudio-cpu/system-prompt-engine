@@ -209,8 +209,18 @@ def assemble_investigation(
     if entry.candidate_repairs:
         issues.add("EXTERNAL_REPAIR_NOT_TESTED")
 
-    # Only ready for separately authorized independent review.
-    ready = verified_source and capsule_valid and preflight.state == ReviewState.READY_FOR_INDEPENDENT_REVIEW
+    # Candidate regressions, unresolved proof, or malformed quality pairs must
+    # not become review-ready merely because source/capsule hashes match.
+    quality_gate = (
+        quality_reason == "QUALITY_COMPARISON_NOT_SUPPLIED"
+        or (quality_reason == "STATIC_QUALITY_DELTA_ONLY" and quality in ("IMPROVED", "NON_INFERIOR"))
+    )
+    if not quality_gate:
+        issues.add("QUALITY_GATE_HOLD")
+    ready = (
+        verified_source and capsule_valid and quality_gate
+        and preflight.state == ReviewState.READY_FOR_INDEPENDENT_REVIEW
+    )
     state = "READY_FOR_INDEPENDENT_REVIEW" if ready else "HOLD"
 
     graph = CausalProofGraph()
