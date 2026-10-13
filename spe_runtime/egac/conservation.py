@@ -153,6 +153,22 @@ _UNCLOSED_FENCE = re.compile(r"^```", re.M)
 _CONF = json.load(open(os.path.join(os.path.dirname(__file__), "confusables_ascii.json"), encoding="utf-8"))["map"]
 
 
+# Round 8 (Bro round 7, class E5): Greek lower-case letters that READ as Latin but have no ASCII target in the
+# vendored UTS #39 map ("κeep", "eχact", "eχactly" were allowed). Applied only where _CONF has no mapping,
+# so every existing fold is unchanged. Upper-case Greek already folds via _CONF (e.g. Κ->k, Χ->x).
+_GREEK_FOLD = {
+    "κ": "k", "ϰ": "k",  # kappa, kappa symbol
+    "χ": "x",                 # chi
+    "ε": "e", "ϵ": "e",  # epsilon, lunate epsilon
+    "η": "n",                 # eta
+    "τ": "t",                 # tau
+    "ω": "w",                 # omega
+    "μ": "u",                 # mu
+    "β": "b",                 # beta
+    "ς": "c", "ϲ": "c",  # final sigma, lunate sigma
+}
+
+
 def skeleton(s: str) -> str:
     """Lower-case confusable skeleton used for ALL classification regexes (homoglyph/ZW/fullwidth-proof)."""
     t = unicodedata.normalize("NFD", unicodedata.normalize("NFKC", s))
@@ -163,7 +179,7 @@ def skeleton(s: str) -> str:
         if ord(ch) < 128:
             out.append(ch.lower())  # ASCII is canonical; only non-ASCII lookalikes are folded (no "m" -> "rn")
         else:
-            out.append(_CONF.get(ch) or _CONF.get(ch.lower()) or ch.lower())
+            out.append(_CONF.get(ch) or _CONF.get(ch.lower()) or _GREEK_FOLD.get(ch.lower()) or ch.lower())
     return unicodedata.normalize("NFKC", "".join(out)).lower()
 
 

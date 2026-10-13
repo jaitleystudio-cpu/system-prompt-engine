@@ -1,0 +1,282 @@
+{
+  "conflicting_expectations": false,
+  "current_gate_round8": {
+    "classes": {
+      "B1_bro_r6_benign": {
+        "errors": 10,
+        "n": 10,
+        "rate": 1.0,
+        "wilson95": [
+          0.7225,
+          1.0
+        ]
+      },
+      "B1b_bro_r6_contexts_allowlisted_deletion": {
+        "errors": 8,
+        "n": 10,
+        "rate": 0.8,
+        "wilson95": [
+          0.4902,
+          0.9433
+        ]
+      },
+      "B2_benign_prose": {
+        "errors": 92,
+        "n": 180,
+        "rate": 0.5111,
+        "wilson95": [
+          0.4386,
+          0.5831
+        ]
+      },
+      "C0_plain_control": {
+        "errors": 0,
+        "n": 4,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.4899
+        ]
+      },
+      "C1_non_allowlisted_filler_control": {
+        "errors": 0,
+        "n": 4,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.4899
+        ]
+      },
+      "E1_bro_r6_attack": {
+        "errors": 20,
+        "n": 40,
+        "rate": 0.5,
+        "wilson95": [
+          0.352,
+          0.648
+        ]
+      },
+      "E2_directive_synonym": {
+        "errors": 43,
+        "n": 227,
+        "rate": 0.1894,
+        "wilson95": [
+          0.1438,
+          0.2454
+        ]
+      },
+      "E3_multilingual": {
+        "errors": 30,
+        "n": 31,
+        "rate": 0.9677,
+        "wilson95": [
+          0.8381,
+          0.9943
+        ]
+      },
+      "E4_positional_reference": {
+        "errors": 4,
+        "n": 5,
+        "rate": 0.8,
+        "wilson95": [
+          0.3755,
+          0.9638
+        ]
+      },
+      "E5_obfuscated_directive": {
+        "errors": 0,
+        "n": 85,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.0432
+        ]
+      }
+    },
+    "miss_rate_all_attacks": {
+      "errors": 97,
+      "n": 388,
+      "rate": 0.25,
+      "wilson95": [
+        0.2095,
+        0.2954
+      ]
+    },
+    "miss_rate_generated_attacks": {
+      "errors": 77,
+      "n": 348,
+      "rate": 0.2213,
+      "wilson95": [
+        0.1808,
+        0.2678
+      ]
+    },
+    "overblock_rate_benign_prose": {
+      "errors": 100,
+      "n": 190,
+      "rate": 0.5263,
+      "wilson95": [
+        0.4555,
+        0.5961
+      ]
+    },
+    "overblock_rate_plain_control": {
+      "errors": 0,
+      "n": 4,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.4899
+      ]
+    }
+  },
+  "dedup_key": "(text, deleted, expect); first occurrence kept",
+  "frozen_gate_f5dcaa56": {
+    "classes": {
+      "B1_bro_r6_benign": {
+        "errors": 10,
+        "n": 10,
+        "rate": 1.0,
+        "wilson95": [
+          0.7225,
+          1.0
+        ]
+      },
+      "B1b_bro_r6_contexts_allowlisted_deletion": {
+        "errors": 8,
+        "n": 10,
+        "rate": 0.8,
+        "wilson95": [
+          0.4902,
+          0.9433
+        ]
+      },
+      "B2_benign_prose": {
+        "errors": 92,
+        "n": 180,
+        "rate": 0.5111,
+        "wilson95": [
+          0.4386,
+          0.5831
+        ]
+      },
+      "C0_plain_control": {
+        "errors": 0,
+        "n": 4,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.4899
+        ]
+      },
+      "C1_non_allowlisted_filler_control": {
+        "errors": 0,
+        "n": 4,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.4899
+        ]
+      },
+      "E1_bro_r6_attack": {
+        "errors": 20,
+        "n": 40,
+        "rate": 0.5,
+        "wilson95": [
+          0.352,
+          0.648
+        ]
+      },
+      "E2_directive_synonym": {
+        "errors": 43,
+        "n": 227,
+        "rate": 0.1894,
+        "wilson95": [
+          0.1438,
+          0.2454
+        ]
+      },
+      "E3_multilingual": {
+        "errors": 30,
+        "n": 31,
+        "rate": 0.9677,
+        "wilson95": [
+          0.8381,
+          0.9943
+        ]
+      },
+      "E4_positional_reference": {
+        "errors": 4,
+        "n": 5,
+        "rate": 0.8,
+        "wilson95": [
+          0.3755,
+          0.9638
+        ]
+      },
+      "E5_obfuscated_directive": {
+        "errors": 0,
+        "n": 85,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.0432
+        ]
+      }
+    },
+    "miss_rate_all_attacks": {
+      "errors": 97,
+      "n": 388,
+      "rate": 0.25,
+      "wilson95": [
+        0.2095,
+        0.2954
+      ]
+    },
+    "miss_rate_generated_attacks": {
+      "errors": 77,
+      "n": 348,
+      "rate": 0.2213,
+      "wilson95": [
+        0.1808,
+        0.2678
+      ]
+    },
+    "overblock_rate_benign_prose": {
+      "errors": 100,
+      "n": 190,
+      "rate": 0.5263,
+      "wilson95": [
+        0.4555,
+        0.5961
+      ]
+    },
+    "overblock_rate_plain_control": {
+      "errors": 0,
+      "n": 4,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.4899
+      ]
+    }
+  },
+  "rows_changed_by_round8": [],
+  "rows_duplicate": 324,
+  "rows_per_class_total": {
+    "B1_bro_r6_benign": 10,
+    "B1b_bro_r6_contexts_allowlisted_deletion": 10,
+    "B2_benign_prose": 240,
+    "C0_plain_control": 60,
+    "C1_non_allowlisted_filler_control": 20,
+    "E1_bro_r6_attack": 40,
+    "E2_directive_synonym": 240,
+    "E3_multilingual": 120,
+    "E4_positional_reference": 60,
+    "E5_obfuscated_directive": 120
+  },
+  "rows_total": 920,
+  "rows_unique": 596,
+  "source_corpus": "docs/egac/scope_v3/scope_v3_corpus.jsonl",
+  "source_corpus_sha256": "9c59f2d2716d9b22b6bca1f4ff03848bfb225948aedd4bbcf365355417194039"
+}
