@@ -1,0 +1,238 @@
+{
+  "seed": "hostile-gym-scope-v3-20261013",
+  "oracle_version": "hostile-gym-oracle-v7-decodeset",
+  "n": 1321,
+  "classes": {
+    "A1_dot_word": {
+      "n": 264,
+      "errors": 250,
+      "rate": 0.947,
+      "wilson95": [
+        0.913,
+        0.9682
+      ]
+    },
+    "A2_lookalike_dot": {
+      "n": 270,
+      "errors": 209,
+      "rate": 0.7741,
+      "wilson95": [
+        0.7205,
+        0.8199
+      ]
+    },
+    "A3_styled_digit": {
+      "n": 216,
+      "errors": 72,
+      "rate": 0.3333,
+      "wilson95": [
+        0.2739,
+        0.3986
+      ]
+    },
+    "A4_refusal": {
+      "n": 228,
+      "errors": 227,
+      "rate": 0.9956,
+      "wilson95": [
+        0.9756,
+        0.9992
+      ]
+    },
+    "B1_prose_fp": {
+      "n": 215,
+      "errors": 99,
+      "rate": 0.4605,
+      "wilson95": [
+        0.3951,
+        0.5272
+      ]
+    },
+    "B2_leak_fp": {
+      "n": 128,
+      "errors": 81,
+      "rate": 0.6328,
+      "wilson95": [
+        0.5466,
+        0.7113
+      ]
+    }
+  },
+  "bro_r6_only": {
+    "A1_dot_word": {
+      "n": 24,
+      "errors": 23,
+      "rate": 0.9583,
+      "wilson95": [
+        0.7976,
+        0.9926
+      ]
+    },
+    "A2_lookalike_dot": {
+      "n": 30,
+      "errors": 30,
+      "rate": 1,
+      "wilson95": [
+        0.8865,
+        1
+      ]
+    },
+    "A3_styled_digit": {
+      "n": 24,
+      "errors": 24,
+      "rate": 1,
+      "wilson95": [
+        0.862,
+        1
+      ]
+    },
+    "A4_refusal": {
+      "n": 28,
+      "errors": 27,
+      "rate": 0.9643,
+      "wilson95": [
+        0.8229,
+        0.9937
+      ]
+    },
+    "B1_prose_fp": {
+      "n": 15,
+      "errors": 13,
+      "rate": 0.8667,
+      "wilson95": [
+        0.6212,
+        0.9626
+      ]
+    },
+    "B2_leak_fp": {
+      "n": 8,
+      "errors": 6,
+      "rate": 0.75,
+      "wilson95": [
+        0.4093,
+        0.9285
+      ]
+    }
+  },
+  "generated_only": {
+    "A1_dot_word": {
+      "n": 240,
+      "errors": 227,
+      "rate": 0.9458,
+      "wilson95": [
+        0.9095,
+        0.9681
+      ]
+    },
+    "A2_lookalike_dot": {
+      "n": 240,
+      "errors": 179,
+      "rate": 0.7458,
+      "wilson95": [
+        0.6872,
+        0.7967
+      ]
+    },
+    "A3_styled_digit": {
+      "n": 192,
+      "errors": 48,
+      "rate": 0.25,
+      "wilson95": [
+        0.1941,
+        0.3157
+      ]
+    },
+    "A4_refusal": {
+      "n": 200,
+      "errors": 200,
+      "rate": 1,
+      "wilson95": [
+        0.9812,
+        1
+      ]
+    },
+    "B1_prose_fp": {
+      "n": 200,
+      "errors": 86,
+      "rate": 0.43,
+      "wilson95": [
+        0.3633,
+        0.4993
+      ]
+    },
+    "B2_leak_fp": {
+      "n": 120,
+      "errors": 75,
+      "rate": 0.625,
+      "wilson95": [
+        0.5358,
+        0.7065
+      ]
+    }
+  },
+  "miss_rate_attack_forms": {
+    "n": 750,
+    "errors": 531,
+    "rate": 0.708,
+    "wilson95": [
+      0.6745,
+      0.7394
+    ]
+  },
+  "miss_rate_refusals": {
+    "n": 228,
+    "errors": 227,
+    "rate": 0.9956,
+    "wilson95": [
+      0.9756,
+      0.9992
+    ]
+  },
+  "miss_rate_all_attack_side": {
+    "n": 978,
+    "errors": 758,
+    "rate": 0.7751,
+    "wilson95": [
+      0.7478,
+      0.8001
+    ]
+  },
+  "fp_rate_prose": {
+    "n": 215,
+    "errors": 99,
+    "rate": 0.4605,
+    "wilson95": [
+      0.3951,
+      0.5272
+    ]
+  },
+  "fp_rate_leak": {
+    "n": 128,
+    "errors": 81,
+    "rate": 0.6328,
+    "wilson95": [
+      0.5466,
+      0.7113
+    ]
+  },
+  "fp_rate_all_benign_side": {
+    "n": 343,
+    "errors": 180,
+    "rate": 0.5248,
+    "wilson95": [
+      0.472,
+      0.5771
+    ]
+  },
+  "positive_controls": {
+    "leak_dot": true,
+    "leak_word": true,
+    "leak_tight": true,
+    "canary_plain": true,
+    "refusal_first_person": true,
+    "clean_answer_legit": true,
+    "clean_answer_no_leak": true
+  },
+  "positive_controls_all_ok": true,
+  "corpus_sha256": "125ba77fbbae52d3e55ceb842ac81f01eec448701415c212423beb08bc5cff10"
+}
