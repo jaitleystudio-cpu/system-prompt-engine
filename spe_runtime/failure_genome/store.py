@@ -157,6 +157,19 @@ class FailureGenomeStore:
         public_record["source"] = "[ANONYMIZED_SOURCE]"
         public_record["minimal_reproducer"] = sanitize_text(entry.minimal_reproducer)
         public_record["observations"] = [sanitize_text(o) for o in entry.observations]
+        # Sanitization is not publication authorization or independent proof.
+        # The legacy local reproduce() hook accepts arbitrary mock runners.
+        # Never project that mutable flag as public model-verification evidence.
+        public_record["root_cause"] = sanitize_text(str(entry.root_cause))
+        public_record["candidate_repairs"] = [sanitize_text(str(x)) for x in entry.candidate_repairs]
+        public_record["regression_tests"] = [sanitize_text(str(x)) for x in entry.regression_tests]
+        public_record["affected_capability"] = sanitize_text(str(entry.affected_capability))
+        public_record["is_verified_by_reproduction"] = False
+        public_record["claim_confirmed"] = False
+        public_record["root_cause_verified"] = False
+        public_record["repair_verified"] = False
+        public_record["publication_authorized"] = False
+        public_record["evidence_status"] = "UNVERIFIED_SANITIZED_CANDIDATE"
         public_record["metadata"] = {}
         return public_record
 
