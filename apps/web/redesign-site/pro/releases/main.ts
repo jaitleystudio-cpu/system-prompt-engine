@@ -1,5 +1,6 @@
 import { type ReleasePack, ed25519Supported, generateKeyPair, signRelease, verifyPack, fingerprint, SEMVER } from "../core/releases.ts";
 import { $, esc, load, save, download, copy } from "../core/ui.ts";
+import "../../../pro-studio/pro/shared/shell.ts";
 const KEY = "spe.pro.releases.v1";
 let hist = load<ReleasePack[]>(KEY, () => []);
 let keys: CryptoKeyPair | null = null; let last: ReleasePack | null = null;
@@ -23,6 +24,7 @@ $("sign").addEventListener("submit", async (e) => {
     $<HTMLTextAreaElement>("pack").value = JSON.stringify(last, null, 2);
     $("meta").textContent = `Key fingerprint ${await fingerprint(last.publicKey)} · sha256 ${last.sha256}`;
     $("out").hidden = false; hist.push(last); save(KEY, hist); renderHist();
+window.addEventListener("spe:action", (e) => { const id = (e as CustomEvent).detail; const f = id === "sign" ? "rn" : id === "verify" ? "vp" : ""; if (f) { $(f).scrollIntoView({ block: "center" }); $(f).focus(); } });
     sstat.innerHTML = `<span class="ok">Signed ${esc(last.name)} ${esc(last.version)}.</span>`;
   } catch (err) { sstat.innerHTML = `<span class="bad">${esc((err as Error).message || "Signing failed.")}</span>`; }
 });

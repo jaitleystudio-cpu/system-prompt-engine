@@ -4,13 +4,13 @@ const O = process.env.BASE || "http://127.0.0.1:4199"; const SHOT = process.env.
 let fail = 0; const ok = (c, m) => { console.log(`${c ? "PASS" : "FAIL"} ${m}`); if (!c) fail++; };
 const step = async (name, f) => { try { await f(); } catch (e) { ok(false, `${name}: ${String(e.message).split("\n")[0]}`); } };
 const b = await chromium.launch();
-// A) Studio: one header row containing nav + actions
+// A) Studio: one top bar (P11 shell) containing breadcrumb + search + actions
 for (const [w, mob] of [[1440, false], [390, true]]) await step(`studio header ${w}`, async () => {
   const pg = await b.newPage({ viewport: { width: w, height: mob ? 844 : 900 }, isMobile: mob, hasTouch: mob }); await pg.goto(O + "/pro/studio/");
   ok(await pg.locator("header").count() === 1 && await pg.locator('[role="banner"], header').count() === 1, `studio ${w}: exactly one header`);
-  ok(await pg.locator("header nav.pronav").count() === 1 && await pg.locator("header #btn-templates, header #btn-example, header #btn-import, header #btn-export").count() === 4, `studio ${w}: nav + 4 actions in the header`);
+  ok(await pg.locator("header nav.shell-crumb").count() === 1 && await pg.locator("header #btn-templates, header #btn-example, header #btn-import, header #btn-export").count() === 4, `studio ${w}: nav + 4 actions in the header`);
   const top = await pg.locator("header").boundingBox(); ok(top.y === 0, `studio ${w}: header at top`);
-  if (!mob) { const ys = await pg.locator("header nav.pronav a[aria-current], header #btn-export").evaluateAll(l => l.map(e => Math.round(e.getBoundingClientRect().top + e.getBoundingClientRect().height / 2)));
+  if (!mob) { const ys = await pg.locator("header .shell-crumb [aria-current], header #btn-export").evaluateAll(l => l.map(e => Math.round(e.getBoundingClientRect().top + e.getBoundingClientRect().height / 2)));
     ok(Math.abs(ys[0] - ys[1]) <= 4, `studio 1440: nav and actions share one row (${ys})`); }
   if (mob) { const small = await pg.locator("header a, header button").evaluateAll(l => l.filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.height < 44 || r.width < 44); }).length); ok(small === 0, "studio 390: header targets >= 44px");
     ok(await pg.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "studio 390: no horizontal overflow"); }

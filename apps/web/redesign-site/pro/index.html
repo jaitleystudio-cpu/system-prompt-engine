@@ -5,40 +5,60 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="robots" content="noindex, nofollow">
-<title>Pro Features · Pro preview · System Prompt Engine</title>
-<meta name="description" content="All SPE Pro preview features in one place.">
-<meta name="theme-color" content="#08090B">
+<title>SPE Pro · Turn intent into prompts you can trust (preview)</title>
+<meta name="description" content="SPE Pro preview: write, test and sign system prompts in your browser.">
+<meta name="theme-color" content="#07080A">
 <link rel="icon" href="/redesign/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../redesign/style.css">
-<link rel="stylesheet" href="./pro.css">
-<link rel="stylesheet" href="../../pro-studio/pro/shared/pronav.css">
-<link rel="stylesheet" href="./hub.css">
+<link rel="stylesheet" href="../../pro-studio/pro/shared/shell.css">
+<link rel="stylesheet" href="./landing.css">
 </head>
-<body>
+<body class="landing">
 <a class="skip" href="#main">Skip to content</a>
-<header><nav class="pronav" aria-label="Pro features"><div class="pronav__in"><a class="pronav__brand" href="/pro/">SPE Pro</a><ul class="pronav__links"><li><a href="/pro/" aria-current="page">Pro Features</a></li><li><a href="/pro/studio/">Prompt Studio</a></li><li><a href="/pro/blueprint/">Agent Blueprint</a></li><li><a href="/pro/regression-lab/">Regression Lab</a></li><li><a href="/pro/releases/">Releases</a></li></ul><span class="pronav__badge">Preview</span></div></nav></header>
+<header class="lnav" role="banner"><div class="lw lnav__in">
+  <button type="button" class="shell-menu" data-drawer-open aria-label="Open navigation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><a class="shell-brand" href="/pro/" aria-current="page"><i aria-hidden="true"></i>SPE Pro<span class="shell-tag">Preview</span></a>
+  <nav class="lnav__links" aria-label="Pro features"><ul><li><a href="/pro/studio/">Prompt Studio</a></li><li><a href="/pro/blueprint/">Agent Blueprint</a></li><li><a href="/pro/regression-lab/">Regression Lab</a></li><li><a href="/pro/releases/">Signed Releases</a></li></ul></nav>
+  <button type="button" class="shell-search" data-palette aria-label="Search features and actions" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="lbl">Search</span><kbd data-mod>Ctrl K</kbd></button><a class="btn btn--primary lnav__cta" href="/pro/studio/">Open Prompt Studio</a>
+</div></header>
 <main id="main">
-<section class="phead" aria-labelledby="t">
-  <div class="hero__glow" aria-hidden="true"></div>
-  <div class="wrap hero__in">
-    <div class="phead__row"><span class="badge">Pro preview</span></div>
-    <h1 id="t" class="h1">Pro Features</h1>
-    <p class="lead">Tools for building, testing and shipping prompts.</p>
-    <p class="hub-note" role="note">Pro preview, not released. Plans and pricing are not decided. Everything runs in your browser; nothing is uploaded.</p>
-  </div>
+<section class="hero" aria-labelledby="hero-h"><div class="lw">
+  <p class="eyebrow"><span class="pill">Pro preview</span> Not released · plans and pricing not decided</p>
+  <h1 id="hero-h" class="h1">Turn intent into prompts<br>you can trust.</h1>
+  <p class="lead">Write a system prompt in clear blocks, test changes against your own cases, and sign the version you ship. Everything runs in your browser.</p>
+  <div class="cta"><a class="btn btn--primary" href="/pro/studio/">Open Prompt Studio</a><a class="btn btn--ghost" href="#features">See all features</a></div>
+  <figure class="hero__shot shot"><img src="/pro/media/studio-hero.jpg" alt="Prompt Studio with an example support prompt, its assembled output and static checks" width="1440" height="900" decoding="async"><figcaption>Prompt Studio, captured from this preview build.</figcaption></figure>
+</div></section>
+<section class="trust" aria-label="How this preview works"><ul class="lw trust__in">
+  <li><b>Runs in your browser</b><span>No server does the work.</span></li><li><b>No account</b><span>Open a page and start.</span></li>
+  <li><b>Nothing uploaded</b><span>Drafts stay on this device.</span></li><li><b>Preview</b><span>Not released; may change.</span></li></ul></section>
+<div id="features" class="lw feats" tabindex="-1"><h2 class="sr-only">Features</h2>
+<section class="feat" id="studio" aria-labelledby="studio-h" data-feature="studio">
+  <div class="feat__copy"><p class="eyebrow"><span class="num">01</span>Prompt Studio <span class="pill">Preview</span></p><h2 id="studio-h" class="h2">Shape intent into a prompt you can read, check and reuse.</h2>
+    <ul class="ticks"><li>Build in blocks: role, rules, tone, output format, examples and your own requirements.</li><li>Static checks flag a missing role or format, conflicting rules and unfilled {{variables}}, labelled as checks, not quality scores.</li><li>Save versions, diff them, and import or export portable .spe files.</li></ul><a class="btn btn--ghost" href="/pro/studio/">Open Prompt Studio <span aria-hidden="true">→</span></a></div>
+  <figure class="shot"><img src="/pro/media/studio.jpg" alt="Prompt Studio editor with blocks, the assembled prompt and static checks" width="1200" height="750" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
 </section>
-<div class="wrap">
-  <ol class="hub-grid" aria-label="Pro features">
-    <li class="hub-card"><div class="hub-card__badges"><span class="badge">Preview</span></div>
-      <h2 class="hub-card__t"><a href="/pro/studio/">Prompt Studio</a></h2><p class="hub-card__b">Build a system prompt from blocks, check it and compare versions.</p><a class="hub-card__go" href="/pro/studio/" aria-label="Open Prompt Studio">Open Prompt Studio <span aria-hidden="true">→</span></a></li>
-    <li class="hub-card"><div class="hub-card__badges"><span class="badge">Preview</span></div>
-      <h2 class="hub-card__t"><a href="/pro/blueprint/">Agent Blueprint</a></h2><p class="hub-card__b">Design the team before you write the code: agents, tools, limits and handoffs, exported as a draft config.</p><a class="hub-card__go" href="/pro/blueprint/" aria-label="Open Agent Blueprint">Open Agent Blueprint <span aria-hidden="true">→</span></a></li>
-    <li class="hub-card"><div class="hub-card__badges"><span class="badge">Preview</span><span class="badge badge--sim">Demo runner: simulated</span></div>
-      <h2 class="hub-card__t"><a href="/pro/regression-lab/">Regression Lab</a></h2><p class="hub-card__b">Save test cases for a prompt and see which ones a change fixed or broke.</p><a class="hub-card__go" href="/pro/regression-lab/" aria-label="Open Regression Lab">Open Regression Lab <span aria-hidden="true">→</span></a></li>
-    <li class="hub-card"><div class="hub-card__badges"><span class="badge">Preview</span></div>
-      <h2 class="hub-card__t"><a href="/pro/releases/">Releases</a></h2><p class="hub-card__b">Version a prompt, sign it in your browser, and let anyone check it hasn't been changed.</p><a class="hub-card__go" href="/pro/releases/" aria-label="Open Releases">Open Releases <span aria-hidden="true">→</span></a></li>
-  </ol>
+<section class="feat" id="blueprint" aria-labelledby="blueprint-h" data-feature="blueprint">
+  <div class="feat__copy"><p class="eyebrow"><span class="num">02</span>Agent Blueprint <span class="pill">Preview</span></p><h2 id="blueprint-h" class="h2">Design the team before you write the code.</h2>
+    <ul class="ticks"><li>Lay out agents, the tools each may use, step limits and who hands off to whom.</li><li>Checks catch duplicate names, broken handoffs and risky tools without human approval.</li><li>Export a draft config in MCP-, OpenAI- or Anthropic-style JSON.</li></ul><a class="btn btn--ghost" href="/pro/blueprint/">Open Agent Blueprint <span aria-hidden="true">→</span></a></div>
+  <figure class="shot"><img src="/pro/media/blueprint.jpg" alt="Agent Blueprint canvas with four connected agents and the edit panel" width="1200" height="750" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
+</section>
+<section class="feat" id="regression" aria-labelledby="regression-h" data-feature="regression">
+  <div class="feat__copy"><p class="eyebrow"><span class="num">03</span>Regression Lab <span class="pill">Preview</span></p><h2 id="regression-h" class="h2">Know what a prompt change fixed, and what it broke.</h2>
+    <ul class="ticks"><li>Write test cases once: must include, must not include, format and length.</li><li>Run version A and version B side by side and see fixed, broken and unchanged cases.</li><li>The demo runner in this preview is simulated, and it is labelled that way.</li></ul><a class="btn btn--ghost" href="/pro/regression-lab/">Open Regression Lab <span aria-hidden="true">→</span></a></div>
+  <figure class="shot"><img src="/pro/media/regression.jpg" alt="Regression Lab report comparing two prompt versions" width="1200" height="750" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
+</section>
+<section class="feat" id="releases" aria-labelledby="releases-h" data-feature="releases">
+  <div class="feat__copy"><p class="eyebrow"><span class="num">04</span>Signed Releases <span class="pill">Preview</span></p><h2 id="releases-h" class="h2">Ship prompts anyone can verify.</h2>
+    <ul class="ticks"><li>Give a prompt a version and changelog, then sign it with Ed25519 in your browser.</li><li>Anyone can paste the pack and check it has not been changed since signing.</li><li>Private keys are generated in the tab and never saved or sent.</li></ul><a class="btn btn--ghost" href="/pro/releases/">Open Signed Releases <span aria-hidden="true">→</span></a></div>
+  <figure class="shot"><img src="/pro/media/releases.jpg" alt="Signed Releases page showing a valid verification result" width="1200" height="750" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
+</section>
 </div>
+<section class="final" aria-labelledby="final-h"><div class="lw final__in"><h2 id="final-h" class="h2">Start with a template, or a blank page.</h2>
+  <p class="lead">Prompt Studio has seven original starter templates, including a Telugu/English assistant.</p>
+  <div class="cta"><a class="btn btn--primary" href="/pro/studio/">Open Prompt Studio</a><button type="button" class="btn btn--ghost" data-palette>Search features <kbd data-mod>Ctrl K</kbd></button></div></div></section>
 </main>
+<footer class="lfoot"><div class="lw lfoot__in"><div><a class="shell-brand" href="/pro/"><i aria-hidden="true"></i>SPE Pro</a><p>Pro preview. Not released. Plans and pricing are not decided. Runs in your browser; nothing is uploaded.</p></div>
+  <nav aria-label="All Pro pages"><ul><li><a href="/pro/">Overview</a></li><li><a href="/pro/studio/">Prompt Studio</a></li><li><a href="/pro/blueprint/">Agent Blueprint</a></li><li><a href="/pro/regression-lab/">Regression Lab</a></li><li><a href="/pro/releases/">Signed Releases</a></li></ul></nav></div></footer>
+<dialog id="shell-drawer" class="shell-drawer" aria-label="Pro navigation"><div class="shell-drawer__head"><a class="shell-brand" href="/pro/"><i aria-hidden="true"></i>SPE Pro<span class="shell-tag">Preview</span></a><button type="button" class="shell-menu" data-drawer-close aria-label="Close navigation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><nav aria-label="Pro, mobile"><ul class="shell-nav"><li><a href="/pro/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg><span>Overview</span></a></li><li><a href="/pro/studio/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="5" rx="1.5"/><rect x="4" y="11" width="16" height="4" rx="1.5"/><rect x="4" y="17" width="10" height="3" rx="1.5"/></svg><span>Prompt Studio</span></a></li><li><a href="/pro/blueprint/"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7.5 10.8 16M16 7.5 13.2 16M8.5 6h7"/></svg><span>Agent Blueprint</span></a></li><li><a href="/pro/regression-lab/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg><span>Regression Lab</span></a></li><li><a href="/pro/releases/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Signed Releases</span></a></li></ul></nav></dialog>
+<script type="module" src="./landing.ts"></script>
 </body>
 </html>

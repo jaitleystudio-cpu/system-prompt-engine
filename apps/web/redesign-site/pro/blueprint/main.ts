@@ -1,5 +1,6 @@
 import { type Blueprint, type Agent, TOOLS, validate, toOpenAI, toAnthropic, toMcpStyle } from "../core/blueprint.ts";
 import { $, esc, load, save, download, copy, uid } from "../core/ui.ts";
+import "../../../pro-studio/pro/shared/shell.ts";
 const KEY = "spe.pro.blueprint.v1";
 const example = (): Blueprint => ({ name: "Bike shop help desk", agents: [
   { id: "triage", name: "Triage", role: "Reads each message and decides who should answer.", instructions: "Ask one clarifying question if the request is unclear.", tools: [], maxSteps: 4, needsApproval: false, x: 16, y: 168 },
@@ -72,3 +73,4 @@ $("copy").addEventListener("click", async () => { $("status").textContent = (awa
 $("dl").addEventListener("click", () => download(`blueprint-${fmt()}-draft.json`, $<HTMLTextAreaElement>("exp").value));
 $("reset").addEventListener("click", () => { bp = example(); sel = bp.agents[0].id; renderAll(); persist(); $("status").textContent = "Example restored."; });
 renderAll();
+window.addEventListener("spe:action", (e) => { const id = (e as CustomEvent).detail; if (id === "add-agent") $("addagent").click(); if (id === "export-config") { $("exp").scrollIntoView({ block: "center" }); $("exp").focus(); } });

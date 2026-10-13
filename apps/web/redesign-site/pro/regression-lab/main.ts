@@ -1,5 +1,6 @@
 import { type TestCase, type DiffReport, runSuite, diffReports, splitList } from "../core/regression.ts";
 import { $, esc, load, save, uid } from "../core/ui.ts";
+import "../../../pro-studio/pro/shared/shell.ts";
 const KEY = "spe.pro.regression.v1";
 interface State { a: string; b: string; cases: TestCase[] }
 const example = (): State => ({
@@ -55,3 +56,4 @@ $("run").addEventListener("click", () => {
 });
 $("reset").addEventListener("click", () => { st = example(); persist(); render(); $("report").hidden = true; $("status").textContent = "Example restored."; });
 render();
+window.addEventListener("spe:action", (e) => { const id = (e as CustomEvent).detail; if (id === "add-case") { $("cn").scrollIntoView({ block: "center" }); $("cn").focus(); } if (id === "run-tests") { $("run").click(); $("report").scrollIntoView({ block: "start" }); } });

@@ -1,4 +1,5 @@
 import { TEMPLATES } from "./templates";
+import "../shared/shell";
 // SPE Pro Prompt Studio r1 — runs fully client-side. No network calls (CSP connect-src 'none').
 type Kind = "role" | "rules" | "tone" | "output" | "examples" | "requirements" | "custom";
 interface Block { id: string; kind: Kind; title: string; text: string; must?: string[]; mustNot?: string[] }
@@ -358,4 +359,11 @@ $("#tpl-list").addEventListener("click", e => { const btn = (e.target as HTMLEle
     versions.push({ id: uid(), note: `Before template: ${t.name}`, at: new Date().toISOString(), blocks: blocks.map(plain), variables: { ...vars } });
   }
   dlgEl.close(); vars = {}; varSig = ""; setBlocks(t.blocks.map(b => plain(b)), `Loaded template ${t.name}${versions.length ? ". Previous draft saved in Versions." : ""}`); renderVersions(); });
+// Command palette actions (from ../shared/shell)
+const keepDraft = (note: string) => { if (!blocks.some(b => b.text.trim())) return true; if (!confirm("Replace your current draft? It will be saved as a version first.")) return false; versions.push({ id: uid(), note, at: new Date().toISOString(), blocks: blocks.map(plain), variables: { ...vars } }); return true; };
+window.addEventListener("spe:action", e => { const id = (e as CustomEvent).detail;
+  if (id === "new-prompt" && keepDraft("Before new prompt")) { vars = {}; varSig = ""; selectTab("edit"); setBlocks((["role", "rules", "tone", "output"] as Kind[]).map(k => ({ kind: k, title: LABEL[k], text: "" })), "New prompt started"); renderVersions(); (document.querySelector("#blocks textarea") as HTMLElement | null)?.focus(); }
+  if (id === "templates") $("#btn-templates").click();
+  if (id === "import") { $("#btn-import").focus(); $("#btn-import").click(); }
+  if (id === "export-spe") $("#btn-export").click(); });
 load(); render(); renderVersions();
