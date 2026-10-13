@@ -162,3 +162,52 @@ def verify_incident_link(
         owner_signature_valid=not issues,
         source_identity_bound_within_scope=not issues,
     )
+
+
+
+def verified_external_entry_binding(
+    *,
+    failure: FailureGenomeEntry,
+    entry,
+    journal: SourceEventJournal | None,
+    proposal: IncidentLinkProposal | None,
+    receipt: AuthenticatedReceipt | None,
+    owner_keys: Mapping[str, str] | None,
+) -> bool:
+    """Re-verify owner signature and latest source at every review/publish use.
+
+    A forged IncidentLinkAssessment dataclass or caller booleans are ignored.
+    Source metadata and owner-signed mapping still DO NOT prove model failure.
+    """
+    from .event_journal import JournalEntry
+
+    if (
+        not isinstance(journal, SourceEventJournal)
+        or not isinstance(entry, JournalEntry)
+        or not isinstance(proposal, IncidentLinkProposal)
+        or not journal.verify_chain()
+    ):
+        return False
+    latest = journal.latest_entry(entry.source_id, entry.event_id)
+    if latest is None or latest != entry:
+        return False
+    if (
+        proposal.external_source_id != entry.source_id
+        or proposal.external_event_id != entry.event_id
+        or proposal.failure_id != getattr(failure, "failure_id", None)
+        or proposal.source_content_sha256 != entry.content_sha256
+        or proposal.source_published_at != entry.source_published_at
+        or proposal.source_observed_at != entry.observed_at
+        or proposal.source_chain_digest != entry.chain_digest
+    ):
+        return False
+    decision = verify_incident_link(
+        failure=failure, journal=journal, proposal=proposal,
+        owner_receipt=receipt, trusted_identity_keys=owner_keys,
+    )
+    return (
+        decision.state == "OWNER_REVIEWED_SOURCE_IDENTITY_ONLY"
+        and decision.owner_signature_valid
+        and decision.source_identity_bound_within_scope
+        and decision.publication_authorized is False
+    )
