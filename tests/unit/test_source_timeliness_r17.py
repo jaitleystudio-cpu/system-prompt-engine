@@ -147,3 +147,16 @@ def test_unsafe_freshness_policy_rejected(max_seconds):
             source_published_at=T0, observed_at=T1,
             archival_threshold_seconds=max_seconds,
         )
+
+
+
+def test_same_batch_duplicate_source_ids_cannot_choose_ambiguous_order():
+    a = watcher(page(
+        source(content="one"),
+        source(content="two", updated=T1),
+    ))
+    r = a.poll("official", allow_network=True, observed_at=T2)
+    assert r.status == "HOLD"
+    assert r.reason_codes == ("AMBIGUOUS_DUPLICATE_SOURCE_IDS",)
+    assert a.journal.entries == ()
+    assert not r.first_to_report_verified
