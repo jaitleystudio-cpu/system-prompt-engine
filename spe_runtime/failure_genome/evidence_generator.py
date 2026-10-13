@@ -1,7 +1,7 @@
 """
 SPE Ω — Programmatic Evidence & Failure Genome Generator Subsystem (Gap 3 Closure).
-Synthesizes CVE-style Failure Genome records, empirical Model Passports,
-and Head-to-Head Benchmark Showdowns backed by reproducible test vectors.
+Contains synthetic demo records, mock Model Passports, and comparison fixtures.
+These objects are NOT independently measured scientific or competitive evidence.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from spe_runtime.research.wdes.types import NanoUSD, validate_nanos
 
 @dataclass(frozen=True)
 class FailureGenomeReport:
-    """An authoritative CVE-style Failure Genome record."""
+    """Synthetic research fixture; not an authenticated real-model incident."""
     failure_id: str  # SPE-FG-2026-XXXXXX
     title: str
     severity: Severity
@@ -32,7 +32,7 @@ class FailureGenomeReport:
 
 @dataclass(frozen=True)
 class ModelPassport:
-    """Empirical, data-driven Model Passport with verified benchmark scores."""
+    """Synthetic model-score fixture; not an actual model measurement."""
     provider: str
     model_id: str
     negative_rule_preservation_score: float  # Under 25-word handoff (0.0 - 1.0)
@@ -48,7 +48,7 @@ class ModelPassport:
 
 @dataclass(frozen=True)
 class BenchmarkShowdown:
-    """Rigorous, factual side-by-side engineering comparison against a competitor."""
+    """Synthetic comparison fixture; not a competitor benchmark verdict."""
     competitor: str  # Promptfoo, Langfuse, LiteLLM
     title: str
     subtitle: str
@@ -58,7 +58,7 @@ class BenchmarkShowdown:
 
 
 class EvidenceGenerator:
-    """Generates authoritative scientific evidence assets and crawlable HTML representations."""
+    """Generates synthetic research fixtures only; no public evidence authority."""
 
     @staticmethod
     def default_failure_genome_records() -> List[FailureGenomeReport]:
@@ -263,202 +263,71 @@ class EvidenceGenerator:
         ]
 
     @staticmethod
-    def render_failure_genome_html(record: FailureGenomeReport) -> str:
-        test_vec_json = json.dumps(record.reproducible_test_vector, indent=2)
+    def _render_synthetic_fixture(category: str, label: str) -> str:
+        """Offline preview only: no scores, observed failures, or publishable evidence."""
+        from html import escape
+
+        title = escape(label, quote=True)
+        category_name = escape(category, quote=True)
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{record.failure_id}: {record.title} | SPE Genome</title>
-  <meta name="description" content="Sanitized failure case, root cause analysis, reproducible test vector, and verified SPE vaccine.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://systempromptengine.com/failure-genome/{record.failure_id}">
-  <style>
-    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #07090e; color: #e2e8f0; margin: 0; padding: 40px 20px; line-height: 1.6; }}
-    .container {{ max-width: 840px; margin: 0 auto; }}
-    header {{ border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 32px; }}
-    h1 {{ font-size: 26px; color: #f8fafc; margin: 0 0 12px 0; }}
-    p.lead {{ font-size: 15px; color: #94a3b8; }}
-    .badge {{ display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: #0f172a; border: 1px solid #334155; color: #38bdf8; margin-bottom: 16px; }}
-    .badge-crit {{ background: #450a0a; border-color: #991b1b; color: #f87171; }}
-    .box {{ background: #0d121d; border: 1px solid #1e293b; border-radius: 8px; padding: 24px; margin: 24px 0; }}
-    pre {{ background: #04060a; padding: 16px; border-radius: 6px; overflow-x: auto; color: #38bdf8; font-size: 13px; }}
-    a {{ color: #38bdf8; text-decoration: none; }}
-    a:hover {{ text-decoration: underline; }}
-    nav.breadcrumbs {{ font-size: 12px; color: #64748b; margin-bottom: 16px; }}
-    footer {{ margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; font-size: 12px; color: #64748b; }}
-  </style>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>SYNTHETIC FIXTURE — {title} | SPE</title>
 </head>
-<body>
-  <div class="container">
-    <nav class="breadcrumbs">
-      <a href="/">Home</a> &gt; <span>failure-genome/{record.failure_id}</span>
-    </nav>
-    <header>
-      <span class="badge { 'badge-crit' if record.severity == Severity.CRITICAL else '' }">{record.severity.value} &bull; {record.failure_class.value}</span>
-      <h1>{record.failure_id}: {record.title}</h1>
-      <p class="lead">Empirical Failure Genome registry entry with reproducible test vector and $0 vaccine contract.</p>
-    </header>
-
-    <main>
-      <div class="box">
-        <h2>Mathematical Root Cause Analysis</h2>
-        <p>{record.root_cause}</p>
-        <p><strong>Affected Model Families:</strong> {', '.join(record.affected_models)}</p>
-        <p><strong>Standards Mapping:</strong> OWASP {record.owasp_mapping} | MITRE {record.mitre_atlas_mapping}</p>
-      </div>
-
-      <div class="box">
-        <h2>Reproducible Test Vector (JSON)</h2>
-        <pre>{test_vec_json}</pre>
-      </div>
-
-      <div class="box">
-        <h2>The SPE Vaccine (.spe Contract)</h2>
-        <pre>{record.spe_vaccine_contract}</pre>
-        <p>Adopt instantly via <code>spe adopt</code> or wire proxy <code>base_url="http://localhost:8080/v1"</code>.</p>
-      </div>
-    </main>
-
-    <footer>
-      <p>&copy; 2026 System Prompt Engine (SPE Ω). 100% Local-First & Air-Gapped AI Instruction Assurance.</p>
-    </footer>
-  </div>
-</body>
-</html>"""
-
-    @staticmethod
-    def render_model_passport_html(passport: ModelPassport) -> str:
-        return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{passport.provider} {passport.model_id}: Empirical Model Passport | SPE Ω</title>
-  <meta name="description" content="Verified empirical benchmark data for {passport.model_id}: negative rule preservation, drift rates, and cost per verified task.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://systempromptengine.com/models/{passport.provider.lower()}/{passport.model_id.lower()}">
-  <style>
-    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #07090e; color: #e2e8f0; margin: 0; padding: 40px 20px; line-height: 1.6; }}
-    .container {{ max-width: 840px; margin: 0 auto; }}
-    header {{ border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 32px; }}
-    h1 {{ font-size: 26px; color: #f8fafc; margin: 0 0 12px 0; }}
-    p.lead {{ font-size: 15px; color: #94a3b8; }}
-    .badge {{ display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: #0f172a; border: 1px solid #334155; color: #38bdf8; margin-bottom: 16px; }}
-    .box {{ background: #0d121d; border: 1px solid #1e293b; border-radius: 8px; padding: 24px; margin: 24px 0; }}
-    table {{ width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }}
-    th, td {{ padding: 10px 14px; border-bottom: 1px solid #1e293b; text-align: left; }}
-    th {{ color: #94a3b8; font-weight: 500; }}
-    pre {{ background: #04060a; padding: 16px; border-radius: 6px; overflow-x: auto; color: #38bdf8; font-size: 13px; }}
-    a {{ color: #38bdf8; text-decoration: none; }}
-    footer {{ margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; font-size: 12px; color: #64748b; }}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <span class="badge">EMPIRICAL_PASSPORT &bull; VERIFIED</span>
-      <h1>{passport.provider} {passport.model_id} Model Passport</h1>
-      <p class="lead">Standardized empirical drift and rule-retention evaluation under SPE Ω control plane.</p>
-    </header>
-
-    <main>
-      <div class="box">
-        <h2>Verified Empirical Scores</h2>
-        <table>
-          <tr><th>Evaluation Metric</th><th>Score</th><th>Benchmark Protocol</th></tr>
-          <tr><td>Negative Rule Preservation</td><td>{passport.negative_rule_preservation_score * 100:.1f}%</td><td>Handoff under 25-word summary load</td></tr>
-          <tr><td>Unauthorized Delegation Rate</td><td>{passport.unauthorized_delegation_rate * 100:.2f}%</td><td>MasDrift multi-agent privilege test</td></tr>
-          <tr><td>SpecBench Generalization Ratio</td><td>{passport.specbench_generalization_ratio:.1f}x</td><td>Held-out vs memorized tasks</td></tr>
-          <tr><td>Cost-per-Verified-Task</td><td>{passport.cost_per_verified_task_nanos} NanoUSD</td><td>Exact integer 2PC escrow accounting</td></tr>
-        </table>
-      </div>
-
-      <div class="box">
-        <h2>Integration Directive</h2>
-        <pre>client = OpenAI(base_url="http://localhost:8080/v1", api_key="spe-local")
-response = client.chat.completions.create(
-    model="{passport.model_id}",
-    messages=[{{"role": "user", "content": "Execute verified workflow"}}]
-)</pre>
-      </div>
-    </main>
-
-    <footer>
-      <p>&copy; 2026 System Prompt Engine (SPE Ω). 100% Local-First & Air-Gapped AI Instruction Assurance.</p>
-    </footer>
-  </div>
-</body>
-</html>"""
-
-    @staticmethod
-    def render_benchmark_showdown_html(showdown: BenchmarkShowdown) -> str:
-        rows = "".join(
-            f"<tr><td><strong>{dim['dimension']}</strong></td><td>{dim['spe_omega']}</td><td>{dim['competitor']}</td></tr>"
-            for dim in showdown.comparison_dimensions
-        )
-        test_vec_json = json.dumps(showdown.reproducible_offline_test_vector, indent=2)
-        safe_id = showdown.competitor.lower().replace(" ", "-")
-        return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{showdown.title} | SPE Ω Benchmark Showdown</title>
-  <meta name="description" content="{showdown.subtitle}">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://systempromptengine.com/compare/spe-vs-{safe_id}">
-  <style>
-    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #07090e; color: #e2e8f0; margin: 0; padding: 40px 20px; line-height: 1.6; }}
-    .container {{ max-width: 880px; margin: 0 auto; }}
-    header {{ border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 32px; }}
-    h1 {{ font-size: 26px; color: #f8fafc; margin: 0 0 12px 0; }}
-    p.lead {{ font-size: 15px; color: #94a3b8; }}
-    .badge {{ display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: #0f172a; border: 1px solid #334155; color: #38bdf8; margin-bottom: 16px; }}
-    .box {{ background: #0d121d; border: 1px solid #1e293b; border-radius: 8px; padding: 24px; margin: 24px 0; }}
-    table {{ width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }}
-    th, td {{ padding: 12px 14px; border-bottom: 1px solid #1e293b; text-align: left; vertical-align: top; }}
-    th {{ color: #94a3b8; font-weight: 500; background: #090d15; }}
-    pre {{ background: #04060a; padding: 16px; border-radius: 6px; overflow-x: auto; color: #38bdf8; font-size: 13px; }}
-    a {{ color: #38bdf8; text-decoration: none; }}
-    footer {{ margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; font-size: 12px; color: #64748b; }}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <span class="badge">HEAD_TO_HEAD_SHOWDOWN &bull; EMPIRICAL</span>
-      <h1>{showdown.title}</h1>
-      <p class="lead">{showdown.subtitle}</p>
-    </header>
-
-    <main>
-      <div class="box">
-        <h2>Side-by-Side Architectural Comparison</h2>
-        <table>
-          <tr><th>Evaluation Dimension</th><th>SPE Ω (Compile-Time Kernel)</th><th>{showdown.competitor}</th></tr>
-          {rows}
-        </table>
-      </div>
-
-      <div class="box">
-        <h2>Offline Reproducible Test Vector</h2>
-        <pre>{test_vec_json}</pre>
-        <p><strong>Empirical Verdict:</strong> {showdown.verdict_summary}</p>
-      </div>
-    </main>
-
-    <footer>
-      <p>&copy; 2026 System Prompt Engine (SPE Ω). 100% Local-First & Air-Gapped AI Instruction Assurance.</p>
-    </footer>
-  </div>
+<body style="font-family:system-ui,sans-serif;max-width:50rem;margin:3rem auto;padding:1rem">
+  <main>
+    <h1>SYNTHETIC FIXTURE — NOT VERIFIED</h1>
+    <h2>{category_name}</h2>
+    <p><strong>{title}</strong></p>
+    <p>This is a non-public test preview. No external model incident, root cause,
+    vaccine/repair, comparative benchmark, price, or product superiority is
+    established by these hard-coded example objects.</p>
+    <p>Publication requires separately reviewed primary sources, genuine
+    reproduction receipts, causal tests, repair regression evidence, and
+    existing SPE owner authorization. A local fixture is never such proof.</p>
+  </main>
 </body>
 </html>"""
 
     @classmethod
-    def export_all_to_directory(cls, output_dir: Path | str) -> List[Path]:
-        """Renders and writes all failure genome, model passport, and showdown pages."""
+    def render_failure_genome_html(
+        cls, record: FailureGenomeReport, *, fixture_only: bool = False
+    ) -> str:
+        if fixture_only is not True:
+            raise PermissionError("Synthetic Failure Genome claims cannot be published without verified evidence authority")
+        return cls._render_synthetic_fixture(
+            "Failure Genome / SPE Vaccine", f"{record.failure_id}: {record.title}"
+        )
+
+    @classmethod
+    def render_model_passport_html(
+        cls, passport: ModelPassport, *, fixture_only: bool = False
+    ) -> str:
+        if fixture_only is not True:
+            raise PermissionError("Synthetic model scores cannot be published as empirical measurements")
+        return cls._render_synthetic_fixture(
+            "Model Passport", f"{passport.provider} {passport.model_id}"
+        )
+
+    @classmethod
+    def render_benchmark_showdown_html(
+        cls, showdown: BenchmarkShowdown, *, fixture_only: bool = False
+    ) -> str:
+        if fixture_only is not True:
+            raise PermissionError("Synthetic competitor comparisons cannot be published as benchmark evidence")
+        return cls._render_synthetic_fixture(
+            "Side-by-Side Architectural Comparison", showdown.title
+        )
+
+    @classmethod
+    def export_all_to_directory(cls, output_dir: Path | str, *, fixture_only: bool = False) -> List[Path]:
+        """Explicitly opt in to generating non-indexable synthetic fixtures only."""
+        if fixture_only is not True:
+            raise PermissionError("Unverified example assets cannot be published or indexed")
         out_path = Path(output_dir)
         out_path.mkdir(parents=True, exist_ok=True)
         written: List[Path] = []
@@ -467,14 +336,14 @@ response = client.chat.completions.create(
         for record in cls.default_failure_genome_records():
             fname = f"failure-genome_{record.failure_id}.html"
             target = out_path / fname
-            target.write_text(cls.render_failure_genome_html(record), encoding="utf-8")
+            target.write_text(cls.render_failure_genome_html(record, fixture_only=True), encoding="utf-8")
             written.append(target)
 
         # 2. Model Passports
         for passport in cls.default_model_passports():
             fname = f"models_{passport.provider.lower()}_{passport.model_id.lower().replace('.', '-')}.html"
             target = out_path / fname
-            target.write_text(cls.render_model_passport_html(passport), encoding="utf-8")
+            target.write_text(cls.render_model_passport_html(passport, fixture_only=True), encoding="utf-8")
             written.append(target)
 
         # 3. Benchmark Showdowns
@@ -482,7 +351,7 @@ response = client.chat.completions.create(
             safe_id = showdown.competitor.lower().replace(" ", "-")
             fname = f"compare_spe-vs-{safe_id}.html"
             target = out_path / fname
-            target.write_text(cls.render_benchmark_showdown_html(showdown), encoding="utf-8")
+            target.write_text(cls.render_benchmark_showdown_html(showdown, fixture_only=True), encoding="utf-8")
             written.append(target)
 
         return written
