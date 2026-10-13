@@ -69,3 +69,9 @@ Bro's replay confirmed the claims above (172 tests, 30/30 killed, 2,791 files by
 ### Verification (round 2)
 - `pytest tests/research/lvt tests/research/rbpd`: **186 passed**, exit 0.
 - Mutation gate: **32/32 KILLED**, MUT_EXIT=0, restoration byte-identical.
+
+## Round 3 (2026-10-13, Bro replay 2): BRO3 and BRO4 killed
+- **BRO3:** a properly signed attestation whose verdict is not APPROVED was accepted. Now covered by `test_signed_attestation_with_non_approved_verdict_is_rejected` and mutant **M33** (the verdict != APPROVED check is removed). Result: KILLED.
+- **BRO4:** a revoked validator key could be re-enrolled. Now covered by `test_revoked_validator_key_cannot_be_re_enrolled` and mutant **M34** (the revocation check on enrol is dropped). Result: KILLED.
+- Gate: **34/34 mutants KILLED**. The unmutated control is BYTES_IDENTICAL. `tests/research/lvt` + `rbpd`: **188 passed**.
+- Evidence: `evidence/lvt2_harness_repair/mutations_r3.json` and `mutations_r3_log.txt`.
