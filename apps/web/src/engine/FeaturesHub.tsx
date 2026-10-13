@@ -10,6 +10,7 @@ import { SpeClickyContinuationHub } from "./SpeClickyContinuationHub";
 import { SpeV5MoonshotNorthStarBrain } from "./SpeV5MoonshotNorthStarBrain";
 import { SpeAgiBrainStudio } from "./SpeAgiBrainStudio";
 import { SpeEgacUniversalStudio } from "./SpeEgacUniversalStudio";
+import { SpeRgdUniversalStudio } from "./SpeRgdUniversalStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -29,6 +30,14 @@ export interface FeatureItem {
 }
 
 export const FEATURES: FeatureItem[] = [
+  {
+    id: "spe-rgd-universal",
+    view: "capabilities",
+    title: "⚡ SPE Ω PRO — Scientific Discovery",
+    subtitle: "Reality-Grounded Discovery (RGD-1), 400M+ Scholarly Catalog, Counterfactual VOI & Proofs",
+    href: "/capabilities",
+    badge: "SPE Pro",
+  },
   {
     id: "spe-egac-universal",
     view: "capabilities",
@@ -185,7 +194,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["spe-rgd-universal", "spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -466,6 +475,10 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 ✕ Close
               </button>
             </div>
+
+            {activeModal === "spe-rgd-universal" && (
+              <SpeRgdUniversalStudio onNavigate={onNavigate} onClose={() => setActiveModal(null)} />
+            )}
 
             {activeModal === "spe-egac-universal" && (
               <SpeEgacUniversalStudio onNavigate={onNavigate} onClose={() => setActiveModal(null)} />
