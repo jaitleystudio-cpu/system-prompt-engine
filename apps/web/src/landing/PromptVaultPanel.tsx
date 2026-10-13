@@ -1,10 +1,5 @@
 import { useState, useMemo } from "react";
 import type { CategoryId } from "@spe/web-runtime";
-import {
-  POWER_PROMPTS_VAULT,
-  compilePowerPrompt,
-  type PowerPrompt,
-} from "../engine/powerPromptsCatalog";
 import { classifyOutcomeIntent } from "../engine/outcomeIntentClassifier";
 import {
   compileDeepSpecification,
@@ -12,6 +7,12 @@ import {
   type ScaledSpecificationPackage,
 } from "../engine/deepSpecificationScaler";
 import type { ModelDialect } from "../engine/modelTranscompiler";
+import { ARSENAL_CATALOG_ASSETS } from "../engine/arsenal/arsenalCatalogData";
+import type { ArsenalPromptAsset, ArsenalTargetPlatform } from "../engine/arsenal/arsenalSchema";
+import { transcompilePromptForPlatform } from "../engine/arsenal/modelTranscompiler";
+import { getAllModels, getModelAtlasStats } from "../engine/modelAtlas/modelAtlasService";
+import type { AiModelEntry } from "../engine/modelAtlas/modelAtlasSchema";
+import { resolveBrowserVerifiedEntitlement, verifySignedEntitlementToken } from "../engine/entitlementVerifier";
 import "./prompt-vault-panel.css";
 
 interface Props {
@@ -32,14 +33,14 @@ function downloadTextFile(filename: string, content: string) {
 
 const PLATFORMS: { id: ModelDialect; name: string; file: string; icon: string; description: string }[] = [
   { id: "antigravity-skills", name: "Antigravity Skills", file: "SKILL.md", icon: "🌟", description: "Google DeepMind Skills format with YAML frontmatter & <RULE> invariants" },
-  { id: "claude-code", name: "Claude 6.2 Code", file: "CLAUDE.md", icon: "💻", description: "Anthropic Claude 6.1/6.2 Code terminal rules, tool limits & build contracts" },
-  { id: "cursor-rules", name: "Cursor 4.9 IDE", file: ".cursorrules", icon: "🎯", description: "Cursor 4.9 & Windsurf 4.9 JSON agent directives & context ceilings" },
-  { id: "windsurf-rules", name: "Windsurf 4.9 IDE", file: ".windsurfrules", icon: "🌊", description: "Codeium Windsurf 4.9 AST rules & cascading execution bounds" },
-  { id: "grok", name: "xAI Grok 4.9", file: "SYSTEM_POLICY.md", icon: "⚡", description: "Grok 4.9 truth-maximizing mathematical directives & real-time grounding" },
-  { id: "kimi", name: "Moonshot Kimi 3.5", file: "SYSTEM_POLICY.md", icon: "🌙", description: "Kimi 3.5 200k ultra-long context attention anchors & bilingual structure" },
-  { id: "openai-markdown", name: "OpenAI 6 / o3-Pro", file: "SYSTEM_POLICY.md", icon: "🤖", description: "OpenAI 6 Developer role markdown schemas with bold non-negotiable invariants" },
-  { id: "gemini-agent", name: "Google Gemini 3.9 Pro", file: "SYSTEM_POLICY.md", icon: "💎", description: "Gemini 3.9 Pro bracketed directive blocks, function calling contracts & grounding" },
-  { id: "open-weights", name: "DeepSeek 4.5 / Llama 4", file: "SYSTEM_POLICY.md", icon: "🧠", description: "DeepSeek 4.5 & Llama 4 token-level ChatML header framing & proof kernel" },
+  { id: "claude-code", name: "Claude 3.7 / 3.5 Code", file: "CLAUDE.md", icon: "💻", description: "Anthropic Claude 3.7 & 3.5 Sonnet Code terminal rules, tool limits & build contracts" },
+  { id: "cursor-rules", name: "Cursor IDE (.cursorrules)", file: ".cursorrules", icon: "🎯", description: "Cursor Agent & Windsurf JSON agent directives & context ceilings" },
+  { id: "windsurf-rules", name: "Windsurf IDE Rules", file: ".windsurfrules", icon: "🌊", description: "Codeium Windsurf cascading AST execution rules and system boundaries" },
+  { id: "grok", name: "xAI Grok 3", file: "SYSTEM_POLICY.md", icon: "⚡", description: "Grok 3 truth-maximizing mathematical directives & Colossus DeepSearch grounding" },
+  { id: "kimi", name: "Moonshot Kimi K1.5", file: "SYSTEM_POLICY.md", icon: "🌙", description: "Kimi K1.5 200k ultra-long context attention anchors & bilingual structure" },
+  { id: "openai-markdown", name: "OpenAI o3-mini / GPT-4o", file: "SYSTEM_POLICY.md", icon: "🤖", description: "OpenAI Developer role markdown schemas with bold non-negotiable invariants" },
+  { id: "gemini-agent", name: "Google Gemini 2.0 Flash / Pro", file: "SYSTEM_POLICY.md", icon: "💎", description: "Gemini 2.0 bracketed directive blocks, function calling contracts & grounding" },
+  { id: "open-weights", name: "DeepSeek-R1 / Llama 3.3", file: "SYSTEM_POLICY.md", icon: "🧠", description: "DeepSeek-R1 & Llama 3.3 token-level ChatML header framing & proof kernel" },
   { id: "ollama-modelfile", name: "Ollama / Local", file: "Modelfile", icon: "🦙", description: "Docker-like local Modelfile with PARAMETER and SYSTEM blocks" },
 ];
 
@@ -59,11 +60,50 @@ const PLATFORM_PRESETS = [
   { label: "⚡ Distributed Sagas Engine", text: "High-throughput zero-copy event streaming cluster with sagas rollbacks" },
 ];
 
+const SPONSORED_ADS = [
+  {
+    id: "ad-groq",
+    tag: "SPONSORED COMPUTE",
+    title: "⚡ Groq® LPU™ Inference — 500+ Tokens/Sec",
+    desc: "Run Llama 3.3 and DeepSeek at instant speed. Get $5 free developer credits with zero credit card required.",
+    cta: "Claim $5 Credit →",
+    url: "https://groq.com",
+  },
+  {
+    id: "ad-neon",
+    tag: "SPONSORED DATABASE",
+    title: "🐘 Neon Serverless Postgres — AI Agent Database",
+    desc: "Branch databases like Git branches for agent test runs and prompt evaluation workflows.",
+    cta: "Start Free on Neon →",
+    url: "https://neon.tech",
+  },
+  {
+    id: "ad-cursor",
+    tag: "SPONSORED IDE",
+    title: "🎯 Cursor IDE — 1-Click System Prompt Execution",
+    desc: "Deploy these SPE .cursorrules and system prompts directly into your IDE agent with one click.",
+    cta: "Try Cursor Free →",
+    url: "https://cursor.com",
+  },
+];
+
 export function PromptVaultPanel({ onSelectPrompt }: Props) {
   const [panelTab, setPanelTab] = useState<"vault" | "discovery" | "platforms">("vault");
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState<string>("All");
-  const [activeModel, setActiveModel] = useState<string>("claude-6");
+  
+  // Model Atlas integration & Tier Authorization
+  const verifiedEntitlement = useMemo(() => resolveBrowserVerifiedEntitlement(), []);
+  const userTier = verifiedEntitlement?.tier ?? null;
+  const allAtlasModels = useMemo(() => getAllModels(), []);
+  const atlasStats = useMemo(() => getModelAtlasStats(), []);
+  void atlasStats;
+
+  const [activeModelId, setActiveModelId] = useState<string>("claude-3-7-sonnet");
+  const [showProUpgradeModal, setShowProUpgradeModal] = useState<boolean>(false);
+  const [entitlementTokenInput, setEntitlementTokenInput] = useState<string>("");
+  const [tokenActivationMessage, setTokenActivationMessage] = useState<string | null>(null);
+
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [varValues, setVarValues] = useState<Record<string, Record<string, string>>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -86,18 +126,60 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
   const [copiedPlatformSpec, setCopiedPlatformSpec] = useState(false);
   const [downloadNotice, setDownloadNotice] = useState<string | null>(null);
 
-  const categories = ["All", "SEO", "Marketing", "Coding", "Business", "Writing"];
+  const [activeArsenalPlatform, setActiveArsenalPlatform] = useState<ArsenalTargetPlatform>("claude");
 
-  const filteredPrompts = useMemo(() => {
-    return POWER_PROMPTS_VAULT.filter((p) => {
-      const matchCat = selectedCat === "All" || p.category === selectedCat;
+  const handleSelectModel = (model: AiModelEntry) => {
+    setActiveModelId(model.id);
+    setActiveArsenalPlatform(model.dialectTemplateKey as ArsenalTargetPlatform);
+  };
+
+  const handleOpenOfflineModal = () => {
+    setShowProUpgradeModal(true);
+  };
+
+  const handleVerifyToken = () => {
+    if (!entitlementTokenInput.trim()) return;
+    const res = verifySignedEntitlementToken(entitlementTokenInput.trim());
+    if (res.verified) {
+      localStorage.setItem("spe_browser_entitlement_v1", entitlementTokenInput.trim());
+      setTokenActivationMessage("Entitlement activated successfully! Pro capabilities unlocked.");
+      setTimeout(() => {
+        setShowProUpgradeModal(false);
+        setTokenActivationMessage(null);
+        window.location.reload();
+      }, 1000);
+    } else {
+      setTokenActivationMessage(`Verification failed: ${res.rejectionReason || "Invalid signature"}`);
+    }
+  };
+
+  const categories = [
+    "All",
+    "Software & DevOps",
+    "Digital Marketing & SEO",
+    "Business & Operations",
+    "UI/UX & Web Design",
+    "Research & Education",
+    "Image Generation",
+    "Video & Motion",
+    "Audio, Speech & Music",
+    "Sales & CRM",
+    "Finance & Analytics",
+    "Customer Support & HR",
+    "Legal & Compliance",
+    "Writing & Productivity",
+  ];
+
+  const filteredArsenalAssets = useMemo(() => {
+    return ARSENAL_CATALOG_ASSETS.filter((p) => {
+      const matchCat = selectedCat === "All" || p.domain === selectedCat;
       const q = search.toLowerCase();
       const matchSearch =
         !q ||
         p.title.toLowerCase().includes(q) ||
         p.tagline.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        p.outcome.toLowerCase().includes(q);
+        p.subdomain.toLowerCase().includes(q) ||
+        p.domain.toLowerCase().includes(q);
       return matchCat && matchSearch;
     });
   }, [search, selectedCat]);
@@ -112,17 +194,25 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
     }));
   };
 
-  const getCompiledText = (p: PowerPrompt) => {
+  const getCompiledText = (p: ArsenalPromptAsset) => {
     const vars = varValues[p.id] || {};
-    return compilePowerPrompt(p, vars);
+    return transcompilePromptForPlatform(p, activeArsenalPlatform, vars, {
+      specificModelId: activeModelId,
+      tier: userTier,
+    });
   };
 
-  const handleLoad = (p: PowerPrompt) => {
+  const handleLoad = (p: ArsenalPromptAsset) => {
     const text = getCompiledText(p);
     let targetCat: CategoryId = "Writing";
-    if (p.category === "SEO" || p.category === "Business" || p.category === "Marketing") {
+    if (
+      p.domain === "Digital Marketing & SEO" ||
+      p.domain === "Business & Operations" ||
+      p.domain === "Sales & CRM" ||
+      p.domain === "Finance & Analytics"
+    ) {
       targetCat = "Business";
-    } else if (p.category === "Coding") {
+    } else if (p.domain === "Software & DevOps" || p.domain === "UI/UX & Web Design") {
       targetCat = "Coding";
     }
     onSelectPrompt(text, targetCat);
@@ -133,7 +223,7 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
     }
   };
 
-  const handleCopy = (p: PowerPrompt) => {
+  const handleCopy = (p: ArsenalPromptAsset) => {
     const text = getCompiledText(p);
     navigator.clipboard.writeText(text).then(() => {
       setCopiedId(p.id);
@@ -141,7 +231,7 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
     });
   };
 
-  const handleSendToExternal = (p: PowerPrompt, url: string) => {
+  const handleSendToExternal = (p: ArsenalPromptAsset, url: string) => {
     const text = getCompiledText(p);
     navigator.clipboard.writeText(text).then(() => {
       window.open(url, "_blank", "noopener,noreferrer");
@@ -260,7 +350,7 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
   };
 
   return (
-    <section className="spe-vault-panel" id="power-prompts-vault" aria-label="Power Prompts and Platform Harness">
+    <section className="spe-vault-panel" id="power-prompts-vault" data-copy-depth="PROOF" aria-label="Power Prompts and Platform Harness">
       <div className="spe-vault-header">
         <div className="spe-vault-badge-row">
           <div className="spe-vault-tab-switch">
@@ -269,96 +359,73 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
               className={`spe-vault-tab-btn ${panelTab === "vault" ? "active" : ""}`}
               onClick={() => setPanelTab("vault")}
             >
-              ⚡ 1-Click Power Vault
+              ⚡ Universal Prompt Arsenal (10,000+)
             </button>
             <button
               type="button"
               className={`spe-vault-tab-btn ${panelTab === "discovery" ? "active" : ""}`}
               onClick={() => setPanelTab("discovery")}
             >
-              🎯 Smart Outcome Lift
+              🎯 Simple Idea to Pro Prompt
             </button>
             <button
               type="button"
               className={`spe-vault-tab-btn ${panelTab === "platforms" ? "active" : ""}`}
               onClick={() => setPanelTab("platforms")}
             >
-              🌐 Universal Platforms & 100k Harness
+              🌐 100,000+ Char (1 Lakh+) Blueprints &amp; 101 Skills
             </button>
           </div>
 
           <div className="spe-vault-model-pills">
-            <span
-              className={`spe-vault-model-tag ${activeModel === "claude-6" ? "active" : ""}`}
-              onClick={() => setActiveModel("claude-6")}
-              style={{ cursor: "pointer" }}
-            >
-              Claude 6.2 Sonnet
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "gemini-39" ? "active" : ""}`}
-              onClick={() => setActiveModel("gemini-39")}
-              style={{ cursor: "pointer" }}
-            >
-              Gemini 3.9 Pro
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "grok-49" ? "active" : ""}`}
-              onClick={() => setActiveModel("grok-49")}
-              style={{ cursor: "pointer" }}
-            >
-              Grok 4.9
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "cursor-49" ? "active" : ""}`}
-              onClick={() => setActiveModel("cursor-49")}
-              style={{ cursor: "pointer" }}
-            >
-              Cursor 4.9
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "deepseek-45" ? "active" : ""}`}
-              onClick={() => setActiveModel("deepseek-45")}
-              style={{ cursor: "pointer" }}
-            >
-              DeepSeek 4.5
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "kimi-35" ? "active" : ""}`}
-              onClick={() => setActiveModel("kimi-35")}
-              style={{ cursor: "pointer" }}
-            >
-              Kimi 3.5
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "openai-6" ? "active" : ""}`}
-              onClick={() => setActiveModel("openai-6")}
-              style={{ cursor: "pointer" }}
-            >
-              OpenAI 6 / o3-Pro
-            </span>
+            {allAtlasModels.slice(0, 8).map((m) => {
+              const isActive = activeModelId === m.id;
+              return (
+                <button
+                  type="button"
+                  key={m.id}
+                  className={`spe-vault-model-tag ${isActive ? "active" : ""}`}
+                  onClick={() => handleSelectModel(m)}
+                  style={{ cursor: "pointer", border: "none" }}
+                  title={`${m.name} (${m.category})`}
+                >
+                  <span>{m.name.split(" (")[0]}</span>
+                  {m.capabilities.supportsThinking ? (
+                    <span className="spe-model-thinking-badge" aria-label="Reasoning model">
+                      🧠 REASONING
+                    </span>
+                  ) : m.capabilities.supportsVision ? (
+                    <span className="spe-model-vision-badge" aria-label="Vision model">
+                      👁️ VISION
+                    </span>
+                  ) : (
+                    <span className="spe-model-free-badge">⚡ FAST</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {panelTab === "vault" ? (
           <>
-            <h2 className="spe-vault-title">The Curated 1-Click AI Vault</h2>
+            <h2 className="spe-vault-title">Universal Prompt Arsenal — 10,000+ Production Prompts (100% Free on the Web)</h2>
             <p className="spe-vault-subtitle">
-              Precision-engineered prompts for modern frontier models. Zero hallucinations, built-in invariants, and instant results.
+              All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney.
             </p>
           </>
         ) : panelTab === "discovery" ? (
           <>
-            <h2 className="spe-vault-title">Outcome Specification Lift Engine</h2>
+            <h2 className="spe-vault-title">Turn Any Simple Idea Into a Clear Step-by-Step Prompt</h2>
             <p className="spe-vault-subtitle">
-              Translating casual requests into verified 2026 specifications. Evaluates positive complex outcomes vs negative direct queries to prevent chat latency.
+              Type a short request in plain English (or speak in 36+ languages). SPE turns complex tasks into structured instructions while letting simple questions pass through without delay.
             </p>
           </>
         ) : (
           <>
-            <h2 className="spe-vault-title">Universal Platform & Multi-Volume Specification Harness</h2>
+            <h2 className="spe-vault-title">100,000+ Character (1 Lakh+) Blueprints &amp; 1-Click Agent Rules</h2>
             <p className="spe-vault-subtitle">
-              Compile enterprise specifications for Antigravity Skills, Claude Code, Cursor, Grok, Kimi, and ChatGPT up to 100,000 words. 100% offline, zero cloud API fees.
+              Build up to 100,000+ characters (1 Lakh+) of clean instructions for Antigravity Skills, Claude Code, Cursor, Windsurf, Grok, Kimi, and ChatGPT — 100% free on your device.
             </p>
           </>
         )}
@@ -366,6 +433,22 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
 
       {panelTab === "vault" && (
         <>
+          <div className="spe-vault-sponsored-banner">
+            <div className="spe-sponsor-badge">SPONSORED PARTNER COMPUTE</div>
+            <div className="spe-sponsor-info">
+              <div className="spe-sponsor-title">⚡ Run Prompts with $5 Free Cloud API Credits on OpenRouter &amp; Together AI</div>
+              <div className="spe-sponsor-desc">Execute Claude 3.7, o3-mini, and DeepSeek-R1 at sub-200ms latency with zero setup.</div>
+            </div>
+            <a
+              href="https://openrouter.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="spe-sponsor-cta"
+            >
+              Claim $5 Free Compute &rarr;
+            </a>
+          </div>
+
           <div className="spe-vault-toolbar">
             <input
               type="search"
@@ -387,22 +470,60 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
                   {cat}
                 </button>
               ))}
+              <button
+                type="button"
+                className="spe-vault-cat-btn"
+                style={{ borderColor: "rgba(245, 158, 11, 0.45)", color: "#fbbf24", background: "rgba(245, 158, 11, 0.1)" }}
+                onClick={handleOpenOfflineModal}
+              >
+                📥 Download Offline Catalog (Pro)
+              </button>
+            </div>
+
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginTop: "0.75rem", alignItems: "center" }}>
+              <span style={{ fontSize: "0.75rem", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                Target AI Model:
+              </span>
+              {[
+                { id: "claude", label: "Claude 3.7 Sonnet (Thinking)" },
+                { id: "chatgpt", label: "OpenAI o3-mini / GPT-4o" },
+                { id: "gemini", label: "Gemini 2.0 Flash / Pro" },
+                { id: "grok", label: "xAI Grok 3" },
+                { id: "cursor", label: "Cursor IDE (.cursorrules)" },
+                { id: "midjourney", label: "Midjourney v6.1" },
+                { id: "flux", label: "FLUX.1 [pro]" },
+                { id: "runway", label: "Runway Gen-3" },
+                { id: "suno", label: "Suno v4" },
+              ].map((plat) => (
+                <button
+                  type="button"
+                  key={plat.id}
+                  className={`spe-vault-cat-btn ${activeArsenalPlatform === plat.id ? "active" : ""}`}
+                  style={{ fontSize: "0.72rem", padding: "0.25rem 0.6rem" }}
+                  onClick={() => setActiveArsenalPlatform(plat.id as ArsenalTargetPlatform)}
+                >
+                  {plat.label}
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="spe-vault-grid">
-            {filteredPrompts.map((p) => {
+            {filteredArsenalAssets.flatMap((p, idx) => {
               const isExpanded = expandedCardId === p.id;
               const currentVars = varValues[p.id] || {};
               const isCopied = copiedId === p.id;
 
-              return (
+              const elements = [
                 <div className="spe-vault-card" key={p.id}>
                   <div className="spe-card-header">
                     <div className="spe-card-header-left">
                       <span className="spe-card-icon" aria-hidden="true">{p.icon}</span>
                       <div className="spe-card-title-wrap">
-                        <span className="spe-card-cat-badge">{p.category}</span>
+                        <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                          <span className="spe-card-cat-badge">{p.domain}</span>
+                          <span style={{ fontSize: "0.68rem", color: "#64748b", textTransform: "uppercase" }}>{p.subdomain}</span>
+                        </div>
                         <h3>{p.title}</h3>
                       </div>
                     </div>
@@ -412,14 +533,14 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
                       style={{ padding: "0.35rem 0.65rem", fontSize: "0.75rem" }}
                       onClick={() => setExpandedCardId(isExpanded ? null : p.id)}
                     >
-                      {isExpanded ? "Hide" : "Edit"}
+                      {isExpanded ? "Hide" : "Edit / Variables"}
                     </button>
                   </div>
 
                   <p className="spe-card-tagline">{p.tagline}</p>
 
                   <div className="spe-card-outcome">
-                    <strong>Outcome:</strong> {p.outcome}
+                    <strong>Constraints:</strong> {p.constraints.slice(0, 2).join("; ")}
                   </div>
 
                   {isExpanded && (
@@ -472,8 +593,65 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
                     </button>
                   </div>
                 </div>
-              );
+              ];
+
+              if ((idx + 1) % 6 === 0) {
+                const ad = SPONSORED_ADS[(Math.floor(idx / 6)) % SPONSORED_ADS.length];
+                elements.push(
+                  <div className="spe-vault-card spe-vault-infeed-ad-card spe-vault-card-ad" key={`infeed-ad-${idx}`}>
+                    <div className="spe-card-header">
+                      <div className="spe-card-header-left">
+                        <span className="spe-card-icon" aria-hidden="true">🚀</span>
+                        <div className="spe-card-title-wrap">
+                          <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                            <span className="spe-sponsor-badge">{ad.tag}</span>
+                          </div>
+                          <h3>{ad.title}</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="spe-card-tagline">{ad.desc}</p>
+                    <div className="spe-card-outcome" style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
+                      Monetization partner supporting 100% free prompt access for all web users.
+                    </div>
+                    <div className="spe-card-actions" style={{ marginTop: "1rem" }}>
+                      <a
+                        href={ad.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="spe-sponsor-cta"
+                        style={{ width: "100%", justifyContent: "center" }}
+                      >
+                        {ad.cta}
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+
+              return elements;
             })}
+          </div>
+
+          <div className="spe-vault-ad-slot-wrap" aria-label="Advertisement">
+            <div className="spe-ad-label">ADVERTISEMENT • SUPPORTING FREE WEB ACCESS FOR ALL</div>
+            <div className="spe-ad-display-box">
+              <div className="spe-ad-content">
+                <span className="spe-ad-logo" aria-hidden="true">⚡</span>
+                <div>
+                  <strong style={{ color: "#ffffff", fontSize: "0.95rem" }}>Groq® LPU™ Inference — Run Prompts at 500+ Tokens/Sec</strong>
+                  <p style={{ margin: "0.2rem 0 0", fontSize: "0.8rem", color: "#94a3b8" }}>Deploy Llama 3.3 and DeepSeek-R1 with zero credit card required. Free developer credits included.</p>
+                </div>
+              </div>
+              <a
+                href="https://groq.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="spe-btn-ad-visit"
+              >
+                Claim Free Inference &rarr;
+              </a>
+            </div>
           </div>
         </>
       )}
@@ -553,7 +731,7 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
             {discoveryResult.decision === "SPECIFICATION_LIFT_AVAILABLE" ? (
               <div className="spe-discovery-lift-content">
                 <p className="spe-discovery-reason">
-                  {discoveryResult.suggestedAction}. Engineered for {activeModel.toUpperCase()}.
+                  {discoveryResult.suggestedAction}. Engineered for {activeModelId.toUpperCase()}.
                 </p>
                 <div className="spe-discovery-prompt-preview">
                   <pre>{discoveryResult.liftedSpecificationPrompt}</pre>
@@ -833,9 +1011,89 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
             <div className="spe-platform-guarantee-banner">
               <div className="spe-platform-guarantee-text">
                 <span aria-hidden="true">🔒</span>
-                <span>100% Offline Cryptographic Generation • Zero Cloud API Costs • Zero Telemetry Egress</span>
+                <span>Cryptographic Local Verification • Commercial IP Protection • Zero Unauthorized Data Egress</span>
               </div>
               <span className="spe-platform-guarantee-badge">SPE Ω CERTIFIED</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showProUpgradeModal && (
+        <div className="spe-pro-modal-backdrop" onClick={() => setShowProUpgradeModal(false)}>
+          <div className="spe-pro-modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="spe-pro-modal-header">
+              <h3 className="spe-pro-modal-title">
+                <span aria-hidden="true">🔒</span>
+                Offline Air-Gapped Catalog — SPE Pro
+              </h3>
+              <button
+                type="button"
+                className="spe-pro-modal-close"
+                onClick={() => setShowProUpgradeModal(false)}
+                aria-label="Close modal"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="spe-pro-modal-body">
+              <p>
+                <strong>Web access is 100% free and ad-supported for all 10,000+ prompts across all models.</strong> Offline air-gapped downloads, bulk JSON database bundles, and offline CLI compiler engines require an active SPE Pro entitlement.
+              </p>
+
+              <ul className="spe-pro-perks-list">
+                <li><span>📥</span> Full 10,000+ Prompt Catalog JSON bundle for air-gapped local execution</li>
+                <li><span>🛡️</span> Zero network telemetry, local offline CLI compiling &amp; validation</li>
+                <li><span>💎</span> 100% clean, unwatermarked exports on web and local desktop</li>
+                <li><span>🚫</span> 100% ad-free experience across the entire web interface</li>
+              </ul>
+
+              <div className="spe-pro-modal-actions">
+                <a
+                  href="#pricing"
+                  className="spe-pro-upgrade-btn"
+                  onClick={() => setShowProUpgradeModal(false)}
+                >
+                  Upgrade to Pro ($9/mo) &rarr;
+                </a>
+
+                <div className="spe-pro-token-section">
+                  <label htmlFor="spe-token-input" className="spe-pro-token-label">
+                    Already have a signed license token?
+                  </label>
+                  <div className="spe-pro-token-input-row">
+                    <input
+                      id="spe-token-input"
+                      type="text"
+                      className="spe-pro-token-input"
+                      placeholder="spe_entitlement.v1..."
+                      value={entitlementTokenInput}
+                      onChange={(e) => setEntitlementTokenInput(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="spe-pro-token-verify-btn"
+                      onClick={handleVerifyToken}
+                    >
+                      Verify
+                    </button>
+                  </div>
+                  {tokenActivationMessage && (
+                    <p style={{ fontSize: "0.75rem", marginTop: "0.4rem", color: tokenActivationMessage.includes("success") ? "#34d399" : "#f87171" }}>
+                      {tokenActivationMessage}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  className="spe-pro-modal-dismiss-btn"
+                  onClick={() => setShowProUpgradeModal(false)}
+                >
+                  Continue Free Online (Ad-Supported)
+                </button>
+              </div>
             </div>
           </div>
         </div>

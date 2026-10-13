@@ -9,6 +9,7 @@ import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
 import { SpeClickyContinuationHub } from "./SpeClickyContinuationHub";
 import { SpeV5MoonshotNorthStarBrain } from "./SpeV5MoonshotNorthStarBrain";
 import { SpeAgiBrainStudio } from "./SpeAgiBrainStudio";
+import { SpeEgacUniversalStudio } from "./SpeEgacUniversalStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -28,6 +29,14 @@ export interface FeatureItem {
 }
 
 export const FEATURES: FeatureItem[] = [
+  {
+    id: "spe-egac-universal",
+    view: "capabilities",
+    title: "⚡ SPE Ω — Adaptive Compute",
+    subtitle: "Evidence-Gated Adaptive Compute (EGAC-1), Semantic Conservation & 8-Technique Lab",
+    href: "/capabilities",
+    badge: "SPE Ω",
+  },
   {
     id: "spe-agi-brain-omega",
     view: "capabilities",
@@ -176,7 +185,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -414,6 +423,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff" }}>
+                  {activeModal === "spe-egac-universal" && "⚡ SPE Ω · Evidence-Gated Adaptive Compute (EGAC-1)"}
                   {activeModal === "spe-agi-brain-omega" && "🧠 SPE AGI BRAIN Ω · Frontier Science Studio"}
                   {activeModal === "spe-v5-moonshot-brain" && "🧠 SPE v5.0 Moonshot North-Star Brain"}
                   {activeModal === "spe-clicky-hub" && "🎯 SPE Clicky Autonomous Continuation Hub"}
@@ -456,6 +466,10 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 ✕ Close
               </button>
             </div>
+
+            {activeModal === "spe-egac-universal" && (
+              <SpeEgacUniversalStudio onNavigate={onNavigate} onClose={() => setActiveModal(null)} />
+            )}
 
             {activeModal === "spe-agi-brain-omega" && (
               <SpeAgiBrainStudio onNavigate={onNavigate} onClose={() => setActiveModal(null)} />
