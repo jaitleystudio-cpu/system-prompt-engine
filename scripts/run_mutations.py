@@ -423,6 +423,38 @@ MUTANTS = [
         "replacement": '',
         "test": "tests/research/lvt/test_conjunct_guard_mutant_killers.py",
     },
+    {
+        "id": 'M48',
+        "name": 'owner attestation timestamp <= 0 check removed (Bro round-5 BRO17)',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": ' or not math.isfinite(ts) or ts <= 0.0:\n            return False\n        sig_hex',
+        "replacement": ' or not math.isfinite(ts):\n            return False\n        sig_hex',
+        "test": 'tests/research/lvt/test_round5_survivor_killers.py',
+    },
+    {
+        "id": 'M49',
+        "name": 'transfer-report family floor 20 -> 2 (Bro round-5 BRO19)',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '        if len(families) < max(20, proto.min_heldout_families):\n            return False, False, "Insufficient',
+        "replacement": '        if len(families) < max(2, proto.min_heldout_families):\n            return False, False, "Insufficient',
+        "test": 'tests/research/lvt/test_round5_survivor_killers.py',
+    },
+    {
+        "id": 'M50',
+        "name": 'study ImprovementSupported family_macro_delta >= 0 dropped (Bro round-5 BRO20)',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '                and study.family_macro_delta >= 0.0\n                and study.p_value',
+        "replacement": '                and study.p_value',
+        "test": 'tests/research/lvt/test_round5_survivor_killers.py',
+    },
+    {
+        "id": 'M51',
+        "name": 'receipt committed_timestamp requirement dropped (Bro round-5 BRO21)',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '        if not tx.canonical_receipt_signature or not tx.committed_timestamp:\n',
+        "replacement": '        if not tx.canonical_receipt_signature:\n',
+        "test": 'tests/research/lvt/test_round5_survivor_killers.py',
+    },
 ]
 
 
