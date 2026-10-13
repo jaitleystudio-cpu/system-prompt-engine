@@ -1,0 +1,29 @@
+name: SPE North Star Public AI Source Watch (opt-in, metadata only)
+
+on:
+  schedule:
+    - cron: '11 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  observe-official-status:
+    # Both owner-set repository variables must be true. Otherwise job SKIPPED.
+    if: ${{ vars.SPE_PUBLIC_INCIDENT_WATCH_ENABLED == 'true' && vars.SPE_PUBLIC_INCIDENT_OWNER_APPROVED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SPE_PUBLIC_INCIDENT_WATCH_ENABLED: 'true'
+      SPE_PUBLIC_INCIDENT_OWNER_APPROVED: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Observe one approved official public Statuspage feed
+        run: python -m tools.spe_public_incident_watch --live
+
+# Zero publication, commits, credentials, model API bills or personal prompts.
+# Hourly cron is best-effort; cross-run deduplication is not yet implemented.
