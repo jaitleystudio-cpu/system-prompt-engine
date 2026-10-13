@@ -146,6 +146,11 @@ class SourceEventJournal:
         self._subjects: dict[tuple[str, str], tuple[str, str, str, str]] = {}
 
     @property
+    def authorities(self) -> dict[str, SourceAuthority]:
+        """Read-only copy for host adapters to validate exact source custody."""
+        return dict(self._authorities)
+
+    @property
     def entries(self) -> tuple[JournalEntry, ...]:
         return tuple(self._entries)
 
