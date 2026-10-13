@@ -46,3 +46,26 @@ Against the OLD harness: 3 of these 4 fail. Against the repaired harness: 4/4 pa
 - LVT-2 suite: 172 passed (168 original + 4 regression), exit 0.
 - Mutation gate: **30/30 KILLED**, MUT_EXIT=0 (all on-disk mutants M01–M30).
 - 385 non-cache files under spe_runtime are byte-identical before and after (sha256 lists in evidence). `git diff -- spe_runtime` is clean.
+
+## Round 2: Bro's independent replay findings (2026-10-13 @ 56c6ca14)
+Bro's replay confirmed the claims above (172 tests, 30/30 killed, 2,791 files byte-identical after restore) and found:
+
+### 1. Two surviving mutants in `LearningValidator.verify_transaction_signature`
+- **BRO1 / M31 — REVOKED check removed:** survived because no test had a receipt that was validly hashed and signed while its status said REVOKED. New test `test_validly_signed_but_revoked_receipt_is_rejected` re-binds and re-signs a receipt with status REVOKED under the validator's own key; only the explicit check rejects it.
+- **BRO2 / M32 — artifact_hash check removed:** the return value is *equivalent* (the later sha256 comparison also fails on an empty hash), so it can only be killed by pinning the fail-closed order. New test `test_missing_artifact_hash_fails_closed_before_any_lookup` asserts the verifier returns False without calling `is_tombstoned` or `_build_receipt_dict`. Disclosed as an ordering/fail-fast contract, not a new security property.
+- Both added to the harness as M31/M32. **Mutation gate now 32/32 KILLED, MUT_EXIT=0** (evidence/lvt2_harness_repair/mutations_r2_20261013.{txt,json}); all git-tracked files under spe_runtime byte-identical before/after the gate.
+
+### 2. SIGKILL leftover (undisclosed in round 1)
+- **Observed by Bro:** a hard kill (SIGKILL) mid-run left **M05 applied to `learning_validator.py` plus `learning_validator.py.orig_backup`**, i.e. the original R1 symptom (Bro kept a copy: /tmp/bro-replay-20261013b/M05_leftover_mutant.py on the Mac mini).
+- **Why:** SIGKILL cannot be caught; signal handlers, `atexit` and `finally` never run. The round-1 repair only covers SIGTERM/SIGHUP/SIGINT. The claim above ("restore every active mutant") holds for trappable signals only.
+- **What fixed it:** the *next* harness run's startup recovery (`main()`: every `*.orig_backup` under REPO_ROOT is written back over its source, then deleted) restored the file before any mutant ran.
+- **Residual risk:** between a SIGKILL and the next harness run, the working tree holds a mutated production source. Anyone running tests or committing in that window sees mutant code. Mitigation: always run the harness (or `git status`/check for `*.orig_backup`) after an interrupted run; never commit with a `*.orig_backup` present.
+- **Test:** `test_sigkill_leftover_is_recovered_by_next_run_startup` (throwaway repo) SIGKILLs the harness mid-mutant, asserts the leftover state, then asserts the next run restores bytes and removes the backup.
+
+### 3. `lvt/types.py` shadowing stdlib `types`
+- Running `spe_runtime/research/lvt/cli.py` as a script puts `lvt/` first on `sys.path`, so `import types` (via argparse/dataclasses) loaded `lvt/types.py` → circular-import crash, exit 1 (3 CLI tests failed without an editable install).
+- **Fix:** `cli.py` removes its own directory from `sys.path` before importing any stdlib module that needs `types`. Not renamed, because 26 files import `spe_runtime.research.lvt.types`. New test `test_cli_script_runs_without_editable_install` (`python -S`, cwd outside repo) fails on the old cli (4/4 CLI tests fail) and passes on the new one.
+
+### Verification (round 2)
+- `pytest tests/research/lvt tests/research/rbpd`: **186 passed**, exit 0.
+- Mutation gate: **32/32 KILLED**, MUT_EXIT=0, restoration byte-identical.

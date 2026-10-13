@@ -62,3 +62,27 @@ def test_harness_never_uses_foreign_checkout_pytest():
     src = HARNESS.read_text()
     assert "offloaded-mac-storage" not in src
     assert "sys.executable, \"-m\", \"pytest\"" in src
+
+
+def test_sigkill_leftover_is_recovered_by_next_run_startup(tmp_path):
+    # Bro replay 2026-10-13: SIGKILL cannot be trapped, so a hard kill mid-mutant leaves the mutant applied plus
+    # *.orig_backup (the original R1 symptom). The next harness run's startup recovery must restore the bytes.
+    cmd, env = _setup(tmp_path, "import time\ndef test_slow():\n    time.sleep(60)\n")
+    p = subprocess.Popen(cmd, cwd=tmp_path, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                         start_new_session=True)
+    deadline = time.time() + 20
+    while (tmp_path / "src.py").read_text() != "X = 2\n" and time.time() < deadline:
+        time.sleep(0.05)
+    assert (tmp_path / "src.py").read_text() == "X = 2\n", "mutant never applied"
+    os.killpg(p.pid, signal.SIGKILL)
+    p.wait(timeout=20)
+    # Documented leftover: mutant still applied + backup on disk (SIGKILL bypasses handlers/atexit/finally).
+    assert (tmp_path / "src.py").read_bytes() == b"X = 2\n"
+    assert (tmp_path / "src.py.orig_backup").read_bytes() == b"X = 1\n"
+    # Next run (a killing test) must first recover, then mutate/restore normally.
+    (tmp_path / "test_fake.py").write_text("from src import X\ndef test_x():\n    assert X == 1\n")
+    r = subprocess.run(cmd, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "1/1 mutants KILLED" in r.stdout
+    assert (tmp_path / "src.py").read_bytes() == b"X = 1\n"
+    assert not (tmp_path / "src.py.orig_backup").exists()

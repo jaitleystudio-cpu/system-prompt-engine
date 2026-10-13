@@ -287,6 +287,22 @@ MUTANTS = [
         "replacement": "        net_positive = True  # MUTANT M30: Falsely claim positive dividend on negative control",
         "test": "tests/research/rbpd/test_rbpd_proof_dividend.py::test_phase_d_lifecycle_proof_dividend_and_negative_control",
     },
+    {
+        "id": "M31",
+        "name": "verify_transaction_signature accepts REVOKED (Bro replay BRO1)",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        if tx.status == QualificationStatus.REVOKED:\n            return False\n        if not tx.canonical_receipt_signature",
+        "replacement": "        # MUTANT M31: REVOKED check removed\n        if not tx.canonical_receipt_signature",
+        "test": "tests/research/lvt/test_verify_signature_mutant_killers.py::test_validly_signed_but_revoked_receipt_is_rejected",
+    },
+    {
+        "id": "M32",
+        "name": "verify_transaction_signature skips artifact_hash check (Bro replay BRO2)",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        if not tx.artifact_hash:\n            return False\n        study_ev_hash",
+        "replacement": "        # MUTANT M32: artifact_hash check removed\n        study_ev_hash",
+        "test": "tests/research/lvt/test_verify_signature_mutant_killers.py::test_missing_artifact_hash_fails_closed_before_any_lookup",
+    },
 ]
 
 

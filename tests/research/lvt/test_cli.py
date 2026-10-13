@@ -69,3 +69,14 @@ def test_cli_malformed_experiment_fails_closed(tmp_path):
     r = _run(path)
     assert r.returncode == 3
     assert 'error' in json.loads(r.stderr)
+
+
+def test_cli_script_runs_without_editable_install(tmp_path):
+    # Bro replay 2026-10-13: lvt/types.py shadowed stdlib `types` when cli.py was run as a script without an
+    # editable install. -S disables site-packages (no editable .pth), cwd is outside the repo.
+    path = tmp_path / 'valid.json'
+    _fixture(path)
+    cli_path = Path(__file__).parent.parent.parent.parent / 'spe_runtime' / 'research' / 'lvt' / 'cli.py'
+    r = subprocess.run([sys.executable, '-S', str(cli_path), str(path)], text=True, capture_output=True, cwd=tmp_path)
+    assert r.returncode == 0, r.stderr
+    assert 'circular import' not in r.stderr

@@ -1,5 +1,16 @@
 """CLI for local-only LVT-2 research scoring. Does not contact external systems."""
 from __future__ import annotations
+# Fix (Bro replay 2026-10-13): when run as a script (python .../lvt/cli.py), Python puts this directory first on
+# sys.path, so the sibling lvt/types.py shadowed the stdlib `types` module (circular-import crash, exit 1) unless the
+# package was editable-installed. Drop the script directory from sys.path BEFORE importing any stdlib module that
+# imports `types` (argparse, dataclasses, json, pathlib ...). os/sys are already loaded by the interpreter.
+import os as _os
+import sys as _sys
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_sys.path[:] = [_p for _p in _sys.path if _os.path.abspath(_p or _os.curdir) != _HERE]
+_mod = _sys.modules.get("types")
+if _mod is not None and _os.path.dirname(_os.path.abspath(getattr(_mod, "__file__", "") or "")) == _HERE:
+    del _sys.modules["types"]
 import argparse
 from dataclasses import asdict
 import json
