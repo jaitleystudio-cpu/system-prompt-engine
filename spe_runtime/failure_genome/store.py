@@ -150,8 +150,8 @@ class FailureGenomeStore:
         if not entry:
             raise KeyError(f"Failure {failure_id} not found")
 
-        if not entry.consent:
-            raise PermissionError("Consent required for public export")
+        if entry.scope != "GLOBAL" or entry.consent is not True:
+            raise PermissionError("GLOBAL scope and explicit consent are required for public export")
 
         public_record = asdict(entry)
         public_record["source"] = "[ANONYMIZED_SOURCE]"
