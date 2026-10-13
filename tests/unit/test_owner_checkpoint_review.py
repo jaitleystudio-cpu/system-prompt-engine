@@ -234,3 +234,52 @@ def test_no_key_enrollment_or_receipt_never_changes_live_journal(tmp_path):
         )
     assert verdict.state == "HOLD"
     assert store.path.read_bytes() == before
+
+
+
+def test_checkpoint_v2_signs_full_metadata_not_only_r2_chain_head(tmp_path):
+    from dataclasses import replace as mutate
+    from spe_runtime.failure_genome.event_journal import SourceEventJournal, JournalDecision
+    store = prepared(tmp_path)
+    original_status = store.audit()
+    original_receipt, trusted = signed_checkpoint(store)
+    with store.session() as original:
+        old_head = original.entries[-1].chain_digest
+        source = original.observations[0]
+        for alteration in (
+            {'subject_model': 'FORGED_PROVIDER_MODEL_SCOPE'},
+            {'url': 'https://status.example.org/api/v2/incidents.json/forged-subpath'},
+        ):
+            tampered = SourceEventJournal(original.authorities)
+            assert tampered.ingest(mutate(source, **alteration)).decision is JournalDecision.ADDED
+            # R2 head alone is unchanged: metadata-inclusive signed v2 must veto.
+            assert tampered.entries[-1].chain_digest == old_head
+            outcome = verify_owner_checkpoint(
+                journal=tampered, expected_allowlist_sha256=store.allowlist_sha256,
+                signed_receipt=original_receipt, trusted_checkpoint_keys=trusted,
+                owner_pinned_floor=genesis_floor(store), now=NOW,
+            )
+            assert outcome.state == 'HOLD'
+            assert 'CHECKPOINT_CONTENT_OR_SEQUENCE_MISMATCH' in outcome.reason_codes
+            assert outcome.metadata_document_sha256 != original_status.metadata_document_sha256
+            assert not outcome.publication_authorized
+
+
+def test_legacy_head_only_signed_receipt_does_not_satisfy_v2_scope(tmp_path):
+    store = prepared(tmp_path)
+    receipt, trusted = signed_checkpoint(store)
+    older = replace(receipt, canonical_payload={
+        key: value for key, value in receipt.canonical_payload.items()
+        if key != 'metadata_document_sha256'
+    })
+    out = assess(store, older, trusted)
+    assert out.state == 'HOLD'
+    assert 'CHECKPOINT_SCHEMA_INVALID' in out.reason_codes
+
+
+def test_metadata_document_digest_stable_across_restart(tmp_path):
+    store = prepared(tmp_path)
+    before = store.audit()
+    after = DurableJournalStore(store.path, store.authorities).audit()
+    assert before.metadata_document_sha256 == after.metadata_document_sha256
+    assert len(before.metadata_document_sha256) == 64
