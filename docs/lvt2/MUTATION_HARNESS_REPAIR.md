@@ -99,3 +99,8 @@ Every attack is a **fully re-sealed** transfer report. All digests, the evidence
 - BRO9 (Bonferroni dropped), BRO10 (study-path `p_value <= alpha_adjusted` deleted), BRO11 (ties counted positive) survived 185/185.
 - New killers: `tests/research/lvt/test_alpha_and_ties_mutant_killers.py` (5 tests; authentic re-sealed reports at p=0.0320 with multiplicity 2, 4 wins + 20 exact ties at p=0.0625, and a study result with p = 1.5 x alpha_adjusted).
 - Gate: M41-M43 added; `evidence/lvt2_harness_repair/mutations_r5.json` / `mutations_r5_log.txt`: 43/43 KILLED, all sources restored. Production code unchanged. Verdicts unchanged.
+
+## Round 5 (Bro round-4 falsification @ de9bb1c9)
+- BRO12 (study-path shuffled-control > 0 removed), BRO13 (EFFECT_FLOOR_UNMET ignored), BRO14 (evaluator_id != generator_id removed), BRO16 (four-arm held-out is_statistically_significant dropped) survived 190/190.
+- New killers: `tests/research/lvt/test_conjunct_guard_mutant_killers.py` (4 tests; each flips one input of the fully qualified R5 fixture, asserts the control conjuncts are all True first, then that the specific conjunct goes False; BRO14 is checked on the study and four-arm paths).
+- Gate: M44-M47 added with Bro's exact targets; `evidence/lvt2_harness_repair/mutations_r6.json` / `mutations_r6_log.txt`: **47/47 KILLED**, all sources restored (pre/post tree hash identical apart from the new evidence files). `tests/research/lvt`: 194 passed; `lvt` + `rbpd`: 203 passed. Production code unchanged. Verdicts unchanged.

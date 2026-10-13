@@ -391,6 +391,38 @@ MUTANTS = [
         "replacement": "        positives = sum(d >= -1e-12 for d in family_deltas)\n",
         "test": "tests/research/lvt/test_alpha_and_ties_mutant_killers.py",
     },
+    {
+        "id": "M44",
+        "name": 'study-path shuffled-control > 0 check removed (Bro round-4 BRO12)',
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": '                and study.train_candidate_minus_shuffled > 0.0\n',
+        "replacement": '',
+        "test": "tests/research/lvt/test_conjunct_guard_mutant_killers.py",
+    },
+    {
+        "id": "M45",
+        "name": 'study-path EFFECT_FLOOR_UNMET reason ignored (Bro round-4 BRO13)',
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": '                and "EFFECT_FLOOR_UNMET" not in study.reasons\n',
+        "replacement": '',
+        "test": "tests/research/lvt/test_conjunct_guard_mutant_killers.py",
+    },
+    {
+        "id": "M46",
+        "name": 'evaluator_id != generator_id independence check removed (Bro round-4 BRO14)',
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": '            and tx.evaluator_id != claim.generator_id\n',
+        "replacement": '',
+        "test": "tests/research/lvt/test_conjunct_guard_mutant_killers.py",
+    },
+    {
+        "id": "M47",
+        "name": 'four-arm held-out is_statistically_significant requirement dropped (Bro round-4 BRO16)',
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": '            and results.is_statistically_significant\n',
+        "replacement": '',
+        "test": "tests/research/lvt/test_conjunct_guard_mutant_killers.py",
+    },
 ]
 
 
