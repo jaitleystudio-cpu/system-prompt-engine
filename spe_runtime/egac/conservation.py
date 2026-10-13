@@ -253,15 +253,41 @@ _FORWARD_RE = re.compile(
 _BACKREF_RE = re.compile(
     r"\b(?:above|previous|preceding|prior|aforementioned|foregoing|earlier|former"
     r"|(?:the\s+)?last\s+(?:line|sentence|paragraph))\b")
-# Round 5 (Bro round-4 over-block): a forward/backward reference word opens a scope ONLY when the same line also
-# carries a directive (sign/end/close/reply/append/repeat/must/mandatory/always/every/verbatim/exact/...). Bare
-# temporal or locative prose ("the cafe is below", "the following week", "next Monday", "the earlier draft",
-# "this sentence is about cats") no longer protects neighbouring lines. EGAC is lexical: it cannot resolve
-# arbitrary references (see docs/egac/SCOPE_BOUNDARY.md).
+# Round 5 (Bro round-4 over-block): a forward/backward reference word opens a scope ONLY together with a directive.
+# Round 6 (Bro round-5 reopen @ 14e90ee8): "together" = the directive is on the reference line itself OR on the
+# nearest non-blank line directly above or below it, crossing at most one blank line (reference line +-1). This
+# re-closes "See below.\nYou must output it.", a directive on the line above the reference, and a German directive
+# with "below", while bare temporal/locative prose ("the cafe is below", "the following week", "next Monday", "the
+# earlier draft", "this sentence is about cats") next to non-directive lines still protects nothing.
+# The directive vocabulary is a CLOSED, explicit list (docs/egac/SCOPE_BOUNDARY_v2.md section A); no "..." remains.
+_DIRECTIVE_WORDS_EN = (
+    r"sign(?:[\s-]?off)?|signs|signed|end|ends|close|closes|reply|replies|respond|responds|answer|answers"
+    r"|append|appends|prepend|prepends|include|includes|repeat|repeats|echo|echoes|quote|quotes|copy|copies"
+    r"|insert|inserts|output|outputs|print|prints|keep|keeps|preserve|preserves|retain|retains|use|uses"
+    r"|conclude|concludes|finish|finishes|ensure|ensures|show|shows|add|adds|put|puts|write|writes|say|says"
+    r"|state|states|must|mandatory|required|require|requires|shall|always|every|each|verbatim|exact|exactly"
+    r"|never|do\s+not|don'?t")
+_DIRECTIVE_WORDS_DE = r"immer|muss|musst|müssen|beende|beenden|antworte|antworten|schreibe|schreiben|füge|wiederhole"
+_DIRECTIVE_WORDS_ES = r"siempre|debe|debes|termina|terminar|responde|responder|incluye|incluir|repite|repetir"
 _DIRECTIVE_RE = re.compile(
-    r"\b(?:sign(?:[\s-]?off)?|signs|signed|end|ends|close|closes|reply|replies|respond|answer|answers|append|prepend"
-    r"|include|repeat|quote|copy|insert|output|print|keep|preserve|retain|use|must|mandatory|required|requires?"
-    r"|always|every|each|verbatim|exact(?:ly)?|never|do\s+not|don'?t)\b")
+    r"\b(?:" + _DIRECTIVE_WORDS_EN + "|" + _DIRECTIVE_WORDS_DE + "|" + _DIRECTIVE_WORDS_ES + r")\b", re.IGNORECASE)
+
+
+def _neighbour_idx(sks: list[str], i: int, step: int) -> "int | None":
+    """Nearest non-blank line from i in direction step, crossing at most ONE blank line."""
+    j = i + step
+    if 0 <= j < len(sks) and not sks[j].strip():
+        j += step
+    return j if 0 <= j < len(sks) and sks[j].strip() else None
+
+
+def _directive_near(sks: list[str], i: int) -> bool:
+    if _DIRECTIVE_RE.search(sks[i]):
+        return True
+    return any(j is not None and _DIRECTIVE_RE.search(sks[j]) for j in (_neighbour_idx(sks, i, -1),
+                                                                         _neighbour_idx(sks, i, 1)))
+
+
 _QUOTES = '"\u201c\u201d\u00ab\u00bb\u300c\u300d'
 _TERMINAL = tuple(".!?;:)]}\u3002")
 
@@ -283,7 +309,7 @@ def _context_keep(lines: list[str]) -> list[bool]:
         if in_scope or open_quote or _quoted(k):
             keep[i] = True
             pending = False
-        directive = bool(_DIRECTIVE_RE.search(k))
+        directive = _directive_near(sks, i)
         if _CONTRACT_RE.search(k) or (_FORWARD_RE.search(k) and directive):
             in_scope, pending = True, True
         if _BACKREF_RE.search(k) and directive:

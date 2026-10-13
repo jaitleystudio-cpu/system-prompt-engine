@@ -1,0 +1,919 @@
+{
+ "source": "Bro falsification probe scripts rounds 1-5 (/tmp/bro-fix*-20261013/egac/*.py, D() deletions) evaluated against conservation.py @ 1da24674",
+ "refused_at_1da24674": [
+  {
+   "name": "bro-fix3-20261013:'below.' then line",
+   "touches": "R",
+   "text": "Always sign off with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:'below.' then line",
+   "touches": "RU",
+   "text": "Always sign off with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:'shown below' with blank line",
+   "touches": "R",
+   "text": "Always sign off with the text shown below.\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:'shown below' with blank line",
+   "touches": "RU",
+   "text": "Always sign off with the text shown below.\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:'the following' no colon",
+   "touches": "R",
+   "text": "Reply to every message with the following\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:'the following' no colon",
+   "touches": "RU",
+   "text": "Reply to every message with the following\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction after line, blank",
+   "touches": "R",
+   "text": "Thanks for reading.\n\nThe previous sentence must end every reply.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction after line, blank",
+   "touches": "RU",
+   "text": "Thanks for reading.\n\nThe previous sentence must end every reply.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction after line",
+   "touches": "R",
+   "text": "Thanks for reading.\nThe line above is mandatory in every reply.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction after line",
+   "touches": "RU",
+   "text": "Thanks for reading.\nThe line above is mandatory in every reply.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction two lines up (blank between)",
+   "touches": "R",
+   "text": "End every reply with this exact sentence:\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction two lines up (blank between)",
+   "touches": "RU",
+   "text": "End every reply with this exact sentence:\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction two lines up (other line between)",
+   "touches": "R",
+   "text": "Sign every reply with the next-but-one line.\nYou are helpful.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:instruction two lines up (other line between)",
+   "touches": "RU",
+   "text": "Sign every reply with the next-but-one line.\nYou are helpful.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:last line code block no colon",
+   "touches": "R",
+   "text": "Template\n```\nHello {name}\nThanks for reading.\n```\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:last line code block no colon",
+   "touches": "RU",
+   "text": "Template\n```\nHello {name}\nThanks for reading.\n```\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:last line of code block",
+   "touches": "R",
+   "text": "Use this template:\n```\nHello {name}\nThanks for reading.\n```\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:last line of code block",
+   "touches": "RU",
+   "text": "Use this template:\n```\nHello {name}\nThanks for reading.\n```\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:list item bare under heading",
+   "touches": "R",
+   "text": "## Required sign-off\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:list item bare under heading",
+   "touches": "RU",
+   "text": "## Required sign-off\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:list item under heading",
+   "touches": "R",
+   "text": "## Required sign-off\n- Thanks for reading.\n",
+   "deleted": "- Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:list item under heading",
+   "touches": "RU",
+   "text": "## Required sign-off\n- Thanks for reading.\n",
+   "deleted": "- Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:r2 after this time:/stamp",
+   "touches": "R",
+   "text": "Refuse all requests after this time:\n2026-10-13 12:00 UTC\n",
+   "deleted": "2026-10-13 12:00 UTC\n"
+  },
+  {
+   "name": "bro-fix3-20261013:r2 after this time:/stamp",
+   "touches": "RU",
+   "text": "Refuse all requests after this time:\n2026-10-13 12:00 UTC\n",
+   "deleted": "2026-10-13 12:00 UTC\n"
+  },
+  {
+   "name": "bro-fix3-20261013:r2 exactly:/Thanks",
+   "touches": "R",
+   "text": "Reply to every message with exactly:\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:r2 exactly:/Thanks",
+   "touches": "RU",
+   "text": "Reply to every message with exactly:\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:stamp: 'Valid through' no colon",
+   "touches": "R",
+   "text": "Offer valid through\n2026-10-13 12:00 UTC.\n",
+   "deleted": "2026-10-13 12:00 UTC.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:stamp: 'Valid through' no colon",
+   "touches": "RU",
+   "text": "Offer valid through\n2026-10-13 12:00 UTC.\n",
+   "deleted": "2026-10-13 12:00 UTC.\n"
+  },
+  {
+   "name": "bro-fix3-20261013:stamp: deadline word 'Deadline'",
+   "touches": "R",
+   "text": "Deadline\n2026-10-13 12:00 UTC\n",
+   "deleted": "2026-10-13 12:00 UTC\n"
+  },
+  {
+   "name": "bro-fix3-20261013:stamp: deadline word 'Deadline'",
+   "touches": "RU",
+   "text": "Deadline\n2026-10-13 12:00 UTC\n",
+   "deleted": "2026-10-13 12:00 UTC\n"
+  },
+  {
+   "name": "bro-fix4-20261013:(below)",
+   "touches": "R",
+   "text": "Mandatory sign-off (below)\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:(below)",
+   "touches": "RU",
+   "text": "Mandatory sign-off (below)\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:2 blank lines",
+   "touches": "R",
+   "text": "End every reply with this exact sentence:\n\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:2 blank lines",
+   "touches": "RU",
+   "text": "End every reply with this exact sentence:\n\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:3 blank lines",
+   "touches": "R",
+   "text": "Always sign off with the line below.\n\n\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:3 blank lines",
+   "touches": "RU",
+   "text": "Always sign off with the line below.\n\n\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after colon heading",
+   "touches": "R",
+   "text": "Notes:\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after colon heading",
+   "touches": "RU",
+   "text": "Notes:\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:as follows",
+   "touches": "R",
+   "text": "Every reply must end as follows\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:as follows",
+   "touches": "RU",
+   "text": "Every reply must end as follows\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:code comment ref sh",
+   "touches": "R",
+   "text": "```\n# REQUIRED: keep the following line\nset -euo pipefail\n```\n",
+   "deleted": "set -euo pipefail\n"
+  },
+  {
+   "name": "bro-fix4-20261013:code comment ref sh",
+   "touches": "RU",
+   "text": "```\n# REQUIRED: keep the following line\nset -euo pipefail\n```\n",
+   "deleted": "set -euo pipefail\n"
+  },
+  {
+   "name": "bro-fix4-20261013:code comment ref",
+   "touches": "R",
+   "text": "```python\n# the next line is mandatory and must never be removed\nassert check_auth(user)\n```\n",
+   "deleted": "assert check_auth(user)\n"
+  },
+  {
+   "name": "bro-fix4-20261013:code comment ref",
+   "touches": "RU",
+   "text": "```python\n# the next line is mandatory and must never be removed\nassert check_auth(user)\n```\n",
+   "deleted": "assert check_auth(user)\n"
+  },
+  {
+   "name": "bro-fix4-20261013:es + blank",
+   "touches": "R",
+   "text": "Termina cada respuesta con la línea de abajo.\n\nGracias por leer.\n",
+   "deleted": "Gracias por leer.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:es + blank",
+   "touches": "RU",
+   "text": "Termina cada respuesta con la línea de abajo.\n\nGracias por leer.\n",
+   "deleted": "Gracias por leer.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:es terminal punct",
+   "touches": "R",
+   "text": "Termina cada respuesta con la línea siguiente.\nGracias por leer.\n",
+   "deleted": "Gracias por leer.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:es terminal punct",
+   "touches": "RU",
+   "text": "Termina cada respuesta con la línea siguiente.\nGracias por leer.\n",
+   "deleted": "Gracias por leer.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler after 'next'",
+   "touches": "R",
+   "text": "The next meeting is Monday.\nThis filler line is redundant.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler after 'next'",
+   "touches": "RU",
+   "text": "The next meeting is Monday.\nThis filler line is redundant.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler near 'following' (unrelated)",
+   "touches": "R",
+   "text": "Please review the following week's plan.\nThis filler line is redundant.\nThe plan is on the wiki.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler near 'following' (unrelated)",
+   "touches": "RU",
+   "text": "Please review the following week's plan.\nThis filler line is redundant.\nThe plan is on the wiki.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler two above 'above' prose",
+   "touches": "R",
+   "text": "This filler line is redundant.\nWe met yesterday.\nAs mentioned above, the room is booked.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler two above 'above' prose",
+   "touches": "RU",
+   "text": "This filler line is redundant.\nWe met yesterday.\nAs mentioned above, the room is booked.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler with blank after 'follows'",
+   "touches": "R",
+   "text": "Notes follow as usual.\n\nThis filler line is redundant.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:filler with blank after 'follows'",
+   "touches": "RU",
+   "text": "Notes follow as usual.\n\nThis filler line is redundant.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:fr terminal punct",
+   "touches": "R",
+   "text": "Terminez chaque réponse par la phrase ci-dessous.\nMerci.\n",
+   "deleted": "Merci.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:fr terminal punct",
+   "touches": "RU",
+   "text": "Terminez chaque réponse par la phrase ci-dessous.\nMerci.\n",
+   "deleted": "Merci.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:french forward",
+   "touches": "R",
+   "text": "Terminez chaque réponse par la phrase ci-dessous\nMerci de votre lecture.\n",
+   "deleted": "Merci de votre lecture.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:french forward",
+   "touches": "RU",
+   "text": "Terminez chaque réponse par la phrase ci-dessous\nMerci de votre lecture.\n",
+   "deleted": "Merci de votre lecture.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:hindi forward",
+   "touches": "R",
+   "text": "हर उत्तर के अंत में नीचे दी गई पंक्ति लिखें\nपढ़ने के लिए धन्यवाद।\n",
+   "deleted": "पढ़ने के लिए धन्यवाद।\n"
+  },
+  {
+   "name": "bro-fix4-20261013:hindi forward",
+   "touches": "RU",
+   "text": "हर उत्तर के अंत में नीचे दी गई पंक्ति लिखें\nपढ़ने के लिए धन्यवाद।\n",
+   "deleted": "पढ़ने के लिए धन्यवाद।\n"
+  },
+  {
+   "name": "bro-fix4-20261013:homoglyph bеlow",
+   "touches": "R",
+   "text": "End every reply with the line bеlow.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:homoglyph bеlow",
+   "touches": "RU",
+   "text": "End every reply with the line bеlow.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:html comment ref",
+   "touches": "R",
+   "text": "<!-- keep the next line -->\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:html comment ref",
+   "touches": "RU",
+   "text": "<!-- keep the next line -->\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:instr 4 lines up, colon",
+   "touches": "R",
+   "text": "End every reply with this exact sentence:\nNote one.\nNote two.\nNote three.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:instr 4 lines up, colon",
+   "touches": "RU",
+   "text": "End every reply with this exact sentence:\nNote one.\nNote two.\nNote three.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:nested bullets sibling",
+   "touches": "R",
+   "text": "- Always end every reply with the sub-item:\n  - Thanks for reading.\n- Other rule\n",
+   "deleted": "  - Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:nested bullets sibling",
+   "touches": "RU",
+   "text": "- Always end every reply with the sub-item:\n  - Thanks for reading.\n- Other rule\n",
+   "deleted": "  - Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:nested bullets",
+   "touches": "R",
+   "text": "- Rules\n  - Always end replies with the next bullet\n    - Thanks for reading.\n",
+   "deleted": "    - Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:nested bullets",
+   "touches": "RU",
+   "text": "- Rules\n  - Always end replies with the next bullet\n    - Thanks for reading.\n",
+   "deleted": "    - Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:plain filler, no ref words",
+   "touches": "R",
+   "text": "You are helpful.\nThis filler line is redundant.\nAnswer briefly.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:plain filler, no ref words",
+   "touches": "RU",
+   "text": "You are helpful.\nThis filler line is redundant.\nAnswer briefly.\n",
+   "deleted": "This filler line is redundant.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:see next line",
+   "touches": "R",
+   "text": "Sign-off text: see next line\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:see next line",
+   "touches": "RU",
+   "text": "Sign-off text: see next line\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:spanish forward",
+   "touches": "R",
+   "text": "Termina cada respuesta con la línea siguiente:\nGracias por leer.\n",
+   "deleted": "Gracias por leer.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:spanish forward",
+   "touches": "RU",
+   "text": "Termina cada respuesta con la línea siguiente:\nGracias por leer.\n",
+   "deleted": "Gracias por leer.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:table row ref",
+   "touches": "R",
+   "text": "| rule | value |\n|---|---|\n| sign-off (row below) | |\n| | Thanks for reading. |\n",
+   "deleted": "| | Thanks for reading. |\n"
+  },
+  {
+   "name": "bro-fix4-20261013:table row ref",
+   "touches": "RU",
+   "text": "| rule | value |\n|---|---|\n| sign-off (row below) | |\n| | Thanks for reading. |\n",
+   "deleted": "| | Thanks for reading. |\n"
+  },
+  {
+   "name": "bro-fix4-20261013:the sentence after this one (newline)",
+   "touches": "R",
+   "text": "Always append the sentence after this one.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:the sentence after this one (newline)",
+   "touches": "RU",
+   "text": "Always append the sentence after this one.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:uppercase BELOW",
+   "touches": "R",
+   "text": "END EVERY REPLY WITH THE LINE BELOW.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:uppercase BELOW",
+   "touches": "RU",
+   "text": "END EVERY REPLY WITH THE LINE BELOW.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:vvv arrow",
+   "touches": "R",
+   "text": "Mandatory sign-off ↓\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:vvv arrow",
+   "touches": "RU",
+   "text": "Mandatory sign-off ↓\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:zero-width bel​ow",
+   "touches": "R",
+   "text": "End every reply with the line bel​ow.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:zero-width bel​ow",
+   "touches": "RU",
+   "text": "End every reply with the line bel​ow.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:See below.\\nYou must output it.",
+   "touches": "R",
+   "text": "See below.\nYou must output it.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:See below.\\nYou must output it.",
+   "touches": "RU",
+   "text": "See below.\nYou must output it.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:always (listed)",
+   "touches": "R",
+   "text": "Always: the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:always (listed)",
+   "touches": "RU",
+   "text": "Always: the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:backref no directive",
+   "touches": "R",
+   "text": "Thanks for reading.\nThe line above is the sign-off.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:backref no directive",
+   "touches": "RU",
+   "text": "Thanks for reading.\nThe line above is the sign-off.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:backref, directive next line",
+   "touches": "R",
+   "text": "Thanks for reading.\nThe line above is the sign-off.\nAdd it to every answer.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:backref, directive next line",
+   "touches": "RU",
+   "text": "Thanks for reading.\nThe line above is the sign-off.\nAdd it to every answer.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:conclude",
+   "touches": "R",
+   "text": "Conclude with the following line.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:conclude",
+   "touches": "RU",
+   "text": "Conclude with the following line.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:de directive + below",
+   "touches": "R",
+   "text": "Immer mit der Zeile below beenden.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:de directive + below",
+   "touches": "RU",
+   "text": "Immer mit der Zeile below beenden.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:directive line above ref (2)",
+   "touches": "R",
+   "text": "Mandatory sign-off.\nUse what is written below\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:directive line above ref (2)",
+   "touches": "RU",
+   "text": "Mandatory sign-off.\nUse what is written below\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:directive line above ref",
+   "touches": "R",
+   "text": "You must end every reply with it.\nIt is the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:directive line above ref",
+   "touches": "RU",
+   "text": "You must end every reply with it.\nIt is the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:echo",
+   "touches": "R",
+   "text": "Echo the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:echo",
+   "touches": "RU",
+   "text": "Echo the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:ensure",
+   "touches": "R",
+   "text": "Ensure the line below closes your answer.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:ensure",
+   "touches": "RU",
+   "text": "Ensure the line below closes your answer.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:finish with",
+   "touches": "R",
+   "text": "Finish your answer with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:finish with",
+   "touches": "RU",
+   "text": "Finish your answer with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:output (listed)",
+   "touches": "R",
+   "text": "Output the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:output (listed)",
+   "touches": "RU",
+   "text": "Output the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:print (listed)",
+   "touches": "R",
+   "text": "Print the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:print (listed)",
+   "touches": "RU",
+   "text": "Print the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:put at end",
+   "touches": "R",
+   "text": "Put the next line at the end of your answers.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:put at end",
+   "touches": "RU",
+   "text": "Put the next line at the end of your answers.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:ref line then directive-free colon-less",
+   "touches": "R",
+   "text": "The sign-off is below\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:ref line then directive-free colon-less",
+   "touches": "RU",
+   "text": "The sign-off is below\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:respond with",
+   "touches": "R",
+   "text": "Respond with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:respond with",
+   "touches": "RU",
+   "text": "Respond with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:same-line ref+directive (control)",
+   "touches": "R",
+   "text": "Reply exactly with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:same-line ref+directive (control)",
+   "touches": "RU",
+   "text": "Reply exactly with the line below.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:sentence-split directive",
+   "touches": "R",
+   "text": "The following line. You will add it to replies\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:sentence-split directive",
+   "touches": "RU",
+   "text": "The following line. You will add it to replies\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:show",
+   "touches": "R",
+   "text": "Show the following to the user\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix5-20261013:show",
+   "touches": "RU",
+   "text": "Show the following to the user\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  }
+ ],
+ "documented_overblock_exemptions": [
+  {
+   "name": "bro-fix4-20261013:Hello before 'as above'",
+   "touches": "R",
+   "text": "Hello.\nRules are as above.\n",
+   "deleted": "Hello.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Hello before 'as above'",
+   "touches": "RU",
+   "text": "Hello.\nRules are as above.\n",
+   "deleted": "Hello.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after 'following week'",
+   "touches": "R",
+   "text": "We meet the following week.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after 'following week'",
+   "touches": "RU",
+   "text": "We meet the following week.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after 'next Monday'",
+   "touches": "R",
+   "text": "The next review is Monday.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after 'next Monday'",
+   "touches": "RU",
+   "text": "The next review is Monday.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after 'this sentence'",
+   "touches": "R",
+   "text": "This sentence is a fun fact.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after 'this sentence'",
+   "touches": "RU",
+   "text": "This sentence is a fun fact.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after unrelated 'below'",
+   "touches": "R",
+   "text": "The budget table is below.\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks after unrelated 'below'",
+   "touches": "RU",
+   "text": "The budget table is below.\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks before 'earlier draft' prose",
+   "touches": "R",
+   "text": "Thanks for reading.\nThe earlier draft had typos.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks before 'earlier draft' prose",
+   "touches": "RU",
+   "text": "Thanks for reading.\nThe earlier draft had typos.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks in para after 'previous' para",
+   "touches": "R",
+   "text": "Thanks for reading.\n\nThe previous version is archived.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "bro-fix4-20261013:Thanks in para after 'previous' para",
+   "touches": "RU",
+   "text": "Thanks for reading.\n\nThe previous version is archived.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:0",
+   "touches": "R",
+   "text": "The cafe is below the office.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:0",
+   "touches": "RU",
+   "text": "The cafe is below the office.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:1",
+   "touches": "R",
+   "text": "We meet again the following week.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:1",
+   "touches": "RU",
+   "text": "We meet again the following week.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:2",
+   "touches": "R",
+   "text": "The launch is next Monday.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:2",
+   "touches": "RU",
+   "text": "The launch is next Monday.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:4",
+   "touches": "R",
+   "text": "Thanks for reading.\nThe earlier draft had typos.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:4",
+   "touches": "RU",
+   "text": "Thanks for reading.\nThe earlier draft had typos.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:5",
+   "touches": "R",
+   "text": "This sentence is about the weather.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:5",
+   "touches": "RU",
+   "text": "This sentence is about the weather.\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:6",
+   "touches": "R",
+   "text": "Parking is below ground.\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  },
+  {
+   "name": "overblock7:6",
+   "touches": "RU",
+   "text": "Parking is below ground.\n\nThanks for reading.\n",
+   "deleted": "Thanks for reading.\n"
+  }
+ ]
+}
