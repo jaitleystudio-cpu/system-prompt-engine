@@ -1,0 +1,86 @@
+======================================================================
+SPE Ω — Genuine LVT-2 Source Mutation Verification Harness
+======================================================================
+Testing mutant M01: Ignore oracle key allowlist... KILLED (exit_code=1, restored=True)
+Testing mutant M02: Allow missing trust registry... KILLED (exit_code=1, restored=True)
+Testing mutant M03: Enable aggregate-only mock qualification... KILLED (exit_code=1, restored=True)
+Testing mutant M04: Accept changed attestation evidence hash... KILLED (exit_code=1, restored=True)
+Testing mutant M05: Skip oracle ID binding... KILLED (exit_code=1, restored=True)
+Testing mutant M06: Trust QUALIFIED without verified receipt... KILLED (exit_code=1, restored=True)
+Testing mutant M07: Permit revoked .spe export... KILLED (exit_code=1, restored=True)
+Testing mutant M08: Replace held-out baseline with training base... KILLED (exit_code=1, restored=True)
+Testing mutant M09: Replace family-macro effect with item weighting... KILLED (exit_code=1, restored=True)
+Testing mutant M10: Convert INCONCLUSIVE into QUALIFIED... KILLED (exit_code=1, restored=True)
+Testing mutant M11: Allow absent validator in evaluate_cross_model_transfer... KILLED (exit_code=1, restored=True)
+Testing mutant M12: Skip transfer receipt authentication in synthesize_spe_learning_artifact... KILLED (exit_code=1, restored=True)
+Testing mutant M13: Bypass 20-family minimum in cross-model transfer... KILLED (exit_code=1, restored=True)
+Testing mutant M14: Bypass model identity binding in evaluate_cross_model_transfer... KILLED (exit_code=1, restored=True)
+Testing mutant M15: Bypass synthetic model check in .spe export... KILLED (exit_code=1, restored=True)
+Testing mutant M16: Bypass owner authority check in validate_and_commit... KILLED (exit_code=1, restored=True)
+Testing mutant M17: Bypass durable tombstone check in is_tombstoned... KILLED (exit_code=1, restored=True)
+Testing mutant M18: Bypass task family clustering distinction check in transfer... KILLED (exit_code=1, restored=True)
+Testing mutant M19: Bypass synthetic model digest invariant check against VERIFIED_MODEL_REVISION... KILLED (exit_code=1, restored=True)
+Testing mutant M20: Bypass caller-asserted owner authorization rejection... KILLED (exit_code=1, restored=True)
+Testing mutant M21: Bypass durable tombstone load from disk in validator... KILLED (exit_code=1, restored=True)
+Testing mutant M22: Bypass independence assertions validation in cross-model transfer... KILLED (exit_code=1, restored=True)
+Testing mutant M23: Bypass persistent parent transaction tombstone check in verify_transaction_signature... KILLED (exit_code=1, restored=True)
+Testing mutant M24: Bypass fail-closed tombstone I/O error handling when explicitly configured... KILLED (exit_code=1, restored=True)
+Testing mutant M25: Bypass parent study synthetic model digest rejection in paired_gate_v2... KILLED (exit_code=1, restored=True)
+Testing mutant M26: Bypass strict cryptographic owner authority requirement on LearningValidator... KILLED (exit_code=1, restored=True)
+Testing mutant M27: Bypass RBPD RealityBoundEvidenceAsset Ed25519 signature verification... KILLED (exit_code=1, restored=True)
+Testing mutant M28: Permit reuse of STALE obligations during selective invalidation... KILLED (exit_code=1, restored=True)
+Testing mutant M29: Disable Channel B sealed reality witness Goodhart divergence detection... KILLED (exit_code=1, restored=True)
+Testing mutant M30: Falsely claim positive proof dividend on negative control benchmark... KILLED (exit_code=1, restored=True)
+Testing mutant M31: verify_transaction_signature accepts REVOKED (Bro replay BRO1)... KILLED (exit_code=1, restored=True)
+Testing mutant M32: verify_transaction_signature skips artifact_hash check (Bro replay BRO2)... KILLED (exit_code=1, restored=True)
+Testing mutant M33: verify_oracle_attestation accepts non-APPROVED verdict (Bro replay 2 BRO3)... KILLED (exit_code=1, restored=True)
+Testing mutant M34: revoked validator key may be re-enrolled (Bro replay 2 BRO4)... KILLED (exit_code=1, restored=True)
+Testing mutant M35: transfer receipt duplicate item_id/content_sha256 replay check removed (Bro replay 3 BRO5)... KILLED (exit_code=1, restored=True)
+Testing mutant M36: transfer significance p_val <= alpha_adj relaxed to p_val <= 1.0 (Bro replay 3 BRO6)... KILLED (exit_code=1, restored=True)
+Testing mutant M37: transfer protocol min_heldout_families floor 20 -> 2 (Bro replay 3 BRO8)... KILLED (exit_code=1, restored=True)
+Testing mutant M38: duplicate check keeps item_id only (content_sha256 replay allowed)... KILLED (exit_code=1, restored=True)
+Testing mutant M39: duplicate check keeps content_sha256 only (item_id replay allowed)... KILLED (exit_code=1, restored=True)
+Testing mutant M40: transfer protocol floor off-by-one (< 19)... KILLED (exit_code=1, restored=True)
+======================================================================
+MUTATION TESTING SUMMARY: 40/40 mutants KILLED
+  [M01] KILLED: Ignore oracle key allowlist | test summary: 1 failed in 0.78s
+  [M02] KILLED: Allow missing trust registry | test summary: 1 failed in 1.00s
+  [M03] KILLED: Enable aggregate-only mock qualification | test summary: 1 failed in 0.36s
+  [M04] KILLED: Accept changed attestation evidence hash | test summary: 1 failed in 0.75s
+  [M05] KILLED: Skip oracle ID binding | test summary: 1 failed in 0.85s
+  [M06] KILLED: Trust QUALIFIED without verified receipt | test summary: 1 failed in 0.90s
+  [M07] KILLED: Permit revoked .spe export | test summary: 1 failed in 0.94s
+  [M08] KILLED: Replace held-out baseline with training base | test summary: 1 failed in 0.28s
+  [M09] KILLED: Replace family-macro effect with item weighting | test summary: 1 failed in 0.09s
+  [M10] KILLED: Convert INCONCLUSIVE into QUALIFIED | test summary: 1 failed in 0.19s
+  [M11] KILLED: Allow absent validator in evaluate_cross_model_transfer | test summary: 1 failed in 0.68s
+  [M12] KILLED: Skip transfer receipt authentication in synthesize_spe_learning_artifact | test summary: 1 failed in 1.07s
+  [M13] KILLED: Bypass 20-family minimum in cross-model transfer | test summary: 1 failed in 1.26s
+  [M14] KILLED: Bypass model identity binding in evaluate_cross_model_transfer | test summary: 1 failed in 1.29s
+  [M15] KILLED: Bypass synthetic model check in .spe export | test summary: 1 failed in 2.01s
+  [M16] KILLED: Bypass owner authority check in validate_and_commit | test summary: 1 failed in 0.78s
+  [M17] KILLED: Bypass durable tombstone check in is_tombstoned | test summary: 1 failed in 1.30s
+  [M18] KILLED: Bypass task family clustering distinction check in transfer | test summary: 1 failed in 1.43s
+  [M19] KILLED: Bypass synthetic model digest invariant check against VERIFIED_MODEL_REVISION | test summary: 1 failed in 1.33s
+  [M20] KILLED: Bypass caller-asserted owner authorization rejection | test summary: 1 failed in 0.61s
+  [M21] KILLED: Bypass durable tombstone load from disk in validator | test summary: 1 failed in 1.33s
+  [M22] KILLED: Bypass independence assertions validation in cross-model transfer | test summary: 1 failed in 1.26s
+  [M23] KILLED: Bypass persistent parent transaction tombstone check in verify_transaction_signature | test summary: 1 failed in 1.26s
+  [M24] KILLED: Bypass fail-closed tombstone I/O error handling when explicitly configured | test summary: 1 failed in 0.09s
+  [M25] KILLED: Bypass parent study synthetic model digest rejection in paired_gate_v2 | test summary: 1 failed in 0.09s
+  [M26] KILLED: Bypass strict cryptographic owner authority requirement on LearningValidator | test summary: 1 failed in 0.38s
+  [M27] KILLED: Bypass RBPD RealityBoundEvidenceAsset Ed25519 signature verification | test summary: 1 failed in 1.71s
+  [M28] KILLED: Permit reuse of STALE obligations during selective invalidation | test summary: 1 failed in 7.06s
+  [M29] KILLED: Disable Channel B sealed reality witness Goodhart divergence detection | test summary: 1 failed in 0.17s
+  [M30] KILLED: Falsely claim positive proof dividend on negative control benchmark | test summary: 1 failed in 25.87s
+  [M31] KILLED: verify_transaction_signature accepts REVOKED (Bro replay BRO1) | test summary: 1 failed in 0.66s
+  [M32] KILLED: verify_transaction_signature skips artifact_hash check (Bro replay BRO2) | test summary: 1 failed in 0.39s
+  [M33] KILLED: verify_oracle_attestation accepts non-APPROVED verdict (Bro replay 2 BRO3) | test summary: 1 failed in 0.94s
+  [M34] KILLED: revoked validator key may be re-enrolled (Bro replay 2 BRO4) | test summary: 1 failed in 0.97s
+  [M35] KILLED: transfer receipt duplicate item_id/content_sha256 replay check removed (Bro replay 3 BRO5) | test summary: 2 failed, 4 passed in 16.41s
+  [M36] KILLED: transfer significance p_val <= alpha_adj relaxed to p_val <= 1.0 (Bro replay 3 BRO6) | test summary: 2 failed, 4 passed in 16.20s
+  [M37] KILLED: transfer protocol min_heldout_families floor 20 -> 2 (Bro replay 3 BRO8) | test summary: 1 failed, 5 passed in 11.51s
+  [M38] KILLED: duplicate check keeps item_id only (content_sha256 replay allowed) | test summary: 1 failed, 5 passed in 16.43s
+  [M39] KILLED: duplicate check keeps content_sha256 only (item_id replay allowed) | test summary: 1 failed, 5 passed in 16.07s
+  [M40] KILLED: transfer protocol floor off-by-one (< 19) | test summary: 1 failed, 5 passed in 14.45s
+======================================================================

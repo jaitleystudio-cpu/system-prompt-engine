@@ -75,3 +75,22 @@ Bro's replay confirmed the claims above (172 tests, 30/30 killed, 2,791 files by
 - **BRO4:** a revoked validator key could be re-enrolled. Now covered by `test_revoked_validator_key_cannot_be_re_enrolled` and mutant **M34** (the revocation check on enrol is dropped). Result: KILLED.
 - Gate: **34/34 mutants KILLED**. The unmutated control is BYTES_IDENTICAL. `tests/research/lvt` + `rbpd`: **188 passed**.
 - Evidence: `evidence/lvt2_harness_repair/mutations_r3.json` and `mutations_r3_log.txt`.
+
+## Round 4 (2026-10-13, Bro replay 3): BRO5, BRO6 and BRO8 killed
+New file: `tests/research/lvt/test_transfer_receipt_mutant_killers.py`.
+
+Every attack is a **fully re-sealed** transfer report. All digests, the evidence hash, the oracle attestation and the validator receipt signature are recomputed with the legitimate keys. So the only check that can reject the report is the one under test. A reseal control confirms that an authentic report still verifies.
+- **BRO5, duplicate replay:** a re-sealed report with a duplicated `item_id` or a duplicated `content_sha256` is rejected ("Duplicate").
+  - M35 removes the check.
+  - M38 keeps only the `item_id` part.
+  - M39 keeps only the `content_sha256` part.
+  - All three are KILLED.
+- **BRO6, significance:** 12 big-win and 12 small-loss families give macro delta ≥ the effect floor but sign-test p = 1 > α/m.
+  - The authentic report verifies as authentic but **not** a transfer.
+  - A re-sealed `transfers_successfully=True` is rejected.
+  - M36 (`p_val <= 1.0`) is KILLED.
+- **BRO8, effective protocol floor:** tested directly with 24 real families, so only the protocol floor check can bite.
+  - `min_heldout_families` set to 0, 2, 10 or 19 is rejected; 20 is accepted.
+  - M37 (floor 20 → 2) and M40 (off by one, < 19) are KILLED.
+- **Gate:** **40/40 mutants KILLED**. The unmutated source is BYTES_IDENTICAL. `tests/research/lvt` + `rbpd`: **194 passed**.
+- **Evidence:** `evidence/lvt2_harness_repair/mutations_r4.json` and `mutations_r4_log.txt`.
