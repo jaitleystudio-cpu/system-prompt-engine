@@ -20,39 +20,47 @@
   <button type="button" class="shell-search" data-palette aria-label="Search features and actions" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="lbl">Search</span><kbd data-mod>Ctrl K</kbd></button><a class="btn btn--primary lnav__cta" href="/pro/studio/">Open Prompt Studio</a>
 </div></header>
 <main id="main">
-<section class="hero" aria-labelledby="hero-h"><div class="lw">
+<section class="hero" aria-labelledby="hero-h"><div class="hero__bg" aria-hidden="true"></div><div class="lw">
   <p class="eyebrow"><span class="pill">Pro preview</span> Not released · plans and pricing not decided</p>
   <h1 id="hero-h" class="h1">Turn intent into prompts<br>you can trust.</h1>
   <p class="lead">Write a system prompt in clear blocks, test changes against your own cases, and sign the version you ship. Everything runs in your browser.</p>
   <div class="cta"><a class="btn btn--primary" href="/pro/studio/">Open Prompt Studio</a><a class="btn btn--ghost" href="#features">See all features</a></div>
-  <figure class="hero__shot shot"><img src="/pro/media/studio-hero.jpg" alt="Prompt Studio with an example support prompt, its assembled output and static checks" width="1440" height="900" decoding="async"><figcaption>Prompt Studio, captured from this preview build.</figcaption></figure>
+  <div class="hero__stage"><figure class="hero__shot shot"><img src="/pro/media/studio-hero.jpg" alt="Prompt Studio with an example support prompt, its assembled output and static checks" width="1440" height="900" decoding="async"><figcaption>Prompt Studio, captured from this preview build.</figcaption></figure></div>
 </div></section>
 <section class="trust" aria-label="How this preview works"><ul class="lw trust__in">
   <li><b>Runs in your browser</b><span>No server does the work.</span></li><li><b>No account</b><span>Open a page and start.</span></li>
   <li><b>Nothing uploaded</b><span>Drafts stay on this device.</span></li><li><b>Preview</b><span>Not released; may change.</span></li></ul></section>
+<section class="bento-wrap" aria-labelledby="bento-h"><div class="lw">
+  <p class="eyebrow sec-eye" data-reveal>Four tools, one workflow</p><h2 id="bento-h" class="h2 sec-h" data-reveal>From first draft to a signed release.</h2>
+  <ul class="bento">
+    <li class="bento__c bento__c--lg" data-reveal><a href="#studio"><span class="bento__n">01</span><b>Prompt Studio</b><span>Blocks, variables, static checks and versions for one system prompt.</span><span class="bento__go" aria-hidden="true">→</span></a></li>
+    <li class="bento__c" data-reveal><a href="#blueprint"><span class="bento__n">02</span><b>Agent Blueprint</b><span>Agents, tools and handoffs, exported as draft config.</span><span class="bento__go" aria-hidden="true">→</span></a></li>
+    <li class="bento__c" data-reveal><a href="#regression"><span class="bento__n">03</span><b>Regression Lab</b><span>Compare two prompt versions against your own test cases.</span><span class="bento__go" aria-hidden="true">→</span></a></li>
+    <li class="bento__c bento__c--lg" data-reveal><a href="#releases"><span class="bento__n">04</span><b>Signed Releases</b><span>Ed25519 signatures made in your browser, verifiable by anyone.</span><span class="bento__go" aria-hidden="true">→</span></a></li>
+  </ul></div></section>
 <div id="features" class="lw feats" tabindex="-1"><h2 class="sr-only">Features</h2>
-<section class="feat" id="studio" aria-labelledby="studio-h" data-feature="studio">
+<section data-reveal class="feat" id="studio" aria-labelledby="studio-h" data-feature="studio">
   <div class="feat__copy"><p class="eyebrow"><span class="num">01</span>Prompt Studio <span class="pill">Preview</span></p><h2 id="studio-h" class="h2">Shape intent into a prompt you can read, check and reuse.</h2>
     <ul class="ticks"><li>Build in blocks: role, rules, tone, output format, examples and your own requirements.</li><li>Static checks flag a missing role or format, conflicting rules and unfilled {{variables}}, labelled as checks, not quality scores.</li><li>Save versions, diff them, and import or export portable .spe files.</li></ul><a class="btn btn--ghost" href="/pro/studio/">Open Prompt Studio <span aria-hidden="true">→</span></a></div>
   <figure class="shot"><img src="/pro/media/studio.jpg" alt="Prompt Studio editor with blocks, the assembled prompt and static checks" width="1100" height="688" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
 </section>
-<section class="feat" id="blueprint" aria-labelledby="blueprint-h" data-feature="blueprint">
+<section data-reveal class="feat" id="blueprint" aria-labelledby="blueprint-h" data-feature="blueprint">
   <div class="feat__copy"><p class="eyebrow"><span class="num">02</span>Agent Blueprint <span class="pill">Preview</span></p><h2 id="blueprint-h" class="h2">Design the team before you write the code.</h2>
     <ul class="ticks"><li>Lay out agents, the tools each may use, step limits and who hands off to whom.</li><li>Checks catch duplicate names, broken handoffs and risky tools without human approval.</li><li>Export a draft config in MCP-, OpenAI- or Anthropic-style JSON.</li></ul><a class="btn btn--ghost" href="/pro/blueprint/">Open Agent Blueprint <span aria-hidden="true">→</span></a></div>
   <figure class="shot"><img src="/pro/media/blueprint.jpg" alt="Agent Blueprint canvas with four connected agents and the edit panel" width="1100" height="688" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
 </section>
-<section class="feat" id="regression" aria-labelledby="regression-h" data-feature="regression">
+<section data-reveal class="feat" id="regression" aria-labelledby="regression-h" data-feature="regression">
   <div class="feat__copy"><p class="eyebrow"><span class="num">03</span>Regression Lab <span class="pill">Preview</span></p><h2 id="regression-h" class="h2">Know what a prompt change fixed, and what it broke.</h2>
     <ul class="ticks"><li>Write test cases once: must include, must not include, format and length.</li><li>Run version A and version B side by side and see fixed, broken and unchanged cases.</li><li>The demo runner in this preview is simulated, and it is labelled that way.</li></ul><a class="btn btn--ghost" href="/pro/regression-lab/">Open Regression Lab <span aria-hidden="true">→</span></a></div>
   <figure class="shot"><img src="/pro/media/regression.jpg" alt="Regression Lab report comparing two prompt versions" width="1100" height="688" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
 </section>
-<section class="feat" id="releases" aria-labelledby="releases-h" data-feature="releases">
+<section data-reveal class="feat" id="releases" aria-labelledby="releases-h" data-feature="releases">
   <div class="feat__copy"><p class="eyebrow"><span class="num">04</span>Signed Releases <span class="pill">Preview</span></p><h2 id="releases-h" class="h2">Ship prompts anyone can verify.</h2>
     <ul class="ticks"><li>Give a prompt a version and changelog, then sign it with Ed25519 in your browser.</li><li>Anyone can paste the pack and check it has not been changed since signing.</li><li>Private keys are generated in the tab and never saved or sent.</li></ul><a class="btn btn--ghost" href="/pro/releases/">Open Signed Releases <span aria-hidden="true">→</span></a></div>
   <figure class="shot"><img src="/pro/media/releases.jpg" alt="Signed Releases page showing a valid verification result" width="1100" height="688" loading="lazy" decoding="async"><figcaption>Captured from this preview build.</figcaption></figure>
 </section>
 </div>
-<section class="final" aria-labelledby="final-h"><div class="lw final__in"><h2 id="final-h" class="h2">Start with a template, or a blank page.</h2>
+<section data-reveal class="final" aria-labelledby="final-h"><div class="lw final__in"><h2 id="final-h" class="h2">Start with a template, or a blank page.</h2>
   <p class="lead">Prompt Studio has seven original starter templates, including a Telugu/English assistant.</p>
   <div class="cta"><a class="btn btn--primary" href="/pro/studio/">Open Prompt Studio</a><button type="button" class="btn btn--ghost" data-palette>Search features <kbd data-mod>Ctrl K</kbd></button></div></div></section>
 </main>

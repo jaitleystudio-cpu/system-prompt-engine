@@ -77,4 +77,21 @@ for (const [w, mob] of [[1440, false], [390, true]]) { const tag = mob ? "390" :
   await pg.keyboard.press("Escape");
   ok(ext.length === 0, `${tag}: no external requests (${ext.length})`);
   await c.close(); }
+// P13: bento links, page weight, scroll reveal + reduced motion
+for (const rm of ["no-preference", "reduce"]) { const c = await b.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: rm }); const pg = await c.newPage();
+  await pg.goto(O + "/pro/"); await pg.evaluate(async () => { for (const i of document.images) { i.loading = "eager"; await i.decode().catch(() => {}); } }); await pg.waitForTimeout(500);
+  if (rm === "reduce") {
+    ok(await pg.locator(".rv").count() === 0, "reduced motion: no reveal-hidden elements");
+    ok(await pg.locator("[data-reveal]").evaluateAll(l => l.every(e => getComputedStyle(e).opacity === "1")), "reduced motion: all sections fully visible without scrolling");
+    ok(await pg.evaluate(() => { const s = getComputedStyle(document.querySelector(".hero__shot")); return s.transitionDuration.split(",").every(d => parseFloat(d) === 0) && !/matrix3d/.test(s.transform); }), "reduced motion: hero shot has no transition and no 3D tilt");
+  } else {
+    const hrefs = await pg.locator(".bento a").evaluateAll(l => l.map(a => a.getAttribute("href").slice(1)));
+    ok(hrefs.length === 4 && await pg.evaluate(h => h.every(id => document.getElementById(id)?.matches("[data-feature]")), hrefs), "bento: 4 cards link to feature sections");
+    const bytes = await pg.evaluate(() => [performance.getEntriesByType("navigation")[0], ...performance.getEntriesByType("resource")].reduce((n, e) => n + (e.encodedBodySize || 0), 0)); ok(bytes > 400e3 && bytes < 1e6, `page weight < 1 MB (${Math.round(bytes / 1024)} KB)`);
+    const below = await pg.locator(".final").evaluate(e => e.classList.contains("rv") && getComputedStyle(e).opacity !== "1"); ok(below, "reveal: below-fold section starts hidden");
+    await pg.locator(".final").scrollIntoViewIfNeeded(); await pg.waitForTimeout(1000);
+    ok(await pg.locator(".final").evaluate(e => e.classList.contains("is-in") && getComputedStyle(e).opacity === "1"), "reveal: section visible after scrolling");
+    ok(await pg.evaluate(() => /^"?Inter/.test(getComputedStyle(document.body).fontFamily) && [...document.fonts].some(f => f.family.replace(/"/g, "") === "Inter" && f.status === "loaded")), "self-hosted Inter font loaded");
+  }
+  await c.close(); }
 await b.close(); console.log(fail ? `FAILED ${fail}` : "ALL PASS"); process.exit(fail ? 1 : 0);
