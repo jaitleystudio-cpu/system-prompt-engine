@@ -18,6 +18,8 @@ from spe_runtime.bench.models import (
     DatasetSplit,
     LlmJudgeOracle,
     HybridCompositeOracle,
+    DeterministicOracle,
+    SchemaConformanceOracle,
     OracleVerdict,
 )
 
@@ -61,27 +63,101 @@ class PairedEvaluation:
     publication_authorized: bool = False
 
 
+def _canonical_sha(value: object) -> str:
+    return hashlib.sha256(json.dumps(
+        value, sort_keys=True, ensure_ascii=False,
+        separators=(",", ":"), allow_nan=False,
+    ).encode("utf-8")).hexdigest()
+
+
+def _oracle_manifest(oracle) -> dict[str, object]:
+    """Freeze the *actual* oracle test, not merely its mutable identifier.
+
+    Arbitrary Python predicates, runtime LLM judges, and subclass overrides
+    are not independently reproducible from the previous R3 receipt. They
+    remain unavailable for this strict held-out evidence route.
+    """
+    if type(oracle) is DeterministicOracle:
+        return {
+            "type": "EXACT_STRING_MATCH",
+            "oracle_id": oracle.oracle_id,
+            "expected_sha256": hashlib.sha256(oracle.exact_target.encode("utf-8")).hexdigest(),
+        }
+    if type(oracle) is SchemaConformanceOracle:
+        return {
+            "type": "JSON_SCHEMA_VALIDATION",
+            "oracle_id": oracle.oracle_id,
+            "schema_sha256": _canonical_sha(oracle.schema),
+        }
+    if type(oracle) is HybridCompositeOracle:
+        if not oracle.components:
+            raise ValueError("ORACLE_FINGERPRINT_UNSUPPORTED")
+        import math
+        if (
+            not isinstance(oracle.pass_threshold, (int, float))
+            or not math.isfinite(oracle.pass_threshold)
+            or not 0 <= oracle.pass_threshold <= 1
+        ):
+            raise ValueError("ORACLE_FINGERPRINT_UNSUPPORTED")
+        components: list[dict[str, object]] = []
+        for sub, weight in oracle.components:
+            if not isinstance(weight, (int, float)) or not math.isfinite(weight) or weight <= 0:
+                raise ValueError("ORACLE_FINGERPRINT_UNSUPPORTED")
+            components.append({"oracle": _oracle_manifest(sub), "weight": weight})
+        return {
+            "type": "HYBRID_WEIGHTED_COMPOSITE",
+            "oracle_id": oracle.oracle_id,
+            "pass_threshold": oracle.pass_threshold,
+            "components": components,
+        }
+    raise ValueError("ORACLE_FINGERPRINT_UNSUPPORTED")
+
+
 def _oracle_is_objective(oracle) -> bool:
-    # Reject simulated LLM judges, estimated keyword coverage and mixtures of
-    # such oracles. Only deterministic oracle classes can be used in this gate.
-    if isinstance(oracle, LlmJudgeOracle):
+    try:
+        _oracle_manifest(oracle)
+        return True
+    except (ValueError, TypeError, AttributeError, OverflowError):
         return False
-    if isinstance(oracle, HybridCompositeOracle):
-        return bool(oracle.components) and all(_oracle_is_objective(part) for part, _ in oracle.components)
-    return getattr(oracle, "evidence_strength", None) == "DETERMINISTIC"
 
 
-def _digest_suite(suite: BenchmarkSuite, task_ids: list[str]) -> str:
-    canonical = json.dumps(
-        {"suite_id": suite.suite_id, "task_ids": task_ids},
-        sort_keys=True, separators=(",", ":"),
-    ).encode("utf-8")
-    return hashlib.sha256(canonical).hexdigest()
+def frozen_suite_digest(suite: BenchmarkSuite) -> str:
+    """SHA256 over all frozen tasks, split assignments, inputs AND oracle rules.
+
+    A renamed oracle target or swapped held-out task must change the digest,
+    even when suite ID and task IDs are unchanged. Opaque predicates fail
+    closed until separately reviewed and version-locked by a trusted owner.
+    """
+    if not isinstance(suite, BenchmarkSuite) or not suite.tasks:
+        raise ValueError("SUITE_MISSING_OR_UNBOUNDED")
+    if len(suite.tasks) > 2000:
+        raise ValueError("SUITE_MISSING_OR_UNBOUNDED")
+    if len(set(t.task_id for t in suite.tasks)) != len(suite.tasks):
+        raise ValueError("DUPLICATE_TASK_IDS")
+    ordered = sorted(suite.tasks, key=lambda t: t.task_id)
+    parts = []
+    for t in ordered:
+        if not isinstance(t.task_id, str) or not t.task_id:
+            raise ValueError("INVALID_TASK_ID")
+        if not isinstance(t.prompt_input, str) or not t.prompt_input.strip():
+            raise ValueError("EMPTY_TASK_INPUT")
+        metadata_digest = _canonical_sha(t.metadata)
+        parts.append({
+            "task_id": t.task_id,
+            "domain": t.domain.value,
+            "split": t.split.value,
+            "input_sha256": hashlib.sha256(t.prompt_input.encode("utf-8")).hexdigest(),
+            "oracle": _oracle_manifest(t.oracle),
+            "metadata_digest": metadata_digest,
+        })
+    return _canonical_sha({"version": "spe.bench.frozen_manifest.v2", "suite_id": suite.suite_id, "tasks": parts})
+
 
 
 def _run_identical(a: ModelRunIdentity, b: ModelRunIdentity) -> bool:
     return (
         a == b
+        and isinstance(a.provider, str) and bool(a.provider.strip())
         and isinstance(a.model_id, str) and bool(a.model_id.strip())
         and isinstance(a.model_revision, str) and a.model_revision.strip().lower() not in ("", "unknown", "unbound", "latest")
         and isinstance(a.configuration_digest, str) and len(a.configuration_digest) == 64
@@ -192,7 +268,7 @@ def evaluate_captured_paired_outputs(
     if delta <= 0:
         reasons.append("NO_POSITIVE_PAIRED_GAIN")
     return PairedEvaluation(
-        suite_digest=_digest_suite(suite, ids),
+        suite_digest=frozen_suite_digest(suite),
         split=split.value,
         tasks=len(tasks),
         trials_per_task=trials_per_task,
