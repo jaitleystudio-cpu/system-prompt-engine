@@ -94,7 +94,7 @@ def _safe_feed_config(config: TrustedStatusFeed) -> bool:
         or not isinstance(config.enabled, bool)
         or type(config.max_events_per_poll) is not int
         or not 1 <= config.max_events_per_poll <= 100
-        or host != host.lower() or host.endswith(".") or "." not in host
+        or host != host.lower() or host.endswith(".") or "." not in host or re.fullmatch(r"[0-9.]+", host) is not None
         or len(host) > 253 or host in ("localhost",) or host.endswith((".localhost", ".local", ".internal"))
         or not all(re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?", label) for label in host.split("."))
         or _global_ip(host)
