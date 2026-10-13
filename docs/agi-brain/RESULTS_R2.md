@@ -30,3 +30,9 @@
 - The R1 "world model" gain (H1 in R1) was a gain over *no* counterexample memory; against a faithful CEGIS baseline it disappears. SPE-WM's bounded probe set (k=16) appears to cost it screening throughput relative to unbounded CEGIS.
 - Minimum attainable sign-flip p with 10 seeds is 0.002; most per-seed differences were zero, so power is low.
 - Self-run on a shared machine (Ollama P4 ran concurrently on GPU); CPU-time budgets are not bit-reproducible. Needs Bro's replay.
+
+## Post-replay note: budget-counter nondeterminism (added 2026-10-13; verdict unchanged)
+- **Finding (Bro replay @ 4fc5e94b, REPLAY_PASS):** non-determinism goes beyond `cpu_used`/`sec`. `evals`, `proposals` and `verifier_calls` differed in about **262/300** rows, and one CEGIS outcome changed (select12k4 seed 0: size 26 vs 27). H1/H2/H3, success 4/6/9% and p_Holm were identical; the change only widens CEGIS's lead.
+- **Root cause:** the frozen contract budgets each run in *process CPU seconds* (`CPU_BUDGET = 8.0`, `time.process_time()` deadline in `search_r2` and `prune`). How many proposals fit in 8 CPU-s depends on machine speed, load and the 4-worker pool, so the counters (and occasionally the final net) are not reproducible even with the seeded RNG.
+- **Fix (opt-in, commit after 4fc5e94b):** `search_r2(..., eval_budget=N)` stops on the deterministic evaluation counter instead of CPU time; with the seeded RNG every counter and outcome is bit-reproducible (test `test_eval_budget_mode_is_deterministic`). The default stays CPU-budgeted so the frozen R2 run and its replay are unchanged.
+- **Status:** the R2 result stays **NOT_PROVEN** as frozen. An eval-budgeted rerun is a *different* budget definition and needs a **fresh prereg** (R3); it must not be used to edit R2.

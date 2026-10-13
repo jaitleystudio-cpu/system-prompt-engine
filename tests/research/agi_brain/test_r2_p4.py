@@ -52,3 +52,21 @@ def test_contracts_frozen():
     h = lambda p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest()
     assert h("docs/agi-brain/CONTRACT_R2.md") == "1911d6af6ef075e342fe9b6820657b262878995f071834dcc43d9ff3659cb735"
     assert h("docs/agi-brain/CONTRACT_P4.md") == "ac01124cbc34e7e547001f3c730310ac740e65dc2c83a8649e35c75097ef515e"
+
+
+def test_eval_budget_mode_is_deterministic():
+    # Bro replay 2026-10-13: CPU-time budget made evals/proposals differ in ~262/300 rows. eval_budget fixes it.
+    from spe_runtime.research.agi_brain.netsearch_r2 import search_r2
+    for cond in ("plain", "cegis", "spe_wm"):
+        a = search_r2("sort8", cond, 3, cpu_budget=999.0, eval_budget=200_000)
+        b = search_r2("sort8", cond, 3, cpu_budget=999.0, eval_budget=200_000)
+        for k in ("net", "size", "depth", "evals", "proposals", "verifier_calls", "model_size"):
+            assert a[k] == b[k], (cond, k)
+        assert a["budget_mode"] == "evals"
+        assert a["evals"] < 200_000 + 2 ** 8 + 1   # stops at the first check over budget
+
+
+def test_cpu_budget_default_unchanged():
+    from spe_runtime.research.agi_brain.netsearch_r2 import search_r2
+    r = search_r2("sort6", "plain", 0, cpu_budget=0.05)
+    assert r["budget_mode"] == "cpu" and r["size"] > 0

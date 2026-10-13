@@ -53,20 +53,30 @@ class Checker2:
         return (True, None) if bad == 0 else (False, cols[(bad & -bad).bit_length() - 1])
 
 
-def prune(net, chk: Checker2, deadline: float):
+def prune(net, chk: Checker2, deadline: float, alive=None):
+    alive = alive or (lambda: time.process_time() < deadline)
     cur = list(net); i = len(cur) - 1
-    while i >= 0 and time.process_time() < deadline:
+    while i >= 0 and alive():
         cand = cur[:i] + cur[i + 1:]
         if chk.exhaustive(cand)[0]: cur = cand
         i -= 1
     return cur
 
 
-def search_r2(fam: str, cond: str, seed: int, cpu_budget: float, start_net: Optional[Net] = None, wm_k: int = 16) -> Dict:
+def search_r2(fam: str, cond: str, seed: int, cpu_budget: float, start_net: Optional[Net] = None, wm_k: int = 16,
+              eval_budget: Optional[int] = None) -> Dict:
+    """cpu_budget (default, as frozen in CONTRACT_R2): stop on process CPU time -> proposal/eval counters depend on
+    machine speed and load and are NOT reproducible (Bro replay 2026-10-13: ~262/300 rows differed).
+    eval_budget (post-R2 fix, opt-in): stop when the deterministic evaluation counter reaches eval_budget; with the
+    seeded RNG every counter and outcome is then bit-reproducible. Changes scoring semantics -> needs a fresh prereg."""
     assert cond in COND_R2
     _, n, _ = parse(fam); rng = random.Random(f"r2|{seed}|{fam}")  # same RNG stream for all conditions
     meter = Meter(); chk = Checker2(fam, meter)
     t0 = time.process_time(); deadline = t0 + cpu_budget
+    if eval_budget is not None:
+        alive = lambda: meter.evals < eval_budget
+    else:
+        alive = lambda: time.process_time() < deadline
     E: List[int] = []                    # CEGIS example set (unbounded)
     wm: Dict[int, int] = {}              # SPE world model: counterexample -> kill count
     n_verifier_calls = 0
@@ -90,9 +100,9 @@ def search_r2(fam: str, cond: str, seed: int, cpu_budget: float, start_net: Opti
         n_verifier_calls += 1
         return chk.exhaustive(net)[0]
 
-    start = [tuple(c) for c in start_net] if start_net is not None else prune(batcher_net(n), chk, deadline)
+    start = [tuple(c) for c in start_net] if start_net is not None else prune(batcher_net(n), chk, deadline, alive)
     best = cur = start; proposals = 0; t_best = time.process_time() - t0
-    while time.process_time() < deadline:
+    while alive():
         cand = _mutate(cur, n, rng); proposals += 1
         if len(cand) > len(cur) + 1: continue
         if valid(cand):
@@ -101,4 +111,4 @@ def search_r2(fam: str, cond: str, seed: int, cpu_budget: float, start_net: Opti
                 best = cur; t_best = time.process_time() - t0
     return {"net": best, "size": len(best), "depth": depth(best, n), "evals": meter.evals,
             "proposals": proposals, "verifier_calls": n_verifier_calls, "cpu_used": time.process_time() - t0,
-            "cpu_to_best": t_best, "model_size": len(E) if cond == "cegis" else len(wm)}
+            "cpu_to_best": t_best, "budget_mode": "evals" if eval_budget is not None else "cpu", "model_size": len(E) if cond == "cegis" else len(wm)}
