@@ -7,7 +7,7 @@ from typing import Any
 
 from .models import RouteMetadata, SeoValidationReport
 
-BASE_CANONICAL_DOMAIN = "https://promptengine.run"
+BASE_CANONICAL_DOMAIN = "https://systempromptengine.com"
 
 TIER_A_CATEGORY_OWNERSHIP: list[RouteMetadata] = [
     RouteMetadata(
