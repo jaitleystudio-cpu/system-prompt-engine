@@ -142,11 +142,17 @@ class SourceEventJournal:
         self._authorities = dict(authorities)
         self._max_events = max_events
         self._entries: list[JournalEntry] = []
+        self._snapshots: list[SourceSnapshot] = []
         self._subjects: dict[tuple[str, str], tuple[str, str, str, str]] = {}
 
     @property
     def entries(self) -> tuple[JournalEntry, ...]:
         return tuple(self._entries)
+
+    @property
+    def observations(self) -> tuple[SourceSnapshot, ...]:
+        """Validated source metadata only; no public incident body or title."""
+        return tuple(self._snapshots)
 
     def latest_entry(self, source_id: str, event_id: str) -> JournalEntry | None:
         """Read-only owner API; do not expose mutable revision bookkeeping."""
@@ -222,6 +228,9 @@ class SourceEventJournal:
             predecessor_digest=snapshot.predecessor_digest,
         )
         self._entries.append(record)
+        # Store only a fixed metadata label; the untrusted title does not
+        # belong in persistent custody and is never needed to replay a hash.
+        self._snapshots.append(replace(snapshot, title="PUBLIC_STATUS_NOTICE_METADATA_ONLY"))
         self._subjects[subject_key] = (
             snapshot.content_sha256, snapshot.observed_at, snapshot.event_kind.value, snapshot.url
         )
