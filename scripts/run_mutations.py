@@ -367,6 +367,30 @@ MUTANTS = [
         "replacement": "        if proto.min_heldout_families < 19 or proto.family_level_significance is not True:",
         "test": "tests/research/lvt/test_transfer_receipt_mutant_killers.py",
     },
+    {
+        "id": "M41",
+        "name": "transfer Bonferroni dropped: alpha_adj = proto.alpha (Bro round-3 BRO9)",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        alpha_adj = proto.alpha / proto.multiplicity\n",
+        "replacement": "        alpha_adj = proto.alpha\n",
+        "test": "tests/research/lvt/test_alpha_and_ties_mutant_killers.py",
+    },
+    {
+        "id": "M42",
+        "name": "study-path study.p_value <= study.alpha_adjusted check deleted (Bro round-3 BRO10)",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "                and study.p_value <= study.alpha_adjusted\n",
+        "replacement": "",
+        "test": "tests/research/lvt/test_alpha_and_ties_mutant_killers.py",
+    },
+    {
+        "id": "M43",
+        "name": "transfer sign test counts ties as positive (Bro round-3 BRO11)",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        positives = sum(d > 1e-12 for d in family_deltas)\n",
+        "replacement": "        positives = sum(d >= -1e-12 for d in family_deltas)\n",
+        "test": "tests/research/lvt/test_alpha_and_ties_mutant_killers.py",
+    },
 ]
 
 
