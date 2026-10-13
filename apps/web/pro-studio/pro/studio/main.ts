@@ -7,7 +7,7 @@ export function reqText(must: string[] = [], mustNot: string[] = []): string {
   return [m.length ? "Must:\n" + m.map(x => `- ${x}`).join("\n") : "", n.length ? "Must not:\n" + n.map(x => `- Do not: ${x}`).join("\n") : ""].filter(Boolean).join("\n");
 }
 const plain = (b: Omit<Block, "id">): Omit<Block, "id"> => b.kind === "requirements" ? { kind: b.kind, title: b.title, text: reqText(b.must, b.mustNot), must: [...(b.must || [])], mustNot: [...(b.mustNot || [])] } : { kind: b.kind, title: b.title, text: b.text };
-interface SpeFile { format: "spe.prompt"; version: 1; name: string; createdAt: string; blocks: Omit<Block, "id">[]; versions?: Version[] }
+interface SpeFile { format: "spe.prompt"; version: 1; name: string; createdAt: string; blocks: Omit<Block, "id">[]; versions?: Version[]; variables?: Record<string, string>; mode?: Mode; rendered?: string }
 
 const LABEL: Record<Kind, string> = { role: "Role", rules: "Rules", tone: "Tone", output: "Output format", examples: "Examples", requirements: "Requirements", custom: "Custom" };
 const HINT: Record<Kind, string> = {
@@ -21,7 +21,21 @@ const HINT: Record<Kind, string> = {
 };
 const STORE = "spe.pro.studio.r1.draft";
 const VSTORE = "spe.pro.studio.r1.versions";
-interface Version { id: string; note: string; at: string; blocks: Omit<Block, "id">[] }
+interface Version { id: string; note: string; at: string; blocks: Omit<Block, "id">[]; variables?: Record<string, string> }
+type Mode = "template" | "filled";
+const XSTORE = "spe.pro.studio.r1.vars";
+let vars: Record<string, string> = {}; let mode: Mode = "template";
+// {{name}} placeholders, [a-zA-Z0-9_] only. Detection and filling are a single regex pass: values are never re-scanned.
+const VAR_RE = /\{\{([a-zA-Z0-9_]+)\}\}/g;
+export function findVars(text: string): [string, number][] { const m = new Map<string, number>(); for (const x of text.matchAll(VAR_RE)) m.set(x[1], (m.get(x[1]) || 0) + 1); return [...m]; }
+export const filled = (text: string, v: Record<string, string>) => text.replace(VAR_RE, (all, n) => v[n] ? v[n] : all);
+export function malformed(text: string): string[] {
+  const rest = text.replace(VAR_RE, " "); const out: string[] = [];
+  for (const m of rest.matchAll(/\{\{[^{}\n]{0,24}|\{?[^{}\n]{0,24}\}\}|\{[a-zA-Z0-9_ ]{1,40}\}(?!\})/g)) out.push(m[0].trim());
+  return out;
+}
+export function cleanVars(x: any): Record<string, string> { const o: Record<string, string> = {}; if (x && typeof x === "object" && !Array.isArray(x)) for (const [k, v] of Object.entries(x).slice(0, 500)) if (/^[a-zA-Z0-9_]+$/.test(k) && typeof v === "string") o[k] = v.slice(0, 20000); return o; }
+const output = () => mode === "filled" ? filled(assemble(blocks), vars) : assemble(blocks);
 let versions: Version[] = [];
 const $ = <T extends HTMLElement>(s: string) => document.querySelector(s) as T;
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -35,8 +49,8 @@ const EXAMPLE: Omit<Block, "id">[] = [
   { kind: "examples", title: "Examples", text: "User: Why was I charged twice in May?\nAssistant: You were billed once for May (INV-2041) and once for a prorated upgrade (INV-2042).\n- Open Billing → Invoices to see both.\n- The upgrade charge covers May 14–31.\nAnything else on your bill?" },
 ];
 
-function load() { try { const r = localStorage.getItem(STORE); if (r) blocks = JSON.parse(r); const v = localStorage.getItem(VSTORE); if (v) versions = JSON.parse(v); } catch { blocks = []; versions = []; } }
-function save() { try { localStorage.setItem(STORE, JSON.stringify(blocks)); localStorage.setItem(VSTORE, JSON.stringify(versions)); } catch { /* storage disabled: editor still works */ } }
+function load() { try { const r = localStorage.getItem(STORE); if (r) blocks = JSON.parse(r); const v = localStorage.getItem(VSTORE); if (v) versions = JSON.parse(v); const x = JSON.parse(localStorage.getItem(XSTORE) || "{}"); vars = cleanVars(x.vars); mode = x.mode === "filled" ? "filled" : "template"; } catch { blocks = []; versions = []; } }
+function save() { try { localStorage.setItem(STORE, JSON.stringify(blocks)); localStorage.setItem(VSTORE, JSON.stringify(versions)); localStorage.setItem(XSTORE, JSON.stringify({ vars, mode })); } catch { /* storage disabled: editor still works */ } }
 const announce = (m: string) => { $("#live").textContent = m; };
 
 export function assemble(bs: Block[]): string {
@@ -65,6 +79,11 @@ export function check(bs: Block[]): Q[] {
     const clash = must.flatMap(m => not.filter(n => norm(n) === norm(m)).map(n => `Must: “${m.trim()}” vs Must not: “${n.trim()}”`));
     out.push(clash.length ? { level: "bad", type: "deterministic", title: `Requirement conflict (${clash.length})`, detail: `Same item in both lists; both are kept in the prompt. ${clash.join("; ")}` } : { level: "ok", type: "deterministic", title: "No requirement in both lists", detail: `Pass: ${must.length} must, ${not.length} must not, none identical.` });
   }
+  const vs = findVars(text);
+  if (vs.length) { const un = vs.filter(([n]) => !vars[n]).map(([n]) => `{{${n}}}`);
+    out.push(un.length ? { level: "warn", type: "deterministic", title: `Unfilled variables (${un.length})`, detail: `No value yet: ${un.slice(0, 8).join(", ")}. They stay as {{name}} in Filled mode.` } : { level: "ok", type: "deterministic", title: "All variables have values", detail: `Pass: ${vs.length} variable${vs.length > 1 ? "s" : ""} filled.` }); }
+  const bad = malformed(text);
+  if (bad.length) out.push({ level: "warn", type: "deterministic", title: `Malformed braces (${bad.length})`, detail: `Not a valid {{name}}: ${bad.slice(0, 5).map(x => `“${x}”`).join(", ")}` });
   if (text) {
     if (!has("output") && /\b(json|markdown|bullet|table|format|sections?|words|sentences|lines)\b/i.test(text)) out.push({ level: "warn", type: "heuristic", title: "Format mentioned outside an Output block", detail: "A dedicated Output format block makes it explicit." });
     const lines = bs.flatMap(b => b.text.split("\n")).map(l => l.trim().toLowerCase()).filter(Boolean);
@@ -151,7 +170,13 @@ function renderAB() {
 }
 function renderSide() {
   const text = assemble(blocks);
-  $("#preview").innerHTML = text ? esc(text) : '<span class="ph">Your assembled prompt appears here as you type.</span>';
+  const parts: string[] = []; let last = 0;
+  for (const m of text.matchAll(VAR_RE)) { parts.push(esc(text.slice(last, m.index))); const v = vars[m[1]];
+    parts.push(mode === "filled" && v ? esc(v) : `<mark class="${mode === "filled" ? "var-unfilled" : "var"}">${esc(m[0])}</mark>`); last = m.index! + m[0].length; }
+  parts.push(esc(text.slice(last)));
+  $("#preview").innerHTML = text ? parts.join("") : '<span class="ph">Your assembled prompt appears here as you type.</span>';
+  (["template", "filled"] as Mode[]).forEach(k => $(`#pv-${k}`).setAttribute("aria-pressed", String(mode === k)));
+  renderVars(findVars(text));
   const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
   $("#stats").textContent = `${blocks.length} blocks · ${words} words · ${text.length} chars · ~${tokens(text)} tokens`;
   const qs = check(blocks); $("#quality").innerHTML = qHtml(qs);
@@ -159,6 +184,12 @@ function renderSide() {
   save();
 }
 
+let varSig = "";
+function renderVars(vs: [string, number][]) {
+  const sig = JSON.stringify(vs); if (sig === varSig) return; varSig = sig;
+  const ul = $("#vars"); ul.innerHTML = vs.length ? vs.map(([n, c]) => `<li class="var-row" data-var="${n}"><label for="var-${n}"><code>{{${n}}}</code> <span class="var-count">${c} use${c > 1 ? "s" : ""}</span></label><input id="var-${n}" class="inp" maxlength="20000" placeholder="Value for ${n}" /></li>`).join("") : '<li class="small">No variables yet. Type {{name}} in any block to add one.</li>';
+  ul.querySelectorAll<HTMLInputElement>("input").forEach(inp => { const n = inp.id.slice(4); inp.value = vars[n] || ""; inp.addEventListener("input", () => { vars[n] = inp.value; if (!inp.value) delete vars[n]; renderSide(); }); });
+}
 function render(focusId?: string, enterId?: string) {
   const ol = $("#blocks"); ol.innerHTML = "";
   ($("#empty") as HTMLElement).hidden = blocks.length > 0;
@@ -247,7 +278,7 @@ function move(from: number, to: number, keep: "up" | "down" | "handle") {
 function add(kind: Kind, text = "") { const b: Block = kind === "requirements" ? { id: uid(), kind, title: LABEL[kind], text: "", must: [], mustNot: [] } : { id: uid(), kind, title: LABEL[kind], text }; blocks.push(b); render(undefined, b.id); (document.querySelector(`[data-id="${b.id}"] textarea, [data-id="${b.id}"] .req-new`) as HTMLElement).focus(); announce(`${b.title} block added`); }
 function setBlocks(bs: Omit<Block, "id">[], msg: string) { blocks = bs.map(b => ({ ...b, id: uid() })); render(); announce(msg); }
 
-export function toSpe(bs: Block[]): SpeFile { return { format: "spe.prompt", version: 1, name: bs.find(b => b.kind === "role")?.text.slice(0, 48) || "Untitled prompt", createdAt: new Date().toISOString(), blocks: bs.map(plain), versions }; }
+export function toSpe(bs: Block[]): SpeFile { return { format: "spe.prompt", version: 1, name: bs.find(b => b.kind === "role")?.text.slice(0, 48) || "Untitled prompt", createdAt: new Date().toISOString(), blocks: bs.map(plain), versions, variables: { ...vars }, mode, rendered: output() }; }
 export const MAX_FILE = 5 * 1024 * 1024, MAX_TEXT = 200_000;
 export function parseSpeJson(raw: string, name = "This file"): any {
   try { return JSON.parse(raw); } catch { throw new Error(`“${name}” is not valid JSON, so it can't be a .spe file. It may be truncated or corrupted.`); }
@@ -287,16 +318,16 @@ $("#file-import").addEventListener("change", async e => {
     if (!/\.(spe|json)$/i.test(f.name)) throw new Error(`“${f.name}” is not a .spe file. Choose a file exported from Prompt Studio (.spe).`);
     if (f.size > MAX_FILE) throw new Error(`“${f.name}” is too large (${(f.size / 1048576).toFixed(1)} MB). The limit is 5 MB.`);
     const d = parseSpeJson(await f.text(), f.name); const bs = fromSpe(d);
-    const vs: Version[] = Array.isArray(d.versions) ? d.versions.slice(0, 100).map((v: any, i: number) => { try { return { id: uid(), note: String(v.note || "Imported").slice(0, 80), at: String(v.at || new Date().toISOString()), blocks: fromSpe({ format: "spe.prompt", version: 1, blocks: v.blocks }) }; } catch (er) { throw new Error(`Version ${i + 1}: ${(er as Error).message}`); } }) : versions;
-    versions = vs; importErr(""); setBlocks(bs, `Imported ${f.name}`); renderVersions();
+    const vs: Version[] = Array.isArray(d.versions) ? d.versions.slice(0, 100).map((v: any, i: number) => { try { return { id: uid(), note: String(v.note || "Imported").slice(0, 80), at: String(v.at || new Date().toISOString()), blocks: fromSpe({ format: "spe.prompt", version: 1, blocks: v.blocks }), variables: cleanVars(v.variables) }; } catch (er) { throw new Error(`Version ${i + 1}: ${(er as Error).message}`); } }) : versions;
+    versions = vs; vars = cleanVars(d.variables); mode = d.mode === "filled" ? "filled" : "template"; varSig = ""; importErr(""); setBlocks(bs, `Imported ${f.name}`); renderVersions();
   } catch (err) { const m = `Import failed: ${(err as Error).message} Your current draft was not changed.`; importErr(m); announce(m); }
   (e.target as HTMLInputElement).value = "";
 });
-$("#btn-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(assemble(blocks)); announce("Prompt copied"); } catch { announce("Copy failed; select the preview text instead"); } });
-(window as any).__spe = { check, detSummary, assemble, toSpe, fromSpe };
-$("#btn-save-v").addEventListener("click", () => { const inp = $("#v-name") as HTMLInputElement; versions.push({ id: uid(), note: inp.value.trim() || `Snapshot ${versions.length + 1}`, at: new Date().toISOString(), blocks: blocks.map(plain) }); inp.value = ""; save(); renderVersions(); announce(`Saved version ${versions.length}`); });
+$("#btn-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(output()); announce(`Prompt copied (${mode === "filled" ? "Filled" : "Template"})`); } catch { announce("Copy failed; select the preview text instead"); } });
+(window as any).__spe = { findVars, filled, malformed, check, detSummary, assemble, toSpe, fromSpe };
+$("#btn-save-v").addEventListener("click", () => { const inp = $("#v-name") as HTMLInputElement; versions.push({ id: uid(), note: inp.value.trim() || `Snapshot ${versions.length + 1}`, at: new Date().toISOString(), blocks: blocks.map(plain), variables: { ...vars } }); inp.value = ""; save(); renderVersions(); announce(`Saved version ${versions.length}`); });
 $("#vlist").addEventListener("click", e => { const t = e.target as HTMLElement; const r = t.closest("[data-restore]") as HTMLElement | null, d = t.closest("[data-delv]") as HTMLElement | null;
-  if (r) { const v = versions.find(x => x.id === r.dataset.restore)!; setBlocks(v.blocks, `Restored ${v.note}`); renderVersions(); }
+  if (r) { const v = versions.find(x => x.id === r.dataset.restore)!; if (v.variables) { vars = { ...v.variables }; varSig = ""; } setBlocks(v.blocks, `Restored ${v.note}`); renderVersions(); }
   if (d) { versions = versions.filter(x => x.id !== d.dataset.delv); save(); renderVersions(); announce("Version deleted"); } });
 ["#d-from", "#d-to"].forEach(s => $(s).addEventListener("change", renderDiff)); ["#ab-a", "#ab-b"].forEach(s => $(s).addEventListener("change", renderAB));
 const tabs = ["edit", "ver", "ab"];
@@ -308,4 +339,5 @@ const qToggle = $("#q-toggle") as HTMLButtonElement;
 const setQ = (open: boolean) => { qToggle.setAttribute("aria-expanded", String(open)); qToggle.textContent = open ? "Hide checks" : "Show checks"; $("#q-panel").classList.toggle("q-collapsed", !open); };
 qToggle.addEventListener("click", () => setQ(qToggle.getAttribute("aria-expanded") !== "true"));
 if (matchMedia("(max-width:767px)").matches) setQ(false);
+(["template", "filled"] as Mode[]).forEach(k => $(`#pv-${k}`).addEventListener("click", () => { mode = k; renderSide(); announce(`Preview shows ${k === "filled" ? "Filled" : "Template"}`); }));
 load(); render(); renderVersions();

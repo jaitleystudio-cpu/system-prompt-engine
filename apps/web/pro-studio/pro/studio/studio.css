@@ -101,6 +101,9 @@ body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.6 var(--sans)
 .req__list{border:1px solid var(--line);border-radius:10px;padding:8px 12px 12px;margin:0;min-width:0}.req__list legend{font:600 14px var(--sans);color:var(--tx);padding:0 4px}
 .req__items{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:6px}.req-item,.req__add{display:flex;gap:6px;align-items:center}.req-item .inp,.req__add .inp{flex:1;width:0;min-width:0}
 .req-del{min-width:44px;min-height:44px}
+.pv-mode{display:flex;gap:4px;margin-left:auto}.pv-mode [aria-pressed=true]{background:var(--s2);border-color:var(--ac);color:var(--tx)}
+.preview mark{background:none;color:var(--k-goal);font-weight:600}.preview mark.var-unfilled{background:rgba(255,200,112,.16);color:#FFC870;outline:1px dashed #FFC870;border-radius:4px}
+.vars{list-style:none;margin:0;padding:0;display:grid;gap:8px}.var-row{display:grid;gap:4px}.var-row label{font-size:14px;color:var(--mu)}.var-row code{color:var(--tx);font:600 14px var(--mono)}
 /* P3 mobile density (<768px only; desktop unchanged) */
 .q-toggle,.q-sum,.mjump{display:none}
 @media (max-width:767px){

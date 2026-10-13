@@ -146,6 +146,45 @@ for (const [w, mob] of [[1440, false], [390, true]]) { const tag = mob ? "390" :
     if (SHOT) { await blk.scrollIntoViewIfNeeded(); await pg.screenshot({ path: `${SHOT}/${PFX}requirements-${tag}.png`, fullPage: !mob }); }
   } catch (e) { ok(false, `P5 ${tag}: ${String(e.message).split("\n")[0]}`); }
   await c.close(); }
+// P6: {{variables}} — deterministic detection, Template/Filled preview, no re-expansion, persistence
+for (const [w, mob] of [[1440, false], [390, true]]) { const tag = mob ? "390" : "desktop";
+  const c = await b.newContext({ viewport: { width: w, height: mob ? 844 : 900 }, isMobile: mob, hasTouch: mob, acceptDownloads: true, bypassCSP: !!AXE, permissions: ["clipboard-read", "clipboard-write"] }); const pg = await c.newPage();
+  try {
+    await pg.goto(BASE); await pg.evaluate(() => localStorage.clear()); await pg.reload();
+    await pg.selectOption("#add-kind", "custom"); await pg.click("#btn-add");
+    await pg.locator('#blocks > li[data-k="custom"] textarea').fill("Hello {{name}}, welcome to {{city}} on {{date}}. Bye {{name}}. Broken: {{ x and {y}}");
+    const rows = await pg.locator("#vars [data-var]").evaluateAll(l => l.map(x => x.dataset.var + ":" + x.querySelector(".var-count").textContent.replace(/\D/g, "")).join(","), null, { timeout: 3000 });
+    ok(rows === "name:2,city:1,date:1", `P6 ${tag}: detection + counts (${rows})`);
+    const qt = (await pg.locator("#quality").innerText());
+    ok(/Unfilled variables \(3\)/.test(qt), `P6 ${tag}: unfilled-variables check`);
+    ok(/Malformed braces/.test(qt) && /\{\{ x/.test(qt) && /\{y\}\}/.test(qt), `P6 ${tag}: malformed-brace warning lists '{{ x' and '{y}}'`);
+    await pg.fill('#vars [data-var="name"] input', "ప్రవీణ్ 🙏"); await pg.fill('#vars [data-var="city"] input', "{{name}}");
+    await pg.click("#pv-filled");
+    const pv = await pg.locator("#preview").innerText();
+    ok(pv.includes("Hello ప్రవీణ్ 🙏, welcome to {{name}} on {{date}}. Bye ప్రవీణ్ 🙏."), `P6 ${tag}: substitution with Telugu; value '{{name}}' not re-expanded`);
+    ok(await pg.locator("#preview mark.var-unfilled").allInnerTexts().then(a => a.join(",")) === "{{date}}", `P6 ${tag}: unfilled kept as {{date}} and highlighted`);
+    await pg.click("#btn-copy"); const clip = await pg.evaluate(() => navigator.clipboard.readText());
+    ok(clip.includes("Hello ప్రవీణ్ 🙏") && clip.includes("{{date}}"), `P6 ${tag}: copy uses Filled mode`);
+    await pg.click("#pv-template"); await pg.click("#btn-copy");
+    ok((await pg.evaluate(() => navigator.clipboard.readText())).includes("Hello {{name}}"), `P6 ${tag}: copy uses Template mode`);
+    await pg.click("#pv-filled");
+    if (mob) for (const el of await pg.locator("#vars input, #vars button, #pv-template, #pv-filled").all()) { const r = await el.boundingBox(); if (r && (r.height < 44 || r.width < 44)) { ok(false, `P6 ${tag}: tap target ${Math.round(r.width)}x${Math.round(r.height)}`); break; } }
+    await pg.reload();
+    ok(await pg.inputValue('#vars [data-var="name"] input') === "ప్రవీణ్ 🙏" && await pg.locator("#pv-filled").getAttribute("aria-pressed") === "true", `P6 ${tag}: values + mode persist after reload`);
+    const before = await pg.locator("#preview").innerText();
+    const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("#btn-export")]); const fp = "/tmp/spe-p6-" + dl.suggestedFilename(); await dl.saveAs(fp);
+    const f = JSON.parse(readFileSync(fp, "utf8"));
+    ok(f.variables?.city === "{{name}}" && f.mode === "filled" && f.rendered?.includes("Hello ప్రవీణ్ 🙏"), `P6 ${tag}: export carries variables + current-mode rendered prompt`);
+    await pg.click("#btn-example"); await pg.setInputFiles("#file-import", fp); await pg.waitForTimeout(300);
+    ok(await pg.locator("#preview").innerText() === before && await pg.inputValue('#vars [data-var="name"] input') === "ప్రవీణ్ 🙏", `P6 ${tag}: .spe round trip identical`);
+    if (!mob) { await pg.evaluate(() => window.__spe.selectTab("ver")); await pg.fill("#v-name", "vars"); await pg.click("#btn-save-v"); await pg.evaluate(() => window.__spe.selectTab("edit"));
+      await pg.fill('#vars [data-var="name"] input', "Other"); await pg.evaluate(() => window.__spe.selectTab("ver")); await pg.locator("[data-restore]").first().click(); await pg.evaluate(() => window.__spe.selectTab("edit"));
+      ok(await pg.inputValue('#vars [data-var="name"] input') === "ప్రవీణ్ 🙏", `P6 ${tag}: versions save + restore variable values`); }
+    if (AXE) { await pg.addScriptTag({ content: readFileSync(AXE, "utf8") }); const r = await pg.evaluate(() => axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa", "best-practice"] }));
+      ok(r.violations.length === 0, `P6 axe ${tag}: ${r.violations.map(v => v.id + "(" + v.nodes.length + ")").join(",") || "0 violations"}`); }
+    if (SHOT) { await pg.locator("#vars").scrollIntoViewIfNeeded(); await pg.screenshot({ path: `${SHOT}/${PFX}variables-${tag}.png`, fullPage: !mob }); }
+  } catch (e) { ok(false, `P6 ${tag}: ${String(e.message).split("\n")[0]}`); }
+  await c.close(); }
 // P3 mobile density. Before (fa396a1f): height 3589/3674px (390/360), prompt at y=2137/2159, checks at 2733/2756,
 // 29 tap targets <44px, 31 text nodes <14px, overflow 0. Assert the after state stays well below that.
 for (const [w, H] of [[390, 3589], [360, 3674]]) {

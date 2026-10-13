@@ -65,10 +65,14 @@
         <section class="panel" aria-labelledby="preview-title">
           <div class="panel__head">
             <h2 id="preview-title" class="panel__title">Assembled prompt</h2>
-            <button type="button" class="btn btn--ghost btn--sm" id="btn-copy">Copy</button>
+            <div class="pv-mode" role="group" aria-label="Preview mode"><button type="button" class="btn btn--ghost btn--sm" id="pv-template" aria-pressed="true">Template</button><button type="button" class="btn btn--ghost btn--sm" id="pv-filled" aria-pressed="false">Filled</button></div><button type="button" class="btn btn--ghost btn--sm" id="btn-copy">Copy</button>
           </div>
           <pre id="preview" class="preview" tabindex="0" aria-label="Assembled prompt preview"></pre>
           <p class="stats" id="stats" aria-live="polite"></p>
+        </section>
+        <section class="panel" aria-labelledby="vars-title">
+          <div class="panel__head"><h2 id="vars-title" class="panel__title">Variables</h2><span class="small q-note">Values you type for {{name}} placeholders</span></div>
+          <ul id="vars" class="vars"></ul>
         </section>
         <section class="panel qpanel" id="q-panel" aria-labelledby="q-title">
           <div class="panel__head"><h2 id="q-title" class="panel__title">Static Prompt Checks</h2><button type="button" class="btn btn--ghost btn--sm q-toggle" id="q-toggle" aria-expanded="true" aria-controls="quality">Hide checks</button></div>
