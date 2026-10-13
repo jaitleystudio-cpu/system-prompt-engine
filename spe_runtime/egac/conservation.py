@@ -281,6 +281,18 @@ def _neighbour_idx(sks: list[str], i: int, step: int) -> "int | None":
     return j if 0 <= j < len(sks) and sks[j].strip() else None
 
 
+# Round 7 (Bro round 6): UTS #39 folds Cyrillic "\u0445" to Latin "x", but it is read phonetically as "h" ("Ec\u0445o" ->
+# "Echo"). Directive detection checks BOTH folds; every other classifier keeps the plain skeleton.
+_CYR_PHONETIC = str.maketrans({"\u0445": "h", "\u0425": "H"})
+
+
+def _directive_skeleton(s: str) -> str:
+    sk = skeleton(s)
+    if any(c in s for c in "\u0445\u0425"):
+        sk = sk + " " + skeleton(s.translate(_CYR_PHONETIC))
+    return sk
+
+
 def _directive_near(sks: list[str], i: int) -> bool:
     if _DIRECTIVE_RE.search(sks[i]):
         return True
@@ -299,6 +311,7 @@ def _quoted(sk: str) -> bool:
 
 def _context_keep(lines: list[str]) -> list[bool]:
     sks = [skeleton(x.rstrip("\n")) for x in lines]
+    dsks = [_directive_skeleton(x.rstrip("\n")) for x in lines]
     keep = [False] * len(lines)
     in_scope, open_quote, pending = False, False, False
     for i, k in enumerate(sks):
@@ -309,7 +322,7 @@ def _context_keep(lines: list[str]) -> list[bool]:
         if in_scope or open_quote or _quoted(k):
             keep[i] = True
             pending = False
-        directive = _directive_near(sks, i)
+        directive = _directive_near(dsks, i)
         if _CONTRACT_RE.search(k) or (_FORWARD_RE.search(k) and directive):
             in_scope, pending = True, True
         if _BACKREF_RE.search(k) and directive:
