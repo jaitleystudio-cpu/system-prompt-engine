@@ -15,9 +15,12 @@ import {
   type EntitlementVerificationResult,
 } from "./entitlementVerifier";
 import { DualLanguagePromptStudio } from "./DualLanguagePromptStudio";
+import { SpePostPromptGuidedJourney } from "./SpePostPromptGuidedJourney";
 
 export interface PromptRadarInspectorProps {
   promptText: string;
+  userRequest?: string;
+  category?: string;
   rawIrPrompt?: unknown;
   activeTarget?: TargetId;
   activeDepthTier?: DepthTier;
@@ -100,6 +103,8 @@ export function autoOptimizeSystemPrompt(prompt: string): string {
 
 export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   promptText,
+  userRequest,
+  category,
   rawIrPrompt,
   activeTarget = "any",
   activeDepthTier = "normal",
@@ -118,6 +123,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [selectedDiagnostic, setSelectedDiagnostic] = useState<string | null>(null);
   const [isOptimized, setIsOptimized] = useState(false);
+  const [isProRadarOpen, setIsProRadarOpen] = useState(false);
 
   // Active prompt based on optimization toggle
   const currentPrompt = useMemo(() => {
@@ -329,17 +335,35 @@ ${promptText}
 `;
 
   return (
-    <div
-      className="spe-prompt-radar-inspector"
-      style={{
-        marginTop: "1.25rem",
-        borderRadius: "12px",
-        background: "var(--spe-surface-card, #0f131d)",
-        border: "1px solid var(--spe-border-subtle, rgba(255, 255, 255, 0.1))",
-        overflow: "hidden",
-        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-      }}
-    >
+    <div className="spe-radar-guided-journey-container" style={{ width: "100%", margin: "1rem 0" }}>
+      <SpePostPromptGuidedJourney
+        promptText={currentPrompt}
+        userRequest={userRequest}
+        category={category}
+        activeTarget={activeTarget}
+        activeDepthTier={activeDepthTier}
+        healthScore={metrics?.healthScore ?? 100}
+        estTokens={metrics?.estTokens ?? 1462}
+        onSelectTarget={onSelectTarget}
+        onSelectDepthTier={onSelectDepthTier}
+        onAutoOptimize={onAutoOptimize}
+        onNavigate={onNavigate}
+        isProRadarOpen={isProRadarOpen}
+        onToggleProRadar={() => setIsProRadarOpen((prev) => !prev)}
+      />
+
+      {isProRadarOpen && (
+        <div
+          className="spe-prompt-radar-inspector"
+          style={{
+            marginTop: "1.25rem",
+            borderRadius: "12px",
+            background: "var(--spe-surface-card, #0f131d)",
+            border: "1px solid var(--spe-border-subtle, rgba(255, 255, 255, 0.1))",
+            overflow: "hidden",
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+          }}
+        >
       {/* Top Telemetry HUD Header */}
       <div
         style={{
@@ -1844,6 +1868,8 @@ ${promptText}
               }
             }}
           />
+        </div>
+      )}
         </div>
       )}
     </div>

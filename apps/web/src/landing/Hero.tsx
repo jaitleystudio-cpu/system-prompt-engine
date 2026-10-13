@@ -26,6 +26,13 @@ import { ConversionKernel } from "./ConversionKernel";
 import { PromptVaultPanel } from "./PromptVaultPanel";
 import { MarkdownExportButton } from "../engine/markdownExport";
 import {
+  PromptRadarInspector,
+  AutoOptimizeCTAButton,
+  autoOptimizeSystemPrompt,
+  CANONICAL_REFERENCE_SYSTEM_PROMPT,
+} from "../engine/PromptRadarInspector";
+import { SpeClickyContinuationHub } from "../engine/SpeClickyContinuationHub";
+import {
   HOME_QUICK_START_MAX_CHARS,
   applyTextBound,
   formatCharCount,
@@ -61,6 +68,7 @@ type Props = {
   intent: Intent;
   onIntent: (bucket: keyof Intent, id: string, text: string) => void;
   onNavigate: (view: AppView) => void;
+  onAutoOptimize?: (optimizedPrompt: string) => void;
 };
 const EXAMPLES = [
   {
@@ -84,8 +92,76 @@ const EXAMPLES = [
     text: "Analyze customer support inquiries, identify root causes, classify severity, and draft empathetic, accurate response drafts with concrete resolution steps.",
   },
 ] as const;
-export function Hero(p: Props) {
+/** Standalone Main Hero Theater — exact Apple-grade design requested as Hero #1 */
+export function HeroTheater({ onNavigate }: { onNavigate?: (view: AppView) => void }) {
   const hero = useDailyHero();
+  return (
+    <section className="spe-hero spe-hero--main-theater" id="top" aria-labelledby="hero-title">
+      <div className="hero-theater">
+        <DotPattern surface="hero" />
+        <div className="hero-topline">
+          <span className="eyebrow">
+            <i /> YOUR IDEAS. YOUR WORDS.
+          </span>
+          <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Account Required</span>
+        </div>
+        <div className="hero-copy">
+          <p className="eyebrow">A CLEAR START FOR ANY AI</p>
+          <h1 id="hero-title" data-daily-title={hero.index}>
+            <span className="visually-hidden">
+              Free System Prompt Generator & AI Prompt Builder —{" "}
+            </span>
+            {hero.title}
+            <br />
+            <em>{hero.accent}</em>
+          </h1>
+          <p className="hero-description">
+            Turn your ideas into clear prompts for any AI.
+            Start with a few words. Add what matters.
+          </p>
+          <a
+            className="hero-start"
+            href="#prompt-studio"
+            aria-label="Open System Prompt Studio to build your prompt"
+            onClick={(e) => {
+              const el = document.getElementById("prompt-studio");
+              if (el) {
+                e.preventDefault();
+                el.scrollIntoView({ behavior: "smooth" });
+              } else if (onNavigate) {
+                onNavigate("create");
+              }
+            }}
+          >
+            Make my prompt <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div className="hero-stage">
+          <HeroStory />
+        </div>
+        <div className="theater-bottom">
+          <span>YOUR IDEA → YOUR PROMPT</span>
+          <a
+            href="#prompt-studio"
+            onClick={(e) => {
+              const el = document.getElementById("prompt-studio");
+              if (el) {
+                e.preventDefault();
+                el.scrollIntoView({ behavior: "smooth" });
+              } else if (onNavigate) {
+                onNavigate("create");
+              }
+            }}
+          >
+            TRY IT BELOW ↓
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function Hero(p: Props) {
   const [reduced, setReduced] = useState(() =>
       matchMedia("(prefers-reduced-motion: reduce)").matches,
     ),
@@ -132,53 +208,8 @@ export function Hero(p: Props) {
   };
   return (
     <section className="spe-hero" id={p.hideTheater ? "prompt-studio-wrapper" : "top"} aria-labelledby={p.hideTheater ? "studio-title" : "hero-title"}>
-      {!p.hideTheater && (
-        <div className="hero-theater">
-          <DotPattern surface="hero" />
-          <div className="hero-topline">
-            <span className="eyebrow">
-              <i /> YOUR IDEAS. YOUR WORDS.
-            </span>
-            <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Account Required</span>
-          </div>
-          <div className="hero-copy">
-            <p className="eyebrow">A CLEAR START FOR ANY AI</p>
-            <h1 id="hero-title" data-daily-title={hero.index}>
-              <span className="visually-hidden">
-                Free System Prompt Generator & AI Prompt Builder —{" "}
-              </span>
-              {hero.title}
-              <br />
-              <em>{hero.accent}</em>
-            </h1>
-            <p className="hero-description">
-              Turn your ideas into clear prompts for any AI.
-              Start with a few words. Add what matters.
-            </p>
-            <a
-              className="hero-start"
-              href="#prompt-studio"
-              aria-label="Open System Prompt Studio to build your prompt"
-            >
-              Make my prompt <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-          <div className="hero-stage">
-            <HeroStory />
-          </div>
-          <div className="theater-bottom">
-            <span>YOUR IDEA → YOUR PROMPT</span>
-            <a href="#prompt-studio">TRY IT BELOW ↓</a>
-          </div>
-        </div>
-      )}
-      <ConversionKernel onNavigate={p.onNavigate} />
-      <PromptVaultPanel
-        onSelectPrompt={(compiledPrompt, cat) => {
-          p.onChange(compiledPrompt);
-          p.onCategory(cat);
-        }}
-      />
+      {!p.hideTheater && <HeroTheater onNavigate={p.onNavigate} />}
+      {!p.hideTheater && <div className="spe-hero-story-bridge" aria-hidden="true" />}
       <section
         className="prompt-studio"
         id="prompt-studio"
@@ -248,7 +279,7 @@ export function Hero(p: Props) {
               </p>
               <p id="spe-one-line-limit-help" className="spe-bound-hint">
                 Quick-start limit {formatCharCount(HOME_QUICK_START_MAX_CHARS)}.
-                For longer material, use{" "}
+                For 100,000+ character (1 Lakh+) input &amp; output, use{" "}
                 <InAppLink view="create" onNavigate={p.onNavigate}>
                   Create
                 </InAppLink>
@@ -350,6 +381,19 @@ export function Hero(p: Props) {
                 {p.busy ? ui.working : ui.build}
                 <span>↗</span>
               </button>
+              <AutoOptimizeCTAButton
+                disabled={p.busy || !p.value.trim()}
+                busy={p.busy}
+                onOptimize={() => {
+                  p.onBuild();
+                  setTimeout(() => {
+                    const radar = document.querySelector("#spe-auto-optimize-section, .spe-prompt-radar-inspector");
+                    if (radar) {
+                      radar.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                  }, 600);
+                }}
+              />
               <span>⌘ / Ctrl + Enter</span>
             </div>
             <p className="compiler-note">{ui.note}</p>
@@ -497,6 +541,21 @@ export function Hero(p: Props) {
                   <button className="spe-build" onClick={p.onCopy}>
                     Copy prompt <span>↗</span>
                   </button>
+                  <AutoOptimizeCTAButton
+                    disabled={!p.prompt}
+                    onOptimize={() => {
+                      if (p.prompt) {
+                        const opt = autoOptimizeSystemPrompt(p.prompt);
+                        p.onAutoOptimize?.(opt);
+                        setTimeout(() => {
+                          const radar = document.querySelector("#spe-auto-optimize-section, .spe-prompt-radar-inspector");
+                          if (radar) {
+                            radar.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }
+                        }, 200);
+                      }
+                    }}
+                  />
                   <button className="spe-ghost" onClick={p.onExport}>
                     Download .spe
                   </button>
@@ -543,13 +602,52 @@ export function Hero(p: Props) {
             )}
           </section>
         </div>
-        <div className="studio-trust">
-          <span>Runs locally</span>
-          <span>No analytics</span>
-          <span>Works offline once cached</span>
-          <span>Portable .spe files</span>
-        </div>
       </section>
+      <section
+        id="spe-auto-optimize-section"
+        className="spe-radar-auto-optimize-mount"
+        style={{
+          width: "min(1440px, 100%)",
+          margin: "1.5rem auto",
+          padding: "0 1.5rem",
+        }}
+      >
+        <PromptRadarInspector
+          promptText={p.prompt || CANONICAL_REFERENCE_SYSTEM_PROMPT}
+          userRequest={p.value || "Build a real-time collaborative state engine with conflict resolution and offline-first persistence"}
+          category="code"
+          activeTarget={p.target}
+          onSelectTarget={p.onTarget}
+          onNavigate={p.onNavigate}
+          onAutoOptimize={(opt) => {
+            p.onChange(opt);
+          }}
+        />
+      </section>
+      <section
+        className="spe-clicky-mount"
+        style={{
+          width: "min(1440px, 100%)",
+          margin: "0 auto 2rem",
+          padding: "0 1.5rem",
+        }}
+      >
+        <SpeClickyContinuationHub
+          onNavigate={p.onNavigate}
+          generatedPrompt={p.prompt || CANONICAL_REFERENCE_SYSTEM_PROMPT}
+          onUsePromptInStudio={(promptText) => {
+            p.onChange(promptText);
+            window.scrollTo(0, 0);
+          }}
+        />
+      </section>
+      <PromptVaultPanel
+        onSelectPrompt={(compiledPrompt, cat) => {
+          p.onChange(compiledPrompt);
+          p.onCategory(cat);
+        }}
+      />
+      <ConversionKernel onNavigate={p.onNavigate} />
     </section>
   );
 }
