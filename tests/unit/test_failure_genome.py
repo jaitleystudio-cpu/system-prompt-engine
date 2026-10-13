@@ -337,10 +337,15 @@ def test_evidence_generator_defaults_and_rendering(tmp_path: Path):
         assert isinstance(r, FailureGenomeReport)
         assert r.failure_id.startswith("SPE-FG-")
         assert len(r.spe_vaccine_contract) > 10
-        html = EvidenceGenerator.render_failure_genome_html(r)
+        with pytest.raises(PermissionError):
+            EvidenceGenerator.render_failure_genome_html(r)
+        html = EvidenceGenerator.render_failure_genome_html(r, fixture_only=True)
         assert "<!DOCTYPE html>" in html
         assert r.failure_id in html
         assert "SPE Vaccine" in html
+        assert "SYNTHETIC FIXTURE" in html
+        assert 'content="noindex, nofollow, noarchive"' in html
+        assert 'rel="canonical"' not in html
 
     # 2. Model Passports
     passports = EvidenceGenerator.default_model_passports()
@@ -351,10 +356,14 @@ def test_evidence_generator_defaults_and_rendering(tmp_path: Path):
         assert 0.0 <= p.unauthorized_delegation_rate <= 1.0
         assert isinstance(p.cost_per_verified_task_nanos, int)
         assert p.cost_per_verified_task_nanos >= 0
-        html = EvidenceGenerator.render_model_passport_html(p)
+        with pytest.raises(PermissionError):
+            EvidenceGenerator.render_model_passport_html(p)
+        html = EvidenceGenerator.render_model_passport_html(p, fixture_only=True)
         assert "<!DOCTYPE html>" in html
         assert p.model_id in html
         assert "Model Passport" in html
+        assert "SYNTHETIC FIXTURE" in html
+        assert "Verified Empirical Scores" not in html
 
     # 3. Benchmark Showdowns
     showdowns = EvidenceGenerator.default_benchmark_showdowns()
@@ -362,17 +371,37 @@ def test_evidence_generator_defaults_and_rendering(tmp_path: Path):
     for s in showdowns:
         assert isinstance(s, BenchmarkShowdown)
         assert len(s.comparison_dimensions) >= 3
-        html = EvidenceGenerator.render_benchmark_showdown_html(s)
+        with pytest.raises(PermissionError):
+            EvidenceGenerator.render_benchmark_showdown_html(s)
+        html = EvidenceGenerator.render_benchmark_showdown_html(s, fixture_only=True)
         assert "<!DOCTYPE html>" in html
         assert s.title in html
         assert "Side-by-Side Architectural Comparison" in html
+        assert "SYNTHETIC FIXTURE" in html
+        assert "Empirical Verdict" not in html
 
     # 4. Directory export
     export_dir = tmp_path / "evidence_export"
-    written = EvidenceGenerator.export_all_to_directory(export_dir)
+    with pytest.raises(PermissionError):
+        EvidenceGenerator.export_all_to_directory(export_dir)
+    assert not export_dir.exists()
+    written = EvidenceGenerator.export_all_to_directory(export_dir, fixture_only=True)
     assert len(written) == len(records) + len(passports) + len(showdowns)
     for f in written:
         assert f.exists()
         assert f.stat().st_size > 200
 
 
+
+
+def test_evidence_generator_escapes_untrusted_fixture_labels():
+    """A model name or external title must not inject HTML or JavaScript."""
+    from dataclasses import replace
+    from spe_runtime.failure_genome.evidence_generator import EvidenceGenerator
+
+    sample = EvidenceGenerator.default_failure_genome_records()[0]
+    malicious = replace(sample, title='<script>alert("pwn")</script>')
+    rendered = EvidenceGenerator.render_failure_genome_html(malicious, fixture_only=True)
+    assert "<script>" not in rendered
+    assert "&lt;script&gt;" in rendered
+    assert 'content="noindex, nofollow, noarchive"' in rendered
