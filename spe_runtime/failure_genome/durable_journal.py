@@ -42,6 +42,7 @@ class CustodyStatus:
     records: int
     head_sha256: str
     allowlist_sha256: str
+    metadata_document_sha256: str
     source_content_independently_verified: bool = False
     rollback_resistant_checkpoint: bool = False
     publication_authorized: bool = False
@@ -147,6 +148,16 @@ def _make_state(journal: SourceEventJournal, allowlist_sha: str) -> bytes:
     if len(blob) > _MAX_BYTES:
         raise JournalCustodyError("STATE_SIZE_LIMIT_EXCEEDED")
     return blob
+
+
+def metadata_document_sha256(journal: SourceEventJournal, allowlist_sha: str) -> str:
+    """Digest of the *whole* normalized durable metadata document.
+
+    The R2 chain digest alone does not include all source URL/model-scope
+    fields. This digest must be pinned by the owner's R12 signed checkpoint.
+    """
+    data = json.loads(_make_state(journal, allowlist_sha).decode("utf-8"))
+    return data["document_sha256"]
 
 
 def _load_state(
@@ -314,4 +325,5 @@ class DurableJournalStore:
                 records=len(journal.entries),
                 head_sha256=journal.entries[-1].chain_digest if journal.entries else "0" * 64,
                 allowlist_sha256=self.allowlist_sha256,
+                metadata_document_sha256=metadata_document_sha256(journal, self.allowlist_sha256),
             )
