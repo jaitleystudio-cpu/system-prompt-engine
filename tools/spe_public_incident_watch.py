@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Public AI incident watch: opt-in, limited to verified official Statuspage feed.
+"""Public AI incident watch: opt-in, limited to reviewed official Statuspage feeds.
 
 This CLI observes PUBLIC source metadata only, not user prompts. No model
 APIs, billing, credentials, search submissions or publishing. By default
@@ -21,20 +21,45 @@ from spe_runtime.failure_genome.source_watch import (
 )
 
 
+# Owner-reviewed endpoints, never accepted from incident JSON or user input.
+# Do not combine sources in one R11 ledger: each needs independently
+# approved custody and its own externally pinned monotonic floor.
+OFFICIAL_FEEDS = {
+    "claude-status": {
+        "hostname": "status.claude.com",
+        "model_scope": "CLAUDE_SERVICE_NOT_INDIVIDUAL_MODEL",
+        "state_env": "SPE_PUBLIC_INCIDENT_STATE_PATH",
+        "approval_env": None,  # Preserves R6's historical approval contract.
+    },
+    "openai-status": {
+        "hostname": "status.openai.com",
+        "model_scope": "OPENAI_SERVICE_NOT_INDIVIDUAL_MODEL",
+        "state_env": "SPE_PUBLIC_INCIDENT_OPENAI_STATE_PATH",
+        "approval_env": "SPE_PUBLIC_INCIDENT_OPENAI_OWNER_APPROVED",
+    },
+}
+
+
 def main() -> int:
     args = argparse.ArgumentParser(description="SPE public incident observer (opt-in)")
     args.add_argument("--live", action="store_true", help="Request a read-only approved public HTTPS feed observation")
+    args.add_argument("--source", choices=tuple(OFFICIAL_FEEDS), default="claude-status",
+                      help="Exactly one owner-allowlisted public provider (default: Claude)")
     selected = args.parse_args()
+    cfg = OFFICIAL_FEEDS[selected.source]
     owner_enabled = os.environ.get("SPE_PUBLIC_INCIDENT_WATCH_ENABLED") == "true"
     separately_granted = os.environ.get("SPE_PUBLIC_INCIDENT_OWNER_APPROVED") == "true"
-    live = bool(selected.live and owner_enabled and separately_granted)
+    source_approved = (
+        cfg["approval_env"] is None
+        or os.environ.get(cfg["approval_env"]) == "true"
+    )
+    live = bool(selected.live and owner_enabled and separately_granted and source_approved)
 
-    # Verified official Statuspage endpoint only; provider source data must
-    # never change the host, path, consent flags or durable state location.
+    # Source data must never change host/path/consent or storage namespace.
     feed = TrustedStatusFeed(
-        source_id="claude-status",
-        hostname="status.claude.com",
-        model_scope="CLAUDE_SERVICE_NOT_INDIVIDUAL_MODEL",
+        source_id=selected.source,
+        hostname=cfg["hostname"],
+        model_scope=cfg["model_scope"],
         enabled=live,
     )
     if not live:
@@ -50,7 +75,7 @@ def main() -> int:
     # GitHub-hosted runners are ephemeral. No state path = do NOT fetch.
     # In production an independently approved persistent POSIX host must
     # provide a private path (0600 state, 0700 parent), not $RUNNER_TEMP.
-    path = os.environ.get("SPE_PUBLIC_INCIDENT_STATE_PATH", "")
+    path = os.environ.get(cfg["state_env"], "")
     if not path or not Path(path).is_absolute():
         print(json.dumps({
             "status": "HOLD_NO_DURABLE_HOST",
@@ -60,6 +85,16 @@ def main() -> int:
             "publication_authorized": False,
         }, sort_keys=True))
         return 2
+    if selected.source == "openai-status":
+        claude_path = os.environ.get("SPE_PUBLIC_INCIDENT_STATE_PATH", "")
+        if claude_path and os.path.realpath(path) == os.path.realpath(claude_path):
+            print(json.dumps({
+                "status": "HOLD_CUSTODY_NAMESPACE_COLLISION",
+                "source_id": feed.source_id,
+                "network_calls": 0,
+                "publication_authorized": False,
+            }, sort_keys=True))
+            return 2
     try:
         store = DurableJournalStore(
             Path(path),
