@@ -56,3 +56,11 @@ Scope: the cost-capped qualified library + entropy-probe agent does not beat a c
 - One holdout run with 3 seeds; families come from one generator, so external validity is untested.
 - t-critical values for df=79 use a table (1.990).
 - The R1 verdict (NOT_PROVEN) stands and is unchanged.
+
+## Robustness note (added 2026-10-13, post-replay; verdict unchanged)
+Independent replay by Bro @ 8d619907 (REPLAY_PASS, byte-identical rows) added a cluster-robust check:
+- Primary (family-level, 80 families, as preregistered): E_CAPPED − B = **−0.043 [−0.080, −0.007]**.
+- Cluster-robust (80 families grouped into **21 clusters by shared op-pairs**, Bro's analysis): **−0.030 [−0.097, +0.036]**.
+- Interpretation: **REJECTED still holds** (the improvement is below δ either way), but the stronger reading "E_CAPPED is significantly *worse* than B" does not survive clustering; it should be read as "no improvement, sign uncertain".
+- Not part of the preregistered analysis; reported as a robustness note only. Numbers are Bro's and were not re-derived by the builder in this commit.
+- Bro also noted the evaluator is not truly independent of the builder (same author, same repo).
