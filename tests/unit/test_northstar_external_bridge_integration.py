@@ -147,7 +147,7 @@ def test_signed_link_unlocks_only_private_review_and_noindex_staging():
     assert 'content="noindex, nofollow, noarchive"' in reviewer.html
     assert not reviewer.publication_authorized
     assert "Public exercise content" not in reviewer.html
-    assert "Provider status notice" in reviewer.html
+    assert "Official provider status notice" in reviewer.html
     staged = prepare_staging_notice(
         draft=notice_draft(j), investigation=report, journal=j.entries[-1],
         failure=case, **identity, **signed_staging(notice_draft(j)),
