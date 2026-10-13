@@ -14,8 +14,15 @@ await pg.screenshot({ path: D + "studio-hero.jpg", type: "jpeg", quality: 72 });
 pg = await page(1.4); await pg.goto(O + "/pro/studio/"); await pg.click("#btn-example"); await ready(pg); await crop(pg, "studio.jpg", "[role=tablist]", -24, -24);
 await pg.goto(O + "/pro/blueprint/"); await ready(pg); await crop(pg, "blueprint.jpg", "#canvas", -16, -56);
 await pg.goto(O + "/pro/regression-lab/"); await pg.check("input[value=demo]", { force: true }).catch(() => {}); await pg.click("#run"); await pg.waitForTimeout(600); await ready(pg); await crop(pg, "regression.jpg", "#report");
-await pg.goto(O + "/pro/releases/"); await pg.fill("#rn", "support-bot"); await pg.fill("#rv", "1.0.0"); await pg.fill("#rc", "First release"); await pg.fill("#rp", "You are a support assistant.");
-await pg.click("#signbtn"); await pg.waitForTimeout(800);
-const pk = await pg.inputValue("#pack").catch(() => ""); if (pk) { await pg.fill("#vp", pk); await pg.click("#verify").catch(() => {}); await pg.waitForTimeout(500); }
-await ready(pg); await crop(pg, "releases.jpg", "#verdict", -16, -420);
+await pg.goto(O + "/pro/releases/"); await pg.evaluate(() => localStorage.clear()); await pg.reload();
+await pg.fill("#rn", "Support bot"); await pg.fill("#rv", "1.2.0"); await pg.fill("#rc", "First release."); await pg.fill("#rp", "You are a support bot.\nNever say: refund");
+await pg.click("#signbtn"); await pg.waitForFunction(() => !document.getElementById("out").hidden, null, { timeout: 5000 });
+await pg.click("#toverify"); await pg.waitForFunction(() => /^Valid/.test(document.getElementById("verdict").textContent.trim()), null, { timeout: 5000 }); await ready(pg);
+// Releases: "Sign a release" and "Verify a pack" sit side by side (~1300px tall). Anchor on both panels' bounding
+// boxes: full width of the pair, a 16:10 window ending just below the lower of the signed pack (#out) and the Valid verdict.
+const u = await pg.evaluate(() => { const g = (q) => document.querySelector(q).getBoundingClientRect(); const sp = document.querySelector("#signbtn").closest("section").getBoundingClientRect(), vp = document.querySelector("#verify").closest("section").getBoundingClientRect();
+  return { x: Math.min(sp.x, vp.x) + scrollX, w: Math.max(sp.right, vp.right) - Math.min(sp.x, vp.x), top: Math.min(sp.y, vp.y) + scrollY, bottom: Math.max(g("#out").bottom, g("#verdict").bottom) + 24 + scrollY, v: document.getElementById("verdict").textContent.trim().slice(0, 40) }; });
+const cw = u.w + 32, ch = cw / 1.6, cy = Math.max(u.top - 16, u.bottom - ch);
+console.log("releases crop", JSON.stringify(u), Math.round(cw), Math.round(ch), Math.round(cy));
+await pg.screenshot({ path: D + "releases.jpg", type: "jpeg", quality: 74, fullPage: true, clip: { x: u.x - 16, y: cy, width: cw, height: ch } });
 await b.close(); console.log("media ok");
