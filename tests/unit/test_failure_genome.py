@@ -15,6 +15,7 @@ def test_failure_genome_ingest_reproduce_sanitize(tmp_path: Path):
 
     # Ingest a new failure
     raw_data = {
+        "scope": "GLOBAL",
         "model": "gpt-4o",
         "model_version": "2024-08-06",
         "failure_class": FailureClass.PROMPT_INJECTION.value,
@@ -433,3 +434,16 @@ def test_public_snapshot_redacts_sensitive_causes_and_repair_text(tmp_path: Path
     assert "bob@example.org" not in str(public)
     assert "abcdefghijklmnopqrstuvwxyz1234" not in str(public)
     assert "sk-ABCDEFGHIJKLMNOPQRSTUVWXYZ123456" not in str(public)
+
+
+def test_private_failure_cannot_be_projected_to_public(tmp_path: Path):
+    store = FailureGenomeStore(tmp_path / "private_guard")
+    entry = store.ingest({
+        "model": "example-model",
+        "failure_class": FailureClass.TOOL_CONFUSION.value,
+        "severity": Severity.MEDIUM.value,
+        "affected_capability": "NONE",
+        "minimal_reproducer": "Private owner's confidential prompt",
+    })
+    with pytest.raises(PermissionError, match="GLOBAL scope"):
+        store.sanitize_for_public(entry.failure_id)
