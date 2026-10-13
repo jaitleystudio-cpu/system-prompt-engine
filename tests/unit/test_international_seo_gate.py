@@ -4,7 +4,7 @@ import pytest
 
 from spe_runtime.seo.international_gate import (
     LocaleCandidate, MarketAggregate,
-    audit_locale_candidate, assess_aggregate_market, wilson_lower_95,
+    audit_locale_candidate, assess_aggregate_market, wilson_lower_95, audit_canonical_domains,
 )
 
 
@@ -114,3 +114,38 @@ def test_wilson_interval_behaves_conservatively():
     assert wilson_lower_95(50, 100) < 0.5
     with pytest.raises(ValueError):
         wilson_lower_95(1, 0)
+
+
+
+def test_existing_seo_owners_must_agree_before_search_submissions():
+    from spe_runtime.seo.routes import BASE_CANONICAL_DOMAIN
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]
+    generator = (root / "scripts/generate-evidence-seo.mjs").read_text(encoding="utf-8")
+    import re
+    match = re.search(r"const CANONICAL_DOMAIN = '([^']+)';", generator)
+    assert match
+    result = audit_canonical_domains({
+        "seo_route_owner": BASE_CANONICAL_DOMAIN,
+        "static_site_owner": match.group(1),
+    })
+    assert result.status == ("READY_FOR_OWNER_REVIEW" if BASE_CANONICAL_DOMAIN == match.group(1) else "HOLD")
+    assert result.sitemap_submission_authorized is False
+    assert result.indexnow_submission_authorized is False
+    if BASE_CANONICAL_DOMAIN != match.group(1):
+        assert "CANONICAL_DOMAIN_CONFLICT" in result.reason_codes
+
+
+def test_canonical_origins_reject_unsafe_and_foreign_urls():
+    for bad in ("http://systempromptengine.com", "javascript:alert(1)",
+                "https://evil.example.org/private", "https://systempromptengine.com@evil.test",
+                "https://systempromptengine.com?secret=yes", "https://systempromptengine.com/path"):
+        try:
+            r = audit_canonical_domains({"seo": bad})
+        except ValueError:
+            continue
+        assert r.status == "HOLD"
+    assert audit_canonical_domains({
+        "owner_a": "https://systempromptengine.com",
+        "owner_b": "https://systempromptengine.com/",
+    }).status == "READY_FOR_OWNER_REVIEW"
