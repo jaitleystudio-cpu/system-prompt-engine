@@ -63,6 +63,7 @@ def source_review_payload(
     *,
     source_published_at: str,
     source_observed_at: str,
+    source_content_sha256: str,
 ) -> dict[str, Any]:
     """Build source-review bytes for a separately enrolled reviewer to sign.
 
@@ -78,6 +79,7 @@ def source_review_payload(
         "source_urls": list(preflight.source_urls),
         "source_published_at": source_published_at,
         "source_observed_at": source_observed_at,
+        "source_content_sha256": source_content_sha256,
     }
 
 
@@ -87,6 +89,7 @@ def _verify_source_review(
     *,
     source_published_at: str | None,
     source_observed_at: str | None,
+    source_content_sha256: str | None,
     receipt: AuthenticatedReceipt | None,
     trusted_source_keys: Mapping[str, str] | None,
 ) -> tuple[bool, str]:
@@ -96,6 +99,8 @@ def _verify_source_review(
         return False, "SIGNED_SOURCE_REVIEW_MISSING"
     if not isinstance(trusted_source_keys, Mapping) or not trusted_source_keys:
         return False, "OWNER_TRUST_ROOT_UNCONFIGURED"
+    if not isinstance(source_content_sha256, str) or len(source_content_sha256) != 64 or any(c not in "0123456789abcdef" for c in source_content_sha256):
+        return False, "SOURCE_CONTENT_DIGEST_MISSING_OR_INVALID"
     key_hex = trusted_source_keys.get(receipt.signer_key_id)
     if not isinstance(key_hex, str) or len(key_hex) != 64:
         return False, "SOURCE_SIGNER_NOT_OWNER_TRUSTED"
@@ -107,6 +112,7 @@ def _verify_source_review(
         entry, preflight,
         source_published_at=source_published_at or "",
         source_observed_at=source_observed_at or "",
+        source_content_sha256=source_content_sha256,
     )
     if receipt.canonical_payload != expected:
         return False, "SOURCE_RECEIPT_BINDING_MISMATCH"
@@ -172,6 +178,7 @@ def assemble_investigation(
     source_urls: Sequence[str] = (),
     source_published_at: str | None = None,
     source_observed_at: str | None = None,
+    source_content_sha256: str | None = None,
     source_receipt: AuthenticatedReceipt | None = None,
     trusted_source_keys: Mapping[str, str] | None = None,
     replay_capsule: ReplayCapsule | None = None,
@@ -189,6 +196,7 @@ def assemble_investigation(
         entry, preflight,
         source_published_at=source_published_at,
         source_observed_at=source_observed_at,
+        source_content_sha256=source_content_sha256,
         receipt=source_receipt,
         trusted_source_keys=trusted_source_keys,
     )
