@@ -486,7 +486,37 @@ const response = await client.chat.completions.create({
   }
 ];
 
+// Public-evidence safety: absent independent receipts, mock cases stay noindex.
+const UNVERIFIED_EVIDENCE_FLAGS = new Set(['SIMULATED_SPEC_BENCHMARK', 'EMPIRICAL_BENCHMARK', 'EMPIRICAL_BENCHMARK_VERIFIED']);
+function needsIndependentEvidence(route) {
+  return route.path === '/compare' || route.path.startsWith('/compare/') ||
+    route.path.startsWith('/models/') || route.path.startsWith('/failure-genome/') ||
+    UNVERIFIED_EVIDENCE_FLAGS.has(route.provenance);
+}
+const SAFE_ROUTES = ROUTES.map(route => needsIndependentEvidence(route) ? {
+  ...route, classification: 'UNVERIFIED_EVIDENCE', provenance: 'UNKNOWN',
+  indexing_status: 'NOINDEX',
+  title: 'Unverified research specimen | SPE',
+  desc: 'Illustrative research specimen; no provider score, failure or repair is independently verified.',
+  custom_section: '',
+} : route);
+function escapeText(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function generateHtmlPage(route) {
+  if (route.classification === 'UNVERIFIED_EVIDENCE') {
+    return [
+      '<!DOCTYPE html>', '<html lang="en"><head><meta charset="UTF-8">',
+      '<meta name="robots" content="noindex, nofollow, noarchive">',
+      '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; base-uri &#39;none&#39;; form-action &#39;none&#39;">',
+      '<title>SYNTHETIC FIXTURE — NOT VERIFIED | SPE</title></head><body>',
+      '<main><h1>SYNTHETIC FIXTURE — NOT VERIFIED</h1>',
+      '<p>No external AI failure, model score, diagnosis, competing-product result or repair has been independently qualified on this page.</p>',
+      '<p>Independent source and experimental verification are required before a public claim may be made.</p>',
+      '<p>Fixture route: ' + escapeText(route.path) + '</p></main></body></html>',
+    ].join('\n');
+  }
   const jsonLd = route.path === '/capabilities' ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -596,7 +626,7 @@ mkdirSync(pagesDir, { recursive: true });
 
 const auditedPages = [];
 
-for (const r of ROUTES) {
+for (const r of SAFE_ROUTES) {
   const safeName = (r.path === '/' ? 'index' : r.path.slice(1).replace(/\//g, '_')) + '.html';
   const outPath = resolve(pagesDir, safeName);
   const html = generateHtmlPage(r);
@@ -608,9 +638,9 @@ for (const r of ROUTES) {
     classification: r.classification,
     indexing_status: r.indexing_status,
     provenance: r.provenance,
-    has_unique_content: true,
+    has_unique_content: r.classification !== 'UNVERIFIED_EVIDENCE',
     word_count: html.split(/\s+/).length,
-    canonical_url: `${CANONICAL_DOMAIN}${r.path}`,
+    canonical_url: r.indexing_status === 'NOINDEX' ? null : `${CANONICAL_DOMAIN}${r.path}`,
     schema_type: r.path === '/capabilities' ? 'FAQPage' : 'SoftwareApplication',
   });
 }
@@ -618,7 +648,7 @@ for (const r of ROUTES) {
 // 2. Write sitemap.xml
 const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${ROUTES.filter(r => r.indexing_status !== 'NOINDEX').map(r => `  <url>
+${SAFE_ROUTES.filter(r => r.indexing_status !== 'NOINDEX').map(r => `  <url>
     <loc>${CANONICAL_DOMAIN}${r.path}</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
@@ -662,7 +692,7 @@ writeFileSync(resolve(publicDir, 'robots.txt'), robotsTxt, 'utf8');
 // 4. Update _redirects
 const redirectRules = [
   '# Evidence SEO Static Pre-Rendered Pages (200 rewrite for crawlers)',
-  ...ROUTES.filter(r => r.path !== '/').map(r => {
+  ...SAFE_ROUTES.filter(r => r.path !== '/').map(r => {
     const safeName = r.path.slice(1).replace(/\//g, '_') + '.html';
     return `${r.path}  /evidence-pages/${safeName}  200`;
   }),
@@ -687,7 +717,7 @@ const seoManifest = {
   generated_at: new Date().toISOString(),
   canonical_domain: CANONICAL_DOMAIN,
   total_prerendered_pages: auditedPages.length,
-  zero_placeholder_pages_verified: true,
+  zero_placeholder_pages_verified: false, // unqualified research fixtures are intentionally withheld
   indexing_summary: {
     total_indexable: auditedPages.filter(p => p.indexing_status === "INDEXABLE").length,
     noindex_count: auditedPages.filter(p => p.indexing_status !== "INDEXABLE").length,
@@ -699,4 +729,4 @@ const seoManifest = {
 mkdirSync(dirname(manifestPath), { recursive: true });
 writeFileSync(manifestPath, JSON.stringify(seoManifest, null, 2), 'utf8');
 
-console.log(`✅ Generated ${ROUTES.length} static SEO evidence pages, sitemap.xml, robots.txt, _redirects, and evidence/seo-manifest.json`);
+console.log(`✅ Generated ${SAFE_ROUTES.length} static SEO evidence pages, sitemap.xml, robots.txt, _redirects, and evidence/seo-manifest.json`);
