@@ -156,25 +156,13 @@
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://systempromptengine.com/models/openai/gpt-4o</loc>
-    <lastmod>2026-10-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
+<url>
     <loc>https://systempromptengine.com/models/anthropic/claude-3-7-sonnet</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://systempromptengine.com/failure-genome/SPE-FG-2026-000001</loc>
-    <lastmod>2026-10-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
+<url>
     <loc>https://systempromptengine.com/integrations/openai</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
