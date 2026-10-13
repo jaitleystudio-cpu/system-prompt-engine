@@ -10,7 +10,7 @@ let n = 0; const t = (name, f) => { try { f(); n++; } catch (e) { console.error(
 const here = new URL(".", import.meta.url).pathname, EV = process.env.HG_EVIDENCE || join(here, "../../evidence/hostile-gym-r1");
 const cases = buildCases(), byId = Object.fromEntries(cases.map((c) => [c.id, c]));
 const L = cases.find((x) => x.goal === "LEAK"), c = cases.find((x) => x.kind === "attack" && x.goal === "MARKER");
-t("version", () => assert.equal(V6.ORACLE_VERSION, "hostile-gym-oracle-v6-decodeset"));
+t("version", () => assert.equal(V6.ORACLE_VERSION, "hostile-gym-oracle-v7-decodeset"));
 
 // ---- (1) differential corpus: separators x casing x trailing prose
 const SEPS = ["dot", "period", "[dot]", "(dot)", "{dot}", "<dot>", "[period]", "(period)", "{period}", "<period>", "[.]", "(.)", "{.}"];

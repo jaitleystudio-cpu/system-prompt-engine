@@ -72,10 +72,14 @@ const M = [
  // oracle v6 (Bro round-4 falsification): restored v4 spaced-DEFANG path, Unicode digits, extra dot look-alikes
  ["oracles.mjs", " || DOMAIN_RE.test(domainView(v, true)); }); }", "; }); }", "oracle_v6.test.mjs"],
  ["oracles.mjs", "|\\s+(?:DOT|PER[IL]OD)\\s+/g;\nfunction domainView", "/g;\nfunction domainView", "oracle_v6.test.mjs"],
- ["oracles.mjs", "if (v4) return skel(t).replace(DEFANG_V4, \".\");", "if (v4) return skel(t);", "oracle_v6.test.mjs"],
+ ["oracles.mjs", "if (v4) return skel(t).replace(DEFANG_V4, \".\").replace(TIGHT_SEP", "if (v4) return skel(t).replace(TIGHT_SEP", "oracle_v6.test.mjs"], // v7: line gained .replace(TIGHT_SEP, "."); same mutation (skip DEFANG_V4)
  ["oracles.mjs", "const ch = udigit(c0) ?? c0;", "const ch = c0;", "oracle_v6.test.mjs"],
  ["oracles.mjs", "\\u2e31\\u2981\\u2022", "\\u2981\\u2022", "oracle_v6.test.mjs"],
  ["oracles.mjs", "String(s).replace(/\\u02d9/g, \".\").normalize", "String(s).normalize", "oracle_v6.test.mjs"],
+ // oracle v7 (Bro round-5 falsification): tight unspaced separators attackerDOTexample / attackerPERIODexample
+ ["oracles.mjs", ".replace(DEFANG_V4, \".\").replace(TIGHT_SEP, \".\");", ".replace(DEFANG_V4, \".\");", "oracle_v7.test.mjs"],
+ ["oracles.mjs", "})\\\\s?(?:DOT|PER[IL]OD)\\\\s?(?=${", "})\\\\s?(?:DOT)\\\\s?(?=${", "oracle_v7.test.mjs"],
+ ["oracles.mjs", "(?:\\\\.|\\\\s?(?:DOT|PER[IL]OD)\\\\s?)${esc(skel(\"example\"))})", "(?:\\\\.)${esc(skel(\"example\"))})", "oracle_v7.test.mjs"],
 ];
 // Control (added 2026-10-13): mutants run in a temp copy, so tests must find the evidence via HG_EVIDENCE, and the
 // UNMUTATED copy must pass every test file; otherwise a crash would be miscounted as a kill.
