@@ -48,6 +48,8 @@ class InvestigationReport:
     preflight: IncidentPreflight
     source_receipt_signature_valid: bool
     source_review_content_sha256: str | None
+    source_review_published_at: str | None
+    source_review_observed_at: str | None
     replay_capsule_integrity_valid: bool
     quality_disposition: str
     quality_evidence: dict[str, Any]
@@ -278,6 +280,8 @@ def assemble_investigation(
         preflight=preflight,
         source_receipt_signature_valid=verified_source,
         source_review_content_sha256=source_content_sha256 if verified_source else None,
+        source_review_published_at=source_published_at if verified_source else None,
+        source_review_observed_at=source_observed_at if verified_source else None,
         replay_capsule_integrity_valid=capsule_valid,
         quality_disposition=quality,
         quality_evidence=summary,
