@@ -1,6 +1,6 @@
 // P11 Pro landing + app shell + Cmd/Ctrl+K palette. Serve: node scripts/build-pro-all.mjs && npx vite preview -c vite.pro-preview.config.ts
 //   then AXE_PATH=... SHOT_DIR=... node scripts/test-pro-hub.mjs
-import { chromium } from "playwright"; import { readFileSync } from "node:fs";
+import { chromium, ENGINE } from "./pw-engine.mjs"; import { readFileSync } from "node:fs";
 const O = process.env.BASE || "http://127.0.0.1:4199"; const AXE = process.env.AXE_PATH, SHOT = process.env.SHOT_DIR, PFX = process.env.SHOT_PREFIX || "";
 let fail = 0; const ok = (c, m) => { console.log(`${c ? "PASS" : "FAIL"} ${m}`); if (!c) fail++; };
 const FEAT = [["/pro/studio/", "Prompt Studio"], ["/pro/blueprint/", "Agent Blueprint"], ["/pro/regression-lab/", "Regression Lab"], ["/pro/releases/", "Signed Releases"]];

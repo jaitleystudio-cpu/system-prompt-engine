@@ -202,3 +202,4 @@ body{font-feature-settings:"cv11","ss01";letter-spacing:-.006em;background:radia
 .pro-top .ed-io{flex:none;margin-left:0;gap:6px;flex-wrap:nowrap}.pro-top .ed-io .btn{min-height:40px;padding:0 14px;font-size:14px}
 @media (max-width:1180px) and (min-width:768px){.pro-top{flex-wrap:wrap}.pro-top .ed-io{width:100%}}
 @media (max-width:767px){.pro-top{position:static}.pro-top .ed-io{display:grid;grid-template-columns:1fr 1fr;width:100%}.pro-top .ed-io .btn{min-height:44px;padding:0 8px}}
+.field--grow{flex:1}

@@ -1,5 +1,5 @@
 // P10 end-to-end flows for Pro pages + single Studio header. Serve: node scripts/build-pro-all.mjs && npx vite preview -c vite.pro-preview.config.ts
-import { chromium } from "playwright"; import { readFileSync } from "node:fs";
+import { chromium, ENGINE } from "./pw-engine.mjs"; import { readFileSync } from "node:fs";
 const O = process.env.BASE || "http://127.0.0.1:4199"; const SHOT = process.env.SHOT_DIR, PFX = process.env.SHOT_PREFIX || "";
 let fail = 0; const ok = (c, m) => { console.log(`${c ? "PASS" : "FAIL"} ${m}`); if (!c) fail++; };
 const step = async (name, f) => { try { await f(); } catch (e) { ok(false, `${name}: ${String(e.message).split("\n")[0]}`); } };

@@ -1,6 +1,6 @@
 // P1 UI regression for SPE Pro Prompt Studio. Usage: serve dist-pro-studio on BASE, then
 //   AXE_PATH=/path/to/axe.min.js SHOT_DIR=/tmp/shots node scripts/test-pro-studio-p1.mjs
-import { chromium } from "playwright";
+import { chromium, ENGINE } from "./pw-engine.mjs";
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 const BASE = process.env.BASE || "http://127.0.0.1:4197/pro/studio/";
 const SHOT = process.env.SHOT_DIR; const PFX = process.env.SHOT_PREFIX || ""; const AXE = process.env.AXE_PATH;
