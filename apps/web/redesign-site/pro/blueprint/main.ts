@@ -34,8 +34,10 @@ function renderEditor() {
   $("tools").innerHTML = "<legend>Tools it may use</legend>" + Object.entries(TOOLS).map(([k, d]) => `<label class="opt"><input type="checkbox" value="${k}" ${a.tools.includes(k) ? "checked" : ""}><span><b class="mono">${k}</b><span class="hint">${esc(d)}</span></span></label>`).join("");
 }
 function renderHandoffs() {
-  const opts = bp.agents.map((a) => `<option value="${a.id}">${esc(a.name)}</option>`).join(""); $("hf").innerHTML = opts; $("ht").innerHTML = opts;
-  if (bp.agents[1]) $<HTMLSelectElement>("ht").value = bp.agents[1].id;
+  const hf = $<HTMLSelectElement>("hf"), ht = $<HTMLSelectElement>("ht"), pf = hf.value, pt = ht.value; // keep user's picks across re-renders
+  const opts = bp.agents.map((a) => `<option value="${a.id}">${esc(a.name)}</option>`).join(""); hf.innerHTML = opts; ht.innerHTML = opts;
+  const has = (id: string) => bp.agents.some((a) => a.id === id);
+  if (has(pf)) hf.value = pf; if (has(pt)) ht.value = pt; else if (bp.agents[1]) ht.value = bp.agents[1].id;
   const nm = (id: string) => esc(bp.agents.find((a) => a.id === id)?.name ?? "missing agent");
   $("hlist").innerHTML = bp.handoffs.map((h, i) => `<li class="item"><div class="item__top"><p>${nm(h.from)} → ${nm(h.to)}</p><button class="btn btn--ghost btn--sm" type="button" data-h="${i}" aria-label="Remove handoff from ${nm(h.from)} to ${nm(h.to)}">Remove</button></div><p class="hint">When ${esc(h.when)}</p></li>`).join("") || '<li class="hint">No handoffs yet.</li>';
 }

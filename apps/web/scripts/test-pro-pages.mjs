@@ -69,4 +69,13 @@ await step("releases", async () => {
   await pg.fill("#vp", "{not json"); await pg.fill("#vf", ""); await pg.click('#verify button[type="submit"], #verify button:not([type])'); await pg.waitForTimeout(300);
   ok(/Not valid/.test(await pg.locator("#verdict").innerText()), "releases: malformed pack fails cleanly");
   if (SHOT) { await pg.click("#toverify"); await pg.waitForTimeout(300); await pg.screenshot({ path: `${SHOT}/${PFX}releases-flow.png`, fullPage: true }); } await pg.close(); });
+// P12: editing an agent field must not reset the handoff From/To selections
+await step("blueprint handoff selection", async () => {
+  const pg = await b.newPage({ viewport: { width: 1440, height: 900 } }); await pg.goto(O + "/pro/blueprint/");
+  const ids = await pg.locator("#hf option").evaluateAll(l => l.map(o => o.value)); ok(ids.length >= 3, `handoff: >=3 agents (${ids.length})`);
+  await pg.selectOption("#hf", ids[2]); await pg.selectOption("#ht", ids[0]);
+  await pg.locator(".node").first().click(); await pg.fill("#an", "Renamed agent"); await pg.fill("#ar", "edited role");
+  ok(await pg.inputValue("#hf") === ids[2] && await pg.inputValue("#ht") === ids[0], "handoff: From/To kept after editing agent fields");
+  ok(await pg.locator("#hf option", { hasText: "Renamed agent" }).count() === 1, "handoff: renamed agent shows in dropdown");
+  await pg.close(); });
 if (bc) await bc.close(); await b.close(); console.log(fail ? `FAILED ${fail}` : "ALL PASS"); process.exit(fail ? 1 : 0);

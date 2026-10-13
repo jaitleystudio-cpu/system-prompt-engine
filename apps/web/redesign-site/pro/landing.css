@@ -25,16 +25,17 @@ body.landing{margin:0;background:radial-gradient(1200px 700px at 50% -240px,rgba
 .shot{margin:0;border:1px solid var(--sh-line2);border-radius:16px;overflow:hidden;background:var(--sh-s1);box-shadow:0 40px 120px -40px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.03) inset}
 .shot img{display:block;width:100%;height:auto}
 .shot figcaption{padding:8px 16px;border-top:1px solid var(--sh-line);color:var(--sh-fa);font-size:13px;text-align:left}
-.hero__shot{margin:64px auto 0;max-width:1120px;position:relative}
+.hero__shot{margin:64px auto 0;width:min(1320px,calc(100vw - 48px));position:relative;left:50%;transform:translateX(-50%)}
 .hero__shot::before{content:"";position:absolute;inset:-1px;border-radius:16px;pointer-events:none;background:linear-gradient(180deg,rgba(142,240,198,.25),transparent 30%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:1px}
 /* trust strip */
 .trust{margin-top:80px;border-block:1px solid var(--sh-line);background:rgba(255,255,255,.015)}
 .trust__in{list-style:none;padding:24px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .trust li{display:grid;gap:2px;padding-left:16px;border-left:2px solid rgba(142,240,198,.35)}.trust b{font-weight:600}.trust span{color:var(--sh-mu);font-size:14px}
 /* features */
-.feats{display:grid;gap:120px;padding:120px 0}
-.feat{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:center;scroll-margin-top:88px}
-.feat:nth-child(odd of .feat) .feat__copy{order:2}
+.feats{display:grid;gap:120px;padding:120px 0;width:min(1320px,100% - 48px)}
+.feat{display:grid;grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:56px;align-items:center;scroll-margin-top:88px}
+.feat:nth-child(odd of .feat) .feat__copy{order:2}.feat:nth-child(odd of .feat){grid-template-columns:minmax(0,.58fr) minmax(0,.42fr)}
+.feat .shot{position:relative;box-shadow:0 0 0 1px rgba(142,240,198,.14),0 30px 90px -30px rgba(142,240,198,.22),0 40px 120px -40px rgba(0,0,0,.95)}.feat .shot img{filter:brightness(1.12) contrast(1.04)}
 .ticks{list-style:none;margin:24px 0 32px;padding:0;display:grid;gap:12px;color:var(--sh-mu)}
 .ticks li{position:relative;padding-left:28px}.ticks li::before{content:"";position:absolute;left:0;top:7px;width:16px;height:10px;border-left:2px solid var(--sh-ac);border-bottom:2px solid var(--sh-ac);transform:rotate(-45deg) scale(.7)}
 /* final + footer */
@@ -43,7 +44,7 @@ body.landing{margin:0;background:radial-gradient(1200px 700px at 50% -240px,rgba
 .lfoot__in{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap}.lfoot p{max-width:420px;margin:8px 0 0}
 .lfoot ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}.lfoot a:not(.shell-brand){display:inline-flex;align-items:center;min-height:44px;color:var(--sh-mu);text-decoration:none}.lfoot a:hover{color:var(--sh-tx)}
 /* responsive */
-@media (max-width:1023px){.lnav__links{display:none}.feat{grid-template-columns:minmax(0,1fr);gap:32px}.feat:nth-child(odd of .feat) .feat__copy{order:0}.trust__in{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:767px){.lw{width:calc(100% - 32px)}.lnav__in{gap:8px}.lnav .shell-tag,.lnav__cta{display:none}.lnav .shell-search{min-width:44px;min-height:44px}.lnav .shell-search kbd,.lnav .shell-search .lbl{display:none}
+@media (max-width:1023px){.lnav__links{display:none}.feat{grid-template-columns:minmax(0,1fr);gap:32px}.feat:nth-child(odd of .feat) .feat__copy{order:0}.feat:nth-child(odd of .feat){grid-template-columns:minmax(0,1fr)}.trust__in{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:767px){.lw,.feats{width:calc(100% - 32px)}.hero__shot{width:100%;left:0;transform:none}.lnav__in{gap:8px}.lnav .shell-tag,.lnav__cta{display:none}.lnav .shell-search{min-width:44px;min-height:44px}.lnav .shell-search kbd,.lnav .shell-search .lbl{display:none}
 .hero{padding-top:48px}.hero__shot{margin-top:40px}.trust{margin-top:48px}.feats{gap:72px;padding:72px 0}.final__in{padding:32px 16px}.final{padding-bottom:72px}.cta .btn{flex:1 1 auto}}
 @media (prefers-reduced-motion:reduce){.btn{transition:none}.btn:hover,.btn:active{transform:none}}
