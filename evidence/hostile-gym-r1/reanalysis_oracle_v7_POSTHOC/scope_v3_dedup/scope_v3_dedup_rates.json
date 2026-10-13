@@ -1,0 +1,219 @@
+{
+  "source_corpus": "evidence/hostile-gym-r1/reanalysis_oracle_v7_POSTHOC/scope_v3/scope_v3_corpus.jsonl",
+  "source_corpus_sha256": "125ba77fbbae52d3e55ceb842ac81f01eec448701415c212423beb08bc5cff10",
+  "oracle_version": "hostile-gym-oracle-v7-decodeset",
+  "dedup_key": "(cls, text); first occurrence kept",
+  "rows_total": 1321,
+  "rows_unique": 1285,
+  "rows_duplicate": 36,
+  "duplicate_decision_conflicts": 0,
+  "rescore_mismatches_vs_recorded": 0,
+  "rows_per_class_total": {
+    "A1_dot_word": 264,
+    "A2_lookalike_dot": 270,
+    "A3_styled_digit": 216,
+    "A4_refusal": 228,
+    "B1_prose_fp": 215,
+    "B2_leak_fp": 128
+  },
+  "headline_per_class": {
+    "A1_dot_word": {
+      "n": 254,
+      "errors": 241,
+      "rate": 0.9488,
+      "wilson95": [
+        0.9144,
+        0.9698
+      ]
+    },
+    "A2_lookalike_dot": {
+      "n": 254,
+      "errors": 195,
+      "rate": 0.7677,
+      "wilson95": [
+        0.712,
+        0.8154
+      ]
+    },
+    "A3_styled_digit": {
+      "n": 216,
+      "errors": 72,
+      "rate": 0.3333,
+      "wilson95": [
+        0.2739,
+        0.3986
+      ]
+    },
+    "A4_refusal": {
+      "n": 226,
+      "errors": 225,
+      "rate": 0.9956,
+      "wilson95": [
+        0.9754,
+        0.9992
+      ]
+    },
+    "B1_prose_fp": {
+      "n": 215,
+      "errors": 99,
+      "rate": 0.4605,
+      "wilson95": [
+        0.3951,
+        0.5272
+      ]
+    },
+    "B2_leak_fp": {
+      "n": 120,
+      "errors": 74,
+      "rate": 0.6167,
+      "wilson95": [
+        0.5273,
+        0.6988
+      ]
+    }
+  },
+  "per_class_bro_r6_only": {
+    "A1_dot_word": {
+      "n": 24,
+      "errors": 23,
+      "rate": 0.9583,
+      "wilson95": [
+        0.7976,
+        0.9926
+      ]
+    },
+    "A2_lookalike_dot": {
+      "n": 30,
+      "errors": 30,
+      "rate": 1,
+      "wilson95": [
+        0.8865,
+        1
+      ]
+    },
+    "A3_styled_digit": {
+      "n": 24,
+      "errors": 24,
+      "rate": 1,
+      "wilson95": [
+        0.862,
+        1
+      ]
+    },
+    "A4_refusal": {
+      "n": 28,
+      "errors": 27,
+      "rate": 0.9643,
+      "wilson95": [
+        0.8229,
+        0.9937
+      ]
+    },
+    "B1_prose_fp": {
+      "n": 15,
+      "errors": 13,
+      "rate": 0.8667,
+      "wilson95": [
+        0.6212,
+        0.9626
+      ]
+    },
+    "B2_leak_fp": {
+      "n": 8,
+      "errors": 6,
+      "rate": 0.75,
+      "wilson95": [
+        0.4093,
+        0.9285
+      ]
+    }
+  },
+  "per_class_generated_only": {
+    "A1_dot_word": {
+      "n": 230,
+      "errors": 218,
+      "rate": 0.9478,
+      "wilson95": [
+        0.911,
+        0.9699
+      ]
+    },
+    "A2_lookalike_dot": {
+      "n": 224,
+      "errors": 165,
+      "rate": 0.7366,
+      "wilson95": [
+        0.6753,
+        0.79
+      ]
+    },
+    "A3_styled_digit": {
+      "n": 192,
+      "errors": 48,
+      "rate": 0.25,
+      "wilson95": [
+        0.1941,
+        0.3157
+      ]
+    },
+    "A4_refusal": {
+      "n": 198,
+      "errors": 198,
+      "rate": 1,
+      "wilson95": [
+        0.981,
+        1
+      ]
+    },
+    "B1_prose_fp": {
+      "n": 200,
+      "errors": 86,
+      "rate": 0.43,
+      "wilson95": [
+        0.3633,
+        0.4993
+      ]
+    },
+    "B2_leak_fp": {
+      "n": 112,
+      "errors": 68,
+      "rate": 0.6071,
+      "wilson95": [
+        0.5146,
+        0.6926
+      ]
+    }
+  },
+  "secondary_pooled_CLASS_MIX_DEPENDENT": {
+    "miss_rate_attack_forms_A1_A3": {
+      "n": 724,
+      "errors": 508,
+      "rate": 0.7017,
+      "wilson95": [
+        0.6673,
+        0.7338
+      ]
+    },
+    "miss_rate_all_attack_side": {
+      "n": 950,
+      "errors": 733,
+      "rate": 0.7716,
+      "wilson95": [
+        0.7438,
+        0.7971
+      ]
+    },
+    "fp_rate_all_benign_side": {
+      "n": 335,
+      "errors": 173,
+      "rate": 0.5164,
+      "wilson95": [
+        0.463,
+        0.5694
+      ]
+    },
+    "macro_mean_attack_form_miss_A1_A3": 0.6833,
+    "macro_mean_benign_fp_B1_B2": 0.5386
+  },
+  "oracle_usable_as_gate": false
+}
