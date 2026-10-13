@@ -65,7 +65,8 @@ def test_metrics_never_claim_world_rank_or_production_authority():
 
 
 def test_not_enough_opt_in_study_or_search_sample_is_hold():
-    candidate = metric(search_impressions=20, search_clicks=9,
+    candidate = metric(period_start="2026-10-01", period_end="2026-10-14",
+                       search_impressions=20, search_clicks=9,
                        opt_in_tasks=5, opt_in_successes=5)
     r = assess_aggregate_market(candidate, baseline=metric())
     assert r.outcome == "HOLD"
