@@ -3,7 +3,7 @@
 import { chromium } from "playwright";
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 const BASE = process.env.BASE || "http://127.0.0.1:4197/pro/studio/";
-const SHOT = process.env.SHOT_DIR; const AXE = process.env.AXE_PATH;
+const SHOT = process.env.SHOT_DIR; const PFX = process.env.SHOT_PREFIX || ""; const AXE = process.env.AXE_PATH;
 let fail = 0; const ok = (c, m) => { console.log(`${c ? "PASS" : "FAIL"} ${m}`); if (!c) fail++; };
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, acceptDownloads: true, bypassCSP: !!AXE }); // bypassCSP only so axe can be injected
@@ -47,9 +47,30 @@ const f = JSON.parse(readFileSync(fp, "utf8")); ok(f.format === "spe.prompt" && 
 await p.click("#btn-example"); ok(!(await p.locator("#preview").innerText()).includes("Diffy"), "pre-import state differs"); await p.setInputFiles("#file-import", fp);
 await p.waitForFunction(() => document.querySelector("#preview").textContent.includes("Diffy"), null, { timeout: 5000 }).catch(() => {}); ok((await p.locator("#preview").innerText()).includes("Diffy"), "import .spe restores blocks");
 ok(net.length === 0, `no external network requests (${net.length})`);
-if (SHOT) { mkdirSync(SHOT, { recursive: true }); await p.screenshot({ path: `${SHOT}/studio-desktop-1440.png`, fullPage: true });
-  await p.evaluate(() => window.__spe.selectTab("ab")); await p.screenshot({ path: `${SHOT}/studio-compare-desktop-1440.png`, fullPage: true });
+// P2: real pointer drag-to-reorder (mouse on desktop, touch on mobile), order in list + prompt, survives reload
+const order = pg => pg.$$eval("#blocks > li", l => l.map(x => x.dataset.k).join(","));
+const heads = async pg => [...(await pg.locator("#preview").innerText()).matchAll(/^## (.+)$/gm)].map(m => m[1]).join(",");
+const EXP = "rules,tone,role,output,examples", EXPH = "Rules,Tone,Role,Output format,Examples";
+async function dragCheck(pg, kind, doDrag) {
+  await pg.goto(BASE); await pg.click("#btn-example");
+  ok(await order(pg) === "role,rules,tone,output,examples", `${kind}: before order role,rules,tone,output,examples`);
+  const h = await pg.locator("#blocks > li").nth(0).locator(".handle").boundingBox(); const t = await pg.locator("#blocks > li").nth(2).boundingBox();
+  await doDrag(h.x + h.width / 2, h.y + h.height / 2, t.x + t.width / 2, t.y + t.height * 0.8);
+  ok(await order(pg) === EXP, `${kind}: blocks reordered (${await order(pg)})`);
+  ok(await heads(pg) === EXPH, `${kind}: assembled prompt reordered (${await heads(pg)})`);
+  await pg.reload(); ok(await order(pg) === EXP && await heads(pg) === EXPH, `${kind}: new order survives reload`);
+}
+{ const c = await b.newContext({ viewport: { width: 1440, height: 900 } }); const pg = await c.newPage();
+  await dragCheck(pg, "mouse", async (x0, y0, x1, y1) => { await pg.mouse.move(x0, y0); await pg.mouse.down(); await pg.mouse.move(x1, y1, { steps: 20 }); await pg.mouse.up(); });
+  await c.close(); }
+{ const c = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }); const pg = await c.newPage(); const cdp = await c.newCDPSession(pg);
+  const touch = (type, x, y) => cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x, y }] });
+  await dragCheck(pg, "touch", async (x0, y0, x1, y1) => { await touch("touchStart", x0, y0); for (let k = 1; k <= 20; k++) await touch("touchMove", x0 + (x1 - x0) * k / 20, y0 + (y1 - y0) * k / 20); await touch("touchEnd"); });
+  if (SHOT) { mkdirSync(SHOT, { recursive: true }); await pg.screenshot({ path: `${SHOT}/${PFX}studio-mobile-after-touch-drag-390.png`, fullPage: true }); }
+  await c.close(); }
+if (SHOT) { mkdirSync(SHOT, { recursive: true }); await p.screenshot({ path: `${SHOT}/${PFX}studio-desktop-1440.png`, fullPage: true });
+  await p.evaluate(() => window.__spe.selectTab("ab")); await p.screenshot({ path: `${SHOT}/${PFX}studio-compare-desktop-1440.png`, fullPage: true });
   const m = await b.newPage({ viewport: { width: 390, height: 844 }, isMobile: true }); await m.goto(BASE); await m.click("#btn-example");
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= 391), "mobile: no horizontal overflow");
-  await m.screenshot({ path: `${SHOT}/studio-mobile-390.png`, fullPage: true }); }
+  await m.screenshot({ path: `${SHOT}/${PFX}studio-mobile-390.png`, fullPage: true }); }
 await b.close(); console.log(fail ? `FAILED ${fail}` : "ALL PASS"); process.exit(fail ? 1 : 0);

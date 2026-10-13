@@ -94,3 +94,4 @@ body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.6 var(--sans)
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 [hidden]{display:none!important}
+.handle{touch-action:none;cursor:grab}.dragging .handle{cursor:grabbing}

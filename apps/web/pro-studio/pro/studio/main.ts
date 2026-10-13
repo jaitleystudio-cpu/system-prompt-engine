@@ -152,7 +152,7 @@ function render(focusId?: string, enterId?: string) {
     li.className = "blk" + (b.id === enterId ? " enter" : ""); li.dataset.k = b.kind; li.dataset.id = b.id;
     const tid = `t-${b.id}`, xid = `x-${b.id}`;
     li.innerHTML = `<div class="blk__bar">
-      <button type="button" class="handle" draggable="true" aria-label="Reorder ${esc(b.title || LABEL[b.kind])}, position ${i + 1} of ${blocks.length}. Alt plus arrow keys to move.">⠿</button>
+      <button type="button" class="handle" aria-label="Reorder ${esc(b.title || LABEL[b.kind])}, position ${i + 1} of ${blocks.length}. Alt plus arrow keys to move.">⠿</button>
       <span class="blk__label">${LABEL[b.kind]}</span>
       <label class="sr-only" for="${tid}">Block title</label><input id="${tid}" class="blk__title" value="${esc(b.title).replace(/"/g, "&quot;")}" />
       <button type="button" class="icon-btn up" aria-label="Move ${esc(b.title)} up" ${i === 0 ? "disabled" : ""}>↑</button>
@@ -167,15 +167,34 @@ function render(focusId?: string, enterId?: string) {
     li.querySelector(".del")!.addEventListener("click", () => { blocks.splice(i, 1); announce(`${b.title} removed`); render(blocks[Math.min(i, blocks.length - 1)]?.id); });
     const h = li.querySelector(".handle") as HTMLButtonElement;
     h.addEventListener("keydown", e => { if (e.altKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) { e.preventDefault(); move(i, e.key === "ArrowUp" ? i - 1 : i + 1, "handle"); } });
-    h.addEventListener("dragstart", e => { e.dataTransfer!.setData("text/plain", b.id); e.dataTransfer!.effectAllowed = "move"; li.classList.add("dragging"); });
-    h.addEventListener("dragend", () => li.classList.remove("dragging"));
-    li.addEventListener("dragover", e => { e.preventDefault(); li.classList.add("over"); });
-    li.addEventListener("dragleave", () => li.classList.remove("over"));
-    li.addEventListener("drop", e => { e.preventDefault(); li.classList.remove("over"); const from = blocks.findIndex(x => x.id === e.dataTransfer!.getData("text/plain")); if (from >= 0 && from !== i) move(from, i, "handle"); });
+    h.addEventListener("pointerdown", e => startDrag(e, i, li, h));
     ol.appendChild(li);
   });
   if (focusId) (ol.querySelector(`[data-id="${focusId}"] .blk__title`) as HTMLElement | null)?.focus();
   renderSide();
+}
+// Pointer-based drag (mouse, touch, pen). HTML5 drag-and-drop never fires for touch.
+function dropIndex(y: number, from: number): number {
+  const items = [...document.querySelectorAll<HTMLElement>("#blocks > li")];
+  let to = items.length - 1;
+  for (let k = 0; k < items.length; k++) { const r = items[k].getBoundingClientRect(); if (y < r.top + r.height / 2) { to = k > from ? k - 1 : k; break; } }
+  return Math.max(0, Math.min(items.length - 1, to));
+}
+function startDrag(e: PointerEvent, from: number, li: HTMLElement, h: HTMLElement) {
+  if (e.button !== 0) return; e.preventDefault(); h.setPointerCapture?.(e.pointerId);
+  const y0 = e.clientY; let to = from, live = false;
+  const items = () => [...document.querySelectorAll<HTMLElement>("#blocks > li")];
+  const onMove = (ev: PointerEvent) => {
+    if (!live && Math.abs(ev.clientY - y0) < 4) return;
+    live = true; li.classList.add("dragging"); to = dropIndex(ev.clientY, from);
+    items().forEach((x, k) => x.classList.toggle("over", k === to && k !== from));
+  };
+  const end = (ev: PointerEvent) => {
+    h.removeEventListener("pointermove", onMove); h.removeEventListener("pointerup", end); h.removeEventListener("pointercancel", end);
+    li.classList.remove("dragging"); items().forEach(x => x.classList.remove("over"));
+    if (live && ev.type === "pointerup" && to !== from) move(from, to, "handle");
+  };
+  h.addEventListener("pointermove", onMove); h.addEventListener("pointerup", end); h.addEventListener("pointercancel", end);
 }
 function move(from: number, to: number, keep: "up" | "down" | "handle") {
   if (to < 0 || to >= blocks.length) return;
