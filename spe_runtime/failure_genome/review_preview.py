@@ -9,9 +9,11 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from html import escape
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Mapping
 
-from .event_journal import EventKind, JournalEntry
+from spe_runtime.ci_gate.receipt import AuthenticatedReceipt
+from .event_journal import EventKind, JournalEntry, SourceEventJournal
+from .incident_identity import IncidentLinkProposal, verified_external_entry_binding
 from .incident_review import ReviewState
 from .investigation import InvestigationReport
 from .store import sanitize_text
@@ -37,6 +39,10 @@ def render_internal_review_draft(
     investigation: InvestigationReport,
     journal_entry: JournalEntry,
     headline: str,
+    identity_journal: SourceEventJournal | None = None,
+    identity_proposal: IncidentLinkProposal | None = None,
+    identity_receipt: AuthenticatedReceipt | None = None,
+    trusted_identity_keys: Mapping[str, str] | None = None,
 ) -> ReviewDraft:
     """Require exact cross-owner binding, produce a redacted HTML draft.
 
@@ -52,8 +58,15 @@ def render_internal_review_draft(
         not investigation.replay_capsule_integrity_valid
     ):
         raise PermissionError("SOURCE_OR_INCIDENT_REVIEW_NOT_READY")
+    # Actual third-party IDs are NOT SPE-FG IDs. Re-verify signed mapping
+    # against the live R2 journal and enrolled signer at this exact use.
+    if journal_entry.event_id != failure.failure_id and not verified_external_entry_binding(
+        failure=failure, entry=journal_entry, journal=identity_journal,
+        proposal=identity_proposal, receipt=identity_receipt,
+        owner_keys=trusted_identity_keys,
+    ):
+        raise PermissionError("EXTERNAL_INCIDENT_IDENTITY_NOT_VERIFIED")
     if (
-        journal_entry.event_id != failure.failure_id or
         not isinstance(investigation.source_review_content_sha256, str) or
         journal_entry.content_sha256 != investigation.source_review_content_sha256 or
         journal_entry.source_published_at != investigation.source_review_published_at or
