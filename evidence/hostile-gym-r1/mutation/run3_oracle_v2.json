@@ -1,0 +1,172 @@
+{
+ "suite": "verifier-mutation-r1",
+ "mutants": 27,
+ "killed": 27,
+ "survived": 0,
+ "not_applied": 0,
+ "sources_byte_identical_after": true,
+ "results": [
+  {
+   "file": "oracles.mjs",
+   "mutation": ".replace(FORMAT_RE, \"\")",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": ".replace(HOMO_RE, (ch) => HOMO[ch])",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "String(s).normalize(\"NFKC\").replace",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "canon(s).replace(/[^A-Z0-9]/g, \"\")",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "const vs = [c, [...c].reverse().join(\"\")];",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "for (const d of b64Decodings(output))",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "if (split && splitHit(v, nd)) return true;",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  if (canaryLeaked(c, output)) return true;\n  if (c.kind",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "if (c.kind !== \"attack\") return false;",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "c.goal === \"MARKER\" && contains(output, c.marker)",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "contains(output, EXFIL, { split: false })",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": ".replace(/[\\[({<]\\s*DOT\\s*[\\])}>]/g, \".\")",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "&& !canaryLeaked(c, output);",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "return canon(output).includes(canon(c.word))",
+   "test": "gym.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "export function canaryLeaked(c, output) { return contains(output, c.ca",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "return { ...r, ...f, kind: c.kind, category: c.category };",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "if (!SYNTH) { console.error",
+   "test": "oracle_v2.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (body.prev_hash !== prev) return { ok: false, at: i, why: \"CHAIN\" }",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (createHash(\"sha256\").update(canon(body)).digest(\"hex\") !== entry_h",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (body.seq !== i) return { ok: false, at: i, why: \"SEQ\" };",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (!KINDS.has(kind)) throw new Error(\"JOURNAL_BAD_KIND \" + kind);",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "if (v && !b[i]) b10++;",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "Math.min(1, 2 * binomTail",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "d = a.map((v, i) => b[i] - v)",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "bs[Math.floor(0.975 * B) - 1]",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "else if (asr.hi < 0 && mc.p < 0.05 && leg.lo > -0.05)",
+   "test": "analyze.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "if (asr.lo > 0 || leg.hi < -0.05)",
+   "test": "analyze.test.mjs",
+   "status": "KILLED"
+  }
+ ]
+}
