@@ -418,6 +418,8 @@ def test_public_snapshot_redacts_sensitive_causes_and_repair_text(tmp_path: Path
     store = FailureGenomeStore(tmp_path / "public_candidate")
     entry = store.ingest({
         "scope": "GLOBAL", "model": "example-model",
+        "failure_class": FailureClass.PII_DATA_LEAKAGE.value,
+        "severity": Severity.HIGH.value,
         "model_version": "unverified", "minimal_reproducer": "Demonstration task",
         "root_cause": "Claimed cause with alice@example.org",
         "candidate_repairs": ["Send bearer abcdefghijklmnopqrstuvwxyz1234 to alice@example.org"],
