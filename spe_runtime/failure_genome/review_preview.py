@@ -56,9 +56,8 @@ def render_internal_review_draft(
         journal_entry.event_id != failure.failure_id or
         not isinstance(investigation.source_review_content_sha256, str) or
         journal_entry.content_sha256 != investigation.source_review_content_sha256 or
-        journal_entry.source_published_at not in (
-            investigation.preflight.source_urls and journal_entry.source_published_at,
-        )
+        journal_entry.source_published_at != investigation.source_review_published_at or
+        journal_entry.observed_at != investigation.source_review_observed_at
     ):
         raise PermissionError("INCIDENT_SOURCE_SNAPSHOT_NOT_BOUND")
     if not isinstance(headline, str) or not headline.strip() or len(headline) > 300:
