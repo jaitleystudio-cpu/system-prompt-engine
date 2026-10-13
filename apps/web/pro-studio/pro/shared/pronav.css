@@ -1,0 +1,13 @@
+/* Shared Pro nav (all /pro/* pages). P7 visual language. PREVIEW ONLY. */
+.pronav{position:relative;z-index:11;background:rgba(7,8,10,.86);border-bottom:1px solid rgba(255,255,255,.07);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.pronav__in{display:flex;align-items:center;gap:16px;width:min(1360px,100% - 48px);margin-inline:auto;min-height:48px}
+.pronav__brand{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:#F3F4F6;font:650 15px/1 inherit;text-decoration:none;white-space:nowrap}
+.pronav__brand::before{content:"";width:16px;height:16px;border-radius:5px;background:linear-gradient(135deg,#8EF0C6,#5E8BFF)}
+.pronav__links{display:flex;gap:4px;list-style:none;margin:0;padding:0;overflow-x:auto;scrollbar-width:none}
+.pronav__links a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;padding:0 12px;border-radius:999px;color:#A6ADBA;font:600 14px/1 inherit;text-decoration:none;white-space:nowrap;transition:color .16s,background .16s}
+.pronav__links a:hover{color:#F3F4F6;background:rgba(255,255,255,.05)}
+.pronav__links a[aria-current=page]{color:#F3F4F6;background:#1A1E24;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.pronav a:focus-visible{outline:2px solid #8EF0C6;outline-offset:2px}
+.pronav__badge{margin-left:auto;padding:4px 10px;border:1px solid rgba(142,240,198,.4);border-radius:999px;color:#8EF0C6;font:500 12px/16px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+@media (max-width:767px){.pronav__in{width:100%;padding:0 8px;gap:4px}.pronav__brand{display:none}.pronav__badge{display:none}.pronav__links a{font-size:14px;padding:0 10px}}
+@media (prefers-reduced-motion:reduce){.pronav__links a{transition:none}}

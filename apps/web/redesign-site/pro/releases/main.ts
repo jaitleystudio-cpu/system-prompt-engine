@@ -1,5 +1,5 @@
-import { type ReleasePack, ed25519Supported, generateKeyPair, signRelease, verifyPack, fingerprint, SEMVER } from "../lib/releases.ts";
-import { $, esc, load, save, download, copy } from "../lib/ui.ts";
+import { type ReleasePack, ed25519Supported, generateKeyPair, signRelease, verifyPack, fingerprint, SEMVER } from "../core/releases.ts";
+import { $, esc, load, save, download, copy } from "../core/ui.ts";
 const KEY = "spe.pro.releases.v1";
 let hist = load<ReleasePack[]>(KEY, () => []);
 let keys: CryptoKeyPair | null = null; let last: ReleasePack | null = null;

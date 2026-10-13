@@ -1,5 +1,5 @@
-import { type TestCase, type DiffReport, runSuite, diffReports, splitList } from "../lib/regression.ts";
-import { $, esc, load, save, uid } from "../lib/ui.ts";
+import { type TestCase, type DiffReport, runSuite, diffReports, splitList } from "../core/regression.ts";
+import { $, esc, load, save, uid } from "../core/ui.ts";
 const KEY = "spe.pro.regression.v1";
 interface State { a: string; b: string; cases: TestCase[] }
 const example = (): State => ({
