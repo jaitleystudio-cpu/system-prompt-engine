@@ -19,7 +19,7 @@ from typing import Mapping
 
 from spe_runtime.ci_gate.receipt import AuthenticatedReceipt, verify_receipt_signature
 from .durable_journal import CustodyStatus, JournalCustodyError, metadata_document_sha256
-from .event_journal import SourceEventJournal
+from .event_journal import JournalDecision, SourceEventJournal
 
 
 CHECKPOINT_SCHEMA = "spe.failure_genome.external_head.v2"
@@ -38,6 +38,7 @@ class OwnerPinnedFloor:
     known_record_count: int
     known_head_sha256: str
     allowlist_sha256: str
+    known_metadata_document_sha256: str | None = None
 
 
 @dataclass(frozen=True)
@@ -139,6 +140,31 @@ def verify_owner_checkpoint(
         )
         if ancestor_head != floor.known_head_sha256:
             issues.add("OWNER_PINNED_ANCESTRY_BROKEN")
+        # A prior head/count did NOT bind URL and model-scope metadata
+        # in the R2 chain. R18 checks the *previous* external metadata
+        # commitment against the exact immutable journal prefix.
+        pinned_meta = floor.known_metadata_document_sha256
+        genesis = floor.minimum_sequence == 0 and floor.known_record_count == 0
+        if pinned_meta is None:
+            if not genesis:
+                issues.add("OWNER_PINNED_METADATA_FLOOR_MISSING")
+        elif not isinstance(pinned_meta, str) or not _SHA.fullmatch(pinned_meta):
+            issues.add("OWNER_PINNED_METADATA_FLOOR_MALFORMED")
+        else:
+            try:
+                prefix = SourceEventJournal(
+                    journal.authorities, max_events=max(1, floor.known_record_count)
+                )
+                for snapshot in journal.observations[:floor.known_record_count]:
+                    result = prefix.ingest(snapshot)
+                    if result.decision is not JournalDecision.ADDED:
+                        raise JournalCustodyError("NON_REPLAYABLE_PREFIX")
+                prefix_sha = metadata_document_sha256(prefix, expected_allowlist_sha256)
+            except (JournalCustodyError, ValueError, TypeError, AttributeError):
+                issues.add("OWNER_PINNED_METADATA_PREFIX_INVALID")
+            else:
+                if pinned_meta != prefix_sha:
+                    issues.add("OWNER_PINNED_METADATA_ANCESTRY_BROKEN")
     if not isinstance(signed_receipt, AuthenticatedReceipt):
         issues.add("CHECKPOINT_RECEIPT_MISSING")
     if not isinstance(trusted_checkpoint_keys, Mapping) or not trusted_checkpoint_keys:
@@ -185,6 +211,12 @@ def verify_owner_checkpoint(
                     or head != owner_pinned_floor.known_head_sha256
                 ):
                     issues.add("CHECKPOINT_SEQUENCE_REUSED_ON_NEW_HEAD")
+                if (
+                    verified_seq == owner_pinned_floor.minimum_sequence
+                    and owner_pinned_floor.known_metadata_document_sha256 is not None
+                    and metadata_sha != owner_pinned_floor.known_metadata_document_sha256
+                ):
+                    issues.add("CHECKPOINT_SEQUENCE_REUSED_ON_NEW_METADATA")
             if signed_receipt.spec_version != "0.1.0":
                 issues.add("CHECKPOINT_RECEIPT_FORMAT_UNKNOWN")
             pinned = trusted_checkpoint_keys.get(signed_receipt.signer_key_id) if isinstance(trusted_checkpoint_keys, Mapping) else None
@@ -202,6 +234,7 @@ def verify_owner_checkpoint(
             known_record_count=count,
             known_head_sha256=head,
             allowlist_sha256=expected_allowlist_sha256,
+            known_metadata_document_sha256=metadata_sha,
         )
         if eligible else None
     )
