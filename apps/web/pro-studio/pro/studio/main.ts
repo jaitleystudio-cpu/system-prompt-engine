@@ -209,13 +209,21 @@ function add(kind: Kind, text = "") { const b = { id: uid(), kind, title: LABEL[
 function setBlocks(bs: Omit<Block, "id">[], msg: string) { blocks = bs.map(b => ({ ...b, id: uid() })); render(); announce(msg); }
 
 export function toSpe(bs: Block[]): SpeFile { return { format: "spe.prompt", version: 1, name: bs.find(b => b.kind === "role")?.text.slice(0, 48) || "Untitled prompt", createdAt: new Date().toISOString(), blocks: bs.map(({ kind, title, text }) => ({ kind, title, text })), versions }; }
-export function fromSpe(raw: string): Omit<Block, "id">[] {
-  const d = JSON.parse(raw);
-  if (!d || d.format !== "spe.prompt" || d.version !== 1 || !Array.isArray(d.blocks)) throw new Error("Not an SPE v1 prompt file.");
+export const MAX_FILE = 5 * 1024 * 1024, MAX_TEXT = 200_000;
+export function parseSpeJson(raw: string, name = "This file"): any {
+  try { return JSON.parse(raw); } catch { throw new Error(`“${name}” is not valid JSON, so it can't be a .spe file. It may be truncated or corrupted.`); }
+}
+export function fromSpe(raw: string | object): Omit<Block, "id">[] {
+  const d: any = typeof raw === "string" ? parseSpeJson(raw) : raw;
+  if (!d || typeof d !== "object") throw new Error("File content is not an SPE prompt object.");
+  if (d.format !== "spe.prompt") throw new Error(`Unrecognised format ${d.format === undefined ? "(missing)" : `“${String(d.format).slice(0, 40)}”`}. Expected “spe.prompt”.`);
+  if (d.version !== 1) throw new Error(`This file is .spe version ${String(d.version).slice(0, 10)}; this Studio reads version 1 only.`);
+  if (!Array.isArray(d.blocks)) throw new Error("The file has no blocks list.");
   if (d.blocks.length > 200) throw new Error("Too many blocks (max 200).");
-  return d.blocks.map((b: any) => {
-    if (!(b && b.kind in LABEL && typeof b.text === "string" && typeof b.title === "string")) throw new Error("A block is malformed.");
-    return { kind: b.kind as Kind, title: b.title.slice(0, 80), text: b.text.slice(0, 20000) };
+  return d.blocks.map((b: any, i: number) => {
+    if (!(b && b.kind in LABEL && typeof b.text === "string" && typeof b.title === "string")) throw new Error(`Block ${i + 1} is malformed (needs a known kind, a title and text).`);
+    if (b.text.length > MAX_TEXT) throw new Error(`Block ${i + 1} is longer than ${MAX_TEXT.toLocaleString("en")} characters.`);
+    return { kind: b.kind as Kind, title: b.title.slice(0, 80), text: b.text };
   });
 }
 
@@ -228,10 +236,17 @@ $("#btn-export").addEventListener("click", () => {
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "prompt.spe"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); announce("Exported prompt.spe");
 });
 $("#btn-import").addEventListener("click", () => $("#file-import").click());
+const importErr = (m: string) => { const el = $("#import-err"); el.textContent = m; el.hidden = !m; };
 $("#file-import").addEventListener("change", async e => {
   const f = (e.target as HTMLInputElement).files?.[0]; if (!f) return;
-  try { if (f.size > 1_000_000) throw new Error("File is over 1 MB."); const raw = await f.text(); const bs = fromSpe(raw); const d = JSON.parse(raw); if (Array.isArray(d.versions)) versions = d.versions.slice(0, 100).map((v: any) => ({ id: uid(), note: String(v.note || "Imported").slice(0, 80), at: String(v.at || new Date().toISOString()), blocks: fromSpe(JSON.stringify({ format: "spe.prompt", version: 1, blocks: v.blocks })) })); setBlocks(bs, `Imported ${f.name}`); renderVersions(); }
-  catch (err) { announce(`Import failed: ${(err as Error).message}`); alert(`Import failed: ${(err as Error).message}`); }
+  try {
+    // Validate everything first; the current draft and versions are only replaced after the whole file parses.
+    if (!/\.(spe|json)$/i.test(f.name)) throw new Error(`“${f.name}” is not a .spe file. Choose a file exported from Prompt Studio (.spe).`);
+    if (f.size > MAX_FILE) throw new Error(`“${f.name}” is too large (${(f.size / 1048576).toFixed(1)} MB). The limit is 5 MB.`);
+    const d = parseSpeJson(await f.text(), f.name); const bs = fromSpe(d);
+    const vs: Version[] = Array.isArray(d.versions) ? d.versions.slice(0, 100).map((v: any, i: number) => { try { return { id: uid(), note: String(v.note || "Imported").slice(0, 80), at: String(v.at || new Date().toISOString()), blocks: fromSpe({ format: "spe.prompt", version: 1, blocks: v.blocks }) }; } catch (er) { throw new Error(`Version ${i + 1}: ${(er as Error).message}`); } }) : versions;
+    versions = vs; importErr(""); setBlocks(bs, `Imported ${f.name}`); renderVersions();
+  } catch (err) { const m = `Import failed: ${(err as Error).message} Your current draft was not changed.`; importErr(m); announce(m); }
   (e.target as HTMLInputElement).value = "";
 });
 $("#btn-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(assemble(blocks)); announce("Prompt copied"); } catch { announce("Copy failed; select the preview text instead"); } });

@@ -42,7 +42,7 @@ if (AXE) { await p.addScriptTag({ content: readFileSync(AXE, "utf8") });
     ok(r.violations.length === 0, `axe ${t}: ${r.violations.map(v => v.id + "(" + v.nodes.length + ")").join(",") || "0 violations"}`); } }
 // export / import roundtrip
 await p.evaluate(() => window.__spe.selectTab("edit"));
-const [dl] = await Promise.all([p.waitForEvent("download"), p.click("#btn-export")]); const fp = await dl.path();
+const [dl] = await Promise.all([p.waitForEvent("download"), p.click("#btn-export")]); const fp = "/tmp/spe-p1-" + dl.suggestedFilename(); await dl.saveAs(fp);
 const f = JSON.parse(readFileSync(fp, "utf8")); ok(f.format === "spe.prompt" && f.versions.length >= 1, "export .spe");
 await p.click("#btn-example"); ok(!(await p.locator("#preview").innerText()).includes("Diffy"), "pre-import state differs"); await p.setInputFiles("#file-import", fp);
 await p.waitForFunction(() => document.querySelector("#preview").textContent.includes("Diffy"), null, { timeout: 5000 }).catch(() => {}); ok((await p.locator("#preview").innerText()).includes("Diffy"), "import .spe restores blocks");
@@ -67,6 +67,48 @@ async function dragCheck(pg, kind, doDrag) {
   const touch = (type, x, y) => cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x, y }] });
   await dragCheck(pg, "touch", async (x0, y0, x1, y1) => { await touch("touchStart", x0, y0); for (let k = 1; k <= 20; k++) await touch("touchMove", x0 + (x1 - x0) * k / 20, y0 + (y1 - y0) * k / 20); await touch("touchEnd"); });
   if (SHOT) { mkdirSync(SHOT, { recursive: true }); await pg.screenshot({ path: `${SHOT}/${PFX}studio-mobile-after-touch-drag-390.png`, fullPage: true }); }
+  await c.close(); }
+// P4: .spe round trip with real files + invalid files never wipe the draft
+{ const c = await b.newContext({ viewport: { width: 1440, height: 900 }, acceptDownloads: true }); const pg = await c.newPage();
+  const dialogs = []; pg.on("dialog", d => { dialogs.push(d.message()); d.dismiss(); });
+  await pg.goto(BASE);
+  const TE = "మీరు ఒక సహాయకుడు. తెలుగులో జవాబు ఇవ్వండి 🚀👩🏽‍💻 — “quotes” & <tags>";
+  const big = ("Long rule line " + TE + "\n").repeat(800); // >50k chars
+  const kinds = ["role", "rules", "tone", "output", "examples", "custom"];
+  const draft = kinds.map((k, i) => ({ id: "x" + i, kind: k, title: k === "custom" ? "కస్టమ్ 🎯" : k, text: k === "rules" ? big : `${k}: ${TE}` }));
+  await pg.evaluate(([d]) => { localStorage.setItem("spe.pro.studio.r1.draft", JSON.stringify(d)); localStorage.setItem("spe.pro.studio.r1.versions", JSON.stringify([{ id: "v1", note: "వెర్షన్ 1 ✅", at: "2026-10-14T00:00:00.000Z", blocks: d.slice(0, 2).map(({ kind, title, text }) => ({ kind, title, text })) }])); }, [draft]);
+  await pg.reload();
+  const state = () => pg.evaluate(() => ({ d: JSON.parse(localStorage.getItem("spe.pro.studio.r1.draft")).map(({ kind, title, text }) => ({ kind, title, text })), v: JSON.parse(localStorage.getItem("spe.pro.studio.r1.versions")).map(({ note, blocks }) => ({ note, blocks })) }));
+  const s0 = await state();
+  ok(big.length > 50000 && s0.d[1].text.length === big.length, `roundtrip: draft has ${big.length}-char block`);
+  const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("#btn-export")]); const fp = "/tmp/spe-p4-" + dl.suggestedFilename(); await dl.saveAs(fp);
+  await pg.click("#btn-example"); await pg.waitForTimeout(100);
+  await pg.setInputFiles("#file-import", fp); await pg.waitForTimeout(300);
+  const s1 = await state();
+  ok(JSON.stringify(s1.d) === JSON.stringify(s0.d), `roundtrip: all 6 block types, Telugu/emoji and ${big.length}-char block identical after import (got rules len ${s1.d[1]?.text.length})`);
+  ok(JSON.stringify(s1.v) === JSON.stringify(s0.v), "roundtrip: versions (with Telugu note) identical after import");
+  const bad = [
+    ["malformed JSON", "broken.spe", Buffer.from('{"format":"spe.prompt","version":1,"blocks":['), /not valid JSON/i],
+    ["wrong format", "other.spe", Buffer.from(JSON.stringify({ format: "other.tool", version: 1, blocks: [] })), /format.*spe\.prompt/i],
+    ["wrong version", "future.spe", Buffer.from(JSON.stringify({ format: "spe.prompt", version: 2, blocks: [] })), /version 2/i],
+    ["too large", "huge.spe", Buffer.alloc(6 * 1024 * 1024, 32), /too large.*5 MB/i],
+    ["not a .spe file", "photo.png", Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), /photo\.png.*\.spe/i],
+  ];
+  for (const [name, fname, buf, re] of bad) {
+    const before = await state(); dialogs.length = 0;
+    await pg.setInputFiles("#file-import", { name: fname, mimeType: "application/octet-stream", buffer: buf }); await pg.waitForTimeout(300);
+    const msg = (await pg.locator("#import-err").count() ? await pg.locator("#import-err").innerText() : "") + " " + dialogs.join(" ");
+    ok(re.test(msg), `invalid ${name}: specific error shown ("${msg.trim().slice(0, 90)}")`);
+    ok(JSON.stringify(await state()) === JSON.stringify(before), `invalid ${name}: draft and versions unchanged`);
+    if (SHOT && name === "malformed JSON") await pg.screenshot({ path: `${SHOT}/${PFX}import-error-1440.png` });
+  }
+  await c.close(); }
+// P4-B: axe at mobile widths, jump bar + checks toggle (collapsed and expanded)
+if (AXE) for (const w of [390, 360]) { const c = await b.newContext({ viewport: { width: w, height: 844 }, isMobile: true, hasTouch: true, bypassCSP: true }); const pg = await c.newPage();
+  await pg.goto(BASE); await pg.click("#btn-example"); await pg.addScriptTag({ content: readFileSync(AXE, "utf8") });
+  for (const st of ["collapsed", "expanded"]) { if (st === "expanded") await pg.locator("#q-toggle").tap();
+    const r = await pg.evaluate(() => axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa", "best-practice"] }));
+    ok(r.violations.length === 0, `axe ${w}px checks ${st}: ${r.violations.map(v => v.id + "(" + v.nodes.length + ")").join(",") || "0 violations"}`); }
   await c.close(); }
 // P3 mobile density. Before (fa396a1f): height 3589/3674px (390/360), prompt at y=2137/2159, checks at 2733/2756,
 // 29 tap targets <44px, 31 text nodes <14px, overflow 0. Assert the after state stays well below that.
