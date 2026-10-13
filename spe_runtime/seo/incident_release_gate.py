@@ -13,13 +13,17 @@ import json
 import re
 from dataclasses import dataclass
 from html import escape
-from typing import Mapping
+from typing import TYPE_CHECKING, Mapping
 from urllib.parse import urlsplit
 
 from spe_runtime.ci_gate.receipt import AuthenticatedReceipt, verify_receipt_signature
-from spe_runtime.failure_genome.event_journal import EventKind, JournalEntry
+from spe_runtime.failure_genome.event_journal import EventKind, JournalEntry, SourceEventJournal
+from spe_runtime.failure_genome.incident_identity import IncidentLinkProposal, verified_external_entry_binding
 from spe_runtime.failure_genome.investigation import InvestigationReport
 from spe_runtime.failure_genome.store import sanitize_text
+
+if TYPE_CHECKING:
+    from spe_runtime.failure_genome.models import FailureGenomeEntry
 
 CANONICAL_ORIGIN = "https://systempromptengine.com"
 EDITORIAL_SCOPE = "SPE_OFFICIAL_SOURCE_ATTRIBUTION_REVIEW_ONLY"
@@ -121,6 +125,11 @@ def prepare_staging_notice(
     release_receipt: AuthenticatedReceipt | None = None,
     trusted_editor_keys: Mapping[str, str] | None = None,
     trusted_release_keys: Mapping[str, str] | None = None,
+    failure: FailureGenomeEntry | None = None,
+    identity_journal: SourceEventJournal | None = None,
+    identity_proposal: IncidentLinkProposal | None = None,
+    identity_receipt: AuthenticatedReceipt | None = None,
+    trusted_identity_keys: Mapping[str, str] | None = None,
 ) -> StagingPackage:
     """Return staging-only HTML if and only if source + two roles are bound."""
     codes: set[str] = set()
@@ -137,7 +146,6 @@ def prepare_staging_notice(
         codes.add("SOURCE_FACTS_OR_RIGHTS_NOT_REVIEWED")
     if (
         draft.incident_id != investigation.failure_id or
-        draft.incident_id != journal.event_id or
         investigation.state != "READY_FOR_INDEPENDENT_REVIEW" or
         not investigation.source_receipt_signature_valid or
         not investigation.replay_capsule_integrity_valid or
@@ -150,6 +158,18 @@ def prepare_staging_notice(
         not isinstance(journal.event_kind, EventKind)
     ):
         codes.add("SOURCE_EVIDENCE_BINDING_INVALID")
+    # External provider IDs are not SPE-FG IDs. Require the actual case
+    # specimen and recheck the enrolled signer against the current journal.
+    if journal.event_id != draft.incident_id:
+        if (
+            failure is None or getattr(failure, "failure_id", None) != draft.incident_id
+            or not verified_external_entry_binding(
+                failure=failure, entry=journal, journal=identity_journal,
+                proposal=identity_proposal, receipt=identity_receipt,
+                owner_keys=trusted_identity_keys,
+            )
+        ):
+            codes.add("EXTERNAL_INCIDENT_IDENTITY_UNVERIFIED")
     if journal.event_kind is EventKind.RETRACTION:
         codes.add("RETRACTED_SOURCE_REQUIRES_CORRECTION_PROCESS")
     origin = urlsplit(draft.source_url)
