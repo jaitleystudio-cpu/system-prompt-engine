@@ -90,6 +90,46 @@ def _valid_positive_int(x: object) -> bool:
     return type(x) is int and x > 0
 
 
+# Round 7 (Bro round-6): hard floor of independent held-out families on EVERY path (study, conjuncts,
+# validate_and_commit, transfer). A protocol may raise it, never lower it.
+HARD_MIN_HELDOUT_FAMILIES = 20
+
+
+def strict_int(x: object, *, minimum: int = 0) -> bool:
+    """True only for a real int (not bool) >= minimum. Never raises."""
+    return type(x) is int and x >= minimum
+
+
+def strict_finite(x: object, *, lo: float = -math.inf, hi: float = math.inf) -> bool:
+    """True only for a real int/float (not bool, not str/None), finite, within [lo, hi]. Never raises."""
+    return type(x) in (int, float) and math.isfinite(x) and lo <= x <= hi
+
+
+def strict_timestamp(x: object) -> bool:
+    """Receipt timestamp: finite, strictly positive int or float (time.time()); never bool/str/None/NaN/inf."""
+    return type(x) in (int, float) and math.isfinite(x) and x > 0
+
+
+def study_numeric_violations(s: object) -> list:
+    """Names of StudyResult fields that are not strictly valid numbers (or that breach the hard floor)."""
+    bad = []
+    if not strict_int(getattr(s, 'holdout_family_count', None), minimum=HARD_MIN_HELDOUT_FAMILIES):
+        bad.append('holdout_family_count')
+    if not strict_finite(getattr(s, 'p_value', None), lo=0.0, hi=1.0):
+        bad.append('p_value')
+    a = getattr(s, 'alpha_adjusted', None)
+    if not (strict_finite(a, lo=0.0, hi=1.0) and a > 0):
+        bad.append('alpha_adjusted')
+    for f in ('family_macro_delta', 'holdout_candidate_minus_base',
+              'train_candidate_minus_base', 'train_candidate_minus_shuffled'):
+        if not strict_finite(getattr(s, f, None), lo=-1.0, hi=1.0):
+            bad.append(f)
+    for f in ('holdout_base_mean', 'holdout_candidate_mean'):
+        if not strict_finite(getattr(s, f, None), lo=0.0, hi=1.0):
+            bad.append(f)
+    return bad
+
+
 def _valid_alpha(x: object) -> bool:
     return type(x) in (int, float) and math.isfinite(x) and 0 < x < 1
 
@@ -213,7 +253,7 @@ def run_study(p: StudyProtocol, train: Sequence[Observation],
         reasons.append('TRAIN_CONTROL_FAILED')
     if macro_delta < -1e-12:
         reasons.append('HELDOUT_REGRESSION')
-    if len(grouped) < p.min_heldout_families:
+    if len(grouped) < max(HARD_MIN_HELDOUT_FAMILIES, p.min_heldout_families):
         reasons.append('INSUFFICIENT_INDEPENDENT_FAMILIES')
     if macro_delta < p.primary_effect_floor:
         reasons.append('EFFECT_FLOOR_UNMET')

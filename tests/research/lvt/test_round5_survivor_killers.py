@@ -41,7 +41,10 @@ def test_owner_attestation_nonpositive_timestamp_is_rejected(_isolated_registrie
 # ---- BRO19 / M49: the in-report family floor (max(20, min_heldout_families)) is load-bearing ----
 # The protocol precheck `min_heldout_families < 20` does not reject NaN (NaN < 20 is False), so the hard floor 20
 # at the family count is the only thing stopping a 10-family report with a NaN protocol minimum.
-def test_transfer_report_family_floor_holds_when_protocol_minimum_is_nan():
+def test_transfer_report_family_floor_holds_when_protocol_minimum_is_nan(monkeypatch):
+    # Round 7: the strict protocol numeric precheck now rejects NaN up front (see test_round7_*). It is disabled here
+    # so this test keeps proving the in-report family floor is independently load-bearing (defence in depth).
+    monkeypatch.setattr(lv, "_transfer_protocol_numeric_violations", lambda proto: [])
     tx, v, osk, opk, rep = _report()
     fams = sorted({o["family_id"] for o in rep["paired_observations"]})
     keep = set(fams[:10])

@@ -110,3 +110,54 @@ Every attack is a **fully re-sealed** transfer report. All digests, the evidence
 - New killers: `tests/research/lvt/test_round5_survivor_killers.py` (4 tests, all with genuinely signed / re-sealed inputs and a passing control): signed attestations at ts 0, -1.0, 0; a 10-family re-sealed transfer report; a study with family_macro_delta = -0.01; receipts re-signed with committed_timestamp None/0/0.0.
 - Finding (not fixed, production code unchanged): BRO19 is only observable because the protocol precheck `proto.min_heldout_families < 20` lets NaN through (NaN < 20 is False). With `min_heldout_families = NaN` the hard floor 20 at the family count is the only remaining guard; the M49 test pins it. Consider rejecting non-finite / non-int `min_heldout_families` in the precheck.
 - Gate: M48-M51 added with Bro's exact targets; `evidence/lvt2_harness_repair/mutations_r7.json` / `mutations_r7_log.txt`: **51/51 KILLED**, all sources restored. `tests/research/lvt`: 198 passed; `lvt` + `rbpd`: 207 passed. Verdicts unchanged.
+
+## Round 7 (Bro round-6 falsification @ 3966d052): study-path floor bypass closed, strict numerics
+**SERIOUS (fixed):** on the study path, `min_heldout_families=1` (or 5) with 6 families gave
+`RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED` (p=0.0156), and `validate_and_commit` minted **QUALIFIED**. The floor of
+20 existed only on the transfer path.
+
+Production changes:
+- `paired_gate_v2.HARD_MIN_HELDOUT_FAMILIES = 20` is now enforced in four places:
+  - `run_study`: `len(families) < max(20, min_heldout_families)` gives `INSUFFICIENT_INDEPENDENT_FAMILIES`
+    (INCONCLUSIVE).
+  - `evaluate_conjuncts`: `holdout_family_count >= 20` is required for `ImprovementSupported`.
+  - `validate_and_commit`: an explicit hard-floor and numeric check runs before any QUALIFIED/RESEARCH_SUPPORTED mint.
+    On failure the result is REJECTED and the signature and timestamp are cleared.
+  - The transfer path, which already had it.
+- Strict numerics via `strict_int`, `strict_finite`, `strict_timestamp` and `study_numeric_violations`:
+  - Fields covered: `holdout_family_count`, `p_value`, `alpha_adjusted`, `family_macro_delta`, train deltas,
+    held-out deltas and means.
+  - Rejected: NaN, ±inf, str, None, bool, negatives and out-of-range values. These are checked before any
+    comparison, so there is no TypeError.
+- Transfer verify path: `_transfer_protocol_numeric_violations` rejects a non-int, bool or negative
+  `min_heldout_families` and an invalid `alpha`, `multiplicity` or `primary_effect_floor` cleanly. Bro's "nan", "20"
+  and None TypeErrors and the accepted NaN protocol minimum are now clean rejections. The existing `< 20` floor check
+  and its message are unchanged.
+- Receipt `committed_timestamp` must be a finite, strictly positive int or float. NaN, ±inf, -1, "x" and True are
+  rejected.
+  - Deviation from "positive int": production mints `time.time()` (a float), so a float is accepted. Requiring an int
+    would make every legitimately minted receipt unverifiable.
+- The early in-report family floor moved into `_report_family_floor_ok` (same expression). M49's target moved with it.
+
+Tests: `tests/research/lvt/test_round7_floor_and_numeric_strictness.py`, 36 tests.
+- **BRO23** (cluster floor 20 → 2) and **BRO24** (family condition dropped from the recomputed success) were masked
+  by earlier layers. They are now pinned by disabling those layers via monkeypatch, which proves each later floor is
+  independently load-bearing.
+- The round-5 NaN test (M49) gets the same treatment: one monkeypatch line was added and its assertion is unchanged.
+- M51 (BRO21) became masked by `strict_timestamp`. It is re-pinned by a layered test, and the harness now accepts
+  several test node ids for one mutant.
+
+Gate: new mutants M52-M62.
+- M52: run_study floor dropped.
+- M53: conjunct floor dropped.
+- M54: validate_and_commit block disabled.
+- M55: conjunct numeric layer disabled.
+- M56: numeric family floor lowered 20 → 0.
+- M57: transfer numeric precheck disabled.
+- M58: timestamp strictness dropped.
+- M59: BRO23.
+- M60: BRO24.
+- M61: strict_finite accepts bool.
+- M62: strict_int accepts bool.
+
+Verification (round 7): `tests/research/lvt` **234 passed**; `lvt` + `rbpd` **243 passed**. Mutation gate r8 (`evidence/lvt2_harness_repair/mutations_r8.json` / `mutations_r8_log.txt`): **62/62 KILLED**, MUT_EXIT=0, all 369 spe_runtime .py files byte-identical before/after. QUALIFIED audit (read-only, all local + origin grok/* refs): no committed LVT receipt, study result or transfer report artifact exists on any grok/* branch, so nothing was QUALIFIED through the bypass. Verdicts unchanged.

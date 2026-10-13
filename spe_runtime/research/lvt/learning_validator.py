@@ -32,6 +32,13 @@ def ed25519_verify(public_key: bytes, message: bytes, signature: bytes) -> bool:
     if len(_ED25519_VERIFY_CACHE) < 4096:
         _ED25519_VERIFY_CACHE[key] = res
     return res
+from spe_runtime.research.lvt.paired_gate_v2 import (
+    HARD_MIN_HELDOUT_FAMILIES,
+    strict_finite,
+    strict_int,
+    strict_timestamp,
+    study_numeric_violations,
+)
 from spe_runtime.research.lvt.types import (
     EvaluatorType,
     GeneratingModelSelfCertificationError,
@@ -40,6 +47,29 @@ from spe_runtime.research.lvt.types import (
     OracleAttestation,
     QualificationStatus,
 )
+
+
+def _transfer_protocol_numeric_violations(proto: Any) -> list:
+    """Round 7: strict numerics for a transfer protocol (never raises). Monkeypatchable so tests can prove the
+    downstream family / cluster / recomputed-success floors are independently load-bearing."""
+    bad = []
+    # type/finiteness only here; the >= 20 floor keeps its own explicit check (and message) right after.
+    if not strict_int(getattr(proto, "min_heldout_families", None), minimum=0):
+        bad.append("min_heldout_families")
+    a = getattr(proto, "alpha", None)
+    if not (strict_finite(a, lo=0.0, hi=1.0) and 0 < a < 1):
+        bad.append("alpha")
+    if not strict_int(getattr(proto, "multiplicity", None), minimum=1):
+        bad.append("multiplicity")
+    if not strict_finite(getattr(proto, "primary_effect_floor", None), lo=0.0, hi=1.0):
+        bad.append("primary_effect_floor")
+    return bad
+
+
+def _report_family_floor_ok(n_families: int, proto: Any) -> bool:
+    """Early in-report family floor (max(20, protocol minimum)). A separate function so tests can disable this
+    layer and prove the recomputed-success and cluster floors are independently load-bearing (BRO24/BRO23)."""
+    return n_families >= max(20, proto.min_heldout_families)
 
 
 def _validate_oracle_key(pkey: Any, oid: str = "") -> str:
@@ -588,8 +618,20 @@ class LearningValidator:
 
         if tx.lvt2_study_result:
             study = tx.lvt2_study_result
+            # Round 7: strict numerics + hard family floor BEFORE any comparison (no TypeError, no NaN/inf slip).
+            numeric_ok = not study_numeric_violations(study)
+            if not numeric_ok:
+                return {
+                    "ContractValid": contract_valid,
+                    "ExperimentAuthorized": True,
+                    "EvidenceAuthentic": False,
+                    "EvaluationIndependent": eval_independent,
+                    "ImprovementSupported": False,
+                    "NoDisqualifyingRegression": False,
+                }
             improvement_supported = (
-                study.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED"
+                study.holdout_family_count >= HARD_MIN_HELDOUT_FAMILIES
+                and study.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED"
                 and study.train_candidate_minus_base > 0.0
                 and study.train_candidate_minus_shuffled > 0.0
                 and study.family_macro_delta >= 0.0
@@ -728,6 +770,20 @@ class LearningValidator:
                 tx.rejection_reason = f"LVT-2 study inconclusive: {', '.join(study.reasons)}"
                 return tx
             elif study.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED":
+                floor_bad = study_numeric_violations(study)
+                if floor_bad:
+                    tx.status = QualificationStatus.REJECTED
+                    tx.is_attested_oracle = False
+                    tx.artifact_hash = ""
+                    tx.canonical_receipt_signature = ""
+                    tx.committed_timestamp = None
+                    tx.rejection_reason = (
+                        f"LVT-2 hard floor / numeric validation failed ({', '.join(floor_bad)}): "
+                        f"requires >= {HARD_MIN_HELDOUT_FAMILIES} held-out families and finite statistics"
+                    )
+                    if strict:
+                        raise LearningValidityRuleViolation(tx.rejection_reason)
+                    return tx
                 oracle_ok, oracle_msg = self.verify_oracle_attestation(
                     tx.oracle_attestation,
                     study.evidence_hash,
@@ -877,6 +933,8 @@ class LearningValidator:
         if tx.status == QualificationStatus.REVOKED:
             return False
         if not tx.canonical_receipt_signature or not tx.committed_timestamp:
+            return False
+        if not strict_timestamp(tx.committed_timestamp):
             return False
         if not tx.artifact_hash:
             return False
@@ -1158,6 +1216,9 @@ class LearningValidator:
             return False, False, "Mismatched target_model_digest against transfer_protocol.model_digest"
         if proto.evaluator_id != report.get("evaluator_id"):
             return False, False, "Mismatched evaluator_id against transfer_protocol.evaluator_id"
+        proto_bad = _transfer_protocol_numeric_violations(proto)
+        if proto_bad:
+            return False, False, f"Transfer protocol has invalid numeric fields: {', '.join(proto_bad)}"
         if proto.min_heldout_families < 20 or proto.family_level_significance is not True:
             return False, False, "Transfer protocol violates minimum independent family requirements"
 
@@ -1202,7 +1263,7 @@ class LearningValidator:
         families = sorted(grouped.keys())
         if families != report.get("family_manifest"):
             return False, False, "Tampered family_manifest in transfer report"
-        if len(families) < max(20, proto.min_heldout_families):
+        if not _report_family_floor_ok(len(families), proto):
             return False, False, "Insufficient independent held-out families in transfer report"
 
         if hashlib.sha256(rfc8785_canonicalize(item_manifest)).hexdigest() != report.get("dataset_digest"):

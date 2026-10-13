@@ -435,8 +435,9 @@ MUTANTS = [
         "id": 'M49',
         "name": 'transfer-report family floor 20 -> 2 (Bro round-5 BRO19)',
         "file": 'spe_runtime/research/lvt/learning_validator.py',
-        "target": '        if len(families) < max(20, proto.min_heldout_families):\n            return False, False, "Insufficient',
-        "replacement": '        if len(families) < max(2, proto.min_heldout_families):\n            return False, False, "Insufficient',
+        # round 7: the early in-report floor moved into _report_family_floor_ok (same expression), target follows it
+        "target": '    return n_families >= max(20, proto.min_heldout_families)',
+        "replacement": '    return n_families >= max(2, proto.min_heldout_families)',
         "test": 'tests/research/lvt/test_round5_survivor_killers.py',
     },
     {
@@ -453,7 +454,95 @@ MUTANTS = [
         "file": 'spe_runtime/research/lvt/learning_validator.py',
         "target": '        if not tx.canonical_receipt_signature or not tx.committed_timestamp:\n',
         "replacement": '        if not tx.canonical_receipt_signature:\n',
-        "test": 'tests/research/lvt/test_round5_survivor_killers.py',
+        "test": 'tests/research/lvt/test_round5_survivor_killers.py tests/research/lvt/test_round7_floor_and_numeric_strictness.py::test_bro21_falsy_timestamp_check_independent',  # round 7: masked by strict_timestamp for the r5 test alone
+    },
+    {
+        "id": 'M52',
+        "name": 'study run_study hard floor 20 dropped (Bro round-6 study-path floor bypass)',
+        "file": 'spe_runtime/research/lvt/paired_gate_v2.py',
+        "target": '    if len(grouped) < max(HARD_MIN_HELDOUT_FAMILIES, p.min_heldout_families):\n',
+        "replacement": '    if len(grouped) < p.min_heldout_families:\n',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M53',
+        "name": 'evaluate_conjuncts explicit holdout_family_count >= 20 dropped',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '                study.holdout_family_count >= HARD_MIN_HELDOUT_FAMILIES\n                and study.status',
+        "replacement": '                study.status',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M54',
+        "name": 'validate_and_commit hard floor / numeric block disabled',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '                floor_bad = study_numeric_violations(study)\n',
+        "replacement": '                floor_bad = []\n',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M55',
+        "name": 'evaluate_conjuncts strict numeric layer disabled',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '            numeric_ok = not study_numeric_violations(study)\n',
+        "replacement": '            numeric_ok = True\n',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M56',
+        "name": 'study_numeric_violations holdout_family_count floor 20 -> 0',
+        "file": 'spe_runtime/research/lvt/paired_gate_v2.py',
+        "target": "    if not strict_int(getattr(s, 'holdout_family_count', None), minimum=HARD_MIN_HELDOUT_FAMILIES):",
+        "replacement": "    if not strict_int(getattr(s, 'holdout_family_count', None), minimum=0):",
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M57',
+        "name": 'transfer verify strict protocol numeric precheck disabled',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '        proto_bad = _transfer_protocol_numeric_violations(proto)\n',
+        "replacement": '        proto_bad = []\n',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M58',
+        "name": 'receipt committed_timestamp strictness (finite, > 0) dropped',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '        if not strict_timestamp(tx.committed_timestamp):\n            return False\n',
+        "replacement": '',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M59',
+        "name": 'transfer cluster floor 20 -> 2 (Bro round-6 BRO23)',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '            if len(clusters) < max(20, proto.min_heldout_families):',
+        "replacement": '            if len(clusters) < max(2, proto.min_heldout_families):',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M60',
+        "name": 'family condition dropped from recomputed transfer success (Bro round-6 BRO24)',
+        "file": 'spe_runtime/research/lvt/learning_validator.py',
+        "target": '            and p_val <= alpha_adj\n            and len(families) >= max(20, proto.min_heldout_families)\n        )',
+        "replacement": '            and p_val <= alpha_adj\n        )',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M61',
+        "name": 'strict_finite accepts bool (isinstance)',
+        "file": 'spe_runtime/research/lvt/paired_gate_v2.py',
+        "target": '    return type(x) in (int, float) and math.isfinite(x) and lo <= x <= hi',
+        "replacement": '    return isinstance(x, (int, float)) and math.isfinite(x) and lo <= x <= hi',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
+    },
+    {
+        "id": 'M62',
+        "name": 'strict_int accepts bool (isinstance)',
+        "file": 'spe_runtime/research/lvt/paired_gate_v2.py',
+        "target": '    return type(x) is int and x >= minimum',
+        "replacement": '    return isinstance(x, int) and x >= minimum',
+        "test": 'tests/research/lvt/test_round7_floor_and_numeric_strictness.py',
     },
 ]
 
@@ -484,7 +573,7 @@ def run_mutation(m: dict) -> dict:
 
     try:
         # Run test
-        cmd = PYTEST_CMD + [m["test"], "-q", "-p", "no:cacheprovider"]
+        cmd = PYTEST_CMD + m["test"].split() + ["-q", "-p", "no:cacheprovider"]
         try:
             proc = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True,
                                   timeout=TEST_TIMEOUT_S)
