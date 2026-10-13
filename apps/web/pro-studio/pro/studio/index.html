@@ -14,18 +14,14 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to editor</a>
+<header class="pro-hdr" role="banner">
 <nav class="pronav" aria-label="Pro features"><div class="pronav__in"><a class="pronav__brand" href="/pro/">SPE Pro</a><ul class="pronav__links"><li><a href="/pro/">Pro Features</a></li><li><a href="/pro/studio/" aria-current="page">Prompt Studio</a></li><li><a href="/pro/blueprint/">Agent Blueprint</a></li><li><a href="/pro/regression-lab/">Regression Lab</a></li><li><a href="/pro/releases/">Releases</a></li></ul><span class="pronav__badge">Preview</span></div></nav>
-<header class="nav" role="banner">
-  <div class="wrap wrap--wide nav__in">
-    <a class="brand" href="/pro/studio/"><span class="brand__mark" aria-hidden="true"></span>SPE</a>
-    <span class="badge">Pro preview</span><span class="ed-tag">Prompt Studio</span>
-    <div class="ed-io">
+<div class="ed-io" role="group" aria-label="Studio actions">
       <button type="button" class="btn btn--ghost btn--sm" id="btn-templates" aria-haspopup="dialog">Templates</button><button type="button" class="btn btn--ghost btn--sm" id="btn-example">Load example</button>
       <button type="button" class="btn btn--ghost btn--sm" id="btn-import">Import .spe</button>
       <input type="file" id="file-import" accept=".spe,application/json" class="sr-only" tabindex="-1" aria-hidden="true" />
       <button type="button" class="btn btn--sm" id="btn-export">Export .spe</button>
     </div>
-  </div>
 </header>
 <main id="main" class="ed">
   <div class="wrap wrap--wide">
