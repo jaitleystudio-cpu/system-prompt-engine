@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import hashlib
 
 import pytest
 
@@ -31,6 +32,7 @@ URL = "https://status.example.org/incidents/example-1"
 PUBLISHED = "2026-10-13T10:00:00Z"
 OBSERVED = "2026-10-13T10:01:00+00:00"
 PROMPT = "Summarize this sample without disclosing secrets."
+SOURCE_DIGEST = hashlib.sha256(b"example frozen official status body").hexdigest()
 
 
 def specimen(**changes):
@@ -53,14 +55,17 @@ def specimen(**changes):
 
 def inputs():
     return dict(source_urls=[URL], source_published_at=PUBLISHED,
-                source_observed_at=OBSERVED)
+                source_observed_at=OBSERVED, source_content_sha256=SOURCE_DIGEST)
 
 
 def signed_source(entry, *, payload_mutation=None, signer=None):
-    preflight = review_failure_for_publication(entry, **inputs())
+    preflight = review_failure_for_publication(
+        entry, source_urls=[URL], source_published_at=PUBLISHED, source_observed_at=OBSERVED,
+    )
     payload = source_review_payload(
         entry, preflight,
         source_published_at=PUBLISHED, source_observed_at=OBSERVED,
+        source_content_sha256=SOURCE_DIGEST,
     )
     if payload_mutation:
         payload.update(payload_mutation)
@@ -323,13 +328,38 @@ def test_reordered_sources_never_reuse_signed_attestation():
     )
     private, public = generate_keypair()
     rec = generate_authenticated_receipt(
-        source_review_payload(entry, pre, source_published_at=PUBLISHED, source_observed_at=OBSERVED),
+        source_review_payload(entry, pre, source_published_at=PUBLISHED, source_observed_at=OBSERVED, source_content_sha256=SOURCE_DIGEST),
         signing_key=private, public_key=public, key_id="owner-pinned",
     )
     report = assemble_investigation(
         entry, source_urls=list(reversed(source_list)),
         source_published_at=PUBLISHED, source_observed_at=OBSERVED,
-        source_receipt=rec, trusted_source_keys={rec.signer_key_id: public.hex()},
+        source_content_sha256=SOURCE_DIGEST, source_receipt=rec, trusted_source_keys={rec.signer_key_id: public.hex()},
+        replay_capsule=capsule(entry),
+    )
+    assert report.state == "HOLD"
+    assert "SOURCE_RECEIPT_BINDING_MISMATCH" in report.reason_codes
+
+
+def test_missing_and_mutated_source_body_digest_are_not_signed_proof():
+    entry = specimen()
+    receipt, trusted = signed_source(entry)
+    for supplied in (None, "", "0" * 64, SOURCE_DIGEST.upper()):
+        args = inputs() | {"source_content_sha256": supplied}
+        report = assemble_investigation(
+            entry, **args, source_receipt=receipt,
+            trusted_source_keys=trusted, replay_capsule=capsule(entry),
+        )
+        assert report.state == "HOLD"
+        assert not report.source_receipt_signature_valid
+
+
+def test_trusted_but_replaced_source_content_hash_fails_binding():
+    entry = specimen()
+    receipt, trusted = signed_source(entry)
+    report = assemble_investigation(
+        entry, **(inputs() | {"source_content_sha256": "a" * 64}),
+        source_receipt=receipt, trusted_source_keys=trusted,
         replay_capsule=capsule(entry),
     )
     assert report.state == "HOLD"
