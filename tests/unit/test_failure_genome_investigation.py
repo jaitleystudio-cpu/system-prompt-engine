@@ -294,6 +294,7 @@ def test_true_static_quality_improvement_never_qualifies_external_repair():
     after = quality_subject()
     report = reviewed(before_subject=before, after_subject=after)
     assert report.quality_disposition == "IMPROVED"
+    assert report.state == "READY_FOR_INDEPENDENT_REVIEW"
     assert "hard:c1" in report.quality_evidence["improved_obligation_ids"]
     assert report.quality_evidence["protected_regressions"] == ()
     assert report.evidence_graph["nodes"]["quality_delta"]["payload"]["disposition"] == "IMPROVED"
@@ -308,6 +309,8 @@ def test_quality_regression_stays_unqualified():
         after_subject=quality_subject("dropped"),
     )
     assert report.quality_disposition == "REGRESSED"
+    assert report.state == "HOLD"
+    assert "QUALITY_GATE_HOLD" in report.reason_codes
     assert report.quality_evidence["protected_regressions"]
     assert not report.external_repair_validated
 
@@ -315,6 +318,7 @@ def test_quality_regression_stays_unqualified():
 def test_malformed_quality_pair_fails_closed_without_raw_prompts():
     report = reviewed(before_subject={"compiled_prompt": "private user text"}, after_subject=None)
     assert report.quality_disposition == "UNMEASURED"
+    assert report.state == "HOLD"
     assert report.quality_evidence == {}
     assert "QUALITY_PAIR_INCOMPLETE" in report.reason_codes
     assert "private user text" not in str(report.evidence_graph)
