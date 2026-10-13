@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import difflib
+import json
+import os
 import re
+import unicodedata
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, Iterable, Optional
@@ -17,10 +20,11 @@ class InfoClass(str, Enum):
     EVIDENCE = "evidence_bearing"
     REPLACEABLE = "replaceable"
     VOLATILE = "volatile"
+    UNVERIFIED = "unverified_prose"  # default-deny: prose not positively allowlisted; conserved, never deletable
 
 
 IMMUTABLE = frozenset({InfoClass.PROTECTED, InfoClass.EXACT_BYTE})
-CONSERVED = frozenset({InfoClass.PROTECTED, InfoClass.EXACT_BYTE, InfoClass.EVIDENCE})
+CONSERVED = frozenset({InfoClass.PROTECTED, InfoClass.EXACT_BYTE, InfoClass.EVIDENCE, InfoClass.UNVERIFIED})
 
 
 @dataclass(frozen=True)
@@ -119,22 +123,61 @@ def lex_json(src: str) -> list[tuple[str, str]]:
 
 # ---------------------------------------------------------------- classifier
 _FENCE = re.compile(r"^```([A-Za-z0-9_+-]*)[ \t]*\n(.*?)^```[ \t]*$\n?", re.M | re.S)
-# Fix (Bro replay 2026-10-13 @ f8c4f88e): was case-sensitive and anchored at line start, so
-# "Never reveal the API key." / "Do not disclose credentials." were REPLACEABLE and deletable.
-# Now case-insensitive and matched anywhere in the line (conservative: over-protecting is safe).
+# ---------------------------------------------------------------- normalisation (before any classification)
+# Unicode UTS #39 confusables -> ASCII (vendored, Unicode 18.0.0) + small caps; NFKC; format/combining chars stripped.
+_CONF = json.load(open(os.path.join(os.path.dirname(__file__), "confusables_ascii.json"), encoding="utf-8"))["map"]
+
+
+def skeleton(s: str) -> str:
+    """Lower-case confusable skeleton used for ALL classification regexes (homoglyph/ZW/fullwidth-proof)."""
+    t = unicodedata.normalize("NFD", unicodedata.normalize("NFKC", s))
+    out = []
+    for ch in t:
+        if unicodedata.category(ch) in ("Cf", "Mn") or ch == "\u00ad":
+            continue
+        if ord(ch) < 128:
+            out.append(ch.lower())  # ASCII is canonical; only non-ASCII lookalikes are folded (no "m" -> "rn")
+        else:
+            out.append(_CONF.get(ch) or _CONF.get(ch.lower()) or ch.lower())
+    return unicodedata.normalize("NFKC", "".join(out)).lower()
+
+
+# Kept for labelling/routing only. NOT a safety mechanism any more: the gate is default-deny (see run_gated).
 _PROTECTED_RE = re.compile(
     r"(?:\b(?:must(?:\s+not)?|mustn['\u2019]t|never|shall(?:\s+not)?|required|requires?|do\s+not|don['\u2019]t|"
     r"always|forbidden|prohibited|not\s+allowed|under\s+no\s+circumstances|exceptions?\s+to)\b|\bconstraint\s*:)",
     re.I,
 )
-# Instruction-like content that a transform must never ADD (checked on inserted lines only).
-_INSTRUCTION_RE = re.compile(
-    r"(?:" + _PROTECTED_RE.pattern + r"|\b(?:ignore|disregard|override|overrides|forget|bypass|reveal|disclose|"
-    r"leak|exfiltrate|jailbreak|pretend|act\s+as|you\s+are\s+now|new\s+instructions?|system\s+prompt|"
-    r"do(?:es)?\s+not\s+apply|no\s+longer\s+appl\w*|examples?\s+only|not\s+a\s+rule|instead|should|"
-    r"you\s+(?:can|may|will)|from\s+now\s+on)\b)",
-    re.I,
-)
+# POSITIVE allowlists. A prose line is deletable only if its whole skeleton matches one of these.
+_FILLER = {skeleton(x) for x in (
+    "thanks for reading", "thank you", "thanks", "many thanks", "hope this helps", "i hope this helps", "best regards",
+    "kind regards", "regards", "cheers", "sincerely", "hello", "hi", "hey", "hi there", "hello there", "good morning",
+    "good afternoon", "good evening", "let me know if you have any questions", "feel free to ask questions")}
+_DECORATION_RE = re.compile(r"^[\s\-=*_~#.\u2500-\u257f]{3,}$")
+_STAMP_RE = re.compile(
+    r"^(?:(?:last\s+updated|updated|generated(?:\s+at|\s+on)?|timestamp|date|as\s+of|retrieved(?:\s+on)?)\s*[:\-]?\s*)?"
+    r"(?:\d{4}-\d{2}-\d{2}(?:[ t]\d{1,2}:\d{2}(?::\d{2})?(?:\s*(?:z|utc|ist|[+-]\d{2}:?\d{2}))?)?"
+    r"|\d{1,2}:\d{2}(?::\d{2})?\s*(?:am|pm|utc|ist)?)\s*\.?$")
+
+
+def _allowlisted_filler(body: str) -> bool:
+    k = skeleton(body).strip()
+    return k == "" or _DECORATION_RE.match(k) is not None or re.sub(r"[\s.!,;:]+$", "", k) in _FILLER
+
+
+def is_volatile_text(body: str) -> bool:
+    return _VOLATILE_RE.search(skeleton(body)) is not None
+
+
+def deletable(span: "Span") -> bool:
+    """Default-deny: only positively allowlisted spans may be removed by a transform."""
+    if span.cls is InfoClass.REPLACEABLE:
+        return True                                   # allowlisted filler / blank / JSON inter-token whitespace
+    if span.cls is InfoClass.VOLATILE:
+        return _STAMP_RE.match(skeleton(span.text).strip()) is not None   # pure date/time stamp lines only
+    return False
+
+
 _EVIDENCE_RE = re.compile(r"(https?://|\bdoi:|\b10\.\d{4,9}/|\[\d+\]|^\s*(?:Source|Evidence|Citation)s?:)", re.I)
 _VOLATILE_RE = re.compile(
     r"\b(?:today|tonight|right now|currently|latest|as of|this (?:week|month|year)|\d{4}-\d{2}-\d{2}"
@@ -149,17 +192,20 @@ def _line_class(line: str, intent: Optional[ProtectedIntent]) -> InfoClass:
         return InfoClass.REPLACEABLE
     if intent is not None:
         for req in tuple(intent.invariants) + tuple(intent.forbidden_actions):
-            if req and req in body:
+            if req and (req in body or skeleton(req) in skeleton(body)):
                 return InfoClass.PROTECTED
-    if _PROTECTED_RE.search(body):
+    sk = skeleton(body)
+    if _PROTECTED_RE.search(sk):
         return InfoClass.PROTECTED
     if body.startswith(("    ", "\t")):
         return InfoClass.EXACT_BYTE  # indentation-sensitive outside a fence
-    if _EVIDENCE_RE.search(body):
+    if _EVIDENCE_RE.search(sk):
         return InfoClass.EVIDENCE
-    if _VOLATILE_RE.search(body):
+    if _VOLATILE_RE.search(sk):
         return InfoClass.VOLATILE
-    return InfoClass.REPLACEABLE
+    if _allowlisted_filler(body):
+        return InfoClass.REPLACEABLE
+    return InfoClass.UNVERIFIED  # default-deny
 
 
 def _classify_prose(text: str, base: int, intent) -> list[Span]:
@@ -215,6 +261,7 @@ class Technique:
     kind: str  # "text" | "decision" | "cache"
     apply: Optional[Callable[..., str]] = None
     description: str = ""
+    appends: str = ""  # an SPE-authored constant suffix the gate may verify byte-for-byte (the only allowed insertion)
 
 
 @dataclass
@@ -258,6 +305,86 @@ def semantic_diff(before: list[Span], after_text: str) -> tuple[dict, list]:
     return removed, diff
 
 
+# ---------------------------------------------------------------- default-deny proof obligation
+def _regions(spans: list[Span]) -> list[tuple[str, list[Span]]]:
+    """Split classified spans into alternating ('prose', spans) and ('fence', spans) regions."""
+    regs: list[tuple[str, list[Span]]] = []
+    in_fence = False
+    for s in spans:
+        opening = s.cls is InfoClass.EXACT_BYTE and s.text.startswith("```")
+        if opening and not in_fence:
+            regs.append(("fence", [s])); in_fence = True; continue
+        if in_fence:
+            regs[-1][1].append(s)
+            if s.cls is InfoClass.EXACT_BYTE and s.text.startswith("```") and len(regs[-1][1]) > 1:
+                in_fence = False
+            continue
+        if not regs or regs[-1][0] != "prose":
+            regs.append(("prose", []))
+        regs[-1][1].append(s)
+    return regs
+
+
+def _prose_proof(src: list[Span], out_text: str) -> Optional[str]:
+    """Output words must equal the input words with only whole deletable spans removed (any whitespace changes)."""
+    out_words = out_text.split()
+    reach = {0}
+    for s in src:
+        w = s.text.split()
+        nxt = set()
+        for p in reach:
+            if out_words[p:p + len(w)] == w:
+                nxt.add(p + len(w))
+            if not w or deletable(s):
+                nxt.add(p)
+        if not nxt:
+            return f"edit/deletion of non-allowlisted {s.cls.value} span {s.text.strip()[:60]!r}"
+        reach = nxt
+    if len(out_words) not in reach:
+        extra = " ".join(out_words[max(reach):][:8]) if reach else ""
+        return f"inserted text not present in input: {extra[:60]!r}"
+    return None
+
+
+def prove_preserving(text: str, before: list[Span], out: str, appends: str = "") -> tuple[bool, str]:
+    """Allowed iff, by construction: (1) the only insertion is the technique's declared constant suffix;
+    (2) fenced blocks keep their non-whitespace token stream (JSON: identical lexer tokens; other code: byte-identical);
+    (3) prose keeps its exact word sequence except whole spans positively allowlisted as deletable."""
+    if appends:
+        if not out.endswith(appends):
+            return False, "declared constant suffix missing"
+        out = out[: len(out) - len(appends)]
+    after = classify(out)
+    rb, ra = _regions(before), _regions(after)
+    if sum(k == "fence" for k, _ in rb) != sum(k == "fence" for k, _ in ra):
+        return False, "fenced-block structure changed"
+    # pair fences in order; everything between fences is prose
+    fences_b = [sp for k, sp in rb if k == "fence"]
+    fences_a = [sp for k, sp in ra if k == "fence"]
+    for fb, fa in zip(fences_b, fences_a):
+        tb = [x.text for x in fb if x.cls is not InfoClass.REPLACEABLE]
+        ta = [x.text for x in fa if x.cls is not InfoClass.REPLACEABLE]
+        if tb != ta:
+            return False, "fenced block content changed beyond inter-token whitespace"
+    # prose regions are separated by fences; align them by position relative to fences
+    pb, pa = _prose_by_gap(rb), _prose_by_gap(ra)
+    for gap in range(len(fences_b) + 1):
+        why = _prose_proof(pb.get(gap, []), "".join(x.text for x in pa.get(gap, [])))
+        if why:
+            return False, why
+    return True, ""
+
+
+def _prose_by_gap(regs) -> dict[int, list[Span]]:
+    gap, out = 0, {}
+    for k, sp in regs:
+        if k == "fence":
+            gap += 1
+        else:
+            out.setdefault(gap, []).extend(sp)
+    return out
+
+
 def run_gated(tech: Technique, text: str, *, intent: Optional[ProtectedIntent] = None, **kw) -> GateResult:
     """Apply a text technique only if it provably leaves conserved spans byte-identical and in order."""
     before = classify(text, intent)
@@ -285,17 +412,10 @@ def run_gated(tech: Technique, text: str, *, intent: Optional[ProtectedIntent] =
     if "".join(eb_before) != "".join(eb_after):
         res.reason = "exact-byte token stream changed"
         return res
-    # Inserted-content check (fix, Bro replay 2026-10-13): a compression/format transform may only remove or
-    # re-encode; it must never ADD instruction-like prose that was not already in the input.
-    in_lines = {ln.strip() for ln in text.splitlines()}
-    added = [ln.strip() for ln in out.splitlines() if ln.strip() and ln.strip() not in in_lines]
-    for s in classify(out, intent):
-        if s.cls is InfoClass.EXACT_BYTE:
-            continue
-        for ln in s.text.splitlines():
-            if ln.strip() in added and _INSTRUCTION_RE.search(ln):
-                res.reason = f"transform inserts instruction-like content: {ln.strip()[:80]!r}"
-                return res
+    ok, why = prove_preserving(text, before, out, tech.appends)
+    if not ok:
+        res.reason = f"not provably semantics-preserving (default-deny): {why}"
+        return res
     removed, diff = semantic_diff(before, out)
     bad = {k for k in removed if InfoClass(k) not in tech.touches and InfoClass(k) in CONSERVED}
     if bad:

@@ -16,10 +16,12 @@ from .conservation import (
     Span,
     Technique,
     classify,
+    is_volatile_text,
     lex_json,
 )
 
 R = InfoClass.REPLACEABLE
+U = InfoClass.UNVERIFIED
 
 
 # 1. JSON minify ----------------------------------------------------------------------------------------
@@ -62,7 +64,7 @@ def normalize_block(block: str) -> str:
 def _apply_ws_norm(text: str, spans: list[Span], **_) -> str:
     out, prev_blank = [], False
     for s in spans:
-        if s.cls is R and not s.text.startswith(("  ", "\t")):
+        if s.cls in (R, U) and not s.text.startswith(("  ", "\t")):
             nl = "\n" if s.text.endswith("\n") else ""
             body = re.sub(r"[ \t]+", " ", s.text.rstrip("\n")).strip()
             if not body and nl:
@@ -132,7 +134,7 @@ def decide_output_budget(cap_tokens: int, contract_words: int = 0, contract_toke
 def route(text: str, intent=None, max_simple_chars: int = 400) -> str:
     spans = classify(text, intent)
     risky = {s.cls for s in spans} & {InfoClass.PROTECTED, InfoClass.EXACT_BYTE, InfoClass.EVIDENCE, InfoClass.VOLATILE}
-    if risky or len(text) > max_simple_chars:
+    if risky or is_volatile_text(text) or len(text) > max_simple_chars:
         return "strong"
     return "small"
 
@@ -167,7 +169,7 @@ class ExactCache:
         self.ttl_s, self.clock = ttl_s, clock
 
     def put(self, prompt: str, scope: CacheScope, value: str) -> None:
-        if any(s.cls is InfoClass.VOLATILE for s in classify(prompt)):
+        if any(s.cls is InfoClass.VOLATILE for s in classify(prompt)) or is_volatile_text(prompt):
             raise Refusal("prompt contains volatile spans; not cacheable")
         self._parts.setdefault(scope.user_scope, {})[cache_key(prompt, scope)] = (self.clock() + self.ttl_s, value)
 
@@ -190,12 +192,12 @@ TECHNIQUES: dict[str, Technique] = {
     t.name: t
     for t in [
         Technique("json_minify", frozenset({R}), "text", _apply_json_minify, "remove inter-token JSON whitespace"),
-        Technique("whitespace_norm", frozenset({R}), "text", _apply_ws_norm, "collapse prose whitespace"),
+        Technique("whitespace_norm", frozenset({R, U}), "text", _apply_ws_norm, "collapse prose whitespace"),
         Technique("context_trim", frozenset({R}), "text", _apply_context_trim, "drop oldest replaceable lines"),
         Technique("duplicate_collapse", frozenset({R}), "text", _apply_dup_collapse, "drop repeated replaceable lines"),
         Technique("exact_cache", frozenset(), "cache", None, "validity-keyed, scope-partitioned exact cache"),
         Technique("output_budget", frozenset(), "decision", None, "max_tokens cap; refuses below output contract"),
-        Technique("concise_instruction", frozenset(), "text", _apply_concise, "append concision instruction"),
+        Technique("concise_instruction", frozenset(), "text", _apply_concise, "append concision instruction", appends=CONCISE),
         Technique("simple_query_routing", frozenset(), "decision", None, "route only all-replaceable short queries"),
     ]
 }

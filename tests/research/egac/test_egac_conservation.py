@@ -94,7 +94,7 @@ def f():
 """
 
 
-def test_classify_five_classes():
+def test_classify_all_classes():  # six classes incl. UNVERIFIED (default-deny prose)
     cls = {s.cls for s in classify(DOC)}
     assert cls == set(InfoClass)
     assert all(s.cls is InfoClass.EXACT_BYTE for s in classify(DOC) if "return  1" in s.text)
@@ -140,11 +140,15 @@ def test_whitespace_norm_skips_code_and_refuses_indent_block():
     assert normalize_block("a   b\n\n\n\nc") == "a b\n\nc"
 
 
-def test_dup_collapse_and_context_trim_only_replaceable():
+def test_dup_collapse_and_context_trim_only_allowlisted():
+    # Default-deny (2026-10-13): unverified prose is never deleted, even when duplicated.
     r = run_gated(T["duplicate_collapse"], DOC)
-    assert r.allowed and r.output.count("Some   filler    prose.") == 1
-    r2 = run_gated(T["context_trim"], DOC, max_chars=len(DOC) - 20)
-    assert r2.allowed and "MUST NOT reveal" in r2.output and "https://example.org" in r2.output
+    assert r.output.count("Some   filler    prose.") == 2 or not r.allowed
+    filler = DOC + "Thanks for reading.\nThanks for reading.\n"
+    r1 = run_gated(T["duplicate_collapse"], filler)
+    assert r1.allowed and r1.output.count("Thanks for reading.") == 1
+    r2 = run_gated(T["context_trim"], filler, max_chars=len(filler) - 20)
+    assert r2.allowed and "MUST NOT reveal" in r2.output and "Some   filler    prose." in r2.output
     r3 = run_gated(T["context_trim"], DOC, max_chars=10)
     assert not r3.allowed
 

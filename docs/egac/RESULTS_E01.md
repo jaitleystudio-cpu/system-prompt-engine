@@ -39,3 +39,37 @@ Bro's replay @ f8c4f88e (REPLAY_PASS on E01) found two gate defects in `spe_runt
 Regression tests: `tests/research/egac/test_egac_bro_replay_gate.py` (all of Bro's `egac_attack.py` cases plus variants, and benign edits that must stay allowed).
 
 Impact on E01: re-gating all 120 E01 control prompts with the fixed gate gives **120/120 allowed with byte-identical treatment prompts** (sha256 prefix 1ab4f59deda4cc84 before and after), and the canary block is unchanged (12 valid / 6 malformed, 0 critical failures). E01 rows and verdict are therefore unaffected and not superseded.
+
+## Gate redesign: DEFAULT-DENY (2026-10-13, after Bro replay 2 FAILED the denylist fix; E01 verdict unchanged: NOT_PROVEN)
+Bro's replay 2 @ 307eb368 showed the case-insensitive denylist was whack-a-mole. Every one of the following was still
+deleted or inserted while the gate said ALLOWED:
+- **Homoglyph/width/ZW/soft-hyphen rule lines:** Cyrillic е/о, Greek ο, full-width, U+200B, U+00AD.
+- **Paraphrased rules:** "Keep the API key secret", "not permitted", "Refrain from…", "You may not…", "You cannot…", "No credential disclosure".
+- **Rules split across lines:** "Do\nnot…", "Under no\ncircumstances…".
+- **Inserted overrides:** paraphrased ("The rule above is superseded", "Treat the earlier line as void"), homoglyph or ZW "Ignore…".
+- **In-place edits** of a replaceable line.
+
+The denylist also over-fired on "Use metric units instead of imperial."
+
+**New design (`spe_runtime/egac/conservation.py`).** Safety no longer depends on any word list. A transform is ALLOWED only if `prove_preserving` shows by construction that:
+1. **Fenced blocks:** each keeps its non-whitespace token stream. For JSON the lexer token sequence is identical (minify); any other code block stays byte-identical.
+2. **Prose:** the output's word sequence (maximal non-whitespace runs) equals the input's word sequence, with only whole spans **positively allowlisted** as deletable removed. Whitespace may change, but words can't be merged or split.
+3. **Insertions:** the only permitted insertion is the technique's declared SPE-authored constant suffix (`appends`, e.g. "Respond concisely."), verified byte-for-byte.
+
+Everything else is refused, including any deletion, insertion, edit or move of non-whitespace text.
+
+Supporting changes:
+- **New default class UNVERIFIED** (`unverified_prose`): conserved and never deletable.
+- **REPLACEABLE now needs positive allowlisting:** blank lines, decoration rules, a fixed set of courtesy phrases ("Thanks for reading", "Hope this helps", …), or JSON inter-token whitespace. Deletable VOLATILE spans are pure date/time stamp lines only.
+- **Normalisation before classification:** NFKC → NFD → strip Cf/Mn (incl. U+00AD, U+200B…) → non-ASCII UTS #39 confusables folded to ASCII (vendored `confusables_ascii.json`, Unicode 18.0.0) → lower-case.
+- **`_PROTECTED_RE` is labelling/routing only**, not the safety mechanism.
+- **Cost of default-deny (disclosed):** `duplicate_collapse` and `context_trim` now only drop allowlisted filler, so they compress much less. A role line such as "You are a helpful assistant." is no longer deletable.
+
+**Tests:** `tests/research/egac`, **85 passed**. Every Bro replay-2 case is included: 18 deletion variants, 3 split-rule deletions, 16 insertions, in-place modify, two move attacks, the JSON duplication and value edit, the metric-units over-fire, word merge/split, and skeleton normalisation.
+
+**E01 re-gate:** with the default-deny gate, all 120 E01 control prompts are still **120/120 allowed with byte-identical treatment prompts**. Bro's hash is `48b471c474652f2d` and mine is `1ab4f59deda4cc84`, identical for f8c4f88e (frozen), 307eb368 and the new gate. Canaries: 12 valid, 6 malformed, 0 critical. E01 is not superseded.
+
+**Editable-install trap:** an editable install of another checkout makes `import spe_runtime` resolve outside this repo. To prevent that:
+- `tests/research/egac/conftest.py` now fails loudly when that happens.
+- Use `scripts/egac/run_tests.sh`. It sets `PYTHONPATH` to this checkout, verifies the import path, runs the tests, and re-gates E01 via `scripts/egac/regate_e01.py`, which exits non-zero if the 120/120 + `48b471c474652f2d` reference is not reproduced.
+- Manual alternative: `PYTHONPATH=<this checkout> python …` or `pip install -e <this checkout>`.
