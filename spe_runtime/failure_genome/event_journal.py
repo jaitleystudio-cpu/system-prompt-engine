@@ -112,6 +112,8 @@ def _source_matches(snapshot: SourceSnapshot, authority: SourceAuthority) -> boo
             return False
         if any(ord(char) < 33 for char in snapshot.url):
             return False
+        if any(ch in url.path for ch in ("\\", "%", "<", ">")) or "/../" in url.path or "/./" in url.path:
+            return False
         prefix = authority.allowed_path_prefix.rstrip("/")
         return url.path == prefix or url.path.startswith(prefix + "/")
     except (ValueError, TypeError, AttributeError):
