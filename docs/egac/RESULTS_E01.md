@@ -106,3 +106,15 @@ Over-block is **5/7 (71%)** both at b667d2ba and now. The single relaxation is t
 Reordering, typo fixes and added lines stay refused, because none of them can be *proved* to keep the meaning. That also applies to the delete-greeting row: it is refused because the greeting sits in the scope of a `:` line.
 
 Tests: `tests/research/egac`, **114 passed**. Run them with `scripts/egac/run_tests.sh`.
+
+## Round 4 (Bro round-3 falsification @ 67e41cc9)
+
+Fixed (each now refused; `tests/research/egac/test_egac_round4_gate.py`, 25 tests):
+- Forward references open a scope: "below", "the following", "next(-but-one)", "as follows", "this/that exact line|sentence|text|…". The scope **survives blank lines until it has captured one non-blank line** ("exact sentence:" + blank, "shown below." + blank).
+- Two lines up ("next-but-one line" + an intervening line) is covered by the paragraph scope.
+- Backward references ("the line above", "the previous sentence", "prior", "foregoing", …) mark the preceding lines of the current paragraph and the whole preceding paragraph as keep.
+- Markdown hard breaks (a line ending in >=2 spaces followed by a non-blank line) are a proof token and are never stripped by the trailing-whitespace relaxation. Trailing spaces before a blank line or EOF are still relaxed (existing test unchanged).
+- An unclosed fence runs to end of text as one EXACT_BYTE span; nothing inside it is relaxed.
+
+**Over-block:** still **5/7 (71%)** on the 7 benign cases (`test_overblock_measured_on_bro_benign_cases`, unchanged). The new scopes make the gate stricter, so over-block on real prompts can only rise; it is not measured beyond these 7 cases.
+**E01 re-gate:** 120/120 allowed, treatment sha16 `48b471c474652f2d` (unchanged). `run_tests.sh`: 139 passed. E01 verdict unchanged (NOT_PROVEN).

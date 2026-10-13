@@ -147,6 +147,7 @@ def lex_json(src: str) -> list[tuple[str, str]]:
 
 # ---------------------------------------------------------------- classifier
 _FENCE = re.compile(r"^```([A-Za-z0-9_+-]*)[ \t]*\n(.*?)^```[ \t]*$\n?", re.M | re.S)
+_UNCLOSED_FENCE = re.compile(r"^```", re.M)
 # ---------------------------------------------------------------- normalisation (before any classification)
 # Unicode UTS #39 confusables -> ASCII (vendored, Unicode 18.0.0) + small caps; NFKC; format/combining chars stripped.
 _CONF = json.load(open(os.path.join(os.path.dirname(__file__), "confusables_ascii.json"), encoding="utf-8"))["map"]
@@ -242,6 +243,16 @@ def _line_class(line: str, intent: Optional[ProtectedIntent]) -> InfoClass:
 #     or the previous line has no terminal punctuation (same paragraph only).
 # Blank lines stay REPLACEABLE (the prose proof is whitespace-blind) but end a scope.
 _CONTRACT_RE = re.compile(r"(?::\s*$|\b(?:exactly|after|before|only|verbatim|if|unless|when|until|except)\b)")
+# Round 4 (Bro round-3): forward references ("the line below", "shown below", "the following", "next-but-one line",
+# "as follows", "this exact sentence") open a scope that SURVIVES blank lines until at least one non-blank line has
+# been captured; backward references ("the line above", "the previous sentence") pull the preceding non-blank
+# lines of the current paragraph AND the preceding paragraph into keep.
+_FORWARD_RE = re.compile(
+    r"\b(?:below|following|next(?:[\s-]+but[\s-]+one)?|as\s+follows|hereafter|underneath|beneath"
+    r"|(?:this|that|these)\s+(?:exact\s+)?(?:line|sentence|text|phrase|message|wording|sign[\s-]?off|closing)s?)\b")
+_BACKREF_RE = re.compile(
+    r"\b(?:above|previous|preceding|prior|aforementioned|foregoing|earlier|former"
+    r"|(?:the\s+)?last\s+(?:line|sentence|paragraph))\b")
 _QUOTES = '"\u201c\u201d\u00ab\u00bb\u300c\u300d'
 _TERMINAL = tuple(".!?;:)]}\u3002")
 
@@ -254,15 +265,30 @@ def _quoted(sk: str) -> bool:
 def _context_keep(lines: list[str]) -> list[bool]:
     sks = [skeleton(x.rstrip("\n")) for x in lines]
     keep = [False] * len(lines)
-    in_scope, open_quote = False, False
+    in_scope, open_quote, pending = False, False, False
     for i, k in enumerate(sks):
         if not k.strip():
-            in_scope = False
+            if not pending:          # a blank line ends a scope only once the scope has captured a line
+                in_scope = False
             continue
         if in_scope or open_quote or _quoted(k):
             keep[i] = True
-        if _CONTRACT_RE.search(k):
-            in_scope = True
+            pending = False
+        if _CONTRACT_RE.search(k) or _FORWARD_RE.search(k):
+            in_scope, pending = True, True
+        if _BACKREF_RE.search(k):
+            j, crossed = i - 1, False
+            while j >= 0:
+                if not sks[j].strip():
+                    if crossed and any(keep[x] for x in range(j + 1, i)) and sks[j + 1].strip():
+                        break
+                    crossed = True
+                    j -= 1
+                    continue
+                keep[j] = True
+                if crossed and (j == 0 or not sks[j - 1].strip()):
+                    break
+                j -= 1
         if sum(k.count(q) for q in _QUOTES) % 2 == 1:
             open_quote = not open_quote
             keep[i] = True
@@ -319,7 +345,14 @@ def classify(text: str, intent: Optional[ProtectedIntent] = None) -> list[Span]:
         spans.append(Span(body_end, m.end(), InfoClass.EXACT_BYTE, text[body_end : m.end()]))
         pos = m.end()
     if pos < len(text):
-        spans += _classify_prose(text[pos:], pos, intent)
+        tail = text[pos:]
+        m = _UNCLOSED_FENCE.search(tail)
+        if m:  # Round 4: an unclosed fence runs to end of text and is byte-exact (never whitespace-relaxed)
+            if m.start() > 0:
+                spans += _classify_prose(tail[: m.start()], pos, intent)
+            spans.append(Span(pos + m.start(), len(text), InfoClass.EXACT_BYTE, tail[m.start():]))
+        else:
+            spans += _classify_prose(tail, pos, intent)
     return [s for s in spans if s.end > s.start]
 
 
@@ -395,12 +428,35 @@ def _regions(spans: list[Span]) -> list[tuple[str, list[Span]]]:
     return regs
 
 
+_HB = "\x00HARDBREAK"
+
+
+def _hard_break_lines(text: str) -> list[bool]:
+    """Markdown hard break: a non-blank line ending in >=2 spaces whose NEXT line is non-blank (same paragraph)."""
+    lines = text.splitlines(keepends=True)
+    return [bool(re.search(r"\S {2,}\r?\n$", ln)) and i + 1 < len(lines) and bool(lines[i + 1].strip())
+            for i, ln in enumerate(lines)]
+
+
+def _words(text: str, hb: Optional[list[bool]] = None) -> list[str]:
+    hb = _hard_break_lines(text) if hb is None else hb
+    out: list[str] = []
+    for ln, h in zip(text.splitlines(keepends=True), hb):
+        out += ln.split() + ([_HB] if h else [])
+    return out
+
+
 def _prose_proof(src: list[Span], out_text: str) -> Optional[str]:
-    """Output words must equal the input words with only whole deletable spans removed (any whitespace changes)."""
-    out_words = out_text.split()
+    """Output words must equal the input words with only whole deletable spans removed (whitespace-blind except
+    markdown hard breaks, which are a token of their own - Round 4)."""
+    out_words = _words(out_text)
+    src_hb = _hard_break_lines("".join(s.text for s in src))
     reach = {0}
+    li = 0
     for s in src:
-        w = s.text.split()
+        n = len(s.text.splitlines(keepends=True))
+        w = _words(s.text, src_hb[li:li + n]) if n else []
+        li += n
         nxt = set()
         for p in reach:
             if out_words[p:p + len(w)] == w:
@@ -462,12 +518,19 @@ def strip_prose_trailing_ws(text: str) -> str:
     out, pos = [], 0
 
     def prose(seg: str) -> str:
+        lines = seg.splitlines(keepends=True)
+        hb = _hard_break_lines(seg)
         return "".join(
-            ln if ln.startswith(("    ", "\t")) else re.sub(r"[ \t]+(?=\r?\n?$)", "", ln)
-            for ln in seg.splitlines(keepends=True))
+            ln if ln.startswith(("    ", "\t")) or h else re.sub(r"[ \t]+(?=\r?\n?$)", "", ln)
+            for ln, h in zip(lines, hb))  # Round 4: markdown hard breaks are preserved
     for m in _FENCE.finditer(text):
         out.append(prose(text[pos:m.start()])); out.append(m.group(0)); pos = m.end()
-    out.append(prose(text[pos:]))
+    tail = text[pos:]
+    u = _UNCLOSED_FENCE.search(tail)
+    if u:  # Round 4: nothing inside an unclosed fence is relaxed
+        out.append(prose(tail[:u.start()])); out.append(tail[u.start():])
+    else:
+        out.append(prose(tail))
     return "".join(out)
 
 
