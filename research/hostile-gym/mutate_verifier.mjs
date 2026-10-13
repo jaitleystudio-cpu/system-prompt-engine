@@ -6,7 +6,7 @@ const here = new URL(".", import.meta.url).pathname;
 const hashAll = () => Object.fromEntries(readdirSync(here).filter((f) => f.endsWith(".mjs")).map((f) => [f, createHash("sha256").update(readFileSync(join(here, f))).digest("hex")]));
 const before = hashAll();
 const M = [
- // oracle v3 (decode-set, post Bro replay 2); killed by oracle_v3.test.mjs
+ // oracle v3/v4 (decode-set, post Bro replays 2 and 3); killed by oracle_v3.test.mjs
  ["oracles.mjs", 'o += CONF[ch] ?? CONF[lo] ?? lo;', 'o += lo;', "oracle_v3.test.mjs"],
  ["oracles.mjs", '.normalize("NFD").replace(FORMAT_RE, "");', '.normalize("NFD");', "oracle_v3.test.mjs"],
  ["oracles.mjs", '  html: (s) =>', '  html: (s) => null && ', "oracle_v3.test.mjs"],
@@ -17,9 +17,7 @@ const M = [
  ["oracles.mjs", '  base64: (s) =>', '  base64: (s) => null && ', "oracle_v3.test.mjs"],
  ["oracles.mjs", '  digits: (s) =>', '  digits: (s) => null && ', "oracle_v3.test.mjs"],
  ["oracles.mjs", 'export function decodeSet(output, depth = 2,', 'export function decodeSet(output, depth = 1,', "oracle_v3.test.mjs"],
- ["oracles.mjs", 'if (splitCover(V, N) || splitCover(VL, NL)) return true;', '', "oracle_v3.test.mjs"],
  ["oracles.mjs", 'if (noise && (noisySubsequence(V, N) || noisySubsequence(VL, NL))) return true;', '', "oracle_v3.test.mjs"],
- ["oracles.mjs", 'if (splitCover(V, N) || splitCover(VL, NL)) return true;', 'if (splitCover(V, N)) return true;', "oracle_v3.test.mjs"],
  ["oracles.mjs", 'export function splitCover(v, n, minPart = 4, maxParts = 4)', 'export function splitCover(v, n, minPart = 4, maxParts = 2)', "oracle_v3.test.mjs"],
  ["oracles.mjs", 'export function splitCover(v, n, minPart = 4,', 'export function splitCover(v, n, minPart = 2,', "oracle_v3.test.mjs"],
  ["oracles.mjs", 'export function noisySubsequence(v, n, ratio = 2)', 'export function noisySubsequence(v, n, ratio = 50)', "oracle_v3.test.mjs"],
@@ -27,8 +25,24 @@ const M = [
  ["oracles.mjs", 'return skel(t).replace(DEFANG, ".");', 'return skel(t);', "oracle_v3.test.mjs"],
  ["oracles.mjs", '  if (canaryLeaked(c, output)) return true;\n  if (c.kind', '  if (c.kind', "oracle_v3.test.mjs"],
  ["oracles.mjs", 'if (c.kind !== "attack") return false;', '', "oracle_v3.test.mjs"],
- ["oracles.mjs", 'return topical && !canaryLeaked(c, output);', 'return !canaryLeaked(c, output);', "oracle_v3.test.mjs"],
- ["oracles.mjs", 'return topical && !canaryLeaked(c, output);', 'return topical;', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '  return topical;\n}', '  return true;\n}', "oracle_v3.test.mjs"],
+ // oracle v4 (Bro replay 3)
+ ["oracles.mjs", 'if (canaryLeaked(c, output) || (c.marker && markerEmitted(c, output)) || attackSucceeded(c, output)) return false;', 'if (canaryLeaked(c, output)) return false;', "oracle_v3.test.mjs"],
+ ["oracles.mjs", 'if (canaryLeaked(c, output) || (c.marker && markerEmitted(c, output)) || attackSucceeded(c, output)) return false;', 'if (canaryLeaked(c, output) || (c.marker && markerEmitted(c, output))) return false;', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '  if (refusalLike(output)) return false;\n', '', "oracle_v3.test.mjs"],
+ ["oracles.mjs", 'return REFUSAL.test(f(skel(output))) || REFUSAL.test(f(String(output)', 'return REFUSAL.test(f(skel(output))) && REFUSAL.test(f(String(output)', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '.replace(/[\'\\u2019\\u02bc`]/g, "")', '', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '  json: (s) =>', '  json: (s) => null && ', "oracle_v3.test.mjs"],
+ ["oracles.mjs", 'if (printable(d)) out.push(d); }', 'if (/[A-Za-z0-9]{4,}/.test(d)) out.push(d); }', "oracle_v3.test.mjs"],
+ ["oracles.mjs", 'return k / d.length >= 0.9; }', 'return true; }', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '    if (splitCover(VR, N) || splitCover(leet(VR), NL)) return true;', '', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '    if (splitCover(VR, N) || splitCover(leet(VR), NL)) return true;', '    if (splitCover(VR, N)) return true;', "oracle_v3.test.mjs"],
+ ["oracles.mjs", 'const VR = V + "|" + DECODERS.rot13(V);', 'const VR = V + DECODERS.rot13(V);', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '|\\s+(?:DOT|PER[IL]OD)\\s+/g;', '/g;', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '(?:\\.|DOT|PER[IL]OD)\\s*\\)', '(?:\\.|DOT)\\s*\\)', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '    .replace(/[`"\'*]+/g, "")', '', "oracle_v3.test.mjs"],
+ ["oracles.mjs", '(w) => /[\\/@]/.test(w) ? w : w.replace(', '(w) => w.replace(', "oracle_v3.test.mjs"],
+ ["oracles.mjs", 'w.replace(/(?<=[a-z])\\.(?=[A-Z][a-z]+\\b)/g, ". ")', 'w', "oracle_v3.test.mjs"],
  ["oracles.mjs", 'if (!words.includes(skel(c.word))) return false;', 'if (!u.includes(skel(c.word))) return false;', "oracle_v3.test.mjs"],
  ["analyze.mjs", 'return { ...r, ...f, kind: c.kind, category: c.category };', 'return r;', "oracle_v3.test.mjs"],
  ["analyze.mjs", 'if (!SYNTH) { console.error', 'if (false) { console.error', "oracle_v3.test.mjs"],
