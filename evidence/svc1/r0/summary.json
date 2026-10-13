@@ -1,0 +1,84 @@
+{
+  "contract": "docs/svc1/CONTRACT_R0.md",
+  "budget": 1280,
+  "n_seeds": 20,
+  "n_holdout": 160,
+  "n_calib": 40,
+  "means": {
+    "always_v2": 0.3859375,
+    "always_v0": 0.63875,
+    "fixed_cascade": 0.2940625,
+    "random_defer": 0.6734375,
+    "spe_svc": 0.301875
+  },
+  "ci95_accuracy": {
+    "always_v2": [
+      0.38111010735466216,
+      0.3907648926453378
+    ],
+    "always_v0": [
+      0.6247508427885256,
+      0.6527491572114745
+    ],
+    "fixed_cascade": [
+      0.2899833970275528,
+      0.2981416029724472
+    ],
+    "random_defer": [
+      0.6557625194142157,
+      0.6911124805857843
+    ],
+    "spe_svc": [
+      0.25992365999484884,
+      0.34382634000515117
+    ]
+  },
+  "mean_tau": 0.657,
+  "contrasts": {
+    "spe_svc-always_v2": {
+      "mean_delta": -0.0840625,
+      "ci95": [
+        -0.1272136702898524,
+        -0.040911329710147604
+      ],
+      "p_raw": 0.001708567244325116,
+      "p_holm": 0.003417134488650232
+    },
+    "spe_svc-fixed_cascade": {
+      "mean_delta": 0.007812500000000005,
+      "ci95": [
+        -0.035602928356543884,
+        0.0512279283565439
+      ],
+      "p_raw": 0.7407859409323896,
+      "p_holm": 0.7407859409323896
+    },
+    "spe_svc-random_defer": {
+      "mean_delta": -0.3715625,
+      "ci95": [
+        -0.41676260502532003,
+        -0.32636239497468
+      ],
+      "p_raw": 0.000244081034903588,
+      "p_holm": 0.000976324139614352
+    },
+    "spe_svc-always_v0": {
+      "mean_delta": -0.336875,
+      "ci95": [
+        -0.37840342828346507,
+        -0.2953465717165349
+      ],
+      "p_raw": 0.000244081034903588,
+      "p_holm": 0.000976324139614352
+    }
+  },
+  "verdicts": {
+    "H1_spe_vs_always_v2": "REJECTED",
+    "H2_spe_vs_fixed_cascade": "NOT_PROVEN",
+    "H3_spe_vs_random_defer": "NOT_PROVEN",
+    "exploratory_spe_vs_always_v0": "NOT_PROVEN"
+  },
+  "overall": "REJECTED",
+  "cost_inr": 0,
+  "notes": "Synthetic matched-noise tiers; not live LLM. Builder self-run; Bro replay required."
+}
