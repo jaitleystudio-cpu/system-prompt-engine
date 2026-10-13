@@ -110,6 +110,42 @@ if (AXE) for (const w of [390, 360]) { const c = await b.newContext({ viewport: 
     const r = await pg.evaluate(() => axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa", "best-practice"] }));
     ok(r.violations.length === 0, `axe ${w}px checks ${st}: ${r.violations.map(v => v.id + "(" + v.nodes.length + ")").join(",") || "0 violations"}`); }
   await c.close(); }
+// P5: Requirements block (user-entered MUST FOLLOW / MUST NOT, deterministic rendering, no extraction)
+for (const [w, mob] of [[1440, false], [390, true]]) { const tag = mob ? "390" : "desktop";
+  const c = await b.newContext({ viewport: { width: w, height: mob ? 844 : 900 }, isMobile: mob, hasTouch: mob, acceptDownloads: true, bypassCSP: !!AXE }); const pg = await c.newPage();
+  try {
+    await pg.goto(BASE); await pg.evaluate(() => localStorage.clear()); await pg.reload();
+    await pg.selectOption("#add-kind", "requirements", { timeout: 3000 }); await pg.click("#btn-add");
+    const pv = () => pg.locator("#preview").innerText(); const blk = pg.locator('#blocks > li[data-k="requirements"]');
+    ok(!/Requirements|Must/.test(await pv()), `P5 ${tag}: empty requirements render nothing`);
+    ok(/Your requirements/.test(await blk.innerText()) && !/extract/i.test(await pg.content()), `P5 ${tag}: labelled 'Your requirements', never 'extracted'`);
+    const addTo = async (list, t, viaEnter) => { const inp = blk.locator(`[data-req="${list}"] .req-new`); await inp.fill(t); if (viaEnter) await inp.press("Enter"); else await blk.locator(`[data-req="${list}"] .req-addbtn`).click(); };
+    await addTo("must", "Work fully offline", true); await addTo("must", "Reply in under 200 words", false);
+    await addTo("mustNot", "collect analytics", true); await addTo("mustNot", "create user accounts", false);
+    const want = "## Requirements\nMust:\n- Work fully offline\n- Reply in under 200 words\nMust not:\n- Do not: collect analytics\n- Do not: create user accounts";
+    ok((await pv()).includes(want), `P5 ${tag}: offline (must), analytics+accounts (must not), 'under 200 words' exact`);
+    await blk.locator('[data-req="must"] .req-item input').nth(1).fill("Reply in under 150 words");
+    ok((await pv()).includes("- Reply in under 150 words") && !(await pv()).includes("200"), `P5 ${tag}: edit to 150, only 150 appears`);
+    await blk.locator('[data-req="mustNot"] .req-item').nth(0).locator(".req-del").click();
+    ok((await pv()).includes("Must:\n- Work fully offline\n- Reply in under 150 words\nMust not:\n- Do not: create user accounts") && !(await pv()).includes("analytics"), `P5 ${tag}: remove one, others unchanged`);
+    await addTo("must", "Create user accounts", true);
+    const q = await pg.locator('#quality [data-qtype="deterministic"]').allInnerTexts(); const cq = q.find(x => /Requirement conflict/.test(x)) || "";
+    ok(/Create user accounts/.test(cq) && /create user accounts/.test(cq) && (await pv()).includes("- Create user accounts") && (await pv()).includes("- Do not: create user accounts"), `P5 ${tag}: conflict shown with both items, neither dropped`);
+    for (const el of await blk.locator(mob ? "button, input" : ".req button, .req input").all()) { const r = await el.boundingBox(); if (r && (r.height < 44 || r.width < 44)) { ok(false, `P5 ${tag}: tap target ${r.width}x${r.height}`); break; } }
+    ok(true, `P5 ${tag}: requirement controls >= 44px`); const before = await pv(); await pg.reload(); ok(await pv() === before, `P5 ${tag}: persists after reload`);
+    const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("#btn-export")]); const fp = "/tmp/spe-p5-" + dl.suggestedFilename(); await dl.saveAs(fp);
+    await pg.click("#btn-example"); ok(!(await pv()).includes("Must not:"), `P5 ${tag}: draft replaced before import`);
+    await pg.setInputFiles("#file-import", fp); await pg.waitForTimeout(300); ok(await pv() === before, `P5 ${tag}: .spe round trip identical`);
+    if (!mob) { await pg.evaluate(() => window.__spe.selectTab("ver")); await pg.fill("#v-name", "reqs"); await pg.click("#btn-save-v");
+      await pg.evaluate(() => window.__spe.selectTab("edit")); await blk.locator('[data-req="must"] .req-item input').nth(0).fill("Work offline only");
+      await pg.evaluate(() => window.__spe.selectTab("ver")); await pg.selectOption("#d-from", { index: 1 }); await pg.selectOption("#d-to", "draft");
+      const df = await pg.locator("#diff").innerText(); ok(/Removed: - Work fully offline/.test(df.replace(/\n/g, " ")) || (df.includes("Work fully offline") && df.includes("Work offline only")), `P5 ${tag}: version + diff show requirement change`);
+      await pg.evaluate(() => window.__spe.selectTab("edit")); }
+    if (AXE) { await pg.addScriptTag({ content: readFileSync(AXE, "utf8") }); const r = await pg.evaluate(() => axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa", "best-practice"] }));
+      ok(r.violations.length === 0, `P5 axe ${tag}: ${r.violations.map(v => v.id + "(" + v.nodes.length + ")").join(",") || "0 violations"}`); }
+    if (SHOT) { await blk.scrollIntoViewIfNeeded(); await pg.screenshot({ path: `${SHOT}/${PFX}requirements-${tag}.png`, fullPage: !mob }); }
+  } catch (e) { ok(false, `P5 ${tag}: ${String(e.message).split("\n")[0]}`); }
+  await c.close(); }
 // P3 mobile density. Before (fa396a1f): height 3589/3674px (390/360), prompt at y=2137/2159, checks at 2733/2756,
 // 29 tap targets <44px, 31 text nodes <14px, overflow 0. Assert the after state stays well below that.
 for (const [w, H] of [[390, 3589], [360, 3674]]) {

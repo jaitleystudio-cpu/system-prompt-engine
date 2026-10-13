@@ -1,15 +1,22 @@
 // SPE Pro Prompt Studio r1 — runs fully client-side. No network calls (CSP connect-src 'none').
-type Kind = "role" | "rules" | "tone" | "output" | "examples" | "custom";
-interface Block { id: string; kind: Kind; title: string; text: string }
+type Kind = "role" | "rules" | "tone" | "output" | "examples" | "requirements" | "custom";
+interface Block { id: string; kind: Kind; title: string; text: string; must?: string[]; mustNot?: string[] }
+// Requirements are typed by the user. Rendering is a fixed template: no NLP, no extraction, nothing added.
+export function reqText(must: string[] = [], mustNot: string[] = []): string {
+  const m = must.map(x => x.trim()).filter(Boolean), n = mustNot.map(x => x.trim()).filter(Boolean);
+  return [m.length ? "Must:\n" + m.map(x => `- ${x}`).join("\n") : "", n.length ? "Must not:\n" + n.map(x => `- Do not: ${x}`).join("\n") : ""].filter(Boolean).join("\n");
+}
+const plain = (b: Omit<Block, "id">): Omit<Block, "id"> => b.kind === "requirements" ? { kind: b.kind, title: b.title, text: reqText(b.must, b.mustNot), must: [...(b.must || [])], mustNot: [...(b.mustNot || [])] } : { kind: b.kind, title: b.title, text: b.text };
 interface SpeFile { format: "spe.prompt"; version: 1; name: string; createdAt: string; blocks: Omit<Block, "id">[]; versions?: Version[] }
 
-const LABEL: Record<Kind, string> = { role: "Role", rules: "Rules", tone: "Tone", output: "Output format", examples: "Examples", custom: "Custom" };
+const LABEL: Record<Kind, string> = { role: "Role", rules: "Rules", tone: "Tone", output: "Output format", examples: "Examples", requirements: "Requirements", custom: "Custom" };
 const HINT: Record<Kind, string> = {
   role: "Who the assistant is and who it serves, e.g. You are a support agent for…",
   rules: "One rule per line. Prefer concrete, testable rules.",
   tone: "Voice and register, e.g. Warm, concise, plain English.",
   output: "Exact shape of the answer: sections, JSON keys, length limits.",
   examples: "Input → ideal output pairs.",
+  requirements: "Your requirements: what the prompt must follow and must not do.",
   custom: "Anything else the model needs.",
 };
 const STORE = "spe.pro.studio.r1.draft";
@@ -51,6 +58,13 @@ export function check(bs: Block[]): Q[] {
   out.push(has("role") ? { level: "ok", type: "deterministic", title: "Has Role block", detail: "Pass: a non-empty Role block exists." } : { level: "bad", type: "deterministic", title: "Has Role block", detail: "Fail: add a Role block saying who the assistant is." });
   out.push(has("output") ? { level: "ok", type: "deterministic", title: "Has Output format block", detail: "Pass: a non-empty Output format block exists." } : { level: "bad", type: "deterministic", title: "Has Output format block", detail: "Fail: add an Output format block describing the answer shape." });
   out.push(t >= MIN_T && t <= MAX_T ? { level: "ok", type: "deterministic", title: `Length within ${MIN_T}–${MAX_T} tokens (est.)`, detail: `Pass: ~${t} tokens.` } : { level: "bad", type: "deterministic", title: `Length within ${MIN_T}–${MAX_T} tokens (est.)`, detail: `Fail: ~${t} tokens.` });
+  const norm = (x: string) => x.trim().replace(/\s+/g, " ").toLowerCase();
+  const req = bs.filter(b => b.kind === "requirements");
+  const must = req.flatMap(b => b.must || []).filter(x => x.trim()), not = req.flatMap(b => b.mustNot || []).filter(x => x.trim());
+  if (must.length || not.length) {
+    const clash = must.flatMap(m => not.filter(n => norm(n) === norm(m)).map(n => `Must: “${m.trim()}” vs Must not: “${n.trim()}”`));
+    out.push(clash.length ? { level: "bad", type: "deterministic", title: `Requirement conflict (${clash.length})`, detail: `Same item in both lists; both are kept in the prompt. ${clash.join("; ")}` } : { level: "ok", type: "deterministic", title: "No requirement in both lists", detail: `Pass: ${must.length} must, ${not.length} must not, none identical.` });
+  }
   if (text) {
     if (!has("output") && /\b(json|markdown|bullet|table|format|sections?|words|sentences|lines)\b/i.test(text)) out.push({ level: "warn", type: "heuristic", title: "Format mentioned outside an Output block", detail: "A dedicated Output format block makes it explicit." });
     const lines = bs.flatMap(b => b.text.split("\n")).map(l => l.trim().toLowerCase()).filter(Boolean);
@@ -160,8 +174,9 @@ function render(focusId?: string, enterId?: string) {
       <button type="button" class="icon-btn down" aria-label="Move ${esc(b.title)} down" ${i === blocks.length - 1 ? "disabled" : ""}>↓</button>
       <button type="button" class="icon-btn del" aria-label="Remove ${esc(b.title)} block">✕</button></div>
       <label class="sr-only" for="${xid}">${esc(b.title)} content</label><textarea id="${xid}" class="blk__ta" placeholder="${esc(HINT[b.kind])}" aria-describedby="bq-${b.id}"></textarea><div class="blk__q" id="bq-${b.id}" aria-label="Block checks">${chips(b)}</div>`;
+    if (b.kind === "requirements") { renderReq(li, b); } else {
     (li.querySelector("textarea") as HTMLTextAreaElement).value = b.text;
-    li.querySelector("textarea")!.addEventListener("input", e => { b.text = (e.target as HTMLTextAreaElement).value; li.querySelector(".blk__q")!.innerHTML = chips(b); renderSide(); });
+    li.querySelector("textarea")!.addEventListener("input", e => { b.text = (e.target as HTMLTextAreaElement).value; li.querySelector(".blk__q")!.innerHTML = chips(b); renderSide(); }); }
     li.querySelector(".blk__title")!.addEventListener("input", e => { b.title = (e.target as HTMLInputElement).value; renderSide(); });
     li.querySelector(".up")!.addEventListener("click", () => move(i, i - 1, "up"));
     li.querySelector(".down")!.addEventListener("click", () => move(i, i + 1, "down"));
@@ -197,6 +212,30 @@ function startDrag(e: PointerEvent, from: number, li: HTMLElement, h: HTMLElemen
   };
   h.addEventListener("pointermove", onMove); h.addEventListener("pointerup", end); h.addEventListener("pointercancel", end);
 }
+function renderReq(li: HTMLElement, b: Block) {
+  b.must ||= []; b.mustNot ||= []; b.text = reqText(b.must, b.mustNot);
+  const lists: [("must" | "mustNot"), string, string][] = [["must", "Must follow", "e.g. Work fully offline"], ["mustNot", "Must not", "e.g. collect analytics"]];
+  const box = document.createElement("div"); box.className = "req";
+  box.innerHTML = `<p class="small req__intro">Your requirements. Added exactly as you type them; Must not items render as “Do not: …”.</p>` + lists.map(([k, lab, ph]) => {
+    const items = b[k]!; const gid = `rq-${k}-${b.id}`;
+    return `<fieldset class="req__list" data-req="${k}"><legend id="${gid}">${lab}</legend><ul class="req__items">${items.map((t, j) => `<li class="req-item"><label class="sr-only" for="${gid}-${j}">${lab} item ${j + 1}</label><input id="${gid}-${j}" class="inp" data-j="${j}" maxlength="2000" /><button type="button" class="icon-btn req-del" data-j="${j}" aria-label="Remove ${lab} item ${j + 1}">✕</button></li>`).join("")}</ul>
+      <div class="req__add"><label class="sr-only" for="${gid}-new">Add ${lab} item</label><input id="${gid}-new" class="inp req-new" placeholder="${esc(ph)}" maxlength="2000" /><button type="button" class="btn btn--ghost btn--sm req-addbtn">Add</button></div></fieldset>`;
+  }).join("");
+  li.querySelector("textarea")!.replaceWith(box); li.querySelector(`label[for="x-${b.id}"]`)?.remove();
+  const sync = () => { b.text = reqText(b.must, b.mustNot); li.querySelector(".blk__q")!.innerHTML = chips(b); renderSide(); };
+  for (const [k, lab] of lists) {
+    const fs = box.querySelector(`[data-req="${k}"]`)!;
+    fs.querySelectorAll<HTMLInputElement>(".req-item input").forEach(inp => { inp.value = b[k]![+inp.dataset.j!]; inp.addEventListener("input", () => { b[k]![+inp.dataset.j!] = inp.value; sync(); }); });
+    fs.querySelectorAll<HTMLButtonElement>(".req-del").forEach(btn => btn.addEventListener("click", () => { const j = +btn.dataset.j!; const [gone] = b[k]!.splice(j, 1); sync(); renderReqAgain(li, b, `[data-req="${k}"] .req-new`); announce(`Removed ${lab} item: ${gone}`); }));
+    const nw = fs.querySelector<HTMLInputElement>(".req-new")!;
+    const add = () => { const v = nw.value; if (!v.trim()) { nw.focus(); return; } b[k]!.push(v); sync(); renderReqAgain(li, b, `[data-req="${k}"] .req-new`); announce(`Added ${lab} item ${b[k]!.length}`); };
+    nw.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); add(); } }); fs.querySelector(".req-addbtn")!.addEventListener("click", add);
+  }
+}
+function renderReqAgain(li: HTMLElement, b: Block, focusSel: string) {
+  const old = li.querySelector(".req")!; const ta = document.createElement("textarea"); old.replaceWith(ta); renderReq(li, b);
+  (li.querySelector(focusSel) as HTMLElement | null)?.focus();
+}
 function move(from: number, to: number, keep: "up" | "down" | "handle") {
   if (to < 0 || to >= blocks.length) return;
   const [b] = blocks.splice(from, 1); blocks.splice(to, 0, b);
@@ -205,10 +244,10 @@ function move(from: number, to: number, keep: "up" | "down" | "handle") {
   const target = (keep === "handle" ? li.querySelector(".handle") : li.querySelector(keep === "up" ? ".up:not([disabled])" : ".down:not([disabled])")) || li.querySelector(".handle");
   (target as HTMLElement).focus();
 }
-function add(kind: Kind, text = "") { const b = { id: uid(), kind, title: LABEL[kind], text }; blocks.push(b); render(undefined, b.id); (document.querySelector(`[data-id="${b.id}"] textarea`) as HTMLElement).focus(); announce(`${b.title} block added`); }
+function add(kind: Kind, text = "") { const b: Block = kind === "requirements" ? { id: uid(), kind, title: LABEL[kind], text: "", must: [], mustNot: [] } : { id: uid(), kind, title: LABEL[kind], text }; blocks.push(b); render(undefined, b.id); (document.querySelector(`[data-id="${b.id}"] textarea, [data-id="${b.id}"] .req-new`) as HTMLElement).focus(); announce(`${b.title} block added`); }
 function setBlocks(bs: Omit<Block, "id">[], msg: string) { blocks = bs.map(b => ({ ...b, id: uid() })); render(); announce(msg); }
 
-export function toSpe(bs: Block[]): SpeFile { return { format: "spe.prompt", version: 1, name: bs.find(b => b.kind === "role")?.text.slice(0, 48) || "Untitled prompt", createdAt: new Date().toISOString(), blocks: bs.map(({ kind, title, text }) => ({ kind, title, text })), versions }; }
+export function toSpe(bs: Block[]): SpeFile { return { format: "spe.prompt", version: 1, name: bs.find(b => b.kind === "role")?.text.slice(0, 48) || "Untitled prompt", createdAt: new Date().toISOString(), blocks: bs.map(plain), versions }; }
 export const MAX_FILE = 5 * 1024 * 1024, MAX_TEXT = 200_000;
 export function parseSpeJson(raw: string, name = "This file"): any {
   try { return JSON.parse(raw); } catch { throw new Error(`“${name}” is not valid JSON, so it can't be a .spe file. It may be truncated or corrupted.`); }
@@ -223,6 +262,10 @@ export function fromSpe(raw: string | object): Omit<Block, "id">[] {
   return d.blocks.map((b: any, i: number) => {
     if (!(b && b.kind in LABEL && typeof b.text === "string" && typeof b.title === "string")) throw new Error(`Block ${i + 1} is malformed (needs a known kind, a title and text).`);
     if (b.text.length > MAX_TEXT) throw new Error(`Block ${i + 1} is longer than ${MAX_TEXT.toLocaleString("en")} characters.`);
+    if (b.kind === "requirements") {
+      const lst = (x: any, nm: string) => { if (x === undefined) return []; if (!Array.isArray(x) || x.length > 200 || x.some((y: any) => typeof y !== "string" || y.length > 2000)) throw new Error(`Block ${i + 1}: “${nm}” must be a list of up to 200 short text items.`); return x as string[]; };
+      return plain({ kind: "requirements", title: b.title.slice(0, 80), text: "", must: lst(b.must, "must"), mustNot: lst(b.mustNot, "mustNot") });
+    }
     return { kind: b.kind as Kind, title: b.title.slice(0, 80), text: b.text };
   });
 }
@@ -251,7 +294,7 @@ $("#file-import").addEventListener("change", async e => {
 });
 $("#btn-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(assemble(blocks)); announce("Prompt copied"); } catch { announce("Copy failed; select the preview text instead"); } });
 (window as any).__spe = { check, detSummary, assemble, toSpe, fromSpe };
-$("#btn-save-v").addEventListener("click", () => { const inp = $("#v-name") as HTMLInputElement; versions.push({ id: uid(), note: inp.value.trim() || `Snapshot ${versions.length + 1}`, at: new Date().toISOString(), blocks: blocks.map(({ kind, title, text }) => ({ kind, title, text })) }); inp.value = ""; save(); renderVersions(); announce(`Saved version ${versions.length}`); });
+$("#btn-save-v").addEventListener("click", () => { const inp = $("#v-name") as HTMLInputElement; versions.push({ id: uid(), note: inp.value.trim() || `Snapshot ${versions.length + 1}`, at: new Date().toISOString(), blocks: blocks.map(plain) }); inp.value = ""; save(); renderVersions(); announce(`Saved version ${versions.length}`); });
 $("#vlist").addEventListener("click", e => { const t = e.target as HTMLElement; const r = t.closest("[data-restore]") as HTMLElement | null, d = t.closest("[data-delv]") as HTMLElement | null;
   if (r) { const v = versions.find(x => x.id === r.dataset.restore)!; setBlocks(v.blocks, `Restored ${v.note}`); renderVersions(); }
   if (d) { versions = versions.filter(x => x.id !== d.dataset.delv); save(); renderVersions(); announce("Version deleted"); } });

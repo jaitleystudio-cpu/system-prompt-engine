@@ -96,6 +96,11 @@ body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.6 var(--sans)
 [hidden]{display:none!important}
 .handle{touch-action:none;cursor:grab}.dragging .handle{cursor:grabbing}
 .import-err{position:relative;margin:0 0 16px;padding:12px 16px;border:1px solid color-mix(in srgb,#FF9B9B 50%,var(--line));border-radius:var(--r);background:color-mix(in srgb,#FF9B9B 8%,var(--s1));color:#FFD0D0;font-size:15px}
+.blk[data-k=requirements]{--c:#7FD4FF}
+.req{display:grid;gap:12px}.req__intro{margin:0}
+.req__list{border:1px solid var(--line);border-radius:10px;padding:8px 12px 12px;margin:0;min-width:0}.req__list legend{font:600 14px var(--sans);color:var(--tx);padding:0 4px}
+.req__items{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:6px}.req-item,.req__add{display:flex;gap:6px;align-items:center}.req-item .inp,.req__add .inp{flex:1;width:0;min-width:0}
+.req-del{min-width:44px;min-height:44px}
 /* P3 mobile density (<768px only; desktop unchanged) */
 .q-toggle,.q-sum,.mjump{display:none}
 @media (max-width:767px){
