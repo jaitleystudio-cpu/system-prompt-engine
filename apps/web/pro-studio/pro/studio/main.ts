@@ -37,61 +37,65 @@ export function assemble(bs: Block[]): string {
 }
 export const tokens = (s: string) => Math.ceil(s.length / 4);
 
-type Q = { level: "ok" | "warn" | "bad"; title: string; detail: string };
+export type QType = "deterministic" | "heuristic" | "tokens" | "model";
+type Q = { level: "ok" | "warn" | "bad" | "na"; type: QType; title: string; detail: string };
+export const QTYPE_LABEL: Record<QType, string> = { deterministic: "Deterministic check", heuristic: "Heuristic warning", tokens: "Token estimate (approximate)", model: "Model evaluation" };
 const VAGUE = ["appropriate", "appropriately", "good", "nice", "properly", "relevant", "some", "various", "etc", "as needed", "if possible", "maybe", "try to", "stuff", "things", "best", "high quality", "engaging"];
+const MIN_T = 40, MAX_T = 3000;
+// Static Prompt Checks: deterministic pass/fail, heuristic warnings, an approximate token estimate,
+// and an explicit "Not run" model evaluation. None of these measure output quality.
 export function check(bs: Block[]): Q[] {
   const out: Q[] = []; const text = assemble(bs); const lower = text.toLowerCase();
-  if (!text) return [{ level: "warn", title: "Nothing to check yet", detail: "Add a block with some text." }];
   const has = (k: Kind) => bs.some(b => b.kind === k && b.text.trim());
-  const fmtHint = /\b(json|markdown|bullet|table|format|sections?|words|sentences|lines)\b/i.test(text);
-  if (!has("output")) out.push({ level: fmtHint ? "warn" : "bad", title: "No Output format block", detail: fmtHint ? "Format is mentioned elsewhere; a dedicated block makes it explicit." : "Say exactly what shape the answer should take." });
-  else out.push({ level: "ok", title: "Output format defined", detail: "The model knows what shape to return." });
-  if (!has("role")) out.push({ level: "warn", title: "No Role block", detail: "Say who the assistant is and who it serves." });
-  // conflicting rules: always/never on same object, or opposing pairs
-  const lines = bs.flatMap(b => b.text.split("\n")).map(l => l.trim().toLowerCase()).filter(Boolean);
-  const conflicts: string[] = [];
-  const norm = (s: string) => s.replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
-  const pos = new Map<string, string>(), neg = new Map<string, string>();
-  for (const l of lines) {
-    const m = l.match(/\b(always|must|do)\s+(.{4,40}?)(?:[.,;]|$)/); if (m) pos.set(norm(m[2]), l);
-    const n = l.match(/\b(never|don't|do not|must not|avoid)\s+(.{4,40}?)(?:[.,;]|$)/); if (n) neg.set(norm(n[2]), l);
-  }
-  for (const [k, l] of pos) if (neg.has(k)) conflicts.push(`“${l}” vs “${neg.get(k)}”`);
-  const pairs: [RegExp, RegExp, string][] = [
-    [/\b(concise|brief|short)\b/, /\b(detailed|thorough|in-depth|comprehensive)\b/, "brief vs detailed"],
-    [/\bformal\b/, /\b(casual|informal|slang)\b/, "formal vs casual"],
-    [/\bno (emoji|emojis)\b/, /\buse (emoji|emojis)\b/, "emoji on vs off"],
-    [/\b(json only|only json)\b/, /\bmarkdown\b/, "JSON-only vs Markdown"],
-  ];
-  for (const [a, b, name] of pairs) if (a.test(lower) && b.test(lower)) conflicts.push(name);
-  const wl = [...lower.matchAll(/\b(?:at most|under|max(?:imum)?(?: of)?|no more than)\s+(\d+)\s+words/g)].map(m => +m[1]);
-  const wm = [...lower.matchAll(/\b(?:at least|minimum(?: of)?|no fewer than)\s+(\d+)\s+words/g)].map(m => +m[1]);
-  if (wl.length && wm.length && Math.max(...wm) > Math.min(...wl)) conflicts.push(`at least ${Math.max(...wm)} words vs at most ${Math.min(...wl)} words`);
-  out.push(conflicts.length ? { level: "bad", title: `Possible conflicting rules (${conflicts.length})`, detail: conflicts.slice(0, 3).join("; ") } : { level: "ok", title: "No obvious rule conflicts", detail: "Checked always/never pairs and common opposites." });
-  const found = VAGUE.filter(w => new RegExp(`\\b${w.replace(/ /g, "\\s+")}\\b`, "i").test(text));
-  out.push(found.length ? { level: "warn", title: `Vague wording (${found.length})`, detail: `Replace with something testable: ${found.slice(0, 6).map(w => `“${w}”`).join(", ")}` } : { level: "ok", title: "No vague filler words", detail: "From a list of common vague terms." });
   const t = tokens(text);
-  out.push(t < 40 ? { level: "warn", title: `Very short (~${t} tokens)`, detail: "Short prompts leave most behaviour to chance." }
-    : t > 3000 ? { level: "warn", title: `Long (~${t} tokens)`, detail: "Long prompts cost more per call and can bury key rules." }
-    : { level: "ok", title: `Length OK (~${t} tokens)`, detail: "Estimate: characters ÷ 4. Real tokenizers differ." });
+  out.push(has("role") ? { level: "ok", type: "deterministic", title: "Has Role block", detail: "Pass: a non-empty Role block exists." } : { level: "bad", type: "deterministic", title: "Has Role block", detail: "Fail: add a Role block saying who the assistant is." });
+  out.push(has("output") ? { level: "ok", type: "deterministic", title: "Has Output format block", detail: "Pass: a non-empty Output format block exists." } : { level: "bad", type: "deterministic", title: "Has Output format block", detail: "Fail: add an Output format block describing the answer shape." });
+  out.push(t >= MIN_T && t <= MAX_T ? { level: "ok", type: "deterministic", title: `Length within ${MIN_T}–${MAX_T} tokens (est.)`, detail: `Pass: ~${t} tokens.` } : { level: "bad", type: "deterministic", title: `Length within ${MIN_T}–${MAX_T} tokens (est.)`, detail: `Fail: ~${t} tokens.` });
+  if (text) {
+    if (!has("output") && /\b(json|markdown|bullet|table|format|sections?|words|sentences|lines)\b/i.test(text)) out.push({ level: "warn", type: "heuristic", title: "Format mentioned outside an Output block", detail: "A dedicated Output format block makes it explicit." });
+    const lines = bs.flatMap(b => b.text.split("\n")).map(l => l.trim().toLowerCase()).filter(Boolean);
+    const conflicts: string[] = [];
+    const norm = (s: string) => s.replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
+    const pos = new Map<string, string>(), neg = new Map<string, string>();
+    for (const l of lines) {
+      const m = l.match(/\b(always|must|do)\s+(.{4,40}?)(?:[.,;]|$)/); if (m) pos.set(norm(m[2]), l);
+      const n = l.match(/\b(never|don't|do not|must not|avoid)\s+(.{4,40}?)(?:[.,;]|$)/); if (n) neg.set(norm(n[2]), l);
+    }
+    for (const [k, l] of pos) if (neg.has(k)) conflicts.push(`“${l}” vs “${neg.get(k)}”`);
+    const pairs: [RegExp, RegExp, string][] = [
+      [/\b(concise|brief|short)\b/, /\b(detailed|thorough|in-depth|comprehensive)\b/, "brief vs detailed"],
+      [/\bformal\b/, /\b(casual|informal|slang)\b/, "formal vs casual"],
+      [/\bno (emoji|emojis)\b/, /\buse (emoji|emojis)\b/, "emoji on vs off"],
+      [/\b(json only|only json)\b/, /\bmarkdown\b/, "JSON-only vs Markdown"],
+    ];
+    for (const [a, b, name] of pairs) if (a.test(lower) && b.test(lower)) conflicts.push(name);
+    const wl = [...lower.matchAll(/\b(?:at most|under|max(?:imum)?(?: of)?|no more than)\s+(\d+)\s+words/g)].map(m => +m[1]);
+    const wm = [...lower.matchAll(/\b(?:at least|minimum(?: of)?|no fewer than)\s+(\d+)\s+words/g)].map(m => +m[1]);
+    if (wl.length && wm.length && Math.max(...wm) > Math.min(...wl)) conflicts.push(`at least ${Math.max(...wm)} words vs at most ${Math.min(...wl)} words`);
+    out.push(conflicts.length ? { level: "warn", type: "heuristic", title: `Possible conflicting rules (${conflicts.length})`, detail: conflicts.slice(0, 3).join("; ") } : { level: "ok", type: "heuristic", title: "No conflicts found by pattern matching", detail: "Checked always/never pairs and common opposites only." });
+    const found = VAGUE.filter(w => new RegExp(`\\b${w.replace(/ /g, "\\s+")}\\b`, "i").test(text));
+    out.push(found.length ? { level: "warn", type: "heuristic", title: `Vague wording (${found.length})`, detail: `Consider something testable: ${found.slice(0, 6).map(w => `“${w}”`).join(", ")}` } : { level: "ok", type: "heuristic", title: "No listed vague words found", detail: "Checked against a fixed list of common vague terms." });
+  }
+  out.push({ level: "na", type: "tokens", title: `~${t} tokens`, detail: "Approximate: characters ÷ 4. Real tokenizers differ." });
+  out.push({ level: "na", type: "model", title: "Not run", detail: "No model evaluation exists in Prompt Studio. Nothing is sent to a model." });
   return out;
 }
+export const detSummary = (bs: Block[]) => { const d = check(bs).filter(q => q.type === "deterministic"); return `${d.filter(q => q.level === "ok").length}/${d.length} deterministic checks pass`; };
 
 export function blockCheck(b: Block): Q[] {
   const t = b.text.trim(); const q: Q[] = [];
-  if (!t) return [{ level: "warn", title: "Empty", detail: "" }];
+  if (!t) return [{ level: "warn", type: "heuristic", title: "Empty", detail: "" }];
   const vague = VAGUE.filter(w => new RegExp(`\\b${w.replace(/ /g, "\\s+")}\\b`, "i").test(t));
-  if (vague.length) q.push({ level: "warn", title: `Vague: ${vague.slice(0, 3).join(", ")}`, detail: "" });
+  if (vague.length) q.push({ level: "warn", type: "heuristic", title: `Vague: ${vague.slice(0, 3).join(", ")}`, detail: "" });
   const words = t.split(/\s+/).length;
-  if (b.kind === "role" && !/\byou are\b|\byou're\b|\bact as\b/i.test(t)) q.push({ level: "warn", title: "No clear identity (\"You are…\")", detail: "" });
-  if (b.kind === "rules" && t.split("\n").filter(l => l.trim()).length < 2) q.push({ level: "warn", title: "Only one rule", detail: "" });
-  if (b.kind === "output" && !/\d|json|bullet|markdown|table|sections?|lines?|words/i.test(t)) q.push({ level: "warn", title: "No measurable format", detail: "" });
-  if (b.kind === "examples" && !/(user|input|q)\s*:/i.test(t)) q.push({ level: "warn", title: "No input/output pair", detail: "" });
-  if (words > 400) q.push({ level: "warn", title: `Long block (${words} words)`, detail: "" });
-  if (!q.length) q.push({ level: "ok", title: "Looks specific", detail: "" });
+  if (b.kind === "role" && !/\byou are\b|\byou're\b|\bact as\b/i.test(t)) q.push({ level: "warn", type: "heuristic", title: "No clear identity (\"You are…\")", detail: "" });
+  if (b.kind === "rules" && t.split("\n").filter(l => l.trim()).length < 2) q.push({ level: "warn", type: "heuristic", title: "Only one rule", detail: "" });
+  if (b.kind === "output" && !/\d|json|bullet|markdown|table|sections?|lines?|words/i.test(t)) q.push({ level: "warn", type: "heuristic", title: "No measurable format", detail: "" });
+  if (b.kind === "examples" && !/(user|input|q)\s*:/i.test(t)) q.push({ level: "warn", type: "heuristic", title: "No input/output pair", detail: "" });
+  if (words > 400) q.push({ level: "warn", type: "heuristic", title: `Long block (${words} words)`, detail: "" });
+  if (!q.length) q.push({ level: "ok", type: "heuristic", title: "Looks specific", detail: "" });
   return q;
 }
-export const score = (bs: Block[]) => { const qs = check(bs); return Math.round(100 * qs.reduce((s, q) => s + (q.level === "ok" ? 1 : q.level === "warn" ? 0.5 : 0), 0) / qs.length); };
 type Op = { t: "eq" | "add" | "del"; s: string };
 export function lineDiff(a: string, b: string): Op[] {
   const A = a ? a.split("\n") : [], B = b ? b.split("\n") : []; const n = A.length, m = B.length;
@@ -104,13 +108,15 @@ export function lineDiff(a: string, b: string): Op[] {
 }
 const esc = (s: string) => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]!));
 const chips = (b: Block) => blockCheck(b).map(q => `<span class="chip chip--${q.level}">${q.level === "ok" ? "✓" : "!"} ${esc(q.title)}</span>`).join("");
-const qHtml = (qs: Q[]) => qs.map(q => `<li class="q q--${q.level}"><i aria-hidden="true">${q.level === "ok" ? "✓" : q.level === "warn" ? "!" : "×"}</i><div><b><span class="sr-only">${q.level === "ok" ? "Pass: " : q.level === "warn" ? "Warning: " : "Problem: "}</span>${esc(q.title)}</b><span>${esc(q.detail)}</span></div></li>`).join("");
+const SYM = { ok: "✓", warn: "!", bad: "×", na: "–" } as const;
+const SR = { ok: "Pass: ", warn: "Warning: ", bad: "Fail: ", na: "" } as const;
+const qHtml = (qs: Q[]) => qs.map(q => `<li class="q q--${q.level}" data-qtype="${q.type}"><i aria-hidden="true">${SYM[q.level]}</i><div><span class="qtype">${QTYPE_LABEL[q.type]}</span><b><span class="sr-only">${SR[q.level]}</span>${esc(q.title)}</b><span>${esc(q.detail)}</span></div></li>`).join("");
 const withIds = (bs: Omit<Block, "id">[]): Block[] => bs.map(b => ({ ...b, id: "" }));
 function sources(): { id: string; label: string; blocks: Block[] }[] { return [{ id: "draft", label: "Current draft", blocks }, ...versions.map((v, i) => ({ id: v.id, label: `v${i + 1} · ${v.note}`, blocks: withIds(v.blocks) }))]; }
 function fillSel(sel: HTMLSelectElement, def: string) { const cur = sel.value || def; sel.innerHTML = sources().map(s => `<option value="${s.id}">${esc(s.label)}</option>`).join(""); sel.value = sources().some(s => s.id === cur) ? cur : def; }
 const src = (id: string) => (sources().find(s => s.id === id) || sources()[0]).blocks;
 function renderVersions() {
-  $("#vlist").innerHTML = versions.length ? versions.map((v, i) => `<li class="vrow"><div><b>v${i + 1} · ${esc(v.note)}</b><span>${new Date(v.at).toLocaleString()} · ${v.blocks.length} blocks · score ${score(withIds(v.blocks))}</span></div><div class="vrow__act"><button type="button" class="btn btn--ghost btn--sm" data-restore="${v.id}" aria-label="Restore v${i + 1} into the editor">Restore</button><button type="button" class="icon-btn" data-delv="${v.id}" aria-label="Delete v${i + 1}">✕</button></div></li>`).reverse().join("") : '<li class="small">No versions yet. Save one to start a history.</li>';
+  $("#vlist").innerHTML = versions.length ? versions.map((v, i) => `<li class="vrow"><div><b>v${i + 1} · ${esc(v.note)}</b><span>${new Date(v.at).toLocaleString()} · ${v.blocks.length} blocks · ${detSummary(withIds(v.blocks))}</span></div><div class="vrow__act"><button type="button" class="btn btn--ghost btn--sm" data-restore="${v.id}" aria-label="Restore v${i + 1} into the editor">Restore</button><button type="button" class="icon-btn" data-delv="${v.id}" aria-label="Delete v${i + 1}">✕</button></div></li>`).reverse().join("") : '<li class="small">No versions yet. Save one to start a history.</li>';
   const last = versions.length ? versions[versions.length - 1].id : "draft";
   fillSel($("#d-from"), last); fillSel($("#d-to"), "draft"); fillSel($("#ab-a"), last); fillSel($("#ab-b"), "draft");
   renderDiff(); renderAB();
@@ -123,11 +129,11 @@ function renderDiff() {
 }
 function renderAB() {
   const a = src(($("#ab-a") as HTMLSelectElement).value), b = src(($("#ab-b") as HTMLSelectElement).value);
-  const sa = score(a), sb = score(b), ta = tokens(assemble(a)), tb = tokens(assemble(b));
+  const ta = tokens(assemble(a)), tb = tokens(assemble(b));
   $("#ab-pa").textContent = assemble(a) || "(empty)"; $("#ab-pb").textContent = assemble(b) || "(empty)";
-  $("#ab-sa").textContent = `Heuristic score ${sa}/100 · ~${ta} tokens`; $("#ab-sb").textContent = `Heuristic score ${sb}/100 · ~${tb} tokens`;
+  $("#ab-sa").textContent = `${detSummary(a)} · ~${ta} tokens`; $("#ab-sb").textContent = `${detSummary(b)} · ~${tb} tokens`;
   $("#ab-qa").innerHTML = qHtml(check(a)); $("#ab-qb").innerHTML = qHtml(check(b));
-  $("#ab-sum").textContent = sa === sb ? `Same heuristic score; B is ${tb - ta >= 0 ? "+" : ""}${tb - ta} tokens vs A.` : `${sa > sb ? "A" : "B"} scores higher on these checks (${Math.max(sa, sb)} vs ${Math.min(sa, sb)}); B is ${tb - ta >= 0 ? "+" : ""}${tb - ta} tokens vs A. This is not a model eval.`;
+  $("#ab-sum").textContent = `Version 2 is ${tb - ta >= 0 ? "+" : ""}${tb - ta} tokens vs version 1. Static checks only; no outcome or model evaluation, so neither version is ranked.`;
 }
 function renderSide() {
   const text = assemble(blocks);
@@ -209,7 +215,7 @@ $("#file-import").addEventListener("change", async e => {
   (e.target as HTMLInputElement).value = "";
 });
 $("#btn-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(assemble(blocks)); announce("Prompt copied"); } catch { announce("Copy failed; select the preview text instead"); } });
-(window as any).__spe = { check, assemble, toSpe, fromSpe };
+(window as any).__spe = { check, detSummary, assemble, toSpe, fromSpe };
 $("#btn-save-v").addEventListener("click", () => { const inp = $("#v-name") as HTMLInputElement; versions.push({ id: uid(), note: inp.value.trim() || `Snapshot ${versions.length + 1}`, at: new Date().toISOString(), blocks: blocks.map(({ kind, title, text }) => ({ kind, title, text })) }); inp.value = ""; save(); renderVersions(); announce(`Saved version ${versions.length}`); });
 $("#vlist").addEventListener("click", e => { const t = e.target as HTMLElement; const r = t.closest("[data-restore]") as HTMLElement | null, d = t.closest("[data-delv]") as HTMLElement | null;
   if (r) { const v = versions.find(x => x.id === r.dataset.restore)!; setBlocks(v.blocks, `Restored ${v.note}`); renderVersions(); }

@@ -37,7 +37,7 @@
     <div class="tabs" role="tablist" aria-label="Studio views">
       <button type="button" role="tab" class="tab" id="tab-edit" aria-controls="view-edit" aria-selected="true">Editor</button>
       <button type="button" role="tab" class="tab" id="tab-ver" aria-controls="view-ver" aria-selected="false" tabindex="-1">Versions &amp; diff</button>
-      <button type="button" role="tab" class="tab" id="tab-ab" aria-controls="view-ab" aria-selected="false" tabindex="-1">A/B compare</button>
+      <button type="button" role="tab" class="tab" id="tab-ab" aria-controls="view-ab" aria-selected="false" tabindex="-1">Compare Versions</button>
     </div>
     <div id="view-edit" role="tabpanel" aria-labelledby="tab-edit">
     <div class="ed-grid">
@@ -70,7 +70,8 @@
           <p class="stats" id="stats" aria-live="polite"></p>
         </section>
         <section class="panel" aria-labelledby="q-title">
-          <div class="panel__head"><h2 id="q-title" class="panel__title">Quality check</h2><span class="small q-note">Local heuristics, not a model judgement</span></div>
+          <div class="panel__head"><h2 id="q-title" class="panel__title">Static Prompt Checks</h2></div>
+          <p class="small q-note" id="q-note">These are static checks of the prompt text, not a measure of output quality.</p>
           <ul id="quality" class="quality"></ul>
         </section>
       </div>
@@ -94,11 +95,11 @@
     </div>
     <div id="view-ab" role="tabpanel" aria-labelledby="tab-ab" hidden>
       <section class="panel" aria-labelledby="ab-title">
-        <div class="panel__head"><h2 id="ab-title" class="panel__title">A/B compare</h2><span class="small q-note">Static comparison by local heuristics. No model is called.</span></div>
-        <div class="row"><div class="field"><label for="ab-a">Variant A</label><select id="ab-a" class="inp"></select></div><div class="field"><label for="ab-b">Variant B</label><select id="ab-b" class="inp"></select></div></div>
+        <div class="panel__head"><h2 id="ab-title" class="panel__title">Compare Versions</h2><span class="small q-note">Side-by-side static checks. No model is called and no version is ranked.</span></div>
+        <div class="row"><div class="field"><label for="ab-a">Version 1</label><select id="ab-a" class="inp"></select></div><div class="field"><label for="ab-b">Version 2</label><select id="ab-b" class="inp"></select></div></div>
         <div class="ab">
-          <div><h3 class="h3">A</h3><p class="score" id="ab-sa"></p><pre id="ab-pa" class="preview" tabindex="0" aria-label="Variant A prompt"></pre><ul id="ab-qa" class="quality"></ul></div>
-          <div><h3 class="h3">B</h3><p class="score" id="ab-sb"></p><pre id="ab-pb" class="preview" tabindex="0" aria-label="Variant B prompt"></pre><ul id="ab-qb" class="quality"></ul></div>
+          <div><h3 class="h3">Version 1</h3><p class="score" id="ab-sa"></p><pre id="ab-pa" class="preview" tabindex="0" aria-label="Version 1 prompt"></pre><ul id="ab-qa" class="quality"></ul></div>
+          <div><h3 class="h3">Version 2</h3><p class="score" id="ab-sb"></p><pre id="ab-pb" class="preview" tabindex="0" aria-label="Version 2 prompt"></pre><ul id="ab-qb" class="quality"></ul></div>
         </div>
         <p class="ab__sum small" id="ab-sum" aria-live="polite"></p>
       </section>

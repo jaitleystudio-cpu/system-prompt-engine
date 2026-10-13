@@ -83,6 +83,8 @@ body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.6 var(--sans)
 .q b{display:block;color:var(--tx);font-weight:600}
 .q span{color:var(--mu)}
 .q i{font-style:normal;font:700 13px/22px var(--mono);text-align:center;border-radius:6px}
+.q--na i{color:var(--mu);background:var(--s2)}
+.q .qtype{display:block;font:600 11px/1.4 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--mu)}
 .q--ok i{color:#04130D;background:var(--ac)}.q--warn i{color:#1A0E00;background:#FFC870}.q--bad i{color:#1A0505;background:#FF9B9B}
 .empty{margin-top:8px;padding:40px 24px;border:1px dashed var(--line2);border-radius:var(--r);text-align:center;display:grid;gap:8px;justify-items:center}
 .empty__cta{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
