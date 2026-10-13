@@ -303,6 +303,22 @@ MUTANTS = [
         "replacement": "        # MUTANT M32: artifact_hash check removed\n        study_ev_hash",
         "test": "tests/research/lvt/test_verify_signature_mutant_killers.py::test_missing_artifact_hash_fails_closed_before_any_lookup",
     },
+    {
+        "id": "M33",
+        "name": "verify_oracle_attestation accepts non-APPROVED verdict (Bro replay 2 BRO3)",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        if attestation.verdict != \"APPROVED\":\n            return False, f\"unapproved verdict: {attestation.verdict}\"\n",
+        "replacement": "        # MUTANT M33: verdict check removed\n",
+        "test": "tests/research/lvt/test_verify_signature_mutant_killers.py::test_signed_attestation_with_non_approved_verdict_is_rejected",
+    },
+    {
+        "id": "M34",
+        "name": "revoked validator key may be re-enrolled (Bro replay 2 BRO4)",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        if pk_hex in cls._REVOKED_VALIDATORS or f\"validator_pk:{pk_hex}\" in cls._GLOBAL_TOMBSTONES:\n            raise ValueError(f\"Validator public key '{pk_hex}' has been revoked and cannot be re-enrolled\")\n",
+        "replacement": "        # MUTANT M34: re-enrollment revocation check removed\n",
+        "test": "tests/research/lvt/test_verify_signature_mutant_killers.py::test_revoked_validator_key_cannot_be_re_enrolled",
+    },
 ]
 
 

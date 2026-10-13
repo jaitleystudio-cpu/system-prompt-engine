@@ -1,0 +1,274 @@
+[
+  {
+    "id": "M01",
+    "name": "Ignore oracle key allowlist",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.80s"
+  },
+  {
+    "id": "M02",
+    "name": "Allow missing trust registry",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.71s"
+  },
+  {
+    "id": "M03",
+    "name": "Enable aggregate-only mock qualification",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.30s"
+  },
+  {
+    "id": "M04",
+    "name": "Accept changed attestation evidence hash",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.75s"
+  },
+  {
+    "id": "M05",
+    "name": "Skip oracle ID binding",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.00s"
+  },
+  {
+    "id": "M06",
+    "name": "Trust QUALIFIED without verified receipt",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.76s"
+  },
+  {
+    "id": "M07",
+    "name": "Permit revoked .spe export",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 2.27s"
+  },
+  {
+    "id": "M08",
+    "name": "Replace held-out baseline with training base",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.23s"
+  },
+  {
+    "id": "M09",
+    "name": "Replace family-macro effect with item weighting",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.09s"
+  },
+  {
+    "id": "M10",
+    "name": "Convert INCONCLUSIVE into QUALIFIED",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.20s"
+  },
+  {
+    "id": "M11",
+    "name": "Allow absent validator in evaluate_cross_model_transfer",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.72s"
+  },
+  {
+    "id": "M12",
+    "name": "Skip transfer receipt authentication in synthesize_spe_learning_artifact",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.51s"
+  },
+  {
+    "id": "M13",
+    "name": "Bypass 20-family minimum in cross-model transfer",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.49s"
+  },
+  {
+    "id": "M14",
+    "name": "Bypass model identity binding in evaluate_cross_model_transfer",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.40s"
+  },
+  {
+    "id": "M15",
+    "name": "Bypass synthetic model check in .spe export",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 2.24s"
+  },
+  {
+    "id": "M16",
+    "name": "Bypass owner authority check in validate_and_commit",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.00s"
+  },
+  {
+    "id": "M17",
+    "name": "Bypass durable tombstone check in is_tombstoned",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.80s"
+  },
+  {
+    "id": "M18",
+    "name": "Bypass task family clustering distinction check in transfer",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.49s"
+  },
+  {
+    "id": "M19",
+    "name": "Bypass synthetic model digest invariant check against VERIFIED_MODEL_REVISION",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.27s"
+  },
+  {
+    "id": "M20",
+    "name": "Bypass caller-asserted owner authorization rejection",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.48s"
+  },
+  {
+    "id": "M21",
+    "name": "Bypass durable tombstone load from disk in validator",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.29s"
+  },
+  {
+    "id": "M22",
+    "name": "Bypass independence assertions validation in cross-model transfer",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.26s"
+  },
+  {
+    "id": "M23",
+    "name": "Bypass persistent parent transaction tombstone check in verify_transaction_signature",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.26s"
+  },
+  {
+    "id": "M24",
+    "name": "Bypass fail-closed tombstone I/O error handling when explicitly configured",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.09s"
+  },
+  {
+    "id": "M25",
+    "name": "Bypass parent study synthetic model digest rejection in paired_gate_v2",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.09s"
+  },
+  {
+    "id": "M26",
+    "name": "Bypass strict cryptographic owner authority requirement on LearningValidator",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.29s"
+  },
+  {
+    "id": "M27",
+    "name": "Bypass RBPD RealityBoundEvidenceAsset Ed25519 signature verification",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 1.46s"
+  },
+  {
+    "id": "M28",
+    "name": "Permit reuse of STALE obligations during selective invalidation",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 7.41s"
+  },
+  {
+    "id": "M29",
+    "name": "Disable Channel B sealed reality witness Goodhart divergence detection",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.17s"
+  },
+  {
+    "id": "M30",
+    "name": "Falsely claim positive proof dividend on negative control benchmark",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 25.55s"
+  },
+  {
+    "id": "M31",
+    "name": "verify_transaction_signature accepts REVOKED (Bro replay BRO1)",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.62s"
+  },
+  {
+    "id": "M32",
+    "name": "verify_transaction_signature skips artifact_hash check (Bro replay BRO2)",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.31s"
+  },
+  {
+    "id": "M33",
+    "name": "verify_oracle_attestation accepts non-APPROVED verdict (Bro replay 2 BRO3)",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.97s"
+  },
+  {
+    "id": "M34",
+    "name": "revoked validator key may be re-enrolled (Bro replay 2 BRO4)",
+    "status": "KILLED",
+    "exit_code": 1,
+    "restored_ok": true,
+    "output_summary": "1 failed in 0.96s"
+  }
+]

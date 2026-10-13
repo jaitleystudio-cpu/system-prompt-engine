@@ -59,3 +59,44 @@ def test_missing_artifact_hash_fails_closed_before_any_lookup(monkeypatch):
     assert v.verify_transaction_signature(tx) is False
     tx.artifact_hash = None
     assert v.verify_transaction_signature(tx) is False
+
+
+# ---- Bro replay 2 (2026-10-13 @ 5b2d4722): BRO3 / BRO4 survivors ----
+import pytest
+from spe_runtime.ci_gate.receipt import generate_keypair
+from spe_runtime.research.lvt.learning_validator import create_oracle_attestation, create_owner_validator_attestation
+
+
+@pytest.fixture
+def _isolated_registries(tmp_path):
+    LearningValidator.clear_owner_registries()
+    LearningValidator.set_tombstone_store_path(tmp_path / "tombstones.jsonl")
+    yield
+    LearningValidator.clear_owner_registries()
+
+
+def test_signed_attestation_with_non_approved_verdict_is_rejected(_isolated_registries):
+    # Kills BRO3/M33: a correctly signed attestation from a TRUSTED oracle whose verdict is not APPROVED must fail.
+    osk, opk = generate_keypair()
+    v = LearningValidator(trusted_oracles={"oracle-mk": opk.hex()})
+    ev = "e" * 64
+    ok, msg = v.verify_oracle_attestation(create_oracle_attestation(osk, opk, "oracle-mk", ev), ev, "oracle-mk")
+    assert ok, msg  # control: APPROVED passes
+    for verdict in ("REJECTED", "INCONCLUSIVE", "approved", ""):
+        ok, msg = v.verify_oracle_attestation(create_oracle_attestation(osk, opk, "oracle-mk", ev, verdict=verdict), ev, "oracle-mk")
+        assert ok is False and "verdict" in msg, (verdict, msg)
+
+
+def test_revoked_validator_key_cannot_be_re_enrolled(_isolated_registries):
+    # Kills BRO4/M34: after owner revocation, a fresh, validly signed owner attestation must NOT re-enroll the key.
+    owner_sk, owner_pk = generate_keypair()
+    _, val_pk = generate_keypair()
+    LearningValidator.register_owner_root_key(owner_pk)
+    att = create_owner_validator_attestation(owner_signing_key=owner_sk, owner_public_key=owner_pk, validator_public_key=val_pk)
+    LearningValidator.register_authorized_validator(val_pk, owner_attestation=att, owner_root_public_key=owner_pk)
+    assert val_pk.hex() in LearningValidator._OWNER_AUTHORIZED_VALIDATORS  # control
+    LearningValidator.revoke_validator_key(validator_public_key=val_pk, owner_signing_key=owner_sk, owner_public_key=owner_pk)
+    fresh = create_owner_validator_attestation(owner_signing_key=owner_sk, owner_public_key=owner_pk, validator_public_key=val_pk)
+    with pytest.raises(ValueError, match="revoked"):
+        LearningValidator.register_authorized_validator(val_pk, owner_attestation=fresh, owner_root_public_key=owner_pk)
+    assert val_pk.hex() not in LearningValidator._OWNER_AUTHORIZED_VALIDATORS
