@@ -46,6 +46,12 @@ def test_failure_genome_ingest_reproduce_sanitize(tmp_path: Path):
     assert "[REDACTED_API_KEY]" in sanitized["minimal_reproducer"]
     assert "[REDACTED_EMAIL]" in sanitized["minimal_reproducer"]
     assert sanitized["source"] == "[ANONYMIZED_SOURCE]"
+    assert sanitized["publication_authorized"] is False
+    assert sanitized["is_verified_by_reproduction"] is False
+    assert sanitized["claim_confirmed"] is False
+    assert sanitized["root_cause_verified"] is False
+    assert sanitized["repair_verified"] is False
+    assert sanitized["evidence_status"] == "UNVERIFIED_SANITIZED_CANDIDATE"
 
     # Test clustering
     clusters = store.cluster_failures()
@@ -405,3 +411,23 @@ def test_evidence_generator_escapes_untrusted_fixture_labels():
     assert "<script>" not in rendered
     assert "&lt;script&gt;" in rendered
     assert 'content="noindex, nofollow, noarchive"' in rendered
+
+
+def test_public_snapshot_redacts_sensitive_causes_and_repair_text(tmp_path: Path):
+    """Public candidate projection cannot expose secrets or mint proof."""
+    store = FailureGenomeStore(tmp_path / "public_candidate")
+    entry = store.ingest({
+        "scope": "GLOBAL", "model": "example-model",
+        "model_version": "unverified", "minimal_reproducer": "Demonstration task",
+        "root_cause": "Claimed cause with alice@example.org",
+        "candidate_repairs": ["Send bearer abcdefghijklmnopqrstuvwxyz1234 to alice@example.org"],
+        "regression_tests": ["Contact bob@example.org to reproduce"],
+        "affected_capability": "SECRET sk-ABCDEFGHIJKLMNOPQRSTUVWXYZ123456",
+    })
+    public = store.sanitize_for_public(entry.failure_id)
+    assert public["publication_authorized"] is False
+    assert public["is_verified_by_reproduction"] is False
+    assert "alice@example.org" not in str(public)
+    assert "bob@example.org" not in str(public)
+    assert "abcdefghijklmnopqrstuvwxyz1234" not in str(public)
+    assert "sk-ABCDEFGHIJKLMNOPQRSTUVWXYZ123456" not in str(public)
