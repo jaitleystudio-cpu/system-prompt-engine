@@ -18,11 +18,11 @@ from datetime import datetime, timedelta, timezone
 from typing import Mapping
 
 from spe_runtime.ci_gate.receipt import AuthenticatedReceipt, verify_receipt_signature
-from .durable_journal import CustodyStatus
+from .durable_journal import CustodyStatus, JournalCustodyError, metadata_document_sha256
 from .event_journal import SourceEventJournal
 
 
-CHECKPOINT_SCHEMA = "spe.failure_genome.external_head.v1"
+CHECKPOINT_SCHEMA = "spe.failure_genome.external_head.v2"
 CHECKPOINT_SCOPE = "OWNER_PINNED_METADATA_CUSTODY_ONLY"
 _SHA = re.compile(r"^[0-9a-f]{64}$")
 
@@ -46,6 +46,7 @@ class CheckpointAssessment:
     reason_codes: tuple[str, ...]
     record_count: int
     head_sha256: str
+    metadata_document_sha256: str
     signer_authenticated_against_owner_root: bool = False
     previous_owner_pin_ancestry_verified: bool = False
     next_floor_candidate: OwnerPinnedFloor | None = None
@@ -83,6 +84,7 @@ def checkpoint_payload(
         "count": status.records,
         "head_sha256": status.head_sha256,
         "allowlist_sha256": status.allowlist_sha256,
+        "metadata_document_sha256": status.metadata_document_sha256,
     }
 
 
@@ -105,6 +107,11 @@ def verify_owner_checkpoint(
     count = len(journal.entries) if isinstance(journal, SourceEventJournal) else 0
     head = journal.entries[-1].chain_digest if count else "0" * 64
     issues: set[str] = set()
+    try:
+        metadata_sha = metadata_document_sha256(journal, expected_allowlist_sha256)
+    except (JournalCustodyError, TypeError, ValueError, AttributeError):
+        metadata_sha = ""
+        issues.add("DURABLE_METADATA_DOCUMENT_INVALID")
     if (
         not isinstance(journal, SourceEventJournal)
         or not journal.verify_chain()
@@ -150,7 +157,7 @@ def verify_owner_checkpoint(
         payload = signed_receipt.canonical_payload
         if not isinstance(payload, dict) or set(payload) != {
             "schema", "scope", "sequence", "issued_at", "count",
-            "head_sha256", "allowlist_sha256",
+            "head_sha256", "allowlist_sha256", "metadata_document_sha256",
         }:
             issues.add("CHECKPOINT_SCHEMA_INVALID")
         elif (
@@ -159,7 +166,8 @@ def verify_owner_checkpoint(
             type(payload["sequence"]) is not int or payload["sequence"] < 1 or
             type(payload["count"]) is not int or payload["count"] != count or
             payload["head_sha256"] != head or
-            payload["allowlist_sha256"] != expected_allowlist_sha256
+            payload["allowlist_sha256"] != expected_allowlist_sha256 or
+            payload["metadata_document_sha256"] != metadata_sha
         ):
             issues.add("CHECKPOINT_CONTENT_OR_SEQUENCE_MISMATCH")
         else:
@@ -202,6 +210,7 @@ def verify_owner_checkpoint(
         reason_codes=tuple(sorted(issues)),
         record_count=count,
         head_sha256=head,
+        metadata_document_sha256=metadata_sha,
         signer_authenticated_against_owner_root=signature_good,
         previous_owner_pin_ancestry_verified=eligible,
         next_floor_candidate=next_floor,
