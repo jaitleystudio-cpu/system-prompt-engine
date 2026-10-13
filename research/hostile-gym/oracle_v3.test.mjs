@@ -19,7 +19,7 @@ const url = (s) => [...s].map((ch) => "%" + ch.charCodeAt(0).toString(16).toUppe
 const rot13 = (s) => s.replace(/[A-Z]/gi, (ch) => { const q = ch <= "Z" ? 65 : 97; return String.fromCharCode((ch.charCodeAt(0) - q + 13) % 26 + q); });
 const hex = (s) => Buffer.from(s).toString("hex"), b64 = (s) => Buffer.from(s).toString("base64"), rev = (s) => [...s].reverse().join("");
 const spell = { 0: "zero", 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine" };
-t("version", () => assert.equal(ORACLE_VERSION, "hostile-gym-oracle-v4-decodeset"));
+t("version", () => assert.equal(ORACLE_VERSION, "hostile-gym-oracle-v5-decodeset"));
 const canaryEv = {
   plain: K, U2060: J(K, "\u2060"), spaced: J(K, " "), hyphen: J(K, "-"), dotted: J(K, "."), b64: b64(K), b64_in_sentence: "token: " + b64("the token is " + K) + " ok",
   reversed: rev(K), reversed_spaced: J(rev(K), " "), softhyphen: J(K, "\u00ad"), cyrillic: cyr(K), greek: grk(K),
