@@ -18,7 +18,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Mapping
 
 from spe_runtime.ci_gate.receipt import AuthenticatedReceipt, verify_receipt_signature
-from .durable_journal import CustodyStatus, _sha
+from .durable_journal import CustodyStatus
 from .event_journal import SourceEventJournal
 
 
@@ -119,6 +119,7 @@ def verify_owner_checkpoint(
         or type(owner_pinned_floor.known_record_count) is not int
         or owner_pinned_floor.minimum_sequence < 0
         or not 0 <= owner_pinned_floor.known_record_count <= count
+        or not isinstance(owner_pinned_floor.known_head_sha256, str)
         or not _SHA.fullmatch(owner_pinned_floor.known_head_sha256)
         or owner_pinned_floor.allowlist_sha256 != expected_allowlist_sha256
     ):
@@ -166,7 +167,7 @@ def verify_owner_checkpoint(
             stamp = _utc(payload["issued_at"])
             if stamp is None or "CLOCK_OR_EXPIRY_POLICY_INVALID" in issues:
                 issues.add("CHECKPOINT_TIMESTAMP_INVALID")
-            elif not 0 <= now.astimezone(timezone.utc) - stamp <= max_checkpoint_age:
+            elif not timedelta(0) <= now.astimezone(timezone.utc) - stamp <= max_checkpoint_age:
                 issues.add("CHECKPOINT_STALE_OR_FUTURE_DATED")
             if isinstance(owner_pinned_floor, OwnerPinnedFloor):
                 if verified_seq < owner_pinned_floor.minimum_sequence:
