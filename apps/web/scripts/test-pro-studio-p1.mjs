@@ -68,6 +68,27 @@ async function dragCheck(pg, kind, doDrag) {
   await dragCheck(pg, "touch", async (x0, y0, x1, y1) => { await touch("touchStart", x0, y0); for (let k = 1; k <= 20; k++) await touch("touchMove", x0 + (x1 - x0) * k / 20, y0 + (y1 - y0) * k / 20); await touch("touchEnd"); });
   if (SHOT) { mkdirSync(SHOT, { recursive: true }); await pg.screenshot({ path: `${SHOT}/${PFX}studio-mobile-after-touch-drag-390.png`, fullPage: true }); }
   await c.close(); }
+// P3 mobile density. Before (fa396a1f): height 3589/3674px (390/360), prompt at y=2137/2159, checks at 2733/2756,
+// 29 tap targets <44px, 31 text nodes <14px, overflow 0. Assert the after state stays well below that.
+for (const [w, H] of [[390, 3589], [360, 3674]]) {
+  const c = await b.newContext({ viewport: { width: w, height: 844 }, isMobile: true, hasTouch: true }); const pg = await c.newPage();
+  await pg.goto(BASE); await pg.click("#btn-example");
+  const m = await pg.evaluate(() => { const vis = e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+    const taps = [...document.querySelectorAll("button,select,input:not([type=file]),textarea,a,[role=tab]")].filter(vis).filter(e => { const r = e.getBoundingClientRect(); return r.height < 44 || r.width < 44; });
+    const txt = [...document.querySelectorAll("body *")].filter(e => vis(e) && !e.closest(".sr-only") && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && parseFloat(getComputedStyle(e).fontSize) < 14);
+    return { h: document.documentElement.scrollHeight, ov: document.documentElement.scrollWidth - innerWidth, taps: taps.length, txt: txt.length }; });
+  ok(m.h <= H * 0.8, `${w}px: page height ${m.h} <= 80% of before ${H}`);
+  ok(m.ov <= 0 && m.taps === 0 && m.txt === 0, `${w}px: overflow ${m.ov}, small taps ${m.taps}, small text ${m.txt}`);
+  ok(await pg.locator(".mjump").isVisible(), `${w}px: sticky jump bar visible`);
+  await pg.locator('.mjump a[href="#preview-title"]').tap(); await pg.waitForTimeout(400);
+  ok(await pg.evaluate(() => { const r = document.querySelector("#preview").getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }), `${w}px: one tap on Prompt brings the prompt into view`);
+  ok(await pg.locator("#quality").isHidden() && await pg.locator("#q-sum").isVisible(), `${w}px: checks collapsed by default with summary`);
+  await pg.locator("#q-toggle").tap(); ok(await pg.locator("#quality").isVisible() && await pg.locator("#q-toggle").getAttribute("aria-expanded") === "true", `${w}px: checks expand on tap`);
+  if (SHOT && w === 390) await pg.screenshot({ path: `${SHOT}/${PFX}studio-mobile-checks-open-390.png`, fullPage: true });
+  await c.close(); }
+{ const pg = await b.newPage({ viewport: { width: 1440, height: 900 } }); await pg.goto(BASE); await pg.click("#btn-example");
+  ok(await pg.locator(".mjump").isHidden() && await pg.locator("#q-toggle").isHidden() && await pg.locator("#quality").isVisible(), "desktop: no mobile bar/toggle, checks visible");
+  await pg.close(); }
 if (SHOT) { mkdirSync(SHOT, { recursive: true }); await p.screenshot({ path: `${SHOT}/${PFX}studio-desktop-1440.png`, fullPage: true });
   await p.evaluate(() => window.__spe.selectTab("ab")); await p.screenshot({ path: `${SHOT}/${PFX}studio-compare-desktop-1440.png`, fullPage: true });
   const m = await b.newPage({ viewport: { width: 390, height: 844 }, isMobile: true }); await m.goto(BASE); await m.click("#btn-example");

@@ -69,13 +69,15 @@
           <pre id="preview" class="preview" tabindex="0" aria-label="Assembled prompt preview"></pre>
           <p class="stats" id="stats" aria-live="polite"></p>
         </section>
-        <section class="panel" aria-labelledby="q-title">
-          <div class="panel__head"><h2 id="q-title" class="panel__title">Static Prompt Checks</h2></div>
+        <section class="panel qpanel" id="q-panel" aria-labelledby="q-title">
+          <div class="panel__head"><h2 id="q-title" class="panel__title">Static Prompt Checks</h2><button type="button" class="btn btn--ghost btn--sm q-toggle" id="q-toggle" aria-expanded="true" aria-controls="quality">Hide checks</button></div>
+          <p class="small q-sum" id="q-sum"></p>
           <p class="small q-note" id="q-note">These are static checks of the prompt text, not a measure of output quality.</p>
           <ul id="quality" class="quality"></ul>
         </section>
       </div>
     </div>
+    <nav class="mjump" aria-label="Jump to section"><a href="#blocks-title">Blocks</a><a href="#preview-title">Prompt</a><a href="#q-title">Checks</a></nav>
     </div>
     <div id="view-ver" role="tabpanel" aria-labelledby="tab-ver" hidden>
       <div class="ed-grid">

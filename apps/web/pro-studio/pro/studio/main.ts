@@ -140,7 +140,8 @@ function renderSide() {
   $("#preview").innerHTML = text ? esc(text) : '<span class="ph">Your assembled prompt appears here as you type.</span>';
   const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
   $("#stats").textContent = `${blocks.length} blocks · ${words} words · ${text.length} chars · ~${tokens(text)} tokens`;
-  $("#quality").innerHTML = qHtml(check(blocks));
+  const qs = check(blocks); $("#quality").innerHTML = qHtml(qs);
+  $("#q-sum").textContent = `${detSummary(blocks)} · ${qs.filter(q => q.level === "warn").length} heuristic warnings`;
   save();
 }
 
@@ -244,4 +245,9 @@ const tabs = ["edit", "ver", "ab"];
 function selectTab(k: string, focus = false) { tabs.forEach(t => { const on = t === k; const b = $(`#tab-${t}`); b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; ($(`#view-${t}`) as HTMLElement).hidden = !on; if (on && focus) b.focus(); }); if (k !== "edit") renderVersions(); }
 tabs.forEach((t, i) => { const b = $(`#tab-${t}`); b.addEventListener("click", () => selectTab(t)); b.addEventListener("keydown", e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); selectTab(tabs[(i + (e.key === "ArrowRight" ? 1 : 2)) % 3], true); } }); });
 (window as any).__spe.lineDiff = lineDiff; (window as any).__spe.selectTab = selectTab;
+// Mobile: checks start collapsed to save space; desktop always shows them (toggle hidden by CSS).
+const qToggle = $("#q-toggle") as HTMLButtonElement;
+const setQ = (open: boolean) => { qToggle.setAttribute("aria-expanded", String(open)); qToggle.textContent = open ? "Hide checks" : "Show checks"; $("#q-panel").classList.toggle("q-collapsed", !open); };
+qToggle.addEventListener("click", () => setQ(qToggle.getAttribute("aria-expanded") !== "true"));
+if (matchMedia("(max-width:767px)").matches) setQ(false);
 load(); render(); renderVersions();
