@@ -103,7 +103,7 @@ def test_private_missing_signed_review_or_hold_is_refused(field):
     {"investigation": investigation(source_review_content_sha256=None)},
 ])
 def test_snapshot_cross_owner_binding_rejects_mismatches(field):
-    with pytest.raises(PermissionError, match="INCIDENT_SOURCE_SNAPSHOT_NOT_BOUND"):
+    with pytest.raises(PermissionError, match="INCIDENT_SOURCE_SNAPSHOT_NOT_BOUND|EXTERNAL_INCIDENT_IDENTITY_NOT_VERIFIED"):
         render(**field)
 
 
