@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#08090B" />
+<meta name="description" content="Pro preview. SPE Pro Prompt Studio. Runs entirely in your browser." />
+<title>Prompt Studio · SPE Pro (preview)</title>
+<link rel="stylesheet" href="./studio.css" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to editor</a>
+<header class="nav" role="banner">
+  <div class="wrap wrap--wide nav__in">
+    <a class="brand" href="/pro/studio/"><span class="brand__mark" aria-hidden="true"></span>SPE</a>
+    <span class="badge">Pro preview</span><span class="ed-tag">Prompt Studio</span>
+    <div class="ed-io">
+      <button type="button" class="btn btn--ghost btn--sm" id="btn-example">Load example</button>
+      <button type="button" class="btn btn--ghost btn--sm" id="btn-import">Import .spe</button>
+      <input type="file" id="file-import" accept=".spe,application/json" class="sr-only" tabindex="-1" aria-hidden="true" />
+      <button type="button" class="btn btn--sm" id="btn-export">Export .spe</button>
+    </div>
+  </div>
+</header>
+<main id="main" class="ed">
+  <div class="wrap wrap--wide">
+    <div class="ed-head">
+      <div>
+        <p class="eyebrow">SPE Pro · Prompt Studio</p>
+        <h1 class="ed-h1">Build your system prompt in blocks.</h1>
+      </div>
+      <p class="privacy" role="note"><span class="privacy__dot" aria-hidden="true"></span><span><strong>Nothing leaves your browser.</strong> No uploads, no account, no network calls. Your draft is saved only on this device.</span></p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Studio views">
+      <button type="button" role="tab" class="tab" id="tab-edit" aria-controls="view-edit" aria-selected="true">Editor</button>
+      <button type="button" role="tab" class="tab" id="tab-ver" aria-controls="view-ver" aria-selected="false" tabindex="-1">Versions &amp; diff</button>
+      <button type="button" role="tab" class="tab" id="tab-ab" aria-controls="view-ab" aria-selected="false" tabindex="-1">A/B compare</button>
+    </div>
+    <div id="view-edit" role="tabpanel" aria-labelledby="tab-edit">
+    <div class="ed-grid">
+      <section class="panel" aria-labelledby="blocks-title">
+        <div class="panel__head">
+          <h2 id="blocks-title" class="panel__title">Blocks</h2>
+          <div class="add">
+            <label for="add-kind" class="sr-only">Block type to add</label>
+            <select id="add-kind" class="sel">
+              <option value="role">Role</option><option value="rules">Rules</option><option value="tone">Tone</option><option value="output">Output format</option><option value="examples">Examples</option><option value="custom">Custom</option>
+            </select>
+            <button type="button" class="btn btn--sm" id="btn-add">Add block</button>
+          </div>
+        </div>
+        <ol id="blocks" class="blocks" aria-describedby="dnd-help"></ol>
+        <p id="dnd-help" class="small">Drag a block by its handle, or focus the handle and use Alt + Arrow Up / Down to reorder.</p>
+        <div id="empty" class="empty" hidden>
+          <p class="h3">Start with an empty canvas</p>
+          <p class="small">Add a Role block first, or load a realistic example to see how it works.</p>
+          <div class="empty__cta"><button type="button" class="btn btn--sm" id="btn-starter">Add starter blocks</button><button type="button" class="btn btn--ghost btn--sm" id="btn-example2">Load example</button></div>
+        </div>
+      </section>
+      <div class="side">
+        <section class="panel" aria-labelledby="preview-title">
+          <div class="panel__head">
+            <h2 id="preview-title" class="panel__title">Assembled prompt</h2>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-copy">Copy</button>
+          </div>
+          <pre id="preview" class="preview" tabindex="0" aria-label="Assembled prompt preview"></pre>
+          <p class="stats" id="stats" aria-live="polite"></p>
+        </section>
+        <section class="panel" aria-labelledby="q-title">
+          <div class="panel__head"><h2 id="q-title" class="panel__title">Quality check</h2><span class="small q-note">Local heuristics, not a model judgement</span></div>
+          <ul id="quality" class="quality"></ul>
+        </section>
+      </div>
+    </div>
+    </div>
+    <div id="view-ver" role="tabpanel" aria-labelledby="tab-ver" hidden>
+      <div class="ed-grid">
+        <section class="panel" aria-labelledby="v-title">
+          <div class="panel__head"><h2 id="v-title" class="panel__title">Version history</h2></div>
+          <div class="row"><div class="field" style="flex:1"><label for="v-name">Version note</label><input id="v-name" class="inp" placeholder="e.g. Tightened refund rule" maxlength="80" /></div><button type="button" class="btn btn--sm" id="btn-save-v">Save version</button></div>
+          <ol id="vlist" class="vlist"></ol>
+          <p class="small">Versions are stored only in this browser (localStorage) and included in .spe exports.</p>
+        </section>
+        <section class="panel" aria-labelledby="d-title">
+          <div class="panel__head"><h2 id="d-title" class="panel__title">Diff</h2></div>
+          <div class="row"><div class="field"><label for="d-from">From</label><select id="d-from" class="inp"></select></div><div class="field"><label for="d-to">To</label><select id="d-to" class="inp"></select></div></div>
+          <p class="score" id="d-sum" aria-live="polite"></p>
+          <pre id="diff" class="diff" tabindex="0" aria-label="Line diff between the two versions"></pre>
+        </section>
+      </div>
+    </div>
+    <div id="view-ab" role="tabpanel" aria-labelledby="tab-ab" hidden>
+      <section class="panel" aria-labelledby="ab-title">
+        <div class="panel__head"><h2 id="ab-title" class="panel__title">A/B compare</h2><span class="small q-note">Static comparison by local heuristics. No model is called.</span></div>
+        <div class="row"><div class="field"><label for="ab-a">Variant A</label><select id="ab-a" class="inp"></select></div><div class="field"><label for="ab-b">Variant B</label><select id="ab-b" class="inp"></select></div></div>
+        <div class="ab">
+          <div><h3 class="h3">A</h3><p class="score" id="ab-sa"></p><pre id="ab-pa" class="preview" tabindex="0" aria-label="Variant A prompt"></pre><ul id="ab-qa" class="quality"></ul></div>
+          <div><h3 class="h3">B</h3><p class="score" id="ab-sb"></p><pre id="ab-pb" class="preview" tabindex="0" aria-label="Variant B prompt"></pre><ul id="ab-qb" class="quality"></ul></div>
+        </div>
+        <p class="ab__sum small" id="ab-sum" aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+</main>
+<p id="live" class="sr-only" aria-live="polite"></p>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>
