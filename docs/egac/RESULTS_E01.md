@@ -118,3 +118,15 @@ Fixed (each now refused; `tests/research/egac/test_egac_round4_gate.py`, 25 test
 
 **Over-block:** still **5/7 (71%)** on the 7 benign cases (`test_overblock_measured_on_bro_benign_cases`, unchanged). The new scopes make the gate stricter, so over-block on real prompts can only rise; it is not measured beyond these 7 cases.
 **E01 re-gate:** 120/120 allowed, treatment sha16 `48b471c474652f2d` (unchanged). `run_tests.sh`: 139 passed. E01 verdict unchanged (NOT_PROVEN).
+
+## Round 5 (Bro round-4 falsification @ 1da24674): over-block regression fixed, scope frozen
+
+- **Over-block regression fixed.** A forward/backward reference word now opens a scope only when the same line also
+  carries a directive (`_DIRECTIVE_RE`). Deleting "Thanks for reading." near unrelated "below", "following week",
+  "next Monday", "earlier draft" (before and after), "this sentence", and "below" + blank is allowed again:
+  7 cases × 2 touch sets in `tests/research/egac/test_egac_round5_overblock.py` (6 of the 7 were RED at 1da24674),
+  plus 5 directive+reference controls that stay refused. All round-3/4 refuse cases still refused.
+- **No new reference phrases.** Remaining reference forms are frozen out of scope in `docs/egac/SCOPE_BOUNDARY.md`
+  (sha256 in `docs/egac/SCOPE_BOUNDARY.sha256`). EGAC is lexical and cannot resolve arbitrary references.
+- Over-block on Bro's 7 benign cases: still 5/7 (unchanged test). `run_tests.sh`: **158 passed**.
+  **E01 re-gate: 120/120 allowed, treatment sha16 `48b471c474652f2d` (unchanged).** E01 stays NOT_PROVEN.

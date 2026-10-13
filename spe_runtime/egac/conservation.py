@@ -253,6 +253,15 @@ _FORWARD_RE = re.compile(
 _BACKREF_RE = re.compile(
     r"\b(?:above|previous|preceding|prior|aforementioned|foregoing|earlier|former"
     r"|(?:the\s+)?last\s+(?:line|sentence|paragraph))\b")
+# Round 5 (Bro round-4 over-block): a forward/backward reference word opens a scope ONLY when the same line also
+# carries a directive (sign/end/close/reply/append/repeat/must/mandatory/always/every/verbatim/exact/...). Bare
+# temporal or locative prose ("the cafe is below", "the following week", "next Monday", "the earlier draft",
+# "this sentence is about cats") no longer protects neighbouring lines. EGAC is lexical: it cannot resolve
+# arbitrary references (see docs/egac/SCOPE_BOUNDARY.md).
+_DIRECTIVE_RE = re.compile(
+    r"\b(?:sign(?:[\s-]?off)?|signs|signed|end|ends|close|closes|reply|replies|respond|answer|answers|append|prepend"
+    r"|include|repeat|quote|copy|insert|output|print|keep|preserve|retain|use|must|mandatory|required|requires?"
+    r"|always|every|each|verbatim|exact(?:ly)?|never|do\s+not|don'?t)\b")
 _QUOTES = '"\u201c\u201d\u00ab\u00bb\u300c\u300d'
 _TERMINAL = tuple(".!?;:)]}\u3002")
 
@@ -274,9 +283,10 @@ def _context_keep(lines: list[str]) -> list[bool]:
         if in_scope or open_quote or _quoted(k):
             keep[i] = True
             pending = False
-        if _CONTRACT_RE.search(k) or _FORWARD_RE.search(k):
+        directive = bool(_DIRECTIVE_RE.search(k))
+        if _CONTRACT_RE.search(k) or (_FORWARD_RE.search(k) and directive):
             in_scope, pending = True, True
-        if _BACKREF_RE.search(k):
+        if _BACKREF_RE.search(k) and directive:
             j, crossed = i - 1, False
             while j >= 0:
                 if not sks[j].strip():
