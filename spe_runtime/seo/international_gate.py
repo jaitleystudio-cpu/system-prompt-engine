@@ -128,6 +128,8 @@ def wilson_lower_95(successes: int, trials: int) -> float:
     """
     if trials <= 0 or not 0 <= successes <= trials:
         raise ValueError("INVALID_WILSON_COUNTS")
+    if successes == 0:
+        return 0.0
     z = 1.959963984540054
     p = successes / trials
     denom = 1 + z * z / trials
