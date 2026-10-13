@@ -185,6 +185,48 @@ for (const [w, mob] of [[1440, false], [390, true]]) { const tag = mob ? "390" :
     if (SHOT) { await pg.locator("#vars").scrollIntoViewIfNeeded(); await pg.screenshot({ path: `${SHOT}/${PFX}variables-${tag}.png`, fullPage: !mob }); }
   } catch (e) { ok(false, `P6 ${tag}: ${String(e.message).split("\n")[0]}`); }
   await c.close(); }
+// P8: starter template gallery
+for (const [w, mob] of [[1440, false], [390, true]]) { const tag = mob ? "390" : "desktop";
+  const c = await b.newContext({ viewport: { width: w, height: mob ? 844 : 900 }, isMobile: mob, hasTouch: mob, bypassCSP: !!AXE }); const pg = await c.newPage();
+  const dlg = []; let accept = false; pg.on("dialog", d => { dlg.push(d.message()); accept ? d.accept() : d.dismiss(); });
+  try {
+    await pg.goto(BASE); await pg.evaluate(() => localStorage.clear()); await pg.reload();
+    await pg.click("#btn-templates", { timeout: 3000 });
+    ok(await pg.locator("#tpl-dialog").isVisible(), `P8 ${tag}: gallery opens`);
+    const n = await pg.locator("#tpl-list .tpl-card").count(); ok(n >= 6 && n <= 8, `P8 ${tag}: ${n} templates`);
+    const card0 = await pg.locator("#tpl-list .tpl-card").first().innerText();
+    ok(/Blocks:/.test(card0) && /Variables:/.test(card0), `P8 ${tag}: card shows name, purpose, block types, variables`);
+    await pg.fill("#tpl-filter", "telugu"); const vis = await pg.locator("#tpl-list .tpl-card:visible").count();
+    ok(vis === 1 && /Telugu/.test(await pg.locator("#tpl-list .tpl-card:visible").innerText()), `P8 ${tag}: filter 'telugu' -> ${vis} card`);
+    await pg.fill("#tpl-filter", "zzzz"); ok(await pg.locator("#tpl-list .tpl-card:visible").count() === 0 && await pg.locator("#tpl-none").isVisible(), `P8 ${tag}: filter with no match shows empty message`);
+    await pg.fill("#tpl-filter", "");
+    if (SHOT) await pg.screenshot({ path: `${SHOT}/${PFX}gallery-${tag}.png` });
+    if (mob) for (const el of await pg.locator("#tpl-dialog button, #tpl-dialog input").all()) { const r = await el.boundingBox(); if (r && (r.height < 44 || r.width < 44)) { ok(false, `P8 ${tag}: tap target ${Math.round(r.width)}x${Math.round(r.height)}`); break; } }
+    if (AXE) { await pg.addScriptTag({ content: readFileSync(AXE, "utf8") }); const r = await pg.evaluate(() => axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa", "best-practice"] }));
+      ok(r.violations.length === 0, `P8 axe ${tag} gallery: ${r.violations.map(v => v.id + "(" + v.nodes.length + ")").join(",") || "0 violations"}`); }
+    // empty draft: loads without confirm
+    await pg.locator('#tpl-list .tpl-card[data-tpl="support"] .tpl-use').click();
+    const kinds = await pg.$$eval("#blocks > li", l => l.map(x => x.dataset.k).join(","));
+    ok(dlg.length === 0 && kinds === "role,rules,tone,output,examples,requirements" && await pg.locator("#tpl-dialog").isHidden(), `P8 ${tag}: empty draft loads without confirm (${kinds})`);
+    const vn = await pg.locator("#vars [data-var]").evaluateAll(l => l.map(x => x.dataset.var).join(","));
+    ok(vn === "product_name,support_hours,escalation_contact", `P8 ${tag}: expected variables (${vn})`);
+    if (SHOT) await pg.screenshot({ path: `${SHOT}/${PFX}loaded-${tag}.png`, fullPage: !mob });
+    // non-empty draft: dismiss confirm keeps draft
+    const prev = await pg.locator("#preview").innerText();
+    await pg.click("#btn-templates"); await pg.locator('#tpl-list .tpl-card[data-tpl="code"] .tpl-use').click();
+    ok(dlg.length === 1 && await pg.locator("#preview").innerText() === prev, `P8 ${tag}: confirm protects non-empty draft (cancel keeps it)`);
+    const nv0 = await pg.evaluate(() => JSON.parse(localStorage.getItem("spe.pro.studio.r1.versions") || "[]").length);
+    accept = true; if (await pg.locator("#tpl-dialog").isHidden()) await pg.click("#btn-templates");
+    await pg.locator('#tpl-list .tpl-card[data-tpl="code"] .tpl-use').click();
+    const vs = await pg.evaluate(() => JSON.parse(localStorage.getItem("spe.pro.studio.r1.versions") || "[]"));
+    ok(vs.length === nv0 + 1 && /Before template/.test(vs.at(-1).note) && /product_name/.test(JSON.stringify(vs.at(-1).blocks)), `P8 ${tag}: auto-version saved old draft (${vs.at(-1)?.note})`);
+    ok((await pg.locator("#preview").innerText()).includes("## Role") && !(await pg.locator("#preview").innerText()).includes("product_name"), `P8 ${tag}: template replaced draft after confirm`);
+    // every template passes deterministic checks
+    if (!mob) { const ids = await pg.evaluate(() => window.__spe.TEMPLATES.map(t => t.id)); const bad = [];
+      for (const id of ids) { const r = await pg.evaluate(i => { const t = window.__spe.TEMPLATES.find(x => x.id === i); return window.__spe.check(t.blocks.map(b => ({ ...b, id: "" }))).filter(q => q.type === "deterministic" && /Role|Output format|Length|both lists/.test(q.title) && q.level !== "ok").map(q => q.title); }, id); if (r.length) bad.push(id + ":" + r.join("/")); }
+      ok(bad.length === 0, `P8 ${tag}: all ${ids.length} templates pass deterministic checks ${bad.join(" ")}`); }
+  } catch (e) { ok(false, `P8 ${tag}: ${String(e.message).split("\n")[0]}`); }
+  await c.close(); }
 // P3 mobile density. Before (fa396a1f): height 3589/3674px (390/360), prompt at y=2137/2159, checks at 2733/2756,
 // 29 tap targets <44px, 31 text nodes <14px, overflow 0. Assert the after state stays well below that.
 for (const [w, H] of [[390, 3589], [360, 3674]]) {

@@ -18,7 +18,7 @@
     <a class="brand" href="/pro/studio/"><span class="brand__mark" aria-hidden="true"></span>SPE</a>
     <span class="badge">Pro preview</span><span class="ed-tag">Prompt Studio</span>
     <div class="ed-io">
-      <button type="button" class="btn btn--ghost btn--sm" id="btn-example">Load example</button>
+      <button type="button" class="btn btn--ghost btn--sm" id="btn-templates" aria-haspopup="dialog">Templates</button><button type="button" class="btn btn--ghost btn--sm" id="btn-example">Load example</button>
       <button type="button" class="btn btn--ghost btn--sm" id="btn-import">Import .spe</button>
       <input type="file" id="file-import" accept=".spe,application/json" class="sr-only" tabindex="-1" aria-hidden="true" />
       <button type="button" class="btn btn--sm" id="btn-export">Export .spe</button>
@@ -113,6 +113,14 @@
     </div>
   </div>
 </main>
+<dialog id="tpl-dialog" class="tpl" aria-labelledby="tpl-title">
+  <div class="tpl__head"><h2 id="tpl-title" class="ed-h2">Starter templates</h2><button type="button" class="icon-btn" id="tpl-close" aria-label="Close templates">✕</button></div>
+  <p class="small">Original starting points. Loading one saves your current draft as a version first.</p>
+  <div class="field"><label for="tpl-filter">Filter templates</label><input id="tpl-filter" class="inp" type="search" placeholder="e.g. json, tutor, telugu" autocomplete="off" /></div>
+  <p class="small" id="tpl-count" aria-live="polite"></p>
+  <ul id="tpl-list" class="tpl__list"></ul>
+  <p id="tpl-none" class="small" hidden>No templates match that filter.</p>
+</dialog>
 <p id="live" class="sr-only" aria-live="polite"></p>
 <script type="module" src="./main.ts"></script>
 </body>

@@ -1,3 +1,4 @@
+import { TEMPLATES } from "./templates";
 // SPE Pro Prompt Studio r1 — runs fully client-side. No network calls (CSP connect-src 'none').
 type Kind = "role" | "rules" | "tone" | "output" | "examples" | "requirements" | "custom";
 interface Block { id: string; kind: Kind; title: string; text: string; must?: string[]; mustNot?: string[] }
@@ -324,7 +325,7 @@ $("#file-import").addEventListener("change", async e => {
   (e.target as HTMLInputElement).value = "";
 });
 $("#btn-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(output()); announce(`Prompt copied (${mode === "filled" ? "Filled" : "Template"})`); } catch { announce("Copy failed; select the preview text instead"); } });
-(window as any).__spe = { findVars, filled, malformed, check, detSummary, assemble, toSpe, fromSpe };
+(window as any).__spe = { TEMPLATES, findVars, filled, malformed, check, detSummary, assemble, toSpe, fromSpe };
 $("#btn-save-v").addEventListener("click", () => { const inp = $("#v-name") as HTMLInputElement; versions.push({ id: uid(), note: inp.value.trim() || `Snapshot ${versions.length + 1}`, at: new Date().toISOString(), blocks: blocks.map(plain), variables: { ...vars } }); inp.value = ""; save(); renderVersions(); announce(`Saved version ${versions.length}`); });
 $("#vlist").addEventListener("click", e => { const t = e.target as HTMLElement; const r = t.closest("[data-restore]") as HTMLElement | null, d = t.closest("[data-delv]") as HTMLElement | null;
   if (r) { const v = versions.find(x => x.id === r.dataset.restore)!; if (v.variables) { vars = { ...v.variables }; varSig = ""; } setBlocks(v.blocks, `Restored ${v.note}`); renderVersions(); }
@@ -340,4 +341,21 @@ const setQ = (open: boolean) => { qToggle.setAttribute("aria-expanded", String(o
 qToggle.addEventListener("click", () => setQ(qToggle.getAttribute("aria-expanded") !== "true"));
 if (matchMedia("(max-width:767px)").matches) setQ(false);
 (["template", "filled"] as Mode[]).forEach(k => $(`#pv-${k}`).addEventListener("click", () => { mode = k; renderSide(); announce(`Preview shows ${k === "filled" ? "Filled" : "Template"}`); }));
+// Template gallery (native <dialog>: focus trap + Escape for free)
+const dlgEl = $("#tpl-dialog") as HTMLDialogElement;
+const kindList = (t: typeof TEMPLATES[number]) => t.blocks.map(b => LABEL[b.kind]).join(", ");
+const varList = (t: typeof TEMPLATES[number]) => findVars(t.blocks.map(b => b.kind === "requirements" ? reqText(b.must, b.mustNot) : b.text).join("\n")).map(([n]) => `{{${n}}}`).join(", ") || "none";
+$("#tpl-list").innerHTML = TEMPLATES.map(t => `<li class="tpl-card" data-tpl="${t.id}" data-q="${esc((t.name + " " + t.purpose + " " + kindList(t) + " " + varList(t)).toLowerCase())}"><h3 class="h3" id="tpl-${t.id}">${esc(t.name)}</h3><p class="small">${esc(t.purpose)}</p><p class="tpl-meta"><b>Blocks:</b> ${esc(kindList(t))}</p><p class="tpl-meta"><b>Variables:</b> <code>${esc(varList(t))}</code></p><button type="button" class="btn btn--sm tpl-use" aria-describedby="tpl-${t.id}">Use template</button></li>`).join("");
+$("#tpl-filter").addEventListener("input", e => { const q = (e.target as HTMLInputElement).value.trim().toLowerCase(); let n = 0;
+  document.querySelectorAll<HTMLElement>(".tpl-card").forEach(li => { const on = !q || li.dataset.q!.includes(q); li.hidden = !on; if (on) n++; });
+  ($("#tpl-none") as HTMLElement).hidden = n > 0; $("#tpl-count").textContent = `${n} of ${TEMPLATES.length} templates`; });
+$("#btn-templates").addEventListener("click", () => { dlgEl.showModal(); ($("#tpl-filter") as HTMLInputElement).focus(); });
+$("#tpl-close").addEventListener("click", () => dlgEl.close());
+$("#tpl-list").addEventListener("click", e => { const btn = (e.target as HTMLElement).closest(".tpl-use"); if (!btn) return;
+  const t = TEMPLATES.find(x => x.id === (btn.closest(".tpl-card") as HTMLElement).dataset.tpl)!;
+  if (blocks.some(b => b.text.trim())) {
+    if (!confirm(`Replace your current draft with “${t.name}”? Your current draft will be saved as a version first.`)) return;
+    versions.push({ id: uid(), note: `Before template: ${t.name}`, at: new Date().toISOString(), blocks: blocks.map(plain), variables: { ...vars } });
+  }
+  dlgEl.close(); vars = {}; varSig = ""; setBlocks(t.blocks.map(b => plain(b)), `Loaded template ${t.name}${versions.length ? ". Previous draft saved in Versions." : ""}`); renderVersions(); });
 load(); render(); renderVersions();
