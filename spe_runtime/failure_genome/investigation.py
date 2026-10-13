@@ -47,6 +47,7 @@ class InvestigationReport:
     reason_codes: tuple[str, ...]
     preflight: IncidentPreflight
     source_receipt_signature_valid: bool
+    source_review_content_sha256: str | None
     replay_capsule_integrity_valid: bool
     quality_disposition: str
     quality_evidence: dict[str, Any]
@@ -276,6 +277,7 @@ def assemble_investigation(
         reason_codes=tuple(sorted(issues)),
         preflight=preflight,
         source_receipt_signature_valid=verified_source,
+        source_review_content_sha256=source_content_sha256 if verified_source else None,
         replay_capsule_integrity_valid=capsule_valid,
         quality_disposition=quality,
         quality_evidence=summary,
