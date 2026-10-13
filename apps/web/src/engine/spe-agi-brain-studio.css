@@ -1,0 +1,322 @@
+/**
+ * SPE AGI BRAIN Ω — Studio Stylesheet
+ * High-end Dark Theme, WCAG 2.2 AAA Accessible, Touch Targets >= 42px
+ */
+
+.spe-agi-brain-root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  color: #f8fafc;
+  font-family: var(--spe-font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  background: #070b14;
+  border-radius: 16px;
+  padding: 1.25rem;
+  border: 1px solid rgba(217, 197, 154, 0.22);
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.spe-agi-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spe-agi-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.spe-agi-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.spe-agi-badge {
+  font-family: var(--spe-font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(217, 197, 154, 0.15);
+  border: 1px solid rgba(217, 197, 154, 0.35);
+  color: #e5d5b0;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.spe-agi-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.spe-agi-pill {
+  font-size: 0.72rem;
+  font-family: var(--spe-font-mono, monospace);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+.spe-agi-pill.highlight {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.spe-agi-pill.gold {
+  color: #e5d5b0;
+  border-color: rgba(229, 213, 176, 0.3);
+  background: rgba(229, 213, 176, 0.08);
+}
+
+/* Tab Bar */
+.spe-agi-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.spe-agi-tab-btn {
+  min-height: 44px;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  background: #0d1321;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spe-agi-tab-btn:hover {
+  background: #141c2e;
+  border-color: rgba(217, 197, 154, 0.3);
+  color: #ffffff;
+}
+
+.spe-agi-tab-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.spe-agi-tab-btn.active {
+  background: linear-gradient(180deg, rgba(229, 213, 176, 0.22) 0%, rgba(217, 197, 154, 0.1) 100%);
+  border: 1px solid #e5d5b0;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(229, 213, 176, 0.15);
+}
+
+/* Content Area */
+.spe-agi-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Grid Layouts */
+.spe-agi-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.spe-agi-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.85rem;
+}
+
+/* Cards */
+.spe-agi-card {
+  background: #0a0f1d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: border-color 0.15s ease;
+}
+
+.spe-agi-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.spe-agi-card.active-card {
+  border-color: #e5d5b0;
+  background: #0e1528;
+}
+
+.spe-agi-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spe-agi-card-desc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+/* Forms & Inputs */
+.spe-agi-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.spe-agi-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.spe-agi-input, .spe-agi-select, .spe-agi-textarea {
+  min-height: 42px;
+  padding: 0.55rem 0.85rem;
+  background: #050812;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.82rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.spe-agi-textarea {
+  min-height: 80px;
+  font-family: var(--spe-font-mono, monospace);
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.spe-agi-input:focus, .spe-agi-select:focus, .spe-agi-textarea:focus {
+  border-color: #e5d5b0;
+  box-shadow: 0 0 0 1px #e5d5b0;
+}
+
+/* Action Buttons */
+.spe-agi-btn {
+  min-height: 42px;
+  padding: 0.55rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.spe-agi-btn-primary {
+  background: #e5d5b0;
+  color: #070b14;
+}
+
+.spe-agi-btn-primary:hover {
+  background: #f1e4c7;
+  transform: translateY(-1px);
+}
+
+.spe-agi-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.spe-agi-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.spe-agi-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+/* Code Previews */
+.spe-agi-code-box {
+  background: #03060c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.9rem;
+  font-family: var(--spe-font-mono, monospace);
+  font-size: 0.76rem;
+  color: #cbd5e1;
+  overflow-x: auto;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* Progress Bar */
+.spe-agi-progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.spe-agi-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8 0%, #10b981 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Status Badges */
+.spe-status-verified {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+
+.spe-status-unknown {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+
+.spe-status-rejected {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.7rem;
+}

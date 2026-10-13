@@ -8,6 +8,7 @@ import { OmegaProofStudio } from "./OmegaProofStudio";
 import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
 import { SpeClickyContinuationHub } from "./SpeClickyContinuationHub";
 import { SpeV5MoonshotNorthStarBrain } from "./SpeV5MoonshotNorthStarBrain";
+import { SpeAgiBrainStudio } from "./SpeAgiBrainStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -27,6 +28,14 @@ export interface FeatureItem {
 }
 
 export const FEATURES: FeatureItem[] = [
+  {
+    id: "spe-agi-brain-omega",
+    view: "capabilities",
+    title: "🧠 SPE AGI BRAIN Ω",
+    subtitle: "Frontier Science, Executable World Models, 12 Invention Strategies & 100k-Word DeepWriter",
+    href: "/capabilities",
+    badge: "AGI Ω",
+  },
   {
     id: "spe-v5-moonshot-brain",
     view: "capabilities",
@@ -167,7 +176,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -186,13 +195,14 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "0.75rem",
-          padding: "1rem 1.25rem",
-          marginBottom: "1.5rem",
-          borderRadius: "12px",
-          background: "var(--spe-surface-card, rgba(255, 255, 255, 0.03))",
-          border: "1px solid var(--spe-border-subtle, rgba(255, 255, 255, 0.1))",
-          backdropFilter: "blur(12px)",
+          gap: "0.85rem",
+          padding: "1.35rem",
+          margin: "0 auto",
+          borderRadius: "20px",
+          background: "linear-gradient(180deg, rgba(13, 19, 33, 0.92) 0%, rgba(7, 11, 20, 0.98) 100%)",
+          backgroundColor: "#0b101d",
+          border: "1px solid rgba(217, 197, 154, 0.2)",
+          boxShadow: "0 22px 48px -18px rgba(0, 0, 0, 0.68), inset 0 1px 0 rgba(255, 255, 255, 0.06)",
         }}
       >
         <div
@@ -201,56 +211,65 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             justifyContent: "space-between",
             alignItems: "center",
             flexWrap: "wrap",
-            gap: "0.5rem",
+            gap: "0.75rem",
+            paddingBottom: "0.75rem",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
             <span
               style={{
-                fontSize: "0.75rem",
-                fontWeight: 700,
+                fontSize: "0.72rem",
+                fontFamily: "var(--spe-font-mono, monospace)",
+                fontWeight: 600,
                 textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                color: "var(--spe-text-muted, #888)",
+                letterSpacing: "0.14em",
+                color: "#f8fafc",
               }}
             >
               SPE DEVELOPER TOOLKIT
             </span>
             <span
               style={{
-                fontSize: "0.65rem",
-                padding: "0.15rem 0.45rem",
-                borderRadius: "999px",
-                background: "rgba(16, 185, 129, 0.15)",
-                color: "#10b981",
+                fontSize: "0.64rem",
+                fontFamily: "var(--spe-font-mono, monospace)",
+                padding: "0.2rem 0.65rem",
+                borderRadius: "9999px",
+                backgroundColor: "#141c2e",
+                background: "rgba(217, 197, 154, 0.14)",
+                border: "1px solid rgba(217, 197, 154, 0.3)",
+                color: "#e5d5b0",
                 fontWeight: 600,
+                whiteSpace: "nowrap",
               }}
             >
               v1.4 LIVE
             </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
             <input
               ref={inputRef}
               type="text"
+              aria-label="Filter developer toolkit features"
               placeholder="Jump to feature (⌘K)..."
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               style={{
-                fontSize: "0.75rem",
-                padding: "0.25rem 0.6rem",
-                borderRadius: "6px",
-                background: "rgba(0, 0, 0, 0.25)",
-                border: "1px solid rgba(255, 255, 255, 0.12)",
-                color: "#fff",
+                fontSize: "0.78rem",
+                minHeight: "38px",
+                padding: "0.4rem 0.9rem",
+                borderRadius: "9999px",
+                background: "#050812",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                color: "#f8fafc",
                 outline: "none",
-                width: "170px",
+                width: "200px",
               }}
             />
             <span
               style={{
-                fontSize: "0.75rem",
-                color: "var(--spe-text-muted, #777)",
+                fontSize: "0.72rem",
+                color: "var(--muted, #9faac1)",
               }}
             >
               All Features Available 100% Free On-Device
@@ -261,7 +280,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: "0.6rem",
           }}
         >
@@ -283,18 +302,16 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: "0.2rem",
-                  padding: "0.6rem 0.8rem",
-                  borderRadius: "8px",
+                  gap: "0.3rem",
+                  padding: "0.8rem 0.95rem",
+                  borderRadius: "12px",
                   textDecoration: "none",
-                  background: isCurrent
-                    ? "var(--spe-accent-soft, rgba(99, 102, 241, 0.15))"
-                    : "var(--spe-surface-hover, rgba(255, 255, 255, 0.02))",
+                  background: isCurrent ? "rgba(229, 213, 176, 0.1)" : "#050812",
                   border: isCurrent
-                    ? "1px solid var(--spe-accent, #6366f1)"
-                    : "1px solid var(--spe-border-subtle, rgba(255, 255, 255, 0.06))",
+                    ? "1px solid #e5d5b0"
+                    : "1px solid rgba(255, 255, 255, 0.1)",
                   color: "inherit",
-                  transition: "all 0.15s ease",
+                  transition: "border-color 0.15s ease",
                   cursor: "pointer",
                 }}
               >
@@ -303,13 +320,14 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    gap: "0.4rem",
                   }}
                 >
                   <span
                     style={{
                       fontWeight: 600,
-                      fontSize: "0.85rem",
-                      color: "var(--spe-text-primary, #fff)",
+                      fontSize: "0.8rem",
+                      color: "#f8fafc",
                     }}
                   >
                     {item.title}
@@ -317,12 +335,15 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                   {item.badge && (
                     <span
                       style={{
-                        fontSize: "0.6rem",
-                        fontWeight: 700,
-                        padding: "0.1rem 0.35rem",
-                        borderRadius: "4px",
-                        background: "linear-gradient(135deg, #6366f1, #a855f7)",
-                        color: "#fff",
+                        fontSize: "0.58rem",
+                        fontFamily: "var(--spe-font-mono, monospace)",
+                        fontWeight: 600,
+                        padding: "0.14rem 0.48rem",
+                        borderRadius: "9999px",
+                        background: "rgba(229, 213, 176, 0.1)",
+                        border: "1px solid rgba(229, 213, 176, 0.26)",
+                        color: "#e5d5b0",
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {item.badge}
@@ -332,8 +353,8 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 <span
                   style={{
                     fontSize: "0.7rem",
-                    color: "var(--spe-text-muted, #888)",
-                    lineHeight: "1.2",
+                    color: "var(--muted, #9faac1)",
+                    lineHeight: "1.35",
                   }}
                 >
                   {item.subtitle}
@@ -393,6 +414,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff" }}>
+                  {activeModal === "spe-agi-brain-omega" && "🧠 SPE AGI BRAIN Ω · Frontier Science Studio"}
                   {activeModal === "spe-v5-moonshot-brain" && "🧠 SPE v5.0 Moonshot North-Star Brain"}
                   {activeModal === "spe-clicky-hub" && "🎯 SPE Clicky Autonomous Continuation Hub"}
                   {activeModal === "omega-proof" && "🛡️ Audit Receipts · Verification & Proof"}
@@ -434,6 +456,10 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 ✕ Close
               </button>
             </div>
+
+            {activeModal === "spe-agi-brain-omega" && (
+              <SpeAgiBrainStudio onNavigate={onNavigate} onClose={() => setActiveModal(null)} />
+            )}
 
             {activeModal === "spe-v5-moonshot-brain" && (
               <SpeV5MoonshotNorthStarBrain onNavigate={onNavigate} />
