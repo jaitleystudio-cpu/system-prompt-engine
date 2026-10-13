@@ -43,3 +43,11 @@ def test_holdout_refuses_without_prereg_match(tmp_path):
     r = subprocess.run([sys.executable, "-m", "spe_runtime.research.rgd1.run", "holdout", str(tmp_path),
                         "--expect-prereg-sha", "0" * 64], capture_output=True, text=True, cwd=ROOT)
     assert r.returncode != 0 and "REFUSED" in r.stdout + r.stderr
+
+
+def test_embed_cache_creates_missing_cache_dir(tmp_path):
+    # Regression (Bro replay 2026-10-13): fresh checkout crashed with FileNotFoundError on data/rgd1_cache/emb.jsonl
+    from spe_runtime.research.rgd1.retrieval import EmbedCache
+    p = tmp_path / "fresh" / "rgd1_cache" / "emb.jsonl"
+    c = EmbedCache(str(p))
+    assert p.parent.is_dir() and c.d == {}

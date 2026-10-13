@@ -32,6 +32,7 @@ def main():
     ctype = {d["id"]: d["type"] for d in corpus}; ctext = {d["id"]: d["text"] for d in corpus}
     tasks = [json.loads(l) for l in open(os.path.join(FROZEN, "tasks.jsonl"))]
     tasks = [t for t in tasks if t["split"] == split]
+    os.makedirs(CACHE, exist_ok=True)  # fix (Bro replay 2026-10-13): fresh checkout crashed on missing data/rgd1_cache/
     bm = BM25(corpus); emb = EmbedCache(os.path.join(CACHE, "emb.jsonl"))
     oa = OpenAlex(max_credits=950) if oa_n else None
     os.makedirs(out, exist_ok=True); rows = []; n_oa = 0

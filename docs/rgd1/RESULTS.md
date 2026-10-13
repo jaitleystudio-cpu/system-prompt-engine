@@ -57,3 +57,8 @@ Secondary results:
 - **Ollama contention:** another worker was also using the shared Ollama, so latency numbers are inflated and noisy.
 - **Underpowered by design:** the family-level R03 − B2 test with 24 fields (stated in the prereg).
 - **Self-built:** the builder wrote the pipeline and analysis. Builder ≠ verifier is pending Bro.
+
+## Post-replay fix (2026-10-13, after Bro REPLAY_PASS @ d6fa486e)
+- Defect: a fresh checkout crashed with `FileNotFoundError: data/rgd1_cache/emb.jsonl` because the gitignored cache dir did not exist.
+- Fix: `EmbedCache`, `gen_queries` and `run.main` now create the cache directory. No scoring, data, or verdict change; R03 stays **NOT_PROVEN**.
+- Note: `run.py` changed after the prereg freeze; this change is I/O-only and does not touch any arm or metric.

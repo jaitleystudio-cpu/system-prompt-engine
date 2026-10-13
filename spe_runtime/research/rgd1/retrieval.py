@@ -46,6 +46,7 @@ def _post(path, payload, timeout=120):
 class EmbedCache:
     def __init__(self, path):
         self.path = path; self.d = {}
+        os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)  # fresh checkout: data/rgd1_cache/ is gitignored
         if os.path.exists(path):
             for l in open(path): r = json.loads(l); self.d[r["k"]] = r["v"]
     def get(self, text, prefix):
@@ -69,6 +70,7 @@ PROMPT = ("You check whether a published conclusion still stands. Paper title: \
 
 def gen_queries(title: str, cache_path: str) -> Tuple[List[str], float]:
     k = hashlib.sha256((GEN_MODEL + PROMPT + title).encode()).hexdigest()
+    os.makedirs(os.path.dirname(os.path.abspath(cache_path)), exist_ok=True)
     cache = {}
     if os.path.exists(cache_path):
         for l in open(cache_path): r = json.loads(l); cache[r["k"]] = r
