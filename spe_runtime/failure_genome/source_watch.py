@@ -259,7 +259,7 @@ class PublicStatusFeedObserver:
             body_digest = hashlib.sha256(json.dumps(
                 item, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
             ).encode("utf-8")).hexdigest()
-            prior = self._journal._subjects.get((feed.source_id, incident_id))
+            prior = self._journal.latest_entry(feed.source_id, incident_id)
             snapshot = SourceSnapshot(
                 source_id=feed.source_id,
                 event_id=incident_id,
@@ -270,7 +270,7 @@ class PublicStatusFeedObserver:
                 event_kind=EventKind.UPDATE if prior else EventKind.NOTICE,
                 subject_model=feed.model_scope,
                 title=title,
-                predecessor_digest=prior[0] if prior else None,
+                predecessor_digest=prior.content_sha256 if prior else None,
             )
             decision = self._journal.ingest(snapshot)
             if decision.decision is JournalDecision.ADDED:
