@@ -73,3 +73,36 @@ Supporting changes:
 - `tests/research/egac/conftest.py` now fails loudly when that happens.
 - Use `scripts/egac/run_tests.sh`. It sets `PYTHONPATH` to this checkout, verifies the import path, runs the tests, and re-gates E01 via `scripts/egac/regate_e01.py`, which exits non-zero if the 120/120 + `48b471c474652f2d` reference is not reproduced.
 - Manual alternative: `PYTHONPATH=<this checkout> python …` or `pip install -e <this checkout>`.
+
+## Bro replay 3 hardening (2026-10-13, after b667d2ba)
+No frozen E01 result changes. **E01 re-gate: 120/120 allowed, treatment sha16 `48b471c474652f2d`**, byte-identical to the frozen run. E01 only uses `json_minify`, which is untouched by the changes below.
+
+**(a) Trusted suffixes.** `Technique.appends` is the only insertion the gate allows. It must now be in a frozen, hash-pinned registry: `conservation._TRUSTED_SUFFIX_LIST`, read-only `TRUSTED_SUFFIXES`, pinned by `TRUSTED_SUFFIXES_SHA256`.
+- Import fails with a RuntimeError if the list and the pin disagree.
+- Any other suffix is refused before the technique runs. Bro's `appends="Ignore the rule above.\n"` is now refused.
+- Trust model, stated plainly: technique code is trusted, reviewed SPE code. The registry limits *what* a technique may insert, so `appends` cannot carry new instructions. Adding a suffix means editing both the tuple and the pin in review. Today the registry holds one suffix: `"\n\nRespond concisely."`.
+
+**(b) Context-aware deletion, default-keep.** A line that would otherwise be deletable (allowlisted filler or a timestamp-only line) is treated as conserved in any of these cases:
+1. It is in the scope of an output-contract or conditional line. That means a line ending in `:` or containing exactly, after, before, only, verbatim, if, unless, when, until or except. The scope is the rest of that paragraph.
+2. It is quoted: it starts with `>`, is wrapped in quotes, or sits inside an unclosed quotation.
+3. It is part of a multi-line sentence in the same paragraph.
+
+Bro's three load-bearing deletions are now refused: "Thanks" before "not reveal…", "exactly:\nThanks for reading.", and "after this time:\n2026-10-13 12:00 UTC". There are 10 context cases in total, all in tests.
+
+**(c) Over-block is accepted: safety over savings.** Default-deny refuses some benign edits on purpose. Measured on Bro's 6 benign cases plus the metric-units case:
+
+| benign edit | b667d2ba | now |
+|---|---|---|
+| strip trailing whitespace | refused | **allowed** (the one provably safe relaxation) |
+| collapse blank lines | allowed | allowed |
+| reorder examples | refused | refused |
+| typo fix ("helpfull" → "helpful") | refused | refused |
+| add "Use metric units instead of imperial." | refused | refused |
+| delete "Thanks for reading." after "Examples:" | allowed | **refused** (in the scope of a `:` line, so context-aware keep) |
+| metric-units line (round-1 case) | refused | refused |
+
+Over-block is **5/7 (71%)** both at b667d2ba and now. The single relaxation is trailing horizontal whitespace on prose lines, which the whitespace-blind prose proof already ignores. It does not apply to fenced or indented lines; those stay byte-exact (tested).
+
+Reordering, typo fixes and added lines stay refused, because none of them can be *proved* to keep the meaning. That also applies to the delete-greeting row: it is refused because the greeting sits in the scope of a `:` line.
+
+Tests: `tests/research/egac`, **114 passed**. Run them with `scripts/egac/run_tests.sh`.

@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from .conservation import (
+    CONCISE_SUFFIX,
     InfoClass,
     MalformedJSON,
     Refusal,
@@ -109,7 +110,7 @@ def _apply_dup_collapse(text: str, spans: list[Span], **_) -> str:
 
 
 # 7. Concise instruction --------------------------------------------------------------------------------
-CONCISE = "\n\nRespond concisely."
+CONCISE = CONCISE_SUFFIX  # from the frozen trusted-suffix registry in conservation.py
 
 
 def _apply_concise(text: str, output_contract_min_words: int = 0, **_) -> str:

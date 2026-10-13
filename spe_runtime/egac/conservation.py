@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import difflib
+import hashlib
 import json
 import os
 import re
 import unicodedata
 from dataclasses import dataclass, field
 from enum import Enum
+from types import MappingProxyType
 from typing import Callable, Iterable, Optional
 
 from spe_runtime.prompt.meta_compiler import ProtectedIntent
@@ -25,6 +27,28 @@ class InfoClass(str, Enum):
 
 IMMUTABLE = frozenset({InfoClass.PROTECTED, InfoClass.EXACT_BYTE})
 CONSERVED = frozenset({InfoClass.PROTECTED, InfoClass.EXACT_BYTE, InfoClass.EVIDENCE, InfoClass.UNVERIFIED})
+
+# ---------------------------------------------------------------- trusted constant suffixes (Bro replay 3)
+# A Technique's `appends` is the ONLY insertion the gate allows, so it must come from this frozen, hash-pinned
+# registry of SPE-authored suffixes. Any other suffix is refused. Trust model: technique code is trusted SPE code
+# (reviewed, in-repo); the registry pins WHAT it may insert, so a technique cannot smuggle new instructions
+# ("Ignore the rule above.") in through `appends`. Changing the set requires editing BOTH the tuple and the pin.
+CONCISE_SUFFIX = "\n\nRespond concisely."
+_TRUSTED_SUFFIX_LIST = (CONCISE_SUFFIX,)
+TRUSTED_SUFFIXES_SHA256 = "ba4003d048e23c866deb71ef663fc0f301e6ca656be580a3d8f8535090bda32a"
+
+
+def _registry_digest(items: Iterable[str]) -> str:
+    return hashlib.sha256("\0".join(sorted(items)).encode("utf-8")).hexdigest()
+
+
+if _registry_digest(_TRUSTED_SUFFIX_LIST) != TRUSTED_SUFFIXES_SHA256:  # pragma: no cover - tamper tripwire
+    raise RuntimeError("EGAC trusted-suffix registry does not match its pinned sha256")
+TRUSTED_SUFFIXES = MappingProxyType({hashlib.sha256(x.encode("utf-8")).hexdigest(): x for x in _TRUSTED_SUFFIX_LIST})
+
+
+def is_trusted_suffix(suffix: str) -> bool:
+    return TRUSTED_SUFFIXES.get(hashlib.sha256(suffix.encode("utf-8")).hexdigest()) == suffix
 
 
 @dataclass(frozen=True)
@@ -208,10 +232,56 @@ def _line_class(line: str, intent: Optional[ProtectedIntent]) -> InfoClass:
     return InfoClass.UNVERIFIED  # default-deny
 
 
+# Context-aware deletion (Bro replay 3). A line that would otherwise be deletable (REPLACEABLE filler or VOLATILE
+# stamp) is re-classified UNVERIFIED (conserved, default-keep) when ANY of these hold:
+#  1. it is inside the scope of an output-contract / conditional line: a line ending in ":" or containing
+#     exactly/after/before/only/verbatim/if/unless/when/until/except. Scope = the rest of that paragraph
+#     (until a blank line or a fence);
+#  2. it is quoted: starts with ">", is wrapped in quotes, or sits inside an unclosed quotation;
+#  3. it is part of a multi-line sentence: it has no terminal punctuation and the next line starts lower-case,
+#     or the previous line has no terminal punctuation (same paragraph only).
+# Blank lines stay REPLACEABLE (the prose proof is whitespace-blind) but end a scope.
+_CONTRACT_RE = re.compile(r"(?::\s*$|\b(?:exactly|after|before|only|verbatim|if|unless|when|until|except)\b)")
+_QUOTES = '"\u201c\u201d\u00ab\u00bb\u300c\u300d'
+_TERMINAL = tuple(".!?;:)]}\u3002")
+
+
+def _quoted(sk: str) -> bool:
+    t = sk.strip()
+    return t.startswith(">") or (len(t) >= 2 and t[0] in _QUOTES + "'`" and t[-1] in _QUOTES + "'`")
+
+
+def _context_keep(lines: list[str]) -> list[bool]:
+    sks = [skeleton(x.rstrip("\n")) for x in lines]
+    keep = [False] * len(lines)
+    in_scope, open_quote = False, False
+    for i, k in enumerate(sks):
+        if not k.strip():
+            in_scope = False
+            continue
+        if in_scope or open_quote or _quoted(k):
+            keep[i] = True
+        if _CONTRACT_RE.search(k):
+            in_scope = True
+        if sum(k.count(q) for q in _QUOTES) % 2 == 1:
+            open_quote = not open_quote
+            keep[i] = True
+        nxt = sks[i + 1].strip() if i + 1 < len(sks) else ""   # same paragraph only (a blank line breaks it)
+        prv = sks[i - 1].strip() if i > 0 else ""
+        if (not k.strip().endswith(_TERMINAL) and nxt[:1].islower()) or (prv and not prv.endswith(_TERMINAL)):
+            keep[i] = True
+    return keep
+
+
 def _classify_prose(text: str, base: int, intent) -> list[Span]:
     spans, pos = [], 0
-    for line in text.splitlines(keepends=True):
-        spans.append(Span(base + pos, base + pos + len(line), _line_class(line, intent), line))
+    lines = text.splitlines(keepends=True)
+    keep = _context_keep(lines)
+    for line, k in zip(lines, keep):
+        cls = _line_class(line, intent)
+        if k and cls in (InfoClass.REPLACEABLE, InfoClass.VOLATILE) and line.strip():
+            cls = InfoClass.UNVERIFIED
+        spans.append(Span(base + pos, base + pos + len(line), cls, line))
         pos += len(line)
     return spans
 
@@ -385,10 +455,30 @@ def _prose_by_gap(regs) -> dict[int, list[Span]]:
     return out
 
 
+def strip_prose_trailing_ws(text: str) -> str:
+    """Remove horizontal whitespace at line ends OUTSIDE fences and outside indentation-sensitive lines.
+    The only over-block reduction we accept as provably safe: the prose proof is already whitespace-blind, and
+    fenced/indented content is untouched (it stays byte-checked)."""
+    out, pos = [], 0
+
+    def prose(seg: str) -> str:
+        return "".join(
+            ln if ln.startswith(("    ", "\t")) else re.sub(r"[ \t]+(?=\r?\n?$)", "", ln)
+            for ln in seg.splitlines(keepends=True))
+    for m in _FENCE.finditer(text):
+        out.append(prose(text[pos:m.start()])); out.append(m.group(0)); pos = m.end()
+    out.append(prose(text[pos:]))
+    return "".join(out)
+
+
 def run_gated(tech: Technique, text: str, *, intent: Optional[ProtectedIntent] = None, **kw) -> GateResult:
-    """Apply a text technique only if it provably leaves conserved spans byte-identical and in order."""
-    before = classify(text, intent)
+    """Apply a text technique only if it provably leaves conserved spans byte-identical and in order
+    (modulo prose trailing whitespace) and inserts nothing but a registered trusted suffix."""
     res = GateResult(tech.name, False, text, chars_before=len(text), chars_after=len(text))
+    if tech.appends and not is_trusted_suffix(tech.appends):
+        res.reason = "declared suffix is not in the frozen trusted-suffix registry"
+        return res
+    before = classify(text, intent)
     illegal = tech.touches & IMMUTABLE
     if illegal:
         res.reason = f"declares touching immutable classes {sorted(c.value for c in illegal)}"
@@ -401,6 +491,11 @@ def run_gated(tech: Technique, text: str, *, intent: Optional[ProtectedIntent] =
     except Refusal as e:
         res.reason = f"technique refused: {e}"
         return res
+    raw_out = out
+    if strip_prose_trailing_ws(out) == out and strip_prose_trailing_ws(text) != text:
+        # compare in the trailing-whitespace-free frame (both sides), keep the technique's real output
+        text = strip_prose_trailing_ws(text)
+        before = classify(text, intent)
     must_keep = [s.text for s in before if s.cls in CONSERVED and s.cls not in tech.touches]
     missing = _conserved_subsequence(must_keep, out)
     if missing is not None:
@@ -421,6 +516,6 @@ def run_gated(tech: Technique, text: str, *, intent: Optional[ProtectedIntent] =
     if bad:
         res.reason = f"diff removes undeclared conserved classes {sorted(bad)}"
         return res
-    res.allowed, res.output = True, out
-    res.removed_by_class, res.semantic_diff, res.chars_after = removed, diff, len(out)
+    res.allowed, res.output = True, raw_out
+    res.removed_by_class, res.semantic_diff, res.chars_after = removed, diff, len(raw_out)
     return res
