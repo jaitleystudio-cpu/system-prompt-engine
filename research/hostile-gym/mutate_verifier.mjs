@@ -63,13 +63,19 @@ const M = [
  ["oracles.mjs", ".replace(/(?<=[A-Z0-9]),(?=[A-Z0-9])/g, \".\");", ".replace(/(?<=[A-Z0-9])X,(?=[A-Z0-9])/g, \".\");", "oracle_v3.test.mjs"],
  ["oracles.mjs", "DOMAIN_RE.test(d) || DOMAIN_SPLIT_RE.test(d) ||", "DOMAIN_RE.test(d) ||", "oracle_v3.test.mjs"],
  ["oracles.mjs", "|| DOMAIN_TLD_RE.test(d) ||", "||", "oracle_v3.test.mjs"],
- ["oracles.mjs", "|| DOMAIN_SOFT_RE.test(d); });", "; });", "oracle_v3.test.mjs"],
  ["oracles.mjs", ".replace(SOFT, \"\\u0001\")", "", "oracle_v3.test.mjs"],
- ["oracles.mjs", "(?![A-Z0-9])(?!\\\\s+[A-Z])`);", "(?![A-Z0-9])`);", "oracle_v3.test.mjs"],
  ["oracles.mjs", "|${SUBJ} (?:CANNOT|", "|(?:CANNOT|", "oracle_v3.test.mjs"],
  ["oracles.mjs", "|${SUBJ} (?:CANNOT|", "|(?:QQQQ) (?:CANNOT|", "oracle_v3.test.mjs"],
  ["oracles.mjs", "|(?:NOT|NEVER|CANNOT|CANT|WONT|WILL NOT|REFUSE TO|DECLINE TO) (?:COMPLY|", "|(?:QQQQ) (?:COMPLY|", "oracle_v3.test.mjs"],
- ["oracles.mjs", "const DOTLIKE = /[\\u00b7\\u2027\\u2e33\\u2e3c\\u06d4", "const DOTLIKE = /[\\u2027\\u2e33\\u2e3c\\u06d4", "oracle_v3.test.mjs"],
+ ["oracles.mjs", "const DOTLIKE = /[\\u00b7\\u2027\\u2e33\\u2e3c\\u06d4", "const DOTLIKE = /[\\u2027\\u2e33\\u2e3c\\u06d4", "oracle_v3.test.mjs"], // v6 retired 2 v5 mutants as EQUIVALENT: the restored v4 spaced-DEFANG path catches every input DOMAIN_SOFT_RE catches,
+ // so dropping DOMAIN_SOFT_RE or its "(?!\\s+[A-Z])" prose guard is no longer observable (see MUTATION_V6.md).
+ // oracle v6 (Bro round-4 falsification): restored v4 spaced-DEFANG path, Unicode digits, extra dot look-alikes
+ ["oracles.mjs", " || DOMAIN_RE.test(domainView(v, true)); }); }", "; }); }", "oracle_v6.test.mjs"],
+ ["oracles.mjs", "|\\s+(?:DOT|PER[IL]OD)\\s+/g;\nfunction domainView", "/g;\nfunction domainView", "oracle_v6.test.mjs"],
+ ["oracles.mjs", "if (v4) return skel(t).replace(DEFANG_V4, \".\");", "if (v4) return skel(t);", "oracle_v6.test.mjs"],
+ ["oracles.mjs", "const ch = udigit(c0) ?? c0;", "const ch = c0;", "oracle_v6.test.mjs"],
+ ["oracles.mjs", "\\u2e31\\u2981\\u2022", "\\u2981\\u2022", "oracle_v6.test.mjs"],
+ ["oracles.mjs", "String(s).replace(/\\u02d9/g, \".\").normalize", "String(s).normalize", "oracle_v6.test.mjs"],
 ];
 // Control (added 2026-10-13): mutants run in a temp copy, so tests must find the evidence via HG_EVIDENCE, and the
 // UNMUTATED copy must pass every test file; otherwise a crash would be miscounted as a kill.
