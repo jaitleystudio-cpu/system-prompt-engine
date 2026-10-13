@@ -94,3 +94,8 @@ Every attack is a **fully re-sealed** transfer report. All digests, the evidence
   - M37 (floor 20 → 2) and M40 (off by one, < 19) are KILLED.
 - **Gate:** **40/40 mutants KILLED**. The unmutated source is BYTES_IDENTICAL. `tests/research/lvt` + `rbpd`: **194 passed**.
 - **Evidence:** `evidence/lvt2_harness_repair/mutations_r4.json` and `mutations_r4_log.txt`.
+
+## Round 4 (Bro round-3 falsification @ 3094f984)
+- BRO9 (Bonferroni dropped), BRO10 (study-path `p_value <= alpha_adjusted` deleted), BRO11 (ties counted positive) survived 185/185.
+- New killers: `tests/research/lvt/test_alpha_and_ties_mutant_killers.py` (5 tests; authentic re-sealed reports at p=0.0320 with multiplicity 2, 4 wins + 20 exact ties at p=0.0625, and a study result with p = 1.5 x alpha_adjusted).
+- Gate: M41-M43 added; `evidence/lvt2_harness_repair/mutations_r5.json` / `mutations_r5_log.txt`: 43/43 KILLED, all sources restored. Production code unchanged. Verdicts unchanged.
