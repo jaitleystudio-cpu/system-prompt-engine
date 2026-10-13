@@ -161,3 +161,35 @@ Gate: new mutants M52-M62.
 - M62: strict_int accepts bool.
 
 Verification (round 7): `tests/research/lvt` **234 passed**; `lvt` + `rbpd` **243 passed**. Mutation gate r8 (`evidence/lvt2_harness_repair/mutations_r8.json` / `mutations_r8_log.txt`): **62/62 KILLED**, MUT_EXIT=0, all 369 spe_runtime .py files byte-identical before/after. QUALIFIED audit (read-only, all local + origin grok/* refs): no committed LVT receipt, study result or transfer report artifact exists on any grok/* branch, so nothing was QUALIFIED through the bypass. Verdicts unchanged.
+
+## Round 8 (Bro round-7 falsification @ 52e58db2)
+
+SERIOUS tamper bypass closed. Bro relabelled a real 6-family INCONCLUSIVE study as SUPPORTED with
+`holdout_family_count=24`, keeping its `evidence_hash` and oracle attestation, and got a verifying QUALIFIED receipt.
+- **Replay before any receipt.** `validate_and_commit` now recomputes the study from the attested raw evidence and
+  rejects (`LVT-2 replay failed (...)`) unless `run_study(raw) == submitted StudyResult` field-for-field. This applies
+  to both QUALIFIED and RESEARCH_SUPPORTED. Raw evidence comes from `tx.lvt2_raw_evidence` or from a content-addressed
+  in-memory store that `run_study` fills, keyed by `evidence_hash`. The entry is re-hashed on every lookup, so it can
+  only be the true preimage of the oracle-attested hash. If raw evidence is missing (for example in another process),
+  the result fails closed (`RAW_EVIDENCE_MISSING`). Reason codes are EVIDENCE_HASH_MISMATCH, REPLAY_RESULT_MISMATCH and
+  REPLAY_INVALID.
+- **Binding.** The signed receipt now carries `result_hash`, a sha256 over every StudyResult field (verdict, reasons,
+  p, alpha, all deltas and means, both family counts, method, version, digest type). Editing any field after commit
+  breaks `verify_transaction_signature`. Before commit, every edit is caught by the replay: oracle attestation
+  binds the raw inputs, and every verdict field is a deterministic function of those inputs.
+- **Receipt timestamp:** must be a real int or float in [1e9, 1e11]. Integer bounds are compared before any float
+  conversion, so 10**400 is rejected cleanly with no OverflowError. 1e-300 is rejected, as are numpy scalars.
+- **numpy-typed protocol minimums** (np.int64/int32/uint8/float64/0-d array/bool_) are rejected cleanly on the study
+  path (StudyInvalid) and the transfer path (numeric violation). numpy-typed study family counts are rejected too.
+
+Tests: `tests/research/lvt/test_round8_result_binding_and_replay.py` adds 66 tests, including Bro's exact attack,
+pre- and post-commit tamper tests for each of the 16 result fields, 10 replay-only layer tests, custody tests,
+timestamp tests and numpy tests.
+Gate r9: new mutants M63–M71 cover replay disabled, status-only compare, re-hash skipped, store ignored, result_hash
+dropped, the lower bound, the int overflow path, the upper bound and numpy ints accepted. **71/71 KILLED**, MUT_EXIT=0,
+and spe_runtime/research/lvt sources are byte-identical before and after (`mutations_r9.json`, `mutations_r9_log.txt`).
+`tests/research/lvt` **300 passed**; lvt + rbpd **309 passed**.
+
+QUALIFIED re-audit (read-only, all 155 local and origin grok/* refs across 99 branches): no data file (json, jsonl,
+txt, log, yaml, csv) contains a QUALIFIED status, an LVT-2 receipt signature, `committed_evidence_hash` or an LVT-2
+receipt. Verdicts unchanged.

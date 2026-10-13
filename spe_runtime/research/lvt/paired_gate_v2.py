@@ -105,9 +105,18 @@ def strict_finite(x: object, *, lo: float = -math.inf, hi: float = math.inf) -> 
     return type(x) in (int, float) and math.isfinite(x) and lo <= x <= hi
 
 
+# Round 8 (Bro round-7): sane receipt-timestamp window. Lower bound 1e9 (2001-09-09 UTC); upper bound 1e11
+# (~year 5138). Bounds are compared BEFORE any float conversion so a huge int (10**400) is rejected cleanly
+# instead of raising OverflowError inside math.isfinite.
+MIN_RECEIPT_TIMESTAMP = 1e9
+MAX_RECEIPT_TIMESTAMP = 1e11
+
+
 def strict_timestamp(x: object) -> bool:
-    """Receipt timestamp: finite, strictly positive int or float (time.time()); never bool/str/None/NaN/inf."""
-    return type(x) in (int, float) and math.isfinite(x) and x > 0
+    """Receipt timestamp: real int or float (time.time()) in [1e9, 1e11]; never bool/str/None/NaN/inf. Never raises."""
+    if type(x) is int:
+        return MIN_RECEIPT_TIMESTAMP <= x <= MAX_RECEIPT_TIMESTAMP
+    return type(x) is float and math.isfinite(x) and MIN_RECEIPT_TIMESTAMP <= x <= MAX_RECEIPT_TIMESTAMP
 
 
 def study_numeric_violations(s: object) -> list:
@@ -278,7 +287,7 @@ def run_study(p: StudyProtocol, train: Sequence[Observation],
         train_candidate_minus_shuffled=train_control,
         train_family_count=len({v.family_id for v in train}),
         holdout_family_count=len(grouped),
-        evidence_hash=_hash_evidence(p, train, heldout),
+        evidence_hash=_register_raw_evidence(p, train, heldout),
         model_digest_type=p.model_digest_type,
     )
 
@@ -290,3 +299,63 @@ def replay_study(old_result: StudyResult, p: StudyProtocol,
         return isinstance(old_result, StudyResult) and old_result == run_study(p, train, heldout)
     except (StudyInvalid, ValueError):
         return False
+
+
+# Round 8 (Bro round-7 SERIOUS tamper bypass): a real 6-family INCONCLUSIVE study relabelled SUPPORTED with
+# holdout_family_count=24, keeping its evidence_hash and oracle attestation, was minted QUALIFIED. The oracle
+# attests evidence_hash (the raw inputs); every verdict field is a deterministic function of those inputs, so
+# validate_and_commit now REPLAYS the study from the attested raw evidence and rejects on any difference, and the
+# signed receipt binds a hash of every StudyResult field so a post-commit edit breaks verification.
+def study_result_hash(s: object) -> str:
+    """sha256 over the canonical JSON of EVERY StudyResult field. '' if not a StudyResult or not serialisable."""
+    if not isinstance(s, StudyResult):
+        return ''
+    try:
+        data = json.dumps(asdict(s), sort_keys=True, allow_nan=False, separators=(',', ':')).encode('utf8')
+    except (TypeError, ValueError):
+        return ''
+    return hashlib.sha256(data).hexdigest()
+
+
+# Content-addressed raw-evidence store. run_study registers its (protocol, train, heldout) under the evidence hash
+# it computed. A lookup is by the ORACLE-ATTESTED evidence_hash and the entry is re-hashed on every lookup, so an
+# entry can only ever be the true preimage of its key: editing a StudyResult cannot change what it replays to.
+# The store is in-memory; in another process the evidence is absent and replay fails closed (RAW_EVIDENCE_MISSING)
+# unless the caller supplies tx.lvt2_raw_evidence, which is checked the same way.
+_RAW_EVIDENCE_STORE: Dict[str, Tuple[Any, Tuple[Any, ...], Tuple[Any, ...]]] = {}
+
+
+def _register_raw_evidence(p: StudyProtocol, train: Sequence[Observation],
+                           heldout: Sequence[Observation]) -> str:
+    h = _hash_evidence(p, train, heldout)
+    _RAW_EVIDENCE_STORE[h] = (p, tuple(train), tuple(heldout))
+    return h
+
+
+def lookup_raw_evidence(evidence_hash: object) -> Optional[tuple]:
+    if not isinstance(evidence_hash, str):
+        return None
+    return _RAW_EVIDENCE_STORE.get(evidence_hash)
+
+
+def replay_violation(study: object, raw: object = None) -> str:
+    """'' iff raw = (protocol, train, heldout) hashes to study.evidence_hash AND run_study(raw) == study exactly.
+    raw defaults to the content-addressed store entry for study.evidence_hash. Otherwise a reason code. Never raises."""
+    if raw is None:
+        raw = lookup_raw_evidence(getattr(study, 'evidence_hash', None))
+    if not (isinstance(raw, tuple) and len(raw) == 3):
+        return 'RAW_EVIDENCE_MISSING'
+    p, train, heldout = raw
+    try:
+        h = _hash_evidence(p, train, heldout)
+    except Exception:
+        return 'RAW_EVIDENCE_INVALID'
+    if h != getattr(study, 'evidence_hash', None):
+        return 'EVIDENCE_HASH_MISMATCH'
+    try:
+        fresh = run_study(p, train, heldout)
+    except Exception:
+        return 'REPLAY_INVALID'
+    if not isinstance(study, StudyResult) or fresh != study:
+        return 'REPLAY_RESULT_MISMATCH'
+    return ''

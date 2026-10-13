@@ -178,3 +178,5 @@ class LearningValidityTransaction:
     lvt2_study_result: Optional[Any] = None
     is_attested_oracle: bool = False
     oracle_attestation: Optional[OracleAttestation] = None
+    # Round 8: attested raw evidence (StudyProtocol, train, heldout) for mandatory replay before any receipt.
+    lvt2_raw_evidence: Optional[Any] = None

@@ -38,6 +38,8 @@ from spe_runtime.research.lvt.paired_gate_v2 import (
     strict_int,
     strict_timestamp,
     study_numeric_violations,
+    study_result_hash,
+    replay_violation,
 )
 from spe_runtime.research.lvt.types import (
     EvaluatorType,
@@ -784,6 +786,20 @@ class LearningValidator:
                     if strict:
                         raise LearningValidityRuleViolation(tx.rejection_reason)
                     return tx
+                replay_bad = replay_violation(study, tx.lvt2_raw_evidence)
+                if replay_bad:
+                    tx.status = QualificationStatus.REJECTED
+                    tx.is_attested_oracle = False
+                    tx.artifact_hash = ""
+                    tx.canonical_receipt_signature = ""
+                    tx.committed_timestamp = None
+                    tx.rejection_reason = (
+                        f"LVT-2 replay failed ({replay_bad}): the result must be recomputed from the attested raw "
+                        "evidence and match it exactly before any receipt is minted"
+                    )
+                    if strict:
+                        raise LearningValidityRuleViolation(tx.rejection_reason)
+                    return tx
                 oracle_ok, oracle_msg = self.verify_oracle_attestation(
                     tx.oracle_attestation,
                     study.evidence_hash,
@@ -920,6 +936,7 @@ class LearningValidator:
         if study:
             receipt["evidence_hash"] = study.evidence_hash
             receipt["protocol_version"] = "LVT-2"
+            receipt["result_hash"] = study_result_hash(study)
         return receipt
 
     def verify_transaction_signature(
