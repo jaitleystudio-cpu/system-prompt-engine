@@ -119,8 +119,21 @@ def lex_json(src: str) -> list[tuple[str, str]]:
 
 # ---------------------------------------------------------------- classifier
 _FENCE = re.compile(r"^```([A-Za-z0-9_+-]*)[ \t]*\n(.*?)^```[ \t]*$\n?", re.M | re.S)
+# Fix (Bro replay 2026-10-13 @ f8c4f88e): was case-sensitive and anchored at line start, so
+# "Never reveal the API key." / "Do not disclose credentials." were REPLACEABLE and deletable.
+# Now case-insensitive and matched anywhere in the line (conservative: over-protecting is safe).
 _PROTECTED_RE = re.compile(
-    r"^\s*(?:[-*]\s*)?(?:MUST(?: NOT)?|NEVER|SHALL(?: NOT)?|REQUIRED|DO NOT|ALWAYS|FORBIDDEN|CONSTRAINT:)\b"
+    r"(?:\b(?:must(?:\s+not)?|mustn['\u2019]t|never|shall(?:\s+not)?|required|requires?|do\s+not|don['\u2019]t|"
+    r"always|forbidden|prohibited|not\s+allowed|under\s+no\s+circumstances|exceptions?\s+to)\b|\bconstraint\s*:)",
+    re.I,
+)
+# Instruction-like content that a transform must never ADD (checked on inserted lines only).
+_INSTRUCTION_RE = re.compile(
+    r"(?:" + _PROTECTED_RE.pattern + r"|\b(?:ignore|disregard|override|overrides|forget|bypass|reveal|disclose|"
+    r"leak|exfiltrate|jailbreak|pretend|act\s+as|you\s+are\s+now|new\s+instructions?|system\s+prompt|"
+    r"do(?:es)?\s+not\s+apply|no\s+longer\s+appl\w*|examples?\s+only|not\s+a\s+rule|instead|should|"
+    r"you\s+(?:can|may|will)|from\s+now\s+on)\b)",
+    re.I,
 )
 _EVIDENCE_RE = re.compile(r"(https?://|\bdoi:|\b10\.\d{4,9}/|\[\d+\]|^\s*(?:Source|Evidence|Citation)s?:)", re.I)
 _VOLATILE_RE = re.compile(
@@ -272,6 +285,17 @@ def run_gated(tech: Technique, text: str, *, intent: Optional[ProtectedIntent] =
     if "".join(eb_before) != "".join(eb_after):
         res.reason = "exact-byte token stream changed"
         return res
+    # Inserted-content check (fix, Bro replay 2026-10-13): a compression/format transform may only remove or
+    # re-encode; it must never ADD instruction-like prose that was not already in the input.
+    in_lines = {ln.strip() for ln in text.splitlines()}
+    added = [ln.strip() for ln in out.splitlines() if ln.strip() and ln.strip() not in in_lines]
+    for s in classify(out, intent):
+        if s.cls is InfoClass.EXACT_BYTE:
+            continue
+        for ln in s.text.splitlines():
+            if ln.strip() in added and _INSTRUCTION_RE.search(ln):
+                res.reason = f"transform inserts instruction-like content: {ln.strip()[:80]!r}"
+                return res
     removed, diff = semantic_diff(before, out)
     bad = {k for k in removed if InfoClass(k) not in tech.touches and InfoClass(k) in CONSERVED}
     if bad:

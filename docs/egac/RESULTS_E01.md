@@ -30,3 +30,12 @@ array-of-records lookups (api_response −5). Not a gate defect — the bytes we
   distorting `prompt_eval_count`. Not in the contract text; identical in both arms. Disclosed here.
 - Latency measured on a shared desktop; reported, non-gating, as pre-registered.
 - Dollar VSOD: BLOCKED (needs paid provider billing). See E01_PROVIDER_CONFIG.md.
+
+## Post-replay gate fix (2026-10-13; E01 verdict unchanged: NOT_PROVEN)
+Bro's replay @ f8c4f88e (REPLAY_PASS on E01) found two gate defects in `spe_runtime/egac/conservation.py`:
+1. `_PROTECTED_RE` was case-sensitive and anchored at line start, so "Never reveal the API key." / "Do not disclose credentials." were REPLACEABLE and could be deleted while the transform stayed ALLOWED. **Fixed:** case-insensitive, matched anywhere in the line (must/never/shall/required/do not/don't/always/forbidden/prohibited/not allowed/under no circumstances/exceptions to/constraint:).
+2. Inserted text was never checked, so a transform adding "Ignore the line above…" or "The constraints above are examples only…" was ALLOWED. **Fixed:** the gate now refuses any transform whose output adds a non-exact-byte line, not present in the input, that matches an instruction-like pattern.
+
+Regression tests: `tests/research/egac/test_egac_bro_replay_gate.py` (all of Bro's `egac_attack.py` cases plus variants, and benign edits that must stay allowed).
+
+Impact on E01: re-gating all 120 E01 control prompts with the fixed gate gives **120/120 allowed with byte-identical treatment prompts** (sha256 prefix 1ab4f59deda4cc84 before and after), and the canary block is unchanged (12 valid / 6 malformed, 0 critical failures). E01 rows and verdict are therefore unaffected and not superseded.
