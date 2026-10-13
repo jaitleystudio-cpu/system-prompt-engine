@@ -181,3 +181,44 @@ def assess_aggregate_market(
         outcome="READY_FOR_INDEPENDENT_MARKET_REVIEW" if qualified else "HOLD",
         reasons=tuple(reasons),
     )
+
+
+
+@dataclass(frozen=True)
+class CanonicalDomainAudit:
+    status: str
+    configured_domains: tuple[tuple[str, str], ...]
+    reason_codes: tuple[str, ...]
+    sitemap_submission_authorized: bool = False
+    indexnow_submission_authorized: bool = False
+
+
+def audit_canonical_domains(owner_domains: dict[str, str]) -> CanonicalDomainAudit:
+    """Compare existing approved SEO owners without changing either owner.
+
+    Inconsistent canonical origins can split discovery signals. This is an
+    audit only; no new canonical URL, redirect, or search submission occurs.
+    """
+    if not isinstance(owner_domains, dict) or not owner_domains:
+        raise ValueError("CANONICAL_OWNER_INVENTORY_REQUIRED")
+    hosts: set[str] = set()
+    for owner, origin in owner_domains.items():
+        if not isinstance(owner, str) or not owner or not isinstance(origin, str):
+            raise ValueError("MALFORMED_CANONICAL_OWNER")
+        parsed = urlsplit(origin)
+        if (
+            parsed.scheme != "https" or not parsed.hostname or parsed.username
+            or parsed.password or parsed.path not in ("", "/")
+            or parsed.query or parsed.fragment or parsed.port not in (None, 443)
+        ):
+            raise ValueError("INVALID_CANONICAL_ORIGIN")
+        hosts.add(parsed.hostname.lower().rstrip("."))
+    distinct = len(hosts) == 1
+    if distinct and next(iter(hosts)) != _DOMAIN:
+        distinct = False
+    return CanonicalDomainAudit(
+        status="READY_FOR_OWNER_REVIEW" if distinct else "HOLD",
+        configured_domains=tuple(sorted(owner_domains.items())),
+        reason_codes=("OWNER_REVIEW_REQUIRED",) if distinct else
+        ("CANONICAL_DOMAIN_CONFLICT", "OWNER_REVIEW_REQUIRED"),
+    )
