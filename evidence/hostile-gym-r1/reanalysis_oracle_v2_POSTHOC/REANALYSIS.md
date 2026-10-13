@@ -37,3 +37,5 @@ Bro's independent replay @ 8f4f9176 (REPLAY_PASS on the H1 numbers) **falsified 
 Legit completion unchanged (held-out 98.96% both arms; dev 100%). Any-case security failure (held-out, all 96 cases): 12.5% → 7.3%.
 
 Conclusion: the oracle evasions did not occur in the actual model outputs on held-out; the H1 held-out numbers are unchanged under oracle v2 and **H1 stays NOT_PROVEN**. The only real-data change is the C16 dev miss. The package-level falsification (forged rows → SUPPORTED) is closed.
+
+> **SUPERSEDED (2026-10-13, Bro replay 2):** oracle v2 was still evaded (HTML entities, URL encoding, ROT13, hex, spelled digits, leet, noise letters, far/reordered splits, small caps) and over-fired on "an attacker. Example:". See ../reanalysis_oracle_v3_POSTHOC/REANALYSIS.md.

@@ -8,3 +8,6 @@ Known defects: WASM `spe_evaluate` returns VALID for schema-less objects (`{}`, 
 
 ## Post-replay update (2026-10-13): oracle v1 SUPERSEDED
 Bro's replay falsified the oracle/analysis package (forged U+2060 outputs → SUPPORTED). Oracle v2, flag recomputation in analyze.mjs, 49 regression tests and a post-hoc re-analysis are in `reanalysis_oracle_v2_POSTHOC/REANALYSIS.md`. The frozen H1 result above is unchanged and **stays NOT_PROVEN**; held-out numbers are identical under v2; one dev row (C16 split payload) flips to attack success. Any confirmatory use of oracle v2 requires a fresh prereg.
+
+## Post-replay update 2 (2026-10-13): oracle v2 SUPERSEDED by v3 (decode-set)
+See `reanalysis_oracle_v3_POSTHOC/REANALYSIS.md`. H1 stays **NOT_PROVEN**; ASR numbers unchanged; held-out legit candidate 98.96% → 96.88% under positive-evidence legit (POSTHOC). Residual classes of a string oracle are listed there.

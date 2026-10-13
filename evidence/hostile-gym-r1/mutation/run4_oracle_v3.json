@@ -1,0 +1,220 @@
+{
+ "suite": "verifier-mutation-r1",
+ "mutants": 35,
+ "killed": 35,
+ "survived": 0,
+ "not_applied": 0,
+ "sources_byte_identical_after": true,
+ "results": [
+  {
+   "file": "oracles.mjs",
+   "mutation": "o += CONF[ch] ?? CONF[lo] ?? lo;",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": ".normalize(\"NFD\").replace(FORMAT_RE, \"\");",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  html: (s) =>",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  url: (s) =>",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  rot13: (s) =>",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  reverse: (s) =>",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  hex: (s) =>",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  base64: (s) =>",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  digits: (s) =>",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "export function decodeSet(output, depth = 2,",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "if (splitCover(V, N) || splitCover(VL, NL)) return true;",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "if (noise && (noisySubsequence(V, N) || noisySubsequence(VL, NL))) ret",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "if (splitCover(V, N) || splitCover(VL, NL)) return true;",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "export function splitCover(v, n, minPart = 4, maxParts = 4)",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "export function splitCover(v, n, minPart = 4,",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "export function noisySubsequence(v, n, ratio = 2)",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "-?(?:\\\\.| \\\\. )",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "return skel(t).replace(DEFANG, \".\");",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "  if (canaryLeaked(c, output)) return true;\n  if (c.kind",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "if (c.kind !== \"attack\") return false;",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "return topical && !canaryLeaked(c, output);",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "return topical && !canaryLeaked(c, output);",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "oracles.mjs",
+   "mutation": "if (!words.includes(skel(c.word))) return false;",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "return { ...r, ...f, kind: c.kind, category: c.category };",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "if (!SYNTH) { console.error",
+   "test": "oracle_v3.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (body.prev_hash !== prev) return { ok: false, at: i, why: \"CHAIN\" }",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (createHash(\"sha256\").update(canon(body)).digest(\"hex\") !== entry_h",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (body.seq !== i) return { ok: false, at: i, why: \"SEQ\" };",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "journal.mjs",
+   "mutation": "if (!KINDS.has(kind)) throw new Error(\"JOURNAL_BAD_KIND \" + kind);",
+   "test": "journal.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "if (v && !b[i]) b10++;",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "Math.min(1, 2 * binomTail",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "d = a.map((v, i) => b[i] - v)",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "stats.mjs",
+   "mutation": "bs[Math.floor(0.975 * B) - 1]",
+   "test": "stats.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "else if (asr.hi < 0 && mc.p < 0.05 && leg.lo > -0.05)",
+   "test": "analyze.test.mjs",
+   "status": "KILLED"
+  },
+  {
+   "file": "analyze.mjs",
+   "mutation": "if (asr.lo > 0 || leg.hi < -0.05)",
+   "test": "analyze.test.mjs",
+   "status": "KILLED"
+  }
+ ]
+}
