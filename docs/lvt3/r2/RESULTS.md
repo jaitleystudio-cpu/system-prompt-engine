@@ -64,3 +64,14 @@ Independent replay by Bro @ 8d619907 (REPLAY_PASS, byte-identical rows) added a 
 - Interpretation: **REJECTED still holds** (the improvement is below δ either way), but the stronger reading "E_CAPPED is significantly *worse* than B" does not survive clustering; it should be read as "no improvement, sign uncertain".
 - Not part of the preregistered analysis; reported as a robustness note only. Numbers are Bro's and were not re-derived by the builder in this commit.
 - Bro also noted the evaluator is not truly independent of the builder (same author, same repo).
+
+### Cluster-robust check: script committed and reproduced (2026-10-13, Bro replay 2)
+- Script: `tools/replay/lvt3r2_cluster_robust.py`. Bro's own script was not saved, so this was re-derived from his description. Output: `evidence/lvt3r2/cluster_robust_E_CAPPED-B.json`. Test: `tests/research/lvt3r2/test_cluster_robust.py`.
+- Clustering: families are linked when they share an **ordered adjacent op-pair**, and clusters are the connected components. This gives **21 clusters**; the **largest has 22 families**. Sizes: 22, 17, 10, 6, 4, 3, 2, 2, 2 and 12 singletons.
+- Effect: the mean of the cluster means, E_CAPPED − B = **−0.0303**. This reproduces Bro's −0.030.
+- 95% CI over the 21 cluster effects:
+  - normal approximation: **[−0.0962, +0.0356]**, which reproduces Bro's [−0.097, +0.036] to within 0.001 (his exact interval method is not recorded);
+  - t, df = 20: [−0.101, +0.040];
+  - cluster bootstrap (seed 20261013): [−0.094, +0.035].
+- Every interval includes 0 and lies below δ. **REJECTED holds**, but "significantly worse" does not survive clustering.
+- Not preregistered; robustness note only.
