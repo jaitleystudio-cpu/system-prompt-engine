@@ -148,6 +148,11 @@ class SourceEventJournal:
     def entries(self) -> tuple[JournalEntry, ...]:
         return tuple(self._entries)
 
+    def latest_entry(self, source_id: str, event_id: str) -> JournalEntry | None:
+        """Read-only owner API; do not expose mutable revision bookkeeping."""
+        return next((item for item in reversed(self._entries)
+                     if item.source_id == source_id and item.event_id == event_id), None)
+
     def ingest(self, snapshot: SourceSnapshot) -> JournalResult:
         if not isinstance(snapshot, SourceSnapshot):
             return JournalResult(JournalDecision.HOLD, ("MALFORMED_SNAPSHOT",))
