@@ -1,0 +1,163 @@
+{
+ "spe": {
+  "words": 107743,
+  "units": 199,
+  "paragraphs": 751,
+  "claims": 1043,
+  "grounded": 190,
+  "grounded_rate": 0.18216682646212848,
+  "distinct4_mean": 0.9720887822173373,
+  "repeated_8gram_rate": 0.037053538278755474,
+  "near_dup_pairs_cos095": 5,
+  "near_dup_per_100_paras": 0.6657789613848203,
+  "adjacent_coherence_mean": 0.7243226400613785,
+  "acronym_internal_contradictions": 13,
+  "acronym_contradictions_vs_corpus": 0,
+  "acronym_detail": {
+   "internal": {
+    "SPE": {
+     "system prompt engine": 92,
+     "within system prompts": 3,
+     "software prompt engine": 2,
+     "systems prompts engines": 1,
+     "like prompt engines": 1
+    },
+    "WDIC": {
+     "witness-directed intelligence compilation": 7,
+     "of witness-directed intelligence compilation": 1,
+     "the witness-directed intelligence compilation": 3,
+     "and witness-directed intelligence compilation": 1
+    },
+    "CSC": {
+     "counterfactual specification closure": 18,
+     "comprehensivescope coverage": 1,
+     "counterfactual intelligence compilation": 1,
+     "comprehensive scope techniques": 1,
+     "counterfactual intelligent compilation": 3,
+     "counterfactual specifications closure": 1
+    },
+    "CCR": {
+     "counterfactual challenge record": 11,
+     "zero-cost product law": 1
+    },
+    "FAR": {
+     "false acceptance rates": 7,
+     "false success rate": 4,
+     "false acceptance rate": 35,
+     "false positive rates": 1
+    },
+    "CEG": {
+     "through counterexample generation": 1,
+     "like counterexample generation": 1
+    },
+    "R1": {
+     "section": 1,
+     "frontier reasoning": 2,
+     "distinct techniques": 1
+    },
+    "LVT": {
+     "longitudinal verification testing": 1,
+     "local verification test": 1,
+     "long horizon thinking": 1,
+     "the long-horizon vision": 1
+    },
+    "CRR": {
+     "of counterfactual reasoning": 1,
+     "to counterfactual reasoning": 1,
+     "counterfactual reasoning": 1
+    },
+    "VVD": {
+     "verification verdicts": 3,
+     "the verification verdicts": 1
+    },
+    "ABI": {
+     "application binary interface": 1,
+     "abstract base interface": 2,
+     "abstraction binary interface": 1,
+     "abstraction base interface": 1
+    },
+    "ZCPL": {
+     "the zero-cost product law": 10,
+     "zero-cost product law": 3,
+     "zero cost product law": 1
+    },
+    "CI": {
+     "continuous integration": 5,
+     "confidence intervals": 2,
+     "confidence interval": 2
+    }
+   },
+   "vs_corpus": {}
+  },
+  "title_adherence_mean": 0.6118155717849731
+ },
+ "baseline": {
+  "words": 100000,
+  "units": 199,
+  "paragraphs": 834,
+  "claims": 300,
+  "grounded": 25,
+  "grounded_rate": 0.08333333333333333,
+  "distinct4_mean": 0.5110019033040956,
+  "repeated_8gram_rate": 0.799075935315472,
+  "near_dup_pairs_cos095": 14730,
+  "near_dup_per_100_paras": 1766.1870503597122,
+  "adjacent_coherence_mean": 0.8903250996949149,
+  "acronym_internal_contradictions": 3,
+  "acronym_contradictions_vs_corpus": 1,
+  "acronym_detail": {
+   "internal": {
+    "WDIC-VCT": {
+     "weakly supervised context-triggered verification": 2,
+     "the weakly supervised context-triggered verification": 5
+    },
+    "ZPP": {
+     "zero-payment": 440,
+     "development of zero-payment": 2,
+     "effectiveness of zero-payment": 8,
+     "limitations while zero-payment": 5,
+     "while zero-payment": 5,
+     "optimize the zero-payment": 150,
+     "significant promise zero-payment": 1,
+     "or zero-payment": 2,
+     "conclusion the zero-payment": 5,
+     "prospects for zero-payment": 1
+    },
+    "HTTPS": {
+     "includes using secure communication protocols": 5,
+     "use secure communication protocols": 4
+    }
+   },
+   "vs_corpus": {
+    "CSC": [
+     "continuous system composition"
+    ]
+   }
+  }
+ },
+ "ci95_spe_minus_baseline": {
+  "grounded_rate": [
+   0.09883349312879515,
+   [
+    0.041833098743358554,
+    0.15408358372029501
+   ]
+  ],
+  "distinct4_mean": [
+   0.4610868789132414,
+   [
+    0.41712198898833985,
+    0.5020746087412908
+   ]
+  ],
+  "adjacent_coherence": [
+   -0.16600245963353644,
+   [
+    -0.1758517562616534,
+    -0.15697391554120532
+   ]
+  ]
+ },
+ "embedding_model": "nomic-embed-text",
+ "note": "Unit of resampling = section (SPE) / equal-size pseudo-section (baseline); one document per arm."
+}
