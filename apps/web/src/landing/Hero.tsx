@@ -38,6 +38,7 @@ import {
   formatCharCount,
   nearLimit,
 } from "../input/boundedText";
+import { UserConfirmedRequirements } from "../engine/UserConfirmedRequirements";
 type Intent = {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
@@ -67,6 +68,7 @@ type Props = {
   onTarget: (v: TargetId) => void;
   intent: Intent;
   onIntent: (bucket: keyof Intent, id: string, text: string) => void;
+  onConfirmedChange?: (atoms: IntentAtom[]) => void;
   onNavigate: (view: AppView) => void;
   onAutoOptimize?: (optimizedPrompt: string) => void;
 };
@@ -333,6 +335,19 @@ export function Hero(p: Props) {
                 </select>
               </label>
             </div>
+            <UserConfirmedRequirements
+              confirmedAtoms={p.intent.confirmed}
+              onChangeConfirmed={(atoms) => {
+                if (p.onConfirmedChange) {
+                  p.onConfirmedChange(atoms);
+                } else {
+                  for (const atom of atoms) {
+                    p.onIntent("confirmed", atom.id, atom.text);
+                  }
+                }
+              }}
+              disabled={p.busy}
+            />
             <details className="brief-details">
               <summary>
                 Refine the brief <span>Role · audience · requirements</span>

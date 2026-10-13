@@ -69,16 +69,22 @@ import { SkipLink } from "./shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE } from "./shell/shellGuards";
 import { FeaturesHub } from "./engine/FeaturesHub";
 import { PromptRadarInspector } from "./engine/PromptRadarInspector";
+import { PlainEnglishShowcase } from "./engine/PlainEnglishShowcase";
 import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
-import { Hero } from "./landing/Hero";
+import { Hero, HeroTheater } from "./landing/Hero";
 import { ValueComparisonMatrix } from "./landing/ValueComparisonMatrix";
 import { HomeQuiet } from "./landing/HomeQuiet";
 import { Workspace } from "./workspace/Workspace";
 import { ReconstructionSummary } from "./workspace/ReconstructionSummary";
 import { ExecutionContractPanel } from "./workspace/ExecutionContractPanel";
 import { UnifiedComposer } from "./composer/UnifiedComposer";
+import {
+  UserConfirmedRequirements,
+  hasCreateIntentFields,
+  preserveCreateIntentFields,
+} from "./engine/UserConfirmedRequirements";
 import { SourcesDepthDisclosure } from "./composer/SourcesDepthDisclosure";
 import {
   ContextProtocolControls,
@@ -104,7 +110,6 @@ import { BeforeAfterDiffSlider } from "./landing/BeforeAfterDiffSlider";
 import { DeveloperRoiCalculator } from "./components/DeveloperRoiCalculator";
 import { SpeUniverseHero } from "./landing/SpeUniverseHero";
 import { SpeCapabilityDeck } from "./landing/SpeCapabilityDeck";
-import { SpeStorytellingCinema } from "./landing/SpeStorytellingCinema";
 import { SubmitWorkflowModal } from "./components/SubmitWorkflowModal";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
@@ -150,37 +155,6 @@ function readInitialRoute(): { view: View; notFound: boolean } {
   const resolved = resolveRoute(window.location.pathname);
   if (resolved.kind === "not-found") return { view: "home", notFound: true };
   return { view: resolved.view, notFound: false };
-}
-
-const CREATE_INTENT_FIELD_IDS = new Set(["desired-output", "desired-example"]);
-
-function preserveCreateIntentFields(
-  current: IntentLensState,
-  next: IntentLensState,
-): IntentLensState {
-  const preserved = new Map(
-    [...current.confirmed, ...current.assumed]
-      .filter((atom) => CREATE_INTENT_FIELD_IDS.has(atom.id))
-      .map((atom) => [atom.id, atom.text]),
-  );
-  const merge = (atoms: IntentAtom[]) =>
-    atoms.map((atom) =>
-      preserved.has(atom.id)
-        ? { ...atom, text: preserved.get(atom.id) ?? "" }
-        : atom,
-    );
-  return {
-    ...next,
-    confirmed: merge(next.confirmed),
-    assumed: merge(next.assumed),
-  };
-}
-
-function hasCreateIntentFields(intent: IntentLensState): boolean {
-  return [...intent.confirmed, ...intent.assumed].some(
-    (atom) =>
-      CREATE_INTENT_FIELD_IDS.has(atom.id) && Boolean(atom.text.trim()),
-  );
 }
 
 function intentFromArtifact(
@@ -466,6 +440,15 @@ export default function App() {
       [bucket]: prev[bucket].map((a: IntentAtom) =>
         a.id === id ? { ...a, text } : a,
       ),
+    }));
+  };
+
+  const updateConfirmedAtoms = (nextAtoms: IntentAtom[]) => {
+    invalidate();
+    setIntentProvenance("USER_EDITED_INTENT");
+    setIntent((prev) => ({
+      ...prev,
+      confirmed: nextAtoms,
     }));
   };
 
@@ -1016,9 +999,7 @@ export default function App() {
           />
         ) : view === "home" && (
           <>
-            <SpeUniverseHero onNavigate={setView} />
-            <SpeStorytellingCinema onNavigate={setView} />
-            <SpeCapabilityDeck onNavigate={setView} />
+            <HeroTheater onNavigate={setView} />
             <Hero
               hideTheater
               onReset={() => {
@@ -1043,6 +1024,7 @@ export default function App() {
               }}
               intent={intent}
               onIntent={updateIntentField}
+              onConfirmedChange={updateConfirmedAtoms}
               onBuild={() => void compile()}
               busy={busy}
               sceneState={sceneState}
@@ -1059,21 +1041,19 @@ export default function App() {
               onCopy={() => void onCopy()}
               onExport={onExportSpe}
               onNavigate={setView}
+              onAutoOptimize={(opt) => {
+                applyUserRequestChange(opt);
+              }}
             />
-            {rendered?.finalPrompt && (
-              <div style={{ maxWidth: "1200px", margin: "1.5rem auto", padding: "0 1.5rem" }}>
-                <PromptRadarInspector
-                  promptText={rendered.finalPrompt}
-                  rawIrPrompt={rawIrPrompt ?? undefined}
-                  activeTarget={target}
-                  activeDepthTier={depthTier}
-                  onSelectTarget={handleSelectTarget}
-                  onSelectDepthTier={handleSelectDepthTier}
-                  onNavigate={setView}
-                />
-              </div>
-            )}
+            <PlainEnglishShowcase
+              onNavigate={setView}
+              onSelectPrompt={(opt) => {
+                applyUserRequestChange(opt);
+              }}
+            />
             <BeforeAfterDiffSlider onNavigate={setView} />
+            <SpeUniverseHero onNavigate={setView} />
+            <SpeCapabilityDeck onNavigate={setView} />
             <DeveloperRoiCalculator onNavigate={setView} />
             <div style={{ maxWidth: "1200px", margin: "2rem auto", padding: "0 1.5rem" }}>
               <FeaturesHub currentView="home" onNavigate={setView} />
@@ -1096,7 +1076,6 @@ export default function App() {
         {!notFound && (view === "create" || view === "code") && (
           <section className="spe-create" aria-labelledby="create-title">
             <DotPattern surface="create" />
-            <FeaturesHub currentView={view} onNavigate={setView} />
             <header className="spe-create-head">
               <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
               <h1 id="create-title">
@@ -1184,6 +1163,13 @@ export default function App() {
                 applyUserRequestChange(prompt);
               }}
             />
+            {view === "create" && (
+              <UserConfirmedRequirements
+                confirmedAtoms={intent.confirmed}
+                onChangeConfirmed={updateConfirmedAtoms}
+                disabled={busy}
+              />
+            )}
             <div className="compile-row">
               <button
                 type="button"
@@ -1245,6 +1231,8 @@ export default function App() {
                 <div style={{ margin: "1rem 0" }}>
                   <PromptRadarInspector
                     promptText={rendered.finalPrompt}
+                    userRequest={rendered.userRequest || userRequest}
+                    category={category}
                     rawIrPrompt={rawIrPrompt ?? undefined}
                     activeTarget={target}
                     activeDepthTier={depthTier}
@@ -1309,6 +1297,9 @@ export default function App() {
                 initialPresentation={mode === "simple" ? "simple" : "inspect"}
               />
             )}
+            <div style={{ marginTop: "2.5rem" }}>
+              <FeaturesHub currentView={view} onNavigate={setView} />
+            </div>
           </section>
         )}
 
@@ -1412,34 +1403,6 @@ export default function App() {
 
         {!notFound && view === "workspace" && (
           <>
-            <ContextProtocolControls
-              source={publicSource}
-              depth={publicDepth}
-              onSourceChange={(v) => {
-                invalidate();
-                setPublicSource(v);
-              }}
-              onDepthChange={(v) => {
-                invalidate();
-                setPublicDepth(v);
-              }}
-              uiMode={mode}
-              disabled={busy}
-              inspectOutput={contextProtocol}
-              refreshNotice={contextRefreshNotice}
-            />
-            {(contextProtocol || executionRecord) && (
-              <section className="spe-workspace">
-                <ExecutionContractPanel
-                  protocolOutput={contextProtocol}
-                  artifact={artifact}
-                  record={executionRecord}
-                  busy={dryRunBusy}
-                  onRunDry={() => void onRunLocalDry()}
-                  initialPresentation={mode === "simple" ? "simple" : "inspect"}
-                />
-              </section>
-            )}
             <Workspace
               userRequest={userRequest}
               setUserRequest={(v) => {
@@ -1457,6 +1420,7 @@ export default function App() {
               }}
               intent={intent}
               updateIntentField={updateIntentField}
+              onConfirmedChange={updateConfirmedAtoms}
               rendered={rendered}
               rawIrPrompt={rawIrPrompt}
               artifact={artifact}
@@ -1485,8 +1449,38 @@ export default function App() {
               onSelectDepthTier={handleSelectDepthTier}
               onNavigate={setView}
             />
+            <section className="spe-workspace spe-workspace--secondary">
+              <ContextProtocolControls
+                source={publicSource}
+                depth={publicDepth}
+                onSourceChange={(v) => {
+                  invalidate();
+                  setPublicSource(v);
+                }}
+                onDepthChange={(v) => {
+                  invalidate();
+                  setPublicDepth(v);
+                }}
+                uiMode={mode}
+                disabled={busy}
+                inspectOutput={contextProtocol}
+                refreshNotice={contextRefreshNotice}
+              />
+            </section>
+            {(contextProtocol || executionRecord) && (
+              <section className="spe-workspace spe-workspace--secondary">
+                <ExecutionContractPanel
+                  protocolOutput={contextProtocol}
+                  artifact={artifact}
+                  record={executionRecord}
+                  busy={dryRunBusy}
+                  onRunDry={() => void onRunLocalDry()}
+                  initialPresentation={mode === "simple" ? "simple" : "inspect"}
+                />
+              </section>
+            )}
 
-            <section className="spe-workspace" aria-labelledby="hist-mini">
+            <section className="spe-workspace spe-workspace--secondary" aria-labelledby="hist-mini">
               <h2 id="hist-mini" className="spe-kicker">
                 Saved ideas
               </h2>

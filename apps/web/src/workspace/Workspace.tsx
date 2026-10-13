@@ -23,9 +23,13 @@ import { TrustPanel } from "../ui/TrustPanel";
 import { techniqueLabel } from "../engine/k3Transport";
 import { ReconstructionSummary } from "./ReconstructionSummary";
 import { FeaturesHub } from "../engine/FeaturesHub";
-import { PromptRadarInspector } from "../engine/PromptRadarInspector";
+import {
+  PromptRadarInspector,
+  AutoOptimizeCTAButton,
+} from "../engine/PromptRadarInspector";
 import { MarkdownExportButton } from "../engine/markdownExport";
 import type { DepthTier } from "../engine/promptSynthesizer";
+import { UserConfirmedRequirements } from "../engine/UserConfirmedRequirements";
 
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
@@ -84,6 +88,7 @@ type Props = {
   setLens: (l: Lens) => void;
   activeDepthTier?: DepthTier;
   onSelectDepthTier?: (tier: DepthTier) => void;
+  onConfirmedChange?: (atoms: IntentAtom[]) => void;
 };
 
 export function Workspace(props: Props) {
@@ -125,9 +130,9 @@ export function Workspace(props: Props) {
 
   return (
     <section className="spe-workspace" aria-labelledby="ws-title">
-      <FeaturesHub currentView="workspace" onNavigate={props.onNavigate} />
       <header className="spe-ws-head">
-        <div>
+        <div className="spe-ws-hero-aura" aria-hidden="true" />
+        <div className="spe-ws-head-copy">
           <p className="spe-kicker">Workspace</p>
           <h1 id="ws-title">A space for your next idea</h1>
         </div>
@@ -136,7 +141,6 @@ export function Workspace(props: Props) {
             <button
               key={{ simple: "Create", inspect: "Inspect", pro: "Proof" }[m]}
               type="button"
-
               aria-pressed={mode === m}
               onClick={() => {
                 setMode(m);
@@ -254,15 +258,83 @@ export function Workspace(props: Props) {
             />
           </label>
 
+          <div className="spe-ws-cta-bar" style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <button
+              type="button"
+              className="spe-build"
+              disabled={workspaceBuildDisabled(busy, userRequest)}
+              onClick={onCompile}
+              style={{ flex: 1 }}
+            >
+              {busy ? ui.working : ui.build}
+            </button>
+            <AutoOptimizeCTAButton
+              disabled={workspaceBuildDisabled(busy, userRequest)}
+              busy={busy}
+              onOptimize={() => {
+                onCompile();
+                setTimeout(() => {
+                  const radar = document.querySelector(".spe-prompt-radar-inspector");
+                  if (radar) {
+                    radar.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                }, 600);
+              }}
+              style={{ flex: 1 }}
+            />
+          </div>
+
+          <details className="spe-ws-advanced" open>
+            <summary>Advanced settings</summary>
+            <div className="spe-ws-toolbar">
+              <label className="spe-field">
+                <span>Category</span>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as CategoryId)}
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="spe-field">
+                <span>Target AI</span>
+                <select
+                  value={target}
+                  onChange={(e) => setTarget(e.target.value as TargetId)}
+                >
+                  {TARGETS.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <p className="spe-muted">
+              These settings change how the prompt is shaped. They do not run a
+              task or grant permission.
+            </p>
+          </details>
+
           <SpeechInput disabled={busy} onInsert={text => setUserRequest([userRequest.trim(), text].filter(Boolean).join("\n\n"))} />
-          <button
-            type="button"
-            className="spe-build"
-            disabled={workspaceBuildDisabled(busy, userRequest)}
-            onClick={onCompile}
-          >
-            {busy ? ui.working : ui.build}
-          </button>
+
+          <UserConfirmedRequirements
+            confirmedAtoms={intent.confirmed}
+            onChangeConfirmed={(atoms) => {
+              if (props.onConfirmedChange) {
+                props.onConfirmedChange(atoms);
+              } else {
+                for (const a of atoms) {
+                  updateIntentField("confirmed", a.id, a.text);
+                }
+              }
+            }}
+            disabled={busy}
+          />
 
           {(mode !== "simple" || lens === "intent") && (
             <div className="spe-intent" aria-label="Your details">
@@ -341,6 +413,8 @@ export function Workspace(props: Props) {
                 <div style={{ margin: "1rem 0" }}>
                   <PromptRadarInspector
                     promptText={rendered.finalPrompt}
+                    userRequest={rendered.userRequest || userRequest}
+                    category={category}
                     rawIrPrompt={props.rawIrPrompt ?? undefined}
                     activeTarget={target}
                     activeDepthTier={props.activeDepthTier}
@@ -497,41 +571,9 @@ export function Workspace(props: Props) {
         )}
       </div>
 
-      <details className="spe-ws-advanced">
-        <summary>Advanced settings</summary>
-        <div className="spe-ws-toolbar">
-          <label className="spe-field">
-            <span>Category</span>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as CategoryId)}
-            >
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="spe-field">
-            <span>Target AI</span>
-            <select
-              value={target}
-              onChange={(e) => setTarget(e.target.value as TargetId)}
-            >
-              {TARGETS.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <p className="spe-muted">
-          These settings change how the prompt is shaped. They do not run a
-          task or grant permission.
-        </p>
-      </details>
+      <div style={{ marginTop: "3rem" }}>
+        <FeaturesHub currentView="workspace" onNavigate={props.onNavigate} />
+      </div>
     </section>
   );
 }
