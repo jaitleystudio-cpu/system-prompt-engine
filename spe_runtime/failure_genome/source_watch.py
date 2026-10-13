@@ -251,6 +251,11 @@ class PublicStatusFeedObserver:
             return PollSummary(source_id, "HOLD", reason_codes=("EVENT_PAGE_BUDGET_EXCEEDED",))
         if any(not isinstance(x, dict) for x in incidents):
             return PollSummary(source_id, "HOLD", reason_codes=("MALFORMED_INCIDENT_ENTRY",))
+        # Two rows with the same provider event ID make revision order
+        # ambiguous. Refuse the entire batch rather than invent an order.
+        source_ids = [x.get("id") for x in incidents if isinstance(x.get("id"), str)]
+        if len(source_ids) != len(set(source_ids)):
+            return PollSummary(source_id, "HOLD", reason_codes=("AMBIGUOUS_DUPLICATE_SOURCE_IDS",))
 
         added = duplicates = held = 0
         accepted: list[JournalEntry] = []
