@@ -28,6 +28,7 @@ from .event_journal import (
     EventKind, JournalDecision, JournalEntry, SourceAuthority,
     SourceEventJournal, SourceSnapshot, _utc,
 )
+from .source_timeliness import assess_source_timeliness
 
 _ID = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
 _STATUS = frozenset({
@@ -68,6 +69,11 @@ class PollSummary:
     held: int = 0
     reason_codes: tuple[str, ...] = ()
     observations: tuple[JournalEntry, ...] = ()
+    archival_observations: int = 0
+    stale_revision_holds: int = 0
+    first_seen_source_age_seconds: tuple[int, ...] = ()
+    source_age_measurements_only: bool = True
+    first_to_report_verified: bool = False
     external_incident_confirmed: bool = False
     publication_authorized: bool = False
 
@@ -248,6 +254,9 @@ class PublicStatusFeedObserver:
 
         added = duplicates = held = 0
         accepted: list[JournalEntry] = []
+        ages: list[int] = []
+        archive_count = 0
+        stale_count = 0
         # Stable presentation order independent from JSON array order.
         for item in sorted(incidents, key=lambda o: str(o.get("id", ""))):
             incident_id = item.get("id")
@@ -268,6 +277,18 @@ class PublicStatusFeedObserver:
                 item, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
             ).encode("utf-8")).hexdigest()
             prior = self._journal.latest_entry(feed.source_id, incident_id)
+            changed = prior is None or body_digest != prior.content_sha256
+            timing = assess_source_timeliness(
+                source_published_at=pub_at,
+                observed_at=now,
+                predecessor_published_at=prior.source_published_at if prior else None,
+                changed_content=changed,
+            )
+            if timing.state == "HOLD":
+                held += 1
+                if "NON_MONOTONIC_SOURCE_REVISION" in timing.reason_codes:
+                    stale_count += 1
+                continue
             snapshot = SourceSnapshot(
                 source_id=feed.source_id,
                 event_id=incident_id,
@@ -284,6 +305,10 @@ class PublicStatusFeedObserver:
             if decision.decision is JournalDecision.ADDED:
                 added += 1
                 accepted.append(decision.entry)
+                if timing.claimed_revision_age_seconds is not None:
+                    ages.append(timing.claimed_revision_age_seconds)
+                if timing.state == "ARCHIVAL_SOURCE_METADATA":
+                    archive_count += 1
             elif decision.decision is JournalDecision.DUPLICATE:
                 duplicates += 1
             else:
@@ -297,4 +322,7 @@ class PublicStatusFeedObserver:
             reason_codes=("NOT_AN_EXTERNAL_MODEL_FAILURE_CONFIRMATION",) if not held
                 else ("UNTRUSTED_RECORDS_HELD", "NOT_AN_EXTERNAL_MODEL_FAILURE_CONFIRMATION"),
             observations=tuple(accepted),
+            archival_observations=archive_count,
+            stale_revision_holds=stale_count,
+            first_seen_source_age_seconds=tuple(ages),
         )
