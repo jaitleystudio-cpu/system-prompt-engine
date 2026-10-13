@@ -167,6 +167,7 @@ class PublicStatusFeedObserver:
         max_bytes: int = MAX_SOURCE_BYTES,
         timeout_seconds: float = 5.0,
         transport: FetchTransport | None = None,
+        journal: SourceEventJournal | None = None,
     ) -> None:
         if not feeds or any(not _safe_feed_config(f) for f in feeds):
             raise ValueError("INVALID_TRUSTED_FEED_ALLOWLIST")
@@ -179,10 +180,17 @@ class PublicStatusFeedObserver:
         if not isinstance(timeout_seconds, (float, int)) or not 0 < timeout_seconds <= 10:
             raise ValueError("INVALID_TIMEOUT_BUDGET")
         self._feeds = {f.source_id: f for f in feeds}
-        self._journal = SourceEventJournal({
+        expected_owners = {
             f.source_id: SourceAuthority(f.source_id, f.hostname, f.path)
             for f in feeds
-        })
+        }
+        if journal is not None and (
+            not isinstance(journal, SourceEventJournal)
+            or journal.authorities != expected_owners
+            or not journal.verify_chain()
+        ):
+            raise ValueError("INJECTED_JOURNAL_OWNER_OR_CHAIN_MISMATCH")
+        self._journal = journal if journal is not None else SourceEventJournal(expected_owners)
         self._max_requests = max_requests
         self._max_bytes = max_bytes
         self._timeout = float(timeout_seconds)
