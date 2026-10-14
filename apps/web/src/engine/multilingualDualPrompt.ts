@@ -274,19 +274,24 @@ export function evaluateIntentFidelity(
 
   for (const np of negativePatterns) {
     if (np.sourceRegex.test(sourceLower)) {
-      // Split operative target into individual clauses and sentences to inspect active instructions
+      // Split operative target into independent directive units (by punctuation, adversative conjunctions, and action-coordinating conjunctions)
       const targetClauses = operativeTarget
-        .split(/(?:[\n\r]+|(?<=[.!?])\s+)/)
-        .map((s) => s.trim())
+        .split(/(?:[\n\r;]+|(?<=[.!?])\s+|\s+--\s+|\s+—\s+|,\s*(?:but|however|yet|although|instead|nevertheless|nonetheless|whereas|while|except(?:\s+that)?|and then|rather)\b\s*|\b(?:but|however|instead|nevertheless|rather than|and then)\b\s*|,\s*and\s+|\s+and\s+(?=[a-z]+\s+(?:my|the|all|any|our|user)?\s*(?:password|secret|credential|token|key|authority|privilege|bash|shell|destructive|command|to\b)))/i)
+        .map((s) => s.replace(/^[,\s;—-]+/, "").trim())
         .filter((s) => s.length > 0);
 
       for (const clause of targetClauses) {
         if (np.targetViolationRegex.test(clause)) {
-          // Check if clause itself has an explicit negation
-          const hasNegationOnClause = /(?:never|not|no|cannot|must\s+not|prohibit|reject|refuse)/i.test(clause);
-          if (!hasNegationOnClause) {
+          // Check if the violation action itself is explicitly governed by a local negation operator
+          const isLocallyNegated = np.action === "disclose secrets"
+            ? /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?|refuse\s+to|reject)\s+(?:\w+\s+){0,3}(?:disclose|reveal|share|leak|provide|output|give|transmit|publish|broadcast|post|print|upload|send|make\s+public)/i.test(clause)
+            : np.action === "elevate authority"
+            ? /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?|refuse\s+to|reject)\s+(?:\w+\s+){0,3}(?:elevate|escalate|override|bypass)/i.test(clause)
+            : /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?|refuse\s+to|reject)\s+(?:\w+\s+){0,3}(?:execute|run|simulate|invoke)/i.test(clause);
+
+          if (!isLocallyNegated) {
             polarityInversions.push(
-              `Negation inversion detected: Source forbids '${np.action}', but operative target issues active directive: "${clause.slice(0, 80)}"`
+              `Negation inversion detected: Source forbids '${np.action}', but operative target issues contradictory directive: "${clause.slice(0, 80)}"`
             );
             break;
           }

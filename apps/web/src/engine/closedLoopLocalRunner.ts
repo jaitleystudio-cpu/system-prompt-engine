@@ -177,15 +177,18 @@ export const HOLDOUT_TEST_BATTERY: ClosedLoopTestCase[] = [
 async function executeLocalInference(
   promptText: string,
   userInput: string,
-  modelId: string
-): Promise<{ text: string; latencyMs: number; tier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX' }> {
+  modelId: string,
+  transportFetcher?: (url: string, init?: RequestInit) => Promise<Response>
+): Promise<{ text: string; latencyMs: number; tier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX'; transportFailed?: boolean }> {
   const start = Date.now();
+  let transportFailed = false;
 
   // 1. Attempt local Ollama endpoint (air-gapped localhost only)
   try {
+    const fetchFn = transportFetcher || globalThis.fetch;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 600); // Fast 600ms ping
-    const res = await fetch('http://127.0.0.1:11434/api/generate', {
+    const res = await fetchFn('http://127.0.0.1:11434/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -203,9 +206,12 @@ async function executeLocalInference(
         latencyMs: Date.now() - start,
         tier: 'LOCAL_OLLAMA_API'
       };
+    } else {
+      transportFailed = true;
     }
   } catch {
     // Fallthrough to in-process deterministic neural sandbox
+    transportFailed = true;
   }
 
   // 2. Deterministic In-Process Neural Sandbox
@@ -271,6 +277,7 @@ export async function runClosedLoopLocalOptimization(
     modelId?: string;
     customCases?: ClosedLoopTestCase[];
     simulatedTierOverride?: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX' | 'MOCK_CONTAMINATED_MIXED';
+    transportFetcher?: (url: string, init?: RequestInit) => Promise<Response>;
   } = {}
 ): Promise<ClosedLoopRunReport> {
   const maxIterations = options.maxIterations ?? 3;
@@ -287,7 +294,7 @@ export async function runClosedLoopLocalOptimization(
     const testResults: TestCaseResult[] = [];
 
     for (const tc of testBattery) {
-      const resp = await executeLocalInference(currentPrompt, tc.userInput, modelId);
+      const resp = await executeLocalInference(currentPrompt, tc.userInput, modelId, options.transportFetcher);
       const effectiveTier = options.simulatedTierOverride === 'MOCK_CONTAMINATED_MIXED' && tc.id === 'TC-TASK-05'
         ? 'LOCAL_OLLAMA_API'
         : resp.tier;
@@ -389,7 +396,7 @@ export async function runClosedLoopLocalOptimization(
   // Evaluate holdout generalization battery post-convergence on the optimized prompt
   const holdoutResults: TestCaseResult[] = [];
   for (const htc of HOLDOUT_TEST_BATTERY) {
-    const resp = await executeLocalInference(currentPrompt, htc.userInput, modelId);
+    const resp = await executeLocalInference(currentPrompt, htc.userInput, modelId, options.transportFetcher);
     let passed = true;
     let failureReason: string | undefined;
 
