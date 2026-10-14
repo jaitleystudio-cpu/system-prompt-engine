@@ -21001,6 +21001,240 @@
       "text": "tokens"
     },
     {
+      "id": "031441ab609760bac4d7",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Claude / Anthropic"
+    },
+    {
+      "id": "060eb4839139e50606b9",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "spe.failure_genome.local_user_report.v1"
+    },
+    {
+      "id": "078514e9cb4c78c8d484",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "PINNED_REAL_MODEL_REPRODUCTION"
+    },
+    {
+      "id": "0dba20434c6d9f6bf8be",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "USER_PRIVACY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "119378ab17aa7a1398e1",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "UNRECOGNIZED_PROVIDER"
+    },
+    {
+      "id": "1c12be9a20b8451a6147",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "CONTROL_CHARACTER_PRESENT"
+    },
+    {
+      "id": "25f48b5bce7175e17aa7",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "PRIVATE_USER_REPORTED_PRELIMINARY_ONLY"
+    },
+    {
+      "id": "2f0e68ded5d1bbe15f17",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "BASELINE_COMPARISON_AND_NEGATIVE_CONTROLS"
+    },
+    {
+      "id": "43fde7818560f999960d",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Code or tool behavior"
+    },
+    {
+      "id": "48622af6645e7fc69911",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "MODEL_REVISION_NOT_PINNED"
+    },
+    {
+      "id": "4b7e312b7a5b3a821ddb",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "INVALID_DRAFT"
+    },
+    {
+      "id": "515a8dbada0a64fe6440",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "5312a07cb457da53a363",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "TEXT_TOO_LONG"
+    },
+    {
+      "id": "5f289018e1014b8f609e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "USER_REPORTED_NOT_VERIFIED"
+    },
+    {
+      "id": "7050dd9d511bebc29cb6",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "REPAIR_REGRESSION_TESTS"
+    },
+    {
+      "id": "7233887bc271e6b66132",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Grok / xAI"
+    },
+    {
+      "id": "73ed238e59a408f03ddd",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Gemini / Google"
+    },
+    {
+      "id": "7d2f2f0f6382943a4e81",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "INDEPENDENT_PRIMARY_SOURCE_VERIFICATION"
+    },
+    {
+      "id": "84693648916d101a9258",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "PRIVATE_INTAKE_REVIEW_HOLD"
+    },
+    {
+      "id": "89f3bd92eb506056d1a8",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "OBSERVED_OUTCOME_REQUIRED"
+    },
+    {
+      "id": "9341b685ba0122a8aafa",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Other"
+    },
+    {
+      "id": "95264bc6e61b7621fa73",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "9e7f6fb1bbe510488f9b",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Safety or refusal"
+    },
+    {
+      "id": "a0ea966b5fea9ef46ef3",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "HUMAN_EDITORIAL_AND_OWNER_RELEASE"
+    },
+    {
+      "id": "a49beadc8a8313e95941",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "READY_FOR_USER_INITIATED_PRIVATE_EXPORT"
+    },
+    {
+      "id": "ab4635687716c24e8493",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "acf6a4a6790df5b5d48e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Instruction following"
+    },
+    {
+      "id": "b2b5e502e2e465861a9a",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "SUSPECTED_SECRET_OR_PERSONAL_IDENTIFIER"
+    },
+    {
+      "id": "bb90fc1626a11fbe0fbe",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "INDEPENDENT_CAUSAL_REVIEW"
+    },
+    {
+      "id": "bddd8577007877f70b4c",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "EXPECTED_OUTCOME_REQUIRED"
+    },
+    {
+      "id": "c262f331599e4a729089",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "UNRECOGNIZED_FAILURE_TYPE"
+    },
+    {
+      "id": "cb7cb5e5a8d01cd2910f",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "ChatGPT / OpenAI"
+    },
+    {
+      "id": "ce3be7c9a378e84ee954",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "USER_SELF_REPORT_UNVERIFIED"
+    },
+    {
+      "id": "ce528923cd27de2f263e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Other or unknown"
+    },
+    {
+      "id": "cfd062a42a522e2081c0",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Factual accuracy"
+    },
+    {
+      "id": "e6903b1cb666c15c46ae",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "MODEL_REVISION_UNPINNED"
+    },
+    {
+      "id": "f1d607c41964f958236e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Formatting"
+    },
+    {
+      "id": "f30fa9bee344e43e1298",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "faf25a219ed4053afe9e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD"
+    },
+    {
       "id": "02157d6594ce899c760f",
       "file": "apps/web/src/pages/IncidentIntelligence.tsx",
       "depth": "PRODUCT",
@@ -22091,6 +22325,186 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
       "text": "Image, screenshot, and video notes are computed here with simple pixel checks. Optional same-origin model packs may load from this site when you use image helpers — no paid vision service is required for this preview."
+    },
+    {
+      "id": "0005f4e90c0cadd4c0f2",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-private-ai-failure-report.json"
+    },
+    {
+      "id": "0aac12bc1c20f779e401",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "PRIVATE FAILURE INTAKE / ON YOUR DEVICE"
+    },
+    {
+      "id": "0c98ab3372cb20a238df",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Local-only draft"
+    },
+    {
+      "id": "1c20b920b750af74539d",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Model revision, if known"
+    },
+    {
+      "id": "1da2a240a9872f57680b",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Expected behavior — short summary"
+    },
+    {
+      "id": "3e1bb2566210bb0823ea",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Export private report"
+    },
+    {
+      "id": "425ab41853c77613fabb",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "What went wrong?"
+    },
+    {
+      "id": "48e9b3c3b02a4d5bbdb4",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Model revision not pinned. The report will explicitly mark it unknown."
+    },
+    {
+      "id": "4ee6f631980a42e94736",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. the exact version shown by the provider"
+    },
+    {
+      "id": "59c323472dbe12ebc254",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Private export could not be prepared. Nothing was sent to SPE."
+    },
+    {
+      "id": "63cf95d9de51828d58b0",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Turn an AI failure into a reviewable report."
+    },
+    {
+      "id": "6bdd739381747b42805b",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "AI provider"
+    },
+    {
+      "id": "70135d4fa0fd062b46c0",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe the outcome, not the full conversation or private answer."
+    },
+    {
+      "id": "740a7c225af1100ef8ae",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Eligible for private export. No external incident proof is implied."
+    },
+    {
+      "id": "98bde1170e259c54586f",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Review the entries and confirm your privacy check before exporting."
+    },
+    {
+      "id": "9ab2378e89a17ce50136",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "What should the AI have done? Do not paste private prompts, keys or personal details."
+    },
+    {
+      "id": "9bd6165e3fb898f216f5",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Remove invisible control characters before exporting."
+    },
+    {
+      "id": "a10f07f74734425803e6",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "I personally reviewed these summaries for private information and secrets. I understand the automated screen cannot guarantee redaction."
+    },
+    {
+      "id": "a483d5d22071aed06147",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "application/json;charset=utf-8"
+    },
+    {
+      "id": "a856cc767bba3a384b9f",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe what happened without uploading your prompt or AI response. SPE prepares a preliminary JSON report only when you choose to export it. The report is not independently verified and never becomes a public case automatically."
+    },
+    {
+      "id": "ad1297ae5e9dca76fa05",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "MODEL_REVISION_UNPINNED"
+    },
+    {
+      "id": "adf5e5183915290fa980",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "SUSPECTED_SECRET_OR_PERSONAL_IDENTIFIER"
+    },
+    {
+      "id": "b617df68218e26f53623",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "A private report file was prepared for your browser's download handling. SPE did not upload it."
+    },
+    {
+      "id": "c838e20c2a1fe1a2f083",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Complete both summaries and confirm your privacy review."
+    },
+    {
+      "id": "dd6b41cb75840951871e",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Observed behavior — short summary"
+    },
+    {
+      "id": "e82a9a412b1213e2d45b",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "CONTROL_CHARACTER_PRESENT"
+    },
+    {
+      "id": "e94f21763042724bb29c",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
+      "id": "ec79c6b204f7dfbdece7",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "none"
+    },
+    {
+      "id": "ef77a2dea7e0e5a3ef54",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "User-reported only · No AI API calls · No automatic upload · No local history storage · No verified repair. Your browser or device may separately manage downloaded files."
+    },
+    {
+      "id": "f187650901d455b8034a",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Possible sensitive data detected. Remove it before exporting."
     },
     {
       "id": "0a4be7243d753e8350e2",
