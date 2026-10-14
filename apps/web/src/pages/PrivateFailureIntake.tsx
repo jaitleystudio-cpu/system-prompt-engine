@@ -3,6 +3,7 @@ import {
   INTAKE_PROVIDERS,
   INTAKE_TYPES,
   buildPrivateIntakeExport,
+  buildLocalRepairStudioBrief,
   reviewLocalIntake,
   type LocalIntakeDraft,
 } from "./incidentIntake";
@@ -11,7 +12,7 @@ import {
  * Private user-report export only. Never send to server, auto-save,
  * search the web, run a model, or claim incident/repair verification.
  */
-export function PrivateFailureIntake() {
+export function PrivateFailureIntake({ onDraftRepair }: { onDraftRepair: (brief: string) => void }) {
   const [draft, setDraft] = useState<LocalIntakeDraft>({
     provider: INTAKE_PROVIDERS[0],
     modelRevision: "",
@@ -57,6 +58,19 @@ export function PrivateFailureIntake() {
       }
     } catch {
       setMessage("Private export could not be prepared. Nothing was sent to SPE.");
+    }
+  }
+
+  function prepareRepairDraft() {
+    if (!review.private_export_eligible) {
+      setMessage("Complete privacy review before drafting an improvement.");
+      return;
+    }
+    try {
+      const brief = buildLocalRepairStudioBrief(draft);
+      onDraftRepair(brief);
+    } catch {
+      setMessage("The local improvement draft could not be prepared. Nothing was sent externally.");
     }
   }
 
@@ -164,6 +178,15 @@ export function PrivateFailureIntake() {
               <span>Complete both summaries and confirm your privacy review.</span>
             )}
           </div>
+          <div className="spe-intake-actions">
+            <button
+              type="button"
+              className="spe-intake-studio-button"
+              disabled={!review.private_export_eligible}
+              onClick={prepareRepairDraft}
+            >
+              Draft improvement in Prompt Studio <span aria-hidden="true">↗</span>
+            </button>
           <button
             type="button"
             className="spe-intake-export-button"
@@ -172,6 +195,7 @@ export function PrivateFailureIntake() {
           >
             Export private report <span aria-hidden="true">↓</span>
           </button>
+          </div>
         </div>
         {message && <p role="status" className="spe-intake-message">{message}</p>}
       </div>
