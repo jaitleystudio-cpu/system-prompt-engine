@@ -73,3 +73,44 @@ env.get_system_message, which IRT does not define (AttributeError). Therefore:
   longer arm-C conversations). keep_alive=-1. Observed speed ~5 tokens/s generation.
 - Harness runs on the Mac from a standalone copy (not a worktree of any existing checkout) at
   /Volumes/4TB-WD/spe-worktrees/cwc1-pilot-r0-run; logs are copied back to the box and committed from the box worktree.
+
+## Amendment 3 (2026-10-14 13:40 IST, cycle 13:05; committed and pushed BEFORE any holdout episode is run)
+Branch grok/cwc1-pilot-r1-real-model (from 5145e92f). Status of amendment 2: its 7B run never produced holdout output
+(the Mac mini went offline from ~13:10 IST and stayed unreachable during this cycle). This is a REDUCED PILOT.
+Facts found on the DEV tasks only (dugongs/peregrines seed 900, label DRY_RUN; holdout untouched):
+- Runtime: the Mac (7B, ~5 tok/s) is unreachable. The Grok box (8 shared CPUs, no GPU, ~4 GB free RAM) runs
+  Ollama 0.40.4 on CPU. qwen2.5 7B does not fit in free RAM. Measured: 1.5B ~23 tok/s, 3B ~11 tok/s single stream;
+  3B with 3 parallel slots ~6 model calls/min aggregate, i.e. ~115 min per holdout seed (11 tasks x 3 arms).
+- The Ollama registry blob CDN is blocked from the box, so weights come from the official Qwen Hugging Face GGUF repos
+  and are imported with `ollama create` (FROM <gguf>; chat template taken from the GGUF).
+- The frozen CWC parser rejected 100% of arm-C steps for both small models on dev: 1.5B returned prediction lists of
+  the wrong length; 3B returned predictions as mappings keyed by bare numbers ({1.0: 1.5}), which is not JSON.
+Changes (all declared before any holdout output; nothing is tuned on holdout):
+1. MODEL: qwen2.5-3b-instruct Q4_K_M, from Qwen/Qwen2.5-3B-Instruct-GGUF file qwen2.5-3b-instruct-q4_k_m.gguf,
+   GGUF sha256 626b4a6678b86442240e33df819e00132d3ba7dddfe1cdc4fbb18e0a9615c62d, Ollama tag
+   qwen2.5-3b-instruct-q4km-hf:latest, Ollama digest a36559c74bc3144e42925b6a67884b7aacc11b0480ceadc732de0e9efc450722.
+   Any other digest voids the run. Same family as the contract's 7B, smaller. Licence: Qwen Research License
+   (research / non-commercial); used here only as an evaluation model, never shipped. num_ctx 8192, temp 0, seed 0,
+   num_predict 512 unchanged. Ollama runs with OLLAMA_NUM_PARALLEL=3 (3 episodes in flight); batched CPU decoding may
+   make outputs not bit-reproducible versus a serial replay — declared; the raw logs are the scored artefact.
+2. PARSER (arm C only): parse_cwc additionally accepts predictions given as a mapping keyed by candidate (matched by
+   float value) and quotes bare numeric object keys before json.loads. Nothing else is repaired; wrong-length
+   predictions are still rejected. Unit-tested (test_parse_cwc_lenient_amendment3). Arms A/B unaffected.
+3. SCOPE / STOPPING RULE (outcome-blind): seed-major order. Seed 101 is run first (all 11 tasks x A/B/C, 3 parallel
+   workers = task shards i%3), then 202, then 303. HARD CUTOFF 16:05 IST. Only seeds whose 33 episodes all finished
+   by the cutoff are scored; unfinished seeds are killed and their partial logs kept but NOT scored. If seed 101 itself
+   is unfinished, the scored set is the tasks of seed 101 for which all three arms finished (reported as PARTIAL), and
+   no verdict other than NOT_PROVEN / NOT_RUN may be issued from fewer than 8 tasks.
+4. SCORER frozen now: spe_runtime/research/cwc1/score.py (section 5 as written: per-task mean over scored seeds of
+   standardised error; paired task-level C-B, C-A, and B-A; 95% percentile bootstrap, 10,000 resamples,
+   numpy default_rng(7)). Missing-data rule (not specified in R0, declared now): PRIMARY = complete cases (a task enters
+   only if every scored (arm, seed) episode produced a score); SENSITIVITY = an unscorable episode gets the worst
+   standardised error observed in that task (any arm/seed). Unscorable counts per arm are reported.
+5. Verdict rule unchanged (section 5). A SUPPORTED by the rule is reported as SUPPORTED-PENDING until Bro re-scores the
+   raw logs and checks witness consistency. Because this is a reduced pilot (3B, fewer seeds), even a rule-SUPPORTED
+   result is a pilot signal only and does not settle the 7B contract.
+Code frozen at commit 6bb0ae3c (harness.py, score.py, tests). Holdout command per seed S and shard i in 0..2:
+   harness --backend ollama --model qwen2.5-3b-instruct-q4km-hf:latest --url http://127.0.0.1:11434 --tasks holdout
+   --arms A,B,C --seeds S --shard i/3 --out evidence/cwc1/r1/scored
+6. Run location: harness runs on the Grok box from this worktree (/workspace/spe-brain/cwc1-r1), logs written to
+   evidence/cwc1/r1/scored/, committed raw before score.json is committed.
