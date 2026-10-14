@@ -301,6 +301,12 @@
       "text": "popstate"
     },
     {
+      "id": "46ea0d823344ee7bea16",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "incidents"
+    },
+    {
       "id": "478fb383375e8dd87a1f",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -347,6 +353,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Screenshot to code"
+    },
+    {
+      "id": "5f874d90b2cc0ba762ca",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Failure Intelligence (preview)"
     },
     {
       "id": "5fac66bc68641de542a8",
@@ -20479,6 +20491,12 @@
       "text": "Multi-Model Targeting: Dedicated formatting for Claude, Cursor, and ChatGPT."
     },
     {
+      "id": "983069c22bf5af725bd4",
+      "file": "apps/web/src/pages/Capabilities.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Failure Intelligence — evidence standards (preview)"
+    },
+    {
       "id": "9ad45de259ddc9191258",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
@@ -20981,6 +20999,534 @@
       "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
       "depth": "PRODUCT",
       "text": "tokens"
+    },
+    {
+      "id": "031441ab609760bac4d7",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Claude / Anthropic"
+    },
+    {
+      "id": "060eb4839139e50606b9",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "spe.failure_genome.local_user_report.v1"
+    },
+    {
+      "id": "078514e9cb4c78c8d484",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "PINNED_REAL_MODEL_REPRODUCTION"
+    },
+    {
+      "id": "0dba20434c6d9f6bf8be",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "USER_PRIVACY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "119378ab17aa7a1398e1",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "UNRECOGNIZED_PROVIDER"
+    },
+    {
+      "id": "1c12be9a20b8451a6147",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "CONTROL_CHARACTER_PRESENT"
+    },
+    {
+      "id": "25f48b5bce7175e17aa7",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "PRIVATE_USER_REPORTED_PRELIMINARY_ONLY"
+    },
+    {
+      "id": "2f0e68ded5d1bbe15f17",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "BASELINE_COMPARISON_AND_NEGATIVE_CONTROLS"
+    },
+    {
+      "id": "43fde7818560f999960d",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Code or tool behavior"
+    },
+    {
+      "id": "48622af6645e7fc69911",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "MODEL_REVISION_NOT_PINNED"
+    },
+    {
+      "id": "4b7e312b7a5b3a821ddb",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "INVALID_DRAFT"
+    },
+    {
+      "id": "515a8dbada0a64fe6440",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "5312a07cb457da53a363",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "TEXT_TOO_LONG"
+    },
+    {
+      "id": "5f289018e1014b8f609e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "USER_REPORTED_NOT_VERIFIED"
+    },
+    {
+      "id": "7050dd9d511bebc29cb6",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "REPAIR_REGRESSION_TESTS"
+    },
+    {
+      "id": "7233887bc271e6b66132",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Grok / xAI"
+    },
+    {
+      "id": "73ed238e59a408f03ddd",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Gemini / Google"
+    },
+    {
+      "id": "7d2f2f0f6382943a4e81",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "INDEPENDENT_PRIMARY_SOURCE_VERIFICATION"
+    },
+    {
+      "id": "84693648916d101a9258",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "PRIVATE_INTAKE_REVIEW_HOLD"
+    },
+    {
+      "id": "89f3bd92eb506056d1a8",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "OBSERVED_OUTCOME_REQUIRED"
+    },
+    {
+      "id": "9341b685ba0122a8aafa",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Other"
+    },
+    {
+      "id": "95264bc6e61b7621fa73",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "9e7f6fb1bbe510488f9b",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Safety or refusal"
+    },
+    {
+      "id": "a0ea966b5fea9ef46ef3",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "HUMAN_EDITORIAL_AND_OWNER_RELEASE"
+    },
+    {
+      "id": "a49beadc8a8313e95941",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "READY_FOR_USER_INITIATED_PRIVATE_EXPORT"
+    },
+    {
+      "id": "ab4635687716c24e8493",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "acf6a4a6790df5b5d48e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Instruction following"
+    },
+    {
+      "id": "b2b5e502e2e465861a9a",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "SUSPECTED_SECRET_OR_PERSONAL_IDENTIFIER"
+    },
+    {
+      "id": "bb90fc1626a11fbe0fbe",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "INDEPENDENT_CAUSAL_REVIEW"
+    },
+    {
+      "id": "bddd8577007877f70b4c",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "EXPECTED_OUTCOME_REQUIRED"
+    },
+    {
+      "id": "c262f331599e4a729089",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "UNRECOGNIZED_FAILURE_TYPE"
+    },
+    {
+      "id": "cb7cb5e5a8d01cd2910f",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "ChatGPT / OpenAI"
+    },
+    {
+      "id": "ce3be7c9a378e84ee954",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "USER_SELF_REPORT_UNVERIFIED"
+    },
+    {
+      "id": "ce528923cd27de2f263e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Other or unknown"
+    },
+    {
+      "id": "cfd062a42a522e2081c0",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Factual accuracy"
+    },
+    {
+      "id": "e6903b1cb666c15c46ae",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "MODEL_REVISION_UNPINNED"
+    },
+    {
+      "id": "f1d607c41964f958236e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "Formatting"
+    },
+    {
+      "id": "f30fa9bee344e43e1298",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "faf25a219ed4053afe9e",
+      "file": "apps/web/src/pages/incidentIntake.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD"
+    },
+    {
+      "id": "02157d6594ce899c760f",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Require separate source/editorial and release review, preserve corrections and withdrawals, and never silently invent an answer."
+    },
+    {
+      "id": "022d2824e435cf633600",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Build a structured prompt"
+    },
+    {
+      "id": "0796d3bacd56709b437c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Investigation surface"
+    },
+    {
+      "id": "08aeb66407b872940b0c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "PROOF, NOT PROMISE"
+    },
+    {
+      "id": "09a043e0c198fe3f4e77",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A proposed repair survives testing"
+    },
+    {
+      "id": "0ba558c8a3860a2a5856",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI service status"
+    },
+    {
+      "id": "12e555acd040b7c9ee8e",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A source status, a reproduced model behavior, and a verified repair are different kinds of evidence. One does not automatically establish the next."
+    },
+    {
+      "id": "14b9c2dc86f5328ffc27",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Keep the official URL, observed revision, and claimed timestamp. A report is not an independently reproduced model failure."
+    },
+    {
+      "id": "1c787733d97a9f2cff3a",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Pin the source revision, provenance and reproducible test. Separate original facts from interpretation and unknowns."
+    },
+    {
+      "id": "1fde496d781bd8cac995",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Evidence boundary."
+    },
+    {
+      "id": "2193459f607c63d03ea5",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Real-model proof required"
+    },
+    {
+      "id": "2ab8f07d68b6d9309e39",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Pending"
+    },
+    {
+      "id": "2cefcb34e8f9bc0d5c71",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "CASE LIBRARY / RELEASE GATE"
+    },
+    {
+      "id": "32f92687b69fb5d2e57a",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "No live AI news feed, headline-first ranking, customer incident data collection, independently verified model diagnosis, repair effectiveness or public release authority is represented on this page. The prompt builder remains a separate local-first tool."
+    },
+    {
+      "id": "367141e229f58deb127c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Review SPE privacy and proof principles"
+    },
+    {
+      "id": "375e95763d9ca4deb68c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Independent review required"
+    },
+    {
+      "id": "3cc6dd19cf1f30a6d6ff",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not authorized"
+    },
+    {
+      "id": "3eac96819c324a11f4c9",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "We will not fill this space with fabricated model failures, simulated benchmark victories, or unreviewed third-party allegations. Only independently authorized, source-attributed cases belong here."
+    },
+    {
+      "id": "3fe7f8f68381cd331251",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "See how evidence is checked"
+    },
+    {
+      "id": "4001c7c8f7aa7753d381",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Source-monitoring deployment"
+    },
+    {
+      "id": "443eb693b2f6a2679955",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "The source-adapter and reviewer code is under draft qualification. No continuously running incident feed, real-model reproduction, or authorized public case library is established here."
+    },
+    {
+      "id": "45f0601e9a0984a9f68d",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider service notices. Not an independently established causal diagnosis."
+    },
+    {
+      "id": "4b5518b3db0da177a8d3",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A human authorizes publication"
+    },
+    {
+      "id": "5d206d63c3042bab0a46",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not yet live"
+    },
+    {
+      "id": "740318c5ee130d142b47",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "WHERE THE ORIGINAL REPORT LIVES"
+    },
+    {
+      "id": "78b0442104db6169b93b",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Use the same pinned model revision, configuration, and held-out task set. Simulated or supplied outputs cannot certify a real model run."
+    },
+    {
+      "id": "7bbd63ec86d43ac3af6d",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Verified repair library"
+    },
+    {
+      "id": "8202d0dbd3a78693412f",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "The behavior can be reproduced"
+    },
+    {
+      "id": "871d308a2b894c58e3e0",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "https://status.claude.com/"
+    },
+    {
+      "id": "8dd8f72ab4f2c03311f5",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Five separate claims. Five separate gates."
+    },
+    {
+      "id": "911b43ec23d03a42dd19",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not released"
+    },
+    {
+      "id": "9190d78e7e8e19901253",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "https://status.openai.com/"
+    },
+    {
+      "id": "9793b47881caeb6291ec",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Independent human adjudication"
+    },
+    {
+      "id": "9e57ab06f9571e284e11",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "evidence comes first."
+    },
+    {
+      "id": "a2008bc6cb34f26dc090",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider service notices. Not proof of any specific model or prompt failure."
+    },
+    {
+      "id": "a5867c6c837c4be369fc",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "RELEASE CUSTODY"
+    },
+    {
+      "id": "a993dd3309df73bdb168",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "The evidence can be examined"
+    },
+    {
+      "id": "aa75231835a544bf9546",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "These are links to provider-operated status websites, not a feed of incidents verified or actively tracked by SPE. Their content can change independently."
+    },
+    {
+      "id": "b300dd63678279ac2789",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "External validation required"
+    },
+    {
+      "id": "b979ff0e1c1129371271",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A provider reported an incident"
+    },
+    {
+      "id": "c33afc4af253541749dd",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not activated"
+    },
+    {
+      "id": "c67dbc18b7f0d232b810",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A failed AI answer deserves more than a dramatic headline. SPE is building a review path from an official report to a reproducible failure, a tested repair, and a transparent correction history."
+    },
+    {
+      "id": "cc6f2482d0b514f681b1",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "No qualified incident brief is available yet."
+    },
+    {
+      "id": "ce0245cc1ba7dbb596e3",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude service status"
+    },
+    {
+      "id": "d0d62ac2b0d2a77b0b96",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Compare a baseline against a repaired prompt with the same oracle, negative controls, regression veto and independent adjudication."
+    },
+    {
+      "id": "d7b32689a689392c4ce3",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Source observation only"
+    },
+    {
+      "id": "f0244bcdd0bcaaaae614",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "When AI fails,"
+    },
+    {
+      "id": "f0304eb62724efefe17e",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Go directly to an official status source."
+    },
+    {
+      "id": "fe81b23d4bf1d8c12c8a",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE / AI FAILURE INTELLIGENCE"
     },
     {
       "id": "100520aff20f92d043a5",
@@ -21779,6 +22325,186 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
       "text": "Image, screenshot, and video notes are computed here with simple pixel checks. Optional same-origin model packs may load from this site when you use image helpers — no paid vision service is required for this preview."
+    },
+    {
+      "id": "0005f4e90c0cadd4c0f2",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-private-ai-failure-report.json"
+    },
+    {
+      "id": "0aac12bc1c20f779e401",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "PRIVATE FAILURE INTAKE / ON YOUR DEVICE"
+    },
+    {
+      "id": "0c98ab3372cb20a238df",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Local-only draft"
+    },
+    {
+      "id": "1c20b920b750af74539d",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Model revision, if known"
+    },
+    {
+      "id": "1da2a240a9872f57680b",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Expected behavior — short summary"
+    },
+    {
+      "id": "3e1bb2566210bb0823ea",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Export private report"
+    },
+    {
+      "id": "425ab41853c77613fabb",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "What went wrong?"
+    },
+    {
+      "id": "48e9b3c3b02a4d5bbdb4",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Model revision not pinned. The report will explicitly mark it unknown."
+    },
+    {
+      "id": "4ee6f631980a42e94736",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. the exact version shown by the provider"
+    },
+    {
+      "id": "59c323472dbe12ebc254",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Private export could not be prepared. Nothing was sent to SPE."
+    },
+    {
+      "id": "63cf95d9de51828d58b0",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Turn an AI failure into a reviewable report."
+    },
+    {
+      "id": "6bdd739381747b42805b",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "AI provider"
+    },
+    {
+      "id": "70135d4fa0fd062b46c0",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe the outcome, not the full conversation or private answer."
+    },
+    {
+      "id": "740a7c225af1100ef8ae",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Eligible for private export. No external incident proof is implied."
+    },
+    {
+      "id": "98bde1170e259c54586f",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Review the entries and confirm your privacy check before exporting."
+    },
+    {
+      "id": "9ab2378e89a17ce50136",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "What should the AI have done? Do not paste private prompts, keys or personal details."
+    },
+    {
+      "id": "9bd6165e3fb898f216f5",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Remove invisible control characters before exporting."
+    },
+    {
+      "id": "a10f07f74734425803e6",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "I personally reviewed these summaries for private information and secrets. I understand the automated screen cannot guarantee redaction."
+    },
+    {
+      "id": "a483d5d22071aed06147",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "application/json;charset=utf-8"
+    },
+    {
+      "id": "a856cc767bba3a384b9f",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe what happened without uploading your prompt or AI response. SPE prepares a preliminary JSON report only when you choose to export it. The report is not independently verified and never becomes a public case automatically."
+    },
+    {
+      "id": "ad1297ae5e9dca76fa05",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "MODEL_REVISION_UNPINNED"
+    },
+    {
+      "id": "adf5e5183915290fa980",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "SUSPECTED_SECRET_OR_PERSONAL_IDENTIFIER"
+    },
+    {
+      "id": "b617df68218e26f53623",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "A private report file was prepared for your browser's download handling. SPE did not upload it."
+    },
+    {
+      "id": "c838e20c2a1fe1a2f083",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Complete both summaries and confirm your privacy review."
+    },
+    {
+      "id": "dd6b41cb75840951871e",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "Observed behavior — short summary"
+    },
+    {
+      "id": "e82a9a412b1213e2d45b",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "CONTROL_CHARACTER_PRESENT"
+    },
+    {
+      "id": "e94f21763042724bb29c",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
+      "id": "ec79c6b204f7dfbdece7",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "none"
+    },
+    {
+      "id": "ef77a2dea7e0e5a3ef54",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "User-reported only · No AI API calls · No automatic upload · No local history storage · No verified repair. Your browser or device may separately manage downloaded files."
+    },
+    {
+      "id": "f187650901d455b8034a",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PROOF",
+      "text": "Possible sensitive data detected. Remove it before exporting."
     },
     {
       "id": "0a4be7243d753e8350e2",
@@ -23011,6 +23737,12 @@
       "text": "Continue"
     },
     {
+      "id": "05dd293f1687decbd1ff",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "An unreleased, noindex explanation of SPE’s incident evidence standards. No live incident feed or verified repair claims are published here."
+    },
+    {
       "id": "0b18cde43a373bead6c8",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -23107,6 +23839,12 @@
       "text": "/privacy"
     },
     {
+      "id": "29f92232c9ce83a88d9a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/ai-incidents"
+    },
+    {
       "id": "2ab69cc3863813bae524",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -23159,6 +23897,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "/capabilities"
+    },
+    {
+      "id": "435b68697f5dcb82a3c2",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "AI Failure Intelligence — Evidence-First Incident Review | SPE"
     },
     {
       "id": "44514acee3add9d07e58",
@@ -23333,6 +24077,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Tested, reproducible business operations and document automation AI workflows for Claude Code, Cursor, and Codex."
+    },
+    {
+      "id": "ab9f93c8dc83af05aa91",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "incidents"
     },
     {
       "id": "ba48c44899936fd87334",
