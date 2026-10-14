@@ -45,7 +45,7 @@ jobs:
       - name: Verify noindex AI Incident Intelligence architecture
         run: npm --prefix apps/web run test:incident-intelligence
       - name: Typecheck SPE web app and new incident route
-        run: npm --prefix apps/web exec -- tsc --noEmit
+        run: cd apps/web && ./node_modules/.bin/tsc --noEmit
       - name: Verify Canonical WASM Hash
         run: |
           node --input-type=module -e '
