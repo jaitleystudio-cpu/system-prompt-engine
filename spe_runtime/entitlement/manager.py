@@ -26,10 +26,11 @@ class EntitlementError(Exception):
 
 
 class EntitlementManager:
-    def __init__(self) -> None:
+    def __init__(self, plans: dict[PlanTier, PlanDefinition] | None = None) -> None:
         self._customers: dict[str, EntitlementState] = {}
         self._processed_event_ids: set[str] = set()
         self._last_event_timestamps: dict[str, int] = {}
+        self._plans: dict[PlanTier, PlanDefinition] = dict(plans or DEFAULT_PLANS)
         self._lock = threading.Lock()
 
     def get_or_create_customer(self, customer_id: str) -> EntitlementState:
@@ -44,7 +45,7 @@ class EntitlementManager:
         return self._customers[customer_id]
 
     def get_plan(self, tier: PlanTier) -> PlanDefinition:
-        return DEFAULT_PLANS[tier]
+        return self._plans.get(tier, DEFAULT_PLANS[tier])
 
     def upgrade_plan(
         self,

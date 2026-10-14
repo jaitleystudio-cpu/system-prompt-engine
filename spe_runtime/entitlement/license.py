@@ -49,9 +49,10 @@ def create_offline_license(
     return base64.b64encode(json.dumps(envelope).encode("utf-8")).decode("ascii")
 
 
-# Official SPE Production License Authority Root Verification Public Key and Signing Key
-OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX = "a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec"
-OFFICIAL_SPE_ROOT_SIGNING_KEY_HEX = "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac"
+# Official SPE Production License Authority Root Verification Public Key (Rotated & Pinned)
+# Production private signing keys are strictly maintained in offline air-gapped cold storage
+# and are NEVER committed to repository source code, distributed packages, or CLI bundles.
+OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX = "a06705d0f0d4c0c23f0d5b53338c2809cd08dbfc6cd33992369436d9902c3f1e"
 
 
 def verify_offline_license(

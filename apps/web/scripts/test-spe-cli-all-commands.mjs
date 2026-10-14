@@ -14,6 +14,7 @@ import { execSync } from "node:child_process";
 import { writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import crypto from "node:crypto";
 import assert from "node:assert";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -441,16 +442,41 @@ console.log("\n[43/43] Testing commercial license status, issue, and check");
 const licStatusOut = runCli(`license status`);
 assert(licStatusOut.includes("SPE Ω Commercial License & Entitlement Status") && licStatusOut.includes("UNLICENSED (Community Edition)"), "License status output missing expected header");
 
+// Generate dedicated test keypair for battery verification
+const testKp = crypto.generateKeyPairSync("ed25519");
+const testSkPkcs8 = testKp.privateKey.export({ type: "pkcs8", format: "der" });
+const testSeed = testSkPkcs8.subarray(-32).toString("hex");
+const testPkSpki = testKp.publicKey.export({ type: "spki", format: "der" });
+const testPkHex = testPkSpki.subarray(-32).toString("hex");
+
+// Negative Gate 1: Issuing without private signing authority must fail closed
+try {
+  runCli(`license issue --customer "Battery Test Corp" --out "${join(tempDir, "unauth.license")}"`);
+  assert(false, "Should have thrown for unauthorized issuance without signing key");
+} catch (e) {
+  assert(e.message.includes("License issuance requires an authorized private signing key") || e.message.includes("Command failed"), "Expected security failure for unauthenticated issuance");
+}
+
 const licIssuePath = join(tempDir, "sample_enterprise.license");
-const licIssueOut = runCli(`license issue --customer "Battery Test Corp" --tier ENTERPRISE --days 365 --out "${licIssuePath}"`);
+const licIssueOut = runCli(`license issue --customer "Battery Test Corp" --tier ENTERPRISE --days 365 --signing-key "${testSeed}" --out "${licIssuePath}"`);
 assert(licIssueOut.includes("Signed offline license token written to"), "License issuance failed");
 assert(existsSync(licIssuePath), "sample_enterprise.license file not created");
 
 const licenseToken = readFileSync(licIssuePath, "utf-8").trim();
-const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE`);
+
+// Negative Gate 2: Checking custom signed token against official root authority without trust pinning must reject
+try {
+  runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE`);
+  assert(false, "Should have rejected untrusted custom signer against official root");
+} catch (e) {
+  assert(e.message.includes("Untrusted public key authority") || e.message.includes("Command failed"), "Expected untrusted authority rejection");
+}
+
+// Positive Gate: Checking with explicit trusted key matches
+const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}"`);
 assert(licCheckOut.includes("License check passed for tier ENTERPRISE"), "License capability check failed");
 
-const licVerifiedStatusOut = runCli(`license status --key "${licenseToken}"`);
+const licVerifiedStatusOut = runCli(`license status --key "${licenseToken}" --trusted-key "${testPkHex}"`);
 assert(licVerifiedStatusOut.includes("ACTIVE (VERIFIED)") && licVerifiedStatusOut.includes("Battery Test Corp"), "Active license status verification failed");
 console.log("  ✓ commercial license status, issue, and check verified");
 

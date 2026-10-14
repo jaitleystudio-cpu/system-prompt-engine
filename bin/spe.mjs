@@ -1187,7 +1187,10 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
 
       if (subAction === 'status') {
         const token = getInstalledToken();
-        const verification = verifyCommercialLicenseToken(token || '');
+        const verification = verifyCommercialLicenseToken(token || '', {
+          trustedPublicKeyHex: flags["trusted-key"] || flags["--trusted-key"],
+          allowCustomSigner: Boolean(flags["allow-custom-signer"] || flags["--allow-custom-signer"]),
+        });
 
         console.log(cyan(`\n🔑 SPE Ω Commercial License & Entitlement Status`));
         console.log(gray(`─────────────────────────────────────────────────────────────────`));
@@ -1242,7 +1245,10 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           tokenToActivate = readFileSync(rawTokenOrPath, 'utf8').trim();
         }
 
-        const verification = verifyCommercialLicenseToken(tokenToActivate);
+        const verification = verifyCommercialLicenseToken(tokenToActivate, {
+          trustedPublicKeyHex: flags["trusted-key"] || flags["--trusted-key"],
+          allowCustomSigner: Boolean(flags["allow-custom-signer"] || flags["--allow-custom-signer"]),
+        });
         if (!verification.valid) {
           console.error(red(`\n❌ License Activation Failed: ${verification.rejectionReason || 'Invalid signature'}`));
           process.exit(1);
@@ -1262,7 +1268,10 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
 
       if (subAction === 'check') {
         const token = getInstalledToken();
-        const verification = verifyCommercialLicenseToken(token || '');
+        const verification = verifyCommercialLicenseToken(token || '', {
+          trustedPublicKeyHex: flags["trusted-key"] || flags["--trusted-key"],
+          allowCustomSigner: Boolean(flags["allow-custom-signer"] || flags["--allow-custom-signer"]),
+        });
         const targetCap = flags.capability;
 
         if (!verification.valid) {
@@ -1303,12 +1312,32 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           machine_fingerprint: flags.fingerprint || null
         };
 
-        const seedHex = process.env.SPE_MASTER_SIGNING_KEY || "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac";
-        const pkcs8Header = Buffer.from("302e020100300506032b657004220420", "hex");
-        const pkcs8 = Buffer.concat([pkcs8Header, Buffer.from(seedHex, "hex")]);
-        const privateKey = crypto.createPrivateKey({ key: pkcs8, format: "der", type: "pkcs8" });
-        const publicKey = crypto.createPublicKey(privateKey);
-        const rawPub = publicKey.export({ type: "spki", format: "der" }).subarray(-32).toString("hex");
+        const seedHex =
+          flags["signing-key"] ||
+          flags["--signing-key"] ||
+          process.env.SPE_LICENSE_SIGNING_KEY ||
+          process.env.SPE_MASTER_SIGNING_KEY;
+
+        let privateKey;
+        let rawPub;
+
+        if (seedHex) {
+          const pkcs8Header = Buffer.from("302e020100300506032b657004220420", "hex");
+          const pkcs8 = Buffer.concat([pkcs8Header, Buffer.from(seedHex, "hex")]);
+          privateKey = crypto.createPrivateKey({ key: pkcs8, format: "der", type: "pkcs8" });
+          const publicKey = crypto.createPublicKey(privateKey);
+          rawPub = publicKey.export({ type: "spki", format: "der" }).subarray(-32).toString("hex");
+        } else if (flags["test-mode"] || flags["--test-mode"] || flags.dev || flags["--dev"]) {
+          const kp = crypto.generateKeyPairSync("ed25519");
+          privateKey = kp.privateKey;
+          rawPub = kp.publicKey.export({ type: "spki", format: "der" }).subarray(-32).toString("hex");
+          console.warn(yellow("⚠️  [SPE DEV MODE] License issued using an ephemeral test keypair. Not trusted by official root."));
+        } else {
+          console.error(red("Error: License issuance requires an authorized private signing key."));
+          console.error(gray("Provide --signing-key <hex> or set SPE_LICENSE_SIGNING_KEY environment variable."));
+          console.error(gray("For local development and testing, pass --test-mode to issue with an ephemeral key."));
+          process.exit(1);
+        }
 
         const canonical = canonicalizeJson(payload);
         const sig = crypto.sign(null, Buffer.from(canonical, 'utf8'), privateKey).toString('hex');

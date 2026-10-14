@@ -461,6 +461,20 @@ export function isOperatorCompatible(
   if (src.constraintType === op.constraintType) {
     return { compatible: true, isInversion: false };
   }
+  if (src.constraintType === "EXACT") {
+    return {
+      compatible: false,
+      isInversion: true,
+      reason: `Source enforces exact equality constraint ('${src.operatorPhrase}'), but operative target weakens or mutates it to a ${op.constraintType} ('${op.operatorPhrase}')`,
+    };
+  }
+  if (op.constraintType === "EXACT") {
+    return {
+      compatible: false,
+      isInversion: true,
+      reason: `Source enforces ${src.constraintType} bound ('${src.operatorPhrase}'), but operative target mutates it into an exact requirement ('${op.operatorPhrase}')`,
+    };
+  }
   if (src.constraintType === "CEILING") {
     if (op.constraintType === "PERMISSIVE_EXCEED") {
       return {
@@ -496,10 +510,55 @@ export function isOperatorCompatible(
   return { compatible: true, isInversion: false };
 }
 
+const GENERIC_CONSTRAINT_HEAD_NOUNS = new Set([
+  "limit", "limits", "limited",
+  "threshold", "thresholds",
+  "amount", "amounts",
+  "maximum", "max",
+  "minimum", "min",
+  "cap", "caps", "capped",
+  "ceiling", "ceilings",
+  "floor", "floors",
+  "bound", "bounds",
+  "value", "values",
+  "total", "totals",
+  "sum", "sums",
+  "rule", "rules",
+  "restriction", "restrictions",
+  "rate", "rates",
+  "number", "numbers",
+  "fee", "fees",
+  "charge", "charges",
+  "cost", "costs",
+  "budget", "budgets"
+]);
+
+function areTokensRelated(t1: string, t2: string): boolean {
+  if (t1 === t2) return true;
+  if (t1.length >= 4 && t2.length >= 4) {
+    if (t1.startsWith(t2) || t2.startsWith(t1)) return true;
+  }
+  return false;
+}
+
 export function computeSubjectMatch(srcTokens: string[], opTokens: string[]): number {
   if (srcTokens.length === 0 && opTokens.length === 0) return 1.0;
   if (srcTokens.length === 0 || opTokens.length === 0) return 0.0;
-  const common = srcTokens.filter((t) => opTokens.includes(t));
+
+  // Filter out generic constraint head nouns to isolate distinctive domain entities
+  const srcDistinct = srcTokens.filter((t) => !GENERIC_CONSTRAINT_HEAD_NOUNS.has(t));
+  const opDistinct = opTokens.filter((t) => !GENERIC_CONSTRAINT_HEAD_NOUNS.has(t));
+
+  // If both clauses define distinctive domain entities, they MUST share at least one related domain entity
+  // (e.g. "withdrawal" vs "transfer" share 0 domain entities and must yield 0.0 affinity)
+  if (srcDistinct.length > 0 && opDistinct.length > 0) {
+    const commonDistinct = srcDistinct.filter((s) => opDistinct.some((o) => areTokensRelated(s, o)));
+    if (commonDistinct.length === 0) {
+      return 0.0;
+    }
+  }
+
+  const common = srcTokens.filter((s) => opTokens.some((o) => areTokensRelated(s, o)));
   if (common.length === 0) return 0.0;
   const allTokens = new Set([...srcTokens, ...opTokens]);
   const jaccard = common.length / allTokens.size;
@@ -781,7 +840,7 @@ export function evaluateIntentFidelity(
         const op = opList[o];
         if (quantitiesMatch(src.quantity, op.quantity)) {
           const score = computeSubjectMatch(src.subjectTokens, op.subjectTokens);
-          if (score > bestScore) {
+          if (score >= 0.25 && score > bestScore) {
             bestScore = score;
             bestOpIdx = o;
           }

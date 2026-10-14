@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-14T18:14:44.931Z",
+  "timestamp": "2026-10-14T18:45:48.686Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -11,7 +11,35 @@
     },
     "testBattery": {
       "status": "PASS",
-      "testsRun": 24,
+      "suitesExecuted": 5,
+      "checksPassed": 83,
+      "suiteDetails": [
+        {
+          "suite": "model-atlas-sync",
+          "checksPassed": 4,
+          "status": "PASS"
+        },
+        {
+          "suite": "pro-features",
+          "checksPassed": 8,
+          "status": "PASS"
+        },
+        {
+          "suite": "arsenal-catalog",
+          "checksPassed": 20,
+          "status": "PASS"
+        },
+        {
+          "suite": "model-atlas",
+          "checksPassed": 15,
+          "status": "PASS"
+        },
+        {
+          "suite": "forensic-r2-gates",
+          "checksPassed": 36,
+          "status": "PASS"
+        }
+      ],
       "failures": 0
     },
     "copyCheck": {
@@ -24,7 +52,11 @@
     }
   },
   "success": true,
-  "durationMs": 14315,
-  "receiptHash": "482ae5bf723f8c57b350b8adfb668c46d94fc7f63d44d8ea570e71b17380ce74",
-  "executionEngine": "SPE-Autonomous-A2Z-Pipeline/v2.0.0"
+  "durationMs": 16917,
+  "contentDigestSha256": "9d7a046b29f1c829116239cf77a5e7344a16dadbea408a886582cc7f57585c90",
+  "digestAlgorithm": "SHA-256",
+  "canonicalization": "RFC_8785_CANONICAL_JSON",
+  "attestationType": "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",
+  "signatureNotice": "Content-addressed integrity digest over deterministic execution results. Not an external PKI certificate.",
+  "executionEngine": "SPE-Autonomous-A2Z-Pipeline/v2.1.0"
 }

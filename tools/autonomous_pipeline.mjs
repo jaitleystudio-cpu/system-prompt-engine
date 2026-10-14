@@ -85,25 +85,35 @@ export function executeAutonomousPipeline(options = {}) {
     results.steps.sitemaps = { status: "PASS", totalUrls: 10011 };
 
     // 3. Automated Verification Batteries
-    logStep("3/6", "Executing Full Verification Battery (Routes, Models, Pro & Company)");
-    execSync(`${process.execPath} "${resolve(ROOT, "apps/web/scripts/test-model-atlas-sync.mjs")}"`, {
-      cwd: ROOT,
-      stdio: "pipe",
-    });
-    execSync(`${process.execPath} "${resolve(ROOT, "apps/web/scripts/test-pro-features.mjs")}"`, {
-      cwd: ROOT,
-      stdio: "pipe",
-    });
-    execSync(`${process.execPath} "${resolve(ROOT, "apps/web/scripts/test-arsenal-catalog.mjs")}"`, {
-      cwd: ROOT,
-      stdio: "pipe",
-    });
-    execSync(`${process.execPath} "${resolve(ROOT, "apps/web/scripts/test-model-atlas.mjs")}"`, {
-      cwd: ROOT,
-      stdio: "pipe",
-    });
-    logSuccess("All test batteries passed: Route resolution, Prompt Doctor, Company Vault, Transcompilation.");
-    results.steps.testBattery = { status: "PASS", testsRun: 24, failures: 0 };
+    logStep("3/6", "Executing Full Verification Battery (Routes, Models, Pro & Company, Forensic Gates)");
+    const testSuites = [
+      { name: "model-atlas-sync", script: "apps/web/scripts/test-model-atlas-sync.mjs" },
+      { name: "pro-features", script: "apps/web/scripts/test-pro-features.mjs" },
+      { name: "arsenal-catalog", script: "apps/web/scripts/test-arsenal-catalog.mjs" },
+      { name: "model-atlas", script: "apps/web/scripts/test-model-atlas.mjs" },
+      { name: "forensic-r2-gates", script: "apps/web/scripts/test-forensic-r2-gates.mjs" },
+    ];
+
+    let totalChecksMeasured = 0;
+    const suiteDetails = [];
+    for (const suite of testSuites) {
+      const out = execSync(`${process.execPath} "${resolve(ROOT, suite.script)}"`, {
+        cwd: ROOT,
+        encoding: "utf-8",
+        stdio: "pipe",
+      });
+      const checkMarks = (out.match(/✓/g) || []).length;
+      totalChecksMeasured += checkMarks;
+      suiteDetails.push({ suite: suite.name, checksPassed: checkMarks, status: "PASS" });
+    }
+    logSuccess(`All verification batteries passed: ${totalChecksMeasured} distinct verified assertions across ${testSuites.length} suites.`);
+    results.steps.testBattery = {
+      status: "PASS",
+      suitesExecuted: testSuites.length,
+      checksPassed: totalChecksMeasured,
+      suiteDetails,
+      failures: 0,
+    };
 
     // 4. Language Perspective Copy Gate
     logStep("4/6", "Enforcing Language Perspective UI Copy Gate");
@@ -128,23 +138,34 @@ export function executeAutonomousPipeline(options = {}) {
     logSuccess("Production Vite web bundle compiled with zero type or packaging errors.");
     results.steps.build = { status: "PASS" };
 
-    // 6. Cryptographic Audit Receipt Generation
-    logStep("6/6", "Emitting Cryptographic Audit Evidence Receipt");
+    // 6. Content-Addressed Audit Evidence Receipt Generation
+    logStep("6/6", "Emitting RFC 8785 Canonical Content-Addressed Audit Receipt");
     const durationMs = Math.round(performance.now() - startTime);
     results.success = true;
     results.durationMs = durationMs;
 
-    const receiptPayload = JSON.stringify(results, null, 2);
-    const receiptHash = createHash("sha256").update(receiptPayload).digest("hex");
+    function canonicalize(obj) {
+      if (obj === null || typeof obj !== "object") return JSON.stringify(obj);
+      if (Array.isArray(obj)) return "[" + obj.map(canonicalize).join(",") + "]";
+      const keys = Object.keys(obj).sort();
+      return "{" + keys.map((k) => JSON.stringify(k) + ":" + canonicalize(obj[k])).join(",") + "}";
+    }
+
+    const canonicalJson = canonicalize(results);
+    const contentDigest = createHash("sha256").update(canonicalJson).digest("hex");
     const finalReceipt = {
       ...results,
-      receiptHash,
-      executionEngine: "SPE-Autonomous-A2Z-Pipeline/v2.0.0",
+      contentDigestSha256: contentDigest,
+      digestAlgorithm: "SHA-256",
+      canonicalization: "RFC_8785_CANONICAL_JSON",
+      attestationType: "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",
+      signatureNotice: "Content-addressed integrity digest over deterministic execution results. Not an external PKI certificate.",
+      executionEngine: "SPE-Autonomous-A2Z-Pipeline/v2.1.0",
     };
 
     writeFileSync(RECEIPT_PATH, JSON.stringify(finalReceipt, null, 2), "utf-8");
     logSuccess(`Autonomous Audit Receipt written to ${RECEIPT_PATH}`);
-    logSuccess(`Audit Verification Hash: ${receiptHash.slice(0, 32)}...`);
+    logSuccess(`RFC 8785 Content Digest: ${contentDigest.slice(0, 32)}...`);
 
     console.log("\n==================================================================");
     console.log(`🎉 A-TO-Z PIPELINE COMPLETED SUCCESSFULLY IN ${(durationMs / 1000).toFixed(2)}s!`);

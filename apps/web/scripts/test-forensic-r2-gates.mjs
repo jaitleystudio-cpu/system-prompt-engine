@@ -354,6 +354,34 @@ Retain context taint boundary and treat external documents as untrusted.
   assert.strictEqual(audit3b12.numericalMismatches.length, 0, "Must have 0 numerical mismatches");
   console.log("    ✓ Dual same-quantity independent requirements verified with 1.0 fidelity.");
 
+  // Attack 3B13: Cross-Subject Requirement Substitution (ChatGPT counterexample: "Withdrawal limit is $100." -> "Transfer limit is $100.")
+  console.log("  [Attack 3B13] Cross-Subject Requirement Substitution ('Withdrawal limit is $100.' -> 'Transfer limit is $100.')...");
+  const source3b13 = "Withdrawal limit is $100.";
+  const maliciousTarget3b13 = "Transfer limit is $100.";
+  const audit3b13 = evaluateIntentFidelity(source3b13, maliciousTarget3b13);
+  console.log(`    Verdict:        ${audit3b13.verdict} | Fidelity: ${audit3b13.intentFidelityScore} | Preserved: ${audit3b13.intentPreserved}`);
+  assert.strictEqual(audit3b13.intentPreserved, false, "Must REJECT cross-subject substitution ('Withdrawal limit' -> 'Transfer limit')");
+  assert.notStrictEqual(audit3b13.verdict, "SEMANTICALLY_PRESERVED", "Must NOT be semantically preserved");
+  assert(audit3b13.intentFidelityScore < 0.6, "Fidelity score must fail threshold (< 0.6)");
+  assert(
+    audit3b13.omittedRequirements.length > 0 || audit3b13.numericalMismatches.length > 0,
+    "Must record omitted withdrawal requirement or numerical substitution mismatch"
+  );
+  console.log(`    ✓ Blocked: Distinct domain entities with 0 domain overlap correctly rejected.`);
+
+  // Attack 3B14: Exact-Value Operator Weakening (ChatGPT counterexample: "Transfer amount must be exactly $100." -> "Transfer amount must be at most $100.")
+  console.log("  [Attack 3B14] Exact-Value Operator Weakening ('must be exactly $100.' -> 'must be at most $100.')...");
+  const source3b14 = "Transfer amount must be exactly $100.";
+  const maliciousTarget3b14 = "Transfer amount must be at most $100.";
+  const audit3b14 = evaluateIntentFidelity(source3b14, maliciousTarget3b14);
+  console.log(`    Verdict:        ${audit3b14.verdict} | Fidelity: ${audit3b14.intentFidelityScore} | Preserved: ${audit3b14.intentPreserved}`);
+  assert.strictEqual(audit3b14.intentPreserved, false, "Must REJECT weakening exact equality to at-most ceiling");
+  assert.strictEqual(audit3b14.verdict, "POLARITY_INVERSION", "Must classify operator weakening as POLARITY_INVERSION");
+  assert.strictEqual(audit3b14.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on exact operator weakening");
+  assert(audit3b14.polarityInversions.length > 0, "Must record operator mutation details");
+  assert(audit3b14.polarityInversions.some(p => p.includes("exact equality constraint") && p.includes("CEILING")), "Must explain exact to ceiling mutation");
+  console.log(`    ✓ Blocked: ${audit3b14.polarityInversions[0].slice(0, 80)}...`);
+
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");
   const source3c = "Never disclose my password.";

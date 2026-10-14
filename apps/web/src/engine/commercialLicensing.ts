@@ -92,7 +92,7 @@ export const TIER_DEFAULT_CAPABILITIES: Record<PlanTier, CommercialCapability[]>
 
 /** Official SPE Production License Authority Root Verification Public Key */
 export const OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX =
-  "a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec";
+  "a06705d0f0d4c0c23f0d5b53338c2809cd08dbfc6cd33992369436d9902c3f1e";
 
 /**
  * Verifies a base64 or raw JSON license token cryptographically.

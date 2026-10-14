@@ -141,17 +141,32 @@ def test_quota_limits_and_exhaustion():
     manager.record_evaluation_run("cust_free", count=10000)
     assert manager.can_run_evaluation("cust_free") is True
 
-    # Pro customer with 2,500 limit enforces quota
+    # Pro customer also has unlimited local evals (-1); upgrading never reduces local capacity
     cust_pro = manager.get_or_create_customer("cust_pro")
     manager.upgrade_plan("cust_pro", PlanTier.PRO)
     assert manager.can_run_evaluation("cust_pro") is True
+    manager.record_evaluation_run("cust_pro", count=50000)
+    assert manager.can_run_evaluation("cust_pro") is True
 
-    # Exhaust Pro quota
-    manager.record_evaluation_run("cust_pro", count=2500)
+    # Quota is strictly enforced if a plan has a finite quota
+    from spe_runtime.entitlement.models import PlanDefinition, DEFAULT_PLANS
+    custom_limited_plan = PlanDefinition(
+        tier=PlanTier.PRO,
+        name="Custom Limited Test",
+        monthly_price_usd=9.0,
+        max_local_evals_per_month=100,
+        max_model_atlas_profiles=10,
+        private_failure_genome_capacity=10,
+        team_members_limit=1,
+        has_ci_enforcement=False,
+        has_offline_license_support=False,
+        has_audit_exports=False,
+    )
+    manager._plans[PlanTier.PRO] = custom_limited_plan
     assert manager.can_run_evaluation("cust_pro") is False
 
-    # Upgrade to Enterprise (-1 limit) restores unlimited access
-    manager.upgrade_plan("cust_pro", PlanTier.ENTERPRISE)
+    # Restore default plans
+    manager._plans = dict(DEFAULT_PLANS)
     assert manager.can_run_evaluation("cust_pro") is True
 
 

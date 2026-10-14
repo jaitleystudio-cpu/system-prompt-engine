@@ -1405,13 +1405,14 @@ class CommercialLicensingAdapter:
         capabilities: list[str] | None = None,
         master_signing_key_hex: str | None = None,
     ) -> Dict[str, Any]:
+        import hashlib
         import os
         from datetime import datetime, timedelta, timezone
+        from spe_runtime.ci_gate.receipt import encodepoint, scalarmult, B
         from spe_runtime.entitlement.license import (
             create_offline_license,
             OfflineLicensePayload,
             OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX,
-            OFFICIAL_SPE_ROOT_SIGNING_KEY_HEX,
         )
 
         if capabilities is None:
@@ -1434,10 +1435,21 @@ class CommercialLicensingAdapter:
         sk_hex = (
             master_signing_key_hex
             or os.environ.get("SPE_MASTER_SIGNING_KEY")
-            or OFFICIAL_SPE_ROOT_SIGNING_KEY_HEX
+            or os.environ.get("SPE_LICENSE_SIGNING_KEY")
         )
+        if not sk_hex:
+            raise ValueError(
+                "License issuance requires an authorized private signing key. "
+                "Provide master_signing_key_hex or set SPE_LICENSE_SIGNING_KEY environment variable."
+            )
+
         sk = bytes.fromhex(sk_hex)
-        pk = bytes.fromhex(OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX)
+        # Deterministically derive Ed25519 public key from private seed
+        h = hashlib.sha512(sk).digest()
+        a = int.from_bytes(h[:32], "little")
+        a &= (1 << 254) - 8
+        a |= (1 << 254)
+        pk = encodepoint(scalarmult(B, a))
 
         payload = OfflineLicensePayload(
             license_id=license_id,
