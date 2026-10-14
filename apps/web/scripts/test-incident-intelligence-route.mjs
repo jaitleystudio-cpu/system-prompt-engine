@@ -19,7 +19,7 @@ const faq = read("src/pages/Capabilities.tsx");
 assert.match(route, /incidents:\s*"\/ai-incidents"/);
 assert.match(route, /"incidents",[\s\S]*?\]\)/);
 assert.match(route, /"incidents"[\s\S]*?path:\s*"\/ai-incidents"/);
-assert.match(app, /view === "incidents"\s*&&\s*<IncidentIntelligence/);
+assert.match(app, /view === "incidents"\s*&&\s*\(\s*<IncidentIntelligence/);
 assert.match(app, /view === "research" \|\|\s*view === "incidents"/);
 assert.match(robots, /Disallow:\s*\/ai-incidents/);
 assert.doesNotMatch(sitemap, /<loc>[^<]*\/ai-incidents/);
