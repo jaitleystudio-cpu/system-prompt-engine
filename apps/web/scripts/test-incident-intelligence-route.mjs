@@ -46,13 +46,15 @@ assert.match(style, /max-width:\s*650px/);
 
 // Critically, adding the page must not secretly enable a live network API,
 // accept user-provided headlines, mint a signed receipt or use synthetic cases.
+// Check executable source: design comments may describe forbidden capabilities.
+const executablePage = page.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 for (const unauthorized of [
   /\bfetch\s*\(/, /XMLHttpRequest/, /EventSource\s*\(/,
   /WebSocket\s*\(/, /localStorage/, /sessionStorage/,
   /dangerouslySetInnerHTML/, /\bwindow\.location\b/, /Math\.random\s*\(/,
   /performance\.now\s*\(/, /setInterval\s*\(/, /document\.cookie/,
 ]) {
-  assert.doesNotMatch(page, unauthorized, "forbidden incident page capability: " + unauthorized);
+  assert.doesNotMatch(executablePage, unauthorized, "forbidden incident page capability: " + unauthorized);
 }
 assert.equal((page.match(/status\.(?:openai|claude)\.com/g) ?? []).length, 2);
 assert.equal((page.match(/status:\s*"/g) ?? []).length, 5);
