@@ -8,6 +8,7 @@ export type AppView =
   | "my-work"
   | "privacy"
   | "capabilities"
+  | "incidents"
   | "workspace"
   | "website"
   | "media"
@@ -26,6 +27,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   "my-work": "/my-work",
   privacy: "/privacy",
   capabilities: "/capabilities",
+  incidents: "/ai-incidents",
   workspace: "/workspace",
   website: "/website",
   media: "/media",
@@ -39,6 +41,7 @@ export const VIEW_PATH: Record<AppView, string> = {
 
 /** Device-local and tool surfaces. Not advertised to crawlers. */
 export const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set([
+  "incidents",
   "workspace",
   "my-work",
   "website",
@@ -134,6 +137,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Privacy & Proof — Local System Prompt Engine | SPE",
     description:
       "How SPE prepares prompts on this device, with honest privacy claims for this release.",
+  },
+  incidents: {
+    path: "/ai-incidents",
+    title: "AI Failure Intelligence — Evidence-First Incident Review | SPE",
+    description:
+      "An unreleased, noindex explanation of SPE’s incident evidence standards. No live incident feed or verified repair claims are published here.",
   },
   capabilities: {
     path: "/capabilities",
