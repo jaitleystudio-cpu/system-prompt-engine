@@ -290,7 +290,11 @@ console.log("  ✓ inspect verified");
 console.log("\n[31/32] Testing trace");
 const traceOut = runCli(`trace -r REQ-FIN-01`);
 assert(traceOut.includes("CAUSAL PROOF GRAPH TRACE") && traceOut.includes("Requirement ID:"), "Trace output missing header");
-console.log("  ✓ trace verified");
+const traceOtel = runCli(`trace -r REQ-FIN-01 --export otel`);
+assert(traceOtel.includes("resourceSpans") && traceOtel.includes("spe-runtime"), "Trace otel export missing resourceSpans");
+const traceLangfuse = runCli(`trace -r REQ-FIN-01 --export langfuse`);
+assert(traceLangfuse.includes("spe-trace-req-fin-01") && traceLangfuse.includes("UFCK-100X"), "Trace langfuse export missing traceId");
+console.log("  ✓ trace, otel, and langfuse exports verified");
 
 // 32. Keypair Generation (spe keygen)
 console.log("\n[32/33] Testing keygen");

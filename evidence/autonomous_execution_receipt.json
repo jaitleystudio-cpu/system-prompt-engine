@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-14T09:56:19.018Z",
+  "timestamp": "2026-10-14T10:15:15.190Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -24,7 +24,7 @@
     }
   },
   "success": true,
-  "durationMs": 27163,
-  "receiptHash": "b11bf8baf6c0467e4346841e32abdc408b66602a88940703f7b85df0851b861c",
+  "durationMs": 12415,
+  "receiptHash": "da2d2b444bfca42971d893cbcf7b344a8a3a03cc2dea1a91a51d03efdbc76863",
   "executionEngine": "SPE-Autonomous-A2Z-Pipeline/v2.0.0"
 }

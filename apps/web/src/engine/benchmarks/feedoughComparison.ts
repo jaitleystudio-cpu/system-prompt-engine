@@ -207,13 +207,14 @@ Conclude with a 7-day smoke-test experiment design (landing page, ad spend budge
 ] as const;
 
 export interface CompareTabOption {
-  id: "benchmarks" | "feedough" | "founder";
+  id: "benchmarks" | "global" | "feedough" | "founder";
   label: string;
   badge: string;
 }
 
 export const COMPARE_TABS: readonly CompareTabOption[] = [
   { id: "benchmarks", label: "Skill & Evaluation Benchmarks", badge: "5 Suites" },
+  { id: "global", label: "Global Top 10 Truth Matrix", badge: "10 Platforms" },
   { id: "feedough", label: "SPE vs Feedough.com Moat Matrix", badge: "8 Dimensions" },
   { id: "founder", label: "Founder & Strategy Presets", badge: "5 Blueprints" },
 ] as const;
