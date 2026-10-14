@@ -1,0 +1,25 @@
+2026-10-14T14:43:46+05:30 START shard2 resilient tasks=[('hyperbolic_temporal_discount', 'direct'), ('location_finding', 'source'), ('irt', 'direct')]
+2026-10-14T14:43:46+05:30 START shard2 resilient tasks=[('hyperbolic_temporal_discount', 'direct'), ('location_finding', 'source'), ('irt', 'direct')]
+2026-10-14T14:43:46+05:30 SKIP existing evidence/cwc1/r1/scored/SCORED_hyperbolic_temporal_discount_direct_101_A.json
+2026-10-14T14:43:46+05:30 SKIP existing evidence/cwc1/r1/scored/SCORED_hyperbolic_temporal_discount_direct_101_A.json
+2026-10-14T14:43:46+05:30 RUN hyperbolic_temporal_discount direct 101 B
+2026-10-14T14:43:46+05:30 RUN hyperbolic_temporal_discount direct 101 B
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+2026-10-14T14:44:15+05:30 CATCH hyperbolic_temporal_discount direct B: ValueError("could not convert string to float: '5] (increased immediate reward and delay)'")
+2026-10-14T14:44:15+05:30 CATCH hyperbolic_temporal_discount direct B: ValueError("could not convert string to float: '5] (increased immediate reward and delay)'")
+2026-10-14T14:44:15+05:30 WROTE evidence/cwc1/r1/scored/SCORED_hyperbolic_temporal_discount_direct_101_B.json in 28.6s raw_error=None err=ValueError("could not convert string to float: '5] (increased immediate reward and delay)'")
+2026-10-14T14:44:15+05:30 WROTE evidence/cwc1/r1/scored/SCORED_hyperbolic_temporal_discount_direct_101_B.json in 28.6s raw_error=None err=ValueError("could not convert string to float: '5] (increased immediate reward and delay)'")
+2026-10-14T14:44:15+05:30 RUN hyperbolic_temporal_discount direct 101 C
+2026-10-14T14:44:15+05:30 RUN hyperbolic_temporal_discount direct 101 C
+2026-10-14T14:44:56+05:30 CATCH hyperbolic_temporal_discount direct C: ValueError('could not convert string to float: "{\'iR\': 1"')
+2026-10-14T14:44:56+05:30 CATCH hyperbolic_temporal_discount direct C: ValueError('could not convert string to float: "{\'iR\': 1"')
+2026-10-14T14:44:56+05:30 WROTE evidence/cwc1/r1/scored/SCORED_hyperbolic_temporal_discount_direct_101_C.json in 41.1s raw_error=None err=ValueError('could not convert string to float: "{\'iR\': 1"')
+2026-10-14T14:44:56+05:30 WROTE evidence/cwc1/r1/scored/SCORED_hyperbolic_temporal_discount_direct_101_C.json in 41.1s raw_error=None err=ValueError('could not convert string to float: "{\'iR\': 1"')
+2026-10-14T14:44:56+05:30 RUN location_finding source 101 A
+2026-10-14T14:44:56+05:30 RUN location_finding source 101 A
+2026-10-14T15:35:28+05:30 CATCH location_finding source A: TimeoutError('timed out')
+2026-10-14T15:35:28+05:30 CATCH location_finding source A: TimeoutError('timed out')
+2026-10-14T15:35:28+05:30 WROTE evidence/cwc1/r1/scored/SCORED_location_finding_source_101_A.json in 3031.9s raw_error=None err=TimeoutError('timed out')
+2026-10-14T15:35:28+05:30 WROTE evidence/cwc1/r1/scored/SCORED_location_finding_source_101_A.json in 3031.9s raw_error=None err=TimeoutError('timed out')
+2026-10-14T15:35:28+05:30 RUN location_finding source 101 B
+2026-10-14T15:35:28+05:30 RUN location_finding source 101 B

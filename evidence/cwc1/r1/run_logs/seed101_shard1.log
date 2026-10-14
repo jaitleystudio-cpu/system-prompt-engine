@@ -1,0 +1,47 @@
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+SCORED peregrines direct 101 A calls 27 raw_error [23415.0, 23162.127596574544] std 0.7900389332373274
+SCORED peregrines direct 101 B calls 20 raw_error [17683.9, 24378.648885654024] std 0.42558374420064554
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py", line 334, in <module>
+    main()
+  File "/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py", line 324, in main
+    log = episode(backend, env_name, goal_name, seed, arm)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py", line 215, in episode
+    out = backend.chat(msgs)
+          ^^^^^^^^^^^^^^^^^^
+  File "/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py", line 58, in chat
+    r = json.load(urllib.request.urlopen(urllib.request.Request(self.url + "/api/chat", body, {"Content-Type": "application/json"}), timeout=600))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/http/client.py", line 304, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out

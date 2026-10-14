@@ -1,0 +1,51 @@
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+eval_pointer: 0
+Generating new eval point
+eval_point: 1, 47, 32, 1
+eval_pointer: 1
+Generating new eval point
+eval_point: 279, 287, 53, 0
+eval_pointer: 2
+Generating new eval point
+eval_point: 2, 110, 265, 1
+eval_pointer: 3
+Generating new eval point
+eval_point: 40, 75, 256, 0
+eval_pointer: 4
+Generating new eval point
+eval_point: 6, 185, 214, 1
+eval_pointer: 5
+Generating new eval point
+eval_point: 66, 164, 75, 0
+eval_pointer: 6
+Generating new eval point
+eval_point: 39, 205, 67, 1
+eval_pointer: 7
+Generating new eval point
+eval_point: 92, 200, 354, 0
+eval_pointer: 8
+Generating new eval point
+eval_point: 35, 260, 18, 1
+eval_pointer: 9
+Generating new eval point
+eval_point: 287, 289, 306, 0
+prediction not parsed
+SCORED hyperbolic_temporal_discount direct 101 A calls 20 raw_error [0.5, 0.5] std 0.0
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py", line 334, in <module>
+    main()
+  File "/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py", line 324, in main
+    log = episode(backend, env_name, goal_name, seed, arm)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py", line 250, in episode
+    obs, ok = goal.env.run_experiment(x)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/boxing-gym/src/boxing_gym/envs/hyperbolic_temporal_discount.py", line 441, in run_experiment
+    designs = self.validate_input(input_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/boxing-gym/src/boxing_gym/envs/hyperbolic_temporal_discount.py", line 434, in validate_input
+    items = [int(float(item)) for item in items]
+                 ^^^^^^^^^^^
+ValueError: could not convert string to float: '1] (trivial example'
