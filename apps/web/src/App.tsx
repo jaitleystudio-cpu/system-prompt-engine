@@ -1386,7 +1386,23 @@ export default function App() {
         )}
 
         {!notFound && view === "capabilities" && <Capabilities onNavigate={setView} />}
-        {!notFound && view === "incidents" && <IncidentIntelligence onNavigate={setView} />}
+        {!notFound && view === "incidents" && (
+          <IncidentIntelligence
+            onNavigate={setView}
+            onDraftRepair={(brief) => {
+              // Explicit user gesture: hand off a preliminary prompt brief
+              // to the EXISTING local semantic engine. No provider API,
+              // reviewer signature, backend upload or verified repair.
+              invalidate();
+              setUserRequest(brief);
+              setCategory("AI Assistant");
+              setIntent(defaultIntentLens(brief));
+              setIntentProvenance("AUTO_DERIVED_INTENT");
+              setView("create");
+              window.scrollTo(0, 0);
+            }}
+          />
+        )}
         {!notFound && view === "privacy" && <PrivacyProof />}
         {!notFound && view === "workflows" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
