@@ -1,0 +1,23 @@
+{
+  "schema": "spe.promptfoo.m07.budget_plan.v1",
+  "splits": {"DEV": 20, "VAL": 10, "FRESH_HELD_OUT": 0},
+  "original_exposed_holdouts_reused": false,
+  "target": {
+    "model_id": "UNSELECTED",
+    "model_version": "",
+    "promptfoo_provider": "not_selected",
+    "spe_provider": "not_selected",
+    "trials": 1,
+    "max_calls_per_case_per_arm": 1,
+    "max_input_tokens": 8192,
+    "max_output_tokens": 2048,
+    "max_optimizer_suggestion_calls": 0
+  },
+  "pricing": {
+    "usd_per_million_input_tokens": null,
+    "usd_per_million_output_tokens": null,
+    "owner_approved_usd_cap": null
+  },
+  "commercial_hypothesis": "Business developers may pay for reproducibly verified prompt-repair workflows if success gains outweigh total per-task costs.",
+  "observed_buyer_demand": false
+}
