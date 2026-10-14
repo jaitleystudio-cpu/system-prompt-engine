@@ -1,5 +1,6 @@
 import type { AppView } from "../routing";
 import { InAppLink } from "../shell/inAppLink";
+import { PrivateFailureIntake } from "./PrivateFailureIntake";
 import "./incident-intelligence.css";
 
 /**
@@ -135,6 +136,8 @@ export function IncidentIntelligence({
             <span>?</span>
           </div>
         </section>
+
+        <PrivateFailureIntake />
 
         <section className="spe-incident-method" id="spe-incident-method" aria-labelledby="spe-incident-method-title">
           <div className="spe-incident-section-head">
