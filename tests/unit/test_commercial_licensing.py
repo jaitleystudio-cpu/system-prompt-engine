@@ -23,6 +23,9 @@ def test_issue_and_verify_active_license():
     assert issued["valid"] if "valid" in issued else True
     token = issued["token"]
 
+    # Security Law: Private signing key must NEVER be leaked in output
+    assert "signing_key_hex" not in issued, "Private signing key leaked in issuance output!"
+
     verified = CommercialLicensingAdapter.verify_license(token)
     assert verified["valid"] is True
     assert verified["status"] == "ACTIVE"
@@ -32,12 +35,38 @@ def test_issue_and_verify_active_license():
     assert "AUTOMATED_CONTINUATION" in verified["capabilities"]
 
 
+def test_untrusted_self_signed_license_rejected_by_default():
+    """Security Law: Forged self-signed tokens must be rejected by default verifier."""
+    sk, pk = generate_keypair()
+    now = datetime.now(timezone.utc)
+    payload = OfflineLicensePayload(
+        license_id="SPE-FORGED-001",
+        customer_id="Malicious Adversary",
+        plan_tier="ENTERPRISE",
+        issued_at=now.isoformat(),
+        expires_at=(now + timedelta(days=365)).isoformat(),
+        capabilities=["ALL"],
+    )
+    forged_token = create_offline_license(payload, sk, pk)
+
+    # Default verification without explicit override must reject the untrusted issuer
+    verified = CommercialLicensingAdapter.verify_license(forged_token)
+    assert verified["valid"] is False
+    assert "untrusted" in verified["error"].lower()
+
+
 def test_expired_license_fails_verification():
     now = datetime.now(timezone.utc)
     expired_time = now - timedelta(days=10)
     issued_time = now - timedelta(days=40)
 
-    sk, pk = generate_keypair()
+    from spe_runtime.entitlement.license import (
+        OFFICIAL_SPE_ROOT_SIGNING_KEY_HEX,
+        OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX,
+    )
+    sk = bytes.fromhex(OFFICIAL_SPE_ROOT_SIGNING_KEY_HEX)
+    pk = bytes.fromhex(OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX)
+
     payload = OfflineLicensePayload(
         license_id="SPE-LIC-EXPIRED-01",
         customer_id="Lapsed Customer LLC",
@@ -62,7 +91,7 @@ def test_tampered_payload_detected_and_rejected():
     )
     import base64
     raw_env = json.loads(base64.b64decode(issued["token"].encode("ascii")).decode("utf-8"))
-    
+
     # Tamper with plan_tier without re-signing
     raw_env["payload"]["plan_tier"] = "ENTERPRISE"
     tampered_token = base64.b64encode(json.dumps(raw_env).encode("utf-8")).decode("ascii")

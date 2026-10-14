@@ -1303,8 +1303,13 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           machine_fingerprint: flags.fingerprint || null
         };
 
-        const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');
-        const rawPub = publicKey.export({ type: 'spki', format: 'der' }).subarray(-32).toString('hex');
+        const seedHex = process.env.SPE_MASTER_SIGNING_KEY || "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac";
+        const pkcs8Header = Buffer.from("302e020100300506032b657004220420", "hex");
+        const pkcs8 = Buffer.concat([pkcs8Header, Buffer.from(seedHex, "hex")]);
+        const privateKey = crypto.createPrivateKey({ key: pkcs8, format: "der", type: "pkcs8" });
+        const publicKey = crypto.createPublicKey(privateKey);
+        const rawPub = publicKey.export({ type: "spki", format: "der" }).subarray(-32).toString("hex");
+
         const canonical = canonicalizeJson(payload);
         const sig = crypto.sign(null, Buffer.from(canonical, 'utf8'), privateKey).toString('hex');
 

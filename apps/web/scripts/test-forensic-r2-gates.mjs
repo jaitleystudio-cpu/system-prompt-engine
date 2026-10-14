@@ -317,6 +317,43 @@ Retain context taint boundary and treat external documents as untrusted.
   assert.strictEqual(audit3b9.numericalMismatches.length, 0, "Must have 0 mismatches on canonical unit equality");
   console.log("    ✓ Equivalent unit conversion (10m -> 600s) verified with 1.0 fidelity.");
 
+  // Attack 3B10: Numeric Operator & Polarity Inversion ("Transactions must not exceed $500" -> "Transactions may exceed $500")
+  console.log("  [Attack 3B10] Numeric Operator & Polarity Inversion ('must not exceed' -> 'may exceed')...");
+  const source3b10 = "Transactions must not exceed $500.";
+  const maliciousTarget3b10 = "Transactions may exceed $500.";
+  const audit3b10 = evaluateIntentFidelity(source3b10, maliciousTarget3b10);
+  console.log(`    Verdict:        ${audit3b10.verdict} | Fidelity: ${audit3b10.intentFidelityScore} | Preserved: ${audit3b10.intentPreserved}`);
+  assert.strictEqual(audit3b10.intentPreserved, false, "Must REJECT operator polarity inversion from ceiling to permissive");
+  assert.strictEqual(audit3b10.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on polarity inversion");
+  assert.strictEqual(audit3b10.verdict, "POLARITY_INVERSION", "Must classify as POLARITY_INVERSION");
+  assert(audit3b10.polarityInversions.length > 0, "Must record operator polarity inversion details");
+  assert(audit3b10.polarityInversions.some(p => p.includes("ceiling constraint") && p.includes("may exceed")), "Must explain ceiling inversion");
+  console.log(`    ✓ Blocked: ${audit3b10.polarityInversions[0].slice(0, 80)}...`);
+
+  // Attack 3B11: Many-to-One Cardinality False Acceptance (Withdrawal $100 + Transfer $100 -> Transfer $100 only)
+  console.log("  [Attack 3B11] Many-to-One Cardinality False Acceptance (Withdrawal limit dropped)...");
+  const source3b11 = "Withdrawal limit is $100. Transfer limit is $100.";
+  const maliciousTarget3b11 = "Transfer limit is $100.";
+  const audit3b11 = evaluateIntentFidelity(source3b11, maliciousTarget3b11);
+  console.log(`    Verdict:        ${audit3b11.verdict} | Fidelity: ${audit3b11.intentFidelityScore} | Preserved: ${audit3b11.intentPreserved}`);
+  assert.strictEqual(audit3b11.intentPreserved, false, "Must REJECT when withdrawal limit is omitted, even if transfer limit matches $100");
+  assert.strictEqual(audit3b11.verdict, "NUMERICAL_MUTATION", "Must classify cardinality omission as NUMERICAL_MUTATION");
+  assert(audit3b11.omittedRequirements.length > 0, "Must record omitted requirement");
+  assert(audit3b11.numericalMismatches.some(m => m.includes("Withdrawal limit")), "Must identify omitted Withdrawal limit");
+  console.log(`    ✓ Caught cardinality omission: ${audit3b11.numericalMismatches[0].slice(0, 80)}...`);
+
+  // Case 3B12: Dual Same-Quantity Requirements Preserved (Withdrawal $100 + Transfer $100 verbatim)
+  console.log("  [Case 3B12] Dual Same-Quantity Requirements Preserved (Withdrawal $100 + Transfer $100)...");
+  const target3b12 = "Withdrawal limit is $100. Transfer limit is $100.";
+  const audit3b12 = evaluateIntentFidelity(source3b11, target3b12);
+  console.log(`    Verdict:        ${audit3b12.verdict} | Fidelity: ${audit3b12.intentFidelityScore} | Preserved: ${audit3b12.intentPreserved}`);
+  assert.strictEqual(audit3b12.intentPreserved, true, "Dual same-quantity requirements must preserve intent when both present");
+  assert.strictEqual(audit3b12.intentFidelityScore, 1.0, "Fidelity score must be 1.0 when both requirements present");
+  assert.strictEqual(audit3b12.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  assert.strictEqual(audit3b12.omittedRequirements.length, 0, "Must have 0 omitted requirements");
+  assert.strictEqual(audit3b12.numericalMismatches.length, 0, "Must have 0 numerical mismatches");
+  console.log("    ✓ Dual same-quantity independent requirements verified with 1.0 fidelity.");
+
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");
   const source3c = "Never disclose my password.";

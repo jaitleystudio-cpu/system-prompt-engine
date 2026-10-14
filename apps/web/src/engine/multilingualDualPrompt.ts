@@ -326,6 +326,13 @@ export function quantitiesMatch(a: CategorizedQuantity, b: CategorizedQuantity):
   return false;
 }
 
+export type NumericConstraintType =
+  | "CEILING"
+  | "FLOOR"
+  | "PERMISSIVE_EXCEED"
+  | "EXACT"
+  | "UNSPECIFIED";
+
 export interface BoundNumericRequirement {
   id: string;
   rawClause: string;
@@ -333,6 +340,8 @@ export interface BoundNumericRequirement {
   subjectTokens: string[];
   quantity: CategorizedQuantity;
   operator: string;
+  constraintType: NumericConstraintType;
+  operatorPhrase: string;
 }
 
 const NUMERIC_STOP_WORDS = new Set([
@@ -359,10 +368,62 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       )
     );
 
+    let constraintType: NumericConstraintType = "UNSPECIFIED";
+    let operatorPhrase = "constraint";
+
+    if (
+      /\b(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed\b/i.test(clause) ||
+      /\b(?:unlimited|no\s+limit|without\s+limit)\b/i.test(clause)
+    ) {
+      constraintType = "PERMISSIVE_EXCEED";
+      const m = clause.match(
+        /\b(?:(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed|unlimited|no\s+limit|without\s+limit)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "may exceed";
+    } else if (
+      /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i.test(clause)
+    ) {
+      constraintType = "CEILING";
+      const m = clause.match(
+        /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "must not exceed";
+    } else if (
+      /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b|under|below|less\s+than)\b/i.test(
+        clause
+      )
+    ) {
+      constraintType = "CEILING";
+      const m = clause.match(
+        /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b|under|below|less\s+than)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "ceiling";
+    } else if (/\b(?:limit\s+(?:is|of|to)?\b)/i.test(clause)) {
+      constraintType = "CEILING";
+      const m = clause.match(/\b(?:limit\s+(?:is|of|to)?\b)/i);
+      operatorPhrase = m ? m[0].toLowerCase() : "limit is";
+    } else if (
+      /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b|above|more\s+than|greater\s+than)\b/i.test(
+        clause
+      )
+    ) {
+      constraintType = "FLOOR";
+      const m = clause.match(
+        /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b|above|more\s+than|greater\s+than)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "floor";
+    } else if (/\b(?:must\s+exceed|shall\s+exceed)\b/i.test(clause)) {
+      constraintType = "FLOOR";
+      operatorPhrase = "must exceed";
+    } else if (/\b(?:exactly|equal\s+to)\b/i.test(clause)) {
+      constraintType = "EXACT";
+      operatorPhrase = "exactly";
+    }
+
     const operatorMatch = clause.match(
       /\b(up\s+to|limit|threshold|exceed|allow|maximum|max|minimum|min|ceiling|cap|budget|amount|funds?|payout|transfer|transfers?|retention|retain|wait|timeout|delay|after|within|at\s+least|at\s+most|below|above)\b/i
     );
-    const operator = operatorMatch ? operatorMatch[0].toLowerCase() : "constraint";
+    const operator = operatorMatch ? operatorMatch[0].toLowerCase() : operatorPhrase;
 
     const subjectDescriptor =
       cleaned
@@ -378,10 +439,61 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       subjectTokens,
       quantity: q,
       operator,
+      constraintType,
+      operatorPhrase,
     });
   }
 
   return requirements;
+}
+
+export function isOperatorCompatible(
+  src: BoundNumericRequirement,
+  op: BoundNumericRequirement
+): {
+  compatible: boolean;
+  isInversion: boolean;
+  reason?: string;
+} {
+  if (src.constraintType === "UNSPECIFIED" || op.constraintType === "UNSPECIFIED") {
+    return { compatible: true, isInversion: false };
+  }
+  if (src.constraintType === op.constraintType) {
+    return { compatible: true, isInversion: false };
+  }
+  if (src.constraintType === "CEILING") {
+    if (op.constraintType === "PERMISSIVE_EXCEED") {
+      return {
+        compatible: false,
+        isInversion: true,
+        reason: `Source enforces ceiling constraint ('${src.operatorPhrase}'), but operative target explicitly authorizes exceeding limit ('${op.operatorPhrase}')`,
+      };
+    }
+    if (op.constraintType === "FLOOR") {
+      return {
+        compatible: false,
+        isInversion: true,
+        reason: `Source enforces ceiling constraint ('${src.operatorPhrase}'), but operative target inverts constraint to a floor ('${op.operatorPhrase}')`,
+      };
+    }
+  }
+  if (src.constraintType === "FLOOR") {
+    if (op.constraintType === "CEILING" || op.constraintType === "PERMISSIVE_EXCEED") {
+      return {
+        compatible: false,
+        isInversion: true,
+        reason: `Source enforces floor constraint ('${src.operatorPhrase}'), but operative target enforces ceiling or permissive rule ('${op.operatorPhrase}')`,
+      };
+    }
+  }
+  if (src.constraintType === "PERMISSIVE_EXCEED" && op.constraintType === "CEILING") {
+    return {
+      compatible: false,
+      isInversion: true,
+      reason: `Source permits exceeding limit ('${src.operatorPhrase}'), but operative target restricts with ceiling ('${op.operatorPhrase}')`,
+    };
+  }
+  return { compatible: true, isInversion: false };
 }
 
 export function computeSubjectMatch(srcTokens: string[], opTokens: string[]): number {
@@ -566,50 +678,142 @@ export function evaluateIntentFidelity(
     }
   }
 
-  // 2. Requirement-Bound Numerical & Threshold Invariant Mutation Detection
+  // 2. Requirement-Bound Numerical & Threshold Invariant Mutation Detection (1-to-1 Cardinality Matching)
   const sourceBoundReqs = extractBoundNumericRequirements(cleanSource);
   const operativeBoundReqs = extractBoundNumericRequirements(operativeTarget);
   const flaggedOpQuantities = new Set<CategorizedQuantity>();
 
-  for (const srcReq of sourceBoundReqs) {
-    const sameCatOps = operativeBoundReqs.filter(
-      (op) => op.quantity.category === srcReq.quantity.category
-    );
+  // Group requirements by category to enforce category isolation and 1-to-1 assignment
+  const categories = new Set<QuantityCategory>([
+    ...sourceBoundReqs.map((r) => r.quantity.category),
+    ...operativeBoundReqs.map((r) => r.quantity.category),
+  ]);
 
-    if (sameCatOps.length === 0) {
-      numericalMismatches.push(
-        `Numerical requirement omitted: Source specifies '${srcReq.quantity.raw}' (${srcReq.quantity.category}) for requirement "${srcReq.subjectDescriptor}", but operative instructions omit all quantities in this category.`
-      );
+  for (const cat of categories) {
+    const srcList = sourceBoundReqs.filter((r) => r.quantity.category === cat);
+    const opList = operativeBoundReqs.filter((r) => r.quantity.category === cat);
+
+    if (srcList.length === 0) continue;
+
+    if (opList.length === 0) {
+      for (const srcReq of srcList) {
+        numericalMismatches.push(
+          `Numerical requirement omitted: Source specifies '${srcReq.quantity.raw}' (${srcReq.quantity.category}) for requirement "${srcReq.subjectDescriptor}", but operative instructions omit all quantities in this category.`
+        );
+        omittedRequirements.push(srcReq.rawClause);
+      }
       continue;
     }
 
-    // Rank candidate operative clauses by subject / requirement match score
-    const scoredCandidates = sameCatOps
-      .map((op) => ({
-        op,
-        score: computeSubjectMatch(srcReq.subjectTokens, op.subjectTokens),
-      }))
-      .sort((a, b) => b.score - a.score);
+    // Candidate pairing matrix for 1-to-1 assignment
+    interface CandidatePair {
+      srcIdx: number;
+      opIdx: number;
+      subjectScore: number;
+      valMatch: boolean;
+      opComp: { compatible: boolean; isInversion: boolean; reason?: string };
+      priority: number;
+    }
 
-    const bestCandidate = scoredCandidates[0];
+    const pairs: CandidatePair[] = [];
+    for (let s = 0; s < srcList.length; s++) {
+      for (let o = 0; o < opList.length; o++) {
+        const sReq = srcList[s];
+        const oReq = opList[o];
+        const subjectScore = computeSubjectMatch(sReq.subjectTokens, oReq.subjectTokens);
+        const valMatch = quantitiesMatch(sReq.quantity, oReq.quantity);
+        const opComp = isOperatorCompatible(sReq, oReq);
 
-    // If an operative requirement with a matching subject context is found (score >= 0.35)
-    if (bestCandidate && bestCandidate.score >= 0.35) {
-      if (!quantitiesMatch(srcReq.quantity, bestCandidate.op.quantity)) {
-        flaggedOpQuantities.add(bestCandidate.op.quantity);
-        const msg = `Numerical constraint reassigned: Requirement "${srcReq.subjectDescriptor}" specifies '${srcReq.quantity.raw}' (${srcReq.quantity.category}), but operative instruction assigns divergent value: '${bestCandidate.op.quantity.raw}' in "${bestCandidate.op.rawClause.trim().slice(0, 80)}"`;
-        if (!numericalMismatches.includes(msg)) {
-          numericalMismatches.push(msg);
+        // Subject match is the primary discriminator for requirement identity
+        // Value match serves only as a tie-breaker when subject similarity is nearly identical
+        let priority = subjectScore * 3.0;
+        if (opComp.isInversion) priority += 0.5; // Pair inverted clauses on same subject to catch inversion
+        if (valMatch) priority += 0.1;
+        if (opComp.compatible) priority += 0.1;
+        pairs.push({ srcIdx: s, opIdx: o, subjectScore, valMatch, opComp, priority });
+      }
+    }
+
+    pairs.sort((a, b) => b.priority - a.priority);
+
+    const assignedSrc = new Set<number>();
+    const claimedOp = new Set<number>();
+
+    // Pass 1: High-affinity subject pairings (subjectScore >= 0.35)
+    for (const pair of pairs) {
+      if (assignedSrc.has(pair.srcIdx) || claimedOp.has(pair.opIdx)) continue;
+      if (pair.subjectScore >= 0.35) {
+        assignedSrc.add(pair.srcIdx);
+        claimedOp.add(pair.opIdx);
+        const src = srcList[pair.srcIdx];
+        const op = opList[pair.opIdx];
+        flaggedOpQuantities.add(op.quantity);
+
+        // Check operator polarity inversion
+        if (!pair.opComp.compatible) {
+          polarityInversions.push(
+            `Operator polarity inversion detected: ${pair.opComp.reason} in "${op.rawClause.trim().slice(0, 80)}"`
+          );
+          numericalMismatches.push(
+            `Operator polarity inverted on requirement "${src.subjectDescriptor}": expected ${src.constraintType} ('${src.operatorPhrase}'), found ${op.constraintType} ('${op.operatorPhrase}') in "${op.rawClause.trim().slice(0, 80)}"`
+          );
+        }
+
+        // Check quantity value mutation
+        if (!pair.valMatch) {
+          const msg = `Numerical constraint reassigned: Requirement "${src.subjectDescriptor}" specifies '${src.quantity.raw}' (${src.quantity.category}), but operative instruction assigns divergent value: '${op.quantity.raw}' in "${op.rawClause.trim().slice(0, 80)}"`;
+          if (!numericalMismatches.includes(msg)) {
+            numericalMismatches.push(msg);
+          }
         }
       }
-    } else {
-      // No specific requirement clause matched closely; verify if this exact quantity exists anywhere in the operative target
-      const exactExists = sameCatOps.some((op) => quantitiesMatch(srcReq.quantity, op.quantity));
-      if (!exactExists) {
-        const msg = `Numerical invariant mutated: Source specifies '${srcReq.quantity.raw}' (${srcReq.quantity.category}) for "${srcReq.subjectDescriptor}", but no matching value exists in operative instructions.`;
+    }
+
+    // Pass 2: Unclaimed exact quantity match fallback
+    for (let s = 0; s < srcList.length; s++) {
+      if (assignedSrc.has(s)) continue;
+      const src = srcList[s];
+
+      let bestOpIdx = -1;
+      let bestScore = -1;
+      for (let o = 0; o < opList.length; o++) {
+        if (claimedOp.has(o)) continue;
+        const op = opList[o];
+        if (quantitiesMatch(src.quantity, op.quantity)) {
+          const score = computeSubjectMatch(src.subjectTokens, op.subjectTokens);
+          if (score > bestScore) {
+            bestScore = score;
+            bestOpIdx = o;
+          }
+        }
+      }
+
+      if (bestOpIdx !== -1) {
+        assignedSrc.add(s);
+        claimedOp.add(bestOpIdx);
+        const op = opList[bestOpIdx];
+        flaggedOpQuantities.add(op.quantity);
+        const opComp = isOperatorCompatible(src, op);
+        if (!opComp.compatible) {
+          polarityInversions.push(
+            `Operator polarity inversion detected: ${opComp.reason} in "${op.rawClause.trim().slice(0, 80)}"`
+          );
+          numericalMismatches.push(
+            `Operator polarity inverted on requirement "${src.subjectDescriptor}": expected ${src.constraintType} ('${src.operatorPhrase}'), found ${op.constraintType} ('${op.operatorPhrase}') in "${op.rawClause.trim().slice(0, 80)}"`
+          );
+        }
+      }
+    }
+
+    // Pass 3: 1-to-1 Cardinality violation: Any unassigned source requirement is an OMISSION
+    for (let s = 0; s < srcList.length; s++) {
+      if (!assignedSrc.has(s)) {
+        const src = srcList[s];
+        const msg = `Numerical requirement omitted: Source specifies '${src.quantity.raw}' (${src.quantity.category}) for requirement "${src.subjectDescriptor}", but this requirement is omitted or superseded in operative instructions (all compatible candidate clauses were claimed by other requirements).`;
         if (!numericalMismatches.includes(msg)) {
           numericalMismatches.push(msg);
         }
+        omittedRequirements.push(src.rawClause);
       }
     }
   }

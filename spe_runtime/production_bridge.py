@@ -1360,6 +1360,7 @@ class CommercialLicensingAdapter:
     def verify_license(
         license_token: str,
         trusted_public_key_hex: str | None = None,
+        allow_custom_signer: bool = False,
         current_time_iso: str | None = None,
     ) -> Dict[str, Any]:
         from spe_runtime.entitlement.license import verify_offline_license, LicenseVerificationError
@@ -1367,6 +1368,7 @@ class CommercialLicensingAdapter:
             payload = verify_offline_license(
                 license_token,
                 trusted_public_key_hex=trusted_public_key_hex,
+                allow_custom_signer=allow_custom_signer,
                 current_time_iso=current_time_iso,
             )
             return {
@@ -1401,10 +1403,16 @@ class CommercialLicensingAdapter:
         plan_tier: str = "ENTERPRISE",
         duration_days: int = 365,
         capabilities: list[str] | None = None,
+        master_signing_key_hex: str | None = None,
     ) -> Dict[str, Any]:
+        import os
         from datetime import datetime, timedelta, timezone
-        from spe_runtime.ci_gate.receipt import generate_keypair
-        from spe_runtime.entitlement.license import create_offline_license, OfflineLicensePayload
+        from spe_runtime.entitlement.license import (
+            create_offline_license,
+            OfflineLicensePayload,
+            OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX,
+            OFFICIAL_SPE_ROOT_SIGNING_KEY_HEX,
+        )
 
         if capabilities is None:
             capabilities = [
@@ -1423,7 +1431,14 @@ class CommercialLicensingAdapter:
         clean_cust = "".join(c for c in customer_id if c.isalnum())[:8].upper() or "CUST"
         license_id = f"SPE-LIC-{now.strftime('%Y%m%d')}-{clean_cust}"
 
-        sk, pk = generate_keypair()
+        sk_hex = (
+            master_signing_key_hex
+            or os.environ.get("SPE_MASTER_SIGNING_KEY")
+            or OFFICIAL_SPE_ROOT_SIGNING_KEY_HEX
+        )
+        sk = bytes.fromhex(sk_hex)
+        pk = bytes.fromhex(OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX)
+
         payload = OfflineLicensePayload(
             license_id=license_id,
             customer_id=customer_id,
@@ -1433,6 +1448,8 @@ class CommercialLicensingAdapter:
             capabilities=capabilities,
         )
         token = create_offline_license(payload, sk, pk)
+
+        # STRICT TRUST BOUNDARY: Never leak private signing key to public caller/logs
         return {
             "token": token,
             "license_id": license_id,
@@ -1440,7 +1457,6 @@ class CommercialLicensingAdapter:
             "plan_tier": plan_tier.upper(),
             "expires_at": expires.isoformat(),
             "public_key_hex": pk.hex(),
-            "signing_key_hex": sk.hex(),
             "capabilities": capabilities,
         }
 

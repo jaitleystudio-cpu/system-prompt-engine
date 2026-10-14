@@ -92,7 +92,7 @@ export const TIER_DEFAULT_CAPABILITIES: Record<PlanTier, CommercialCapability[]>
 
 /** Official SPE Production License Authority Root Verification Public Key */
 export const OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX =
-  "c30ec17b341551d74cc646fbfadfd562d4630fe1409c58bd933abc7c7ba3871c";
+  "a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec";
 
 /**
  * Verifies a base64 or raw JSON license token cryptographically.
@@ -101,6 +101,7 @@ export function verifyCommercialLicenseToken(
   licenseToken: string,
   options: {
     trustedPublicKeyHex?: string;
+    allowCustomSigner?: boolean;
     currentEpochMs?: number;
     clockSkewSeconds?: number;
   } = {}
@@ -160,8 +161,12 @@ export function verifyCommercialLicenseToken(
     };
   }
 
-  // 1. Verify trusted authority if provided
-  if (options.trustedPublicKeyHex && public_key_hex !== options.trustedPublicKeyHex) {
+  // 1. Verify trusted authority: Pin strictly to OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX by default
+  const effectiveTrustedKey =
+    options.trustedPublicKeyHex ??
+    (options.allowCustomSigner ? undefined : OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX);
+
+  if (effectiveTrustedKey && public_key_hex !== effectiveTrustedKey) {
     return {
       valid: false,
       status: "TAMPERED",
@@ -169,7 +174,7 @@ export function verifyCommercialLicenseToken(
       daysRemaining: 0,
       isExpired: true,
       unlockedCapabilities: [],
-      rejectionReason: "Untrusted public key authority",
+      rejectionReason: `Untrusted public key authority: signer '${public_key_hex.slice(0, 12)}...' does not match pinned SPE root authority ('${OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX.slice(0, 12)}...')`,
       publicKeyHex: public_key_hex,
     };
   }

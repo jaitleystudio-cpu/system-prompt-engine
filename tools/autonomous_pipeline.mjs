@@ -115,7 +115,7 @@ export function executeAutonomousPipeline(options = {}) {
     if (copyResult.unreviewed !== 0 || copyResult.violations.length !== 0) {
       throw new Error(`Copy check failed: ${copyResult.violations.length} violations found.`);
     }
-    logSuccess(`5,861 static UI strings reviewed: 0 unreviewed, 0 violations.`);
+    logSuccess(`${copyResult.candidateCount.toLocaleString()} static UI strings reviewed: 0 unreviewed, 0 violations.`);
     results.steps.copyCheck = { status: "PASS", candidateCount: copyResult.candidateCount, violations: 0 };
 
     // 5. Production Build Compilation

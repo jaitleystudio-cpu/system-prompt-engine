@@ -133,17 +133,26 @@ def test_plan_upgrade_and_downgrade():
 
 def test_quota_limits_and_exhaustion():
     manager = EntitlementManager()
-    cust = manager.get_or_create_customer("cust_limited")
-    # Free tier has 100 limit
-    assert manager.can_run_evaluation("cust_limited") is True
+    cust_free = manager.get_or_create_customer("cust_free")
+    # Free Community has unlimited local evals (-1) per Free-for-life commitment
+    assert manager.can_run_evaluation("cust_free") is True
 
-    # Exhaust quota
-    manager.record_evaluation_run("cust_limited", count=100)
-    assert manager.can_run_evaluation("cust_limited") is False
+    # Record 10,000 evaluations; Free tier remains unlimited
+    manager.record_evaluation_run("cust_free", count=10000)
+    assert manager.can_run_evaluation("cust_free") is True
 
-    # Upgrade to Pro (2,500 limit) restores permission
-    manager.upgrade_plan("cust_limited", PlanTier.PRO)
-    assert manager.can_run_evaluation("cust_limited") is True
+    # Pro customer with 2,500 limit enforces quota
+    cust_pro = manager.get_or_create_customer("cust_pro")
+    manager.upgrade_plan("cust_pro", PlanTier.PRO)
+    assert manager.can_run_evaluation("cust_pro") is True
+
+    # Exhaust Pro quota
+    manager.record_evaluation_run("cust_pro", count=2500)
+    assert manager.can_run_evaluation("cust_pro") is False
+
+    # Upgrade to Enterprise (-1 limit) restores unlimited access
+    manager.upgrade_plan("cust_pro", PlanTier.ENTERPRISE)
+    assert manager.can_run_evaluation("cust_pro") is True
 
 
 def test_offline_ed25519_license_generation_and_verification():
