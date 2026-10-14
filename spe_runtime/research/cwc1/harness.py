@@ -135,18 +135,45 @@ def tag(text, name):
     return m[-1].strip() if m else None
 
 
+def _loads_lenient(blob):
+    """Amendment 3: small models emit Python-style mappings keyed by bare numbers ({1.0: 1.5}). Quote bare numeric
+    keys, then json.loads. No other repair (no comment stripping, no truncation repair)."""
+    try:
+        return json.loads(blob)
+    except Exception:
+        fixed = re.sub(r'([{,]\s*)([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)(\s*:)', r'\1"\2"\3', blob)
+        return json.loads(fixed)
+
+
+def _as_list(pred, cands):
+    """Amendment 3: accept predictions as a list aligned with candidates OR as a mapping keyed by candidate
+    (matched by float value). Anything else is malformed."""
+    if isinstance(pred, list):
+        return pred
+    if isinstance(pred, dict):
+        try:
+            m = {float(k): v for k, v in pred.items()}
+            return [m[float(c)] for c in cands]
+        except Exception:
+            return None
+    return None
+
+
 def parse_cwc(text):
     m = re.search(r"\{.*\}", text, re.S)
     if not m:
         return None
     try:
-        d = json.loads(m.group(0))
+        d = _loads_lenient(m.group(0))
         hs, cs, pr = d["hypotheses"], d["candidates"], d["predictions"]
         if len(hs) < 2 or not cs:
             return None
         ids = [h["id"] for h in hs]
-        if any(i not in pr or len(pr[i]) != len(cs) for i in ids):
+        pr = {i: _as_list(pr.get(i), cs) for i in ids}
+        if any(pr[i] is None or len(pr[i]) != len(cs) for i in ids):
             return None
+        [float(v) for i in ids for v in pr[i]]
+        d["predictions"] = pr
         return d
     except Exception:
         return None
@@ -273,11 +300,22 @@ def main():
     ap.add_argument("--arms", default="A,B,C")
     ap.add_argument("--out", required=True)
     ap.add_argument("--dry-run", action="store_true")
+    # amendment 3: model/url/seed/shard selection (defaults reproduce R0 behaviour)
+    ap.add_argument("--model", default=os.environ.get("CWC1_MODEL", "qwen2.5:7b-instruct"))
+    ap.add_argument("--url", default=os.environ.get("CWC1_OLLAMA_URL", "http://localhost:11434"))
+    ap.add_argument("--seeds", default=None, help="comma list, subset of the frozen seeds")
+    ap.add_argument("--shard", default="0/1", help="i/n: run tasks whose holdout index %% n == i")
     a = ap.parse_args()
     if a.tasks == "holdout" and (a.backend == "stub" or a.dry_run):
         raise SystemExit("holdout cannot be run with stub/dry-run")
-    backend = Stub() if a.backend == "stub" else Ollama()
+    backend = Stub() if a.backend == "stub" else Ollama(model=a.model, url=a.url)
     tasks, seeds = (DEV, DEV_SEEDS) if a.tasks == "dev" else (HOLDOUT, HOLDOUT_SEEDS)
+    if a.seeds:
+        sel = tuple(int(x) for x in a.seeds.split(","))
+        assert set(sel) <= set(seeds), "seeds must be a subset of the frozen seeds"
+        seeds = sel
+    si, sn = (int(x) for x in a.shard.split("/"))
+    tasks = [t for k, t in enumerate(tasks) if k % sn == si]
     os.makedirs(a.out, exist_ok=True)
     label = "DRY_RUN" if a.dry_run else "SCORED"
     for env_name, goal_name in tasks:
@@ -285,6 +323,7 @@ def main():
             for arm in a.arms.split(","):
                 log = episode(backend, env_name, goal_name, seed, arm)
                 log["label"] = label
+                log["model_tag"] = getattr(backend, "model", "STUB")
                 fn = f"{a.out}/{label}_{env_name}_{goal_name}_{seed}_{arm}.json"
                 with open(fn, "w") as f:
                     json.dump(log, f, indent=1, sort_keys=True, default=str)

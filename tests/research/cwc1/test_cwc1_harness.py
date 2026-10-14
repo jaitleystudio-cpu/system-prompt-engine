@@ -31,7 +31,19 @@ def test_partition_and_retrieval():
     assert len(r) == 2 and r[0]["title"] == "Dugong"
 
 
-ALL = [test_choose_discriminating, test_parse_cwc, test_partition_and_retrieval]
+def test_parse_cwc_lenient_amendment3():
+    a = ('{"hypotheses": [{"id": "H1", "form": "lin"}, {"id": "H2", "form": "exp"}], "candidates": [1.0, 2.5], '
+         '"predictions": {"H1": {1.0: 1.5, 2.5: 3.0}, "H2": {1.0: 1.5, 2.5: 3.3}}}')
+    d = H.parse_cwc(a)
+    assert d["predictions"] == {"H1": [1.5, 3.0], "H2": [1.5, 3.3]}
+    assert H.choose_discriminating(d)[0] == 1
+    assert H.parse_cwc('{"hypotheses": [{"id": "A"}, {"id": "B"}], "candidates": [0, 1], '
+                       '"predictions": {"A": [5], "B": [4]}}') is None          # wrong length still rejected
+    assert H.parse_cwc('{"hypotheses": [{"id": "A"}, {"id": "B"}], "candidates": [0], '
+                       '"predictions": {"A": {"7": 1}, "B": [4]}}') is None     # key not a candidate
+
+
+ALL = [test_choose_discriminating, test_parse_cwc, test_partition_and_retrieval, test_parse_cwc_lenient_amendment3]
 if __name__ == "__main__":
     for t in ALL:
         t()
