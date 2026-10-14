@@ -206,3 +206,37 @@ def test_identical_manifest_digest_allows_exploratory_comparison_without_win_cla
     assert result["task_manifest_digest"]==a.task_manifest_digest==b.task_manifest_digest
     assert result["delta"]==1.0
     assert result["competitive_verdict"]=="NOT_ADJUDICATED"
+
+
+@pytest.mark.parametrize("reference", [
+    "https://example.invalid/malicious-schema",
+    "file:///etc/passwd",
+    "../another-file.json",
+    "http://127.0.0.1:8000/admin",
+])
+def test_schema_oracle_blocks_external_ref_resolution(reference):
+    with pytest.raises(ValueError, match="External JSON Schema references are forbidden"):
+        SchemaConformanceOracle("external-ref", {
+            "type": "object",
+            "properties": {"payload": {"$ref": reference}},
+        })
+
+
+def test_schema_oracle_allows_same_document_ref_without_network():
+    schema = {
+        "type": "object",
+        "properties": {"count": {"$ref": "#/$defs/count"}},
+        "$defs": {"count": {"type": "integer", "minimum": 1}},
+    }
+    oracle = SchemaConformanceOracle("local-ref", schema)
+    assert oracle.evaluate('{"count":2}', {}).passed is True
+    assert oracle.evaluate('{"count":"two"}', {}).passed is False
+
+
+def test_schema_oracle_invalid_local_ref_fails_closed():
+    oracle = SchemaConformanceOracle("broken-local-ref", {
+        "type": "object", "properties": {"count": {"$ref": "#/$defs/missing"}}
+    })
+    verdict = oracle.evaluate('{"count":3}', {})
+    assert verdict.passed is False
+    assert verdict.evidence_class == "DETERMINISTIC"
