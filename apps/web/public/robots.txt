@@ -1,8 +1,6 @@
-# robots.txt for SPE Ω Public Evidence & Universal Prompt Engine
+# robots.txt for SPE Ω Public Evidence Engine
 User-agent: *
 Allow: /
-Allow: /prompts
-Allow: /prompts/
 Allow: /create
 Allow: /code
 Allow: /daily-lab
@@ -16,41 +14,14 @@ Allow: /workflows/
 Allow: /build-skill
 Allow: /integrations/
 Allow: /compare/
-Allow: /pricing
 Allow: /migrate/
 Disallow: /workspace
 Disallow: /my-work
 Disallow: /website
 Disallow: /media
 Disallow: /research
-Disallow: /ocr
 Disallow: /studio
 Disallow: /private/
 Disallow: /api/
-
-# Explicit permissions for premier AI search crawlers
-User-agent: Googlebot
-Allow: /
-Allow: /prompts/
-
-User-agent: Bingbot
-Allow: /
-Allow: /prompts/
-
-User-agent: PerplexityBot
-Allow: /
-Allow: /prompts/
-
-User-agent: ClaudeBot
-Allow: /
-Allow: /prompts/
-
-User-agent: GPTBot
-Allow: /
-Allow: /prompts/
-
-User-agent: Applebot
-Allow: /
-Allow: /prompts/
 
 Sitemap: https://systempromptengine.com/sitemap.xml

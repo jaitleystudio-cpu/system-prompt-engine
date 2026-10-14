@@ -8,7 +8,7 @@ import {
 } from "../engine/deepSpecificationScaler";
 import type { ModelDialect } from "../engine/modelTranscompiler";
 import { ARSENAL_CATALOG_ASSETS } from "../engine/arsenal/arsenalCatalogData";
-import { getArsenalCatalogIndex, getArsenalAssetById } from "../engine/arsenal/arsenalHydrator";
+import { getArsenalCatalogList, getArsenalAssetById } from "../engine/arsenal/arsenalHydrator";
 import type { ArsenalPromptAsset, ArsenalTargetPlatform } from "../engine/arsenal/arsenalSchema";
 import { transcompilePromptForPlatform } from "../engine/arsenal/modelTranscompiler";
 import { getAllModels, getModelAtlasStats } from "../engine/modelAtlas/modelAtlasService";
@@ -176,7 +176,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
     { label: "Writing & Productivity", count: "350", icon: "✍️" },
   ];
 
-  const allCatalogRecords = useMemo(() => getArsenalCatalogIndex(), []);
+  const allCatalogRecords = useMemo(() => getArsenalCatalogList(), []);
 
   const filteredCatalogRecords = useMemo(() => {
     const q = search.toLowerCase().trim();

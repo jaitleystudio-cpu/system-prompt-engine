@@ -13,7 +13,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { getArsenalCatalogIndex, getArsenalAssetById } from "../apps/web/src/engine/arsenal/arsenalHydrator.ts";
+import { getArsenalCatalogList, getArsenalAssetById } from "../apps/web/src/engine/arsenal/arsenalHydrator.ts";
 import { transcompilePromptForPlatform } from "../apps/web/src/engine/arsenal/modelTranscompiler.ts";
 import { diagnosePrompt, enhancePromptWithDoctor } from "../apps/web/src/engine/arsenal/promptDoctor.ts";
 import { getAllModels, getModelById } from "../apps/web/src/engine/modelAtlas/modelAtlasService.ts";
@@ -71,7 +71,7 @@ async function run() {
       }
       const keywords = rawQuery.split(/\s+/).filter(Boolean);
       const start = performance.now();
-      const records = getArsenalCatalogIndex();
+      const records = getArsenalCatalogList();
       const matches = records.filter((r) => {
         const text = `${r.title} ${r.tagline} ${r.domain} ${r.subdomain}`.toLowerCase();
         return keywords.every((kw) => text.includes(kw));

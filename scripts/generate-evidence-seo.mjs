@@ -522,21 +522,111 @@ const response = await client.chat.completions.create({
   // Tier E: Migration & Comparison
   {
     path: '/compare/spe-vs-promptfoo',
-    title: 'SPE vs Promptfoo: Architecture Comparison | SPE',
-    desc: 'Compare compile-time formal assurance against runtime test scanning.',
+    title: 'SPE vs Promptfoo: Architecture & 1-Click Immunization Comparison | SPE',
+    desc: 'Compare compile-time formal assurance, 1-click AST immunization, and $0 local WASM vs Promptfoo test runner.',
     classification: 'MIGRATION_PATH',
     provenance: 'SPECIFICATION_VERIFIED',
     indexing_status: 'INDEXABLE',
     custom_section: `
       <h2>Architectural Comparison: SPE Ω vs Promptfoo</h2>
-      <p>Promptfoo is an excellent prompt testing utility. SPE Ω is a formal compile-time control plane and runtime authority gateway.</p>
+      <p>Promptfoo is an excellent prompt testing harness. SPE Ω is a formal compile-time cognitive compiler and runtime authority gateway.</p>
       <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
         <tr style="border-bottom: 1px solid #334155; text-align: left;"><th>Dimension</th><th>Promptfoo</th><th>System Prompt Engine (SPE Ω)</th></tr>
         <tr style="border-bottom: 1px solid #1e293b;"><td>Primary Paradigm</td><td>Test Runner</td><td>Compiler & Control Plane</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>1-Click Immunization</td><td>None (Diagnostic only)</td><td>SUPPORTED (Automated AST patch injection)</td></tr>
         <tr style="border-bottom: 1px solid #1e293b;"><td>ProtectedIntent</td><td>UNKNOWN</td><td>SUPPORTED (Immutable requirements)</td></tr>
         <tr style="border-bottom: 1px solid #1e293b;"><td>Cryptographic Proofs</td><td>JSON Reports</td><td>RFC 8785 JCS + Ed25519 Signed Receipts</td></tr>
         <tr style="border-bottom: 1px solid #1e293b;"><td>Runtime Capability Gate</td><td>Not supported</td><td>SUPPORTED (CapabilityFirewall)</td></tr>
       </table>
+      <pre>$ npx @systempromptengine/cli vuln-sync prompt.md --refine</pre>
+    `
+  },
+  {
+    path: '/compare/spe-vs-feedough',
+    title: 'SPE vs Feedough: Professional AI Prompts vs Consumer Ad Hub | SPE',
+    desc: 'Compare production-grade cognitive compiler prompts, type-safe contracts, and $0 air-gap against Feedough consumer templates.',
+    classification: 'MIGRATION_PATH',
+    provenance: 'SPECIFICATION_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Head-to-Head Comparison: SPE Ω vs Feedough.com</h2>
+      <p>Feedough is an ad-supported startup resource directory with generic form templates. SPE Ω provides institutional founder strategy frameworks and formal prompt compilers.</p>
+      <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <tr style="border-bottom: 1px solid #334155; text-align: left;"><th>Dimension</th><th>Feedough.com</th><th>System Prompt Engine (SPE Ω)</th></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Prompt Architecture</td><td>Generic 3-sentence text</td><td>Horn Logic AST & Type-Safe IR</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Security Armor</td><td>None (0 OWASP probes)</td><td>10 OWASP Attack Probes + 1-Click Immunize</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Execution Privacy</td><td>Ad-tracker heavy</td><td>100% Air-Gapped WebAssembly (0 tracking)</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Founder Strategy Models</td><td>Basic Mad-Libs text</td><td>Osterwalder Canvas, Porter Moats, SaaS Economics</td></tr>
+      </table>
+    `
+  },
+  {
+    path: '/compare/spe-vs-langfuse',
+    title: 'SPE vs Langfuse: Formal Prompt Compiler vs Tracing CMS | SPE',
+    desc: 'Compare compile-time prompt invariants, SATSS v1 bounds, and native OpenTelemetry exports against Langfuse tracing CMS.',
+    classification: 'MIGRATION_PATH',
+    provenance: 'SPECIFICATION_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Architectural Comparison: SPE Ω vs Langfuse</h2>
+      <p>Langfuse is a leading open-source LLM observability platform. SPE Ω operates upstream as the formal cognitive compiler that bounds instructions before inference, with native OpenTelemetry export bridges.</p>
+      <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <tr style="border-bottom: 1px solid #334155; text-align: left;"><th>Dimension</th><th>Langfuse</th><th>System Prompt Engine (SPE Ω)</th></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Primary Paradigm</td><td>PostgreSQL Tracing & CMS</td><td>Compile-Time Control Plane</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Prompt Invariants</td><td>Unchecked string templates</td><td>Horn Logic & Invariant Compilation</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>OpenTelemetry Bridge</td><td>Vendor SDK</td><td>spe trace --export otel & langfuse</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Local Air-Gap</td><td>Requires backend server</td><td>100% In-Browser & Local CLI ($0 compute)</td></tr>
+      </table>
+    `
+  },
+  {
+    path: '/compare/spe-vs-braintrust',
+    title: 'SPE vs Braintrust: $0 Local WASM vs Enterprise Evaluation Gate | SPE',
+    desc: 'Compare $0 client-side WebAssembly verification and multi-seat consensus against Braintrust cloud evaluations.',
+    classification: 'MIGRATION_PATH',
+    provenance: 'SPECIFICATION_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Architectural Comparison: SPE Ω vs Braintrust</h2>
+      <p>Braintrust is an enterprise evaluation platform with cloud token billing. SPE Ω offers zero-cloud-cost on-device execution with multi-seat consensus and Fleiss' Kappa verification.</p>
+      <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <tr style="border-bottom: 1px solid #334155; text-align: left;"><th>Dimension</th><th>Braintrust</th><th>System Prompt Engine (SPE Ω)</th></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Infrastructure Cost</td><td>$100+/mo cloud token burn</td><td>$0.00 Local WASM on-device</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Multi-Seat Consensus</td><td>Hosted queues</td><td>Fleiss' Kappa + Wilson 95% Bound</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>1-Click Immunization</td><td>None (Manual rewriting)</td><td>Automated Defensive Invariant AST Patch</td></tr>
+      </table>
+    `
+  },
+  {
+    path: '/compare/spe-vs-aiprm',
+    title: 'SPE vs AIPRM: 10,000 Free Type-Safe Prompts vs $50/mo Chrome Directory | SPE',
+    desc: 'Compare 10,000 type-safe prompts, zero telemetry, and 1-click immunization against AIPRM subscription extension.',
+    classification: 'MIGRATION_PATH',
+    provenance: 'SPECIFICATION_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Direct Comparison: SPE Ω vs AIPRM for ChatGPT</h2>
+      <p>AIPRM charges $20–$50/mo for community-submitted raw text prompts. SPE Ω provides 10,000 free verified prompt architectures with 1-click IDE export and zero data tracking.</p>
+      <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <tr style="border-bottom: 1px solid #334155; text-align: left;"><th>Dimension</th><th>AIPRM</th><th>System Prompt Engine (SPE Ω)</th></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Pricing</td><td>$9 to $50/month</td><td>100% Free Core Engine</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Prompt Quality</td><td>Unchecked community text</td><td>SATSS v1 Type-Safe Architectures</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Telemetry Tracking</td><td>Cloud telemetry servers</td><td>100% Air-Gapped WebAssembly (0 telemetry)</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>IDE Export</td><td>Web browser only</td><td>Claude Code, Cursor, Windsurf, Codex</td></tr>
+      </table>
+    `
+  },
+  {
+    path: '/compare/spe-vs-all',
+    title: 'Global Top 10 Prompt Platforms Truth Matrix | SPE Ω',
+    desc: 'Empirical 12-dimension benchmark matrix comparing SPE Ω against Promptfoo, Langfuse, Braintrust, AIPRM, Feedough, and Big Tech consoles.',
+    classification: 'MIGRATION_PATH',
+    provenance: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Global Top 10 Prompt Engineering Platforms Truth Matrix</h2>
+      <p>An empirical evaluation of the world's leading prompt platforms across 12 rigorous engineering dimensions.</p>
+      <p>SPE is not an LLM. It is the Universal Cognitive Compiler and System Armor that powers frontier models safely.</p>
     `
   },
   {

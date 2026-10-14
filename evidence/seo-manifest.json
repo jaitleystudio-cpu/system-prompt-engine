@@ -1,11 +1,11 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-12T04:37:37.463Z",
+  "generated_at": "2026-10-14T10:35:46.713Z",
   "canonical_domain": "https://systempromptengine.com",
-  "total_prerendered_pages": 35,
+  "total_prerendered_pages": 40,
   "zero_placeholder_pages_verified": true,
   "indexing_summary": {
-    "total_indexable": 35,
+    "total_indexable": 40,
     "noindex_count": 0,
     "REAL_PRODUCT": 14,
     "CATEGORY_OWNERSHIP": 8,
@@ -13,7 +13,7 @@
     "OPEN_WEIGHTS_MODEL_PASSPORT": 1,
     "REAL_DATA": 1,
     "INTEGRATION_GUIDE": 4,
-    "MIGRATION_PATH": 2
+    "MIGRATION_PATH": 7
   },
   "pages": [
     {
@@ -381,13 +381,68 @@
     },
     {
       "path": "/compare/spe-vs-promptfoo",
-      "title": "SPE vs Promptfoo: Architecture Comparison | SPE",
+      "title": "SPE vs Promptfoo: Architecture & 1-Click Immunization Comparison | SPE",
       "classification": "MIGRATION_PATH",
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 455,
+      "word_count": 510,
       "canonical_url": "https://systempromptengine.com/compare/spe-vs-promptfoo",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/compare/spe-vs-feedough",
+      "title": "SPE vs Feedough: Professional AI Prompts vs Consumer Ad Hub | SPE",
+      "classification": "MIGRATION_PATH",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 511,
+      "canonical_url": "https://systempromptengine.com/compare/spe-vs-feedough",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/compare/spe-vs-langfuse",
+      "title": "SPE vs Langfuse: Formal Prompt Compiler vs Tracing CMS | SPE",
+      "classification": "MIGRATION_PATH",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 513,
+      "canonical_url": "https://systempromptengine.com/compare/spe-vs-langfuse",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/compare/spe-vs-braintrust",
+      "title": "SPE vs Braintrust: $0 Local WASM vs Enterprise Evaluation Gate | SPE",
+      "classification": "MIGRATION_PATH",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 487,
+      "canonical_url": "https://systempromptengine.com/compare/spe-vs-braintrust",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/compare/spe-vs-aiprm",
+      "title": "SPE vs AIPRM: 10,000 Free Type-Safe Prompts vs $50/mo Chrome Directory | SPE",
+      "classification": "MIGRATION_PATH",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 506,
+      "canonical_url": "https://systempromptengine.com/compare/spe-vs-aiprm",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/compare/spe-vs-all",
+      "title": "Global Top 10 Prompt Platforms Truth Matrix | SPE Ω",
+      "classification": "MIGRATION_PATH",
+      "indexing_status": "INDEXABLE",
+      "provenance": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 458,
+      "canonical_url": "https://systempromptengine.com/compare/spe-vs-all",
       "schema_type": "SoftwareApplication"
     },
     {

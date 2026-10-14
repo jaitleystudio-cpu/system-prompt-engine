@@ -808,7 +808,7 @@ const cachedHydratedAssets = new Map<string, ArsenalPromptAsset>();
  * Builds the complete 10,000 prompt catalog index in memory.
  * Runs in <8ms and caches the result for all subsequent lookups.
  */
-export function getArsenalCatalogIndex(): ArsenalIndexRecord[] {
+export function getArsenalCatalogList(): ArsenalIndexRecord[] {
   if (cachedIndex) return cachedIndex;
 
   const records: ArsenalIndexRecord[] = [];
@@ -1050,7 +1050,7 @@ export function getArsenalAssetById(id: string): ArsenalPromptAsset | undefined 
     return cachedHydratedAssets.get(id);
   }
 
-  const allRecords = getArsenalCatalogIndex();
+  const allRecords = getArsenalCatalogList();
   const indexRecord = allRecords.find((r) => r.id === id);
   if (!indexRecord) return undefined;
 

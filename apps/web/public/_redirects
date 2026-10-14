@@ -32,6 +32,11 @@
 /integrations/mcp  /evidence-pages/integrations_mcp.html  200
 /integrations/github-actions  /evidence-pages/integrations_github-actions.html  200
 /compare/spe-vs-promptfoo  /evidence-pages/compare_spe-vs-promptfoo.html  200
+/compare/spe-vs-feedough  /evidence-pages/compare_spe-vs-feedough.html  200
+/compare/spe-vs-langfuse  /evidence-pages/compare_spe-vs-langfuse.html  200
+/compare/spe-vs-braintrust  /evidence-pages/compare_spe-vs-braintrust.html  200
+/compare/spe-vs-aiprm  /evidence-pages/compare_spe-vs-aiprm.html  200
+/compare/spe-vs-all  /evidence-pages/compare_spe-vs-all.html  200
 /migrate/from-raw-prompts  /evidence-pages/migrate_from-raw-prompts.html  200
 
 # Static binary model and asset preserves

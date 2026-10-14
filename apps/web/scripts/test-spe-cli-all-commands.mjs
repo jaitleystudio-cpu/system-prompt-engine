@@ -377,7 +377,7 @@ assert(matchData.conflict_check_passed === true, "Conflict check must pass");
 console.log("  ✓ exchange match verified");
 
 // 38. Programmatic SEO & Ad Sanctuary Governor (spe exchange seo-check)
-console.log("\n[38/38] Testing exchange seo-check");
+console.log("\n[38/42] Testing exchange seo-check");
 const seoOutPath = join(tempDir, "sample_seo_audit.json");
 const seoOut = runCli(`exchange seo-check /exchange/skills/drizzle-orm --passport EVP-3010cdfe9f530793 --trials 200 --out "${seoOutPath}"`);
 assert(seoOut.includes("PROGRAMMATIC SEO & AD-MONETIZATION GOVERNOR") && seoOut.includes("INDEXABLE"), "SEO check output missing expected status");
@@ -387,11 +387,60 @@ assert(seoData.status === "INDEXABLE", "SEO indexability status mismatch");
 assert(seoData.robots_directive === "index, follow", "Robots directive mismatch");
 console.log("  ✓ exchange seo-check verified");
 
+// 39. Chrome Web Store & Edge Readiness (spe extension-audit)
+console.log("\n[39/42] Testing extension-audit");
+const extAuditPath = join(tempDir, "sample_ext_audit.json");
+const extOut = runCli(`extension-audit --out "${extAuditPath}"`);
+assert(extOut.includes("STORE READY") && extOut.includes("Chrome Web Store Score: 100/100"), "Extension audit failed readiness check");
+assert(existsSync(extAuditPath), "sample_ext_audit.json not created");
+const extData = JSON.parse(readFileSync(extAuditPath, "utf-8"));
+assert(extData.chrome.passed === true, "Chrome extension check must pass");
+assert(extData.edge.passed === true, "Edge extension check must pass");
+console.log("  ✓ extension-audit verified");
+
+// 40. Government & Defense Compliance with 1-Click Immunization (spe certify --framework)
+console.log("\n[40/42] Testing certify with government framework & 1-click immunization");
+const compOutPath = join(tempDir, "sample_nist_compliance.json");
+const compOut = runCli(`certify "${promptPath1}" --framework nist-ai-rmf --immunize --out "${compOutPath}"`);
+assert(compOut.includes("Immunized Compliance Score:") && compOut.includes("100%"), "Compliance immunization failed to achieve 100%");
+assert(existsSync(compOutPath), "sample_nist_compliance.json not created");
+const compData = JSON.parse(readFileSync(compOutPath, "utf-8"));
+assert(compData.complianceScore === 100, "Compliance score must be 100%");
+assert(compData.isFullyCompliant === true, "Must be fully compliant");
+console.log("  ✓ certify with framework & 1-click immunization verified");
+
+// 41. Multi-Seat Annotator Consensus (spe consensus)
+console.log("\n[41/42] Testing consensus");
+const consensusOutPath = join(tempDir, "sample_consensus.json");
+const consensusOut = runCli(`consensus --out "${consensusOutPath}"`);
+assert(consensusOut.includes("MULTI-SEAT CONSENSUS REPORT") && consensusOut.includes("Inter-Annotator Agreement"), "Consensus output missing expected report");
+assert(existsSync(consensusOutPath), "sample_consensus.json not created");
+const consensusData = JSON.parse(readFileSync(consensusOutPath, "utf-8"));
+assert(consensusData.compositeMeanScore > 85, "Composite consensus score too low");
+assert(consensusData.conflictsDetected === 0, "Conflicts should be 0");
+console.log("  ✓ consensus verified");
+
+// 42. Sovereign Local APM Telemetry & Trace Store (spe apm)
+console.log("\n[42/42] Testing apm, otel, and langfuse exports");
+const apmOutPath = join(tempDir, "sample_apm_metrics.json");
+const apmOut = runCli(`apm --out "${apmOutPath}"`);
+assert(apmOut.includes("LOCAL APM METRICS SUMMARY") && apmOut.includes("Zero Egress Verified"), "APM summary missing expected header");
+assert(existsSync(apmOutPath), "sample_apm_metrics.json not created");
+
+const apmOtelPath = join(tempDir, "sample_apm_otel.json");
+const apmOtelOut = runCli(`apm --export otel --out "${apmOtelPath}"`);
+assert(existsSync(apmOtelPath), "sample_apm_otel.json not created");
+
+const apmLfPath = join(tempDir, "sample_apm_langfuse.json");
+const apmLfOut = runCli(`apm --export langfuse --out "${apmLfPath}"`);
+assert(existsSync(apmLfPath), "sample_apm_langfuse.json not created");
+console.log("  ✓ apm, otel, and langfuse exports verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 38 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 42 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
 
 

@@ -129,8 +129,8 @@ import indexData from "../src/engine/arsenal/arsenalCatalogIndex.json" with { ty
 assert.ok(indexData.length >= 100, `Expected search index length >= 100, got ${indexData.length}`);
 console.log(`  ✓ arsenalCatalogIndex.json is valid (${indexData.length} search items ready for <5ms client search).`);
 
-const { getArsenalCatalogIndex, getArsenalAssetById } = await import("../src/engine/arsenal/arsenalHydrator.ts");
-const fullIndex = getArsenalCatalogIndex();
+const { getArsenalCatalogList, getArsenalAssetById } = await import("../src/engine/arsenal/arsenalHydrator.ts");
+const fullIndex = getArsenalCatalogList();
 assert.equal(fullIndex.length, 10000, `Expected exactly 10,000 indexed prompt assets, got ${fullIndex.length}`);
 
 // Verify domain counts match exact target allocations
