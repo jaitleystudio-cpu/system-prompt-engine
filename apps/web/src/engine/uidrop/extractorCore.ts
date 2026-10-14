@@ -16,8 +16,6 @@ import type {
   PageStructureTokens,
 } from "../../types/design-system";
 import {
-  calculateContrastRatio,
-  determineThemeFromSurface,
   evaluateContrastPair,
   normalizeToHex,
 } from "./wcagContrast";

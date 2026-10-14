@@ -13,6 +13,7 @@ import { SpeEgacUniversalStudio } from "./SpeEgacUniversalStudio";
 import { SpeRgdUniversalStudio } from "./SpeRgdUniversalStudio";
 import { OmniMediaStudio } from "./OmniMediaStudio";
 import { PromptCardWorkbench } from "./PromptCardWorkbench";
+import { UiDropExtractorStudio } from "./UiDropExtractorStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -45,6 +46,14 @@ export const FEATURES: FeatureItem[] = [
     view: "capabilities",
     title: "🃏 PromptCard VLM (V1.4.0)",
     subtitle: "Reverse-Engineer Images into 12-Clause Prompts, 4 Style Pills & Trilingual JSON",
+    href: "/capabilities",
+    badge: "PRO Paid",
+  },
+  {
+    id: "uidrop-extractor",
+    view: "capabilities",
+    title: "🎨 UIDrop Design System Extractor",
+    subtitle: "Snap Any Webpage into Live CSS Design Tokens, WCAG AAA Badges & 6 AI Launchers",
     href: "/capabilities",
     badge: "PRO Paid",
   },
@@ -212,7 +221,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["omni-media-studio", "promptcard-vlm", "spe-rgd-universal", "spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["omni-media-studio", "promptcard-vlm", "uidrop-extractor", "spe-rgd-universal", "spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -501,6 +510,10 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
 
             {activeModal === "promptcard-vlm" && (
               <PromptCardWorkbench customerTier="PRO" onSelectPrompt={() => setActiveModal(null)} />
+            )}
+
+            {activeModal === "uidrop-extractor" && (
+              <UiDropExtractorStudio onClose={() => setActiveModal(null)} />
             )}
 
             {activeModal === "spe-rgd-universal" && (
