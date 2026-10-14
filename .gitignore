@@ -255,3 +255,10 @@ qualification/*_receipt.json
 /ocr-pack/lib/
 /ocr-pack/.bottle/
 /.ocr-scratch/
+
+# Agent & local tooling artifacts
+.DS_Store
+.agents/
+.local-bin/
+.xocor/
+

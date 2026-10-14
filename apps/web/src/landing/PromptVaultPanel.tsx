@@ -14,6 +14,7 @@ import { transcompilePromptForPlatform } from "../engine/arsenal/modelTranscompi
 import { getAllModels, getModelAtlasStats } from "../engine/modelAtlas/modelAtlasService";
 import type { AiModelEntry } from "../engine/modelAtlas/modelAtlasSchema";
 import { resolveBrowserVerifiedEntitlement, verifySignedEntitlementToken } from "../engine/entitlementVerifier";
+import { FOUNDER_STRATEGY_PRESETS } from "../engine/benchmarks/feedoughComparison";
 import "./prompt-vault-panel.css";
 
 interface Props {
@@ -1011,6 +1012,19 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
                     }}
                   >
                     {p.label}
+                  </button>
+                ))}
+                {FOUNDER_STRATEGY_PRESETS.map((fnd) => (
+                  <button
+                    type="button"
+                    key={fnd.id}
+                    className={`spe-discovery-chip ${platformUserRequest === fnd.brief ? "active" : ""}`}
+                    onClick={() => {
+                      setPlatformUserRequest(fnd.brief);
+                      setPlatformCategory("Business");
+                    }}
+                  >
+                    {fnd.title}
                   </button>
                 ))}
               </div>

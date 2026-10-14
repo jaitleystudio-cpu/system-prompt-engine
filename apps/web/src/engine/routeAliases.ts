@@ -31,6 +31,19 @@ export const ROUTE_ALIASES: Record<string, string> = {
   "/eval": "eval-studio",
   "/redteam": "eval-studio",
   "/matrix": "eval-studio",
+  "/tools/chatgpt-prompt-generator": "create",
+  "/tools/claude-prompt-generator": "create",
+  "/tools/xml-prompt-generator": "create",
+  "/tools/json-prompt-generator": "create",
+  "/tools/chain-of-thought-prompt-generator": "create",
+  "/tools/reasoning-prompt-generator": "create",
+  "/tools/few-shot-prompt-generator": "create",
+  "/tools/tree-of-thought-prompt-generator": "create",
+  "/tools/ai-prompt-optimiser": "create",
+  "/tools/ai-prompt-optimizer": "create",
+  "/compare/spe-vs-feedough": "compare",
+  "/extension": "capabilities",
+  "/chrome-extension": "capabilities",
 };
 
 export function isPromptSubRoute(pathname: string): boolean {

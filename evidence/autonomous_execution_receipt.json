@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-14T09:26:17.096Z",
+  "timestamp": "2026-10-14T09:56:19.018Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -16,7 +16,7 @@
     },
     "copyCheck": {
       "status": "PASS",
-      "candidateCount": 5849,
+      "candidateCount": 5820,
       "violations": 0
     },
     "build": {
@@ -24,7 +24,7 @@
     }
   },
   "success": true,
-  "durationMs": 15471,
-  "receiptHash": "500a9301a6cfe40e1b351c75a98c2e72f0ab0b1689e418136311495d2dfc6bb8",
+  "durationMs": 27163,
+  "receiptHash": "b11bf8baf6c0467e4346841e32abdc408b66602a88940703f7b85df0851b861c",
   "executionEngine": "SPE-Autonomous-A2Z-Pipeline/v2.0.0"
 }

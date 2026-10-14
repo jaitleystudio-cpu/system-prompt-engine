@@ -115,7 +115,7 @@ console.log("  ✓ $1/mo pricing, offline license cryptographic verification, an
 
 // 5. Test Cross-Browser Compiler & Packaging Script
 console.log("\n[5/7] Executing Cross-Browser Compiler (build-cross-browser.mjs)...");
-execSync(`node "${resolve(pkgRoot, "scripts/build-cross-browser.mjs")}"`, { stdio: "inherit" });
+execSync(`"${process.execPath}" "${resolve(pkgRoot, "scripts/build-cross-browser.mjs")}"`, { stdio: "inherit" });
 
 const distTargets = ["chrome", "firefox", "safari", "edge"];
 for (const t of distTargets) {
