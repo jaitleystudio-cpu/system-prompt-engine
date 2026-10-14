@@ -22,6 +22,7 @@ Disallow: /website
 Disallow: /media
 Disallow: /research
 Disallow: /studio
+Disallow: /ocr
 Disallow: /private/
 Disallow: /api/
 

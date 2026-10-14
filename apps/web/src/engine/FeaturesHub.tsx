@@ -12,6 +12,7 @@ import { SpeAgiBrainStudio } from "./SpeAgiBrainStudio";
 import { SpeEgacUniversalStudio } from "./SpeEgacUniversalStudio";
 import { SpeRgdUniversalStudio } from "./SpeRgdUniversalStudio";
 import { OmniMediaStudio } from "./OmniMediaStudio";
+import { PromptCardWorkbench } from "./PromptCardWorkbench";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -38,6 +39,14 @@ export const FEATURES: FeatureItem[] = [
     subtitle: "Universal Photo to Text, Streaming Voice Invariants, Video Action Vectors & Photo to Code Spatial AST",
     href: "/capabilities",
     badge: "Built by ANTIGRAVITY",
+  },
+  {
+    id: "promptcard-vlm",
+    view: "capabilities",
+    title: "🃏 PromptCard VLM (V1.4.0)",
+    subtitle: "Reverse-Engineer Images into 12-Clause Prompts, 4 Style Pills & Trilingual JSON",
+    href: "/capabilities",
+    badge: "PRO Paid",
   },
   {
     id: "spe-rgd-universal",
@@ -203,7 +212,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["omni-media-studio", "spe-rgd-universal", "spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["omni-media-studio", "promptcard-vlm", "spe-rgd-universal", "spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -441,6 +450,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff" }}>
+                  {activeModal === "promptcard-vlm" && "🃏 PROMPTCARD · V1.4.0 · Image to Prompt Reverse-Engineering"}
                   {activeModal === "spe-egac-universal" && "⚡ SPE Ω · Evidence-Gated Adaptive Compute (EGAC-1)"}
                   {activeModal === "spe-agi-brain-omega" && "🧠 SPE AGI BRAIN Ω · Frontier Science Studio"}
                   {activeModal === "spe-v5-moonshot-brain" && "🧠 SPE v5.0 Moonshot North-Star Brain"}
@@ -487,6 +497,10 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
 
             {activeModal === "omni-media-studio" && (
               <OmniMediaStudio onClose={() => setActiveModal(null)} />
+            )}
+
+            {activeModal === "promptcard-vlm" && (
+              <PromptCardWorkbench customerTier="PRO" onSelectPrompt={() => setActiveModal(null)} />
             )}
 
             {activeModal === "spe-rgd-universal" && (

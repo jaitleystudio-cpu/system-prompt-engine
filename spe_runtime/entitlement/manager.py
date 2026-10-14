@@ -79,6 +79,13 @@ class EntitlementManager:
         plan = self.get_plan(cust.plan_tier)
         return cust.quota.can_run_eval(plan.max_local_evals_per_month)
 
+    def can_access_promptcard_vlm(self, customer_id: str) -> bool:
+        cust = self.get_or_create_customer(customer_id)
+        if not cust.is_active():
+            return False
+        plan = self.get_plan(cust.plan_tier)
+        return plan.has_promptcard_vlm
+
     def record_evaluation_run(self, customer_id: str, count: int = 1) -> None:
         cust = self.get_or_create_customer(customer_id)
         cust.quota.record_eval(count)

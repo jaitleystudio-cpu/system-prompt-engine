@@ -883,6 +883,20 @@ export async function verifyZeroEgressSandboxAuditReceipt(
     reasons.push("Sandbox isolation was not enforced.");
   }
 
+  // Strict property verification: Reject injected unauthenticated properties
+  const allowedKeys = new Set([
+    "schemaVersion", "receiptId", "candidateHash", "timestampIso",
+    "networkMode", "sandboxIsolationEnforced", "outboundConnections",
+    "outboundBytes", "dnsRequestsAttempted", "costIncurredUsd",
+    "offlineFallbackTier", "environmentFingerprint",
+    "canonicalDigestHex", "signatureHex", "signerPublicKeyHex"
+  ]);
+  for (const k of Object.keys(receipt)) {
+    if (!allowedKeys.has(k)) {
+      reasons.push(`Unknown or unexpected property '${k}' in receipt.`);
+    }
+  }
+
   // Verify canonical digest
   const partialReceipt = {
     schemaVersion: receipt.schemaVersion,

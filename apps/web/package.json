@@ -63,6 +63,7 @@
     "test:stress-1m": "node --expose-gc scripts/stress-1m-volume-qualification.mjs",
     "test:genetic-evolver": "node scripts/test-genetic-evolver.mjs",
     "test:vision-inverse-compiler": "node scripts/test-vision-inverse-compiler.mjs",
+    "test:promptcard-vlm": "node scripts/test-promptcard-vlm.mjs",
     "test:hybrid-rag-engine": "node scripts/test-hybrid-rag-engine.mjs",
     "test:cognitive-shader": "node scripts/test-cognitive-shader.mjs",
     "test:blinded-judge-arena": "node scripts/test-blinded-judge-arena.mjs",

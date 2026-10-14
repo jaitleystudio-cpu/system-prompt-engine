@@ -35,6 +35,7 @@ class PlanDefinition:
     has_ci_enforcement: bool
     has_offline_license_support: bool
     has_audit_exports: bool
+    has_promptcard_vlm: bool = False
 
 
 DEFAULT_PLANS: dict[PlanTier, PlanDefinition] = {
@@ -49,6 +50,7 @@ DEFAULT_PLANS: dict[PlanTier, PlanDefinition] = {
         has_ci_enforcement=False,
         has_offline_license_support=False,
         has_audit_exports=False,
+        has_promptcard_vlm=False,
     ),
     PlanTier.PRO: PlanDefinition(
         tier=PlanTier.PRO,
@@ -61,6 +63,7 @@ DEFAULT_PLANS: dict[PlanTier, PlanDefinition] = {
         has_ci_enforcement=False,
         has_offline_license_support=False,
         has_audit_exports=True,
+        has_promptcard_vlm=True,
     ),
     PlanTier.TEAM: PlanDefinition(
         tier=PlanTier.TEAM,
@@ -73,6 +76,7 @@ DEFAULT_PLANS: dict[PlanTier, PlanDefinition] = {
         has_ci_enforcement=True,
         has_offline_license_support=False,
         has_audit_exports=True,
+        has_promptcard_vlm=True,
     ),
     PlanTier.ENTERPRISE: PlanDefinition(
         tier=PlanTier.ENTERPRISE,
@@ -85,6 +89,7 @@ DEFAULT_PLANS: dict[PlanTier, PlanDefinition] = {
         has_ci_enforcement=True,
         has_offline_license_support=True,
         has_audit_exports=True,
+        has_promptcard_vlm=True,
     ),
 }
 

@@ -158,7 +158,7 @@ export class OfflineNeuralModelCache {
   }
 
   public async cacheModel(meta: CachedNeuralModel, data: Uint8Array): Promise<boolean> {
-    const computed = await computeSha256(new TextDecoder().decode(data.slice(0, 100)));
+    const computed = await computeSha256(data);
     this.inMemoryCache.set(meta.modelId, { meta: { ...meta, sha256: computed }, data });
     return true;
   }
@@ -417,19 +417,26 @@ export class WebGpuNeuralEngine {
     const totalBytes = await this.cache.getTotalCacheBytes();
     const timestampIso = new Date().toISOString();
 
-    const rawPayload = JSON.stringify({
-      schemaVersion: 'spe.neural-webgpu-audit.v1',
-      timestampIso,
-      modelId,
-      tier: caps.tier,
-      adapter: caps.adapterName,
-      totalBytes,
-      shaderCount: this.activeShaderCount,
-      costUsd: 0,
-      zeroEgress: true,
-    });
+    function canonicalize(val: any): string {
+      if (val === null || typeof val !== 'object') return JSON.stringify(val);
+      if (Array.isArray(val)) return '[' + val.map(canonicalize).join(',') + ']';
+      const keys = Object.keys(val).sort();
+      return '{' + keys.map((k) => JSON.stringify(k) + ':' + canonicalize(val[k])).join(',') + '}';
+    }
 
-    const sha256AuditDigest = await computeSha256(rawPayload);
+    const payload = {
+      adapter: caps.adapterName,
+      costUsd: 0,
+      modelId,
+      schemaVersion: 'spe.neural-webgpu-audit.v1',
+      shaderCount: this.activeShaderCount,
+      tier: caps.tier,
+      timestampIso,
+      totalBytes,
+      zeroEgress: true,
+    };
+
+    const sha256AuditDigest = await computeSha256(canonicalize(payload));
 
     return {
       schemaVersion: 'spe.neural-webgpu-audit.v1',
@@ -444,5 +451,42 @@ export class WebGpuNeuralEngine {
       zeroEgressObserved: true,
       sha256AuditDigest,
     };
+  }
+
+  /**
+   * Verifies an emitted neural audit receipt against canonical RFC 8785 digest.
+   */
+  public async verifyAuditReceipt(receipt: NeuralAuditReceipt): Promise<{ verified: boolean; error?: string }> {
+    if (!receipt || receipt.schemaVersion !== 'spe.neural-webgpu-audit.v1') {
+      return { verified: false, error: 'Invalid schemaVersion: expected spe.neural-webgpu-audit.v1' };
+    }
+    if (receipt.costUsd !== 0 || !receipt.zeroEgressObserved) {
+      return { verified: false, error: 'Zero-egress or zero-cost guarantee violated' };
+    }
+
+    function canonicalize(val: any): string {
+      if (val === null || typeof val !== 'object') return JSON.stringify(val);
+      if (Array.isArray(val)) return '[' + val.map(canonicalize).join(',') + ']';
+      const keys = Object.keys(val).sort();
+      return '{' + keys.map((k) => JSON.stringify(k) + ':' + canonicalize(val[k])).join(',') + '}';
+    }
+
+    const payload = {
+      adapter: receipt.adapterName,
+      costUsd: 0,
+      modelId: receipt.modelId,
+      schemaVersion: receipt.schemaVersion,
+      shaderCount: receipt.shaderExecutionsCount,
+      tier: receipt.hardwareTier,
+      timestampIso: receipt.timestampIso,
+      totalBytes: receipt.vramAllocatedBytes,
+      zeroEgress: true,
+    };
+
+    const expectedDigest = await computeSha256(canonicalize(payload));
+    if (expectedDigest !== receipt.sha256AuditDigest) {
+      return { verified: false, error: `Digest mismatch: expected ${expectedDigest}, got ${receipt.sha256AuditDigest}` };
+    }
+    return { verified: true };
   }
 }

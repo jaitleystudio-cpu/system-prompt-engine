@@ -21,6 +21,7 @@ import {
   type ActionVector,
 } from "./speechVideoSynthesis";
 import { WebGpuNeuralEngine, type WebGpuCapabilities } from "./WebGpuNeuralEngine";
+import { PromptCardWorkbench } from "./PromptCardWorkbench";
 
 export type OmniPillar = "ocr" | "speech" | "video" | "photo_to_code" | "image_to_prompt";
 export type CodeTarget = "react" | "nextjs" | "vue" | "svelte" | "swiftui" | "compose" | "html";
@@ -327,7 +328,7 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [isRecording]);
+  }, [isRecording, activePillar]);
 
   // Recording timer
   useEffect(() => {
@@ -424,27 +425,149 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
   );
 
   // Photo to Code & Calipers state
-  const [caliperSelectedComponent, setCaliperSelectedComponent] = useState<string>("Navbar (Header)");
-  const [liveEditedCode, setLiveEditedCode] = useState<string>("");
+  const CALIPER_PROFILES: Record<string, {
+    bounds: { width: number; height: number; x: number; y: number };
+    typography: { fontFamily: string; fontSize: string; lineHeight: string; fontWeight: number };
+    contrastRatio: number;
+    wcagCompliance: string;
+    flexDirection: string;
+    gap: string;
+    padding: string;
+    background: string;
+    color: string;
+  }> = useMemo(() => ({
+    "Navbar (Header)": {
+      bounds: { width: 1200, height: 64, x: 0, y: 0 },
+      typography: { fontFamily: "Inter, sans-serif", fontSize: "15px", lineHeight: "24px", fontWeight: 700 },
+      contrastRatio: 16.2,
+      wcagCompliance: "AAA",
+      flexDirection: "row",
+      gap: "16px",
+      padding: "16px 24px",
+      background: "#0b0f19",
+      color: "#ffffff",
+    },
+    "Metric Card 1 (ARR)": {
+      bounds: { width: 380, height: 140, x: 24, y: 88 },
+      typography: { fontFamily: "Inter, sans-serif", fontSize: "32px", lineHeight: "40px", fontWeight: 800 },
+      contrastRatio: 18.4,
+      wcagCompliance: "AAA",
+      flexDirection: "column",
+      gap: "8px",
+      padding: "20px",
+      background: "#111827",
+      color: "#ffffff",
+    },
+    "Metric Card 2 (WASM Latency)": {
+      bounds: { width: 380, height: 140, x: 428, y: 88 },
+      typography: { fontFamily: "JetBrains Mono, monospace", fontSize: "32px", lineHeight: "40px", fontWeight: 800 },
+      contrastRatio: 14.1,
+      wcagCompliance: "AAA",
+      flexDirection: "column",
+      gap: "8px",
+      padding: "20px",
+      background: "#111827",
+      color: "#06b6d4",
+    },
+    "Metric Card 3 (Auto-Immunization)": {
+      bounds: { width: 380, height: 140, x: 832, y: 88 },
+      typography: { fontFamily: "Inter, sans-serif", fontSize: "32px", lineHeight: "40px", fontWeight: 800 },
+      contrastRatio: 15.5,
+      wcagCompliance: "AAA",
+      flexDirection: "column",
+      gap: "8px",
+      padding: "20px",
+      background: "#111827",
+      color: "#a855f7",
+    },
+    "Telemetry Graph & Live Waveform": {
+      bounds: { width: 780, height: 380, x: 24, y: 252 },
+      typography: { fontFamily: "Inter, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 600 },
+      contrastRatio: 12.8,
+      wcagCompliance: "AAA",
+      flexDirection: "column",
+      gap: "12px",
+      padding: "24px",
+      background: "#0b0f19",
+      color: "#94a3b8",
+    },
+    "Zero-Egress Security Feed": {
+      bounds: { width: 380, height: 380, x: 832, y: 252 },
+      typography: { fontFamily: "JetBrains Mono, monospace", fontSize: "13px", lineHeight: "18px", fontWeight: 500 },
+      contrastRatio: 13.9,
+      wcagCompliance: "AAA",
+      flexDirection: "column",
+      gap: "10px",
+      padding: "24px",
+      background: "#0b0f19",
+      color: "#34d399",
+    },
+  }), []);
 
-  const calipers = useMemo(() => ({
-    component: caliperSelectedComponent,
-    bounds: { width: 384, height: 64, x: 24, y: 16 },
-    typography: { fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px", lineHeight: "20px", fontWeight: 600 },
-    contrastRatio: 14.8,
-    wcagCompliance: "AAA",
-    flexDirection: "row",
-    gap: "12px",
-    padding: "16px 24px",
-    background: "#111827",
-    color: "#ffffff"
-  }), [caliperSelectedComponent]);
+  const [caliperSelectedComponent, setCaliperSelectedComponent] = useState<string>("Navbar (Header)");
+  const [editedCodeMap, setEditedCodeMap] = useState<Record<string, string>>({});
+
+  const calipers = useMemo(() => {
+    const profile = CALIPER_PROFILES[caliperSelectedComponent] || CALIPER_PROFILES["Navbar (Header)"];
+    return {
+      component: caliperSelectedComponent,
+      ...profile,
+    };
+  }, [CALIPER_PROFILES, caliperSelectedComponent]);
 
   // Image to Prompt: 3D Lighting & Visual DNA state
+  const VISUAL_DNA_PRESETS: Record<string, { label: string; dna: VisualDnaChromosomes }> = useMemo(() => ({
+    medium_format: {
+      label: "Hasselblad 100c Studio",
+      dna: {
+        optics: "Hasselblad H6D-100c Medium Format",
+        focalLength: "85mm f/1.2 Prime Lens",
+        bokeh: "Creamy shallow depth-of-field, 9-blade circular aperture",
+        medium: "35mm Kodak Portra 400 analog grain",
+        composition: "Rule of thirds, low-angle dynamic perspective",
+        subject: "Sovereign obsidian mainframe monolith with electric cyan telemetry glow",
+      },
+    },
+    cinema_65mm: {
+      label: "ARRI Alexa 65 Widescreen",
+      dna: {
+        optics: "ARRI Alexa 65 Master Anamorphic",
+        focalLength: "35mm f/1.4 Anamorphic Lens",
+        bokeh: "Horizontal anamorphic cyan streak flare, oval bokeh discs",
+        medium: "Kodak Vision3 500T 65mm motion picture film stock",
+        composition: "Cinematic 2.39:1 widescreen, Dutch angle silhouette",
+        subject: "Air-gapped server node surrounded by glowing fiber-optic conduits",
+      },
+    },
+    leica_rangefinder: {
+      label: "Leica M11-P Street",
+      dna: {
+        optics: "Leica M11-P Rangefinder (Zero Tamper)",
+        focalLength: "50mm f/0.95 Noctilux-M ASPH",
+        bokeh: "Ultra-shallow natural falloff with zero optical aberration",
+        medium: "Ilford HP5 Plus 400 push-processed black & white grain",
+        composition: "Eye-level candid decisive moment geometry",
+        subject: "Hardware security engineer configuring cryptographic enclave",
+      },
+    },
+    macro_probe: {
+      label: "Laowa 24mm Probe",
+      dna: {
+        optics: "Laowa 24mm f/14 2X Macro Probe",
+        focalLength: "24mm f/14 Deep Field Macro",
+        bokeh: "Pinpoint edge-to-edge sharpness with wide background context",
+        medium: "Ultra-clean digital sensor RAW at native ISO 64",
+        composition: "Extreme macro bug-eye low perspective",
+        subject: "Silicon die interconnects and quantum-resistant microcircuitry",
+      },
+    },
+  }), []);
+
   const [lightingVector, setLightingVector] = useState<LightingVectorKey>("cyberpunk_neon");
   const [visualDna, setVisualDna] = useState<VisualDnaChromosomes>(DEFAULT_VISUAL_DNA);
-  void setVisualDna;
-  void setCaliperSelectedComponent;
+  const [activeDnaPresetKey, setActiveDnaPresetKey] = useState<string>("medium_format");
+  const [imagePromptSubMode, setImagePromptSubMode] = useState<"dial" | "promptcard">("dial");
+
   const modulatedPrompts = useMemo(
     () => modulateImagePrompts(visualDna, lightingVector),
     [visualDna, lightingVector]
@@ -571,6 +694,18 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
 
 
   const activeCodeData = codePresetsData[codePreset] || codePresetsData["saas-dashboard"];
+  const editedCodeKey = `${codePreset}-${codeTarget}`;
+  const liveEditedCode = editedCodeMap[editedCodeKey] || "";
+  const setLiveEditedCode = useCallback((code: string) => {
+    setEditedCodeMap((prev) => {
+      if (!code) {
+        const next = { ...prev };
+        delete next[editedCodeKey];
+        return next;
+      }
+      return { ...prev, [editedCodeKey]: code };
+    });
+  }, [editedCodeKey]);
 
   // Handle Copy Actions
   const handleCopy = useCallback(async (content: string, setCopiedState: (v: boolean) => void) => {
@@ -1286,32 +1421,104 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
                 <div className="spe-omni-viewport">
                   <svg viewBox="0 0 100 100" style={{ width: "100%", height: "420px", background: "#060910" }}>
                     {/* Header */}
-                    <rect x="5" y="6" width="90" height="12" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" strokeWidth="0.8" rx="2" />
-                    <text x="8" y="13.5" fill="#c084fc" fontSize="2.5" fontWeight="bold">Navbar (Header)</text>
+                    <g
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setCaliperSelectedComponent("Navbar (Header)")}
+                      data-testid="caliper-target-navbar"
+                    >
+                      <rect
+                        x="5" y="6" width="90" height="12"
+                        fill={caliperSelectedComponent === "Navbar (Header)" ? "rgba(139, 92, 246, 0.35)" : "rgba(139, 92, 246, 0.15)"}
+                        stroke={caliperSelectedComponent === "Navbar (Header)" ? "#38bdf8" : "#8b5cf6"}
+                        strokeWidth={caliperSelectedComponent === "Navbar (Header)" ? "1.8" : "0.8"}
+                        rx="2"
+                      />
+                      <text x="8" y="13.5" fill="#c084fc" fontSize="2.5" fontWeight="bold">Navbar (Header)</text>
+                    </g>
 
                     {/* Metric Cards */}
-                    <rect x="5" y="22" width="28" height="24" fill="rgba(6, 182, 212, 0.12)" stroke="#06b6d4" strokeWidth="0.8" rx="2" />
-                    <text x="7" y="28" fill="#38bdf8" fontSize="2.2" fontWeight="bold">Metric Card 1</text>
-                    <text x="7" y="36" fill="#ffffff" fontSize="3.2" fontWeight="bold">$4.25M</text>
+                    <g
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setCaliperSelectedComponent("Metric Card 1 (ARR)")}
+                      data-testid="caliper-target-arr"
+                    >
+                      <rect
+                        x="5" y="22" width="28" height="24"
+                        fill={caliperSelectedComponent === "Metric Card 1 (ARR)" ? "rgba(6, 182, 212, 0.35)" : "rgba(6, 182, 212, 0.12)"}
+                        stroke={caliperSelectedComponent === "Metric Card 1 (ARR)" ? "#38bdf8" : "#06b6d4"}
+                        strokeWidth={caliperSelectedComponent === "Metric Card 1 (ARR)" ? "1.8" : "0.8"}
+                        rx="2"
+                      />
+                      <text x="7" y="28" fill="#38bdf8" fontSize="2.2" fontWeight="bold">Metric Card 1</text>
+                      <text x="7" y="36" fill="#ffffff" fontSize="3.2" fontWeight="bold">$4.25M</text>
+                    </g>
 
-                    <rect x="36" y="22" width="28" height="24" fill="rgba(16, 185, 129, 0.12)" stroke="#10b981" strokeWidth="0.8" rx="2" />
-                    <text x="38" y="28" fill="#34d399" fontSize="2.2" fontWeight="bold">WASM Latency</text>
-                    <text x="38" y="36" fill="#38bdf8" fontSize="3.2" fontWeight="bold">1.2 ms</text>
+                    <g
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setCaliperSelectedComponent("Metric Card 2 (WASM Latency)")}
+                      data-testid="caliper-target-latency"
+                    >
+                      <rect
+                        x="36" y="22" width="28" height="24"
+                        fill={caliperSelectedComponent === "Metric Card 2 (WASM Latency)" ? "rgba(16, 185, 129, 0.35)" : "rgba(16, 185, 129, 0.12)"}
+                        stroke={caliperSelectedComponent === "Metric Card 2 (WASM Latency)" ? "#38bdf8" : "#10b981"}
+                        strokeWidth={caliperSelectedComponent === "Metric Card 2 (WASM Latency)" ? "1.8" : "0.8"}
+                        rx="2"
+                      />
+                      <text x="38" y="28" fill="#34d399" fontSize="2.2" fontWeight="bold">WASM Latency</text>
+                      <text x="38" y="36" fill="#38bdf8" fontSize="3.2" fontWeight="bold">1.2 ms</text>
+                    </g>
 
-                    <rect x="67" y="22" width="28" height="24" fill="rgba(245, 158, 11, 0.12)" stroke="#f59e0b" strokeWidth="0.8" rx="2" />
-                    <text x="69" y="28" fill="#fbbf24" fontSize="2.2" fontWeight="bold">Immunity</text>
-                    <text x="69" y="36" fill="#a855f7" fontSize="3.2" fontWeight="bold">100.0%</text>
+                    <g
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setCaliperSelectedComponent("Metric Card 3 (Auto-Immunization)")}
+                      data-testid="caliper-target-immunity"
+                    >
+                      <rect
+                        x="67" y="22" width="28" height="24"
+                        fill={caliperSelectedComponent === "Metric Card 3 (Auto-Immunization)" ? "rgba(245, 158, 11, 0.35)" : "rgba(245, 158, 11, 0.12)"}
+                        stroke={caliperSelectedComponent === "Metric Card 3 (Auto-Immunization)" ? "#38bdf8" : "#f59e0b"}
+                        strokeWidth={caliperSelectedComponent === "Metric Card 3 (Auto-Immunization)" ? "1.8" : "0.8"}
+                        rx="2"
+                      />
+                      <text x="69" y="28" fill="#fbbf24" fontSize="2.2" fontWeight="bold">Immunity</text>
+                      <text x="69" y="36" fill="#a855f7" fontSize="3.2" fontWeight="bold">100.0%</text>
+                    </g>
 
                     {/* Main Chart Area */}
-                    <rect x="5" y="50" width="58" height="44" fill="rgba(255, 255, 255, 0.04)" stroke="#475569" strokeWidth="0.8" rx="2" />
-                    <text x="8" y="56" fill="#94a3b8" fontSize="2.5" fontWeight="bold">Telemetry Graph & Live Waveform</text>
-                    <path d="M 8 82 Q 22 62, 36 74 T 60 58" fill="none" stroke="#06b6d4" strokeWidth="1.2" />
+                    <g
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setCaliperSelectedComponent("Telemetry Graph & Live Waveform")}
+                      data-testid="caliper-target-telemetry"
+                    >
+                      <rect
+                        x="5" y="50" width="58" height="44"
+                        fill={caliperSelectedComponent === "Telemetry Graph & Live Waveform" ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.04)"}
+                        stroke={caliperSelectedComponent === "Telemetry Graph & Live Waveform" ? "#38bdf8" : "#475569"}
+                        strokeWidth={caliperSelectedComponent === "Telemetry Graph & Live Waveform" ? "1.8" : "0.8"}
+                        rx="2"
+                      />
+                      <text x="8" y="56" fill="#94a3b8" fontSize="2.5" fontWeight="bold">Telemetry Graph & Live Waveform</text>
+                      <path d="M 8 82 Q 22 62, 36 74 T 60 58" fill="none" stroke="#06b6d4" strokeWidth="1.2" />
+                    </g>
 
                     {/* Side Rail Panel */}
-                    <rect x="67" y="50" width="28" height="44" fill="rgba(255, 255, 255, 0.04)" stroke="#475569" strokeWidth="0.8" rx="2" />
-                    <text x="70" y="56" fill="#94a3b8" fontSize="2.5" fontWeight="bold">Zero-Egress Feed</text>
-                    <rect x="70" y="62" width="22" height="6" fill="rgba(16, 185, 129, 0.2)" rx="1" />
-                    <rect x="70" y="72" width="22" height="6" fill="rgba(139, 92, 246, 0.2)" rx="1" />
+                    <g
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setCaliperSelectedComponent("Zero-Egress Security Feed")}
+                      data-testid="caliper-target-feed"
+                    >
+                      <rect
+                        x="67" y="50" width="28" height="44"
+                        fill={caliperSelectedComponent === "Zero-Egress Security Feed" ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.04)"}
+                        stroke={caliperSelectedComponent === "Zero-Egress Security Feed" ? "#38bdf8" : "#475569"}
+                        strokeWidth={caliperSelectedComponent === "Zero-Egress Security Feed" ? "1.8" : "0.8"}
+                        rx="2"
+                      />
+                      <text x="70" y="56" fill="#94a3b8" fontSize="2.5" fontWeight="bold">Zero-Egress Feed</text>
+                      <rect x="70" y="62" width="22" height="6" fill="rgba(16, 185, 129, 0.2)" rx="1" />
+                      <rect x="70" y="72" width="22" height="6" fill="rgba(139, 92, 246, 0.2)" rx="1" />
+                    </g>
                   </svg>
                 </div>
 
@@ -1477,20 +1684,85 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
                     </div>
                   )}
 
-                  {/* TAB 5: LIVE CODE EDITOR */}
+                  {/* TAB 5: LIVE CODE EDITOR WITH INSTANT DOM PREVIEW */}
                   {codeTab === "editor" && (
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", height: "100%" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontSize: "0.85rem", color: "#38bdf8", fontWeight: "bold" }}>Editable Source ({codeTarget.toUpperCase()})</span>
-                        <span style={{ fontSize: "0.75rem", color: "#34d399", background: "rgba(16, 185, 129, 0.15)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>Hot Reload Enabled</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <span style={{ fontSize: "0.85rem", color: "#38bdf8", fontWeight: "bold" }}>Editable Source ({codeTarget.toUpperCase()})</span>
+                          <span style={{ fontSize: "0.75rem", color: "#34d399", background: "rgba(16, 185, 129, 0.15)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>
+                            ⚡ Instant DOM Sync & Hot Reload
+                          </span>
+                        </div>
+                        {liveEditedCode && (
+                          <button
+                            onClick={() => setLiveEditedCode("")}
+                            style={{ padding: "0.2rem 0.6rem", fontSize: "0.75rem", borderRadius: "4px", background: "rgba(239, 68, 68, 0.15)", border: "1px solid rgba(239, 68, 68, 0.3)", color: "#f87171", cursor: "pointer" }}
+                          >
+                            Reset to Template
+                          </button>
+                        )}
                       </div>
-                      <textarea
-                        value={liveEditedCode || activeCodeData.code[codeTarget]}
-                        onChange={(e) => setLiveEditedCode(e.target.value)}
-                        className="spe-omni-code-block"
-                        style={{ width: "100%", height: "300px", resize: "vertical", fontFamily: "monospace", fontSize: "0.85rem", background: "#060910", color: "#38bdf8", border: "1px solid #334155", borderRadius: "8px", padding: "0.75rem" }}
-                        data-testid="live-code-editor"
-                      />
+
+                      {/* Split Pane: Code Editor + Instant Live DOM Preview */}
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+                        {/* Left: Code Editor Textarea */}
+                        <div>
+                          <textarea
+                            value={liveEditedCode || activeCodeData.code[codeTarget]}
+                            onChange={(e) => setLiveEditedCode(e.target.value)}
+                            className="spe-omni-code-block"
+                            style={{ width: "100%", height: "300px", resize: "none", fontFamily: "monospace", fontSize: "0.8rem", background: "#060910", color: "#38bdf8", border: "1px solid #334155", borderRadius: "8px", padding: "0.75rem", boxSizing: "border-box" }}
+                            data-testid="live-code-editor"
+                          />
+                        </div>
+
+                        {/* Right: Instant Rendered Live DOM Preview */}
+                        <div style={{ display: "flex", flexDirection: "column", background: "#0b0f19", borderRadius: "8px", border: "1px solid #334155", overflow: "hidden", height: "300px" }}>
+                          <div style={{ padding: "0.4rem 0.75rem", background: "#0f172a", borderBottom: "1px solid #334155", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: "0.72rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>⚡ Instant Rendered DOM</span>
+                            <span style={{ fontSize: "0.68rem", color: "#34d399", fontWeight: 600 }}>Zero-Latency Sync</span>
+                          </div>
+
+                          {codeTarget === "html" ? (
+                            <iframe
+                              srcDoc={liveEditedCode || activeCodeData.code[codeTarget]}
+                              title="Instant HTML DOM Preview"
+                              style={{ width: "100%", height: "100%", border: "none", background: "#060910" }}
+                              sandbox="allow-scripts"
+                              data-testid="live-dom-preview-frame"
+                            />
+                          ) : (
+                            <div style={{ padding: "1rem", overflowY: "auto", height: "100%", color: "#ffffff", fontSize: "0.85rem" }} data-testid="live-dom-preview-container">
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #1e293b", paddingBottom: "0.5rem", marginBottom: "0.75rem" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                                  <span style={{ background: "#8b5cf6", width: "20px", height: "20px", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "0.7rem", color: "#ffffff" }}>Ω</span>
+                                  <strong style={{ fontSize: "0.85rem" }}>{activeCodeData.title}</strong>
+                                </div>
+                                <span style={{ fontSize: "0.7rem", color: "#34d399", background: "rgba(16, 185, 129, 0.15)", padding: "0.15rem 0.4rem", borderRadius: "4px" }}>DOM Active</span>
+                              </div>
+                              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem", marginBottom: "0.75rem" }}>
+                                <div style={{ padding: "0.5rem", borderRadius: "6px", background: "#111827", border: "1px solid #1f2937" }}>
+                                  <div style={{ fontSize: "0.65rem", color: "#94a3b8" }}>TARGET DIALECT</div>
+                                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#38bdf8" }}>{codeTarget.toUpperCase()}</div>
+                                </div>
+                                <div style={{ padding: "0.5rem", borderRadius: "6px", background: "#111827", border: "1px solid #1f2937" }}>
+                                  <div style={{ fontSize: "0.65rem", color: "#94a3b8" }}>SOURCE LENGTH</div>
+                                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#a855f7" }}>{(liveEditedCode || activeCodeData.code[codeTarget]).length} chars</div>
+                                </div>
+                              </div>
+                              <div style={{ padding: "0.5rem", borderRadius: "6px", background: "#07090e", border: "1px solid #1e293b", fontSize: "0.75rem", color: "#cbd5e1" }}>
+                                <strong>DOM Node Tree ({activeCodeData.ast.length} nodes):</strong>
+                                <ul style={{ margin: "0.25rem 0 0", paddingLeft: "1.2rem", lineHeight: 1.5 }}>
+                                  {activeCodeData.ast.map((node, i) => (
+                                    <li key={i}><span style={{ color: "#38bdf8" }}>{node.component}</span> &bull; <span style={{ color: "#64748b" }}>{node.bounds}</span></li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1531,9 +1803,33 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
           <section aria-labelledby="image-prompt-heading">
             <h2 id="image-prompt-heading" className="sr-only">Image to Prompt 3D Lighting & Visual DNA Dial</h2>
             
-            {/* 3D Lighting Vector Dial Presets Bar */}
-            <div className="spe-omni-presets">
-              <span className="spe-omni-presets-label">3D Lighting Presets:</span>
+            {/* Sub-Mode Selector: 3D Lighting Dial vs PromptCard Studio */}
+            <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.85rem" }}>
+              <button
+                className={`spe-omni-preset-pill ${imagePromptSubMode === "dial" ? "active" : ""}`}
+                onClick={() => setImagePromptSubMode("dial")}
+                data-testid="mode-lighting-dial"
+              >
+                💡 3D Lighting & Visual DNA Dial
+              </button>
+              <button
+                className={`spe-omni-preset-pill ${imagePromptSubMode === "promptcard" ? "active" : ""}`}
+                onClick={() => setImagePromptSubMode("promptcard")}
+                data-testid="mode-promptcard-studio"
+              >
+                🃏 PromptCard VLM (V1.4.0) Studio
+              </button>
+            </div>
+
+            {imagePromptSubMode === "promptcard" ? (
+              <div style={{ marginTop: "1rem" }}>
+                <PromptCardWorkbench customerTier="PRO" onSelectPrompt={onApplyPrompt} />
+              </div>
+            ) : (
+              <>
+                {/* 3D Lighting Vector Dial Presets Bar */}
+                <div className="spe-omni-presets">
+                  <span className="spe-omni-presets-label">3D Lighting Presets:</span>
               {(Object.keys(LIGHTING_PRESETS) as LightingVectorKey[]).map((key) => {
                 const setting = LIGHTING_PRESETS[key];
                 return (
@@ -1544,6 +1840,27 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
                     data-testid={`lighting-preset-${key}`}
                   >
                     {setting.label} ({setting.temperatureK}K)
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Visual DNA Chromosome Presets Bar */}
+            <div className="spe-omni-presets" style={{ marginTop: "0.5rem" }}>
+              <span className="spe-omni-presets-label">Visual DNA Presets:</span>
+              {Object.keys(VISUAL_DNA_PRESETS).map((key) => {
+                const setting = VISUAL_DNA_PRESETS[key];
+                return (
+                  <button
+                    key={key}
+                    className={`spe-omni-preset-pill ${activeDnaPresetKey === key ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveDnaPresetKey(key);
+                      setVisualDna(setting.dna);
+                    }}
+                    data-testid={`dna-preset-${key}`}
+                  >
+                    {setting.label}
                   </button>
                 );
               })}
@@ -1580,25 +1897,60 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.6rem" }}>
                     <div style={{ padding: "0.6rem 0.85rem", background: "#0b0f19", borderRadius: "6px", border: "1px solid #1e293b" }}>
                       <span style={{ fontSize: "0.7rem", color: "#64748b", textTransform: "uppercase" }}>Optics / Camera</span>
-                      <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#ffffff", marginTop: "0.2rem" }}>{visualDna.optics}</div>
+                      <input
+                        value={visualDna.optics}
+                        onChange={(e) => setVisualDna((prev) => ({ ...prev, optics: e.target.value }))}
+                        style={{ width: "100%", background: "transparent", border: "none", color: "#ffffff", fontSize: "0.8rem", fontWeight: 600, outline: "none", marginTop: "0.2rem" }}
+                        data-testid="dna-input-optics"
+                      />
                     </div>
                     <div style={{ padding: "0.6rem 0.85rem", background: "#0b0f19", borderRadius: "6px", border: "1px solid #1e293b" }}>
                       <span style={{ fontSize: "0.7rem", color: "#64748b", textTransform: "uppercase" }}>Focal Length</span>
-                      <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#38bdf8", marginTop: "0.2rem" }}>{visualDna.focalLength}</div>
+                      <input
+                        value={visualDna.focalLength}
+                        onChange={(e) => setVisualDna((prev) => ({ ...prev, focalLength: e.target.value }))}
+                        style={{ width: "100%", background: "transparent", border: "none", color: "#38bdf8", fontSize: "0.8rem", fontWeight: 600, outline: "none", marginTop: "0.2rem" }}
+                        data-testid="dna-input-focal-length"
+                      />
                     </div>
                     <div style={{ padding: "0.6rem 0.85rem", background: "#0b0f19", borderRadius: "6px", border: "1px solid #1e293b" }}>
                       <span style={{ fontSize: "0.7rem", color: "#64748b", textTransform: "uppercase" }}>Bokeh Character</span>
-                      <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#a855f7", marginTop: "0.2rem" }}>{visualDna.bokeh}</div>
+                      <input
+                        value={visualDna.bokeh}
+                        onChange={(e) => setVisualDna((prev) => ({ ...prev, bokeh: e.target.value }))}
+                        style={{ width: "100%", background: "transparent", border: "none", color: "#a855f7", fontSize: "0.8rem", fontWeight: 600, outline: "none", marginTop: "0.2rem" }}
+                        data-testid="dna-input-bokeh"
+                      />
                     </div>
                     <div style={{ padding: "0.6rem 0.85rem", background: "#0b0f19", borderRadius: "6px", border: "1px solid #1e293b" }}>
                       <span style={{ fontSize: "0.7rem", color: "#64748b", textTransform: "uppercase" }}>Medium / Grain</span>
-                      <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#34d399", marginTop: "0.2rem" }}>{visualDna.medium}</div>
+                      <input
+                        value={visualDna.medium}
+                        onChange={(e) => setVisualDna((prev) => ({ ...prev, medium: e.target.value }))}
+                        style={{ width: "100%", background: "transparent", border: "none", color: "#34d399", fontSize: "0.8rem", fontWeight: 600, outline: "none", marginTop: "0.2rem" }}
+                        data-testid="dna-input-medium"
+                      />
                     </div>
                   </div>
 
                   <div style={{ padding: "0.6rem 0.85rem", background: "#0b0f19", borderRadius: "6px", border: "1px solid #1e293b" }}>
                     <span style={{ fontSize: "0.7rem", color: "#64748b", textTransform: "uppercase" }}>Compositional Framing</span>
-                    <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#fbbf24", marginTop: "0.2rem" }}>{visualDna.composition}</div>
+                    <input
+                      value={visualDna.composition}
+                      onChange={(e) => setVisualDna((prev) => ({ ...prev, composition: e.target.value }))}
+                      style={{ width: "100%", background: "transparent", border: "none", color: "#fbbf24", fontSize: "0.8rem", fontWeight: 600, outline: "none", marginTop: "0.2rem" }}
+                      data-testid="dna-input-composition"
+                    />
+                  </div>
+
+                  <div style={{ padding: "0.6rem 0.85rem", background: "#0b0f19", borderRadius: "6px", border: "1px solid #1e293b" }}>
+                    <span style={{ fontSize: "0.7rem", color: "#64748b", textTransform: "uppercase" }}>Subject / Core Entity</span>
+                    <input
+                      value={visualDna.subject}
+                      onChange={(e) => setVisualDna((prev) => ({ ...prev, subject: e.target.value }))}
+                      style={{ width: "100%", background: "transparent", border: "none", color: "#e2e8f0", fontSize: "0.8rem", fontWeight: 500, outline: "none", marginTop: "0.2rem" }}
+                      data-testid="dna-input-subject"
+                    />
                   </div>
                 </div>
               </div>
@@ -1672,8 +2024,10 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
                 </div>
               </div>
             </div>
-          </section>
-        )}
+            </>
+          )}
+        </section>
+      )}
 
       </main>
     </div>
