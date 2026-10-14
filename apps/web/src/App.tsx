@@ -94,6 +94,7 @@ import {
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
 import { Capabilities } from "./pages/Capabilities";
+import { IncidentIntelligence } from "./pages/IncidentIntelligence";
 import {
   AgentExportTabs,
   formatForAgent,
@@ -992,7 +993,8 @@ export default function App() {
           view === "website" ||
           view === "media" ||
           view === "ocr" ||
-          view === "research"
+          view === "research" ||
+          view === "incidents"
         }
         notFound={notFound}
       />
@@ -1384,6 +1386,7 @@ export default function App() {
         )}
 
         {!notFound && view === "capabilities" && <Capabilities onNavigate={setView} />}
+        {!notFound && view === "incidents" && <IncidentIntelligence onNavigate={setView} />}
         {!notFound && view === "privacy" && <PrivacyProof />}
         {!notFound && view === "workflows" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
@@ -1586,6 +1589,7 @@ export default function App() {
             <h3>Trust & Privacy</h3>
             <InAppLink view="capabilities" onNavigate={setView}>Mathematical Proofs</InAppLink>
             <InAppLink view="privacy" onNavigate={setView}>Zero-Egress Guarantee</InAppLink>
+            <InAppLink view="incidents" onNavigate={setView}>AI Failure Intelligence (preview)</InAppLink>
             <InAppLink view="my-work" onNavigate={setView}>Local Workspace</InAppLink>
           </div>
           <div className="spe-footer-col">
