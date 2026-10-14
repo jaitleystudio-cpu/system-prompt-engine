@@ -86,12 +86,15 @@ def test_spe_cwc_engine_end_to_end_discovery_cycle():
     assert result.scientific_witness.mechanism_id == "MECH-CORE-01"
     assert len(result.scientific_witness.sha256_seal) == 64
 
-    # 5. Procedure compounded and qualified for reuse
+    # 5. Procedure compounded and qualified for in-distribution sanity (CWC-F09)
     assert result.reusable_procedure is not None
-    assert result.reusable_procedure.qualification_state == QualificationState.TRANSFER_QUALIFIED_REUSABLE
+    assert result.reusable_procedure.qualification_state == QualificationState.IN_DISTRIBUTION_SANITY_PASS
     assert result.reusable_procedure.transfer_pass_rate == 1.0
 
-    # 6. Productivity Gain exceeds 100x target
+    # 6. Reclassified cost fixture ratio (CWC-F04)
+    assert result.benchmark_type == "ILLUSTRATIVE_COST_FIXTURE"
+    assert result.is_100x_empirically_proven is False
+    assert result.cost_ratio_fixture >= 100.0
     assert result.productivity_gain_g >= 100.0
 
 

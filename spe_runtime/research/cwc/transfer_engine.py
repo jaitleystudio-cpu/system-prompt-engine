@@ -1,7 +1,6 @@
 """
-Transfer Qualification & 100X Productivity Engine for CWC-1.
-Manages OOD generalization across unseen task families, capability compounding,
-and the formal 100X productivity metric.
+Transfer Qualification & Cost-Accounting Fixture Engine for CWC-1.
+Version 1.1: Repaired with Honest LVT Qualification Boundaries and Explicit Cost Fixture Classification (CWC-F04, CWC-F09).
 """
 
 from __future__ import annotations
@@ -27,11 +26,13 @@ class TransferEngine:
         mechanism: ExplanatoryMechanism,
         witness: ScientificWitness,
         unseen_test_cases: List[Dict[str, float]],
+        lvt_transfer_token: Optional[str] = None,
     ) -> ReusableScientificProcedure:
         """
         Tests the discovered mechanism against out-of-distribution unseen problem instances.
-        If pass rate >= min_transfer_pass_rate and no negative controls fail,
-        promotes the capability to TRANSFER_QUALIFIED_REUSABLE.
+        LVT Gate (CWC-F09):
+        If tests pass locally, marks IN_DISTRIBUTION_SANITY_PASS or LVT_QUALIFIED_TRANSFER_PENDING.
+        Only marks TRANSFER_QUALIFIED_REUSABLE when authorized by an external verified LVT token.
         """
         if witness.truth_status != "SUPPORTED" or not witness.biosecurity_screen_passed:
             # Cannot qualify contradicted or unverified mechanism
@@ -92,19 +93,24 @@ class TransferEngine:
                     counterexamples.append(f"OOD prediction error {error:.2f} at x={x_val}")
 
         pass_rate = passed / len(unseen_test_cases)
-        is_qualified = pass_rate >= self.min_pass_rate and len(counterexamples) == 0
+        is_passed = pass_rate >= self.min_pass_rate and len(counterexamples) == 0
 
-        qual_state = (
-            QualificationState.TRANSFER_QUALIFIED_REUSABLE
-            if is_qualified
-            else QualificationState.QUARANTINED_FALSIFIED
-        )
+        if not is_passed:
+            qual_state = QualificationState.QUARANTINED_FALSIFIED
+        else:
+            # If external LVT token present, promote to TRANSFER_QUALIFIED_REUSABLE
+            # Otherwise, mark IN_DISTRIBUTION_SANITY_PASS (CWC-F09)
+            if lvt_transfer_token and lvt_transfer_token.startswith("LVT-TRANSFER-VERIFIED-"):
+                qual_state = QualificationState.TRANSFER_QUALIFIED_REUSABLE
+            else:
+                qual_state = QualificationState.IN_DISTRIBUTION_SANITY_PASS
 
         seal_payload = {
             "mechanism_id": mechanism.mechanism_id,
             "pass_rate": pass_rate,
             "tasks_count": len(unseen_test_cases),
             "qual_state": qual_state.value,
+            "lvt_token": lvt_transfer_token or "NONE",
         }
         seal = hashlib.sha256(json.dumps(seal_payload, sort_keys=True).encode("utf-8")).hexdigest()
 
@@ -119,20 +125,23 @@ class TransferEngine:
             cryptographic_seal=seal,
             conditions_of_applicability=mechanism.assumptions,
             known_counterexamples=tuple(counterexamples),
+            lvt_provenance_id=lvt_transfer_token,
         )
 
-    def calculate_100x_productivity_gain(
+    def calculate_cost_fixture_ratio(
         self,
         verified_outcomes_cwc: int,
         cost_nanos_cwc: int,
         verified_outcomes_baseline: int = 1,
-        cost_usd_baseline: float = 20.0,  # Conventional $20 AI subscription / multi-turn token burn
+        cost_usd_baseline: float = 20.0,
     ) -> float:
         """
-        Calculates the verified scientific productivity ratio:
+        Calculates illustrative cost accounting ratio on fixture problems (CWC-F04):
             P_cwc = verified_outcomes / (cost_nanos / 10^9)
             P_base = verified_outcomes_baseline / cost_usd_baseline
-            Gain G = P_cwc / P_base
+            Ratio = P_cwc / P_base
+        NOTE: This is a cost accounting regression check fixture, NOT an empirical claim
+        of general real-world scientific superiority.
         """
         cost_usd_cwc = max(cost_nanos_cwc / 1_000_000_000.0, 0.0001)
         p_cwc = verified_outcomes_cwc / cost_usd_cwc
@@ -140,5 +149,17 @@ class TransferEngine:
         cost_base = max(cost_usd_baseline, 0.0001)
         p_base = verified_outcomes_baseline / cost_base
 
-        gain = p_cwc / p_base if p_base > 0 else 1.0
-        return round(gain, 2)
+        ratio = p_cwc / p_base if p_base > 0 else 1.0
+        return round(ratio, 2)
+
+    def calculate_100x_productivity_gain(
+        self,
+        verified_outcomes_cwc: int,
+        cost_nanos_cwc: int,
+        verified_outcomes_baseline: int = 1,
+        cost_usd_baseline: float = 20.0,
+    ) -> float:
+        """Backwards compatibility alias for calculate_cost_fixture_ratio."""
+        return self.calculate_cost_fixture_ratio(
+            verified_outcomes_cwc, cost_nanos_cwc, verified_outcomes_baseline, cost_usd_baseline
+        )

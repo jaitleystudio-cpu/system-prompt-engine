@@ -1,6 +1,7 @@
 """
-Mechanism Compiler & Identifiability Analyzer for CWC-1.
-Compiles scientific problems into competing causal mechanisms and computes observational equivalence.
+Mechanism Compiler & Scoped Identifiability Analyzer for CWC-1.
+Compiles scientific problems into competing causal mechanisms (including ODEs, state-space,
+and cyclic biochemical networks) and computes scoped identifiability verdicts (CWC-F01, CWC-F10).
 """
 
 from __future__ import annotations
@@ -10,11 +11,12 @@ from .types import (
     ExplanatoryMechanism,
     IdentifiabilityStatus,
     MechanismClass,
+    ModelRepresentationType,
 )
 
 
 class MechanismCompiler:
-    """Compiles scientific questions into competing causal mechanisms and checks identifiability."""
+    """Compiles scientific questions into competing causal mechanisms and computes scoped identifiability."""
 
     def __init__(self, epsilon_identifiability: float = 0.05):
         self.epsilon_ident = epsilon_identifiability
@@ -26,8 +28,8 @@ class MechanismCompiler:
         existing_data_point: float = 1.0,
     ) -> List[ExplanatoryMechanism]:
         """
-        Compiles at least two candidate causal mechanisms explaining the phenomenon.
-        Includes assumptions, equations, causal graph edges, and falsification criteria.
+        Compiles candidate explanatory mechanisms explaining the phenomenon.
+        Supports DAGs, differential equation systems, cyclic networks, and state spaces (CWC-F10).
         """
         domain_clean = domain.strip().lower()
 
@@ -44,6 +46,8 @@ class MechanismCompiler:
                 predictions={"stim_baseline": 2.0 * existing_data_point, "stim_high_freq": 4.0, "stim_paired_pulse": 2.1},
                 falsification_conditions=("AMPA exocytosis blocked, yet EPSC potentiates > 50%",),
                 prior_weight=0.55,
+                model_representation=ModelRepresentationType.BIOCHEMICAL_REACTION_NETWORK,
+                is_cyclic=False,
             )
             m2 = ExplanatoryMechanism(
                 mechanism_id="MECH-NEURO-02",
@@ -56,6 +60,8 @@ class MechanismCompiler:
                 predictions={"stim_baseline": 2.0 * existing_data_point, "stim_high_freq": 6.2, "stim_paired_pulse": 1.2},
                 falsification_conditions=("Scavenging extracellular NO prevents LTP without altering baseline transmission",),
                 prior_weight=0.45,
+                model_representation=ModelRepresentationType.BIOCHEMICAL_REACTION_NETWORK,
+                is_cyclic=True,  # Retrograde feedback loop is cyclic
             )
             return [m1, m2]
 
@@ -72,6 +78,7 @@ class MechanismCompiler:
                 predictions={"isotope_shift_ratio": 0.50, "pressure_delta_gpa": 12.4},
                 falsification_conditions=("Zero isotope effect observed with mass substitution (alpha < 0.02)",),
                 prior_weight=0.35,
+                model_representation=ModelRepresentationType.DIFFERENTIAL_EQUATION_SYSTEM,
             )
             m2 = ExplanatoryMechanism(
                 mechanism_id="MECH-MAT-02",
@@ -84,6 +91,39 @@ class MechanismCompiler:
                 predictions={"isotope_shift_ratio": 0.05, "pressure_delta_gpa": 24.8},
                 falsification_conditions=("Node-free isotropic s-wave gap observed in angle-resolved photoemission",),
                 prior_weight=0.65,
+                model_representation=ModelRepresentationType.DIFFERENTIAL_EQUATION_SYSTEM,
+            )
+            return [m1, m2]
+
+        elif "oscillator" in domain_clean or "cyclic" in domain_clean:
+            # Non-DAG Dynamical System (CWC-F10)
+            m1 = ExplanatoryMechanism(
+                mechanism_id="MECH-DYN-01",
+                name="Lotka-Volterra Coupled Oscillator",
+                mechanism_class=MechanismClass.EQUATION_SYSTEM,
+                hypothesis="Cyclic oscillations emerge from conservative predator-prey rate dynamics.",
+                assumptions=("Constant prey birth rate", "Linear interaction term"),
+                causal_edges=(("Prey_x", "Predator_y"), ("Predator_y", "Prey_x")),
+                equations=("dx/dt = alpha*x - beta*x*y", "dy/dt = delta*x*y - gamma*y"),
+                predictions={"x_baseline": 2.0, "x_intervene_2": 3.8, "period_t": 6.28},
+                falsification_conditions=("Limit cycle amplitude is invariant to initial condition perturbation",),
+                prior_weight=0.50,
+                model_representation=ModelRepresentationType.DIFFERENTIAL_EQUATION_SYSTEM,
+                is_cyclic=True,
+            )
+            m2 = ExplanatoryMechanism(
+                mechanism_id="MECH-DYN-02",
+                name="Hopf Limit-Cycle Dissipative Oscillator (FitzHugh-Nagumo)",
+                mechanism_class=MechanismClass.EQUATION_SYSTEM,
+                hypothesis="Oscillations arise via supercritical Hopf bifurcation with cubic relaxation.",
+                assumptions=("Timescale separation epsilon << 1", "Cubic nullcline"),
+                causal_edges=(("Voltage_v", "Recovery_w"), ("Recovery_w", "Voltage_v")),
+                equations=("dv/dt = v - v^3/3 - w + I", "dw/dt = (v + a - b*w) * eps"),
+                predictions={"x_baseline": 2.0, "x_intervene_2": 5.9, "period_t": 4.15},
+                falsification_conditions=("Phase trajectories do not converge to unique limit cycle attractor",),
+                prior_weight=0.50,
+                model_representation=ModelRepresentationType.DIFFERENTIAL_EQUATION_SYSTEM,
+                is_cyclic=True,
             )
             return [m1, m2]
 
@@ -91,7 +131,7 @@ class MechanismCompiler:
             # Canonical Synthetic Scientific Mechanism Discovery Problem
             # M1: y = 2x (Linear)
             # M2: y = x + x^2 (Quadratic)
-            # Both predict y=2 at x=1 (Observationally equivalent at baseline x=1)
+            # Both predict y=2 at x=1 (Observationally equivalent under baseline condition x_baseline)
             m1 = ExplanatoryMechanism(
                 mechanism_id="MECH-CORE-01",
                 name="Linear Direct Coupling Mechanism",
@@ -103,6 +143,8 @@ class MechanismCompiler:
                 predictions={"x_baseline": 2.0 * existing_data_point, "x_intervene_2": 4.0, "x_intervene_3": 6.0},
                 falsification_conditions=("Output at x=2 deviates from 4.0 by more than 10%",),
                 prior_weight=0.50,
+                model_representation=ModelRepresentationType.CAUSAL_DAG,
+                is_cyclic=False,
             )
             m2 = ExplanatoryMechanism(
                 mechanism_id="MECH-CORE-02",
@@ -115,6 +157,8 @@ class MechanismCompiler:
                 predictions={"x_baseline": 2.0 * existing_data_point, "x_intervene_2": 6.0, "x_intervene_3": 12.0},
                 falsification_conditions=("Output at x=2 deviates from 6.0 by more than 10%",),
                 prior_weight=0.50,
+                model_representation=ModelRepresentationType.CAUSAL_DAG,
+                is_cyclic=False,
             )
             return [m1, m2]
 
@@ -122,17 +166,43 @@ class MechanismCompiler:
         self,
         mechanisms: List[ExplanatoryMechanism],
         observation_condition: str,
+        is_search_exhaustive: bool = True,
+        formal_equivalence_proven: bool = False,
+        baseline_observed_value: Optional[float] = None,
     ) -> Tuple[IdentifiabilityStatus, float]:
         """
-        Evaluates whether competing mechanisms can be separated under the current observation condition.
-        Computes Total Variation / relative separation between models:
-            TV = |y_i - y_j| / max(|y_i|, |y_j|, 1.0)
-        If TV < epsilon_ident for all pairs, the mechanisms are OBSERVATIONALLY_EQUIVALENT.
+        Evaluates scoped identifiability verdicts (CWC-F01):
+        1. MODEL_SET_INADEQUATE: If baseline observation contradicts all candidate models.
+        2. NONIDENTIFIABLE_PROVED: Only when a valid mathematical proof establishes global non-identifiability.
+        3. DISTINGUISHABLE_ACTION_FOUND: At least one feasible intervention has TV >= epsilon_ident.
+        4. NO_DISCRIMINATING_ACTION_ESTABLISHED: Evaluated actions show TV < epsilon_ident.
+        5. IDENTIFIABILITY_UNKNOWN: Search or model analysis is incomplete.
         """
         if len(mechanisms) < 2:
-            return IdentifiabilityStatus.UNIQUE_IDENTIFIED, 1.0
+            return IdentifiabilityStatus.MODEL_SET_INADEQUATE, 0.0
+
+        # Check if baseline observation contradicts all models
+        if baseline_observed_value is not None:
+            baseline_residuals = []
+            for m in mechanisms:
+                pred = m.predictions.get(observation_condition)
+                if pred is not None:
+                    baseline_residuals.append(abs(pred - baseline_observed_value) / max(abs(pred), 1.0))
+            if baseline_residuals and min(baseline_residuals) > 0.50:
+                # All models fail to explain baseline within 50% error
+                return IdentifiabilityStatus.MODEL_SET_INADEQUATE, 0.0
+
+        # If formal proof provided, grant NONIDENTIFIABLE_PROVED
+        if formal_equivalence_proven:
+            return IdentifiabilityStatus.NONIDENTIFIABLE_PROVED, 0.0
+
+        # Incomplete search check
+        if not is_search_exhaustive:
+            return IdentifiabilityStatus.IDENTIFIABILITY_UNKNOWN, 0.0
 
         max_tv = 0.0
+        has_predictions = False
+
         for i in range(len(mechanisms)):
             for j in range(i + 1, len(mechanisms)):
                 m_i = mechanisms[i]
@@ -141,15 +211,18 @@ class MechanismCompiler:
                 pred_j = m_j.predictions.get(observation_condition)
 
                 if pred_i is None or pred_j is None:
-                    # Condition unobserved
                     continue
 
+                has_predictions = True
                 denom = max(abs(pred_i), abs(pred_j), 1.0)
                 tv = abs(pred_i - pred_j) / denom
                 if tv > max_tv:
                     max_tv = tv
 
+        if not has_predictions:
+            return IdentifiabilityStatus.IDENTIFIABILITY_UNKNOWN, 0.0
+
         if max_tv < self.epsilon_ident:
-            return IdentifiabilityStatus.OBSERVATIONALLY_EQUIVALENT, max_tv
+            return IdentifiabilityStatus.NO_DISCRIMINATING_ACTION_ESTABLISHED, max_tv
         else:
-            return IdentifiabilityStatus.UNIQUE_IDENTIFIED, max_tv
+            return IdentifiabilityStatus.DISTINGUISHABLE_ACTION_FOUND, max_tv

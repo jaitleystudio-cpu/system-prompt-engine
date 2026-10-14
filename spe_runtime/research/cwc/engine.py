@@ -1,12 +1,14 @@
 """
 Unified CWC-1 Engine Orchestrator for SPE Ω PRO.
-Connects Mechanism Compilation, Identifiability Gating, Jensen-Shannon VOI Selection,
-Precommitment Sealing, Witness Adjudication, and Transfer-Qualified Compounding.
+Version 1.1: Repaired with Structural Feasibility Isolation, Scoped Identifiability,
+4 Evidence Dimensions, and Explicit Fixture Reclassification (CWC-F01 through CWC-F12).
 """
 
 from __future__ import annotations
 from typing import Dict, List, Optional, Tuple
 from .types import (
+    AcquisitionMode,
+    ActionDecision,
     Cwc1Result,
     ExplanatoryMechanism,
     IdentifiabilityStatus,
@@ -17,6 +19,7 @@ from .types import (
     ReusableScientificProcedure,
     ScientificWitness,
     ScientificWitnessType,
+    StatisticalProtocol,
 )
 from .mechanism_compiler import MechanismCompiler
 from .experiment_selector import ExperimentSelector
@@ -30,7 +33,7 @@ class SpeCwcEngine:
     def __init__(
         self,
         epsilon_ident: float = 0.05,
-        lambda_evsi: float = 0.5,
+        lambda_evsi: float = 1.0,
         mu_fr: float = 1.0,
         witness_tolerance: float = 0.15,
         min_transfer_pass_rate: float = 0.80,
@@ -48,20 +51,31 @@ class SpeCwcEngine:
         candidate_actions: Optional[List[InterventionalAction]] = None,
         simulated_observation: Optional[ObservationWitness] = None,
         ood_transfer_cases: Optional[List[Dict[str, float]]] = None,
+        statistical_protocol: Optional[StatisticalProtocol] = None,
+        lvt_transfer_token: Optional[str] = None,
+        acquisition_mode: AcquisitionMode = AcquisitionMode.MONETARY_DECISION_VALUE,
+        budget_nanos: int = 10_000_000_000,
+        risk_ceiling_nanos: int = 1_000_000_000,
     ) -> Cwc1Result:
         """
         Executes a complete CWC-1 scientific discovery and verification cycle:
-        Question -> Competing Mechanisms -> Identifiability Check -> Decisive Experiment ->
-        Precommitment Lock -> Observation Witness -> Scientific Witness -> Transfer Test -> Compounded Procedure.
+        Question -> Competing Mechanisms -> Scoped Identifiability Check -> Decisive Experiment ->
+        Structural Action Selection -> Precommitment Lock -> Observation Witness ->
+        Multi-Dimensional Scientific Witness -> LVT Transfer Test -> Compounded Procedure.
         """
         # 1. Compile Competing Explanatory Mechanisms
         mechanisms = self.compiler.compile_competing_mechanisms(domain, problem_description)
 
-        # 2. Identifiability Analysis at Baseline
-        ident_status, tv_gap = self.compiler.compute_identifiability(mechanisms, baseline_condition)
+        # 2. Scoped Identifiability Analysis at Baseline (CWC-F01)
+        baseline_obs_val = simulated_observation.observed_value if simulated_observation and simulated_observation.measured_variable == baseline_condition else None
+        ident_status, tv_gap = self.compiler.compute_identifiability(
+            mechanisms=mechanisms,
+            observation_condition=baseline_condition,
+            baseline_observed_value=baseline_obs_val,
+        )
 
         # 3. Default Candidate Actions if none provided
-        if not candidate_actions:
+        if candidate_actions is None:
             candidate_actions = [
                 InterventionalAction(
                     action_id="ACT-EXP-01",
@@ -72,7 +86,7 @@ class SpeCwcEngine:
                     cost_nanos=150_000_000,  # $0.15 USD
                     risk_nanos=10_000_000,   # $0.01 USD
                     expected_information_gain=1.2,
-                    expected_value_sample_info=1.5,
+                    expected_value_sample_info=2.0,  # $2.00 EVSI in monetary terms
                     falsification_potential=0.85,
                 ),
                 InterventionalAction(
@@ -84,7 +98,7 @@ class SpeCwcEngine:
                     cost_nanos=450_000_000,  # $0.45 USD
                     risk_nanos=50_000_000,
                     expected_information_gain=1.4,
-                    expected_value_sample_info=1.6,
+                    expected_value_sample_info=2.5,
                     falsification_potential=0.90,
                 ),
                 InterventionalAction(
@@ -96,20 +110,32 @@ class SpeCwcEngine:
                     cost_nanos=2_000_000_000,
                     risk_nanos=10_000_000_000,
                     expected_information_gain=2.0,
-                    expected_value_sample_info=2.0,
+                    expected_value_sample_info=5.0,
                     falsification_potential=0.99,
                 ),
             ]
 
-        # 4. Decisive Experiment Selection (JSD + Exact NanoUSD Acquisition)
-        best_action, best_jsd = self.selector.select_best_experiment(mechanisms, candidate_actions)
+        # 4. Decisive Experiment Selection (Structural Filtering + Consistent Acquisition - CWC-F02, CWC-F03)
+        action_decision, best_jsd = self.selector.select_best_experiment(
+            mechanisms=mechanisms,
+            candidate_actions=candidate_actions,
+            budget_nanos=budget_nanos,
+            risk_ceiling_nanos=risk_ceiling_nanos,
+            mode=acquisition_mode,
+        )
+        best_action = action_decision.selected_action
 
-        # 5. Cryptographic Precommitment Lock (Anti-HARKing)
+        # 5. Cryptographic Precommitment Lock (Verifiable Chronology - CWC-F06)
         precommitment: Optional[PrecommitmentDigest] = None
         if best_action is not None:
-            precommitment = self.selector.seal_precommitment_lock(mechanisms, best_action)
+            prot_id = statistical_protocol.protocol_id if statistical_protocol else "DEFAULT"
+            precommitment = self.selector.seal_precommitment_lock(
+                mechanisms=mechanisms,
+                action=best_action,
+                protocol_id=prot_id,
+            )
 
-        # 6. Ingest Observation & Seal Scientific Witness
+        # 6. Ingest Observation & Seal Multi-Dimensional Scientific Witness (CWC-F05, CWC-F07, CWC-F08)
         scientific_witness: Optional[ScientificWitness] = None
         if simulated_observation is not None and precommitment is not None:
             claim = f"Response follows causal mechanism under {simulated_observation.measured_variable}"
@@ -118,12 +144,12 @@ class SpeCwcEngine:
                 observation=simulated_observation,
                 precommitment=precommitment,
                 claim_statement=claim,
+                statistical_protocol=statistical_protocol,
             )
 
-        # 7. Evaluate Out-of-Distribution (OOD) Transfer & Compound Procedure
+        # 7. Evaluate Out-of-Distribution (OOD) Transfer & Compound Procedure (CWC-F09)
         reusable_proc: Optional[ReusableScientificProcedure] = None
         if scientific_witness is not None and scientific_witness.truth_status == "SUPPORTED":
-            # Identify the winning mechanism
             winning_mech = next(
                 (m for m in mechanisms if m.mechanism_id == scientific_witness.mechanism_id),
                 mechanisms[0],
@@ -132,12 +158,13 @@ class SpeCwcEngine:
                 mechanism=winning_mech,
                 witness=scientific_witness,
                 unseen_test_cases=ood_transfer_cases or [],
+                lvt_transfer_token=lvt_transfer_token,
             )
 
-        # 8. Compute 100X Productivity Metric
+        # 8. Compute Illustrative Cost Accounting Fixture Ratio (CWC-F04)
         total_cost = best_action.cost_nanos if best_action else 100_000_000
         verified_outcomes = 1 if (scientific_witness and scientific_witness.truth_status == "SUPPORTED") else 0
-        gain_g = self.transfer_engine.calculate_100x_productivity_gain(
+        fixture_ratio = self.transfer_engine.calculate_cost_fixture_ratio(
             verified_outcomes_cwc=verified_outcomes,
             cost_nanos_cwc=total_cost,
             verified_outcomes_baseline=1,
@@ -150,10 +177,15 @@ class SpeCwcEngine:
             identifiability_status=ident_status,
             total_variation_gap=round(tv_gap, 4),
             selected_action=best_action,
+            action_decision=action_decision,
             jensen_shannon_disagreement=round(best_jsd, 4),
             precommitment=precommitment,
             scientific_witness=scientific_witness,
             reusable_procedure=reusable_proc,
-            productivity_gain_g=gain_g,
+            benchmark_type="ILLUSTRATIVE_COST_FIXTURE",
+            cost_ratio_fixture=fixture_ratio,
+            empirical_discovery_gain="UNMEASURED_PENDING_INDEPENDENT_BENCHMARK",
+            is_100x_empirically_proven=False,
+            productivity_gain_g=fixture_ratio,
             total_cost_nanos=total_cost,
         )

@@ -39,11 +39,19 @@ def test_ood_transfer_qualification_success():
         {"x": 10.0, "expected_y": 0.0, "is_negative_control": True},  # Negative control: output must deviate from 0
     ]
 
-    proc = transfer_engine.evaluate_ood_transfer(linear_mech, witness, unseen_cases)
-    assert proc.qualification_state == QualificationState.TRANSFER_QUALIFIED_REUSABLE
-    assert proc.transfer_pass_rate == 1.0
-    assert len(proc.known_counterexamples) == 0
-    assert len(proc.cryptographic_seal) == 64
+    # Without external LVT token: qualifies as IN_DISTRIBUTION_SANITY_PASS (CWC-F09)
+    proc_local = transfer_engine.evaluate_ood_transfer(linear_mech, witness, unseen_cases)
+    assert proc_local.qualification_state == QualificationState.IN_DISTRIBUTION_SANITY_PASS
+    assert proc_local.transfer_pass_rate == 1.0
+    assert len(proc_local.known_counterexamples) == 0
+    assert len(proc_local.cryptographic_seal) == 64
+
+    # With verified external LVT token: promotes to TRANSFER_QUALIFIED_REUSABLE
+    proc_lvt = transfer_engine.evaluate_ood_transfer(
+        linear_mech, witness, unseen_cases, lvt_transfer_token="LVT-TRANSFER-VERIFIED-EXP01"
+    )
+    assert proc_lvt.qualification_state == QualificationState.TRANSFER_QUALIFIED_REUSABLE
+    assert proc_lvt.lvt_provenance_id == "LVT-TRANSFER-VERIFIED-EXP01"
 
 
 def test_ood_transfer_quarantine_on_failure():
