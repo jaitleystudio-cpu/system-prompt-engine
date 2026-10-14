@@ -21,6 +21,7 @@ Disallow: /my-work
 Disallow: /website
 Disallow: /media
 Disallow: /research
+Disallow: /ai-incidents
 Disallow: /studio
 Disallow: /private/
 Disallow: /api/

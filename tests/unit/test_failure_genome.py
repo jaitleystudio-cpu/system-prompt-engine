@@ -15,6 +15,7 @@ def test_failure_genome_ingest_reproduce_sanitize(tmp_path: Path):
 
     # Ingest a new failure
     raw_data = {
+        "scope": "GLOBAL",
         "model": "gpt-4o",
         "model_version": "2024-08-06",
         "failure_class": FailureClass.PROMPT_INJECTION.value,
@@ -46,6 +47,12 @@ def test_failure_genome_ingest_reproduce_sanitize(tmp_path: Path):
     assert "[REDACTED_API_KEY]" in sanitized["minimal_reproducer"]
     assert "[REDACTED_EMAIL]" in sanitized["minimal_reproducer"]
     assert sanitized["source"] == "[ANONYMIZED_SOURCE]"
+    assert sanitized["publication_authorized"] is False
+    assert sanitized["is_verified_by_reproduction"] is False
+    assert sanitized["claim_confirmed"] is False
+    assert sanitized["root_cause_verified"] is False
+    assert sanitized["repair_verified"] is False
+    assert sanitized["evidence_status"] == "UNVERIFIED_SANITIZED_CANDIDATE"
 
     # Test clustering
     clusters = store.cluster_failures()
@@ -337,10 +344,15 @@ def test_evidence_generator_defaults_and_rendering(tmp_path: Path):
         assert isinstance(r, FailureGenomeReport)
         assert r.failure_id.startswith("SPE-FG-")
         assert len(r.spe_vaccine_contract) > 10
-        html = EvidenceGenerator.render_failure_genome_html(r)
+        with pytest.raises(PermissionError):
+            EvidenceGenerator.render_failure_genome_html(r)
+        html = EvidenceGenerator.render_failure_genome_html(r, fixture_only=True)
         assert "<!DOCTYPE html>" in html
         assert r.failure_id in html
         assert "SPE Vaccine" in html
+        assert "SYNTHETIC FIXTURE" in html
+        assert 'content="noindex, nofollow, noarchive"' in html
+        assert 'rel="canonical"' not in html
 
     # 2. Model Passports
     passports = EvidenceGenerator.default_model_passports()
@@ -351,10 +363,14 @@ def test_evidence_generator_defaults_and_rendering(tmp_path: Path):
         assert 0.0 <= p.unauthorized_delegation_rate <= 1.0
         assert isinstance(p.cost_per_verified_task_nanos, int)
         assert p.cost_per_verified_task_nanos >= 0
-        html = EvidenceGenerator.render_model_passport_html(p)
+        with pytest.raises(PermissionError):
+            EvidenceGenerator.render_model_passport_html(p)
+        html = EvidenceGenerator.render_model_passport_html(p, fixture_only=True)
         assert "<!DOCTYPE html>" in html
         assert p.model_id in html
         assert "Model Passport" in html
+        assert "SYNTHETIC FIXTURE" in html
+        assert "Verified Empirical Scores" not in html
 
     # 3. Benchmark Showdowns
     showdowns = EvidenceGenerator.default_benchmark_showdowns()
@@ -362,17 +378,72 @@ def test_evidence_generator_defaults_and_rendering(tmp_path: Path):
     for s in showdowns:
         assert isinstance(s, BenchmarkShowdown)
         assert len(s.comparison_dimensions) >= 3
-        html = EvidenceGenerator.render_benchmark_showdown_html(s)
+        with pytest.raises(PermissionError):
+            EvidenceGenerator.render_benchmark_showdown_html(s)
+        html = EvidenceGenerator.render_benchmark_showdown_html(s, fixture_only=True)
         assert "<!DOCTYPE html>" in html
         assert s.title in html
         assert "Side-by-Side Architectural Comparison" in html
+        assert "SYNTHETIC FIXTURE" in html
+        assert "Empirical Verdict" not in html
 
     # 4. Directory export
     export_dir = tmp_path / "evidence_export"
-    written = EvidenceGenerator.export_all_to_directory(export_dir)
+    with pytest.raises(PermissionError):
+        EvidenceGenerator.export_all_to_directory(export_dir)
+    assert not export_dir.exists()
+    written = EvidenceGenerator.export_all_to_directory(export_dir, fixture_only=True)
     assert len(written) == len(records) + len(passports) + len(showdowns)
     for f in written:
         assert f.exists()
         assert f.stat().st_size > 200
 
 
+
+
+def test_evidence_generator_escapes_untrusted_fixture_labels():
+    """A model name or external title must not inject HTML or JavaScript."""
+    from dataclasses import replace
+    from spe_runtime.failure_genome.evidence_generator import EvidenceGenerator
+
+    sample = EvidenceGenerator.default_failure_genome_records()[0]
+    malicious = replace(sample, title='<script>alert("pwn")</script>')
+    rendered = EvidenceGenerator.render_failure_genome_html(malicious, fixture_only=True)
+    assert "<script>" not in rendered
+    assert "&lt;script&gt;" in rendered
+    assert 'content="noindex, nofollow, noarchive"' in rendered
+
+
+def test_public_snapshot_redacts_sensitive_causes_and_repair_text(tmp_path: Path):
+    """Public candidate projection cannot expose secrets or mint proof."""
+    store = FailureGenomeStore(tmp_path / "public_candidate")
+    entry = store.ingest({
+        "scope": "GLOBAL", "model": "example-model",
+        "failure_class": FailureClass.PII_DATA_LEAKAGE.value,
+        "severity": Severity.HIGH.value,
+        "model_version": "unverified", "minimal_reproducer": "Demonstration task",
+        "root_cause": "Claimed cause with alice@example.org",
+        "candidate_repairs": ["Send bearer abcdefghijklmnopqrstuvwxyz1234 to alice@example.org"],
+        "regression_tests": ["Contact bob@example.org to reproduce"],
+        "affected_capability": "SECRET sk-ABCDEFGHIJKLMNOPQRSTUVWXYZ123456",
+    })
+    public = store.sanitize_for_public(entry.failure_id)
+    assert public["publication_authorized"] is False
+    assert public["is_verified_by_reproduction"] is False
+    assert "alice@example.org" not in str(public)
+    assert "bob@example.org" not in str(public)
+    assert "abcdefghijklmnopqrstuvwxyz1234" not in str(public)
+    assert "sk-ABCDEFGHIJKLMNOPQRSTUVWXYZ123456" not in str(public)
+
+
+def test_private_failure_cannot_be_projected_to_public(tmp_path: Path):
+    store = FailureGenomeStore(tmp_path / "private_guard")
+    entry = store.ingest({
+        "model": "example-model",
+        "failure_class": FailureClass.TOOL_CONFUSION.value,
+        "severity": Severity.MEDIUM.value,
+        "affected_capability": "NONE",
+        "minimal_reproducer": "Private owner's confidential prompt",
+    })
+    with pytest.raises(PermissionError, match="GLOBAL scope"):
+        store.sanitize_for_public(entry.failure_id)
