@@ -14,7 +14,7 @@
  */
 
 import { fileURLToPath } from 'node:url';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
@@ -65,6 +65,12 @@ const { computeSha256 } = await import(`${engineDir}/hashUtils.ts`);
 const { auditComplianceFramework, immunizeComplianceFramework } = await import(`${engineDir}/complianceFrameworks.ts`);
 const { evaluateMultiSeatConsensus, STANDARD_ENTERPRISE_RUBRIC } = await import(`${engineDir}/multiAnnotatorConsensus.ts`);
 const { globalApmStore } = await import(`${engineDir}/apmTelemetryStore.ts`);
+const {
+  verifyCommercialLicenseToken,
+  resolveActiveLicense,
+  OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX,
+  TIER_DEFAULT_CAPABILITIES,
+} = await import(`${engineDir}/commercialLicensing.ts`);
 
 let auditExtensionTarget = null;
 const candidateExtPaths = [
@@ -137,6 +143,7 @@ ${bold('COMMANDS:')}
   ${green('ztes')}        <file>       Run ZTES-10 Zero-Trust Epistemic Sandbox audit against skill or prompt
   ${green('aeq')}         <file>       Run AEQ-H10 Hostile Adversarial Mutation testing
   ${green('utg')}         [topic]      Query Universal Theorem Graph & Epistemic Moat Kernel
+  ${green('license')}     [action]     Manage commercial license, check expiration, and activate keys
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -1161,6 +1168,164 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
       }
       console.log(green('\n✓ Sovereign APM Telemetry active. Use --export otel or --export langfuse to export.'));
       break;
+    }
+
+    case 'license': {
+      const subAction = fileTarget || flags.action || 'status';
+      const homedir = process.env.HOME || process.env.USERPROFILE || '.';
+      const speConfigDir = resolve(homedir, '.spe');
+      const defaultLicensePath = resolve(speConfigDir, 'license.key');
+
+      const getInstalledToken = () => {
+        if (flags.key) return flags.key;
+        if (flags.token) return flags.token;
+        if (process.env.SPE_LICENSE_KEY) return process.env.SPE_LICENSE_KEY;
+        if (existsSync('./spe.license')) return readFileSync('./spe.license', 'utf8').trim();
+        if (existsSync(defaultLicensePath)) return readFileSync(defaultLicensePath, 'utf8').trim();
+        return null;
+      };
+
+      if (subAction === 'status') {
+        const token = getInstalledToken();
+        const verification = verifyCommercialLicenseToken(token || '');
+
+        console.log(cyan(`\n🔑 SPE Ω Commercial License & Entitlement Status`));
+        console.log(gray(`─────────────────────────────────────────────────────────────────`));
+        if (!verification.valid) {
+          if (verification.status === 'EXPIRED') {
+            console.log(`  Status:               ${bold(red('EXPIRED'))}`);
+            console.log(`  Customer:             ${verification.payload?.customer_id || 'Unknown'}`);
+            console.log(`  Tier:                 ${verification.payload?.plan_tier || 'PRO'}`);
+            console.log(`  Expired On:           ${verification.payload?.expires_at}`);
+            console.log(`  Rejection Reason:     ${verification.rejectionReason}`);
+            console.log(`\n  ${yellow('⚠️  To renew your license, visit: https://systempromptengine.com/pricing')}`);
+          } else {
+            console.log(`  Status:               ${yellow('UNLICENSED (Community Edition)')}`);
+            console.log(`  Plan:                 Free Community ($0.00 / month)`);
+            console.log(`  Air-Gap Mode:         Active (Local In-Browser WASM)`);
+            console.log(`  Commercial Gates:     Locked (Automated PR gates, Pro immunizer)`);
+            console.log(`\n  ${gray('To activate an enterprise license: spe license activate <token-or-file>')}`);
+            console.log(`  ${gray('To purchase Pro or Enterprise: https://systempromptengine.com/pricing')}`);
+          }
+        } else {
+          const p = verification.payload;
+          console.log(`  Status:               ${bold(green('ACTIVE (VERIFIED)'))}`);
+          console.log(`  Customer:             ${bold(p.customer_id)}`);
+          console.log(`  License ID:           ${p.license_id}`);
+          console.log(`  Plan Tier:            ${bold(cyan(p.plan_tier))}`);
+          console.log(`  Seats Authorized:     ${p.seats || 1}`);
+          console.log(`  Issued At:            ${p.issued_at}`);
+          console.log(`  Expires At:           ${p.expires_at} (${verification.daysRemaining} days remaining)`);
+          console.log(`  Authority Public Key: ${verification.publicKeyHex?.slice(0, 16)}...`);
+          console.log(`\n${bold('  Unlocked Commercial Capabilities:')}`);
+          for (const cap of verification.unlockedCapabilities) {
+            console.log(`    ✓ ${green(cap)}`);
+          }
+        }
+        console.log(gray(`─────────────────────────────────────────────────────────────────`));
+        if (flags.out) {
+          writeFileSync(flags.out, JSON.stringify(verification, null, 2), 'utf8');
+          console.log(green(`\n✓ License status exported to ${flags.out}`));
+        }
+        break;
+      }
+
+      if (subAction === 'activate') {
+        const rawTokenOrPath = flags.token || flags.key || args[2];
+        if (!rawTokenOrPath) {
+          console.error(red('Error: Missing license token or file path. Usage: spe license activate <token-or-path>'));
+          process.exit(1);
+        }
+
+        let tokenToActivate = rawTokenOrPath;
+        if (existsSync(rawTokenOrPath)) {
+          tokenToActivate = readFileSync(rawTokenOrPath, 'utf8').trim();
+        }
+
+        const verification = verifyCommercialLicenseToken(tokenToActivate);
+        if (!verification.valid) {
+          console.error(red(`\n❌ License Activation Failed: ${verification.rejectionReason || 'Invalid signature'}`));
+          process.exit(1);
+        }
+
+        if (!existsSync(speConfigDir)) {
+          mkdirSync(speConfigDir, { recursive: true });
+        }
+        writeFileSync(defaultLicensePath, tokenToActivate, 'utf8');
+        console.log(green(`\n✓ SPE License Successfully Activated!`));
+        console.log(`  Customer:   ${bold(verification.payload.customer_id)}`);
+        console.log(`  Plan Tier:  ${bold(cyan(verification.payload.plan_tier))}`);
+        console.log(`  Expires:    ${verification.payload.expires_at} (${verification.daysRemaining} days remaining)`);
+        console.log(`  Saved To:   ${defaultLicensePath}`);
+        break;
+      }
+
+      if (subAction === 'check') {
+        const token = getInstalledToken();
+        const verification = verifyCommercialLicenseToken(token || '');
+        const targetCap = flags.capability;
+
+        if (!verification.valid) {
+          console.error(red(`\n❌ License Check Failed: ${verification.rejectionReason || 'Unlicensed'}`));
+          console.error(yellow(`Renew or purchase a license at: https://systempromptengine.com/pricing`));
+          process.exit(1);
+        }
+
+        if (targetCap && !verification.unlockedCapabilities.includes(targetCap)) {
+          console.error(red(`\n❌ License Missing Required Capability: '${targetCap}'`));
+          process.exit(1);
+        }
+
+        console.log(green(`✓ License check passed for tier ${verification.payload.plan_tier} (${verification.daysRemaining} days remaining)`));
+        break;
+      }
+
+      if (subAction === 'issue') {
+        const crypto = await import('node:crypto');
+        const { canonicalizeJson } = await import(`${engineDir}/proofReceipt.ts`);
+
+        const customer = flags.customer || 'Acme AI Labs';
+        const tier = (flags.tier || 'ENTERPRISE').toUpperCase();
+        const days = parseInt(flags.days || '365', 10);
+        const seats = parseInt(flags.seats || '10', 10);
+
+        const now = new Date();
+        const expires = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+
+        const payload = {
+          license_id: `SPE-LIC-${crypto.randomBytes(6).toString('hex').toUpperCase()}`,
+          customer_id: customer,
+          plan_tier: tier,
+          issued_at: now.toISOString(),
+          expires_at: expires.toISOString(),
+          capabilities: TIER_DEFAULT_CAPABILITIES[tier] || TIER_DEFAULT_CAPABILITIES.PRO,
+          seats,
+          machine_fingerprint: flags.fingerprint || null
+        };
+
+        const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');
+        const rawPub = publicKey.export({ type: 'spki', format: 'der' }).subarray(-32).toString('hex');
+        const canonical = canonicalizeJson(payload);
+        const sig = crypto.sign(null, Buffer.from(canonical, 'utf8'), privateKey).toString('hex');
+
+        const envelope = {
+          payload,
+          signature_hex: sig,
+          public_key_hex: rawPub
+        };
+
+        const encodedToken = Buffer.from(JSON.stringify(envelope)).toString('base64');
+        if (flags.out) {
+          writeFileSync(flags.out, encodedToken, 'utf8');
+          console.log(green(`✓ Signed offline license token written to: ${flags.out}`));
+        } else {
+          console.log(encodedToken);
+        }
+        break;
+      }
+
+      console.error(red(`Error: Unknown license subaction '${subAction}'. Available: status, activate, check, issue.`));
+      process.exit(1);
     }
 
     default:

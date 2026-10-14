@@ -1174,6 +1174,112 @@ def cmd_exchange(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_license(args: argparse.Namespace) -> int:
+    import os
+    from spe_runtime.production_bridge import CommercialLicensingAdapter
+    action = getattr(args, "action", "status") or "status"
+
+    def _resolve_token() -> str | None:
+        t = getattr(args, "key", None) or getattr(args, "token", None) or os.environ.get("SPE_LICENSE_KEY")
+        if not t:
+            for cand in [Path("./spe.license"), Path.home() / ".spe" / "license.key"]:
+                if cand.exists():
+                    try:
+                        return cand.read_text(encoding="utf-8").strip()
+                    except Exception:
+                        pass
+        return t
+
+    if action == "status":
+        token = _resolve_token()
+        if not token:
+            if getattr(args, "json", False):
+                print(json.dumps({"valid": False, "status": "UNLICENSED", "plan_tier": "COMMUNITY"}, indent=2))
+            else:
+                print("🔑 SPE Ω Commercial License & Entitlement Status")
+                print("─────────────────────────────────────────────────────────────────")
+                print("  Status:               UNLICENSED (Community Edition)")
+                print("  Plan:                 Free Community ($0.00 / month)")
+                print("  Air-Gap Mode:         Active (Local In-Browser WASM)")
+                print("  Commercial Gates:     Locked (Automated PR gates, Pro immunizer)")
+                print("\n  To activate an enterprise license: spe license activate <token-or-file>")
+                print("  To purchase Pro or Enterprise: https://systempromptengine.com/pricing")
+                print("─────────────────────────────────────────────────────────────────")
+            return 0
+
+        res = CommercialLicensingAdapter.verify_license(token)
+        if getattr(args, "json", False):
+            print(json.dumps(res, indent=2))
+        else:
+            print("🔑 SPE Ω Commercial License & Entitlement Status")
+            print("─────────────────────────────────────────────────────────────────")
+            if res["valid"]:
+                print(f"  Status:               ACTIVE (VERIFIED)")
+                print(f"  Customer:             {res['customer_id']}")
+                print(f"  License ID:           {res['license_id']}")
+                print(f"  Plan Tier:            {res['plan_tier']}")
+                print(f"  Expires At:           {res['expires_at']}")
+                print("\n  Unlocked Commercial Capabilities:")
+                for c in res["capabilities"]:
+                    print(f"    ✓ {c}")
+            else:
+                print(f"  Status:               {res['status']}")
+                print(f"  Error:                {res['error']}")
+                print("  To renew or purchase: https://systempromptengine.com/pricing")
+            print("─────────────────────────────────────────────────────────────────")
+        return 0 if res["valid"] else 1
+
+    if action == "activate":
+        raw = getattr(args, "token", None)
+        if not raw:
+            print("Error: Missing license token or file path. Usage: spe license activate <token-or-path>", file=sys.stderr)
+            return 1
+        token = Path(raw).read_text(encoding="utf-8").strip() if Path(raw).exists() else raw.strip()
+        res = CommercialLicensingAdapter.verify_license(token)
+        if not res["valid"]:
+            print(f"❌ License Activation Failed: {res.get('error')}", file=sys.stderr)
+            return 1
+
+        target_dir = Path.home() / ".spe"
+        target_dir.mkdir(parents=True, exist_ok=True)
+        (target_dir / "license.key").write_text(token, encoding="utf-8")
+        print(f"✓ SPE License Successfully Activated for '{res['customer_id']}' (Tier: {res['plan_tier']}, Expires: {res['expires_at']})")
+        return 0
+
+    if action == "issue":
+        customer = getattr(args, "customer", None) or "Acme AI Labs"
+        tier = getattr(args, "tier", None) or "ENTERPRISE"
+        days = getattr(args, "days", 365)
+        res = CommercialLicensingAdapter.issue_license(customer, plan_tier=tier, duration_days=days)
+        if getattr(args, "out", None):
+            Path(args.out).write_text(res["token"], encoding="utf-8")
+            print(f"✓ Signed offline license token written to: {args.out}")
+        elif getattr(args, "json", False):
+            print(json.dumps(res, indent=2))
+        else:
+            print(res["token"])
+        return 0
+
+    if action == "check":
+        token = _resolve_token()
+        if not token:
+            print("❌ License Check Failed: Unlicensed (Community Edition)", file=sys.stderr)
+            return 1
+        res = CommercialLicensingAdapter.verify_license(token)
+        if not res["valid"]:
+            print(f"❌ License Check Failed: {res.get('error')}", file=sys.stderr)
+            return 1
+        cap = getattr(args, "capability", None)
+        if cap and cap not in res["capabilities"]:
+            print(f"❌ License Missing Required Capability: '{cap}'", file=sys.stderr)
+            return 1
+        print(f"✓ License check passed for tier {res['plan_tier']}")
+        return 0
+
+    print(f"Error: Unknown action '{action}'", file=sys.stderr)
+    return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="spe", description="SPE Ω Unified Assurance CLI")
     subparsers = parser.add_subparsers(dest="subcommand", required=True)
@@ -1359,6 +1465,18 @@ def main(argv: list[str] | None = None) -> int:
     p_utg.add_argument("topic", nargs="?", default="execution_state_ledger", help="Scientific topic or directive")
     p_utg.add_argument("--json", action="store_true", help="Output raw JSON")
 
+    # license
+    p_license = subparsers.add_parser("license", help="Manage SPE commercial license, verify offline entitlements, and check expiry")
+    p_license.add_argument("action", nargs="?", default="status", choices=["status", "activate", "check", "issue"], help="License action")
+    p_license.add_argument("token", nargs="?", default=None, help="License token or path to file for activate")
+    p_license.add_argument("--key", dest="key", help="License token")
+    p_license.add_argument("--customer", default="Acme AI Labs", help="Customer ID for license issuance")
+    p_license.add_argument("--tier", default="ENTERPRISE", help="Plan tier (PRO, TEAM, ENTERPRISE)")
+    p_license.add_argument("--days", type=int, default=365, help="Validity duration in days")
+    p_license.add_argument("--capability", help="Specific capability to check")
+    p_license.add_argument("--out", help="Output file path for issued license")
+    p_license.add_argument("--json", action="store_true", help="Output raw JSON")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -1385,6 +1503,7 @@ def main(argv: list[str] | None = None) -> int:
         "ztes": cmd_ztes,
         "aeq": cmd_aeq,
         "utg": cmd_utg,
+        "license": cmd_license,
     }
 
     handler = handlers.get(args.subcommand)

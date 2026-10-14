@@ -1350,5 +1350,101 @@ class SOVOperationsAdapter:
         return SOVKernel.evaluate_privacy_and_seo_governor(route_or_run)
 
 
+class CommercialLicensingAdapter:
+    """
+    Production facade for SPE Commercial Licensing & Anti-Piracy Entitlement Kernel.
+    Manages offline Ed25519 licenses, capability checks, and renewal time-bombs.
+    """
+
+    @staticmethod
+    def verify_license(
+        license_token: str,
+        trusted_public_key_hex: str | None = None,
+        current_time_iso: str | None = None,
+    ) -> Dict[str, Any]:
+        from spe_runtime.entitlement.license import verify_offline_license, LicenseVerificationError
+        try:
+            payload = verify_offline_license(
+                license_token,
+                trusted_public_key_hex=trusted_public_key_hex,
+                current_time_iso=current_time_iso,
+            )
+            return {
+                "valid": True,
+                "status": "ACTIVE",
+                "customer_id": payload.customer_id,
+                "license_id": payload.license_id,
+                "plan_tier": payload.plan_tier,
+                "issued_at": payload.issued_at,
+                "expires_at": payload.expires_at,
+                "capabilities": payload.capabilities,
+                "machine_fingerprint": payload.machine_fingerprint,
+                "error": None,
+            }
+        except LicenseVerificationError as e:
+            return {
+                "valid": False,
+                "status": "EXPIRED" if "expired" in str(e).lower() else "INVALID",
+                "customer_id": None,
+                "license_id": None,
+                "plan_tier": "COMMUNITY",
+                "issued_at": None,
+                "expires_at": None,
+                "capabilities": [],
+                "machine_fingerprint": None,
+                "error": str(e),
+            }
+
+    @staticmethod
+    def issue_license(
+        customer_id: str,
+        plan_tier: str = "ENTERPRISE",
+        duration_days: int = 365,
+        capabilities: list[str] | None = None,
+    ) -> Dict[str, Any]:
+        from datetime import datetime, timedelta, timezone
+        from spe_runtime.ci_gate.receipt import generate_keypair
+        from spe_runtime.entitlement.license import create_offline_license, OfflineLicensePayload
+
+        if capabilities is None:
+            capabilities = [
+                "AUTOMATED_CONTINUATION",
+                "ENTERPRISE_CI_GATE",
+                "OWASP_IMMUNIZATION",
+                "FRONTIER_MODEL_ATLAS",
+                "MULTI_SEAT_CONSENSUS",
+                "APM_TELEMETRY_EXPORT",
+                "UNWATERMARKED_EXPORTS",
+                "OFFLINE_ENTERPRISE",
+            ]
+
+        now = datetime.now(timezone.utc)
+        expires = now + timedelta(days=duration_days)
+        clean_cust = "".join(c for c in customer_id if c.isalnum())[:8].upper() or "CUST"
+        license_id = f"SPE-LIC-{now.strftime('%Y%m%d')}-{clean_cust}"
+
+        sk, pk = generate_keypair()
+        payload = OfflineLicensePayload(
+            license_id=license_id,
+            customer_id=customer_id,
+            plan_tier=plan_tier.upper(),
+            issued_at=now.isoformat(),
+            expires_at=expires.isoformat(),
+            capabilities=capabilities,
+        )
+        token = create_offline_license(payload, sk, pk)
+        return {
+            "token": token,
+            "license_id": license_id,
+            "customer_id": customer_id,
+            "plan_tier": plan_tier.upper(),
+            "expires_at": expires.isoformat(),
+            "public_key_hex": pk.hex(),
+            "signing_key_hex": sk.hex(),
+            "capabilities": capabilities,
+        }
+
+
+
 
 

@@ -53,6 +53,7 @@ from spe_runtime.production_bridge import (
     ReleaseAuditorAdapter,
     TriOriginDiagnosticAdapter,
     ContinuationAuditorAdapter,
+    CommercialLicensingAdapter,
     HonestTaskProjection,
     AntiSelfCertificationError,
     ObligationDroppedError,

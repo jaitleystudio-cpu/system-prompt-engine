@@ -436,11 +436,29 @@ const apmLfOut = runCli(`apm --export langfuse --out "${apmLfPath}"`);
 assert(existsSync(apmLfPath), "sample_apm_langfuse.json not created");
 console.log("  ✓ apm, otel, and langfuse exports verified");
 
+// 43. Commercial Licensing & Anti-Piracy Entitlement (spe license)
+console.log("\n[43/43] Testing commercial license status, issue, and check");
+const licStatusOut = runCli(`license status`);
+assert(licStatusOut.includes("SPE Ω Commercial License & Entitlement Status") && licStatusOut.includes("UNLICENSED (Community Edition)"), "License status output missing expected header");
+
+const licIssuePath = join(tempDir, "sample_enterprise.license");
+const licIssueOut = runCli(`license issue --customer "Battery Test Corp" --tier ENTERPRISE --days 365 --out "${licIssuePath}"`);
+assert(licIssueOut.includes("Signed offline license token written to"), "License issuance failed");
+assert(existsSync(licIssuePath), "sample_enterprise.license file not created");
+
+const licenseToken = readFileSync(licIssuePath, "utf-8").trim();
+const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE`);
+assert(licCheckOut.includes("License check passed for tier ENTERPRISE"), "License capability check failed");
+
+const licVerifiedStatusOut = runCli(`license status --key "${licenseToken}"`);
+assert(licVerifiedStatusOut.includes("ACTIVE (VERIFIED)") && licVerifiedStatusOut.includes("Battery Test Corp"), "Active license status verification failed");
+console.log("  ✓ commercial license status, issue, and check verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 42 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 43 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
 
 
