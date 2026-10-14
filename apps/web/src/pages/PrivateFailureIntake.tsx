@@ -200,8 +200,8 @@ export function PrivateFailureIntake({ onDraftRepair }: { onDraftRepair: (brief:
         {message && <p role="status" className="spe-intake-message">{message}</p>}
       </div>
       <p className="spe-intake-boundary">
-        User-reported only · No AI API calls · No automatic upload · No local history storage · No verified repair.
-        Your browser or device may separately manage downloaded files.
+        User-reported only · This intake form saves no history or uploads · No verified repair.
+        Prompt Studio may separately offer opt-in local history. Your browser may manage downloaded files.
       </p>
     </section>
   );
