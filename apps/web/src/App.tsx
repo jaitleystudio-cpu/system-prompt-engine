@@ -149,6 +149,9 @@ const PromptArsenalPage = lazy(() =>
 const EvalStudio = lazy(() =>
   import("./engine/eval/EvalStudio").then((m) => ({ default: m.EvalStudio }))
 );
+const AiIncidentWire = lazy(() =>
+  import("./pages/AiIncidentWire").then((m) => ({ default: m.AiIncidentWire }))
+);
 
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
@@ -1418,6 +1421,11 @@ export default function App() {
                 window.scrollTo(0, 0);
               }}
             />
+          </Suspense>
+        )}
+        {!notFound && view === "incidents" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <AiIncidentWire onNavigate={setView} />
           </Suspense>
         )}
         {!notFound && view === EVAL_STUDIO_VIEW && (

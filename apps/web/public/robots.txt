@@ -12,6 +12,7 @@ Allow: /failure-genome/
 Allow: /tools/
 Allow: /workflows/
 Allow: /build-skill
+Allow: /incidents/
 Allow: /integrations/
 Allow: /compare/
 Allow: /migrate/

@@ -78,6 +78,12 @@ const NAV_GROUPS: NavGroup[] = [
         desc: "Head-to-head prompt tests with real accuracy proof",
       },
       {
+        id: "incidents",
+        label: "AI Incident Radar",
+        desc: "Breaking AI failures, jailbreaks & root cause post-mortems",
+        badge: "LIVE",
+      },
+      {
         id: "lab",
         label: "Daily Recipes",
         desc: "Daily tested prompts & inspiration",

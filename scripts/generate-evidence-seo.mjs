@@ -645,6 +645,119 @@ const response = await client.chat.completions.create({
         <li>Generate package specifications: <code>npx spe adopt . --apply</code></li>
       </ol>
     `
+  },
+
+  // Tier F: AI Incidents & Failure Post-Mortems Wire
+  {
+    path: '/incidents',
+    title: 'AI Incident Radar & Failure Post-Mortem Wire | SPE Ω',
+    desc: 'Independent, code-verified post-mortems of breaking AI model failures, prompt leaks, jailbreaks, and cost runaways. The truth behind AI bugs.',
+    classification: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>AI Incident Radar & Failure Observatory</h2>
+      <p>The open, forensic truth behind breaking AI model failures, prompt leaks, jailbreaks, and agent catastrophes. Backed by reproducible test code and mathematical root causes.</p>
+      <ul>
+        <li><strong>DeepSeek R1/V3:</strong> Raw reasoning scratchpad prompt leaks in &lt;think&gt; streams.</li>
+        <li><strong>OpenAI o3-mini:</strong> Negated inequality polarity inversion under speculative reasoning.</li>
+        <li><strong>Claude Code:</strong> Unconstrained path traversal and recursive file deletion.</li>
+        <li><strong>Gemini 2.0 Flash:</strong> Tool schema argument confusion in multi-step workflows.</li>
+        <li><strong>Autonomous Coding Agents:</strong> Infinite retry loops and $4,800 compute runaways.</li>
+        <li><strong>Llama 3 70B:</strong> Financial invariant mutation and currency symbol drifts.</li>
+      </ul>
+      <pre>$ spe incident list</pre>
+    `
+  },
+  {
+    path: '/incidents/deepseek-r1-prompt-leak',
+    title: 'DeepSeek R1/V3 Reasoning Prompt Leak Forensic Post-Mortem | SPE Incident Wire',
+    desc: 'Empirical root-cause analysis and minimal reproducer payload for DeepSeek R1 prompt extraction inside reasoning scratchpads.',
+    classification: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>DeepSeek R1 / V3 Reasoning Scratchpad Prompt Leak</h2>
+      <p><strong>Vulnerability:</strong> Confidentiality Leak & System Boundary Bypass (OWASP LLM02 / CWE-200).</p>
+      <p><strong>Root Cause:</strong> Lack of token-level confidentiality masking between internal &lt;think&gt; reasoning buffers and output streams.</p>
+      <p><strong>How SPE Prevents It:</strong> SPE ProtectedIntent compiles an epistemic firewall that scrubs reasoning buffers before delivery.</p>
+      <pre>$ spe redteam prompt.md --attack prompt-extraction --strict</pre>
+    `
+  },
+  {
+    path: '/incidents/openai-o3-negation-collapse',
+    title: 'OpenAI o3-mini Negated Polarity Inversion Post-Mortem | SPE Incident Wire',
+    desc: 'Forensic analysis of OpenAI o3-mini inverting regulatory floor requirements ("no less than $100") into ceilings under speculative reasoning.',
+    classification: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>OpenAI o3-mini Negated Inequality Polarity Inversion</h2>
+      <p><strong>Vulnerability:</strong> Excessive Agency & Propositional Polarity Collapse (OWASP LLM08 / CWE-697).</p>
+      <p><strong>Root Cause:</strong> Tokenization of negated compounds drops negative particles during semantic compression, converting $x \\ge 100$ into $x < 100$.</p>
+      <p><strong>How SPE Prevents It:</strong> SPE 9-tier operator extraction precedence guarantees negated floor phrasing resolves to FLOOR / INCLUSIVE.</p>
+      <pre>$ spe verify financial_contract.spe --fail-on-inversion</pre>
+    `
+  },
+  {
+    path: '/incidents/claude-code-file-deletion',
+    title: 'Claude Code Path Traversal & Recursive File Deletion Incident | SPE Incident Wire',
+    desc: 'Empirical root cause analysis of Claude Code executing unconstrained shell commands outside project root boundaries.',
+    classification: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Claude Code Workspace Path Traversal Incident</h2>
+      <p><strong>Vulnerability:</strong> Ambient Authority Escalation (OWASP LLM08 / CWE-732).</p>
+      <p><strong>Root Cause:</strong> Unconstrained shell tool dispatch permitted recursive directory deletion commands above the project root.</p>
+      <p><strong>How SPE Prevents It:</strong> SPE PermissionCeiling halts any command referencing parent paths (../) or destructive deletion patterns.</p>
+      <pre>$ spe check-scope --path . --disallow-parent-traversal</pre>
+    `
+  },
+  {
+    path: '/incidents/gemini-2-tool-confusion',
+    title: 'Gemini 2.0 Flash Tool Schema Argument Confusion Incident | SPE Incident Wire',
+    desc: 'Analysis of Gemini 2.0 Flash swapping overlapping arguments in parallel function calls, leaking PII to external webhooks.',
+    classification: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Gemini 2.0 Flash Tool Schema Argument Confusion</h2>
+      <p><strong>Vulnerability:</strong> Tool Confusion & Sensitive Data Disclosure (OWASP LLM07 / CWE-20).</p>
+      <p><strong>Root Cause:</strong> Ambiguous function schemas with overlapping arguments caused hallucinated tool parameter assignments.</p>
+      <p><strong>How SPE Prevents It:</strong> SPE 6-Clause Execution Contract enforces deterministic schema validation before dispatch.</p>
+      <pre>$ spe test-tools --schema tools.json --enforce-type-guards</pre>
+    `
+  },
+  {
+    path: '/incidents/cursor-agent-cost-runaway',
+    title: 'Autonomous Coding Agent Infinite Loop & $4,800 Compute Runaway | SPE Incident Wire',
+    desc: 'Post-mortem of autonomous coding agent looping overnight for 14 hours on a flawed test fixture, burning $4,800 in API tokens.',
+    classification: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Autonomous Coding Agent Infinite Retry Loop</h2>
+      <p><strong>Vulnerability:</strong> Unbounded Resource Consumption (OWASP LLM10 / CWE-835).</p>
+      <p><strong>Root Cause:</strong> Inability to distinguish between code defects and verifier defects (Origin V) combined with unbudgeted retries.</p>
+      <p><strong>How SPE Prevents It:</strong> SPE Counterfactual Witness Continuation (CWC) enforces NanoUSD cost ceilings and Tri-Origin Diagnostics.</p>
+      <pre>$ spe continue --max-cost-nano-usd 500000000 --halt-on-cycle</pre>
+    `
+  },
+  {
+    path: '/incidents/llama-3-currency-drift',
+    title: 'Llama 3 70B Financial Invariant Mutation & Currency Drift | SPE Incident Wire',
+    desc: 'Analysis of Meta Llama 3 70B mutating strict currency symbols ($5,000 to €5,000) during multilingual prompt refinement.',
+    classification: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Llama 3 70B Financial Invariant Mutation</h2>
+      <p><strong>Vulnerability:</strong> Financial Invariant Drift & Incorrect Comparison (OWASP LLM08 / CWE-697).</p>
+      <p><strong>Root Cause:</strong> Multilingual contextual attention drifted USD currency symbols into Euros during translation, introducing a 10% value variance.</p>
+      <p><strong>How SPE Prevents It:</strong> SPE Economic Object Invariance enforces strict symmetric set equality for currency identities and modifiers.</p>
+      <pre>$ spe diff source.md target.md --strict-numeric</pre>
+    `
   }
 ];
 
@@ -805,6 +918,7 @@ Allow: /failure-genome/
 Allow: /tools/
 Allow: /workflows/
 Allow: /build-skill
+Allow: /incidents/
 Allow: /integrations/
 Allow: /compare/
 Allow: /migrate/

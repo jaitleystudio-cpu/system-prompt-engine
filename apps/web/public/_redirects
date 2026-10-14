@@ -38,6 +38,13 @@
 /compare/spe-vs-aiprm  /evidence-pages/compare_spe-vs-aiprm.html  200
 /compare/spe-vs-all  /evidence-pages/compare_spe-vs-all.html  200
 /migrate/from-raw-prompts  /evidence-pages/migrate_from-raw-prompts.html  200
+/incidents  /evidence-pages/incidents.html  200
+/incidents/deepseek-r1-prompt-leak  /evidence-pages/incidents_deepseek-r1-prompt-leak.html  200
+/incidents/openai-o3-negation-collapse  /evidence-pages/incidents_openai-o3-negation-collapse.html  200
+/incidents/claude-code-file-deletion  /evidence-pages/incidents_claude-code-file-deletion.html  200
+/incidents/gemini-2-tool-confusion  /evidence-pages/incidents_gemini-2-tool-confusion.html  200
+/incidents/cursor-agent-cost-runaway  /evidence-pages/incidents_cursor-agent-cost-runaway.html  200
+/incidents/llama-3-currency-drift  /evidence-pages/incidents_llama-3-currency-drift.html  200
 
 # Static binary model and asset preserves
 /models/*  /models/:splat  200

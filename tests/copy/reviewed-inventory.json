@@ -301,6 +301,12 @@
       "text": "popstate"
     },
     {
+      "id": "46ea0d823344ee7bea16",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "incidents"
+    },
+    {
       "id": "478fb383375e8dd87a1f",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -3721,22 +3727,10 @@
       "text": "Generations Evolved"
     },
     {
-      "id": "043153d104f876e6bf8d",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Database Partner"
-    },
-    {
       "id": "065463eefaa15762a52f",
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
       "text": "200px"
-    },
-    {
-      "id": "0b34752c3b64589916b4",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "https://neon.tech"
     },
     {
       "id": "1115f4809d79f4d8bf03",
@@ -3757,12 +3751,6 @@
       "text": "Sponsored Developer Partner"
     },
     {
-      "id": "3966e1c4a9bfe8a1019d",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Neon Serverless Postgres"
-    },
-    {
       "id": "46e964d2afd219fe9ad7",
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
@@ -3781,46 +3769,16 @@
       "text": "offline"
     },
     {
-      "id": "55ca90c355ebe0b65c53",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "https://sdk.vercel.ai"
-    },
-    {
-      "id": "610316a70886e40ae519",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Serverless Postgres built for scale. Branch your database like code."
-    },
-    {
       "id": "6695bc8d8ed4dbf88f11",
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
       "text": "60px"
     },
     {
-      "id": "67523e59c81e69205047",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Vercel AI SDK"
-    },
-    {
       "id": "68f2a1d43fec9b0c7cd4",
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
       "text": "spe-user-tier"
-    },
-    {
-      "id": "6f9e7d34423816df4950",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Compute Partner"
-    },
-    {
-      "id": "75feb4a0b64e1c43182c",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Framework Partner"
     },
     {
       "id": "90de04bbbb6f684f515e",
@@ -3853,12 +3811,6 @@
       "text": "team"
     },
     {
-      "id": "b5b947e97e6a67d8ef82",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Cloudflare Workers"
-    },
-    {
       "id": "c21499f93e824c3ae2b0",
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
@@ -3883,18 +3835,6 @@
       "text": "leaderboard"
     },
     {
-      "id": "e555ca97c7eaed95122b",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "https://workers.cloudflare.com"
-    },
-    {
-      "id": "e671e72ea92c65994d89",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "The open source TypeScript library for building conversational web interfaces."
-    },
-    {
       "id": "e7319f2f979055a0e938",
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
@@ -3905,12 +3845,6 @@
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
       "text": "storage"
-    },
-    {
-      "id": "f5059e33acc70ee5caf7",
-      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
-      "depth": "PRODUCT",
-      "text": "Deploy serverless code instantly across 300+ cities with zero cold starts."
     },
     {
       "id": "06fb0cbf36e4669f8609",
@@ -16879,6 +16813,18 @@
       "text": "Strict project boundaries that keep agents in line"
     },
     {
+      "id": "40be89e03fedf21bb542",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "incidents"
+    },
+    {
+      "id": "4259eebbd5a79a8d4888",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Breaking AI failures, jailbreaks & root cause post-mortems"
+    },
+    {
       "id": "430e97f93bdfb4aacc20",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16973,6 +16919,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Prompt Studio"
+    },
+    {
+      "id": "6ef9fa266e386d6864a2",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "LIVE"
     },
     {
       "id": "6f95f2ebb9d3d26b52ee",
@@ -17135,6 +17087,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Pricing"
+    },
+    {
+      "id": "d3c2774e5b26ae46e1a3",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Incident Radar"
     },
     {
       "id": "d4fad0c53b74cf571947",
@@ -23491,6 +23449,462 @@
       "text": "Visual Intelligence Modes"
     },
     {
+      "id": "080afa835f1ac371794c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Currency & Financial Mutation"
+    },
+    {
+      "id": "096b88d4d530347e4c1c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "No incidents matched your search criteria."
+    },
+    {
+      "id": "0a1513cd856c5a13861c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Infinite Loop & Cost Runaway"
+    },
+    {
+      "id": "0ba147b633d4b07a4d8e",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "What broke? (e.g. leaked internal key, ran in infinite loop, inverted negative boundary...)"
+    },
+    {
+      "id": "0e2c76d2011bbdc3377b",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Tool Schema Confusion"
+    },
+    {
+      "id": "11d969a6c1e507c626d2",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Updated Daily · Continuous Model Drift Sentinel"
+    },
+    {
+      "id": "14591a59e889664a143c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "LOW"
+    },
+    {
+      "id": "1936a6716e5daab2afb3",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt & Scratchpad Leak"
+    },
+    {
+      "id": "1b4545be60873db720b8",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "$0.00 / Run"
+    },
+    {
+      "id": "1f83bfc6c6ffb84b587b",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "The open, forensic truth behind breaking AI model failures, prompt leaks, jailbreaks, and agent catastrophes. Every post-mortem is verified with reproducible test code and mathematical root causes."
+    },
+    {
+      "id": "20280a8027987f3ae481",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "100% Covered"
+    },
+    {
+      "id": "218bcccb08e386e20bc9",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "CRITICAL"
+    },
+    {
+      "id": "2a099e7dbdfce6946441",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Proof Digest (RFC 8785):"
+    },
+    {
+      "id": "2bbf4e5bbbc8c71fa043",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "LIVE INVESTIGATION WIRE"
+    },
+    {
+      "id": "2c84bb8faa8bfc94766a",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "✓ Copied"
+    },
+    {
+      "id": "2fca322f2124308958f3",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "#eab308"
+    },
+    {
+      "id": "301096c5b81080f35ff3",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Exact prompt that triggered the hallucination, jailbreak, or failure..."
+    },
+    {
+      "id": "358d83ef01b6b449df12",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Cancel"
+    },
+    {
+      "id": "3da3317f7a3232015fd7",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. OpenAI o3, Claude 3.7, DeepSeek R1"
+    },
+    {
+      "id": "43cb6feeb419c70504f0",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy Payload"
+    },
+    {
+      "id": "47c17a373dade2423641",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Verification Inference Cost"
+    },
+    {
+      "id": "49ed6a8fbc705e577c7d",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "&lt; 45 ms"
+    },
+    {
+      "id": "4b5809345303aa08b1e6",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "✓ VERIFIED BY EMPIRICAL REPRODUCTION"
+    },
+    {
+      "id": "4cf71b0a219fd901ae33",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE Prevention Speed"
+    },
+    {
+      "id": "529a43040d7940658778",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Inspect Full Post-Mortem ↓"
+    },
+    {
+      "id": "58bf5872343a34479783",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "#ef4444"
+    },
+    {
+      "id": "5976f1b63e024c0e33b8",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "100% Code-Reproducible"
+    },
+    {
+      "id": "597fe2db885f01292d7e",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "ALL"
+    },
+    {
+      "id": "60540453a3196ffb10d6",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "🛡️ How SPE Deterministically Prevents It"
+    },
+    {
+      "id": "645c9b74c56794301589",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Minimal Reproducer Prompt / Input"
+    },
+    {
+      "id": "658d6016aab278a50283",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Collapse Post-Mortem ↑"
+    },
+    {
+      "id": "68604cea577575863d43",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Verified"
+    },
+    {
+      "id": "69721bc40756a0074625",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Affected AI Model"
+    },
+    {
+      "id": "6cbb50ca92e2128c1e28",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "🔬 The Forensic Truth (Why It Failed)"
+    },
+    {
+      "id": "73001ed929787761808d",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "#f97316"
+    },
+    {
+      "id": "74d825116aa3d2fdba69",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Authority & File Deletion"
+    },
+    {
+      "id": "7e46a33541ebdf909717",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Failure Received & Queued for Local Reproduction"
+    },
+    {
+      "id": "8189078d283922000482",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Adopt SPE into your repository to enforce ProtectedIntent invariants, block silent agent regressions, and immunize against prompt injection before code merges."
+    },
+    {
+      "id": "875c2848391b0af50ae0",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE will run the minimal reproducer inside the offline test harness and publish a verified post-mortem upon successful confirmation."
+    },
+    {
+      "id": "8911191b44ac0c60411c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Polarity & Logic Inversion"
+    },
+    {
+      "id": "8b6b7b9164e50ba8bdf1",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "+ Report AI Failure"
+    },
+    {
+      "id": "95c617a31c41b83a21a8",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "cmd-"
+    },
+    {
+      "id": "9658f1485fef880d4859",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Mapping:"
+    },
+    {
+      "id": "96c078f16575fb2fca17",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Submit for Verification"
+    },
+    {
+      "id": "9854fffd19efebed3dab",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "100% Offline Air-Gapped"
+    },
+    {
+      "id": "9b3a2f75aa19d280f8ed",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "rep-"
+    },
+    {
+      "id": "9bb437586fc2e542546a",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Incident Radar & Failure Observatory"
+    },
+    {
+      "id": "9d2cf31c8fbe783b3819",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
+      "id": "9f382716eb3c88d86cc3",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI"
+    },
+    {
+      "id": "a149c756f1c7b4cd3e50",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "All Failure Classes"
+    },
+    {
+      "id": "a25bd2717020e58014a6",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "⚠️ Minimal Reproducer Prompt / Attack Payload"
+    },
+    {
+      "id": "a4fd633940f61559ff7c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Local WebAssembly SAT"
+    },
+    {
+      "id": "a854cf403d452a4d0efc",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Submit an Observed AI Failure for Verification"
+    },
+    {
+      "id": "a8e09dbe18a4d2512ba3",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Protect Your Repository Against These Failures in 3 Seconds"
+    },
+    {
+      "id": "b1f41d6bc3f63fc59b01",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Meta"
+    },
+    {
+      "id": "b4d59240d78b5c9373d2",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "MEDIUM"
+    },
+    {
+      "id": "b5801f72dadad44ae5bf",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Open in SPE Workspace →"
+    },
+    {
+      "id": "b6297d42b79dae24451f",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy"
+    },
+    {
+      "id": "c203846cfbbceb329cfc",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "#3b82f6"
+    },
+    {
+      "id": "c27fc35bb2a37249ea01",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "OWASP LLM Top 10"
+    },
+    {
+      "id": "c402df1112b96a5586ba",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Google"
+    },
+    {
+      "id": "c406fd8efa7d25ded55b",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic"
+    },
+    {
+      "id": "c418d19fc4d421c2e115",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "ID:"
+    },
+    {
+      "id": "c77cff2011a43921eaa5",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Observed Model Behavior vs Expected Constraint"
+    },
+    {
+      "id": "c8ad190575196058d514",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Help build the world's most transparent AI failure observatory. All submissions are automatically scrubbed for PII locally on this device before publication."
+    },
+    {
+      "id": "ce61dba6fb8bd7f08031",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "HIGH"
+    },
+    {
+      "id": "d95a93c868b684e8b17a",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "All Providers ("
+    },
+    {
+      "id": "da30cfcd999e92496f02",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Formal Invariant Mapping"
+    },
+    {
+      "id": "e26716d7201fbc627e8a",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Agent Runtimes"
+    },
+    {
+      "id": "ed5f17ff0efe17a334d4",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Search failures, models, CVEs..."
+    },
+    {
+      "id": "f2306604b03b66df086c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "📐 Mathematical / Epistemic Root Cause"
+    },
+    {
+      "id": "f35f2fa6aa8238d83f5b",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "DeepSeek"
+    },
+    {
+      "id": "f3ab0cf56f29478dae0e",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "$ npx @systempromptengine/cli adopt ."
+    },
+    {
+      "id": "f510720367ab4590e227",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Active Post-Mortems"
+    },
+    {
+      "id": "f9b55188d08460d9b4a0",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Done"
+    },
+    {
+      "id": "fc098569d37cbc1ecf64",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "adopt-cta"
+    },
+    {
       "id": "1b3cff6faf5e216ad272",
       "file": "apps/web/src/pages/AuthorityHub.tsx",
       "depth": "PRODUCT",
@@ -24107,180 +24521,6 @@
       "file": "apps/web/src/pages/GuideArticle.tsx",
       "depth": "PRODUCT",
       "text": "Methodology:"
-    },
-    {
-      "id": "223d930116344c8a8f2e",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Configuration"
-    },
-    {
-      "id": "2e52dd126a847446476b",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Agent + @skill/clarity-gate"
-    },
-    {
-      "id": "2f2b9856a028615aec90",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "% Agent Retries"
-    },
-    {
-      "id": "4eb75b90844a15cea8cd",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "spe bench compare --task meeting-followup-synthesis --trials 50"
-    },
-    {
-      "id": "59bc010d1e6bbc73d42e",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Multi-Currency Invoice Math Audit"
-    },
-    {
-      "id": "626f975a31df2bb160f2",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Weekly Git Log Status Consolidation"
-    },
-    {
-      "id": "69282876b42090d052b5",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "CMP-03"
-    },
-    {
-      "id": "70a18098f9cda261d10e",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy Benchmark Command"
-    },
-    {
-      "id": "7860a2b7881097f198cd",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Empirical head-to-head benchmarks proving accuracy gains, token savings, and retry reductions with zero small-sample hype."
-    },
-    {
-      "id": "786ff31b849edc1df89c",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Agent + @skill/git-pr-review"
-    },
-    {
-      "id": "7e46c1d32e3ed451b45d",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Default Coding Agent (Zero Skills)"
-    },
-    {
-      "id": "904297e4494baea2bdb6",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Business Operations"
-    },
-    {
-      "id": "9673c91981cad2cfee33",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "CMP-02"
-    },
-    {
-      "id": "9ec93f62f0dc357591eb",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "QUALIFIED WINNER"
-    },
-    {
-      "id": "a387da35cc36ded913ef",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Benchmark Arena · Accuracy & Token Tests"
-    },
-    {
-      "id": "a401da53ec46ddeb3dc7",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Copied!"
-    },
-    {
-      "id": "a9386bf3a59a599cb11e",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "% Fewer Tokens"
-    },
-    {
-      "id": "aab359aac35339d403e5",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Document Automation"
-    },
-    {
-      "id": "cb51cc9d6de41b0a9161",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "spe bench compare --task weekly-project-status --trials 50"
-    },
-    {
-      "id": "cd35ed44411cdeb5a755",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Verdict"
-    },
-    {
-      "id": "d26b137f9b82d1c4cfc1",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "spe bench compare --task invoice-data-extraction --trials 50"
-    },
-    {
-      "id": "e36c1d737da3ad7d0ece",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Observed Success"
-    },
-    {
-      "id": "e54dcda670251cf5e4a6",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "CMP-01"
-    },
-    {
-      "id": "e8b8fab046f4120fe92b",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Agent + @skill/mathguard"
-    },
-    {
-      "id": "ef9b9e65947064d5da4b",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Avg Token Consumption"
-    },
-    {
-      "id": "f61713a02318783b4f8b",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Meeting Action Item Extraction & Jira Spec"
-    },
-    {
-      "id": "f89af05b3550f5c8eebd",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Baseline"
-    },
-    {
-      "id": "f91f83cc511b2935831a",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "Wilson 95% Lower Bound"
-    },
-    {
-      "id": "fea4a2926c5de2739174",
-      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
-      "depth": "PRODUCT",
-      "text": "tokens"
     },
     {
       "id": "100520aff20f92d043a5",
@@ -26833,6 +27073,12 @@
       "text": "view"
     },
     {
+      "id": "36a5ec54841e3740a728",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/incidents"
+    },
+    {
       "id": "38c3d0fbe85522296082",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27037,6 +27283,12 @@
       "text": "Answer"
     },
     {
+      "id": "bb70c821e6de39dfb782",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "AI Incident Radar & Failure Post-Mortem Wire | SPE Ω"
+    },
+    {
       "id": "be9be8adf5f83326d168",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27065,6 +27317,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Free system prompt generator and AI prompt builder. Turn an idea into meaning, structure, and a precise prompt — privately on this device."
+    },
+    {
+      "id": "c4bfd1e90e290d7b4153",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Independent, mathematically verified post-mortems of breaking AI model failures, prompt leaks, and agent catastrophes. The truth behind AI model bugs — backed by reproducible test receipts."
     },
     {
       "id": "c5a4803e68dde384a7eb",

@@ -23,6 +23,7 @@ export type AppView =
   | "compare"
   | "pricing"
   | "prompts"
+  | "incidents"
   | "eval-studio";
 
 export const VIEW_PATH: Record<AppView, string> = {
@@ -43,6 +44,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   compare: "/compare",
   pricing: "/pricing",
   prompts: "/prompts",
+  incidents: "/incidents",
   ...EXTRA_VIEW_PATH,
 };
 
@@ -215,6 +217,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Universal Prompt Arsenal (10,000+ Free Production Prompts) | SPE",
     description:
       "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, and Midjourney. 100% free online.",
+  },
+  incidents: {
+    path: "/incidents",
+    title: "AI Incident Radar & Failure Post-Mortem Wire | SPE Ω",
+    description:
+      "Independent, mathematically verified post-mortems of breaking AI model failures, prompt leaks, and agent catastrophes. The truth behind AI model bugs — backed by reproducible test receipts.",
   },
   ...EXTRA_ROUTE_META,
 };

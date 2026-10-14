@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-14T19:50:23.941Z",
+  "timestamp": "2026-10-14T20:17:27.341Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -57,7 +57,7 @@
     },
     "copyCheck": {
       "status": "PASS",
-      "candidateCount": 5820,
+      "candidateCount": 5904,
       "violations": 0
     },
     "build": {
@@ -65,8 +65,8 @@
     }
   },
   "success": true,
-  "durationMs": 16256,
-  "contentDigestSha256": "7f90fe37f79d849258516188b2c5fdae87f81bdbcc0661d298e4777da466aba8",
+  "durationMs": 12910,
+  "contentDigestSha256": "a52881f0b20546fde8275b5a80b650991a276c6085ca35a437be99221cbf9d19",
   "digestAlgorithm": "SHA-256",
   "canonicalization": "RFC_8785_CANONICAL_JSON",
   "attestationType": "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",

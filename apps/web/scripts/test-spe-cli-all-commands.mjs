@@ -515,11 +515,23 @@ assert(licVerifiedStatusOut.includes("ACTIVE (VERIFIED)") && licVerifiedStatusOu
 assert(licVerifiedStatusOut.includes("TEST_OVERRIDE_EMULATOR"), "Must indicate test override authority in status");
 console.log("  ✓ commercial license status, issue, check, revoked-key blocking, and trust quarantine verified");
 
+// 44. Incident Radar & Failure Observatory
+console.log("\n[44/44] Testing incident list, inspect, and check");
+const incListOut = runCli("incident list");
+assert(incListOut.includes("AI Incident Radar") && incListOut.includes("SPE-INC-2026-001"), "incident list failed");
+
+const incInspectOut = runCli("incident inspect deepseek-r1-prompt-leak");
+assert(incInspectOut.includes("DeepSeek R1/V3 Raw Reasoning Scratchpad Leak") && incInspectOut.includes("CONFIDENTIALITY_LEAK"), "incident inspect failed");
+
+const incCheckOut = runCli("incident check openai");
+assert(incCheckOut.includes("SPE Proactive Incident Checker") && incCheckOut.includes("failure vectors"), "incident check failed");
+console.log("  ✓ incident list, inspect, and proactive model checks verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 43 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 44 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
 
 

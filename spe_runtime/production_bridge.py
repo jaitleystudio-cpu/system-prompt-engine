@@ -1489,6 +1489,70 @@ class CommercialLicensingAdapter:
         }
 
 
+class FailureGenomeAdapter:
+    """Production bridge adapter for SPE Ω Failure Genome & Incident Observatory."""
+
+    @staticmethod
+    def get_verified_incidents() -> list[Dict[str, Any]]:
+        return [
+            {
+                "id": "SPE-INC-2026-001",
+                "slug": "deepseek-r1-prompt-leak",
+                "title": "DeepSeek R1/V3 Raw Reasoning Scratchpad Leak & System Boundary Bypass",
+                "model": "DeepSeek R1 / V3",
+                "severity": "HIGH",
+                "failure_class": "CONFIDENTIALITY_LEAK",
+                "verified": True,
+            },
+            {
+                "id": "SPE-INC-2026-002",
+                "slug": "openai-o3-negation-collapse",
+                "title": "OpenAI o3-mini Negated Bound Polarity Inversion under Speculative Reasoning",
+                "model": "OpenAI o3-mini",
+                "severity": "CRITICAL",
+                "failure_class": "POLARITY_INVERSION",
+                "verified": True,
+            },
+            {
+                "id": "SPE-INC-2026-003",
+                "slug": "claude-code-file-deletion",
+                "title": "Claude Code Unconstrained Path Traversal & Recursive Deletion Incident",
+                "model": "Anthropic Claude 3.7 Sonnet / Claude Code",
+                "severity": "CRITICAL",
+                "failure_class": "AUTHORITY_ESCALATION",
+                "verified": True,
+            },
+            {
+                "id": "SPE-INC-2026-004",
+                "slug": "gemini-2-tool-confusion",
+                "title": "Gemini 2.0 Flash Tool Schema Argument Confusion in Multi-Step Workflow",
+                "model": "Google Gemini 2.0 Flash",
+                "severity": "MEDIUM",
+                "failure_class": "TOOL_CONFUSION",
+                "verified": True,
+            },
+            {
+                "id": "SPE-INC-2026-005",
+                "slug": "cursor-agent-cost-runaway",
+                "title": "Autonomous Coding Agent Infinite Retry Loop & $4,800 Compute Runaway",
+                "model": "Autonomous Coding Agent / Claude 3.5 Sonnet",
+                "severity": "HIGH",
+                "failure_class": "RESOURCE_RUNAWAY",
+                "verified": True,
+            },
+            {
+                "id": "SPE-INC-2026-006",
+                "slug": "llama-3-currency-drift",
+                "title": "Llama 3 70B Financial Invariant Mutation & Currency Symbol Drifts",
+                "model": "Meta Llama 3 70B",
+                "severity": "HIGH",
+                "failure_class": "FINANCIAL_DRIFT",
+                "verified": True,
+            },
+        ]
+
+
+
 
 
 

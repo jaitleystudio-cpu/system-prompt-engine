@@ -1,11 +1,11 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-14T10:35:46.713Z",
+  "generated_at": "2026-10-14T20:09:35.839Z",
   "canonical_domain": "https://systempromptengine.com",
-  "total_prerendered_pages": 40,
+  "total_prerendered_pages": 47,
   "zero_placeholder_pages_verified": true,
   "indexing_summary": {
-    "total_indexable": 40,
+    "total_indexable": 47,
     "noindex_count": 0,
     "REAL_PRODUCT": 14,
     "CATEGORY_OWNERSHIP": 8,
@@ -13,7 +13,8 @@
     "OPEN_WEIGHTS_MODEL_PASSPORT": 1,
     "REAL_DATA": 1,
     "INTEGRATION_GUIDE": 4,
-    "MIGRATION_PATH": 7
+    "MIGRATION_PATH": 7,
+    "EMPIRICAL_BENCHMARK_VERIFIED": 7
   },
   "pages": [
     {
@@ -454,6 +455,83 @@
       "has_unique_content": true,
       "word_count": 435,
       "canonical_url": "https://systempromptengine.com/migrate/from-raw-prompts",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/incidents",
+      "title": "AI Incident Radar & Failure Post-Mortem Wire | SPE Ω",
+      "classification": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 519,
+      "canonical_url": "https://systempromptengine.com/incidents",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/incidents/deepseek-r1-prompt-leak",
+      "title": "DeepSeek R1/V3 Reasoning Prompt Leak Forensic Post-Mortem | SPE Incident Wire",
+      "classification": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 468,
+      "canonical_url": "https://systempromptengine.com/incidents/deepseek-r1-prompt-leak",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/incidents/openai-o3-negation-collapse",
+      "title": "OpenAI o3-mini Negated Polarity Inversion Post-Mortem | SPE Incident Wire",
+      "classification": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 480,
+      "canonical_url": "https://systempromptengine.com/incidents/openai-o3-negation-collapse",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/incidents/claude-code-file-deletion",
+      "title": "Claude Code Path Traversal & Recursive File Deletion Incident | SPE Incident Wire",
+      "classification": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 469,
+      "canonical_url": "https://systempromptengine.com/incidents/claude-code-file-deletion",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/incidents/gemini-2-tool-confusion",
+      "title": "Gemini 2.0 Flash Tool Schema Argument Confusion Incident | SPE Incident Wire",
+      "classification": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 473,
+      "canonical_url": "https://systempromptengine.com/incidents/gemini-2-tool-confusion",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/incidents/cursor-agent-cost-runaway",
+      "title": "Autonomous Coding Agent Infinite Loop & $4,800 Compute Runaway | SPE Incident Wire",
+      "classification": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 490,
+      "canonical_url": "https://systempromptengine.com/incidents/cursor-agent-cost-runaway",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/incidents/llama-3-currency-drift",
+      "title": "Llama 3 70B Financial Invariant Mutation & Currency Drift | SPE Incident Wire",
+      "classification": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 484,
+      "canonical_url": "https://systempromptengine.com/incidents/llama-3-currency-drift",
       "schema_type": "SoftwareApplication"
     }
   ]

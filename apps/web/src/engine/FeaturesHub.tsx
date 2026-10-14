@@ -11,6 +11,7 @@ import { SpeV5MoonshotNorthStarBrain } from "./SpeV5MoonshotNorthStarBrain";
 import { SpeAgiBrainStudio } from "./SpeAgiBrainStudio";
 import { SpeEgacUniversalStudio } from "./SpeEgacUniversalStudio";
 import { SpeRgdUniversalStudio } from "./SpeRgdUniversalStudio";
+import { OmniMediaStudio } from "./OmniMediaStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -30,6 +31,14 @@ export interface FeatureItem {
 }
 
 export const FEATURES: FeatureItem[] = [
+  {
+    id: "omni-media-studio",
+    view: "capabilities",
+    title: "⚡ Universal Multimodal Cognitive Studio",
+    subtitle: "Universal Photo to Text, Streaming Voice Invariants, Video Action Vectors & Photo to Code Spatial AST",
+    href: "/capabilities",
+    badge: "Built by ANTIGRAVITY",
+  },
   {
     id: "spe-rgd-universal",
     view: "capabilities",
@@ -194,7 +203,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["spe-rgd-universal", "spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["omni-media-studio", "spe-rgd-universal", "spe-egac-universal", "spe-agi-brain-omega", "spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -475,6 +484,10 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 ✕ Close
               </button>
             </div>
+
+            {activeModal === "omni-media-studio" && (
+              <OmniMediaStudio onClose={() => setActiveModal(null)} />
+            )}
 
             {activeModal === "spe-rgd-universal" && (
               <SpeRgdUniversalStudio onNavigate={onNavigate} onClose={() => setActiveModal(null)} />

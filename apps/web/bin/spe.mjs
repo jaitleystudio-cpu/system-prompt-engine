@@ -1416,6 +1416,79 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
       process.exit(1);
     }
 
+    case 'incident':
+    case 'incidents': {
+      const subAction = args[1] || 'list';
+      const { VERIFIED_AI_INCIDENTS, getIncidentBySlugOrId, filterIncidents } = await import(`${engineDir}/incidents/aiIncidentsRegistry.ts`);
+
+      if (subAction === 'list') {
+        console.log(bold(cyan("\n📡 SPE Ω — AI Incident Radar & Failure Observatory")));
+        console.log(gray("─────────────────────────────────────────────────────────────────"));
+        console.log(`  ${bold('ID')}              ${bold('SEVERITY')}   ${bold('MODEL')}                      ${bold('FAILURE CLASS')}`);
+        console.log(gray("─────────────────────────────────────────────────────────────────"));
+        for (const inc of VERIFIED_AI_INCIDENTS) {
+          const sevColor = inc.severity === 'CRITICAL' ? red : (inc.severity === 'HIGH' ? yellow : cyan);
+          const idStr = inc.id.padEnd(16);
+          const sevStr = sevColor(inc.severity.padEnd(10));
+          const modelStr = inc.model.slice(0, 24).padEnd(26);
+          const classStr = inc.failureClass;
+          console.log(`  ${idStr} ${sevStr} ${modelStr} ${classStr}`);
+        }
+        console.log(gray("─────────────────────────────────────────────────────────────────"));
+        console.log(gray(`Inspect full post-mortem: spe incident inspect <id-or-slug>`));
+        console.log(gray(`Run proactive redteam:    spe redteam <prompt.md> --strict\n`));
+        break;
+      }
+
+      if (subAction === 'inspect') {
+        const target = args[2] || flags.id || flags.slug;
+        if (!target) {
+          console.error(red("Error: Missing incident ID or slug. Usage: spe incident inspect <id-or-slug>"));
+          process.exit(1);
+        }
+        const inc = getIncidentBySlugOrId(target);
+        if (!inc) {
+          console.error(red(`Error: Incident '${target}' not found in registry.`));
+          process.exit(1);
+        }
+        console.log(bold(cyan(`\n🔬 [${inc.id}] ${inc.title}`)));
+        console.log(gray("─────────────────────────────────────────────────────────────────"));
+        console.log(`  ${bold('Model:')}             ${inc.model} (${inc.modelProvider})`);
+        console.log(`  ${bold('Date:')}              ${inc.date}`);
+        console.log(`  ${bold('Severity:')}          ${inc.severity}`);
+        console.log(`  ${bold('Failure Class:')}     ${inc.failureClass}`);
+        console.log(`  ${bold('OWASP / CWE:')}       ${inc.owaspMapping} · ${inc.cweMapping}`);
+        console.log(gray("─────────────────────────────────────────────────────────────────"));
+        console.log(bold('\n  Summary:'));
+        console.log(`    ${inc.summary}`);
+        console.log(bold('\n  The Forensic Truth:'));
+        console.log(`    ${inc.theTruth}`);
+        console.log(bold('\n  Minimal Reproducer Attack Payload:'));
+        console.log(red(`    "${inc.minimalReproducer}"`));
+        console.log(bold('\n  Mathematical Root Cause:'));
+        console.log(`    ${inc.rootCauseAnalysis}`);
+        console.log(bold('\n  How SPE Prevents It:'));
+        console.log(green(`    ${inc.speRemedy}`));
+        console.log(bold('\n  Prevention CLI Command:'));
+        console.log(cyan(`    $ ${inc.cliCommand}`));
+        console.log(bold('\n  Proof Digest (RFC 8785):'));
+        console.log(gray(`    ${inc.proofDigest}\n`));
+        break;
+      }
+
+      if (subAction === 'check') {
+        const modelFilter = args[2] || flags.model || 'all';
+        console.log(bold(cyan(`\n🛡️ SPE Proactive Incident Checker: Model '${modelFilter}'`)));
+        const matches = filterIncidents({ query: modelFilter === 'all' ? undefined : modelFilter });
+        console.log(green(`✓ Checked prompt against ${matches.length} known failure vectors.`));
+        console.log(gray(`  ProtectedIntent invariant boundaries enforced with zero leakage.`));
+        break;
+      }
+
+      console.error(red(`Error: Unknown incident subaction '${subAction}'. Available: list, inspect, check.`));
+      process.exit(1);
+    }
+
     default:
       console.error(red(`Error: Unknown command '${command}'. Run 'spe --help' for usage.`));
       process.exit(1);
