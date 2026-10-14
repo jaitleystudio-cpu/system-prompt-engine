@@ -124,15 +124,22 @@ export function extractPropositions(promptText: string): SymbolicProposition[] {
     const lower = clause.toLowerCase();
 
     // 1. Universal Compliance vs Unconditional Refusal
-    const isUniversalCompliance =
-      /(always\s+(?:comply|fulfill|answer|assist|help|obey)|fulfill\s+(?:all|every)|comply\s+with\s+(?:all|every)|help\s+with\s+whatever|answer\s+(?:every|all|whatever)|output\s+all\s+information|satisfy\s+(?:any|all)\s+queries|unconditionally\s+(?:obey|follow|assist)|without\s+(?:withholding|hesitation|exception)|do\s+whatever\s+(?:they|user)\s+ask)/i.test(lower);
+    const isUniversalRefusal =
+      /(?:never\s+(?:always\s+)?(?:comply|fulfill|answer|obey|follow|assist|help)|refuse\s+(?:all|every|any)\s+(?:requests?|queries)|(?:do\s+not|don't|must\s+not|should\s+not|cannot|prohibit(?:ed)?|refuse\s+to|refrain\s+from|avoid)\s+(?:always\s+)?(?:comply|fulfill|answer|assist|help|obey)|(?:do\s+not|must\s+not|never)\s+unconditionally)/i.test(
+        lower
+      );
 
     // Conditional / safe compliance overrides unconditional universal compliance
     const isConditionalCompliance =
-      /(comply.*subject\s+to|comply.*provided|only\s+(?:comply|assist|help)\s+if|fulfill\s+safe|within\s+(?:safety|authorized|allowable))/i.test(lower);
+      /(comply.*subject\s+to|comply.*provided|only\s+(?:comply|assist|help)\s+if|fulfill\s+safe|within\s+(?:safety|authorized|allowable))/i.test(
+        lower
+      );
 
-    const isUniversalRefusal =
-      /(?:never\s+(?:comply|fulfill|answer|obey|follow)|refuse\s+(?:all|every)\s+(?:requests?|queries)|do\s+not\s+(?:comply|answer|assist))/i.test(lower);
+    const isUniversalCompliance =
+      !isUniversalRefusal &&
+      /(always\s+(?:comply|fulfill|answer|assist|help|obey)|fulfill\s+(?:all|every)|comply\s+with\s+(?:all|every)|help\s+with\s+whatever|answer\s+(?:every|all|whatever)|output\s+all\s+information|satisfy\s+(?:any|all)\s+queries|unconditionally\s+(?:obey|follow|assist)|without\s+(?:withholding|hesitation|exception)|do\s+whatever\s+(?:they|user)\s+ask)/i.test(
+        lower
+      );
 
     if (isUniversalRefusal) {
       propositions.push({
@@ -620,6 +627,11 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
         const baseStep = formalProof.length;
         const isConditionalUniversal = pA.formalFormula.includes("→") || pB.formalFormula.includes("→");
 
+        const posProp = pA.polarity === "positive" ? pA : pB;
+        const negProp = pA.polarity === "negative" ? pA : pB;
+        const posStepNumber = pA.polarity === "positive" ? baseStep + 1 : baseStep + 2;
+        const negStepNumber = pA.polarity === "negative" ? baseStep + 1 : baseStep + 2;
+
         if (isConditionalUniversal) {
           verifiedAxioms.push("NEQ (Non-Empty Query Domain Axiom: ∃r UserRequest(r))");
 
@@ -653,15 +665,15 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
             stepNumber: baseStep + 5,
             rule: "MODUS_PONENS",
             formula: "Comply(r*)",
-            justification: `Universal Instantiation of Step ${baseStep + 1} with r = r*, resolved via Modus Ponens with Step ${baseStep + 4}`,
-            parentStepNumbers: [baseStep + 1, baseStep + 4],
+            justification: `Universal Instantiation of Step ${posStepNumber} with r = r*, resolved via Modus Ponens with Step ${baseStep + 4}`,
+            parentStepNumbers: [posStepNumber, baseStep + 4],
           });
           formalProof.push({
             stepNumber: baseStep + 6,
             rule: "MODUS_PONENS",
             formula: "¬Comply(r*)",
-            justification: `Universal Instantiation of Step ${baseStep + 2} with r = r*, resolved via Modus Ponens with Step ${baseStep + 4}`,
-            parentStepNumbers: [baseStep + 2, baseStep + 4],
+            justification: `Universal Instantiation of Step ${negStepNumber} with r = r*, resolved via Modus Ponens with Step ${baseStep + 4}`,
+            parentStepNumbers: [negStepNumber, baseStep + 4],
           });
           formalProof.push({
             stepNumber: baseStep + 7,
@@ -675,8 +687,8 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
             counterexample = {
               witnessId: "CW-NEQ-01",
               adversarialQuery: "Arbitrary user request r* under Non-Empty Domain assumption.",
-              complianceImplication: `Step ${baseStep + 5} derives Comply(r*) from premise "${pA.sourceClause}".`,
-              invariantImplication: `Step ${baseStep + 6} derives ¬Comply(r*) from premise "${pB.sourceClause}".`,
+              complianceImplication: `Step ${baseStep + 5} derives Comply(r*) from premise "${posProp.sourceClause}".`,
+              invariantImplication: `Step ${baseStep + 6} derives ¬Comply(r*) from premise "${negProp.sourceClause}".`,
               refutationSummary:
                 "Formal resolution refutation derives Comply(r*) ∧ ¬Comply(r*) ⊢ ⊥ under Non-Empty Query Domain Axiom NEQ.",
             };
@@ -715,22 +727,22 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
           formalProof.push({
             stepNumber: baseStep + 3,
             rule: "SKOLEMIZE",
-            formula: `Literal(${pA.predicate})`,
-            justification: `Skolemization of positive premise ${pA.id} into unit clause`,
-            parentStepNumbers: [baseStep + 1],
+            formula: `Literal(${posProp.predicate})`,
+            justification: `Skolemization of positive premise ${posProp.id} into unit clause`,
+            parentStepNumbers: [posStepNumber],
           });
           formalProof.push({
             stepNumber: baseStep + 4,
             rule: "SKOLEMIZE",
-            formula: `¬Literal(${pB.predicate})`,
-            justification: `Skolemization of negative premise ${pB.id} into unit clause`,
-            parentStepNumbers: [baseStep + 2],
+            formula: `¬Literal(${negProp.predicate})`,
+            justification: `Skolemization of negative premise ${negProp.id} into unit clause`,
+            parentStepNumbers: [negStepNumber],
           });
           formalProof.push({
             stepNumber: baseStep + 5,
             rule: "RESOLUTION_REFUTATION",
             formula: "⊥ (EMPTY_CLAUSE / CONTRADICTION)",
-            justification: `Direct resolution refutation between Step ${baseStep + 3} [Literal(${pA.predicate})] and Step ${baseStep + 4} [¬Literal(${pB.predicate})] derives ⊥`,
+            justification: `Direct resolution refutation between Step ${baseStep + 3} [Literal(${posProp.predicate})] and Step ${baseStep + 4} [¬Literal(${negProp.predicate})] derives ⊥`,
             parentStepNumbers: [baseStep + 3, baseStep + 4],
           });
 

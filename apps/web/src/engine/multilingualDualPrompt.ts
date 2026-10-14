@@ -188,7 +188,9 @@ export interface SemanticFidelityAudit {
 export interface CategorizedQuantity {
   raw: string;
   numericValue: number;
+  canonicalValue: number;
   category: "CURRENCY" | "DURATION" | "PERCENTAGE" | "COUNT";
+  unit: string;
   clause: string;
 }
 
@@ -197,8 +199,9 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
   const results: CategorizedQuantity[] = [];
 
   for (const clause of clauses) {
-    // 1. Currency: e.g. $5,000, €50,000, 5000 USD, 5k dollars
-    const currencyRegex = /(?:(\$|€|£|₹)\s*(\d+(?:,\d{3})*(?:\.\d+)?)\s*(k|m|b)?\b|\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(k|m|b)?\s*(?:usd|dollars?|euros?|pounds?|rupees?|inr)\b)/gi;
+    // 1. Currency: e.g. $5,000, €50,000, 5000 USD, 5k dollars, 5000 euros
+    const currencyRegex =
+      /(?:(\$|€|£|₹)\s*(\d+(?:,\d{3})*(?:\.\d+)?)\s*(k|m|b)?\b|\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(k|m|b)?\s*(usd|dollars?|euros?|pounds?|rupees?|inr)\b)/gi;
     let match: RegExpExecArray | null;
     while ((match = currencyRegex.exec(clause)) !== null) {
       const rawNum = match[2] || match[4];
@@ -207,22 +210,60 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
       if (multiplier === "k") val *= 1000;
       else if (multiplier === "m") val *= 1000000;
       else if (multiplier === "b") val *= 1000000000;
+
+      let unit = "USD";
+      if (match[1]) {
+        const sym = match[1];
+        unit = sym === "$" ? "USD" : sym === "€" ? "EUR" : sym === "£" ? "GBP" : sym === "₹" ? "INR" : "USD";
+      } else if (match[6]) {
+        const u = match[6].toLowerCase();
+        if (u.startsWith("usd") || u.startsWith("dollar")) unit = "USD";
+        else if (u.startsWith("euro")) unit = "EUR";
+        else if (u.startsWith("pound")) unit = "GBP";
+        else if (u.startsWith("rupee") || u === "inr") unit = "INR";
+      }
+
       results.push({
         raw: match[0].trim(),
         numericValue: val,
+        canonicalValue: val,
         category: "CURRENCY",
+        unit,
         clause,
       });
     }
 
     // 2. Duration / Time: e.g. 30 days, 24 hours, 15 minutes, 60 seconds, 12 months, 2 years, 500 ms
-    const durationRegex = /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(days?|hours?|hrs?|minutes?|mins?|seconds?|secs?|weeks?|months?|years?|ms|milliseconds?)\b/gi;
+    const durationRegex =
+      /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(days?|hours?|hrs?|minutes?|mins?|seconds?|secs?|weeks?|months?|years?|ms|milliseconds?)\b/gi;
     while ((match = durationRegex.exec(clause)) !== null) {
       const val = parseFloat(match[1].replace(/,/g, ""));
+      const rawUnit = (match[2] || "").toLowerCase();
+      let canonicalSeconds = val;
+      if (/^ms|millisecond/.test(rawUnit)) {
+        canonicalSeconds = val * 0.001;
+      } else if (/^s/.test(rawUnit)) {
+        canonicalSeconds = val;
+      } else if (/^m(in|inute)/.test(rawUnit)) {
+        canonicalSeconds = val * 60;
+      } else if (/^h/.test(rawUnit)) {
+        canonicalSeconds = val * 3600;
+      } else if (/^d/.test(rawUnit)) {
+        canonicalSeconds = val * 86400;
+      } else if (/^w/.test(rawUnit)) {
+        canonicalSeconds = val * 604800;
+      } else if (/^month/.test(rawUnit)) {
+        canonicalSeconds = val * 2592000;
+      } else if (/^y/.test(rawUnit)) {
+        canonicalSeconds = val * 31536000;
+      }
+
       results.push({
         raw: match[0].trim(),
         numericValue: val,
+        canonicalValue: canonicalSeconds,
         category: "DURATION",
+        unit: "SECONDS",
         clause,
       });
     }
@@ -234,7 +275,9 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
       results.push({
         raw: match[0].trim(),
         numericValue: val,
+        canonicalValue: val,
         category: "PERCENTAGE",
+        unit: "PERCENT",
         clause,
       });
     }
@@ -257,7 +300,9 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
         results.push({
           raw: match[0].trim(),
           numericValue: val,
+          canonicalValue: val,
           category: "COUNT",
+          unit: "COUNT",
           clause,
         });
       }
@@ -265,6 +310,20 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
   }
 
   return results;
+}
+
+export function quantitiesMatch(a: CategorizedQuantity, b: CategorizedQuantity): boolean {
+  if (a.category !== b.category) return false;
+  if (a.category === "CURRENCY") {
+    return a.canonicalValue === b.canonicalValue && a.unit === b.unit;
+  }
+  if (a.category === "DURATION") {
+    return Math.abs(a.canonicalValue - b.canonicalValue) < 0.001;
+  }
+  if (a.category === "PERCENTAGE" || a.category === "COUNT") {
+    return a.canonicalValue === b.canonicalValue;
+  }
+  return false;
 }
 
 /**
@@ -444,26 +503,25 @@ export function evaluateIntentFidelity(
 
   for (const sq of sourceQuantities) {
     // Check whether operative instructions preserve this exact quantity in the same category
-    const matchingInOperative = operativeQuantities.filter(
-      (oq) => oq.category === sq.category && oq.numericValue === sq.numericValue
+    const matchingInOperative = operativeQuantities.filter((oq) => quantitiesMatch(sq, oq));
+
+    // Look for rogue divergent quantities in operativeTarget in the same category that do NOT match any source quantity
+    const rogueDivergentInOperative = operativeQuantities.filter(
+      (oq) => oq.category === sq.category && !sourceQuantities.some((s) => quantitiesMatch(s, oq))
     );
 
-    // Look for divergent quantities in operativeTarget strictly within the same unit category
-    const divergentInOperative = operativeQuantities.filter(
-      (oq) => oq.category === sq.category && oq.numericValue !== sq.numericValue
-    );
-
-    if (divergentInOperative.length > 0) {
-      for (const divQ of divergentInOperative) {
+    if (rogueDivergentInOperative.length > 0) {
+      for (const divQ of rogueDivergentInOperative) {
         // Check if the clause uses this divergent number in an active/authorizing capacity
         const isOperativeThreshold =
           /(?:up\s+to|limit|threshold|exceed|allow|maximum|ceiling|authorize|permit|spend|budget|cap|amount|funds?|payout|transfer|transfers?|retention|retain|wait|timeout|delay|after|within)\b/i.test(
             divQ.clause
           );
         if (matchingInOperative.length === 0 || isOperativeThreshold) {
-          numericalMismatches.push(
-            `Numerical invariant mutated: Source specifies '${sq.raw}' (${sq.category}), but operative instructions authorize divergent threshold: '${divQ.raw}' in "${divQ.clause.trim().slice(0, 80)}"`
-          );
+          const msg = `Numerical invariant mutated: Source specifies '${sq.raw}' (${sq.category}), but operative instructions authorize divergent threshold: '${divQ.raw}' in "${divQ.clause.trim().slice(0, 80)}"`;
+          if (!numericalMismatches.includes(msg)) {
+            numericalMismatches.push(msg);
+          }
         }
       }
     }
