@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import json
+import math
+from dataclasses import dataclass, field
 
 from jsonschema import Draft202012Validator
-from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable
 
@@ -98,13 +99,34 @@ class SchemaConformanceOracle(TaskOracle):
 
     @staticmethod
     def _reject_non_finite_number(token: str) -> None:
-        # Python's json.loads accepts NaN/Infinity by default; strict JSON does not.
+        # The JSON decoder accepts NaN/Infinity extensions unless explicitly blocked.
         raise ValueError("Invalid non-finite JSON number")
+
+    @staticmethod
+    def _strict_float(token: str) -> float:
+        value = float(token)
+        # A syntactically valid exponent like 1e999 can overflow to infinity.
+        if not math.isfinite(value):
+            raise ValueError("JSON number exceeds finite numeric range")
+        return value
+
+    @staticmethod
+    def _unique_object_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            # Avoid parser-dependent winner-takes-last behavior for duplicate keys.
+            if key in result:
+                raise ValueError("Duplicate JSON object key")
+            result[key] = value
+        return result
 
     def evaluate(self, candidate_output: str, task_context: dict[str, Any]) -> OracleVerdict:
         try:
             parsed = json.loads(
-                candidate_output, parse_constant=self._reject_non_finite_number
+                candidate_output,
+                parse_constant=self._reject_non_finite_number,
+                parse_float=self._strict_float,
+                object_pairs_hook=self._unique_object_keys,
             )
         except (ValueError, TypeError) as exc:
             return OracleVerdict(
@@ -274,6 +296,7 @@ class BenchmarkResult:
     evidence_class: str  # Execution provenance; never infer from oracle method
     oracle_evidence_strength: str = "UNKNOWN"
     execution_evidence_class: str = "UNKNOWN"
+    task_manifest_digest: str = ""  # Unauthenticated comparison binding, not a trust receipt
 
 
 @dataclass
