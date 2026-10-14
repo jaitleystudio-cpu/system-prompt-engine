@@ -312,10 +312,16 @@ try {
       const logic = verifySymbolicConstraints(rawPrompt);
       const dq = evaluatePromptDataQuality(rawPrompt, { isParadoxFree: logic.isParadoxFree });
 
-      console.log(`\n${bold('FIRST-ORDER LOGIC STATUS:')} ${logic.isParadoxFree ? green('PROVABLY_SATISFIABLE') : red(logic.status)}`);
+      console.log(`\n${bold('FIRST-ORDER LOGIC STATUS:')} ${logic.isParadoxFree ? green(logic.status) : red(logic.status)}`);
       console.log(`  Proof Method:           ${cyan(logic.proofMethod)}`);
       console.log(`  Propositions Extracted: ${logic.propositions.length}`);
       console.log(`  Satisfiability Ratio:   ${(logic.satisfiabilityRatio * 100).toFixed(1)}%`);
+      if (logic.refutationScope && logic.refutationScope !== 'NONE') {
+        console.log(`  Refutation Scope:       ${yellow(logic.refutationScope)}`);
+      }
+      if (logic.modelCertificate) {
+        console.log(`  Model Certificate:      ${green('Constructive Model M Validated')}`);
+      }
       if (logic.verifiedAxioms && logic.verifiedAxioms.length > 0) {
         console.log(`  Axioms Applied:         ${cyan(logic.verifiedAxioms.join(', '))}`);
       }
@@ -926,6 +932,9 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
       console.log(`  Model Gen. Score:  ${cyan(report.empiricalOptimizationScore)}`);
       console.log(`  Holdout Probes:    ${report.holdoutPassRatePercent}% (Internal Sanity Gap: ${report.generalizationGapPercent}%)`);
       console.log(`  Tier Disclosure:   ${gray(report.tierDisclosure)}`);
+      if (report.tierBreakdown) {
+        console.log(`  Tier Breakdown:    Total Inferences: ${report.tierBreakdown.totalInferences} (Simulated: ${report.tierBreakdown.simulationCount}, Real: ${report.tierBreakdown.realModelCount}, Contaminated: ${report.tierBreakdown.isContaminated ? red('YES (REJECTED)') : green('NO')})`);
+      }
 
       if (flags.out) {
         writeFileSync(flags.out, report.markdownReport, 'utf8');

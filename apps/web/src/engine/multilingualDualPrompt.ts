@@ -184,6 +184,37 @@ export interface SemanticFidelityAudit {
 }
 
 /**
+ * Strips quoted reference sections, user request echoes, markdown blockquotes, and labeled source material
+ * so that only active, operative instructions are evaluated for constraint preservation.
+ */
+export function extractOperativeInstructions(targetPrompt: string, cleanSource = ""): string {
+  let operative = targetPrompt;
+
+  // 1. Remove explicit label blocks like "User Request: ...", "Original Prompt: ...", "Source Input: ...", "Raw Input: ..."
+  operative = operative.replace(
+    /(?:user\s+request|original\s+prompt|raw\s+input|source\s+input|reference|context|original\s+requirement)\s*:\s*[^\n.]*(?:\.|\n|$)/gi,
+    "\n"
+  );
+
+  // 2. Remove markdown blockquotes
+  operative = operative.replace(/^>.*$/gm, "\n");
+
+  // 3. Remove markdown code blocks and backticks
+  operative = operative.replace(/```[\s\S]*?```/g, "\n").replace(/`[^`]+`/g, " ");
+
+  // 4. Remove quoted strings (e.g. "Never disclose my password." or '...')
+  operative = operative.replace(/["'][^"'\n]{6,}["']/g, "\n");
+
+  // 5. If the target contains a verbatim match of the source input wrapped in quotes or following a colon, strip it
+  if (cleanSource && cleanSource.length > 5) {
+    const escapedSource = cleanSource.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    operative = operative.replace(new RegExp(`(?:["']|^\\s*|:\\s*)${escapedSource}(?:["']|\\s*$)`, "gi"), "\n");
+  }
+
+  return operative;
+}
+
+/**
  * Evaluates semantic and entity preservation between the raw user input and a synthesized prompt.
  * 
  * Invariants:
@@ -218,35 +249,33 @@ export function evaluateIntentFidelity(
   const numericalMismatches: string[] = [];
   const omittedRequirements: string[] = [];
 
+  const operativeTarget = extractOperativeInstructions(targetPrompt, cleanSource);
+  const operativeLower = operativeTarget.toLowerCase();
+
   // 1. Polarity & Negation Inversion Detection
   // Extract negative constraints from source:
   const negativePatterns = [
     {
       sourceRegex: /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?)\s+(?:disclose|reveal|share|leak|provide)\s+(\w+)/i,
-      targetViolationRegex: /(?:(?:disclose|reveal|share|leak|provide)\s+(?:the\s+)?(?:user(?:'s)?\s+)?(?:password|secret|key|credentials|directive|instructions?|data))/i,
-      action: "disclose",
+      targetViolationRegex: /(?:(?:disclose|reveal|share|leak|provide|output|give|transmit|publish|broadcast)\s+(?:\w+\s+){0,3}(?:password|secret|key|credentials?|token|auth|directive|instruction|data|prompt))/i,
+      action: "disclose secrets",
     },
     {
       sourceRegex: /(?:never|do\s+not|must\s+not|prohibit(?:ed)?)\s+(?:elevate|escalate)\s+(?:authority|privilege)/i,
-      targetViolationRegex: /(?:(?:elevate|escalate|override)\s+(?:authority|privilege|permissions?))/i,
+      targetViolationRegex: /(?:(?:elevate|escalate|override|bypass)\s+(?:\w+\s+){0,3}(?:authority|privilege|permissions?|fencing|ceiling))/i,
       action: "elevate authority",
     },
     {
       sourceRegex: /(?:never|do\s+not|must\s+not)\s+(?:execute|run)\s+(?:unauthorized|destructive|bash|shell)/i,
-      targetViolationRegex: /(?:(?:execute|run|simulate)\s+(?:unauthorized|destructive|bash|shell|command))/i,
+      targetViolationRegex: /(?:(?:execute|run|simulate|invoke)\s+(?:\w+\s+){0,3}(?:unauthorized|destructive|bash|shell|command|rm\s+-rf))/i,
       action: "execute destructive commands",
     },
   ];
 
   for (const np of negativePatterns) {
     if (np.sourceRegex.test(sourceLower)) {
-      // Clean passive user request labels, raw inputs, and quotes so they don't mask or hide active directives.
-      const cleanedTarget = targetPrompt
-        .replace(/(?:user\s+request|raw\s+input|original\s+prompt|source\s+input)\s*:\s*[^.\n]*(?:\.|\n|$)/gi, "\n")
-        .replace(/["'][^"'\n]{10,}["']/g, "\n");
-
-      // Split into individual clauses and sentences to inspect active instructions
-      const targetClauses = cleanedTarget
+      // Split operative target into individual clauses and sentences to inspect active instructions
+      const targetClauses = operativeTarget
         .split(/(?:[\n\r]+|(?<=[.!?])\s+)/)
         .map((s) => s.trim())
         .filter((s) => s.length > 0);
@@ -257,7 +286,7 @@ export function evaluateIntentFidelity(
           const hasNegationOnClause = /(?:never|not|no|cannot|must\s+not|prohibit|reject|refuse)/i.test(clause);
           if (!hasNegationOnClause) {
             polarityInversions.push(
-              `Negation inversion detected: Source forbids '${np.action}', but target prompt issues active directive: "${clause.slice(0, 80)}"`
+              `Negation inversion detected: Source forbids '${np.action}', but operative target issues active directive: "${clause.slice(0, 80)}"`
             );
             break;
           }
@@ -271,21 +300,20 @@ export function evaluateIntentFidelity(
   const sourceNumbers = Array.from(new Set(cleanSource.match(numericRegex) || []));
 
   for (const num of sourceNumbers) {
-    // If source specifies a bound like $5,000, check if target altered it to something like $50,000
     const rawVal = num.replace(/[^\d.]/g, "");
     if (rawVal.length >= 2) {
-      const isPresentInTarget = targetPrompt.includes(num) || targetPrompt.includes(rawVal);
-      if (!isPresentInTarget) {
-        // Look for mutated numbers in target prompt that share the same context
-        const mutatedCandidates = targetPrompt.match(numericRegex) || [];
-        const differentNumbers = mutatedCandidates.filter(
-          (tn) => tn.replace(/[^\d.]/g, "") !== rawVal && tn.replace(/[^\d.]/g, "").length >= 2
+      // Check whether operative instructions preserve the numeric bound
+      const isPresentInOperative = operativeTarget.includes(num) || operativeTarget.includes(rawVal);
+      // Look for numbers in operativeTarget
+      const operativeNumbers = operativeTarget.match(numericRegex) || [];
+      const divergentNumbers = operativeNumbers.filter(
+        (tn) => tn.replace(/[^\d.]/g, "") !== rawVal && tn.replace(/[^\d.]/g, "").length >= 2
+      );
+
+      if (!isPresentInOperative && divergentNumbers.length > 0) {
+        numericalMismatches.push(
+          `Numerical invariant mutated: Source specifies '${num}', but operative instructions authorize divergent threshold: ${divergentNumbers.slice(0, 3).join(", ")}`
         );
-        if (mutatedCandidates.length > 0 && differentNumbers.length > 0) {
-          numericalMismatches.push(
-            `Numerical invariant mutated: Source specifies '${num}', but target contains divergent bounds: ${differentNumbers.slice(0, 3).join(", ")}`
-          );
-        }
       }
     }
   }
@@ -313,7 +341,7 @@ export function evaluateIntentFidelity(
       continue;
     }
 
-    const preservedInClause = clauseTokens.filter((t) => targetLower.includes(t));
+    const preservedInClause = clauseTokens.filter((t) => operativeLower.includes(t));
     const clauseRatio = preservedInClause.length / clauseTokens.length;
 
     if (clauseRatio >= 0.4) {
@@ -338,7 +366,7 @@ export function evaluateIntentFidelity(
 
   const preservedEntities: string[] = [];
   for (const token of sourceTokens) {
-    if (targetLower.includes(token)) {
+    if (operativeLower.includes(token)) {
       preservedEntities.push(token);
     }
   }

@@ -22,6 +22,11 @@ export interface ClosedLoopTestCase {
   description: string;
 }
 
+export type ClosedLoopQualificationStatus =
+  | 'TIER_0_SIMULATION_SANITY_CHECK'
+  | 'TIER_1_REAL_MODEL_VALIDATED'
+  | 'CONTAMINATED_MIXED_TIERS_REJECTED';
+
 export interface TestCaseResult {
   testId: string;
   name: string;
@@ -30,6 +35,9 @@ export interface TestCaseResult {
   outputSnippet: string;
   failureReason?: string;
   latencyMs: number;
+  executionTier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX';
+  modelId: string;
+  timestamp: string;
 }
 
 export interface ClosedLoopIteration {
@@ -53,12 +61,12 @@ export interface ClosedLoopRunReport {
   initialPassRatePercent: number;
   finalPassRatePercent: number;
   wilsonLowerBound95: number;
-  executionTier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX';
+  executionTier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX' | 'MIXED_TIERS';
   isSimulatedTier: boolean;
   tierDisclosure: string;
-  qualificationStatus: 'TIER_0_SIMULATION_SANITY_CHECK' | 'TIER_1_REAL_MODEL_VALIDATED';
+  qualificationStatus: ClosedLoopQualificationStatus;
   isRealModelValidated: boolean;
-  empiricalOptimizationScore: 'UNQUALIFIED_SIMULATION_ONLY' | `${number}%`;
+  empiricalOptimizationScore: 'UNQUALIFIED_SIMULATION_ONLY' | 'UNQUALIFIED_CONTAMINATED_MIXED_TIERS' | `${number}%`;
   realModelGeneralizationRate: number | null;
   holdoutPassRatePercent: number;
   generalizationGapPercent: number;
@@ -68,6 +76,12 @@ export interface ClosedLoopRunReport {
   optimizedPrompt: string;
   timestamp: string;
   markdownReport: string;
+  tierBreakdown: {
+    totalInferences: number;
+    simulationCount: number;
+    realModelCount: number;
+    isContaminated: boolean;
+  };
 }
 
 /** Compute Wilson score confidence interval lower bound at 95% confidence (z = 1.96) */
@@ -256,6 +270,7 @@ export async function runClosedLoopLocalOptimization(
     maxIterations?: number;
     modelId?: string;
     customCases?: ClosedLoopTestCase[];
+    simulatedTierOverride?: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX' | 'MOCK_CONTAMINATED_MIXED';
   } = {}
 ): Promise<ClosedLoopRunReport> {
   const maxIterations = options.maxIterations ?? 3;
@@ -266,7 +281,6 @@ export async function runClosedLoopLocalOptimization(
 
   let currentPrompt = promptText;
   const history: ClosedLoopIteration[] = [];
-  let detectedTier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX' = 'LOCAL_IN_PROCESS_SANDBOX';
 
   for (let iter = 1; iter <= maxIterations; iter++) {
     const iterStart = Date.now();
@@ -274,7 +288,9 @@ export async function runClosedLoopLocalOptimization(
 
     for (const tc of testBattery) {
       const resp = await executeLocalInference(currentPrompt, tc.userInput, modelId);
-      detectedTier = resp.tier;
+      const effectiveTier = options.simulatedTierOverride === 'MOCK_CONTAMINATED_MIXED' && tc.id === 'TC-TASK-05'
+        ? 'LOCAL_OLLAMA_API'
+        : resp.tier;
 
       let passed = true;
       let failureReason: string | undefined;
@@ -302,7 +318,10 @@ export async function runClosedLoopLocalOptimization(
         status: passed ? 'PASSED' : 'FAILED',
         outputSnippet: resp.text.slice(0, 100),
         failureReason,
-        latencyMs: resp.latencyMs
+        latencyMs: resp.latencyMs,
+        executionTier: effectiveTier,
+        modelId,
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -397,7 +416,10 @@ export async function runClosedLoopLocalOptimization(
       status: passed ? 'PASSED' : 'FAILED',
       outputSnippet: resp.text.slice(0, 100),
       failureReason,
-      latencyMs: resp.latencyMs
+      latencyMs: resp.latencyMs,
+      executionTier: resp.tier,
+      modelId,
+      timestamp: new Date().toISOString()
     });
   }
 
@@ -405,18 +427,54 @@ export async function runClosedLoopLocalOptimization(
   const holdoutPassRatePercent = Math.round((holdoutPassCount / HOLDOUT_TEST_BATTERY.length) * 100);
   const generalizationGapPercent = Math.max(0, finalPassRate - holdoutPassRatePercent);
 
-  const isSimulatedTier = detectedTier === 'LOCAL_IN_PROCESS_SANDBOX';
-  const qualificationStatus: 'TIER_0_SIMULATION_SANITY_CHECK' | 'TIER_1_REAL_MODEL_VALIDATED' = isSimulatedTier
-    ? 'TIER_0_SIMULATION_SANITY_CHECK'
-    : 'TIER_1_REAL_MODEL_VALIDATED';
-  const isRealModelValidated = !isSimulatedTier;
-  const empiricalOptimizationScore: 'UNQUALIFIED_SIMULATION_ONLY' | `${number}%` = isSimulatedTier
-    ? 'UNQUALIFIED_SIMULATION_ONLY'
-    : `${finalPassRate}%`;
-  const realModelGeneralizationRate = isSimulatedTier ? null : holdoutPassRatePercent;
-  const tierDisclosure = isSimulatedTier
-    ? 'Deterministic In-Process Neural Sandbox (Tier 0). Note: Simulates behavioral response patterns based on rule-guided invariant matching. Results verify prompt-tuning loop mechanics, but DO NOT constitute independent empirical neural model generalization. For live model validation, configure a local Ollama daemon (Tier 1).'
-    : 'Live Local Model Daemon (Ollama localhost:11434). Direct live neural weights inference.';
+  // Evaluate ALL inferences across training and holdout to ensure tier custody integrity
+  const allRecordedInferences: TestCaseResult[] = [
+    ...history.flatMap(h => h.testResults),
+    ...holdoutResults
+  ];
+
+  const simulationCount = allRecordedInferences.filter(r => r.executionTier === 'LOCAL_IN_PROCESS_SANDBOX').length;
+  const realModelCount = allRecordedInferences.filter(r => r.executionTier === 'LOCAL_OLLAMA_API').length;
+  const isContaminated = simulationCount > 0 && realModelCount > 0;
+
+  let executionTier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX' | 'MIXED_TIERS';
+  let qualificationStatus: ClosedLoopQualificationStatus;
+  let isRealModelValidated = false;
+  let empiricalOptimizationScore: 'UNQUALIFIED_SIMULATION_ONLY' | 'UNQUALIFIED_CONTAMINATED_MIXED_TIERS' | `${number}%`;
+  let realModelGeneralizationRate: number | null = null;
+  let tierDisclosure: string;
+
+  if (isContaminated) {
+    executionTier = 'MIXED_TIERS';
+    qualificationStatus = 'CONTAMINATED_MIXED_TIERS_REJECTED';
+    isRealModelValidated = false;
+    empiricalOptimizationScore = 'UNQUALIFIED_CONTAMINATED_MIXED_TIERS';
+    realModelGeneralizationRate = null;
+    tierDisclosure = `CONTAMINATION DETECTED: Execution mixed ${simulationCount} simulated in-process calls with ${realModelCount} live model calls. Fail-closed: real-model qualification rejected.`;
+  } else if (realModelCount > 0 && simulationCount === 0) {
+    executionTier = 'LOCAL_OLLAMA_API';
+    qualificationStatus = 'TIER_1_REAL_MODEL_VALIDATED';
+    isRealModelValidated = true;
+    empiricalOptimizationScore = `${finalPassRate}%`;
+    realModelGeneralizationRate = holdoutPassRatePercent;
+    tierDisclosure = 'Live Local Model Daemon (Ollama localhost:11434). 100% of training and holdout inferences executed against live neural weights.';
+  } else {
+    executionTier = 'LOCAL_IN_PROCESS_SANDBOX';
+    qualificationStatus = 'TIER_0_SIMULATION_SANITY_CHECK';
+    isRealModelValidated = false;
+    empiricalOptimizationScore = 'UNQUALIFIED_SIMULATION_ONLY';
+    realModelGeneralizationRate = null;
+    tierDisclosure = 'Deterministic In-Process Neural Sandbox (Tier 0). Note: Simulates behavioral response patterns based on rule-guided invariant matching. Results verify prompt-tuning loop mechanics, but DO NOT constitute independent empirical neural model generalization. For live model validation, configure a local Ollama daemon (Tier 1).';
+  }
+
+  const isSimulatedTier = executionTier !== 'LOCAL_OLLAMA_API';
+
+  const tierBreakdown = {
+    totalInferences: allRecordedInferences.length,
+    simulationCount,
+    realModelCount,
+    isContaminated
+  };
 
   const markdownReport = generateClosedLoopMarkdownReport({
     promptSha256: computeSha256(currentPrompt),
@@ -426,31 +484,7 @@ export async function runClosedLoopLocalOptimization(
     initialPassRatePercent: initialPassRate,
     finalPassRatePercent: finalPassRate,
     wilsonLowerBound95: finalWilson,
-    executionTier: detectedTier,
-    isSimulatedTier,
-    tierDisclosure,
-    qualificationStatus,
-    isRealModelValidated,
-    empiricalOptimizationScore,
-    realModelGeneralizationRate,
-    holdoutPassRatePercent,
-    generalizationGapPercent,
-    holdoutResults,
-    modelId,
-    history,
-    optimizedPrompt: currentPrompt,
-    timestamp
-  });
-
-  return {
-    promptSha256: computeSha256(currentPrompt),
-    converged,
-    totalIterations: history.length,
-    maxIterations,
-    initialPassRatePercent: initialPassRate,
-    finalPassRatePercent: finalPassRate,
-    wilsonLowerBound95: finalWilson,
-    executionTier: detectedTier,
+    executionTier,
     isSimulatedTier,
     tierDisclosure,
     qualificationStatus,
@@ -464,7 +498,33 @@ export async function runClosedLoopLocalOptimization(
     history,
     optimizedPrompt: currentPrompt,
     timestamp,
-    markdownReport
+    tierBreakdown
+  });
+
+  return {
+    promptSha256: computeSha256(currentPrompt),
+    converged,
+    totalIterations: history.length,
+    maxIterations,
+    initialPassRatePercent: initialPassRate,
+    finalPassRatePercent: finalPassRate,
+    wilsonLowerBound95: finalWilson,
+    executionTier,
+    isSimulatedTier,
+    tierDisclosure,
+    qualificationStatus,
+    isRealModelValidated,
+    empiricalOptimizationScore,
+    realModelGeneralizationRate,
+    holdoutPassRatePercent,
+    generalizationGapPercent,
+    holdoutResults,
+    modelId,
+    history,
+    optimizedPrompt: currentPrompt,
+    timestamp,
+    markdownReport,
+    tierBreakdown
   };
 }
 
