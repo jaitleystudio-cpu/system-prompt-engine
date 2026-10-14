@@ -181,6 +181,8 @@ export interface SemanticFidelityAudit {
     | "NUMERICAL_MUTATION"
     | "OMISSION_DEFICIT"
     | "CONTRADICTORY_INSTRUCTION";
+  auditScope?: "RESTRICTED_LEXICAL_AND_POLARITY_FILTER";
+  epistemicDisclaimer?: string;
 }
 
 /**
@@ -252,22 +254,46 @@ export function evaluateIntentFidelity(
   const operativeTarget = extractOperativeInstructions(targetPrompt, cleanSource);
   const operativeLower = operativeTarget.toLowerCase();
 
+  const DISCLOSURE_VERBS =
+    "disclose|reveal|share|leak|provide|send|transmit|forward|publish|broadcast|post|print|upload|dump|distribute|deliver|dispatch|release|expose|transfer|relay|give|surrender|trade|sell|email|message|whisper|communicate|airdrop|export|exfiltrate|stream|write|display|echo|output";
+
+  const SENSITIVE_OBJECTS =
+    "passwords?|secrets?|keys?|credentials?|tokens?|auth|directives?|instructions?|data|prompts?|pii|confidential|api_keys?";
+
+  const DESTINATION_TARGETS =
+    "strangers?|outsiders?|third\\s*part(?:y|ies)|public|everyone|any(?:one|body)|unauthorized(?:\\s+users?)?|hackers?|internet|online|remote|external";
+
+  const ESCALATION_VERBS =
+    "elevate|escalate|override|bypass|grant\\s+root|disable\\s+fencing|ignore\\s+limits|assume\\s+admin|gain\\s+privilege";
+
+  const DESTRUCTIVE_VERBS =
+    "execute|run|simulate|invoke|launch|spawn|pipe|eval|rm\\s+-rf|format\\s+disk|drop\\s+database|delete\\s+all";
+
   // 1. Polarity & Negation Inversion Detection
   // Extract negative constraints from source:
   const negativePatterns = [
     {
-      sourceRegex: /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?)\s+(?:disclose|reveal|share|leak|provide)\s+(\w+)/i,
-      targetViolationRegex: /(?:(?:disclose|reveal|share|leak|provide|output|give|transmit|publish|broadcast)\s+(?:\w+\s+){0,3}(?:password|secret|key|credentials?|token|auth|directive|instruction|data|prompt))/i,
+      sourceRegex: new RegExp(`(?:never|do\\s+not|don't|must\\s+not|cannot|prohibit(?:ed)?)\\s+(?:${DISCLOSURE_VERBS})\\s+(\\w+)`, "i"),
+      targetViolationRegex: new RegExp(
+        `(?:(?:${DISCLOSURE_VERBS})\\s+(?:\\w+\\s+){0,4}(?:${SENSITIVE_OBJECTS})|(?:${DISCLOSURE_VERBS})\\s+(?:\\w+\\s+){0,4}(?:to\\s+(?:${DESTINATION_TARGETS})))`,
+        "i"
+      ),
       action: "disclose secrets",
     },
     {
-      sourceRegex: /(?:never|do\s+not|must\s+not|prohibit(?:ed)?)\s+(?:elevate|escalate)\s+(?:authority|privilege)/i,
-      targetViolationRegex: /(?:(?:elevate|escalate|override|bypass)\s+(?:\w+\s+){0,3}(?:authority|privilege|permissions?|fencing|ceiling))/i,
+      sourceRegex: new RegExp(`(?:never|do\\s+not|must\\s+not|prohibit(?:ed)?)\\s+(?:${ESCALATION_VERBS})\\s+(?:authority|privilege)`, "i"),
+      targetViolationRegex: new RegExp(
+        `(?:(?:${ESCALATION_VERBS})\\s+(?:\\w+\\s+){0,3}(?:authority|privilege|permissions?|fencing|ceiling))`,
+        "i"
+      ),
       action: "elevate authority",
     },
     {
-      sourceRegex: /(?:never|do\s+not|must\s+not)\s+(?:execute|run)\s+(?:unauthorized|destructive|bash|shell)/i,
-      targetViolationRegex: /(?:(?:execute|run|simulate|invoke)\s+(?:\w+\s+){0,3}(?:unauthorized|destructive|bash|shell|command|rm\s+-rf))/i,
+      sourceRegex: new RegExp(`(?:never|do\\s+not|must\\s+not)\\s+(?:${DESTRUCTIVE_VERBS})\\s+(?:unauthorized|destructive|bash|shell)`, "i"),
+      targetViolationRegex: new RegExp(
+        `(?:(?:${DESTRUCTIVE_VERBS})\\s+(?:\\w+\\s+){0,3}(?:unauthorized|destructive|bash|shell|command|rm\\s+-rf))`,
+        "i"
+      ),
       action: "execute destructive commands",
     },
   ];
@@ -284,10 +310,10 @@ export function evaluateIntentFidelity(
         if (np.targetViolationRegex.test(clause)) {
           // Check if the violation action itself is explicitly governed by a local negation operator
           const isLocallyNegated = np.action === "disclose secrets"
-            ? /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?|refuse\s+to|reject)\s+(?:\w+\s+){0,3}(?:disclose|reveal|share|leak|provide|output|give|transmit|publish|broadcast|post|print|upload|send|make\s+public)/i.test(clause)
+            ? new RegExp(`(?:never|do\\s+not|don't|must\\s+not|cannot|prohibit(?:ed)?|refuse\\s+to|reject)\\s+(?:\\w+\\s+){0,3}(?:${DISCLOSURE_VERBS}|make\\s+public)`, "i").test(clause)
             : np.action === "elevate authority"
-            ? /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?|refuse\s+to|reject)\s+(?:\w+\s+){0,3}(?:elevate|escalate|override|bypass)/i.test(clause)
-            : /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?|refuse\s+to|reject)\s+(?:\w+\s+){0,3}(?:execute|run|simulate|invoke)/i.test(clause);
+            ? new RegExp(`(?:never|do\\s+not|don't|must\\s+not|cannot|prohibit(?:ed)?|refuse\\s+to|reject)\\s+(?:\\w+\\s+){0,3}(?:${ESCALATION_VERBS})`, "i").test(clause)
+            : new RegExp(`(?:never|do\\s+not|don't|must\\s+not|cannot|prohibit(?:ed)?|refuse\\s+to|reject)\\s+(?:\\w+\\s+){0,3}(?:${DESTRUCTIVE_VERBS})`, "i").test(clause);
 
           if (!isLocallyNegated) {
             polarityInversions.push(
@@ -315,10 +341,23 @@ export function evaluateIntentFidelity(
         (tn) => tn.replace(/[^\d.]/g, "") !== rawVal && tn.replace(/[^\d.]/g, "").length >= 2
       );
 
-      if (!isPresentInOperative && divergentNumbers.length > 0) {
-        numericalMismatches.push(
-          `Numerical invariant mutated: Source specifies '${num}', but operative instructions authorize divergent threshold: ${divergentNumbers.slice(0, 3).join(", ")}`
-        );
+      if (divergentNumbers.length > 0) {
+        for (const divNum of divergentNumbers) {
+          const divRaw = divNum.replace(/[^\d.]/g, "");
+          // Find the operative sentence/clause that contains this divergent number
+          const divClause = operativeTarget
+            .split(/[\n\r;]+|(?<=[.!?])\s+/)
+            .find((c) => c.includes(divNum) || c.includes(divRaw));
+          if (divClause) {
+            // Check if the clause uses this divergent number in an active/authorizing capacity
+            const isOperativeThreshold = /(?:up\s+to|limit|threshold|exceed|allow|maximum|ceiling|authorize|permit|spend|budget|cap|amount|funds?|payout|transfer|transfers?)\b/i.test(divClause);
+            if (!isPresentInOperative || isOperativeThreshold) {
+              numericalMismatches.push(
+                `Numerical invariant mutated: Source specifies '${num}', but operative instructions authorize divergent threshold: '${divNum}' in "${divClause.trim().slice(0, 80)}"`
+              );
+            }
+          }
+        }
       }
     }
   }
@@ -389,6 +428,9 @@ export function evaluateIntentFidelity(
       numericalMismatches,
       polarityInversions,
       verdict: "POLARITY_INVERSION",
+      auditScope: "RESTRICTED_LEXICAL_AND_POLARITY_FILTER",
+      epistemicDisclaimer:
+        "Static heuristic filter over defined lexicon. Does not constitute general semantic-equivalence proof for unconstrained natural language.",
     };
   }
 
@@ -402,6 +444,9 @@ export function evaluateIntentFidelity(
       numericalMismatches,
       polarityInversions,
       verdict: "NUMERICAL_MUTATION",
+      auditScope: "RESTRICTED_LEXICAL_AND_POLARITY_FILTER",
+      epistemicDisclaimer:
+        "Static heuristic filter over defined lexicon. Does not constitute general semantic-equivalence proof for unconstrained natural language.",
     };
   }
 
@@ -415,6 +460,9 @@ export function evaluateIntentFidelity(
       numericalMismatches,
       polarityInversions,
       verdict: "OMISSION_DEFICIT",
+      auditScope: "RESTRICTED_LEXICAL_AND_POLARITY_FILTER",
+      epistemicDisclaimer:
+        "Static heuristic filter over defined lexicon. Does not constitute general semantic-equivalence proof for unconstrained natural language.",
     };
   }
 
@@ -431,6 +479,9 @@ export function evaluateIntentFidelity(
     numericalMismatches,
     polarityInversions,
     verdict: "SEMANTICALLY_PRESERVED",
+    auditScope: "RESTRICTED_LEXICAL_AND_POLARITY_FILTER",
+    epistemicDisclaimer:
+      "Static heuristic filter over defined lexicon. Does not constitute general semantic-equivalence proof for unconstrained natural language.",
   };
 }
 
