@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+
+from jsonschema import Draft202012Validator
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable
@@ -79,42 +81,70 @@ class DeterministicOracle(TaskOracle):
 
 
 class SchemaConformanceOracle(TaskOracle):
+    """Fail-closed JSON Schema Draft 2020-12 oracle.
+
+    A valid schema validates shapes and types only, not factual truth.
+    """
+
     def __init__(self, oracle_id: str, json_schema: dict[str, Any]) -> None:
+        # Reject malformed schemas before grading; no implicit partial validation.
+        Draft202012Validator.check_schema(json_schema)
         self.oracle_id = oracle_id
         self.method = "JSON_SCHEMA_VALIDATION"
-        self.known_limitations = "Validates structure and typing, not factual truth"
+        self.known_limitations = "Draft 2020-12 structural/schema validation; not factual truth"
         self.evidence_strength = "DETERMINISTIC"
         self.schema = json_schema
+        self._validator = Draft202012Validator(json_schema)
+
+    @staticmethod
+    def _reject_non_finite_number(token: str) -> None:
+        # Python's json.loads accepts NaN/Infinity by default; strict JSON does not.
+        raise ValueError("Invalid non-finite JSON number")
 
     def evaluate(self, candidate_output: str, task_context: dict[str, Any]) -> OracleVerdict:
         try:
-            parsed = json.loads(candidate_output)
-            # Basic validation of required properties
-            reqs = self.schema.get("required", [])
-            for r in reqs:
-                if r not in parsed:
-                    return OracleVerdict(
-                        passed=False,
-                        score=0.0,
-                        rationale=f"Missing required field '{r}' in JSON payload",
-                        evidence_class="DETERMINISTIC",
-                        oracle_id=self.oracle_id,
-                    )
-            return OracleVerdict(
-                passed=True,
-                score=1.0,
-                rationale="Valid JSON matching required schema properties",
-                evidence_class="DETERMINISTIC",
-                oracle_id=self.oracle_id,
+            parsed = json.loads(
+                candidate_output, parse_constant=self._reject_non_finite_number
             )
-        except Exception as e:
+        except (ValueError, TypeError) as exc:
             return OracleVerdict(
                 passed=False,
                 score=0.0,
-                rationale=f"JSON parse error: {str(e)}",
+                rationale=f"Invalid JSON payload ({type(exc).__name__})",
                 evidence_class="DETERMINISTIC",
                 oracle_id=self.oracle_id,
             )
+
+        error = next(self._validator.iter_errors(parsed), None)
+        if error is not None:
+            if error.validator == "required" and isinstance(error.instance, dict):
+                missing = next(
+                    (key for key in error.validator_value if key not in error.instance),
+                    None,
+                )
+                rationale = f"Missing required field '{missing}' in JSON payload"
+            else:
+                location = "$" + "".join(
+                    f"[{item}]" if isinstance(item, int) else f".{item}"
+                    for item in error.absolute_path
+                )
+                # Do not echo private candidate values in evidence diagnostics.
+                rationale = f"JSON Schema violation at {location}: {error.validator}"
+            return OracleVerdict(
+                passed=False,
+                score=0.0,
+                rationale=rationale,
+                evidence_class="DETERMINISTIC",
+                oracle_id=self.oracle_id,
+            )
+
+        return OracleVerdict(
+            passed=True,
+            score=1.0,
+            rationale="Valid JSON satisfying Draft 2020-12 schema constraints",
+            evidence_class="DETERMINISTIC",
+            oracle_id=self.oracle_id,
+        )
 
 
 class ProgrammaticConstraintOracle(TaskOracle):
@@ -241,7 +271,9 @@ class BenchmarkResult:
     accuracy_score: float
     domain_breakdown: dict[str, float]
     verdicts: list[OracleVerdict]
-    evidence_class: str
+    evidence_class: str  # Execution provenance; never infer from oracle method
+    oracle_evidence_strength: str = "UNKNOWN"
+    execution_evidence_class: str = "UNKNOWN"
 
 
 @dataclass
