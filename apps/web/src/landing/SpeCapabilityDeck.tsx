@@ -277,7 +277,7 @@ export function SpeCapabilityDeck({ onNavigate }: Props) {
         <header className="spe-deck-story-header">
           <div className="spe-hero-reflective-wrap">
             <h2 id={headingId} className="spe-hero-reflective-h1">
-              EVERYTHING YOU NEED FOR AI, IN SIMPLE ENGLISH
+              Everything You Need for AI, <em>in Simple English.</em>
             </h2>
           </div>
           <p className="spe-deck-subtitle">

@@ -203,7 +203,8 @@ class RepoAuditor:
                             patch_lines.append(f"--- a/{rel_path}:{line_idx}")
                             patch_lines.append(f"- {line.strip()}")
                             if "OpenAI(" in line:
-                                patch_lines.append(f"+ {line.strip().replace('OpenAI(', 'OpenAI(base_url=\"http://localhost:8080/v1\", ')}")
+                                replaced_call = line.strip().replace("OpenAI(", "OpenAI(base_url='http://localhost:8080/v1', ")
+                                patch_lines.append(f"+ {replaced_call}")
                             else:
                                 patch_lines.append(f"+ # [SPE_GUARDED] {line.strip()}")
 

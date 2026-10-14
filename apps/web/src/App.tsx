@@ -85,6 +85,7 @@ import {
   hasCreateIntentFields,
   preserveCreateIntentFields,
 } from "./engine/UserConfirmedRequirements";
+import { EVAL_STUDIO_VIEW } from "./engine/routeAliases";
 import { SourcesDepthDisclosure } from "./composer/SourcesDepthDisclosure";
 import {
   ContextProtocolControls,
@@ -141,6 +142,12 @@ const HeadToHeadCompare = lazy(() =>
 );
 const Pricing = lazy(() =>
   import("./pages/Pricing").then((m) => ({ default: m.Pricing }))
+);
+const PromptArsenalPage = lazy(() =>
+  import("./pages/PromptArsenalPage").then((m) => ({ default: m.PromptArsenalPage }))
+);
+const EvalStudio = lazy(() =>
+  import("./engine/eval/EvalStudio").then((m) => ({ default: m.EvalStudio }))
 );
 
 type View = AppView;
@@ -1398,6 +1405,24 @@ export default function App() {
         {!notFound && view === "pricing" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
             <Pricing onNavigate={setView} />
+          </Suspense>
+        )}
+        {!notFound && view === "prompts" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <PromptArsenalPage
+              onNavigate={setView}
+              onSelectPrompt={(compiledPrompt, cat) => {
+                applyUserRequestChange(compiledPrompt);
+                setCategory(cat);
+                setView("create");
+                window.scrollTo(0, 0);
+              }}
+            />
+          </Suspense>
+        )}
+        {!notFound && view === EVAL_STUDIO_VIEW && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <EvalStudio />
           </Suspense>
         )}
 

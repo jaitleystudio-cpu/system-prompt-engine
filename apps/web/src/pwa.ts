@@ -8,9 +8,14 @@ export function registerServiceWorker(): void {
     if (!sw) return;
     const register = () => {
       try {
-        void sw.register("/sw.js", { updateViaCache: "none" }).catch(() => {
-          /* A failed install never substitutes a remote compiler. */
-        });
+        void sw
+          .register("/sw.js", { updateViaCache: "none" })
+          .then((reg) => {
+            void reg.update();
+          })
+          .catch(() => {
+            /* A failed install never substitutes a remote compiler. */
+          });
       } catch {
         /* Sandboxed or restricted environment */
       }

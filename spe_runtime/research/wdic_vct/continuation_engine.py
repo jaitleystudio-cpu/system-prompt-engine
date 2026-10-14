@@ -94,6 +94,10 @@ class WDICContinuationEngine:
         res_match = re.search(r"RESULT:\s*([^\n]+)", raw_text, re.IGNORECASE)
         if res_match:
             summary = res_match.group(1).strip()
+        else:
+            first_line = next((line.strip() for line in raw_text.splitlines() if line.strip()), "")
+            if first_line:
+                summary = first_line[:200]
 
         return TaskReport(
             task_id=task_id,

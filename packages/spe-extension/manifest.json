@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "SPE — System Prompt Engine (1-Click AI Power Prompts & QuillBot Killer)",
-  "short_name": "SPE AI",
-  "version": "1.0.0",
-  "description": "Universal AI prompt companion, QuillBot rephraser & Grammarly humanizer for ChatGPT, Claude, Gemini, Google Docs & any website.",
+  "name": "SPE × Awesome Codex Pet (316 Pixel Pets Along Your Typing + Auto AI Cursor)",
+  "short_name": "SPE Codex Pet",
+  "version": "2.0.0",
+  "description": "316 real pixel-art Codex Pets that walk along your typing caret + Autonomous Moving AI Cursor for ChatGPT, Claude, Gemini, Gmail & any website.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -11,7 +11,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "SPE AI Companion",
+    "default_title": "SPE × Awesome Codex Pet",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -29,12 +29,15 @@
       ],
       "js": ["content.js"],
       "css": ["content.css"],
-      "run_at": "document_idle"
+      "run_at": "document_idle",
+      "all_frames": false
     }
   ],
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "tabs",
+    "scripting"
   ],
   "host_permissions": [
     "https://*/*",

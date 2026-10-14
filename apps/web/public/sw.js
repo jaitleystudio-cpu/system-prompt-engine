@@ -50,9 +50,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   event.respondWith(
-    caches.open(CACHE).then((cache) => cache.match(req)).then((hit) => {
-      if (hit) return hit;
-      return fetch(req).then((res) => {
+    fetch(req)
+      .then((res) => {
         if (!res || !res.ok) return res;
         const dest = req.destination;
         const cacheable =
@@ -61,13 +60,13 @@ self.addEventListener("fetch", (event) => {
           dest === "worker" ||
           dest === "manifest" ||
           url.pathname.endsWith(".wasm") ||
-          url.pathname.endsWith(".json") && url.pathname.includes("spe_wasm");
+          (url.pathname.endsWith(".json") && url.pathname.includes("spe_wasm"));
         if (cacheable) {
           const copy = res.clone();
           caches.open(CACHE).then((cache) => cache.put(req, copy));
         }
         return res;
-      });
-    })
+      })
+      .catch(() => caches.open(CACHE).then((cache) => cache.match(req)))
   );
 });

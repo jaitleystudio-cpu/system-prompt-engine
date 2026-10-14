@@ -1594,6 +1594,317 @@ Required Specification Sections:
 
   setupSelectionActionBar();
 
+  // =========================================================================
+  // 7. SPE Autonomous Cursor Agent (Pet Parked/Optional by Default)
+  // =========================================================================
+  function setupClickyCursorBuddy() {
+    if (document.getElementById("spe-autonomous-ai-cursor")) return;
+
+    const CODEX_PETS = [
+      { slug: "firefly--lingxiaotian", name: "Firefly" },
+      { slug: "kid-goku--julianhuang", name: "Kid Goku" },
+      { slug: "doraemon--xueshi", name: "Doraemon" },
+      { slug: "shinchan--chenxin-dlut", name: "Shin-chan" },
+      { slug: "frieren--lingxiaotian", name: "Frieren" }
+    ];
+    let petEnabled = false; // Parked by default per user directive
+    let currentPetIdx = 0;
+
+    function getPetWebp(slug, action) {
+      return `https://codexpet.top/assets/previews/${slug}/webp/${action || "idle"}.webp`;
+    }
+
+    // Optional Pet Container (Hidden/Parked by default)
+    const petWrap = document.createElement("div");
+    petWrap.id = "spe-codex-pet-wrap";
+    petWrap.style.cssText = "position:fixed;top:0;left:0;width:88px;height:96px;pointer-events:auto;cursor:pointer;z-index:2147483645;will-change:transform;display:none;filter:drop-shadow(0 8px 16px rgba(0,0,0,0.4));";
+    const petImg = document.createElement("img");
+    petImg.src = getPetWebp(CODEX_PETS[0].slug, "idle");
+    petImg.style.cssText = "width:88px;height:88px;object-fit:contain;image-rendering:pixelated;display:block;pointer-events:none;";
+    petWrap.appendChild(petImg);
+    document.body.appendChild(petWrap);
+
+    // 1. Visible Autonomous Moving AI Cursor
+    const aiCursor = document.createElement("div");
+    aiCursor.id = "spe-autonomous-ai-cursor";
+    aiCursor.style.cssText = "position:fixed;top:0;left:0;width:36px;height:36px;pointer-events:none;z-index:2147483647;will-change:transform;opacity:1;filter:drop-shadow(0 8px 16px rgba(234,88,12,0.55));font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;";
+    aiCursor.innerHTML = `
+      <div id="spe-ai-cursor-ripple" style="position:absolute;top:-12px;left:-12px;width:42px;height:42px;border-radius:50%;border:3px solid #ea580c;opacity:0;transform:scale(0.4);transition:all 0.35s ease-out;"></div>
+      <svg viewBox="0 0 28 28" width="30" height="30" fill="none">
+        <path d="M5 3L23 13.5L14.2 15.8L10.5 24.5L5 3Z" fill="#EA580C" stroke="#FFFFFF" stroke-width="2.2" stroke-linejoin="round"/>
+      </svg>
+      <div id="spe-ai-cursor-tag" style="position:absolute;left:24px;top:18px;background:#1c1917;color:#fff;border:1.5px solid #ea580c;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,0.35);">🤖 Autonomous Cursor · Idle</div>
+    `;
+    document.body.appendChild(aiCursor);
+
+    // 2. Highlight Box for Autonomous DOM Scanning
+    const scanBox = document.createElement("div");
+    scanBox.id = "spe-autonomous-scan-box";
+    scanBox.style.cssText = "position:fixed;top:0;left:0;width:0;height:0;pointer-events:none;z-index:2147483644;border:2px solid #ea580c;background:rgba(234,88,12,0.08);border-radius:10px;opacity:0;transition:all 0.28s cubic-bezier(0.22,1,0.36,1);box-shadow:0 0 0 4px rgba(234,88,12,0.15);";
+    document.body.appendChild(scanBox);
+
+    // 3. Autonomous Command Bar (Bottom-Right)
+    const dock = document.createElement("div");
+    dock.id = "spe-autonomous-dock";
+    dock.style.cssText = "position:fixed;bottom:16px;right:16px;z-index:2147483646;display:flex;flex-direction:column;gap:8px;width:390px;max-width:calc(100vw - 32px);background:rgba(28,25,23,0.96);color:#fafaf9;padding:12px 14px;border-radius:18px;box-shadow:0 18px 42px rgba(0,0,0,0.45);border:1px solid rgba(251,146,60,0.45);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;";
+    dock.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#fb923c;">
+          <span>🎯 Autonomous Cursor Agent</span>
+          <span id="spe-mission-status" style="font-size:10px;background:rgba(234,88,12,0.2);color:#fdba74;padding:2px 7px;border-radius:999px;">Ready</span>
+        </div>
+        <button id="spe-toggle-pet-btn" style="background:transparent;color:#a8a29e;border:1px solid #44403c;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700;cursor:pointer;" title="Optional Pet (Parked by default)">🐾 Pet: OFF</button>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <input id="spe-autonomous-query" type="text" placeholder="Ask cursor to search/do anything (e.g. iPhone 16 Pro price)..." value="iPhone 16 Pro Max price and specs" style="flex:1;background:#292524;color:#fff;border:1px solid #44403c;border-radius:10px;padding:7px 10px;font-size:12px;outline:none;" />
+        <button id="spe-autonomous-go" style="background:linear-gradient(135deg,#ea580c,#d97706);color:#fff;border:none;border-radius:10px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;">▶ Go Search</button>
+      </div>
+      <div id="spe-autonomous-results" style="display:none;max-height:190px;overflow-y:auto;background:#141210;border:1px solid #292524;border-radius:10px;padding:8px 10px;font-size:11px;line-height:1.45;color:#e7e5e4;"></div>
+    `;
+    document.body.appendChild(dock);
+
+    const cursorTag = document.getElementById("spe-ai-cursor-tag");
+    const statusBadge = document.getElementById("spe-mission-status");
+    const resultsBox = document.getElementById("spe-autonomous-results");
+
+    function setCursorStatus(text) {
+      if (cursorTag) cursorTag.textContent = `🤖 ${text}`;
+      if (statusBadge) statusBadge.textContent = text;
+    }
+
+    function pulseCursorRipple() {
+      const r = document.getElementById("spe-ai-cursor-ripple");
+      if (!r) return;
+      r.style.transition = "none";
+      r.style.opacity = "1";
+      r.style.transform = "scale(0.4)";
+      requestAnimationFrame(() => {
+        r.style.transition = "all 0.4s ease-out";
+        r.style.opacity = "0";
+        r.style.transform = "scale(2.0)";
+      });
+    }
+
+    function highlightElement(el) {
+      if (!el || !el.getBoundingClientRect) {
+        scanBox.style.opacity = "0";
+        return;
+      }
+      const r = el.getBoundingClientRect();
+      scanBox.style.left = `${Math.max(4, r.left - 6)}px`;
+      scanBox.style.top = `${Math.max(4, r.top - 6)}px`;
+      scanBox.style.width = `${Math.min(window.innerWidth - 12, r.width + 12)}px`;
+      scanBox.style.height = `${Math.min(window.innerHeight - 12, r.height + 12)}px`;
+      scanBox.style.opacity = "1";
+    }
+
+    let cursorTargetX = window.innerWidth - 260;
+    let cursorTargetY = window.innerHeight - 180;
+    let cursorCurX = cursorTargetX;
+    let cursorCurY = cursorTargetY;
+
+    function tickCursor() {
+      cursorCurX += (cursorTargetX - cursorCurX) * 0.16;
+      cursorCurY += (cursorTargetY - cursorCurY) * 0.16;
+      aiCursor.style.transform = `translate3d(${cursorCurX.toFixed(1)}px, ${cursorCurY.toFixed(1)}px, 0)`;
+      if (petEnabled) {
+        petWrap.style.transform = `translate3d(${(cursorCurX - 48).toFixed(1)}px, ${(cursorCurY - 88).toFixed(1)}px, 0)`;
+      }
+      requestAnimationFrame(tickCursor);
+    }
+    requestAnimationFrame(tickCursor);
+
+    // Toggle Optional Pet
+    const togglePetBtn = document.getElementById("spe-toggle-pet-btn");
+    if (togglePetBtn) {
+      togglePetBtn.addEventListener("click", () => {
+        petEnabled = !petEnabled;
+        petWrap.style.display = petEnabled ? "block" : "none";
+        togglePetBtn.textContent = petEnabled ? `🐾 Pet: ${CODEX_PETS[currentPetIdx].name}` : "🐾 Pet: OFF";
+        togglePetBtn.style.color = petEnabled ? "#fb923c" : "#a8a29e";
+      });
+    }
+    petWrap.addEventListener("click", () => {
+      currentPetIdx = (currentPetIdx + 1) % CODEX_PETS.length;
+      petImg.src = getPetWebp(CODEX_PETS[currentPetIdx].slug, "waving");
+      if (togglePetBtn) togglePetBtn.textContent = `🐾 Pet: ${CODEX_PETS[currentPetIdx].name}`;
+    });
+
+    // Helper: Find search box on current page (Google, Bing, Amazon, YouTube, ChatGPT, etc.)
+    function findSearchOrInputBox() {
+      const selectors = [
+        "textarea[name='q']",
+        "input[name='q']",
+        "input[type='search']",
+        "input[aria-label*='Search' i]",
+        "textarea[aria-label*='Search' i]",
+        "#twotabsearchtextbox",
+        "textarea",
+        "input[type='text']:not(#spe-autonomous-query)"
+      ];
+      for (const sel of selectors) {
+        const el = document.querySelector(sel);
+        if (el && el.getBoundingClientRect) {
+          const r = el.getBoundingClientRect();
+          if (r.width > 60 && r.height > 16) return el;
+        }
+      }
+      return null;
+    }
+
+    // Step A: Execute Autonomous Search in front of the user
+    function startAutonomousSearch(query) {
+      const cleanQuery = (query || "").trim() || "iPhone 16 Pro Max price and specs";
+      setCursorStatus(`Moving to Search Bar...`);
+      const searchInput = findSearchOrInputBox();
+
+      // Save mission state so when search results page loads, cursor continues scanning results automatically
+      try {
+        if (api && api.storage && api.storage.local) {
+          api.storage.local.set({
+            spe_autonomous_mission: {
+              query: cleanQuery,
+              stage: "SCAN_RESULTS",
+              startedAt: Date.now()
+            }
+          });
+        }
+      } catch (e) {}
+
+      if (searchInput) {
+        const r = searchInput.getBoundingClientRect();
+        highlightElement(searchInput);
+        cursorTargetX = r.left + Math.min(80, r.width / 3);
+        cursorTargetY = r.top + r.height / 2;
+
+        setTimeout(() => {
+          pulseCursorRipple();
+          searchInput.focus();
+          setCursorStatus(`Typing "${cleanQuery}"...`);
+          let idx = 0;
+          const timer = setInterval(() => {
+            idx += 1;
+            const slice = cleanQuery.slice(0, idx);
+            if ("value" in searchInput) {
+              searchInput.value = slice;
+              searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+            } else {
+              searchInput.textContent = slice;
+              searchInput.dispatchEvent(new InputEvent("input", { bubbles: true }));
+            }
+            cursorTargetX = Math.min(r.right - 20, r.left + 24 + idx * 7);
+            if (idx >= cleanQuery.length) {
+              clearInterval(timer);
+              pulseCursorRipple();
+              setCursorStatus("Submitting Search...");
+              setTimeout(() => {
+                const form = searchInput.closest("form");
+                if (form) {
+                  form.submit();
+                } else {
+                  window.location.href = `https://www.google.com/search?q=${encodeURIComponent(cleanQuery)}`;
+                }
+              }, 350);
+            }
+          }, 42);
+        }, 550);
+      } else {
+        // No search input on current page -> move cursor to top bar and navigate directly to Google Search in front of user
+        cursorTargetX = window.innerWidth / 2;
+        cursorTargetY = 40;
+        pulseCursorRipple();
+        setCursorStatus(`Opening Google Search for "${cleanQuery}"...`);
+        setTimeout(() => {
+          window.location.href = `https://www.google.com/search?q=${encodeURIComponent(cleanQuery)}`;
+        }, 500);
+      }
+    }
+
+    // Step B: When Search Results Page Loads, Cursor Autonomously Scans & Extracts Live Results in Front of User
+    function checkAndResumeAutonomousScan() {
+      if (!api || !api.storage || !api.storage.local) return;
+      api.storage.local.get(["spe_autonomous_mission"], (data) => {
+        const mission = data && data.spe_autonomous_mission;
+        if (!mission || mission.stage !== "SCAN_RESULTS") return;
+        if (Date.now() - (mission.startedAt || 0) > 60000) return; // Expire after 60s
+
+        // Clear stage so it doesn't loop forever
+        api.storage.local.set({ spe_autonomous_mission: { ...mission, stage: "DONE" } });
+
+        // Find result headings/cards on Google or any search page
+        const headings = Array.from(document.querySelectorAll("div#search h3, main h3, h3, [data-sokoban-container] h3")).filter((h) => {
+          const r = h.getBoundingClientRect();
+          return r.width > 40 && r.top > 60 && h.textContent.trim().length > 4;
+        }).slice(0, 5);
+
+        if (headings.length === 0) return;
+
+        resultsBox.style.display = "block";
+        resultsBox.innerHTML = `<div style="color:#fb923c;font-weight:800;margin-bottom:4px;">⚡ Autonomous Cursor Scanning Live Results for "${mission.query}"...</div>`;
+
+        let i = 0;
+        const extracted = [];
+
+        function scanNext() {
+          if (i >= headings.length) {
+            scanBox.style.opacity = "0";
+            setCursorStatus(`Finished Scanning ${extracted.length} Results`);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            resultsBox.innerHTML = `
+              <div style="color:#4ade80;font-weight:800;margin-bottom:6px;">✅ Live Autonomous Search Complete (${extracted.length} sources scanned):</div>
+              ${extracted.map((item, idx) => `
+                <div style="margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #292524;">
+                  <a href="${item.url}" style="color:#fb923c;font-weight:700;text-decoration:none;display:block;">${idx + 1}. ${item.title}</a>
+                  <div style="color:#a8a29e;font-size:10px;">${item.snippet}</div>
+                </div>
+              `).join("")}
+            `;
+            return;
+          }
+
+          const h = headings[i];
+          const card = h.closest("div.MjjYud, div.g, article, li") || h.parentElement;
+          h.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          setTimeout(() => {
+            const r = h.getBoundingClientRect();
+            cursorTargetX = Math.max(24, r.left + 20);
+            cursorTargetY = Math.max(24, r.top + r.height / 2);
+            highlightElement(card || h);
+            pulseCursorRipple();
+            setCursorStatus(`Reading Result #${i + 1} of ${headings.length}...`);
+
+            const linkEl = h.closest("a") || (card && card.querySelector("a"));
+            const snippetEl = card ? card.querySelector("div.VwiC3b, span, p") : null;
+            extracted.push({
+              title: h.textContent.trim(),
+              url: linkEl ? linkEl.href : window.location.href,
+              snippet: snippetEl ? snippetEl.textContent.trim().slice(0, 140) : ""
+            });
+
+            i += 1;
+            setTimeout(scanNext, 950);
+          }, 450);
+        }
+
+        setTimeout(scanNext, 600);
+      });
+    }
+
+    const goBtn = document.getElementById("spe-autonomous-go");
+    const queryInput = document.getElementById("spe-autonomous-query");
+    if (goBtn && queryInput) {
+      goBtn.addEventListener("click", () => startAutonomousSearch(queryInput.value));
+      queryInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") startAutonomousSearch(queryInput.value);
+      });
+    }
+
+    checkAndResumeAutonomousScan();
+  }
+
+  setupClickyCursorBuddy();
+
   console.log("SPE Companion active on " + getHostPlatform());
 })();
 

@@ -6,6 +6,22 @@ const api = typeof globalThis.browser !== "undefined" && typeof globalThis.brows
   ? globalThis.browser
   : globalThis.chrome;
 
+function injectIntoAllOpenTabs() {
+  if (!api || !api.tabs || !api.scripting) return;
+  api.tabs.query({ url: ["http://*/*", "https://*/*"] }, (tabs) => {
+    if (!tabs) return;
+    for (const tab of tabs) {
+      if (!tab.id) continue;
+      try {
+        api.scripting.insertCSS({ target: { tabId: tab.id }, files: ["content.css"] }).catch(() => {});
+        api.scripting.executeScript({ target: { tabId: tab.id }, files: ["content.js"] }).catch(() => {});
+      } catch (e) {
+        // Ignore restricted tab errors
+      }
+    }
+  });
+}
+
 if (api && api.runtime && api.runtime.onInstalled) {
   api.runtime.onInstalled.addListener((details) => {
     if (details.reason === "install") {
@@ -16,8 +32,15 @@ if (api && api.runtime && api.runtime.onInstalled) {
         spe_subscription_tier: "FREE",
         favoriteIds: ["seo-outrank-competitor", "copy-high-converting-landing-page", "write-100-percent-humanizer"]
       });
-      console.log("SPE Universal Browser Companion initialized successfully.");
     }
+    injectIntoAllOpenTabs();
+    console.log("SPE × Awesome Codex Pet initialized and injected into open tabs.");
+  });
+}
+
+if (api && api.runtime && api.runtime.onStartup) {
+  api.runtime.onStartup.addListener(() => {
+    injectIntoAllOpenTabs();
   });
 }
 

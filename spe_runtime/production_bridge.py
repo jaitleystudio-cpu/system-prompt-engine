@@ -18,6 +18,8 @@ Provides clean, high-level production facades:
 13. SOVOperationsAdapter: Projects Master Prompt 4 Frictionless Production Adoption & Sovereign Operations Governor.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
 import hashlib
@@ -670,12 +672,12 @@ class ContinuationAuditorAdapter:
         )
 
         # Step 6: Empirical S-Capsule Solution Blueprint
-        query_text = f"{report.summary} {' '.join(report.files_modified)} {' '.join(req_list)}"
+        query_text = f"{report.summary} {report.raw_text} {' '.join(report.files_modified)} {' '.join(req_list)}"
         s_capsule = cwc_engine.capsule_retriever.fetch_solution_blueprint(query_text)
 
         # Step 7: Specialized Skill Discovery & Injection
         skill_proposal = cwc_engine.skill_installer.formulate_installation_proposal(
-            task_description=f"{report.summary} {' '.join(deficit.open_requirements)}",
+            task_description=f"{report.summary} {report.raw_text} {' '.join(deficit.open_requirements)}",
             files_modified=report.files_modified,
         )
 

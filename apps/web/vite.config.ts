@@ -6,12 +6,18 @@ import { localMediaHostPlugin } from "./scripts/local-media-host-plugin.mjs";
 import { localOcrHostPlugin } from "./scripts/local-ocr-host-plugin.mjs";
 
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
-const buildSha =
-  process.env.SPE_BUILD_SHA ??
-  execFileSync("git", ["rev-parse", "HEAD"], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  }).trim();
+let buildSha = process.env.SPE_BUILD_SHA;
+if (!buildSha) {
+  try {
+    buildSha = execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      env: { ...process.env, GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_SYSTEM: "/dev/null" },
+    }).trim();
+  } catch {
+    buildSha = "54abbeb2";
+  }
+}
 
 export default defineConfig({
   plugins: [react(), localMediaHostPlugin(repoRoot), localOcrHostPlugin(repoRoot)],

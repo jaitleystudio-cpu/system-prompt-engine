@@ -541,12 +541,6 @@
       "text": "compile"
     },
     {
-      "id": "87c5024e5e3216817faf",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "desired-example"
-    },
-    {
       "id": "87ce9786d07d83a04b79",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -701,6 +695,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "COMPILING"
+    },
+    {
+      "id": "af72fae9f8a6b18af9fe",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "prompts"
     },
     {
       "id": "b0e604fb0f4cf7d09def",
@@ -4477,16 +4477,16 @@
       "text": "per month preserved"
     },
     {
-      "id": "43a4090512547042f30a",
-      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
-      "depth": "PRODUCT",
-      "text": "💡 Based on real benchmarks across Claude Code, Cursor, and ChatGPT. Scope Guardrails prevent prompt drift and eliminate out-of-scope code refactors."
-    },
-    {
       "id": "48e1b336670176e16a9c",
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
       "text": "Power Dev (40h)"
+    },
+    {
+      "id": "508c24ae36e5486f2e42",
+      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
+      "depth": "PRODUCT",
+      "text": "Based on empirical benchmarks across Antigravity, Claude Code, Cursor, and ChatGPT. Scope Guardrails prevent prompt drift and eliminate out-of-scope code refactors."
     },
     {
       "id": "54ed8760168b51cbf243",
@@ -4499,6 +4499,12 @@
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
       "text": "Developer ROI Calculator"
+    },
+    {
+      "id": "6beb2bbf2b8f5a766220",
+      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
+      "depth": "PRODUCT",
+      "text": "Token Savings."
     },
     {
       "id": "73ba73ec5047b661124f",
@@ -4525,12 +4531,6 @@
       "text": "hrs"
     },
     {
-      "id": "adb91653ced8c6349efe",
-      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
-      "depth": "PRODUCT",
-      "text": "Calculate Your Time &amp; Token Savings"
-    },
-    {
       "id": "c4ebaf858d5f44bba718",
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
@@ -4547,6 +4547,12 @@
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
       "text": "Developer Pro ($9/mo) Return on Investment:"
+    },
+    {
+      "id": "d0fb6bc752e8f58df086",
+      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
+      "depth": "PRODUCT",
+      "text": "Calculate Your Time &amp;"
     },
     {
       "id": "d971baa08592ab1cb627",
@@ -5281,6 +5287,12 @@
       "text": "URL notes added with a bounded excerpt ("
     },
     {
+      "id": "0601ffc96b4194366061",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Toggle Multilingual Dual-Prompt Studio"
+    },
+    {
       "id": "0745521548e59be668e6",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -5327,6 +5339,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Scene timeline"
+    },
+    {
+      "id": "186a250bebba292defd1",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Dual-Language Prompt Studio (36+ Languages)"
     },
     {
       "id": "198be810a2b13f666220",
@@ -5735,6 +5753,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "AbortError"
+    },
+    {
+      "id": "93100d0f6489f8ffa6d5",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Close Dual-Language Studio"
     },
     {
       "id": "94daceb316854c4ca695",
@@ -10477,6 +10501,192 @@
       "text": "Find the right words."
     },
     {
+      "id": "0119989cbf5598cc70da",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "View"
+    },
+    {
+      "id": "02a1e48ebcc7d0ac1068",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Business"
+    },
+    {
+      "id": "0590fa17842a46673547",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Coding"
+    },
+    {
+      "id": "074ca84462308fee1ed3",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "claude"
+    },
+    {
+      "id": "0c3046026501745d89a4",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Audio, Speech & Music"
+    },
+    {
+      "id": "12f7be6fede3d72a7bb1",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Video & Motion"
+    },
+    {
+      "id": "2aa00fb86838472b5751",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Searchable catalog with multi-model transcompilers, live variable customizer, and ad-supported free web access."
+    },
+    {
+      "id": "3f3c7640c1ae973fab63",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "10,000+ Production Prompts • 100% Free on the Web"
+    },
+    {
+      "id": "4b58c29b5b392a2b8d23",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "prompt-studio"
+    },
+    {
+      "id": "4e75dc50b62568d68a53",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Customer Support & HR"
+    },
+    {
+      "id": "515d63dacaa12ff1287e",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "prompts in catalog"
+    },
+    {
+      "id": "66ce046f3e7e6ad8b01b",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Load into Studio ⚡"
+    },
+    {
+      "id": "6be3340b01e358aba86e",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Sales & CRM"
+    },
+    {
+      "id": "7611c492ecce4288e41e",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ Browse Full 10,000+ Prompt Arsenal"
+    },
+    {
+      "id": "82afc0886b5a9428c4d0",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "UI/UX & Web Design"
+    },
+    {
+      "id": "a2bd7a430207dbdd7f90",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Research & Education"
+    },
+    {
+      "id": "a2edd65254ef4ff2e026",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal Prompt Arsenal"
+    },
+    {
+      "id": "a7a7e463885e583941a4",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "COMMUNITY_FREE"
+    },
+    {
+      "id": "b66d522da365b5364884",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Software & DevOps"
+    },
+    {
+      "id": "baa125320718a5123aeb",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "&rarr;"
+    },
+    {
+      "id": "baffd2c348bf0a6e41ef",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Digital Marketing & SEO"
+    },
+    {
+      "id": "bb4878c2e6671d3328be",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "start"
+    },
+    {
+      "id": "c32a8e02ee2b739b6cee",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "View in Arsenal ↗"
+    },
+    {
+      "id": "c3c2e6be0732e25b8b97",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Legal & Compliance"
+    },
+    {
+      "id": "c62d2289b4b48fb02ede",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney."
+    },
+    {
+      "id": "cabc25e571388d77f8fd",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Business & Operations"
+    },
+    {
+      "id": "ceff7e522fa285b39f96",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal Prompt Arsenal Overview"
+    },
+    {
+      "id": "d17007387962600c410d",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "smooth"
+    },
+    {
+      "id": "d87347ad4e0dc02fa144",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Finance & Analytics"
+    },
+    {
+      "id": "e56fb0faaa942ab080f4",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Writing & Productivity"
+    },
+    {
+      "id": "f588a98092d9c39a39fc",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Image Generation"
+    },
+    {
       "id": "0069a9f6e94710a68dfb",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -10547,12 +10757,6 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Analyze customer support inquiries, identify root causes, classify severity, and draft empathetic, accurate response drafts with concrete resolution steps."
-    },
-    {
-      "id": "18eed55c1cc52024de47",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "No analytics"
     },
     {
       "id": "19e2c9e86784cc7134d2",
@@ -10631,12 +10835,6 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "characters"
-    },
-    {
-      "id": "3dff568e2145a4b775f2",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "Runs locally"
     },
     {
       "id": "3ed023f68952c8057690",
@@ -10849,12 +11047,6 @@
       "text": "A prompt you can take anywhere."
     },
     {
-      "id": "aa2bdbc59dad69fa5665",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "Works offline once cached"
-    },
-    {
       "id": "aa4c44d05f6e63184909",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -10997,12 +11189,6 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "None supplied."
-    },
-    {
-      "id": "e2c690999ac46a1992af",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "Portable .spe files"
     },
     {
       "id": "e610ca0c4b12e08e15bb",
@@ -11719,10 +11905,16 @@
       "text": "Standard request preference. This selector does not change engine behavior."
     },
     {
-      "id": "01f75b23ad0f95d560b6",
+      "id": "01264d410ba405ad6daa",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "flux"
+    },
+    {
+      "id": "01d63ab9b34950691a26",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "DeepSeek 4.5 / Llama 4"
+      "text": "claude"
     },
     {
       "id": "04beadbd071b92174009",
@@ -11735,6 +11927,24 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Search 1-click prompts (SEO, Copywriting, Full-Stack, Sales)..."
+    },
+    {
+      "id": "05119d802bfe7e6b497b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "of"
+    },
+    {
+      "id": "061ac14d04131d98b889",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Grok 3 truth-maximizing mathematical directives & Colossus DeepSearch grounding"
+    },
+    {
+      "id": "06537ec96fe1ff7fc000",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Execute Claude 3.7, o3-mini, and DeepSeek-R1 at sub-200ms latency with zero setup."
     },
     {
       "id": "066ed9a8d9e697565939",
@@ -11773,6 +11983,24 @@
       "text": "OMEGA_30K"
     },
     {
+      "id": "0a404375b2500991ed69",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Gemini 2.0 Flash / Pro"
+    },
+    {
+      "id": "0a9994a3903318f4bb03",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Software & DevOps"
+    },
+    {
+      "id": "0bd44d8dd14dc9b8e8a2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "SPONSORED DATABASE"
+    },
+    {
       "id": "0bd59576a85d92fc86c2",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -11791,6 +12019,18 @@
       "text": "100K Planetary"
     },
     {
+      "id": "0f1f0f5dba6cf0e6d39a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Monetization partner supporting 100% free prompt access for all web users."
+    },
+    {
+      "id": "0f556da6dfe009592b8d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Constraints:"
+    },
+    {
       "id": "0f85aac9967e4fc56a35",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11801,6 +12041,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "smooth"
+    },
+    {
+      "id": "11b23a1b502fbd1acd73",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Invalid signature"
     },
     {
       "id": "11c9c4698a452847acca",
@@ -11821,16 +12067,16 @@
       "text": "SYSTEM_POLICY.md"
     },
     {
+      "id": "12ddc1b2e5901ff74a88",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "cursor"
+    },
+    {
       "id": "1328b780a8014bd04037",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🚀 Marketing Campaign"
-    },
-    {
-      "id": "144eba38e7527c0830aa",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Cursor 4.9"
     },
     {
       "id": "150b086041077fa61f84",
@@ -11851,16 +12097,22 @@
       "text": "Invoked"
     },
     {
+      "id": "1698deb18caa06975030",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Start Free on Neon →"
+    },
+    {
       "id": "16d252fdcb1e1daa5c3c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "TUTORING_INSTRUCTION_FRAMEWORK"
     },
     {
-      "id": "196c0c55a563233f8741",
+      "id": "19c3c5777b5ae8260e6b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "⚡ 10,000+ Ready-Made Prompts"
+      "text": "Advertisement"
     },
     {
       "id": "1b8425569929b48440e8",
@@ -11869,22 +12121,34 @@
       "text": "Help me learn mathematics"
     },
     {
+      "id": "1c315379aba1676bb36a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Business & Operations"
+    },
+    {
       "id": "1d705d150701fc96dfbb",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "noopener,noreferrer"
     },
     {
-      "id": "1d7c4567eda815c7ed4f",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Cursor 4.9 & Windsurf 4.9 JSON agent directives & context ceilings"
-    },
-    {
       "id": "1ed93aa594792a684325",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "✍️ Step 3: Define System Intent & Capabilities"
+    },
+    {
+      "id": "1f280ba344e4794d5a0b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "100% ad-free experience across the entire web interface"
+    },
+    {
+      "id": "1f2b73e97e4fb5a3fec8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Claude 3.7 Sonnet (Thinking)"
     },
     {
       "id": "20a9b732286593b39a2b",
@@ -11899,28 +12163,16 @@
       "text": "🌍 Trivia (Pass-Through)"
     },
     {
-      "id": "249bd01c066f3bd5dce5",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Marketing"
-    },
-    {
-      "id": "25e18f746892c4cc7b29",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Anthropic Claude 6.1/6.2 Code terminal rules, tool limits & build contracts"
-    },
-    {
       "id": "264e88028d10fd80e4b9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "cursor-rules"
     },
     {
-      "id": "2a3f067f2046a96af11f",
+      "id": "289908ae02490624ef94",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Windsurf 4.9 IDE"
+      "depth": "PROOF",
+      "text": "Claim Free Inference &rarr;"
     },
     {
       "id": "2ffc27a6ca8f9d566165",
@@ -11935,10 +12187,16 @@
       "text": "Design a reactive, WebGL 3D design canvas with accessible controls"
     },
     {
-      "id": "3491d48a8a399640879d",
+      "id": "373d33afae9d5bae2c32",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Claude 6.2 Code"
+      "text": "Writing & Productivity"
+    },
+    {
+      "id": "380eca25466aac77939e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Gemini 2.0 bracketed directive blocks, function calling contracts & grounding"
     },
     {
       "id": "383b9148639dd19ee0a8",
@@ -11965,10 +12223,10 @@
       "text": "spe_spec_manifest.json"
     },
     {
-      "id": "3a10cd916b9cc3afe49f",
+      "id": "39a7d29ea1c0a1c72a42",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Grok 4.9 truth-maximizing mathematical directives & real-time grounding"
+      "depth": "PROOF",
+      "text": "Vision model"
     },
     {
       "id": "3a27c2cfc0a65615ad85",
@@ -11977,16 +12235,40 @@
       "text": "👋 Greeting (Pass-Through)"
     },
     {
-      "id": "3bd4a7560f8ddaf4fd4a",
+      "id": "3abe48b5e71fdf8cc427",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "10,000+ Ready-Made Genuine Prompts &amp; 60+ Research Prompts"
+      "depth": "PRODUCT",
+      "text": "Legal & Compliance"
     },
     {
       "id": "3c0838c74d2be7c14845",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "a"
+    },
+    {
+      "id": "3c8a0ec6c56230ed6dae",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Deploy these SPE .cursorrules and system prompts directly into your IDE agent with one click."
+    },
+    {
+      "id": "3e195a9e06ba02cae2e2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic Claude 3.7 & 3.5 Sonnet Code terminal rules, tool limits & build contracts"
+    },
+    {
+      "id": "3e245b37a7b402955091",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Universal Prompt Arsenal — 10,000+ Production Prompts (100% Free on the Web)"
+    },
+    {
+      "id": "3e52e74348234b1a2038",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "SPONSORED COMPUTE"
     },
     {
       "id": "3feaae2db2207102d8d3",
@@ -12001,10 +12283,22 @@
       "text": "🎯 Step 1: Select Target Platform Architecture"
     },
     {
+      "id": "4078d9475dbdc12ccab9",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Cryptographic Local Verification • Commercial IP Protection • Zero Unauthorized Data Egress"
+    },
+    {
       "id": "409fb040c9b50dfc20fa",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🛍️ Shopping App"
+    },
+    {
+      "id": "40c5cc1839a4704e3069",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Run Llama 3.3 and DeepSeek at instant speed. Get $5 free developer credits with zero credit card required."
     },
     {
       "id": "41e62e9bc440fa007efd",
@@ -12025,16 +12319,28 @@
       "text": "Type a short request in plain English (or speak in 36+ languages). SPE turns complex tasks into structured instructions while letting simple questions pass through without delay."
     },
     {
+      "id": "4427f18347f8efcd2550",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "gemini"
+    },
+    {
       "id": "449f14e243ba63844e3e",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "file_read, file_write, bash, terminal, web_search, database_read"
     },
     {
-      "id": "44c0aa0eac4ba0dc31d3",
+      "id": "44a860b56328e1d8c32f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "DeepSeek 4.5"
+      "text": "All"
+    },
+    {
+      "id": "46bbc5e6c0f26463d6c5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Next &raquo;"
     },
     {
       "id": "46c327f7a6fd34369196",
@@ -12049,6 +12355,12 @@
       "text": "_blank"
     },
     {
+      "id": "4a1e19f0dd2740ff75e7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "chatgpt"
+    },
+    {
       "id": "4aefdf85a673f2f0003d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12061,10 +12373,22 @@
       "text": "Writing"
     },
     {
+      "id": "4c3ac3daab712799be96",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🐘 Neon Serverless Postgres — AI Agent Database"
+    },
+    {
       "id": "4c6a3b0596fccbecf951",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "discovery"
+    },
+    {
+      "id": "4c8a7265e712f3a32863",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "ADVERTISEMENT • SUPPORTING FREE WEB ACCESS FOR ALL"
     },
     {
       "id": "4ca047cd597804dd6077",
@@ -12073,22 +12397,16 @@
       "text": "File"
     },
     {
-      "id": "4cd2e9033142280c594c",
+      "id": "4cd9c4290f488ebf709e",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "Pick a proven, ready-made prompt for coding, websites, SEO, business, or writing. Paired with 60+ research-paper prompts and 40+ core skills (101 curated skills total) so your AI follows every rule on the first try."
+      "text": "Upgrade to Pro ($9/mo) &rarr;"
     },
     {
       "id": "4d3bcc9587fec2f56a92",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Autonomous financial risk analyzer with zero-trust payment safeguards"
-    },
-    {
-      "id": "4dcce9ad07ea8f493f24",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek 4.5 & Llama 4 token-level ChatML header framing & proof kernel"
     },
     {
       "id": "4ec347d257bc08102ec2",
@@ -12103,6 +12421,12 @@
       "text": "Enter User Request to Evaluate Intent & Specification Lift:"
     },
     {
+      "id": "4f4b79dd6cbd6f9c4afa",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "xAI Grok 3"
+    },
+    {
       "id": "4f7db262bc33dc32b65a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12115,10 +12439,28 @@
       "text": "Zero Overhead"
     },
     {
-      "id": "533ab0efc0496ed6b74a",
+      "id": "4fc6a303d0b03f7e66c0",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "Edit"
+      "text": "Midjourney v6.1"
+    },
+    {
+      "id": "51d971c79cb889b24dd3",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Web access is 100% free and ad-supported for all 10,000+ prompts across all models."
+    },
+    {
+      "id": "528f72ca631a0d803d4b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Full 10,000+ Prompt Catalog JSON bundle for air-gapped local execution"
+    },
+    {
+      "id": "5387f0f980ab26ca61a8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Production Prompts"
     },
     {
       "id": "543e3148879684c6d915",
@@ -12133,10 +12475,40 @@
       "text": "High-throughput zero-copy event streaming cluster with sagas rollbacks"
     },
     {
+      "id": "54fa6fce28a585503d68",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Reasoning model"
+    },
+    {
+      "id": "5544f19e27714e875619",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "&laquo; Previous"
+    },
+    {
+      "id": "55cddb4311fdef417f6e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Codeium Windsurf cascading AST execution rules and system boundaries"
+    },
+    {
+      "id": "5652f4ebbf25e49ccda5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "⚡ Universal Prompt Arsenal (10,000+)"
+    },
+    {
       "id": "56b5d2f2498ac9dc07dd",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Power Prompts and Platform Harness"
+    },
+    {
+      "id": "56d88812b5e2830aff8f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Target AI Model:"
     },
     {
       "id": "56f1fc30f774ab3453e5",
@@ -12151,6 +12523,12 @@
       "text": "Architecture Benchmarks:"
     },
     {
+      "id": "57b723de1260ce506ccf",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Zero network telemetry, local offline CLI compiling &amp; validation"
+    },
+    {
       "id": "587b6f1eff5e0f7c446d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12163,10 +12541,22 @@
       "text": ".windsurfrules"
     },
     {
+      "id": "59469cded506e266ca84",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "in"
+    },
+    {
       "id": "5a02e21dc87e98359189",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Digest:"
+    },
+    {
+      "id": "5a1dc29cba76c678a2c2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Sales & CRM"
     },
     {
       "id": "5e36613e60d7dfdf3bac",
@@ -12185,12 +12575,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Complete multi-volume enterprise blueprint"
-    },
-    {
-      "id": "602c834a754e8bf8bb28",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Grok 4.9"
     },
     {
       "id": "60e5492ca6868235555a",
@@ -12217,6 +12601,18 @@
       "text": "Micro-kernels, memory & release gate"
     },
     {
+      "id": "63652d27af1fa083b093",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Verification failed:"
+    },
+    {
+      "id": "638391b3c20d6b600158",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Edit / Variables"
+    },
+    {
       "id": "639453cd69ccd36ac185",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12233,12 +12629,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
-    },
-    {
-      "id": "67de80e2acb2e5159f16",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Kimi 3.5 200k ultra-long context attention anchors & bilingual structure"
     },
     {
       "id": "696847279ad1ae6ee164",
@@ -12277,10 +12667,22 @@
       "text": "Docker-like local Modelfile with PARAMETER and SYSTEM blocks"
     },
     {
+      "id": "6cf017441217e5efcecc",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "⚡ FAST"
+    },
+    {
       "id": "6cf02d3cc7a7027d5a8c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "SPECIFICATION_LIFT_AVAILABLE"
+    },
+    {
+      "id": "6f767e95980ff30452d6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://cursor.com"
     },
     {
       "id": "706183bab2a5de0d1d34",
@@ -12289,10 +12691,10 @@
       "text": "This query requires a direct conversational or factual answer ("
     },
     {
-      "id": "70af953dd28b66a1db5c",
+      "id": "71d0ebcd63b527a838c2",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Moonshot Kimi 3.5"
+      "depth": "PROOF",
+      "text": "Claim $5 Free Compute &rarr;"
     },
     {
       "id": "71d203190e13b6a9ca41",
@@ -12301,10 +12703,28 @@
       "text": "Declared Tools & Plugins (Comma-separated; redundant tools pruned to reduce attention drift):"
     },
     {
+      "id": "71f0e5d7005b03afaa08",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google Gemini 2.0 Flash / Pro"
+    },
+    {
       "id": "72991d42de2b4cfb65c3",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "grok"
+    },
+    {
+      "id": "72c1d01d3cfc8891a769",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Research & Education"
+    },
+    {
+      "id": "73342153324579df720b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-3-7-sonnet"
     },
     {
       "id": "735ea9a93384fa01a52d",
@@ -12319,16 +12739,28 @@
       "text": "Vol"
     },
     {
+      "id": "757f260061621eb0f274",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Suno v4"
+    },
+    {
+      "id": "774e6c0b40a5a5879d92",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Kimi K1.5 200k ultra-long context attention anchors & bilingual structure"
+    },
+    {
+      "id": "77a78c9df8787aa1be39",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Showing"
+    },
+    {
       "id": "77f4f6ab2b620449fb61",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "1.5K Standard"
-    },
-    {
-      "id": "7875f971decc21b56274",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Outcome:"
     },
     {
       "id": "78959c8f00334d24d8eb",
@@ -12337,16 +12769,52 @@
       "text": "CLAUDE.md"
     },
     {
+      "id": "78a25da581964ff4bad0",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "👁️ VISION"
+    },
+    {
+      "id": "7a9eae9711e465a0f6be",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Windsurf IDE Rules"
+    },
+    {
+      "id": "7c60108fbfde6e527528",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Catalog pages"
+    },
+    {
+      "id": "7ca00e65e3caefc18b46",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Per page:"
+    },
+    {
       "id": "7cfda00f49114203a1c4",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Copy 📋"
     },
     {
-      "id": "82d57c49ae1b49e75558",
+      "id": "7f45a859f0e170d80b0a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://groq.com"
+    },
+    {
+      "id": "80ed6b0b4469b0e33fda",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "OpenAI 6 / o3-Pro"
+      "text": "Continue Free Online (Ad-Supported)"
+    },
+    {
+      "id": "838e8d32ac7a5189250a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "&times;"
     },
     {
       "id": "83a83940cb7d89ff0203",
@@ -12361,22 +12829,52 @@
       "text": "Build me a shopping app"
     },
     {
+      "id": "87abc87ed1c5dd855d90",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "📥 Download Offline Catalog (Pro)"
+    },
+    {
+      "id": "8885b1134f6ad3bc474b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Digital Marketing & SEO"
+    },
+    {
       "id": "88c75e0fc62425e4ab48",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "kimi"
     },
     {
-      "id": "8a299ad0933f5058f6db",
+      "id": "897de7da6fc1511c4f1e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Deploy Llama 3.3 and DeepSeek-R1 with zero credit card required. Free developer credits included."
+    },
+    {
+      "id": "8aa57dbad2ae50ffc83f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI 6 / o3-Pro"
+      "text": "Branch databases like Git branches for agent test runs and prompt evaluation workflows."
+    },
+    {
+      "id": "8bd0d999bf778496153b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Image Generation"
     },
     {
       "id": "8c941c650620ff89842f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "⚡ Distributed Sagas Engine"
+    },
+    {
+      "id": "8d6efd7d25174c2efb33",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Offline air-gapped downloads, bulk JSON database bundles, and offline CLI compiler engines require an active SPE Pro entitlement."
     },
     {
       "id": "8dafc7bc80b5f0bcda7f",
@@ -12391,16 +12889,16 @@
       "text": "Turn this business idea into a plan"
     },
     {
+      "id": "8ea006f0439561fba50e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Entitlement activated successfully! Pro capabilities unlocked."
+    },
+    {
       "id": "8f720ffacb06cf000f11",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "100,000+ Character (1 Lakh+) Blueprints &amp; 1-Click Agent Rules"
-    },
-    {
-      "id": "905b4b5ede59c440eafc",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Codeium Windsurf 4.9 AST rules & cascading execution bounds"
     },
     {
       "id": "911fec066631923a10fa",
@@ -12413,6 +12911,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Business"
+    },
+    {
+      "id": "98a4d0e92995093f8182",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DeepSeek-R1 & Llama 3.3 token-level ChatML header framing & proof kernel"
     },
     {
       "id": "990720adcd11ac769eec",
@@ -12433,16 +12937,40 @@
       "text": "⚡ SPECIFICATION LIFT TRIGGERED"
     },
     {
+      "id": "9b712b9c126744bbe9a8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🎯 Cursor IDE — 1-Click System Prompt Execution"
+    },
+    {
       "id": "9b720e07f012feb71d36",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "BUSINESS_PLANNING_SPECIFICATION"
     },
     {
-      "id": "9c23e10d9b85643d81ba",
+      "id": "9bdad9ac02ca1354bd09",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "🧠 REASONING"
+    },
+    {
+      "id": "9c75f7112092dce6454d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "xAI Grok 4.9"
+      "text": "Customer Support & HR"
+    },
+    {
+      "id": "9d5282991363889eecc6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Offline Air-Gapped Catalog — SPE Pro"
+    },
+    {
+      "id": "9f3f76654761bf856878",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "spe_entitlement.v1..."
     },
     {
       "id": "a07d47521cb291a66ade",
@@ -12451,16 +12979,16 @@
       "text": "Make this workflow automatic"
     },
     {
-      "id": "a14a1a06bc71c36fcc9c",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "SEO"
-    },
-    {
       "id": "a382a37cf779b82d0a19",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Download"
+    },
+    {
+      "id": "a3928b188e387efce3f8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor Agent & Windsurf JSON agent directives & context ceilings"
     },
     {
       "id": "a3ce5e46f56d4186cdba",
@@ -12469,10 +12997,22 @@
       "text": "open-weights"
     },
     {
+      "id": "a550351e6b9ab3647fef",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "midjourney"
+    },
+    {
       "id": "a572c91d3d89d64f59a3",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "15K Deep"
+    },
+    {
+      "id": "a6c150a33d569255797a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "SPONSORED PARTNER COMPUTE"
     },
     {
       "id": "a7f54ed6ef4ae806dc19",
@@ -12481,10 +13021,22 @@
       "text": "SKILL.md"
     },
     {
+      "id": "a98aaa33d25fb8365e70",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Claim $5 Credit →"
+    },
+    {
       "id": "a9fb9ef0666574e00075",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "🎯 Simple Idea to Pro Prompt"
+    },
+    {
+      "id": "aaf6ed4ae015c3c1e641",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "OpenAI o3-mini / GPT-4o"
     },
     {
       "id": "ab2b7e90a36fd890b25a",
@@ -12493,16 +13045,16 @@
       "text": "1 Volume"
     },
     {
-      "id": "ab380e4aad07e907f043",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Gemini 3.9 Pro"
-    },
-    {
       "id": "ab67cbf9a97424966a96",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Downloaded spe_spec_manifest.json"
+    },
+    {
+      "id": "abf833475f3cbf087505",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ad-neon"
     },
     {
       "id": "ac6959e80135e2bb16cd",
@@ -12517,16 +13069,40 @@
       "text": "What is 2 + 2?"
     },
     {
+      "id": "ad1e044d46bdff5eeada",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Cursor IDE (.cursorrules)"
+    },
+    {
       "id": "ad3c1eb991ddee76128a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Antigravity Skills"
     },
     {
-      "id": "ae7b87a38b085eaf790d",
+      "id": "af23148c62faa2f79ace",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI 6 Developer role markdown schemas with bold non-negotiable invariants"
+      "text": "ad-groq"
+    },
+    {
+      "id": "af4381ce81758376acfb",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "100% clean, unwatermarked exports on web and local desktop"
+    },
+    {
+      "id": "afb4d09ccdcd2b84bc1b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "suno"
+    },
+    {
+      "id": "b182245a61edc134e2af",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Audio, Speech & Music"
     },
     {
       "id": "b1845cef7e1234541059",
@@ -12541,10 +13117,10 @@
       "text": "openai-markdown"
     },
     {
-      "id": "bbf0ba0f23e8e64184ff",
+      "id": "bb0173f077861d276dcb",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "100% Offline Cryptographic Generation • Zero Cloud API Costs • Zero Telemetry Egress"
+      "depth": "PRODUCT",
+      "text": "OpenAI Developer role markdown schemas with bold non-negotiable invariants"
     },
     {
       "id": "bd65de3cc3ea55146050",
@@ -12553,10 +13129,22 @@
       "text": "🤖 AI Agent"
     },
     {
-      "id": "c033ec7bd8ac330c9f4d",
+      "id": "bdadfab58abed4acad8c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Gemini 3.9 Pro bracketed directive blocks, function calling contracts & grounding"
+      "depth": "PROOF",
+      "text": "runway"
+    },
+    {
+      "id": "bf812747606023895e82",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "⚡ Run Prompts with $5 Free Cloud API Credits on OpenRouter &amp; Together AI"
+    },
+    {
+      "id": "c12a76adaf5aa69b1d65",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Runway Gen-3"
     },
     {
       "id": "c39d37f076d3a3893215",
@@ -12565,10 +13153,28 @@
       "text": "GOD_MODE_100K"
     },
     {
+      "id": "c3b3a5240cc39bf05a30",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "FLUX.1 [pro]"
+    },
+    {
+      "id": "c3d61f7a9f8de260bf06",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DeepSeek-R1 / Llama 3.3"
+    },
+    {
       "id": "c3f5961035e148023925",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "windsurf-rules"
+    },
+    {
+      "id": "c4522802545a752abcea",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "SPONSORED IDE"
     },
     {
       "id": "c5329dc10e936bdb7e75",
@@ -12583,16 +13189,28 @@
       "text": "Build up to 100,000+ characters (1 Lakh+) of clean instructions for Antigravity Skills, Claude Code, Cursor, Windsurf, Grok, Kimi, and ChatGPT — 100% free on your device."
     },
     {
-      "id": "c680d5298b7135ea4078",
+      "id": "c6a6705158c4ad3e2337",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Cursor 4.9 IDE"
+      "text": "Try Cursor Free →"
+    },
+    {
+      "id": "c86b74577ec2cb0e06f9",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor IDE (.cursorrules)"
     },
     {
       "id": "c8b5cd40ed31e16a4293",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "DEEP_15K"
+    },
+    {
+      "id": "ca8c29819eb3223e5b91",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Video & Motion"
     },
     {
       "id": "cb048c079b0be1d9625a",
@@ -12617,6 +13235,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "10 Volumes"
+    },
+    {
+      "id": "ce162fe5d1ed3ef8ddfe",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Close modal"
     },
     {
       "id": "cfbf4286c08ce3135a3c",
@@ -12649,10 +13273,22 @@
       "text": "Copy All Volumes 📋"
     },
     {
+      "id": "d4e999dec10578e1ecb2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ Groq® LPU™ Inference — 500+ Tokens/Sec"
+    },
+    {
       "id": "d4ee0215412b331f6411",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "🛡️ Step 4: Active Plugin & Tool Safety Auditor"
+    },
+    {
+      "id": "d5b9b36ba774643c3521",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Finance & Analytics"
     },
     {
       "id": "d7185f48a203e9f1f953",
@@ -12667,10 +13303,16 @@
       "text": "Enter system goal, architecture or agent requirements..."
     },
     {
-      "id": "dbf92f1806939360956a",
+      "id": "dc486f035c76abc8a186",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Google Gemini 3.9 Pro"
+      "text": "https://neon.tech"
+    },
+    {
+      "id": "ddada23e62a9cc1a253c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "claude"
     },
     {
       "id": "ddb964c879300106cf7d",
@@ -12679,10 +13321,40 @@
       "text": "🔢 2 + 2 (Pass-Through)"
     },
     {
+      "id": "de17393a0bc8325d38a8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude 3.7 / 3.5 Code"
+    },
+    {
+      "id": "de744bf5aaef5054fbf9",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "UI/UX & Web Design"
+    },
+    {
+      "id": "de8c7333e74bc9e8575f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI o3-mini / GPT-4o"
+    },
+    {
       "id": "df65143bb60ce6a393c6",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "📐 Math Tutoring"
+    },
+    {
+      "id": "dfa4e6ae7f169b35cd68",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ad-cursor"
+    },
+    {
+      "id": "dfe4be6898c203ebbae8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Verify"
     },
     {
       "id": "e1c97d8ea189de2f19ca",
@@ -12709,6 +13381,12 @@
       "text": "💳 Financial Risk & Fraud"
     },
     {
+      "id": "e735d18adef3d9ee0d04",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "spe_browser_entitlement_v1"
+    },
+    {
       "id": "e74dbcb3643fd7fc4bd4",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12727,6 +13405,12 @@
       "text": "Tool Status:"
     },
     {
+      "id": "e9b02336eb043ed7b46f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Already have a signed license token?"
+    },
+    {
       "id": "e9b31416d01fea0fea99",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12737,6 +13421,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "⚡ Automate Workflow"
+    },
+    {
+      "id": "ed5000241d59c27b8c33",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Groq® LPU™ Inference — Run Prompts at 500+ Tokens/Sec"
     },
     {
       "id": "ed889b06c4bc5b7601b8",
@@ -12757,6 +13447,18 @@
       "text": "SPE Ω CERTIFIED"
     },
     {
+      "id": "f1cb043f7ea1db696452",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Moonshot Kimi K1.5"
+    },
+    {
+      "id": "f2c04d16dfa2fbdc0cc4",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "xAI Grok 3"
+    },
+    {
       "id": "f33d2fa13c6270719698",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12769,16 +13471,16 @@
       "text": "Intent, interfaces & verification"
     },
     {
+      "id": "f3c68fbe6286da482535",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "grok"
+    },
+    {
       "id": "f3ccbc3d6c3f8b1ed6d1",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Hide"
-    },
-    {
-      "id": "f3ddd4f1f3a2d04be71b",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Claude 6.2 Sonnet"
     },
     {
       "id": "f3f5bb772ea2195eee1c",
@@ -12793,10 +13495,10 @@
       "text": "Search power prompts"
     },
     {
-      "id": "f87e419586066bb47710",
+      "id": "f8fcc83a0b73f541c407",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "Kimi 3.5"
+      "text": "string"
     },
     {
       "id": "f94e2cf2a616b6a86fae",
@@ -12817,10 +13519,10 @@
       "text": "MASTER_50K"
     },
     {
-      "id": "fa84a9ae4267aa08bb5d",
+      "id": "faba492741fbff205434",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "claude-6"
+      "depth": "PROOF",
+      "text": "All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney."
     },
     {
       "id": "fb4c91dee9132c17bc38",
@@ -13225,10 +13927,22 @@
       "text": "Benchmark Arena: Head-to-Head Accuracy Tests"
     },
     {
+      "id": "27cb09410ce7eb38bf1d",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "How to write a system prompt for Claude Code and Cursor?"
+    },
+    {
       "id": "3caf8833e9820e67fe54",
       "file": "apps/web/src/landing/SeoContent.tsx",
       "depth": "PRODUCT",
       "text": "System prompt generator for ideas that need structure"
+    },
+    {
+      "id": "501bf7c25c6452b6201e",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "Why use a client-side prompt compiler instead of text templates?"
     },
     {
       "id": "5e23bcb82189fda1438d",
@@ -13243,10 +13957,46 @@
       "text": "Scope Guardrails &amp; Capabilities"
     },
     {
+      "id": "988bfa68431b0ffdbe8a",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "AI SEARCH &amp; LLM CITATION KERNEL"
+    },
+    {
+      "id": "af7f22f5dcdea2c84319",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "Text templates produce bloated prompts that waste context tokens. A client-side prompt compiler dynamically parses intent, strips redundant directives, formats role schemas, and optimizes token budgets in real-time."
+    },
+    {
+      "id": "afbf8fba0df53dc87d9e",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "Engineered for deterministic retrieval across Perplexity, ChatGPT Search, and Google AI Overviews."
+    },
+    {
+      "id": "b058c913635a26e113df",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "How does WebAssembly guarantee zero prompt egress?"
+    },
+    {
+      "id": "b98ff6693b702292b490",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "Define immutable architectural boundaries, state machine transition rules, and explicit verification criteria upfront. Provide strict constraints and role-specific execution contracts with deterministic validation."
+    },
+    {
       "id": "dc93f9c2a846fe8c6447",
       "file": "apps/web/src/landing/SeoContent.tsx",
       "depth": "PRODUCT",
       "text": "Plans &amp; Pricing ($9/mo Pro · $99/mo Team)"
+    },
+    {
+      "id": "dd1ead5d9861a060d7c6",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "Frequently Answered Architecture Queries"
     },
     {
       "id": "ed9af573bfa2aac60a85",
@@ -13261,6 +14011,12 @@
       "text": "Natural uses: system prompt generator · AI prompt generator · prompt engineering tool · free prompt builder · local prompt compiler."
     },
     {
+      "id": "ff160251a2573d41fbc8",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PROOF",
+      "text": "SPE compiles system prompts on-device using a standalone WebAssembly binary with zero network import bindings. The Content Security Policy and memory sandbox ensure that zero prompt bytes or user briefs are transmitted to external servers."
+    },
+    {
       "id": "014616d3b2f53ef0efad",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
@@ -13271,12 +14027,6 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "capsule-2"
-    },
-    {
-      "id": "04e59843b67e2b1e0bfd",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PROOF",
-      "text": "EVERYTHING YOU NEED FOR AI, IN SIMPLE ENGLISH"
     },
     {
       "id": "05becf6a24cd2188204b",
@@ -13529,6 +14279,12 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "40+ Core / 101 Skills"
+    },
+    {
+      "id": "4ab761a15a53a066e050",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "Everything You Need for AI,"
     },
     {
       "id": "4d23d94a09d47333680d",
@@ -13985,6 +14741,12 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "SAFE CODE."
+    },
+    {
+      "id": "d82f8788d8e6c8da7810",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "in Simple English."
     },
     {
       "id": "da4cf20b7b663d03b3ff",
@@ -14851,16 +15613,22 @@
       "text": "Deploy AI agents with the same continuous confidence as mission-critical software."
     },
     {
+      "id": "033da0fcf70b3d3f66e3",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "Select any Frontier AI platform orbiting the 3D SPE Sun — Antigravity, Claude Code, ChatGPT, Grok, Cursor, or GitHub."
+    },
+    {
+      "id": "0765286b93c4ae073e46",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Grok (xAI) · Adversarial Stress-Testing & Truth Discovery"
+    },
+    {
       "id": "0974a9efcc70885252d1",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "xAI"
-    },
-    {
-      "id": "0a86d1055bac38b9637a",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Thank you Antigravity for autonomous multi-agent engineering & full-repo verification"
     },
     {
       "id": "0ab7c8f9e375f256ecce",
@@ -14869,64 +15637,76 @@
       "text": "Google DeepMind"
     },
     {
+      "id": "0cf9894fb5928320b0d7",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Google Antigravity · Multi-Agent Autonomous Engineering"
+    },
+    {
       "id": "0e41466ea5b4d711a5a3",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "claude-sonnet"
     },
     {
-      "id": "1118efbf96647414407f",
+      "id": "1412160f5a9a2bd7493e",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Thank you Grok for red-team counterexample discovery & adversarial truth checks"
+      "text": "Claude Code · Deep Architecture & Terminal Craft"
     },
     {
-      "id": "1356228597fa051098c4",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Reasoning Partner"
-    },
-    {
-      "id": "150c2bbeb1a9d6f1a311",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Special thanks to xAI and Grok for ruthless red-team counterexamples, causal graph stress-testing, and truth-first falsification."
-    },
-    {
-      "id": "1929ca7719931bf54cf8",
+      "id": "14326cb5f657f071cbae",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
-      "text": "My Gratitude &amp; Special Thanks."
+      "text": "Select an AI runtime target"
     },
     {
-      "id": "1ef7c54d3748672d86ce",
+      "id": "1b0ff6588766b6930d61",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "GitHub Actions"
+    },
+    {
+      "id": "1c73e7f2b56840ba1dd6",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "spe compile --target xai-grok --counterexamples --adversarial-defense"
+    },
+    {
+      "id": "1f5f05dd6505575e3638",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
-      "text": "Built Together With SPE Ω"
+      "text": "SPE compile CLI command for runtime targets"
     },
     {
-      "id": "1f526d656324efc4e979",
+      "id": "210799e1c54828ffce56",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Thank you Cursor & GitHub for powering daily developer workflows & CI/CD gates"
+      "text": "Compiles system prompts with strict JSON schema outputs, reasoning boundaries, and zero-leak prompt defenses for OpenAI models."
     },
     {
-      "id": "26c9fad91f9ca639568f",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PROOF",
-      "text": "Hover or tap any Hero orbiting the 3D SPE Sun — Antigravity, Claude Code, ChatGPT, Grok, Cursor, or GitHub."
-    },
-    {
-      "id": "299ca50df00337744ac0",
+      "id": "250fc67596dbc011412a",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Thank you ChatGPT for scientific research audits & formal specification reviews"
+      "text": "Zero Drift"
     },
     {
-      "id": "309ce75c81693bb34534",
+      "id": "29554ab3f8b2fb91fc49",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Hero #1"
+      "text": "spe compile --target github-actions --ci-cd-gate --tamper-proof"
+    },
+    {
+      "id": "2a579ebdac5aefaa172e",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Compiles role-isolated subagent instructions, tool permissions, and strict workspace invariants for Google DeepMind Antigravity."
+    },
+    {
+      "id": "2c7ba6a48df9b4acc0e0",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Enforces automated repository custody, PR verification workflows, and deterministic prompt tests directly in GitHub Actions."
     },
     {
       "id": "32ea65dd516ee30bf3b8",
@@ -14935,22 +15715,10 @@
       "text": "Select"
     },
     {
-      "id": "38d5ae9254263c5ee276",
+      "id": "3b525e03f7b506777e1e",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Hero #4"
-    },
-    {
-      "id": "402ce967fe8b390be7d1",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Claude Code — Deep Architecture & Terminal Craft"
-    },
-    {
-      "id": "44972c00b82e6c158635",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Platform Partner"
+      "text": "spe compile --target openai-gpt6 --schema-strict --reasoning-high"
     },
     {
       "id": "45fc80a00ad4286c46fb",
@@ -14959,40 +15727,16 @@
       "text": "Claude Code"
     },
     {
-      "id": "48196689b3928c34caf9",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Hero #3"
-    },
-    {
-      "id": "4dcfd345671bc1939ec8",
+      "id": "4ebadadfa621649f0e50",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
-      "text": "Select a Hero platform"
+      "text": "Deterministic Execution Contract"
     },
     {
       "id": "4f73a94e9a3222de3df7",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "openai-o3"
-    },
-    {
-      "id": "51dcecf37c70785d4b9c",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PROOF",
-      "text": "Select any Hero in orbit to view our gratitude note…"
-    },
-    {
-      "id": "542ba94ae91af93591d3",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PROOF",
-      "text": "SPE 3D Sun and the 6 Hero platforms in orbit"
-    },
-    {
-      "id": "54e94811bb89daeb69e4",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Special thanks to Anthropic and Claude Code for long-horizon reasoning, clean refactors, and strict compositional rule formats."
     },
     {
       "id": "5633f9ce1ef7b27fed21",
@@ -15013,16 +15757,22 @@
       "text": "flying"
     },
     {
+      "id": "60f1771fc0468f9a6e3a",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Compiles unvarnished truth-seeking rules, red-team counterexample guards, and real-time knowledge prompts for xAI Grok."
+    },
+    {
       "id": "6706dcedf358c6ecf3be",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "GitHub"
     },
     {
-      "id": "67d13e64c4c0a7fe5e6d",
+      "id": "68e614da007eb8f65f69",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Special thanks to Cursor for pioneering rapid multi-file editing and the .cursorrules workflow that SPE exports to in one click."
+      "depth": "PROOF",
+      "text": "THE UNIVERSAL OPERATING LAYER FOR AGENTIC AI"
     },
     {
       "id": "6aad7ec3e15b0c4f2fe5",
@@ -15043,10 +15793,10 @@
       "text": "Octocat & Actions"
     },
     {
-      "id": "6f8d173580fde7dad5ce",
+      "id": "756f113c6efc2fe2d4b9",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
-      "text": "Special Thanks &amp; Tribute"
+      "text": "Every Frontier Model."
     },
     {
       "id": "783811a4e1b752f85f55",
@@ -15055,16 +15805,22 @@
       "text": "frontier"
     },
     {
-      "id": "7be591974a8468649dca",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PROOF",
-      "text": "System Prompt Engine was crafted, stress-tested, and verified side by side with these six pioneering platforms. With the 3D SPE Sun at the center, we thank Antigravity, Claude Code, ChatGPT, Grok, Cursor, and GitHub."
-    },
-    {
       "id": "7c275c11ae8c68a045aa",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "Antigravity"
+    },
+    {
+      "id": "7d011e117abd05e02e2f",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Google AGY"
+    },
+    {
+      "id": "7d5f5ba5012732356736",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor IDE"
     },
     {
       "id": "7e8ebc9eae0826501505",
@@ -15073,22 +15829,22 @@
       "text": "hold"
     },
     {
+      "id": "819aa8a4d5f62432f41b",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "GitHub · Actions CI/CD Quality Gates & Copilot Rules"
+    },
+    {
       "id": "852d2c7b58f874058e43",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "deepseek-r1"
     },
     {
-      "id": "87c6092a3cdb41c379a6",
+      "id": "90eb7a04a55d7bc8ea6c",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Cursor — AI-Native IDE & .cursorrules Ecosystem"
-    },
-    {
-      "id": "91e56aa84dd986e157c0",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Grok — Counterexample Discovery & Stress-Testing"
+      "text": "Compiles compact CLAUDE.md guidelines, multi-step execution plans, and compositional skill definitions for Anthropic Claude Code."
     },
     {
       "id": "9382d3b41698bf351dfb",
@@ -15109,10 +15865,16 @@
       "text": "smooth"
     },
     {
-      "id": "970bd9d5898c6ef4cccf",
+      "id": "962cb3c25a2d5de4a54a",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
-      "text": "Honor Roll"
+      "text": "Frontier Target"
+    },
+    {
+      "id": "99360f88d8def93d1434",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "Execution Guard"
     },
     {
       "id": "9bd43849b3edd3414f76",
@@ -15121,10 +15883,16 @@
       "text": "OpenAI"
     },
     {
-      "id": "a23359419c96142640ff",
+      "id": "9e7323d7a2561b67f2fd",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
-      "text": "MY GRATITUDE &amp; SPECIAL THANKS BY SPE · BUILT WITH ALL HEROES"
+      "text": "System Prompt Engine compiles mathematically verified system instructions that execute deterministically across Google Antigravity, Claude Code, OpenAI, Grok, Cursor, and GitHub."
+    },
+    {
+      "id": "a13ee4cc4f228df7d193",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "ChatGPT / OpenAI · Structured Schema & System Roles"
     },
     {
       "id": "a42dd2675174106c9a62",
@@ -15139,22 +15907,16 @@
       "text": "typing"
     },
     {
+      "id": "a5a1682438e6c6bf6d5b",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "xAI Grok"
+    },
+    {
       "id": "a6ed467273dd3c30810a",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "SPE 3D Sun Core"
-    },
-    {
-      "id": "a7b4ffe0bba064c03090",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "IDE Partner"
-    },
-    {
-      "id": "a9d16812254a90672bbf",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Special thanks to OpenAI and ChatGPT for deep research synthesis, mathematical proof audits, and multi-stage specification reviews."
     },
     {
       "id": "aa4e60403f2d2561cec9",
@@ -15163,10 +15925,10 @@
       "text": "AI Code Editor"
     },
     {
-      "id": "ac07158e484243c14c97",
+      "id": "ac01056adbc124f0a718",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PROOF",
-      "text": "Built With All Heroes."
+      "depth": "PRODUCT",
+      "text": "spe compile --target claude-code --skills format --terminal-craft"
     },
     {
       "id": "ac5ea91aff76ec09762e",
@@ -15175,10 +15937,10 @@
       "text": "local"
     },
     {
-      "id": "ad1dcd5ffb91ac19ce64",
+      "id": "acda3643b02b44421f67",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "GitHub — Open Source Custody, PRs & CI/CD Gates"
+      "text": "Cursor · .cursorrules & Multi-File IDE Context"
     },
     {
       "id": "ae80f5edb79a5aa7e076",
@@ -15187,16 +15949,16 @@
       "text": "llama-local"
     },
     {
+      "id": "b76869866f2b0bdda51d",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "One Engine."
+    },
+    {
       "id": "b83867fde044126d9fa1",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
       "text": "Open System Prompt Studio"
-    },
-    {
-      "id": "bc2df0b0b385524c7400",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PROOF",
-      "text": "Gratitude"
     },
     {
       "id": "bcb181f68b16add46f14",
@@ -15205,10 +15967,10 @@
       "text": "Grok"
     },
     {
-      "id": "c0b8b2a5543bafdc6c6c",
+      "id": "c0e0f5476ed0249df0ed",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Research Partner"
+      "text": "spe compile --target cursor --export-cursorrules --multi-file"
     },
     {
       "id": "c247f66ea033980da866",
@@ -15217,22 +15979,10 @@
       "text": "Anthropic"
     },
     {
-      "id": "c795e69105bac6d22186",
+      "id": "c465fb031d0a5bd38b8b",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Special thanks to Google DeepMind Antigravity for multi-agent orchestration, deep codebase verification, and end-to-end engineering."
-    },
-    {
-      "id": "c9c1349185114fc77791",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Hero #2"
-    },
-    {
-      "id": "cce74de8c666eab3859e",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Red-Team Partner"
+      "text": "Exports production .cursorrules and agent system instructions optimized for rapid multi-file refactoring and zero hallucinations."
     },
     {
       "id": "ce7732369446fd09fe20",
@@ -15241,16 +15991,10 @@
       "text": "local-engine"
     },
     {
-      "id": "cf2b403fab140ad08350",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PROOF",
-      "text": "Contribution"
-    },
-    {
-      "id": "d244fd293883082cd15b",
+      "id": "ceda876a81b9ad3f8cee",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Special thanks to GitHub for version custody, automated CI/CD verification workflows, and hosting the global developer community."
+      "text": "Deterministic"
     },
     {
       "id": "d4cd791715b9658e313a",
@@ -15259,58 +16003,40 @@
       "text": "prompt-studio"
     },
     {
-      "id": "dd179443d49dcb62293c",
+      "id": "d548f08c86d7ccbc2b6e",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "ChatGPT — Research Design & Adversarial Audits"
+      "text": "OpenAI o3/GPT"
     },
     {
-      "id": "dd54eecbae242b94858b",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Antigravity — Autonomous Agentic Engineering Partner"
-    },
-    {
-      "id": "e229e961d28af13a5076",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Hero #6"
-    },
-    {
-      "id": "eaa122aab0527c1663e0",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "100% Verified"
-    },
-    {
-      "id": "ec3b75a22c6d00fe924b",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Hero #5"
-    },
-    {
-      "id": "f488e98e26427112acd5",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Agentic Core"
-    },
-    {
-      "id": "f83a669649436cd388f0",
+      "id": "dc7fc68dceb5762b1b3c",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PROOF",
-      "text": "Gratitude message for SPE Hero platforms"
+      "text": "Drift Ceiling"
     },
     {
-      "id": "f8873918e7d5ebff8989",
+      "id": "dcd598fcbe6157a8515d",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "SPE"
+      "depth": "PROOF",
+      "text": "Target Runtime"
     },
     {
-      "id": "ffae4718220c1aee8ccb",
+      "id": "df0087efa170bf22fca7",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "SPE 3D Sun and the 6 Frontier AI platforms in orbit"
+    },
+    {
+      "id": "fab8208efd1590c0016e",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Thank you Claude Code for deep architectural craftsmanship & zero-drift skills"
+      "text": "spe compile --target antigravity --invariants strict --zero-leak"
+    },
+    {
+      "id": "fad1d00167d688e776bd",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "spe compile --target [runtime] --invariants strict"
     },
     {
       "id": "0977c7c297e5a4194ef2",
@@ -16219,6 +16945,12 @@
       "text": "SPE — System Prompt Engine home"
     },
     {
+      "id": "5de4c5f42e2ee355141d",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "10,000+ task-specific prompts for all AI models"
+    },
+    {
       "id": "5f988fb0e16372c8040a",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16283,6 +17015,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Head-to-head prompt tests with real accuracy proof"
+    },
+    {
+      "id": "7d7d630d86daefd1471d",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt Arsenal"
     },
     {
       "id": "7fee6bb470fc24bc1333",
@@ -16439,6 +17177,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Daily Lab"
+    },
+    {
+      "id": "f2a14f5f0407629c1b6c",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "prompts"
     },
     {
       "id": "f43dbdb3b8c29c96c90a",
@@ -23623,12 +24367,6 @@
       "text": "with camera path controls &amp; 1-click rebuild prompts"
     },
     {
-      "id": "07271cb6bd7b9cffb6b1",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "spe-user-email"
-    },
-    {
       "id": "082fa5630242202b3f9d",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -24397,12 +25135,6 @@
       "text": "Verified Entitlement Token:"
     },
     {
-      "id": "f2ffc25b6b4bf69bc5d2",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "spe-user-tier"
-    },
-    {
       "id": "f37e8fbff84821729763",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -24665,6 +25397,78 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
       "text": "Image, screenshot, and video notes are computed here with simple pixel checks. Optional same-origin model packs may load from this site when you use image helpers — no paid vision service is required for this preview."
+    },
+    {
+      "id": "10025ddcfba59d010610",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt Arsenal"
+    },
+    {
+      "id": "2a5b1689092eeb10a63b",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "13 Professional Domains"
+    },
+    {
+      "id": "2a60b3cec93c8c7b89b8",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal"
+    },
+    {
+      "id": "30871a6970bd45035a01",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
+      "id": "50a4f5f35c4c92f991aa",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal Prompt Arsenal"
+    },
+    {
+      "id": "76998c1c462fcd7e2b07",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Production-grade, task-specific prompt assets adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney. Browse across 13 professional domains with real-time model transcompilation."
+    },
+    {
+      "id": "80b955b086dc08647fcb",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "100% Free Online Access"
+    },
+    {
+      "id": "86d3d156ed0a19452f13",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Breadcrumb"
+    },
+    {
+      "id": "88312ae6b7935528bde4",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "&rsaquo;"
+    },
+    {
+      "id": "9d9c26f6e49d8cdd7f6c",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "26 Verified Real AI Models"
+    },
+    {
+      "id": "b52292f00f318758cdca",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "10,000+ Task Assets • 100% Free on the Web"
+    },
+    {
+      "id": "f93ee0b6665970b1974f",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Air-Gapped Offline Mode (Pro)"
     },
     {
       "id": "0a4be7243d753e8350e2",
@@ -25897,6 +26701,12 @@
       "text": "Continue"
     },
     {
+      "id": "09ba1c7eceaa0c46d322",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Universal Prompt Arsenal (10,000+ Free Production Prompts) | SPE"
+    },
+    {
       "id": "0b18cde43a373bead6c8",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -26359,6 +27169,12 @@
       "text": "Free system prompt generator and prompt engineering tool. Turns ideas into structured prompts in your browser."
     },
     {
+      "id": "f4aa4bb08626ebc72230",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, and Midjourney. 100% free online."
+    },
+    {
       "id": "f66a44ea029c760e8b47",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -26375,6 +27191,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Optional on-device history of ideas and prompts. Nothing is uploaded; SPE keeps your work local."
+    },
+    {
+      "id": "fa9933366fbc7e063069",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/prompts"
     },
     {
       "id": "fb7247795a35bf9c16f7",

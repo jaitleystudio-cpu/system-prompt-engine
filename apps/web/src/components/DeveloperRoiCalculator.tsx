@@ -26,32 +26,57 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
     <section
       className="spe-roi-calculator-section"
       style={{
-        maxWidth: "1100px",
+        maxWidth: "1200px",
         margin: "3rem auto",
-        padding: "2rem 1.5rem",
-        borderRadius: "12px",
-        backgroundColor: "#070c18",
-        border: "1px solid #1e293b",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+        padding: "2.5rem 2.25rem",
+        borderRadius: "24px",
+        background: "radial-gradient(120% 100% at 50% 0%, #0f172a 0%, #070b14 65%, #04060c 100%)",
+        border: "1px solid rgba(226, 232, 240, 0.14)",
+        boxShadow: "0 32px 80px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.14)",
       }}
       aria-label="Developer ROI Calculator"
     >
-      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+      <div style={{ textAlign: "center", marginBottom: "2.25rem" }}>
         <span
           style={{
-            fontSize: "0.8125rem",
+            display: "inline-block",
+            padding: "0.3rem 0.85rem",
+            borderRadius: "9999px",
+            background: "rgba(217, 197, 154, 0.1)",
+            border: "1px solid rgba(217, 197, 154, 0.28)",
+            fontSize: "0.72rem",
+            fontFamily: "var(--spe-font-mono, monospace)",
             textTransform: "uppercase",
             fontWeight: 700,
-            letterSpacing: "0.08em",
-            color: "#38bdf8",
+            letterSpacing: "0.14em",
+            color: "#d9c59a",
+            marginBottom: "0.65rem",
           }}
         >
           Instant Value Calculator
         </span>
-        <h2 style={{ fontSize: "1.75rem", fontWeight: 800, margin: "0.5rem 0", color: "#f8fafc" }}>
-          Calculate Your Time &amp; Token Savings
+        <h2
+          style={{
+            fontSize: "clamp(1.75rem, 3vw, 2.35rem)",
+            fontWeight: 800,
+            letterSpacing: "-0.03em",
+            margin: "0.35rem 0 0.6rem",
+            color: "#f8fafc",
+          }}
+        >
+          Calculate Your Time &amp;{" "}
+          <em
+            style={{
+              fontFamily: "var(--spe-font-display, 'Instrument Serif', Georgia, serif)",
+              fontWeight: 400,
+              fontStyle: "italic",
+              color: "#d9c59a",
+            }}
+          >
+            Token Savings.
+          </em>
         </h2>
-        <p style={{ color: "#94a3b8", fontSize: "0.9375rem", maxWidth: "600px", margin: "0 auto" }}>
+        <p style={{ color: "#94a3b8", fontSize: "1rem", maxWidth: "600px", margin: "0 auto", lineHeight: 1.6 }}>
           See exactly how much debugging time and wasted API budget you preserve with SPE guardrails.
         </p>
       </div>
@@ -67,17 +92,18 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
         {/* Slider Box */}
         <div
           style={{
-            padding: "1.5rem",
-            backgroundColor: "#0d1424",
-            borderRadius: "8px",
-            border: "1px solid #1e293b",
+            padding: "1.75rem",
+            backgroundColor: "rgba(10, 15, 28, 0.85)",
+            borderRadius: "16px",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.06)",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "1rem" }}>
             <label htmlFor="hours-slider" style={{ color: "#cbd5e1", fontSize: "0.9375rem", fontWeight: 600 }}>
               AI Coding Usage:
             </label>
-            <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "#38bdf8" }}>
+            <span style={{ fontSize: "1.35rem", fontWeight: 800, color: "#38bdf8", fontFamily: "var(--spe-font-mono, monospace)" }}>
               {weeklyHours} hrs / week
             </span>
           </div>
@@ -98,15 +124,15 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
             }}
           />
 
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#64748b" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#64748b", fontFamily: "var(--spe-font-mono, monospace)" }}>
             <span>Casual (3h)</span>
             <span>Regular (15h)</span>
             <span>Power Dev (40h)</span>
           </div>
 
-          <div style={{ marginTop: "1.5rem", paddingTop: "1rem", borderTop: "1px solid #1e293b" }}>
-            <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.5, margin: 0 }}>
-              💡 Based on real benchmarks across Claude Code, Cursor, and ChatGPT. Scope Guardrails prevent prompt drift and eliminate out-of-scope code refactors.
+          <div style={{ marginTop: "1.5rem", paddingTop: "1rem", borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}>
+            <p style={{ fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.55, margin: 0 }}>
+              Based on empirical benchmarks across Antigravity, Claude Code, Cursor, and ChatGPT. Scope Guardrails prevent prompt drift and eliminate out-of-scope code refactors.
             </p>
           </div>
         </div>
@@ -115,17 +141,18 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div
             style={{
-              padding: "1.25rem",
-              backgroundColor: "#0d1527",
-              borderRadius: "8px",
-              border: "1px solid #1e293b",
+              padding: "1.35rem",
+              backgroundColor: "rgba(10, 15, 28, 0.85)",
+              borderRadius: "16px",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.06)",
               textAlign: "center",
             }}
           >
-            <span style={{ fontSize: "0.75rem", textTransform: "uppercase", color: "#94a3b8", fontWeight: 700 }}>
+            <span style={{ fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", fontWeight: 700 }}>
               Debugging Time Saved
             </span>
-            <div style={{ fontSize: "2rem", fontWeight: 800, color: "#34d399", margin: "0.4rem 0" }}>
+            <div style={{ fontSize: "2.1rem", fontWeight: 800, color: "#34d399", margin: "0.4rem 0", fontFamily: "var(--spe-font-mono, monospace)" }}>
               ~{hoursSavedMonthly} hrs
             </div>
             <span style={{ fontSize: "0.75rem", color: "#64748b" }}>per month preserved</span>
@@ -133,17 +160,18 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
 
           <div
             style={{
-              padding: "1.25rem",
-              backgroundColor: "#0d1527",
-              borderRadius: "8px",
-              border: "1px solid #1e293b",
+              padding: "1.35rem",
+              backgroundColor: "rgba(10, 15, 28, 0.85)",
+              borderRadius: "16px",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.06)",
               textAlign: "center",
             }}
           >
-            <span style={{ fontSize: "0.75rem", textTransform: "uppercase", color: "#94a3b8", fontWeight: 700 }}>
+            <span style={{ fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", fontWeight: 700 }}>
               Wasted Tokens Saved
             </span>
-            <div style={{ fontSize: "2rem", fontWeight: 800, color: "#38bdf8", margin: "0.4rem 0" }}>
+            <div style={{ fontSize: "2.1rem", fontWeight: 800, color: "#38bdf8", margin: "0.4rem 0", fontFamily: "var(--spe-font-mono, monospace)" }}>
               ${tokenDollarsSavedMonthly}
             </div>
             <span style={{ fontSize: "0.75rem", color: "#64748b" }}>avoided API retries</span>
@@ -152,10 +180,11 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
           <div
             style={{
               gridColumn: "1 / -1",
-              padding: "1.25rem",
-              background: "linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(14, 165, 233, 0.15) 100%)",
-              borderRadius: "8px",
-              border: "1px solid rgba(56, 189, 248, 0.3)",
+              padding: "1.35rem 1.5rem",
+              background: "linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(217, 197, 154, 0.08) 100%)",
+              borderRadius: "16px",
+              border: "1px solid rgba(217, 197, 154, 0.28)",
+              boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -164,10 +193,10 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
             }}
           >
             <div>
-              <div style={{ fontSize: "0.875rem", color: "#f8fafc", fontWeight: 700 }}>
+              <div style={{ fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600 }}>
                 Developer Pro ($9/mo) Return on Investment:
               </div>
-              <div style={{ fontSize: "1.125rem", color: "#38bdf8", fontWeight: 800 }}>
+              <div style={{ fontSize: "1.125rem", color: "#d9c59a", fontWeight: 800, marginTop: "0.2rem" }}>
                 {roiMultiplier}x ROI · Estimated ${monthlySavingsValue}/mo in preserved engineering value
               </div>
             </div>
@@ -177,14 +206,22 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
                 type="button"
                 onClick={() => onNavigate?.("pricing")}
                 style={{
-                  padding: "0.6rem 1.1rem",
-                  backgroundColor: "#2563eb",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "6px",
+                  minHeight: "44px",
+                  minWidth: "220px",
+                  padding: "10px 24px",
+                  backgroundImage: "linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)",
+                  backgroundColor: "#e2e8f0",
+                  color: "#090d16",
+                  border: "1px solid rgba(255, 255, 255, 0.4)",
+                  borderRadius: "9999px",
                   fontWeight: 700,
-                  fontSize: "0.875rem",
+                  fontSize: "0.85rem",
                   cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 8px 20px rgba(0, 0, 0, 0.35)",
+                  transition: "transform 0.15s ease, box-shadow 0.15s ease",
                 }}
               >
                 Get Developer Pro ($9/mo) →

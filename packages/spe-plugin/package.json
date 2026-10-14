@@ -1,0 +1,20 @@
+{
+  "name": "@spe/plugin",
+  "version": "1.0.0",
+  "description": "SPE — System Prompt Engine OpenAI Plugin & MCP Server",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "node scripts/test-plugin.mjs"
+  },
+  "keywords": [
+    "system-prompts",
+    "openai-plugin",
+    "mcp",
+    "prompt-engineering"
+  ],
+  "author": "System Prompt Engine Team",
+  "license": "MIT"
+}

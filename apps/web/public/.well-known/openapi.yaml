@@ -1,0 +1,214 @@
+openapi: 3.0.3
+info:
+  title: SPE — System Prompt Engine
+  description: >-
+    SPE converts user goals into structured system prompts for AI assistants and coding agents.
+    It preserves requirements, inspects prompt constraints, and optimizes multilingual versions.
+  version: 1.0.0
+servers:
+  - url: https://systempromptengine.com
+paths:
+  /api/v1/compile-system-prompt:
+    post:
+      operationId: compile_system_prompt
+      summary: Compile a structured system prompt from user goals and constraints
+      description: >-
+        Use this tool when the user requests a reusable system prompt, structured AI instructions,
+        or a system-level instruction set for an AI assistant or coding agent. Compile the user's
+        stated objective, constraints, role, output format, and acceptance criteria into a structured prompt.
+        Preserve user-supplied facts and clearly identify missing requirements. Do not use this tool merely
+        to answer an ordinary factual question, generate an image, translate unrelated text, or complete a
+        task that does not require a prompt artifact.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - goal
+              properties:
+                goal:
+                  type: string
+                  description: The primary objective or task the AI assistant must fulfill.
+                category:
+                  type: string
+                  description: Domain category (e.g., Coding, Business, Research, Writing, Assistant).
+                  default: Assistant
+                role:
+                  type: string
+                  description: Explicit persona or system role description.
+                constraints:
+                  type: array
+                  items:
+                    type: string
+                  description: Prohibitions, boundaries, and hard invariants.
+                target_model:
+                  type: string
+                  description: Intended model runtime (e.g., chatgpt, claude, local).
+                  default: chatgpt
+                output_format:
+                  type: string
+                  description: Desired schema or structure (e.g., JSON, markdown, code).
+      responses:
+        '200':
+          description: Successfully compiled system prompt
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - prompt
+                  - character_count
+                  - language
+                  - is_token_count_exact
+                  - estimated_tokens
+                  - capacity_limit
+                  - warnings
+                  - entitlement_status
+                properties:
+                  prompt:
+                    type: string
+                    description: The fully structured, ready-to-use system prompt.
+                  character_count:
+                    type: integer
+                    description: Actual character count of the generated prompt.
+                  language:
+                    type: string
+                    description: Detected primary language code (e.g., en, te, hi).
+                  is_token_count_exact:
+                    type: boolean
+                    description: Explicit disclosure whether token count is exact or estimated.
+                  estimated_tokens:
+                    type: integer
+                    description: Calibrated estimated token count for the target model.
+                  capacity_limit:
+                    type: integer
+                    description: Active capacity ceiling in characters (15,000 for Free tier).
+                  warnings:
+                    type: array
+                    items:
+                      type: string
+                    description: Non-blocking notices regarding missing requirements or edge cases.
+                  entitlement_status:
+                    type: string
+                    enum: [FREE, PRO, TEAM]
+                    description: Entitlement level under which the prompt was synthesized.
+
+  /api/v1/inspect-system-prompt:
+    post:
+      operationId: inspect_system_prompt
+      summary: Inspect and audit an existing system prompt for missing requirements and rule conflicts
+      description: >-
+        Review an existing prompt for ambiguity, missing requirements, and rule conflicts.
+        Analyzes role clarity, objective boundaries, operational invariants, and acceptance criteria.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - prompt_text
+              properties:
+                prompt_text:
+                  type: string
+                  description: The existing system prompt to audit and review.
+      responses:
+        '200':
+          description: Systematic prompt inspection audit report
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - quality_score
+                  - character_count
+                  - has_role
+                  - has_objective
+                  - has_invariants
+                  - has_verification
+                  - missing_requirements
+                  - recommendations
+                properties:
+                  quality_score:
+                    type: number
+                    description: Computed quality score out of 100.
+                  character_count:
+                    type: integer
+                  has_role:
+                    type: boolean
+                  has_objective:
+                    type: boolean
+                  has_invariants:
+                    type: boolean
+                  has_verification:
+                    type: boolean
+                  missing_requirements:
+                    type: array
+                    items:
+                      type: string
+                  recommendations:
+                    type: array
+                    items:
+                      type: string
+
+  /api/v1/compare-prompt-languages:
+    post:
+      operationId: compare_prompt_languages
+      summary: Compare native-language and English versions of a prompt with token economics
+      description: >-
+        Generate native-language and optimized English versions of a prompt and compare token
+        efficiency and estimated API costs. Leaves the final version choice strictly to the user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - prompt_text
+              properties:
+                prompt_text:
+                  type: string
+                  description: Input brief or prompt in any native language.
+                category:
+                  type: string
+                  default: Business
+                target_model:
+                  type: string
+                  default: claude-sonnet
+      responses:
+        '200':
+          description: Dual-language prompt comparison bundle
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - detected_language
+                  - native_prompt
+                  - english_prompt
+                  - hybrid_prompt
+                  - token_savings_percent
+                  - cost_savings_percent
+                  - recommended_version
+                  - recommendation_reason
+                properties:
+                  detected_language:
+                    type: object
+                  native_prompt:
+                    type: string
+                  english_prompt:
+                    type: string
+                  hybrid_prompt:
+                    type: string
+                  token_savings_percent:
+                    type: number
+                  cost_savings_percent:
+                    type: number
+                  recommended_version:
+                    type: string
+                    enum: [english, native, hybrid]
+                  recommendation_reason:
+                    type: string

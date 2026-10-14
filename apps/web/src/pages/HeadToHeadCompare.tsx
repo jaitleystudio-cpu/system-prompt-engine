@@ -175,12 +175,14 @@ export const HeadToHeadCompare: React.FC = () => {
               <button
                 onClick={() => copyCommand(bench.reproducibleCommand, bench.id)}
                 style={{
-                  padding: "0.4rem 0.75rem",
+                  minHeight: "40px",
+                  padding: "8px 18px",
                   backgroundColor: copiedId === bench.id ? "#059669" : "#1e293b",
                   color: "#f8fafc",
-                  border: "1px solid #334155",
-                  borderRadius: "4px",
+                  border: "1px solid rgba(217, 197, 154, 0.3)",
+                  borderRadius: "9999px",
                   fontSize: "0.8125rem",
+                  fontWeight: 600,
                   cursor: "pointer",
                 }}
               >

@@ -90,3 +90,101 @@ def test_dynamic_skill_auto_install():
     # Invalid nonexistent skill
     fail = installer.auto_install_skill("fake-nonexistent-skill-999")
     assert fail is False
+
+
+def test_antigravity_and_seo_skills_registered():
+    installer = SkillAutoInstaller()
+    reqs = installer.detect_required_skills(
+        task_description="Use superpowers and skill-orchestrator to build a glassmorphic 3d css interface with schema.org seo and recallmax",
+        files_modified=["apps/web/src/engine/SpeClickyContinuationHub.tsx"],
+    )
+    names = {r.skill_name for r in reqs}
+    assert "using-superpowers" in names
+    assert "antigravity-design-expert" in names
+    assert "antigravity-skill-orchestrator" in names
+    assert "seo" in names
+    assert "recallmax" in names
+
+
+def test_spe_v4_all_15_required_skills_registered_and_detected():
+    installer = SkillAutoInstaller()
+    assert len(installer.SPE_V4_REQUIRED_SKILLS) == 15
+    for skill in installer.SPE_V4_REQUIRED_SKILLS:
+        assert skill in installer.KNOWN_SKILL_REGISTRY
+        assert skill in installer.installed_skills
+
+    # Test 1: Exact slash-command prompt from <original_task> without extra synthetic keywords
+    exact_prompt = (
+        "use skills /using-superpowers /product-design /performance-engineer "
+        "/frontend-mobile-development-component-scaffold /progressive-web-app /deep-research "
+        "/seo /antigravity-design-expert /design-taste-frontend /error-diagnostics-error-trace "
+        "/competitor-alternatives /docker-expert /trpc-fullstack /antigravity-skill-orchestrator "
+        "/asana-automation to upgrade SPE Next Stage v4.0"
+    )
+    exact_reqs = installer.detect_required_skills(
+        task_description=exact_prompt,
+        files_modified=["apps/web/src/engine/SpeV4NextStageSeoDeck.tsx"],
+    )
+    exact_detected_names = {r.skill_name for r in exact_reqs}
+    for skill in installer.SPE_V4_REQUIRED_SKILLS:
+        assert skill in exact_detected_names, f"Expected v4.0 skill {skill} to be detected from exact slash prompt"
+
+    # Test 2: l-orchestrator and Core Web Vitals (cwv/inp/lcp/cls) shorthand detection
+    shorthand_reqs = installer.detect_required_skills(
+        task_description="Run l-orchestrator with CWV INP LCP CLS budgets",
+        files_modified=[],
+    )
+    shorthand_names = {r.skill_name for r in shorthand_reqs}
+    assert "antigravity-skill-orchestrator" in shorthand_names
+    assert "performance-engineer" in shorthand_names
+
+
+def test_spe_v5_all_72_moonshot_skills_registered_and_detected():
+    installer = SkillAutoInstaller()
+    assert len(installer.SPE_V5_REQUIRED_SKILLS) == 72
+    for skill in installer.SPE_V5_REQUIRED_SKILLS:
+        assert skill in installer.KNOWN_SKILL_REGISTRY, f"Missing {skill} in KNOWN_SKILL_REGISTRY"
+        assert skill in installer.installed_skills, f"Missing {skill} in default installed_skills"
+
+    # Test 1: Exact slash-command prompt from <original_task>
+    exact_v5_prompt = (
+        "update v5 extreme robust direct moonshot brain upgrade aggressively text, reading, audio, video, writing "
+        "multilanguage use each and every skill and plugins upgrade all main tools that uses CLICKY "
+        "/audio-transcriber /fal-audio /azure-ai-contentunderstanding-py /azure-ai-openai-dotnet "
+        "/podcast-generation /videodb /videodb-skills /seek-and-analyze-video /daily-gift /fal-generate "
+        "/ingest-youtube /remotion-best-practices /youtube-summarizer /youtube-automation /tiktok-automation "
+        "/humanize-chinese /employment-contract-templates /using-superpowers /antigravity-skill-orchestrator "
+        "/google-antigravity-sdk /voice-agents /voice-ai-development /voice-ai-engine-development "
+        "/azure-ai-voicelive-dotnet /azure-ai-voicelive-java /azure-ai-voicelive-py /azure-ai-voicelive-ts "
+        "/agentphone /ux-copy /professional-proofreader /pipecat-friday-agent /github-issue-creator "
+        "/earllm-build /content-creator /azure-ai-contentsafety-py /azure-ai-vision-imageanalysis-java "
+        "/agents-v2-py /threejs-textures /azure-containerregistry-py /azure-ai-translation-text-py "
+        "/aomi-transact /azure-ai-transcription-py /azure-ai-translation-document-py "
+        "/bigquery-data-transfer-service /alphagenome-single-variant-analysis /jaspar-database "
+        "/modern-web-guidance /ensembl-database /azure-ai-textanalytics-py /azure-speech-to-text-rest-py "
+        "/ad-creative /code-reviewer /ux-audit /uxui-principles /shadcn /python-performance-optimization "
+        "/boost /readme /hugging-face-papers /cqrs-implementation /gcp-spark /deep-research /documentation "
+        "/doc-coauthoring /magic-ui-generator /local-llm-expert /rag-engineer /prompt-caching "
+        "/prompt-engineering-patterns /hugging-face-evaluation /llm-application-dev-prompt-optimize "
+        "/llm-application-dev-langchain-agent"
+    )
+    reqs = installer.detect_required_skills(
+        task_description=exact_v5_prompt,
+        files_modified=["apps/web/src/engine/SpeV5MoonshotNorthStarBrain.tsx"],
+    )
+    detected = {r.skill_name for r in reqs}
+    for skill in installer.SPE_V5_REQUIRED_SKILLS:
+        assert skill in detected, f"Expected v5.0 skill {skill} to be detected from exact slash prompt"
+
+    # Test 2: Underscore variant detection for science/genomic skills
+    science_reqs = installer.detect_required_skills(
+        task_description="Run alphagenome_single_variant_analysis with jaspar_database and ensembl_database",
+        files_modified=[],
+    )
+    science_names = {r.skill_name for r in science_reqs}
+    assert "alphagenome-single-variant-analysis" in science_names
+    assert "jaspar-database" in science_names
+    assert "ensembl-database" in science_names
+
+
+

@@ -11,6 +11,7 @@ import "./before-after-diff.css";
 
 interface BeforeAfterDiffSliderProps {
   onNavigate?: (view: AppView) => void;
+  isMainHero?: boolean;
 }
 
 interface DiffScenario {
@@ -159,6 +160,7 @@ const SCENARIOS: DiffScenario[] = [
 
 export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
   onNavigate,
+  isMainHero = true,
 }) => {
   const [activeScenarioId, setActiveScenarioId] = useState<string>("auth-refactor");
   const [splitPct, setSplitPct] = useState<number>(50);
@@ -230,16 +232,22 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
 
   return (
     <section
-      className="spe-diff-section"
+      className={`spe-diff-section ${isMainHero ? "is-main-hero" : ""}`}
       data-copy-depth="PROOF"
       aria-labelledby="diff-slider-heading"
     >
       <div className="spe-diff-container">
+        {/* Top ambient glow & light beam */}
+        <div className="spe-diff-ambient-glow" aria-hidden="true" />
+
         {/* Section Heading */}
         <div className="spe-diff-header">
-          <span className="spe-diff-eyebrow">
-            EMPIRICAL RUN DIFF · HALLUCINATION VS DETERMINISM
-          </span>
+          <div className="spe-diff-eyebrow-wrap">
+            <span className="spe-diff-eyebrow">
+              <span className="spe-live-pulse-dot" aria-hidden="true" />
+              EMPIRICAL RUN DIFF · HALLUCINATION VS DETERMINISM
+            </span>
+          </div>
           <h2 id="diff-slider-heading" className="spe-diff-title">
             Before vs After: <em>See the Proof in Real Agent Runs</em>
           </h2>
@@ -273,8 +281,13 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
         <div className="spe-diff-scorecard-grid">
           <div className="spe-diff-scorecard is-before">
             <div className="spe-scorecard-label">
-              <span>{activeScenario.before.label}</span>
-              <span>{activeScenario.before.cost}</span>
+              <div className="spe-scorecard-chip-title">
+                <span className="spe-scorecard-indicator" aria-hidden="true" />
+                <span>{activeScenario.before.label}</span>
+              </div>
+              <div className="spe-scorecard-chip-cost">
+                <span>{activeScenario.before.cost}</span>
+              </div>
             </div>
             <div className="spe-scorecard-stats">
               <div className="spe-stat-item">
@@ -294,8 +307,13 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
 
           <div className="spe-diff-scorecard is-after">
             <div className="spe-scorecard-label">
-              <span>{activeScenario.after.label}</span>
-              <span>{activeScenario.after.cost}</span>
+              <div className="spe-scorecard-chip-title">
+                <span className="spe-scorecard-indicator" aria-hidden="true" />
+                <span>{activeScenario.after.label}</span>
+              </div>
+              <div className="spe-scorecard-chip-cost">
+                <span>{activeScenario.after.cost}</span>
+              </div>
             </div>
             <div className="spe-scorecard-stats">
               <div className="spe-stat-item">
@@ -363,8 +381,8 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
               <div className="spe-terminal-window">
                 <div className="spe-terminal-topbar">
                   <div className="spe-terminal-dots">
-                    <span className="spe-dot spe-dot-green" />
-                    <span className="spe-dot spe-dot-green" />
+                    <span className="spe-dot spe-dot-red" />
+                    <span className="spe-dot spe-dot-yellow" />
                     <span className="spe-dot spe-dot-green" />
                   </div>
                   <span className="spe-terminal-tag">
@@ -404,7 +422,7 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
                   <div className="spe-terminal-dots">
                     <span className="spe-dot spe-dot-red" />
                     <span className="spe-dot spe-dot-yellow" />
-                    <span className="spe-dot spe-dot-red" />
+                    <span className="spe-dot spe-dot-green" />
                   </div>
                   <span className="spe-terminal-tag">
                     ❌ Unguided AI Agent Run (Hallucination)

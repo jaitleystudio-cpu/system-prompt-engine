@@ -158,6 +158,12 @@ class CWCWitnessEngine:
 
         # Default: AST & Deterministic Test Oracle
         target = files[0] if files else "target_code.py"
+        if target.endswith(".swift"):
+            verify_cmd = f"swiftc -parse {target} && pytest -q"
+        elif target.endswith((".ts", ".tsx", ".js", ".mjs")):
+            verify_cmd = "npm --prefix apps/web run test:v1-4-omnibrain && pytest -q"
+        else:
+            verify_cmd = f"pytest {target} -v"
         return CounterfactualProbe(
             probe_id="PROBE-DETERMINISTIC-01",
             name="Invariant Boundary Assertion Probe",
@@ -165,7 +171,7 @@ class CWCWitnessEngine:
             cost_nano_usd=0,
             expected_compliant="All explicit assertions pass with non-empty mutation coverage",
             expected_violation="Boundary condition edge cases produce unexpected behavior",
-            verification_command=f"pytest {target} -v",
+            verification_command=verify_cmd,
             description="Executes deterministic boundary assertions on modified files.",
         )
 

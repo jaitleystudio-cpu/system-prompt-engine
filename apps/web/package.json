@@ -6,6 +6,8 @@
   "description": "SPE-WEB-03 semantic press research preview. Real local WASM compiler.",
   "license": "MIT OR Apache-2.0",
   "scripts": {
+    "auto": "node ../../tools/autonomous_pipeline.mjs",
+    "auto:daemon": "node ../../tools/autonomous_pipeline.mjs --daemon",
     "copy-wasm": "node scripts/copy-wasm.mjs",
     "wasm:build-canonical": "node ../../tools/wasm_canonical_build.mjs",
     "dev": "npm run wasm:build-canonical && npm run copy-wasm && vite",

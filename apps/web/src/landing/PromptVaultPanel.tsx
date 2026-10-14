@@ -8,6 +8,7 @@ import {
 } from "../engine/deepSpecificationScaler";
 import type { ModelDialect } from "../engine/modelTranscompiler";
 import { ARSENAL_CATALOG_ASSETS } from "../engine/arsenal/arsenalCatalogData";
+import { getArsenalCatalogIndex, getArsenalAssetById } from "../engine/arsenal/arsenalHydrator";
 import type { ArsenalPromptAsset, ArsenalTargetPlatform } from "../engine/arsenal/arsenalSchema";
 import { transcompilePromptForPlatform } from "../engine/arsenal/modelTranscompiler";
 import { getAllModels, getModelAtlasStats } from "../engine/modelAtlas/modelAtlasService";
@@ -17,6 +18,7 @@ import "./prompt-vault-panel.css";
 
 interface Props {
   onSelectPrompt: (compiledPrompt: string, category: CategoryId) => void;
+  initialAssetId?: string;
 }
 
 function downloadTextFile(filename: string, content: string) {
@@ -87,7 +89,7 @@ const SPONSORED_ADS = [
   },
 ];
 
-export function PromptVaultPanel({ onSelectPrompt }: Props) {
+export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
   const [panelTab, setPanelTab] = useState<"vault" | "discovery" | "platforms">("vault");
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState<string>("All");
@@ -104,7 +106,7 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
   const [entitlementTokenInput, setEntitlementTokenInput] = useState<string>("");
   const [tokenActivationMessage, setTokenActivationMessage] = useState<string | null>(null);
 
-  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(initialAssetId ?? null);
   const [varValues, setVarValues] = useState<Record<string, Record<string, string>>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -153,27 +155,32 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
     }
   };
 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(24);
+
   const categories = [
-    "All",
-    "Software & DevOps",
-    "Digital Marketing & SEO",
-    "Business & Operations",
-    "UI/UX & Web Design",
-    "Research & Education",
-    "Image Generation",
-    "Video & Motion",
-    "Audio, Speech & Music",
-    "Sales & CRM",
-    "Finance & Analytics",
-    "Customer Support & HR",
-    "Legal & Compliance",
-    "Writing & Productivity",
+    { label: "All", count: "10,000+", icon: "⚡" },
+    { label: "Software & DevOps", count: "1,600", icon: "💻" },
+    { label: "Digital Marketing & SEO", count: "1,200", icon: "📈" },
+    { label: "Business & Operations", count: "1,000", icon: "🏢" },
+    { label: "UI/UX & Web Design", count: "850", icon: "🎨" },
+    { label: "Research & Education", count: "850", icon: "🔬" },
+    { label: "Image Generation", count: "900", icon: "🖼️" },
+    { label: "Video & Motion", count: "700", icon: "🎬" },
+    { label: "Audio, Speech & Music", count: "600", icon: "🎵" },
+    { label: "Sales & CRM", count: "650", icon: "💼" },
+    { label: "Finance & Analytics", count: "450", icon: "📊" },
+    { label: "Customer Support & HR", count: "600", icon: "🤝" },
+    { label: "Legal & Compliance", count: "250", icon: "⚖️" },
+    { label: "Writing & Productivity", count: "350", icon: "✍️" },
   ];
 
-  const filteredArsenalAssets = useMemo(() => {
-    return ARSENAL_CATALOG_ASSETS.filter((p) => {
+  const allCatalogRecords = useMemo(() => getArsenalCatalogIndex(), []);
+
+  const filteredCatalogRecords = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return allCatalogRecords.filter((p) => {
       const matchCat = selectedCat === "All" || p.domain === selectedCat;
-      const q = search.toLowerCase();
       const matchSearch =
         !q ||
         p.title.toLowerCase().includes(q) ||
@@ -182,7 +189,43 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
         p.domain.toLowerCase().includes(q);
       return matchCat && matchSearch;
     });
-  }, [search, selectedCat]);
+  }, [allCatalogRecords, search, selectedCat]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredCatalogRecords.length / pageSize));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+
+  const pageRecords = useMemo(() => {
+    const start = (safeCurrentPage - 1) * pageSize;
+    return filteredCatalogRecords.slice(start, start + pageSize);
+  }, [filteredCatalogRecords, safeCurrentPage, pageSize]);
+
+  const pageArsenalAssets = useMemo(() => {
+    let list = pageRecords
+      .map((r) => {
+        const flagship = ARSENAL_CATALOG_ASSETS.find((a) => a.id === r.id);
+        if (flagship) return flagship;
+        return getArsenalAssetById(r.id);
+      })
+      .filter((a): a is ArsenalPromptAsset => Boolean(a));
+
+    if (initialAssetId && !list.some((a) => a.id === initialAssetId)) {
+      const deepAsset = getArsenalAssetById(initialAssetId);
+      if (deepAsset) {
+        list = [deepAsset, ...list];
+      }
+    }
+    return list;
+  }, [pageRecords, initialAssetId]);
+
+  const handleCategorySelect = (catLabel: string) => {
+    setSelectedCat(catLabel);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearch(val);
+    setCurrentPage(1);
+  };
 
   const handleVarChange = (promptId: string, varName: string, val: string) => {
     setVarValues((prev) => ({
@@ -455,7 +498,7 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
               className="spe-vault-search"
               placeholder="Search 1-click prompts (SEO, Copywriting, Full-Stack, Sales)..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               aria-label="Search power prompts"
             />
 
@@ -463,11 +506,11 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
               {categories.map((cat) => (
                 <button
                   type="button"
-                  key={cat}
-                  className={`spe-vault-cat-btn ${selectedCat === cat ? "active" : ""}`}
-                  onClick={() => setSelectedCat(cat)}
+                  key={cat.label}
+                  className={`spe-vault-cat-btn ${selectedCat === cat.label ? "active" : ""}`}
+                  onClick={() => handleCategorySelect(cat.label)}
                 >
-                  {cat}
+                  <span>{cat.icon ? `${cat.icon} ` : ""}{cat.label} ({cat.count})</span>
                 </button>
               ))}
               <button
@@ -508,8 +551,43 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
             </div>
           </div>
 
+          <div className="spe-vault-results-meta" id="spe-vault-catalog-top">
+            <div>
+              Showing{" "}
+              <span className="spe-results-count-highlight">
+                {filteredCatalogRecords.length === 0
+                  ? 0
+                  : `${(safeCurrentPage - 1) * pageSize + 1}–${Math.min(
+                      safeCurrentPage * pageSize,
+                      filteredCatalogRecords.length
+                    )}`}
+              </span>{" "}
+              of{" "}
+              <span className="spe-results-count-highlight">
+                {filteredCatalogRecords.length.toLocaleString()}
+              </span>{" "}
+              Production Prompts {selectedCat !== "All" ? `in ${selectedCat}` : ""}
+            </div>
+            <div className="spe-results-page-size-wrap">
+              <span>Per page:</span>
+              {[24, 48, 96].map((sz) => (
+                <button
+                  type="button"
+                  key={sz}
+                  className={`spe-results-size-btn ${pageSize === sz ? "active" : ""}`}
+                  onClick={() => {
+                    setPageSize(sz);
+                    setCurrentPage(1);
+                  }}
+                >
+                  {sz}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="spe-vault-grid">
-            {filteredArsenalAssets.flatMap((p, idx) => {
+            {pageArsenalAssets.flatMap((p, idx) => {
               const isExpanded = expandedCardId === p.id;
               const currentVars = varValues[p.id] || {};
               const isCopied = copiedId === p.id;
@@ -632,6 +710,75 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
               return elements;
             })}
           </div>
+
+          {totalPages > 1 && (
+            <nav className="spe-vault-pagination-wrap" aria-label="Catalog pages">
+              <button
+                type="button"
+                className="spe-vault-page-nav-btn"
+                disabled={safeCurrentPage === 1}
+                onClick={() => {
+                  setCurrentPage((prev) => Math.max(1, prev - 1));
+                  document.getElementById("spe-vault-catalog-top")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                &laquo; Previous
+              </button>
+
+              {(() => {
+                const pages: (number | string)[] = [];
+                if (totalPages <= 7) {
+                  for (let i = 1; i <= totalPages; i++) pages.push(i);
+                } else {
+                  pages.push(1);
+                  if (safeCurrentPage > 3) pages.push("...");
+                  const start = Math.max(2, safeCurrentPage - 1);
+                  const end = Math.min(totalPages - 1, safeCurrentPage + 1);
+                  for (let i = start; i <= end; i++) {
+                    if (!pages.includes(i)) pages.push(i);
+                  }
+                  if (safeCurrentPage < totalPages - 2) pages.push("...");
+                  if (!pages.includes(totalPages)) pages.push(totalPages);
+                }
+
+                return pages.map((p, pIdx) => {
+                  if (typeof p === "string") {
+                    return (
+                      <span key={`dots-${pIdx}`} className="spe-vault-page-dots" aria-hidden="true">
+                        ...
+                      </span>
+                    );
+                  }
+                  return (
+                    <button
+                      type="button"
+                      key={p}
+                      className={`spe-vault-page-num-btn ${safeCurrentPage === p ? "active" : ""}`}
+                      onClick={() => {
+                        setCurrentPage(p);
+                        document.getElementById("spe-vault-catalog-top")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      aria-current={safeCurrentPage === p ? "page" : undefined}
+                    >
+                      {p}
+                    </button>
+                  );
+                });
+              })()}
+
+              <button
+                type="button"
+                className="spe-vault-page-nav-btn"
+                disabled={safeCurrentPage === totalPages}
+                onClick={() => {
+                  setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                  document.getElementById("spe-vault-catalog-top")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                Next &raquo;
+              </button>
+            </nav>
+          )}
 
           <div className="spe-vault-ad-slot-wrap" aria-label="Advertisement">
             <div className="spe-ad-label">ADVERTISEMENT • SUPPORTING FREE WEB ACCESS FOR ALL</div>

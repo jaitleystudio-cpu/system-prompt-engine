@@ -70,8 +70,8 @@
   justify-content: center;
   min-height: 44px;
   min-width: 44px;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
   background: var(--spe-hub-surface);
   border: 1px solid var(--spe-hub-border);
   color: var(--spe-hub-muted);

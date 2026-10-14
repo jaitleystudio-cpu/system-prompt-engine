@@ -1,4 +1,9 @@
-/** History-based public routes — no router dependency (₹0). */
+import {
+  ROUTE_ALIASES,
+  isPromptSubRoute,
+  EXTRA_VIEW_PATH,
+  EXTRA_ROUTE_META,
+} from "./engine/routeAliases.ts";
 
 export type AppView =
   | "home"
@@ -16,7 +21,9 @@ export type AppView =
   | "workflows"
   | "skill-builder"
   | "compare"
-  | "pricing";
+  | "pricing"
+  | "prompts"
+  | "eval-studio";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -35,6 +42,8 @@ export const VIEW_PATH: Record<AppView, string> = {
   "skill-builder": "/build-skill",
   compare: "/compare",
   pricing: "/pricing",
+  prompts: "/prompts",
+  ...EXTRA_VIEW_PATH,
 };
 
 /** Device-local and tool surfaces. Not advertised to crawlers. */
@@ -51,6 +60,9 @@ const PATH_VIEW: Record<string, AppView> = {
   ...Object.fromEntries(
     Object.entries(VIEW_PATH).map(([view, path]) => [path, view as AppView]),
   ),
+  ...Object.fromEntries(
+    Object.entries(ROUTE_ALIASES).map(([path, view]) => [path, view as AppView]),
+  ),
   "/skill-builder": "skill-builder",
   "/skills": "skill-builder",
 } as Record<string, AppView>;
@@ -63,6 +75,9 @@ export function resolveRoute(pathname: string):
   | { kind: "view"; view: AppView; canonicalPath: string }
   | { kind: "not-found"; pathname: string } {
   const clean = pathname.replace(/\/+$/, "") || "/";
+  if (isPromptSubRoute(clean)) {
+    return { kind: "view", view: PATH_VIEW[VIEW_PATH.prompts], canonicalPath: clean };
+  }
   const view = PATH_VIEW[clean];
   if (!view) return { kind: "not-found", pathname: clean };
   return { kind: "view", view, canonicalPath: VIEW_PATH[view] };
@@ -195,6 +210,13 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     description:
       "Simple, honest pricing. The core deterministic compiler will always be 100% free and on-device. Upgrade to Developer Pro or Team for advanced workflow automation and team gates.",
   },
+  prompts: {
+    path: "/prompts",
+    title: "Universal Prompt Arsenal (10,000+ Free Production Prompts) | SPE",
+    description:
+      "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, and Midjourney. 100% free online.",
+  },
+  ...EXTRA_ROUTE_META,
 };
 
 export function jsonLdSoftwareApplication(): Record<string, unknown> {

@@ -42,6 +42,7 @@ import {
   formatCharCount,
   nearLimit,
 } from "../input/boundedText";
+import { DualLanguagePromptStudio } from "../engine/DualLanguagePromptStudio";
 
 export type ComposerMode =
   | "text"
@@ -118,6 +119,7 @@ export function UnifiedComposer({
   } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const valueRef = useRef(value);
+  const [showDualStudio, setShowDualStudio] = useState(false);
   const opIdRef = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
   const availableModes = showOutputControls
@@ -606,6 +608,49 @@ export function UnifiedComposer({
               }}
             />
           </label>
+          <p className="spe-bound-meter" aria-live="polite">
+            {formatCharCount(value.length)} / 100,000+ characters (1 Lakh+ character input &amp; output supported)
+          </p>
+          <div style={{ marginTop: "0.5rem", display: "flex", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              className="spe-secondary-btn"
+              aria-label="Toggle Multilingual Dual-Prompt Studio"
+              style={{
+                fontSize: "0.78rem",
+                padding: "7px 14px",
+                borderRadius: "9999px",
+                minHeight: "38px",
+                maxWidth: "320px",
+                cursor: "pointer",
+                background: "rgba(56, 189, 248, 0.12)",
+                color: "#38bdf8",
+                border: "1px solid rgba(56, 189, 248, 0.35)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                fontWeight: 650,
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                transition: "all 0.18s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+              onClick={() => setShowDualStudio((prev) => !prev)}
+            >
+              <span style={{ flexShrink: 0 }}>🌍</span>
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{showDualStudio ? "Close Dual-Language Studio" : "Dual-Language Prompt Studio (36+ Languages)"}</span>
+            </button>
+          </div>
+          {showDualStudio && (
+            <div style={{ marginTop: "0.75rem" }}>
+              <DualLanguagePromptStudio
+                initialInput={value}
+                onApplyPrompt={(p) => {
+                  onChange(p);
+                  setShowDualStudio(false);
+                }}
+                onClose={() => setShowDualStudio(false)}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -885,11 +930,11 @@ export function UnifiedComposer({
           aria-labelledby="composer-tab-url"
         >
           <label className="spe-field">
-            <span>Website URL</span>
+            <span>Website, Video, or Podcast/Audio URL</span>
             <input
               type="url"
               inputMode="url"
-              placeholder="https://example.com"
+              placeholder="https://example.com, YouTube/video link, or podcast/audio URL"
               value={urlInput}
               disabled={disabled}
               onChange={(e) => setUrlInput(e.target.value)}
@@ -904,6 +949,25 @@ export function UnifiedComposer({
               onClick={() => void onUrlFetch()}
             >
               Use URL reference
+            </button>
+            <button
+              type="button"
+              className="spe-ghost"
+              disabled={disabled || !urlInput.trim()}
+              onClick={() => {
+                const cleanUrl = urlInput.trim();
+                if (!cleanUrl) return;
+                appendBlock(
+                  [
+                    "Video / Podcast Link → Text, Summary & Storytelling Request:",
+                    `Source link reference: ${cleanUrl}`,
+                    "Goals: Extract a clean structured transcript outline, chapter summary, key takeaways, storytelling script, and an actionable English pro prompt from this video or podcast reference.",
+                  ].join("\n"),
+                );
+                setStatus("Video/podcast link structured prompt template added.");
+              }}
+            >
+              Video / Podcast → Text &amp; Summary
             </button>
             <label className="spe-ghost file-btn">
               Upload HTML

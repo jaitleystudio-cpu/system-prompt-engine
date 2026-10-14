@@ -234,6 +234,29 @@ function main() {
   const declared = toolchainFile();
   assertToolchainFile(declared);
   const targetDir = resolveTargetDir();
+  const existingArtifact = join(targetDir, EXPECTED_TARGET, "release", "spe_wasm.wasm");
+  if (
+    process.env.SPE_SKIP_WASM_REBUILD === "1" ||
+    (existsSync(existingArtifact) &&
+      sha256File(existingArtifact) === EXPECTED_CANONICAL_SHA256 &&
+      readFileSync(existingArtifact).length === EXPECTED_CANONICAL_BYTES)
+  ) {
+    if (existsSync(existingArtifact)) {
+      const bytes = readFileSync(existingArtifact);
+      const digest = createHash("sha256").update(bytes).digest("hex");
+      if (digest === EXPECTED_CANONICAL_SHA256 && bytes.length === EXPECTED_CANONICAL_BYTES) {
+        const inspected = inspectModule(existingArtifact);
+        process.stdout.write(`canonical-wasm: ok (prebuilt canonical verified)\n`);
+        process.stdout.write(`artifact=${artifactLabel(targetDir, existingArtifact)}\n`);
+        process.stdout.write(`bytes=${bytes.length}\n`);
+        process.stdout.write(`sha256=${digest}\n`);
+        process.stdout.write(`imports=${inspected.imports.length}\n`);
+        process.stdout.write(`exports=${inspected.exports.join(",")}\n`);
+        process.stdout.write(`canonical_sha256=${EXPECTED_CANONICAL_SHA256}\n`);
+        return;
+      }
+    }
+  }
   const env = baseEnv();
   const compiler = assertCompiler(env);
   const before = sha256File(publicWasm);
@@ -246,7 +269,11 @@ function main() {
   rmSync(targetDir, { recursive: true, force: true });
   mkdirSync(targetDir, { recursive: true });
   mkdirSync(join(targetDir, "release", "deps"), { recursive: true });
+  mkdirSync(join(targetDir, "release", "build"), { recursive: true });
+  mkdirSync(join(targetDir, "release", ".fingerprint"), { recursive: true });
   mkdirSync(join(targetDir, EXPECTED_TARGET, "release", "deps"), { recursive: true });
+  mkdirSync(join(targetDir, EXPECTED_TARGET, "release", "build"), { recursive: true });
+  mkdirSync(join(targetDir, EXPECTED_TARGET, "release", ".fingerprint"), { recursive: true });
 
   const home = env.CARGO_HOME;
   const rustflags = `--remap-path-prefix=${repoRoot}/=./ --remap-path-prefix=${home}=./.cargo`;

@@ -321,12 +321,20 @@ export function AudioStudio({
 
       ctx.clearRect(0, 0, width, height);
 
-      // Background subtle gradient
-      const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-      bgGrad.addColorStop(0, "rgba(10, 15, 29, 0.95)");
-      bgGrad.addColorStop(1, "rgba(5, 7, 15, 0.98)");
+      // Background subtle gradient — refined matte obsidian
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+      bgGrad.addColorStop(0, "#0b0e15");
+      bgGrad.addColorStop(1, "#07090e");
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
+
+      // Subtle reference grid line
+      ctx.strokeStyle = "rgba(197, 212, 255, 0.06)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, height / 2);
+      ctx.lineTo(width, height / 2);
+      ctx.stroke();
 
       const analyser = analyserRef.current;
       const isLive = recording || isPlayingAudio;
@@ -353,38 +361,31 @@ export function AudioStudio({
             speechActivityCountRef.current++;
           }
 
-          const barCount = 36;
+          const barCount = 42;
           const barWidth = (width / barCount) - 3;
           const step = Math.floor(bufferLength / barCount);
 
           for (let i = 0; i < barCount; i++) {
             const val = dataArray[i * step] || 0;
-            const barHeight = Math.max(4, (val / 255) * (height - 16));
+            const barHeight = Math.max(3, (val / 255) * (height - 18));
             const x = i * (barWidth + 3) + 2;
             const y = height - barHeight - 4;
 
-            // Cyberpunk neon gradient
+            // Refined periwinkle/silver studio gradient
             const grad = ctx.createLinearGradient(0, height, 0, 0);
-            grad.addColorStop(0, "#06b6d4"); // cyan
-            grad.addColorStop(0.5, "#818cf8"); // indigo
-            grad.addColorStop(1, "#34d399"); // emerald
+            grad.addColorStop(0, "rgba(183, 200, 255, 0.35)");
+            grad.addColorStop(1, "rgba(231, 237, 255, 0.92)");
 
             ctx.fillStyle = grad;
             ctx.beginPath();
-            ctx.roundRect(x, y, barWidth, barHeight, [2, 2, 0, 0]);
+            ctx.roundRect(x, y, barWidth, barHeight, [1.5, 1.5, 0, 0]);
             ctx.fill();
-
-            // Peak cap glow
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(x, y, barWidth, 1.5);
           }
         } else {
           // Oscilloscope Sine Waveform
           analyser.getByteTimeDomainData(dataArray);
-          ctx.lineWidth = 2.5;
-          ctx.strokeStyle = "#38bdf8";
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = "#38bdf8";
+          ctx.lineWidth = 1.75;
+          ctx.strokeStyle = "#b7c8ff";
 
           ctx.beginPath();
           const sliceWidth = width / bufferLength;
@@ -397,26 +398,25 @@ export function AudioStudio({
             x += sliceWidth;
           }
           ctx.stroke();
-          ctx.shadowBlur = 0;
         }
       } else {
-        // Idle Ambient Hologram Wave
+        // Idle Precision Acoustic Wave
         setDbLevel(-48);
-        ctx.lineWidth = 1.8;
-        ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+        ctx.lineWidth = 1.25;
+        ctx.strokeStyle = "rgba(183, 200, 255, 0.28)";
         ctx.beginPath();
         for (let x = 0; x < width; x += 3) {
-          const y = height / 2 + Math.sin(x * 0.03 + phase) * 8 * Math.sin(x * 0.01 + phase * 0.5);
+          const y = height / 2 + Math.sin(x * 0.025 + phase) * 5 * Math.sin(x * 0.008 + phase * 0.4);
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
         ctx.stroke();
 
         // Secondary subtle harmonic
-        ctx.strokeStyle = "rgba(168, 85, 247, 0.25)";
+        ctx.strokeStyle = "rgba(159, 170, 193, 0.14)";
         ctx.beginPath();
         for (let x = 0; x < width; x += 3) {
-          const y = height / 2 + Math.cos(x * 0.04 - phase) * 6;
+          const y = height / 2 + Math.cos(x * 0.032 - phase) * 3.5;
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
@@ -625,64 +625,58 @@ export function AudioStudio({
 
   return (
     <div className="spe-audio-studio-v12" style={{
-      margin: "1.25rem 0",
+      margin: "1.1rem 0",
       padding: "1.25rem",
-      background: "linear-gradient(180deg, rgba(15, 23, 42, 0.75) 0%, rgba(10, 15, 29, 0.9) 100%)",
-      border: "1px solid rgba(56, 189, 248, 0.25)",
+      background: "linear-gradient(180deg, rgba(13, 19, 33, 0.94) 0%, rgba(7, 11, 20, 0.98) 100%)",
+      border: "1px solid rgba(217, 197, 154, 0.2)",
       borderRadius: "16px",
-      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.35)",
-      backdropFilter: "blur(12px)",
+      boxShadow: "0 18px 40px -16px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06)",
       color: "#f8fafc",
-      fontFamily: "system-ui, -apple-system, sans-serif",
+      fontFamily: "var(--spe-font-body, system-ui, -apple-system, sans-serif)",
     }}>
       {/* Studio Header Bar */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem", flexWrap: "wrap", gap: "0.75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", minWidth: 0 }}>
           <span style={{
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "32px",
-            height: "32px",
-            borderRadius: "8px",
-            background: "linear-gradient(135deg, #06b6d4, #818cf8)",
-            fontSize: "1.1rem",
+            width: "34px",
+            height: "34px",
+            borderRadius: "10px",
+            background: "rgba(217, 197, 154, 0.12)",
+            border: "1px solid rgba(217, 197, 154, 0.28)",
+            fontSize: "0.95rem",
+            flexShrink: 0,
           }}>🎙️</span>
-          <div>
-            <h3 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, letterSpacing: "-0.01em", color: "#e2e8f0" }}>
-              SPE Audio & Speech Studio <span style={{ fontSize: "0.75rem", padding: "2px 8px", background: "rgba(56, 189, 248, 0.2)", color: "#38bdf8", borderRadius: "12px", border: "1px solid rgba(56, 189, 248, 0.3)" }}>v1.2 NORTH STAR 10/10</span>
-            </h3>
-            <p style={{ margin: 0, fontSize: "0.78rem", color: "#94a3b8" }}>
-              Real-Time Speech-to-Prompt Audio Studio & Real-Time Audio Visualizer (Shortcut: <kbd style={{ padding: "1px 5px", background: "rgba(255,255,255,0.1)", borderRadius: "4px", fontSize: "0.72rem" }}>⌘⇧M</kbd>)
+          <div style={{ minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.55rem", flexWrap: "wrap" }}>
+              <h3 style={{ margin: 0, fontSize: "0.94rem", fontWeight: 650, letterSpacing: "-0.015em", color: "#f8fafc" }}>
+                Audio & Speech Studio
+              </h3>
+              <span style={{
+                fontSize: "0.64rem",
+                fontFamily: "var(--spe-font-mono, monospace)",
+                padding: "2px 8px",
+                background: "rgba(217, 197, 154, 0.12)",
+                color: "#e5d5b0",
+                borderRadius: "9999px",
+                border: "1px solid rgba(217, 197, 154, 0.3)",
+                whiteSpace: "nowrap",
+                letterSpacing: "0.08em",
+                fontWeight: 600,
+              }}>v1.2 STUDIO</span>
+            </div>
+            <p style={{ margin: "3px 0 0", fontSize: "0.75rem", color: "#cbd5e1" }}>
+              Voice-to-prompt synthesizer · <kbd style={{ padding: "1px 5px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.16)", borderRadius: "4px", fontSize: "0.68rem", color: "#f8fafc", fontFamily: "var(--spe-font-mono, monospace)" }}>⌘⇧M</kbd>
             </p>
           </div>
         </div>
 
         {/* Studio Controls & Sound Toggle */}
-        <div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
-          <button
-            type="button"
-            onClick={() => {
-              setSoundEnabled(!soundEnabled);
-              if (!soundEnabled) playTactileAudio("chime");
-            }}
-            style={{
-              padding: "4px 9px",
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              borderRadius: "6px",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              cursor: "pointer",
-              background: soundEnabled ? "rgba(56, 189, 248, 0.15)" : "rgba(0, 0, 0, 0.3)",
-              color: soundEnabled ? "#38bdf8" : "#64748b",
-            }}
-            title="Toggle Tactile Audio Sound Effects"
-          >
-            {soundEnabled ? "🔊 Sound FX" : "🔇 Muted"}
-          </button>
-
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", width: "100%", justifyContent: "space-between" }}>
           {/* Studio Tabs */}
-          <div style={{ display: "flex", gap: "3px", background: "rgba(15, 23, 42, 0.6)", padding: "3px", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+          <div style={{ display: "flex", gap: "4px", background: "#050812", padding: "4px", borderRadius: "9999px", border: "1px solid rgba(255, 255, 255, 0.12)" }}>
             <button
               type="button"
               onClick={() => {
@@ -690,14 +684,15 @@ export function AudioStudio({
                 setActiveTab("mic");
               }}
               style={{
-                padding: "4px 11px",
-                fontSize: "0.78rem",
+                minHeight: "36px",
+                padding: "6px 14px",
+                fontSize: "0.75rem",
                 fontWeight: 600,
-                borderRadius: "6px",
+                borderRadius: "9999px",
                 border: "none",
                 cursor: "pointer",
-                background: activeTab === "mic" ? "rgba(56, 189, 248, 0.25)" : "transparent",
-                color: activeTab === "mic" ? "#38bdf8" : "#94a3b8",
+                background: activeTab === "mic" ? "rgba(217, 197, 154, 0.2)" : "transparent",
+                color: activeTab === "mic" ? "#f8fafc" : "#cbd5e1",
               }}
             >
               Live Mic
@@ -709,14 +704,15 @@ export function AudioStudio({
                 setActiveTab("upload");
               }}
               style={{
-                padding: "4px 11px",
-                fontSize: "0.78rem",
+                minHeight: "36px",
+                padding: "6px 14px",
+                fontSize: "0.75rem",
                 fontWeight: 600,
-                borderRadius: "6px",
+                borderRadius: "9999px",
                 border: "none",
                 cursor: "pointer",
-                background: activeTab === "upload" ? "rgba(56, 189, 248, 0.25)" : "transparent",
-                color: activeTab === "upload" ? "#38bdf8" : "#94a3b8",
+                background: activeTab === "upload" ? "rgba(217, 197, 154, 0.2)" : "transparent",
+                color: activeTab === "upload" ? "#f8fafc" : "#cbd5e1",
               }}
             >
               Audio Upload
@@ -728,40 +724,64 @@ export function AudioStudio({
                 setActiveTab("presets");
               }}
               style={{
-                padding: "4px 11px",
-                fontSize: "0.78rem",
+                minHeight: "36px",
+                padding: "6px 14px",
+                fontSize: "0.75rem",
                 fontWeight: 600,
-                borderRadius: "6px",
+                borderRadius: "9999px",
                 border: "none",
                 cursor: "pointer",
-                background: activeTab === "presets" ? "rgba(56, 189, 248, 0.25)" : "transparent",
-                color: activeTab === "presets" ? "#38bdf8" : "#94a3b8",
+                background: activeTab === "presets" ? "rgba(217, 197, 154, 0.2)" : "transparent",
+                color: activeTab === "presets" ? "#f8fafc" : "#cbd5e1",
               }}
             >
               Voice Presets
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setSoundEnabled(!soundEnabled);
+              if (!soundEnabled) playTactileAudio("chime");
+            }}
+            style={{
+              minHeight: "36px",
+              padding: "6px 12px",
+              fontSize: "0.72rem",
+              fontWeight: 600,
+              borderRadius: "9999px",
+              border: "1px solid rgba(255, 255, 255, 0.16)",
+              cursor: "pointer",
+              background: soundEnabled ? "rgba(217, 197, 154, 0.12)" : "rgba(15, 23, 42, 0.7)",
+              color: soundEnabled ? "#e5d5b0" : "#cbd5e1",
+            }}
+            title="Toggle Tactile Audio Sound Effects"
+          >
+            {soundEnabled ? "🔊 Sound FX" : "🔇 Muted"}
+          </button>
         </div>
       </div>
 
       {/* Real-time Oscilloscope Canvas Visualizer */}
-      <div style={{ position: "relative", marginBottom: "1rem", borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(56, 189, 248, 0.2)" }}>
+      <div style={{ position: "relative", marginBottom: "0.95rem", borderRadius: "12px", overflow: "hidden", border: "1px solid rgba(255, 255, 255, 0.12)", background: "#050812" }}>
         <canvas
           ref={canvasRef}
           width={720}
-          height={110}
-          style={{ width: "100%", height: "110px", display: "block" }}
+          height={76}
+          style={{ width: "100%", height: "76px", display: "block" }}
         />
 
         {/* Visualizer Overlay Badges */}
         <div style={{
           position: "absolute",
           top: "8px",
-          left: "12px",
+          left: "10px",
           display: "flex",
-          gap: "8px",
+          gap: "6px",
           alignItems: "center",
-          fontSize: "0.75rem",
+          fontSize: "0.66rem",
+          fontFamily: "var(--spe-font-mono, monospace)",
           fontWeight: 600,
         }}>
           {recording ? (
@@ -769,43 +789,43 @@ export function AudioStudio({
               display: "inline-flex",
               alignItems: "center",
               gap: "5px",
-              background: "rgba(239, 68, 68, 0.25)",
-              color: "#f87171",
-              padding: "2px 8px",
-              borderRadius: "12px",
-              border: "1px solid rgba(239, 68, 68, 0.4)",
+              background: "rgba(127, 29, 29, 0.88)",
+              color: "#fecaca",
+              padding: "3px 8px",
+              borderRadius: "9999px",
+              border: "1px solid rgba(248, 113, 113, 0.45)",
             }}>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ef4444", display: "inline-block", animation: "pulse 1.2s infinite" }} />
-              RECORDING {formatTimer(recordingTime)}
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#f87171", display: "inline-block" }} />
+              REC {formatTimer(recordingTime)}
             </span>
           ) : (
             <span style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "5px",
-              background: "rgba(16, 185, 129, 0.2)",
-              color: "#34d399",
-              padding: "2px 8px",
-              borderRadius: "12px",
-              border: "1px solid rgba(16, 185, 129, 0.3)",
+              background: "rgba(5, 8, 18, 0.88)",
+              color: "#e2e8f0",
+              padding: "3px 8px",
+              borderRadius: "9999px",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
             }}>
               ● STUDIO READY
             </span>
           )}
 
           <span style={{
-            background: "rgba(15, 23, 42, 0.7)",
-            color: "#94a3b8",
-            padding: "2px 8px",
-            borderRadius: "12px",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
+            background: "rgba(5, 8, 18, 0.88)",
+            color: "#cbd5e1",
+            padding: "3px 8px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(255, 255, 255, 0.14)",
           }}>
             LEVEL: {dbLevel} dB
           </span>
         </div>
 
         {/* Visualizer Mode Toggle */}
-        <div style={{ position: "absolute", bottom: "8px", right: "12px", display: "flex", gap: "4px" }}>
+        <div style={{ position: "absolute", bottom: "6px", right: "8px", display: "flex", gap: "4px" }}>
           <button
             type="button"
             onClick={() => {
@@ -813,24 +833,26 @@ export function AudioStudio({
               setVisualizerMode(visualizerMode === "bars" ? "wave" : "bars");
             }}
             style={{
-              background: "rgba(15, 23, 42, 0.8)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              color: "#38bdf8",
-              padding: "3px 8px",
-              borderRadius: "6px",
-              fontSize: "0.7rem",
+              minHeight: "36px",
+              background: "rgba(5, 8, 18, 0.9)",
+              border: "1px solid rgba(217, 197, 154, 0.28)",
+              color: "#e5d5b0",
+              padding: "6px 14px",
+              borderRadius: "9999px",
+              fontSize: "0.72rem",
               fontWeight: 600,
+              fontFamily: "var(--spe-font-mono, monospace)",
               cursor: "pointer",
             }}
           >
-            {visualizerMode === "bars" ? "📊 Neon Bars" : "〰️ Waveform"}
+            {visualizerMode === "bars" ? "Spectrum" : "Waveform"}
           </button>
         </div>
       </div>
 
       {/* Tab Panels */}
       {activeTab === "mic" && (
-        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginBottom: "1rem", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.95rem", flexWrap: "wrap" }}>
           {!recording ? (
             <button
               type="button"
@@ -839,19 +861,22 @@ export function AudioStudio({
               style={{
                 display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: "8px",
-                padding: "8px 18px",
-                borderRadius: "10px",
-                border: "none",
-                background: "linear-gradient(135deg, #0284c7, #2563eb)",
-                color: "#ffffff",
+                width: "auto",
+                minWidth: "220px",
+                minHeight: "44px",
+                padding: "10px 22px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(217, 197, 154, 0.35)",
+                background: "rgba(217, 197, 154, 0.12)",
+                color: "#f8fafc",
                 fontWeight: 600,
-                fontSize: "0.88rem",
+                fontSize: "0.82rem",
                 cursor: "pointer",
-                boxShadow: "0 4px 14px rgba(2, 132, 199, 0.4)",
               }}
             >
-              <span>●</span> Start Recording Mic <span style={{ opacity: 0.7, fontSize: "0.75rem" }}>(⌘⇧M)</span>
+              <span style={{ color: "#e5d5b0" }}>●</span> Start Recording Mic <span style={{ color: "#cbd5e1", fontSize: "0.72rem", fontFamily: "var(--spe-font-mono, monospace)" }}>(⌘⇧M)</span>
             </button>
           ) : (
             <button
@@ -860,16 +885,19 @@ export function AudioStudio({
               style={{
                 display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: "8px",
-                padding: "8px 18px",
-                borderRadius: "10px",
-                border: "none",
-                background: "linear-gradient(135deg, #dc2626, #b91c1c)",
-                color: "#ffffff",
+                width: "auto",
+                minWidth: "220px",
+                minHeight: "44px",
+                padding: "10px 22px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(248, 113, 113, 0.5)",
+                background: "rgba(153, 27, 27, 0.45)",
+                color: "#fecaca",
                 fontWeight: 600,
-                fontSize: "0.88rem",
+                fontSize: "0.82rem",
                 cursor: "pointer",
-                boxShadow: "0 4px 14px rgba(220, 38, 38, 0.4)",
               }}
             >
               <span>■</span> Stop Recording ({formatTimer(recordingTime)})
@@ -877,7 +905,7 @@ export function AudioStudio({
           )}
 
           {interimText && (
-            <span style={{ fontSize: "0.82rem", color: "#38bdf8", fontStyle: "italic" }}>
+            <span style={{ fontSize: "0.78rem", color: "#e5d5b0", fontStyle: "italic" }}>
               Hearing: "{interimText}"
             </span>
           )}
@@ -885,25 +913,23 @@ export function AudioStudio({
       )}
 
       {activeTab === "upload" && (
-        <div style={{ marginBottom: "1rem" }}>
+        <div style={{ marginBottom: "0.95rem" }}>
           <label style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            padding: "1.25rem",
-            border: "2px dashed rgba(56, 189, 248, 0.35)",
+            padding: "1.1rem",
+            border: "1px dashed rgba(217, 197, 154, 0.35)",
             borderRadius: "12px",
-            background: "rgba(15, 23, 42, 0.4)",
+            background: "#050812",
             cursor: "pointer",
-            transition: "border 0.2s",
           }}>
-            <span style={{ fontSize: "1.75rem", marginBottom: "0.25rem" }}>📁</span>
-            <span style={{ fontSize: "0.88rem", fontWeight: 600, color: "#e2e8f0" }}>
+            <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "#f8fafc", marginBottom: "4px" }}>
               Drop audio file here or click to browse
             </span>
-            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-              Supports MP3, WAV, WebM, M4A, OGG (auto-analyzed with Web Audio API)
+            <span style={{ fontSize: "0.74rem", color: "#cbd5e1", textAlign: "center" }}>
+              Supports MP3, WAV, WebM, M4A, OGG (100% local Web Audio decode)
             </span>
             <input
               type="file"
@@ -917,21 +943,22 @@ export function AudioStudio({
           </label>
 
           {audioFileInfo && (
-            <div style={{ marginTop: "0.75rem", display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(15, 23, 42, 0.6)", padding: "8px 14px", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+            <div style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#050812", padding: "8px 12px", borderRadius: "10px", border: "1px solid rgba(255, 255, 255, 0.14)" }}>
               <div>
-                <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "#f8fafc" }}>🎵 {audioFileInfo.name}</span>
-                <span style={{ marginLeft: "10px", fontSize: "0.75rem", color: "#94a3b8" }}>{audioFileInfo.durationSec}s · {audioFileInfo.sampleRate}Hz · {audioFileInfo.sizeKb} KB</span>
+                <span style={{ fontWeight: 600, fontSize: "0.8rem", color: "#f8fafc" }}>{audioFileInfo.name}</span>
+                <span style={{ marginLeft: "8px", fontSize: "0.72rem", color: "#cbd5e1" }}>{audioFileInfo.durationSec}s · {audioFileInfo.sizeKb} KB</span>
               </div>
               <button
                 type="button"
                 onClick={togglePlayAudio}
                 style={{
-                  background: isPlayingAudio ? "#ef4444" : "#0284c7",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "5px 12px",
-                  color: "#ffffff",
-                  fontSize: "0.8rem",
+                  minHeight: "36px",
+                  background: isPlayingAudio ? "rgba(153, 27, 27, 0.45)" : "rgba(217, 197, 154, 0.16)",
+                  border: "1px solid rgba(217, 197, 154, 0.3)",
+                  borderRadius: "9999px",
+                  padding: "6px 12px",
+                  color: "#f8fafc",
+                  fontSize: "0.75rem",
                   fontWeight: 600,
                   cursor: "pointer",
                 }}
@@ -944,7 +971,7 @@ export function AudioStudio({
       )}
 
       {activeTab === "presets" && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "0.5rem", marginBottom: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "0.5rem", marginBottom: "0.95rem" }}>
           {PRESET_VOICE_MEMOS.map((preset, idx) => (
             <button
               key={idx}
@@ -952,23 +979,23 @@ export function AudioStudio({
               onClick={() => {
                 triggerClickAudio();
                 updateTranscript(preset.raw);
-                setStatusNotice(`Loaded preset: "${preset.title}". Click Synthesize System Prompt or select a Persona below.`);
+                setStatusNotice(`Loaded preset: "${preset.title}".`);
               }}
               style={{
                 textAlign: "left",
-                padding: "10px",
+                padding: "10px 12px",
                 borderRadius: "10px",
-                background: "rgba(15, 23, 42, 0.5)",
-                border: "1px solid rgba(56, 189, 248, 0.2)",
+                background: "#050812",
+                border: "1px solid rgba(255, 255, 255, 0.14)",
                 cursor: "pointer",
-                color: "#e2e8f0",
+                color: "#f8fafc",
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#38bdf8", fontWeight: 700, marginBottom: "4px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.76rem", color: "#e5d5b0", fontWeight: 600, marginBottom: "3px" }}>
                 <span>{preset.title}</span>
-                <span>{preset.duration}</span>
+                <span style={{ fontFamily: "var(--spe-font-mono, monospace)", fontSize: "0.68rem", color: "#cbd5e1" }}>{preset.duration}</span>
               </div>
-              <p style={{ margin: 0, fontSize: "0.75rem", color: "#94a3b8", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
+              <p style={{ margin: 0, fontSize: "0.73rem", color: "#cbd5e1", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
                 "{preset.raw}"
               </p>
             </button>
@@ -977,20 +1004,21 @@ export function AudioStudio({
       )}
 
       {/* Transcript Editor & Quantum Transformation Actions */}
-      <div style={{ marginTop: "1rem" }}>
+      <div style={{ marginTop: "0.5rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-          <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          <span style={{ fontSize: "0.7rem", fontFamily: "var(--spe-font-mono, monospace)", fontWeight: 600, color: "#cbd5e1", textTransform: "uppercase", letterSpacing: "0.06em" }}>
             Transcribed Voice Memo & Audio Intent
           </span>
           {localTranscript && (
-            <span style={{ fontSize: "0.75rem", color: "#64748b" }}>
-              {localTranscript.length} characters
+            <span style={{ fontSize: "0.7rem", fontFamily: "var(--spe-font-mono, monospace)", color: "#cbd5e1" }}>
+              {localTranscript.length} chars
             </span>
           )}
         </div>
 
         <textarea
-          rows={3}
+          rows={2}
+          aria-label="Transcribed Voice Memo and Audio Intent"
           value={localTranscript}
           onChange={(e) => updateTranscript(e.target.value)}
           placeholder="Your spoken words or audio transcript will appear here. Edit freely, or click 1-Click Synthesize below…"
@@ -998,20 +1026,20 @@ export function AudioStudio({
             width: "100%",
             boxSizing: "border-box",
             borderRadius: "10px",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
-            background: "rgba(15, 23, 42, 0.6)",
+            border: "1px solid rgba(255, 255, 255, 0.16)",
+            background: "#050812",
             color: "#f8fafc",
-            padding: "10px",
-            fontSize: "0.88rem",
-            lineHeight: 1.5,
+            padding: "10px 12px",
+            fontSize: "0.82rem",
+            lineHeight: 1.55,
             resize: "vertical",
             fontFamily: "inherit",
           }}
         />
 
         {/* Quick Intent Enricher Chips */}
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", marginTop: "8px" }}>
-          <span style={{ fontSize: "0.72rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Quick Intent:</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", marginTop: "10px" }}>
+          <span style={{ fontSize: "0.68rem", fontFamily: "var(--spe-font-mono, monospace)", color: "#cbd5e1", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Quick Intent:</span>
           {QUICK_INTENT_CHIPS.map((chip, idx) => (
             <button
               key={idx}
@@ -1024,14 +1052,18 @@ export function AudioStudio({
                 setStatusNotice(`Enriched voice intent with: ${chip.label}`);
               }}
               style={{
-                fontSize: "0.72rem",
-                padding: "3px 8px",
-                borderRadius: "6px",
-                border: "1px solid rgba(56, 189, 248, 0.2)",
-                background: "rgba(15, 23, 42, 0.5)",
-                color: "#cbd5e1",
+                minHeight: "38px",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                padding: "7px 14px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                background: "#050812",
+                color: "#e2e8f0",
                 cursor: "pointer",
-                transition: "all 0.15s ease",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "all 0.18s ease",
               }}
               title="Click to enrich voice transcript with this technical domain spec"
             >
@@ -1041,11 +1073,11 @@ export function AudioStudio({
         </div>
 
         {/* 4 Specialized Persona Synthesizers */}
-        <div style={{ marginTop: "12px", padding: "10px", borderRadius: "10px", background: "rgba(0, 0, 0, 0.25)", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
-          <div style={{ fontSize: "0.72rem", color: "#38bdf8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "8px" }}>
-            🎭 4 Specialized Voice Persona Synthesizers (1-Click North Star):
+        <div style={{ marginTop: "12px", padding: "12px", borderRadius: "12px", background: "#050812", border: "1px solid rgba(255, 255, 255, 0.12)" }}>
+          <div style={{ fontSize: "0.68rem", fontFamily: "var(--spe-font-mono, monospace)", color: "#cbd5e1", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600, marginBottom: "8px" }}>
+            4 Specialized Voice Persona Synthesizers:
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "6px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "6px" }}>
             <button
               type="button"
               disabled={disabled || !localTranscript.trim()}
@@ -1056,15 +1088,19 @@ export function AudioStudio({
                 setStatusNotice("👔 Synthesized Executive CTO Architectural Prompt!");
               }}
               style={{
+                minHeight: "38px",
                 padding: "7px 10px",
                 borderRadius: "8px",
-                border: "1px solid rgba(99, 102, 241, 0.35)",
-                background: !localTranscript.trim() ? "rgba(255, 255, 255, 0.05)" : "linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(79, 70, 229, 0.35))",
-                color: "#c7d2fe",
-                fontSize: "0.78rem",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                background: !localTranscript.trim() ? "rgba(15, 23, 42, 0.6)" : "rgba(217, 197, 154, 0.12)",
+                color: "#f8fafc",
+                fontSize: "0.75rem",
                 fontWeight: 600,
                 cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
                 textAlign: "left",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               👔 Executive CTO
@@ -1080,15 +1116,19 @@ export function AudioStudio({
                 setStatusNotice("⚡ Synthesized 10x Full-Stack Lead Engineer Prompt!");
               }}
               style={{
+                minHeight: "38px",
                 padding: "7px 10px",
                 borderRadius: "8px",
-                border: "1px solid rgba(16, 185, 129, 0.35)",
-                background: !localTranscript.trim() ? "rgba(255, 255, 255, 0.05)" : "linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.35))",
-                color: "#a7f3d0",
-                fontSize: "0.78rem",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                background: !localTranscript.trim() ? "rgba(15, 23, 42, 0.6)" : "rgba(217, 197, 154, 0.12)",
+                color: "#f8fafc",
+                fontSize: "0.75rem",
                 fontWeight: 600,
                 cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
                 textAlign: "left",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               ⚡ 10x Lead Dev
@@ -1104,15 +1144,19 @@ export function AudioStudio({
                 setStatusNotice("🎨 Synthesized Creative Director & UI Virtuoso Prompt!");
               }}
               style={{
+                minHeight: "38px",
                 padding: "7px 10px",
                 borderRadius: "8px",
-                border: "1px solid rgba(236, 72, 153, 0.35)",
-                background: !localTranscript.trim() ? "rgba(255, 255, 255, 0.05)" : "linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(219, 39, 119, 0.35))",
-                color: "#fbcfe8",
-                fontSize: "0.78rem",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                background: !localTranscript.trim() ? "rgba(15, 23, 42, 0.6)" : "rgba(217, 197, 154, 0.12)",
+                color: "#f8fafc",
+                fontSize: "0.75rem",
                 fontWeight: 600,
                 cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
                 textAlign: "left",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               🎨 Creative Director
@@ -1128,15 +1172,19 @@ export function AudioStudio({
                 setStatusNotice("🛡️ Synthesized Security Auditor & Red-Team Prompt!");
               }}
               style={{
+                minHeight: "38px",
                 padding: "7px 10px",
                 borderRadius: "8px",
-                border: "1px solid rgba(245, 158, 11, 0.35)",
-                background: !localTranscript.trim() ? "rgba(255, 255, 255, 0.05)" : "linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.35))",
-                color: "#fde68a",
-                fontSize: "0.78rem",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                background: !localTranscript.trim() ? "rgba(15, 23, 42, 0.6)" : "rgba(217, 197, 154, 0.12)",
+                color: "#f8fafc",
+                fontSize: "0.75rem",
                 fontWeight: 600,
                 cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
                 textAlign: "left",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               🛡️ Security Lead
@@ -1159,15 +1207,15 @@ export function AudioStudio({
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              padding: "8px 16px",
-              borderRadius: "8px",
-              border: "none",
-              background: !localTranscript.trim() ? "rgba(255, 255, 255, 0.1)" : "linear-gradient(135deg, #10b981, #059669)",
-              color: "#ffffff",
-              fontWeight: 700,
-              fontSize: "0.85rem",
+              minHeight: "40px",
+              padding: "8px 14px",
+              borderRadius: "9999px",
+              border: "1px solid rgba(217, 197, 154, 0.4)",
+              background: !localTranscript.trim() ? "rgba(15, 23, 42, 0.7)" : "#e5d5b0",
+              color: !localTranscript.trim() ? "#cbd5e1" : "#050812",
+              fontWeight: 650,
+              fontSize: "0.76rem",
               cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
-              boxShadow: !localTranscript.trim() ? "none" : "0 4px 14px rgba(16, 185, 129, 0.35)",
             }}
           >
             ⚡ Universal System Prompt
@@ -1186,13 +1234,14 @@ export function AudioStudio({
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
+              minHeight: "40px",
               padding: "8px 14px",
-              borderRadius: "8px",
-              border: "1px solid rgba(56, 189, 248, 0.3)",
-              background: "rgba(15, 23, 42, 0.6)",
-              color: "#38bdf8",
+              borderRadius: "9999px",
+              border: "1px solid rgba(255, 255, 255, 0.16)",
+              background: "#050812",
+              color: "#e2e8f0",
               fontWeight: 600,
-              fontSize: "0.82rem",
+              fontSize: "0.75rem",
               cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
             }}
           >
@@ -1208,12 +1257,14 @@ export function AudioStudio({
               setStatusNotice("📝 Inserted raw voice transcript.");
             }}
             style={{
-              padding: "8px 12px",
-              borderRadius: "8px",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
+              minHeight: "40px",
+              padding: "8px 14px",
+              borderRadius: "9999px",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
               background: "transparent",
-              color: "#94a3b8",
-              fontSize: "0.82rem",
+              color: "#cbd5e1",
+              fontWeight: 500,
+              fontSize: "0.75rem",
               cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
             }}
           >
@@ -1224,8 +1275,8 @@ export function AudioStudio({
 
       {/* Status Notice */}
       {statusNotice && (
-        <div style={{ marginTop: "10px", fontSize: "0.8rem", color: "#38bdf8", display: "flex", alignItems: "center", gap: "6px" }}>
-          <span>✨</span>
+        <div style={{ marginTop: "10px", fontSize: "0.75rem", color: "#e5d5b0", display: "flex", alignItems: "center", gap: "6px", fontWeight: 500 }}>
+          <span>●</span>
           <span>{statusNotice}</span>
         </div>
       )}

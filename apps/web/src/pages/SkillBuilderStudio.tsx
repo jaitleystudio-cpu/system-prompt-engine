@@ -138,12 +138,14 @@ export const SkillBuilderStudio: React.FC = () => {
                   type="button"
                   onClick={() => applyPreset(FRAMEWORK_PRESETS[k])}
                   style={{
-                    padding: "0.25rem 0.55rem",
-                    fontSize: "0.72rem",
-                    borderRadius: "4px",
-                    backgroundColor: "rgba(99, 102, 241, 0.15)",
-                    border: "1px solid rgba(99, 102, 241, 0.3)",
-                    color: "#a5b4fc",
+                    minHeight: "38px",
+                    padding: "6px 14px",
+                    fontSize: "0.78rem",
+                    fontWeight: 600,
+                    borderRadius: "9999px",
+                    backgroundColor: "rgba(217, 197, 154, 0.14)",
+                    border: "1px solid rgba(217, 197, 154, 0.35)",
+                    color: "#e5d5b0",
                     cursor: "pointer",
                   }}
                 >
@@ -302,23 +304,24 @@ export const SkillBuilderStudio: React.FC = () => {
             </pre>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.75rem" }}>
             <button
               type="button"
               onClick={downloadSkillFile}
               disabled={!auditReport.isSafe}
               style={{
-                width: "100%",
-                padding: "0.75rem",
-                backgroundColor: !auditReport.isSafe ? "#334155" : "#059669",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "6px",
-                fontWeight: 600,
+                width: "auto",
+                minWidth: "200px",
+                padding: "10px 22px",
+                backgroundColor: !auditReport.isSafe ? "#334155" : "#dec99e",
+                color: !auditReport.isSafe ? "#cbd5e1" : "#050812",
+                border: "1px solid rgba(229, 213, 176, 0.85)",
+                borderRadius: "9999px",
+                fontWeight: 700,
                 cursor: !auditReport.isSafe ? "not-allowed" : "pointer",
-                fontSize: "0.9rem",
+                fontSize: "0.875rem",
                 minHeight: "44px",
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "0.5rem",
@@ -328,20 +331,21 @@ export const SkillBuilderStudio: React.FC = () => {
               <span>📥 Download SKILL.md</span>
             </button>
 
-            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginTop: "0.25rem" }}>
-              <span style={{ fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase" }}>Terminal:</span>
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              <span style={{ fontSize: "0.75rem", color: "#cbd5e1", textTransform: "uppercase" }}>Terminal:</span>
               <button
                 type="button"
                 onClick={() => setPlatform("bash")}
                 style={{
-                  padding: "0.3rem 0.65rem",
-                  fontSize: "0.75rem",
-                  borderRadius: "4px",
-                  border: platform === "bash" ? "1px solid #3b82f6" : "1px solid #334155",
+                  padding: "6px 14px",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  borderRadius: "9999px",
+                  border: platform === "bash" ? "1px solid rgba(217, 197, 154, 0.5)" : "1px solid #334155",
                   backgroundColor: platform === "bash" ? "#1e293b" : "#0f172a",
-                  color: platform === "bash" ? "#60a5fa" : "#94a3b8",
+                  color: platform === "bash" ? "#e5d5b0" : "#cbd5e1",
                   cursor: "pointer",
-                  minHeight: "36px",
+                  minHeight: "38px",
                 }}
               >
                 Bash / macOS / Linux
@@ -350,14 +354,15 @@ export const SkillBuilderStudio: React.FC = () => {
                 type="button"
                 onClick={() => setPlatform("powershell")}
                 style={{
-                  padding: "0.3rem 0.65rem",
-                  fontSize: "0.75rem",
-                  borderRadius: "4px",
-                  border: platform === "powershell" ? "1px solid #3b82f6" : "1px solid #334155",
+                  padding: "6px 14px",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  borderRadius: "9999px",
+                  border: platform === "powershell" ? "1px solid rgba(217, 197, 154, 0.5)" : "1px solid #334155",
                   backgroundColor: platform === "powershell" ? "#1e293b" : "#0f172a",
-                  color: platform === "powershell" ? "#60a5fa" : "#94a3b8",
+                  color: platform === "powershell" ? "#e5d5b0" : "#cbd5e1",
                   cursor: "pointer",
-                  minHeight: "36px",
+                  minHeight: "38px",
                 }}
               >
                 PowerShell / Windows
@@ -369,15 +374,16 @@ export const SkillBuilderStudio: React.FC = () => {
               onClick={copyInstall}
               disabled={!auditReport.isSafe}
               style={{
-                width: "100%",
-                padding: "0.75rem",
-                backgroundColor: !auditReport.isSafe ? "#475569" : copied ? "#059669" : "#2563eb",
+                width: "auto",
+                minWidth: "220px",
+                padding: "10px 22px",
+                backgroundColor: !auditReport.isSafe ? "#475569" : copied ? "#059669" : "#1e293b",
                 color: "#ffffff",
-                border: "none",
-                borderRadius: "6px",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                borderRadius: "9999px",
                 fontWeight: 600,
                 cursor: !auditReport.isSafe ? "not-allowed" : "pointer",
-                fontSize: "0.9rem",
+                fontSize: "0.875rem",
                 minHeight: "44px",
                 touchAction: "manipulation",
               }}

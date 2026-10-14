@@ -23,7 +23,7 @@ import { InAppLink } from "../shell/inAppLink";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
 import { ConversionKernel } from "./ConversionKernel";
-import { PromptVaultPanel } from "./PromptVaultPanel";
+import { FeaturedArsenalPreview } from "./FeaturedArsenalPreview";
 import { MarkdownExportButton } from "../engine/markdownExport";
 import {
   PromptRadarInspector,
@@ -656,7 +656,8 @@ export function Hero(p: Props) {
           }}
         />
       </section>
-      <PromptVaultPanel
+      <FeaturedArsenalPreview
+        onNavigate={p.onNavigate}
         onSelectPrompt={(compiledPrompt, cat) => {
           p.onChange(compiledPrompt);
           p.onCategory(cat);

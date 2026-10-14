@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { isPromptSubRoute } from "../engine/routeAliases.ts";
 import {
   absoluteUrl,
   jsonLdCapabilitiesFaq,
@@ -74,7 +75,11 @@ export function SeoHead({
     const description = notFound
       ? "That address is not a page in this preview."
       : meta.description;
-    const url = absoluteUrl(meta.path);
+    const currentPath =
+      Boolean(globalThis.window) && isPromptSubRoute(window.location.pathname)
+        ? window.location.pathname
+        : meta.path;
+    const url = absoluteUrl(currentPath);
     document.title = title;
     upsertMeta("name", "description", description);
     upsertMeta(

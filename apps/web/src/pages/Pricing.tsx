@@ -496,14 +496,20 @@ export function Pricing({
                       type="button"
                       onClick={handleCopyKey}
                       style={{
-                        padding: "0.25rem 0.5rem",
+                        minHeight: "36px",
+                        padding: "6px 14px",
                         backgroundColor: "#1e293b",
-                        border: "1px solid #334155",
-                        borderRadius: "4px",
+                        border: "1px solid rgba(255, 255, 255, 0.18)",
+                        borderRadius: "9999px",
                         color: "#f8fafc",
-                        fontSize: "0.75rem",
+                        fontSize: "0.78rem",
+                        fontWeight: 600,
                         cursor: "pointer",
                         flexShrink: 0,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "all 0.15s ease",
                       }}
                     >
                       {copiedKey ? "Copied!" : "Copy"}

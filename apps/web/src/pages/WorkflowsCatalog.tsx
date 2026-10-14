@@ -258,15 +258,21 @@ export const WorkflowsCatalog: React.FC<WorkflowsCatalogProps> = ({
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 style={{
-                  padding: "0.5rem 0.85rem",
-                  borderRadius: "6px",
+                  minHeight: "38px",
+                  padding: "8px 18px",
+                  borderRadius: "9999px",
                   border: "1px solid",
                   borderColor: selectedCategory === cat ? "#38bdf8" : "#334155",
-                  backgroundColor: selectedCategory === cat ? "rgba(56, 189, 248, 0.15)" : "#0f172a",
+                  backgroundColor: selectedCategory === cat ? "rgba(56, 189, 248, 0.18)" : "#0f172a",
                   color: selectedCategory === cat ? "#38bdf8" : "#94a3b8",
                   cursor: "pointer",
-                  fontSize: "0.85rem",
+                  fontSize: "0.82rem",
+                  fontWeight: selectedCategory === cat ? 700 : 500,
                   textTransform: "capitalize",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.15s ease",
                 }}
               >
                 {cat === "all" ? "All Domains" : cat.replace("-", " ")}
@@ -292,15 +298,20 @@ export const WorkflowsCatalog: React.FC<WorkflowsCatalogProps> = ({
               key={fw.id}
               onClick={() => setSelectedFramework(fw.id)}
               style={{
-                padding: "0.3rem 0.65rem",
-                borderRadius: "999px",
+                minHeight: "36px",
+                padding: "6px 14px",
+                borderRadius: "9999px",
                 border: "1px solid",
                 borderColor: selectedFramework === fw.id ? "#818cf8" : "rgba(255, 255, 255, 0.1)",
                 backgroundColor: selectedFramework === fw.id ? "rgba(99, 102, 241, 0.2)" : "rgba(255, 255, 255, 0.03)",
                 color: selectedFramework === fw.id ? "#a5b4fc" : "#94a3b8",
                 cursor: "pointer",
-                fontSize: "0.75rem",
-                fontWeight: selectedFramework === fw.id ? 600 : 400,
+                fontSize: "0.78rem",
+                fontWeight: selectedFramework === fw.id ? 650 : 500,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               {fw.label}
@@ -384,20 +395,23 @@ export const WorkflowsCatalog: React.FC<WorkflowsCatalogProps> = ({
                 onClick={() => handleRunInBrowser(wf)}
                 style={{
                   width: "100%",
-                  padding: "0.65rem 1rem",
+                  padding: "10px 20px",
+                  backgroundImage: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
                   backgroundColor: "#2563eb",
                   color: "#ffffff",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontWeight: 600,
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  borderRadius: "9999px",
+                  fontWeight: 650,
                   cursor: "pointer",
-                  fontSize: "0.875rem",
+                  fontSize: "0.86rem",
                   minHeight: "44px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "0.5rem",
+                  boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
                   touchAction: "manipulation",
+                  transition: "all 0.15s ease",
                 }}
               >
                 <span>⚡ Run in Browser Workspace</span>
@@ -407,16 +421,21 @@ export const WorkflowsCatalog: React.FC<WorkflowsCatalogProps> = ({
                 onClick={() => copyToClipboard(wf.sampleInstructions, wf.slug)}
                 style={{
                   width: "100%",
-                  padding: "0.55rem 1rem",
+                  padding: "10px 18px",
                   backgroundColor: copiedSlug === wf.slug ? "#059669" : "#1e293b",
                   color: copiedSlug === wf.slug ? "#ffffff" : "#cbd5e1",
-                  border: "1px solid #334155",
-                  borderRadius: "6px",
-                  fontWeight: 500,
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  borderRadius: "9999px",
+                  fontWeight: 600,
                   cursor: "pointer",
-                  fontSize: "0.8125rem",
+                  fontSize: "0.82rem",
                   minHeight: "44px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.4rem",
                   touchAction: "manipulation",
+                  transition: "all 0.15s ease",
                 }}
               >
                 {copiedSlug === wf.slug ? "✓ Copied CLI Command!" : "Copy CLI Command for Terminal"}

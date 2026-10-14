@@ -46,9 +46,8 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
         <p className="spe-kicker">Daily Lab</p>
         <h1 id="lab-title">Daily Recipes: Today&apos;s Tested Prompts, {todaysLabDateLabel()}</h1>
         <p>
-          A small preview and a prompt seed you can open in Prompt Studio. The same
-          short list repeats on a schedule. It is not a new random scene each
-          visit.
+          Explore an interactive 3D camera-scroll preview and a tested prompt seed you can open in Prompt Studio.
+          The same curated list repeats on a schedule so you can study how lighting, materials, and camera motion work.
         </p>
         <p className="spe-muted" data-product-status="FINITE_QUEUE">
           {queueHonestyLine()}

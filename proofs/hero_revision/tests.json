@@ -252,12 +252,12 @@
   {
     "name": "layout 768",
     "pass": true,
-    "detail": "{\"overflow\":false,\"sceneHeight\":1040,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+    "detail": "{\"overflow\":false,\"sceneHeight\":435,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
   },
   {
     "name": "layout 1024",
     "pass": true,
-    "detail": "{\"overflow\":false,\"sceneHeight\":1040,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+    "detail": "{\"overflow\":false,\"sceneHeight\":435,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
   },
   {
     "name": "layout 1440",

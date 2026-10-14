@@ -383,7 +383,7 @@ export function CapabilityFoundryStudio() {
       </div>
 
       {/* Capsule Selector */}
-      <div style={{ display: "flex", gap: "8px", marginBottom: "1.25rem" }}>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "1.25rem", flexWrap: "wrap" }}>
         {SAMPLE_CAPSULES.map((c, i) => (
           <button
             key={c.capsule_id}
@@ -396,14 +396,19 @@ export function CapabilityFoundryStudio() {
               setMutationTested(false);
             }}
             style={{
-              padding: "6px 14px",
-              borderRadius: "6px",
-              fontSize: "0.85rem",
-              fontWeight: 500,
+              minHeight: "38px",
+              padding: "8px 16px",
+              borderRadius: "9999px",
+              fontSize: "0.82rem",
+              fontWeight: 600,
               cursor: "pointer",
-              border: selectedIdx === i ? "1px solid #6366f1" : "1px solid rgba(255, 255, 255, 0.1)",
-              background: selectedIdx === i ? "rgba(99, 102, 241, 0.2)" : "rgba(255, 255, 255, 0.02)",
-              color: selectedIdx === i ? "#ffffff" : "rgba(255, 255, 255, 0.7)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              border: selectedIdx === i ? "1px solid #6366f1" : "1px solid rgba(255, 255, 255, 0.14)",
+              background: selectedIdx === i ? "rgba(99, 102, 241, 0.25)" : "rgba(255, 255, 255, 0.04)",
+              color: selectedIdx === i ? "#ffffff" : "rgba(255, 255, 255, 0.8)",
+              transition: "all 0.15s ease",
             }}
           >
             {c.name}
@@ -433,19 +438,25 @@ export function CapabilityFoundryStudio() {
               boxSizing: "border-box",
             }}
           />
-          <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+          <div style={{ display: "flex", gap: "8px", marginTop: "8px", flexWrap: "wrap" }}>
             <button
               type="button"
               onClick={handleExecute}
               style={{
-                padding: "8px 16px",
-                borderRadius: "6px",
-                background: "#4f46e5",
+                minHeight: "42px",
+                padding: "10px 20px",
+                borderRadius: "9999px",
+                background: "linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)",
                 color: "#ffffff",
-                border: "none",
-                fontWeight: 600,
-                fontSize: "0.85rem",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                fontWeight: 650,
+                fontSize: "0.84rem",
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 14px rgba(79, 70, 229, 0.35)",
+                transition: "all 0.15s ease",
               }}
             >
               Execute Capsule ($0 Cost)
@@ -454,13 +465,19 @@ export function CapabilityFoundryStudio() {
               type="button"
               onClick={handleRunMutationTest}
               style={{
-                padding: "8px 14px",
-                borderRadius: "6px",
+                minHeight: "42px",
+                padding: "10px 18px",
+                borderRadius: "9999px",
                 background: "rgba(255, 255, 255, 0.08)",
                 color: "#e2e8f0",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                fontSize: "0.85rem",
+                border: "1px solid rgba(255, 255, 255, 0.18)",
+                fontSize: "0.84rem",
+                fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               Property Mutation Test
@@ -518,7 +535,20 @@ export function CapabilityFoundryStudio() {
             <button
               type="button"
               onClick={handleSimulateSprt}
-              style={{ background: "none", border: "none", color: "#818cf8", textDecoration: "underline", cursor: "pointer", padding: 0 }}
+              style={{
+                background: "rgba(129, 140, 248, 0.15)",
+                border: "1px solid rgba(129, 140, 248, 0.35)",
+                color: "#c7d2fe",
+                borderRadius: "9999px",
+                padding: "6px 14px",
+                minHeight: "36px",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "all 0.18s ease",
+              }}
             >
               Verify SPRT
             </button>
@@ -555,19 +585,24 @@ export function CapabilityFoundryStudio() {
             </h4>
           </div>
 
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <button
               type="button"
               onClick={handleEvolveGeneration}
               style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 16px",
+                borderRadius: "9999px",
                 background: "rgba(99, 102, 241, 0.25)",
                 color: "#c7d2fe",
                 border: "1px solid rgba(99, 102, 241, 0.4)",
                 fontSize: "0.8rem",
                 fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               Evolve Generation
@@ -577,14 +612,19 @@ export function CapabilityFoundryStudio() {
               onClick={handlePromoteChampion}
               disabled={promotionStatus === "ACTIVE"}
               style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 16px",
+                borderRadius: "9999px",
                 background: promotionStatus === "ACTIVE" ? "rgba(16, 185, 129, 0.2)" : "rgba(16, 185, 129, 0.4)",
                 color: "#6ee7b7",
                 border: "1px solid rgba(16, 185, 129, 0.5)",
                 fontSize: "0.8rem",
                 fontWeight: 600,
                 cursor: promotionStatus === "ACTIVE" ? "default" : "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               {promotionStatus === "ACTIVE" ? "Promoted Active" : "Promote Champion"}
@@ -593,13 +633,19 @@ export function CapabilityFoundryStudio() {
               type="button"
               onClick={handleRollback}
               style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 16px",
+                borderRadius: "9999px",
                 background: "rgba(239, 68, 68, 0.15)",
                 color: "#fca5a5",
                 border: "1px solid rgba(239, 68, 68, 0.3)",
                 fontSize: "0.8rem",
+                fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               Instant Rollback
@@ -713,14 +759,19 @@ export function CapabilityFoundryStudio() {
               type="button"
               onClick={handleRunDiscoveryEpoch}
               style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 16px",
+                borderRadius: "9999px",
                 background: "rgba(236, 72, 153, 0.25)",
                 color: "#fbcfe8",
                 border: "1px solid rgba(236, 72, 153, 0.4)",
                 fontSize: "0.8rem",
                 fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               Run Discovery Epoch
@@ -882,14 +933,19 @@ export function CapabilityFoundryStudio() {
               type="button"
               onClick={handleBroadcastCapsule}
               style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 16px",
+                borderRadius: "9999px",
                 background: "rgba(59, 130, 246, 0.25)",
                 color: "#bfdbfe",
                 border: "1px solid rgba(59, 130, 246, 0.4)",
                 fontSize: "0.8rem",
                 fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               Broadcast Capsule to Swarm
@@ -898,14 +954,19 @@ export function CapabilityFoundryStudio() {
               type="button"
               onClick={handleTriggerBftRound}
               style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 16px",
+                borderRadius: "9999px",
                 background: "rgba(16, 185, 129, 0.25)",
                 color: "#6ee7b7",
                 border: "1px solid rgba(16, 185, 129, 0.4)",
                 fontSize: "0.8rem",
                 fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               Trigger BFT Consensus Round
@@ -914,14 +975,19 @@ export function CapabilityFoundryStudio() {
               type="button"
               onClick={handleSimulateByzantineSlash}
               style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 16px",
+                borderRadius: "9999px",
                 background: "rgba(239, 68, 68, 0.2)",
                 color: "#fca5a5",
                 border: "1px solid rgba(239, 68, 68, 0.35)",
                 fontSize: "0.8rem",
                 fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
               }}
             >
               Simulate Byzantine Slash
