@@ -39,11 +39,17 @@ runs:
     - name: Run SPE Invariant Verification & PR Regression Gate
       id: verify-step
       shell: bash
+      env:
+        INPUT_PROMPT_PATH: ${{ inputs.prompt-path }}
+        INPUT_STRICT: ${{ inputs.strict }}
+        INPUT_OUTPUT_RECEIPT: ${{ inputs.output-receipt }}
+        INPUT_SIGNING_KEY: ${{ inputs.signing-key }}
+        BASE_REF_NAME: ${{ github.base_ref }}
+        EVENT_NAME: ${{ github.event_name }}
       run: |
         echo "=== SPE Ω ENTERPRISE PROMPT REGRESSION GATE ==="
-        PROMPT_PATH="${{ inputs.prompt-path }}"
-        OUTPUT_RECEIPT="${{ inputs.output-receipt }}"
-        SIGNING_KEY="${{ inputs.signing-key }}"
+        PROMPT_PATH="$INPUT_PROMPT_PATH"
+        OUTPUT_RECEIPT="$INPUT_OUTPUT_RECEIPT"
         
         # 0. Check Input Prompt Existence
         if [ ! -f "$PROMPT_PATH" ]; then
@@ -68,17 +74,47 @@ runs:
           echo "❌ OWASP compliance audit failed with exit code $OWASP_EXIT" >&2
         fi
         
-        # 3. Pull Request Semantic Diff (Regression Detection)
+        # 3. Pull Request Semantic Diff (Regression Detection & Baseline Provenance)
         DIFF_EXIT=0
-        if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ -n "$GITHUB_BASE_REF" ]; then
-          echo "Comparing PR prompt against base branch ($GITHUB_BASE_REF)..."
-          git show origin/$GITHUB_BASE_REF:"$PROMPT_PATH" > base_prompt.md 2>/dev/null || true
-          if [ -s base_prompt.md ]; then
-            node --experimental-strip-types apps/web/bin/spe.mjs diff base_prompt.md "$PROMPT_PATH" || DIFF_EXIT=$?
-            if [ "$DIFF_EXIT" -ne 0 ]; then
-              echo "❌ Semantic diff regression detected with exit code $DIFF_EXIT" >&2
+        COMPARISON_STATUS="NOT_APPLICABLE"
+        COMPARISON_RESULT="NOT_APPLICABLE"
+        BASE_COMMIT_SHA=""
+        REASON_INAPPLICABLE=""
+
+        if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_REF_NAME" ]; then
+          echo "Checking PR base branch reference (origin/$BASE_REF_NAME)..."
+          if ! git rev-parse --verify "origin/$BASE_REF_NAME" >/dev/null 2>&1; then
+            echo "❌ Critical Error: Unable to resolve PR base reference 'origin/$BASE_REF_NAME'. Failing closed." >&2
+            DIFF_EXIT=1
+            COMPARISON_STATUS="FAILED_TO_RESOLVE_BASE_REF"
+            COMPARISON_RESULT="FAIL"
+            REASON_INAPPLICABLE="BASE_REF_UNRESOLVABLE"
+          else
+            BASE_COMMIT_SHA=$(git rev-parse "origin/$BASE_REF_NAME" 2>/dev/null || echo "")
+            if git cat-file -e "origin/$BASE_REF_NAME:$PROMPT_PATH" 2>/dev/null; then
+              echo "Extracting base prompt from origin/$BASE_REF_NAME:$PROMPT_PATH..."
+              git show "origin/$BASE_REF_NAME:$PROMPT_PATH" > base_prompt.md
+              echo "Executing semantic differential analysis between base and head..."
+              node --experimental-strip-types apps/web/bin/spe.mjs diff base_prompt.md "$PROMPT_PATH" || DIFF_EXIT=$?
+              if [ "$DIFF_EXIT" -ne 0 ]; then
+                echo "❌ Semantic diff regression detected with exit code $DIFF_EXIT" >&2
+                COMPARISON_STATUS="REGRESSION_DETECTED"
+                COMPARISON_RESULT="FAIL"
+              else
+                echo "✅ Semantic differential check passed: no regressions detected."
+                COMPARISON_STATUS="EVALUATED_NO_REGRESSION"
+                COMPARISON_RESULT="PASS"
+              fi
+            else
+              echo "ℹ️ Note: Prompt file '$PROMPT_PATH' does not exist in base reference 'origin/$BASE_REF_NAME'."
+              echo "Evaluating new-file baseline policy: Standalone core verification & OWASP compliance required."
+              COMPARISON_STATUS="NOT_APPLICABLE"
+              COMPARISON_RESULT="NOT_APPLICABLE"
+              REASON_INAPPLICABLE="NEW_PROMPT_FILE_NO_PRIOR_BASELINE"
             fi
           fi
+        else
+          REASON_INAPPLICABLE="NOT_A_PULL_REQUEST_OR_MISSING_BASE_REF"
         fi
 
         # 4. Determine overall gate verdict
@@ -87,9 +123,19 @@ runs:
           OVERALL_VERDICT="FAIL"
         fi
 
+        export MEASURED_VERIFY_EXIT="$VERIFY_EXIT"
+        export MEASURED_OWASP_EXIT="$OWASP_EXIT"
+        export MEASURED_DIFF_EXIT="$DIFF_EXIT"
+        export MEASURED_COMPARISON_STATUS="$COMPARISON_STATUS"
+        export MEASURED_COMPARISON_RESULT="$COMPARISON_RESULT"
+        export MEASURED_BASE_COMMIT_SHA="$BASE_COMMIT_SHA"
+        export MEASURED_REASON_INAPPLICABLE="$REASON_INAPPLICABLE"
+        export MEASURED_OVERALL_VERDICT="$OVERALL_VERDICT"
+
         # 5. Generate RFC 8785 Canonical Proof Receipt from Actual Measured Outcomes
         echo "Generating RFC 8785 Canonical Proof Receipt (Overall Verdict: $OVERALL_VERDICT)..."
-        node -e "
+        SIGNING_FAILURE_EXIT=0
+        node --input-type=module -e "
           import { writeFileSync } from 'node:fs';
           import { createHash, sign, createPrivateKey } from 'node:crypto';
 
@@ -100,68 +146,152 @@ runs:
             return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalize(val[k])).join(',') + '}';
           }
 
-          const verifyOk = Number('$VERIFY_EXIT') === 0;
-          const owaspOk = Number('$OWASP_EXIT') === 0;
-          const diffOk = Number('$DIFF_EXIT') === 0;
-          const overallOk = '$OVERALL_VERDICT' === 'PASS';
+          const promptPath = process.env.INPUT_PROMPT_PATH || '';
+          const outputReceipt = process.env.INPUT_OUTPUT_RECEIPT || 'proof-receipt.json';
+          const rawSigningKey = (process.env.INPUT_SIGNING_KEY || '').trim();
+          const verifyExit = Number(process.env.MEASURED_VERIFY_EXIT || 0);
+          const owaspExit = Number(process.env.MEASURED_OWASP_EXIT || 0);
+          const diffExit = Number(process.env.MEASURED_DIFF_EXIT || 0);
+          const comparisonStatus = process.env.MEASURED_COMPARISON_STATUS || 'NOT_APPLICABLE';
+          const comparisonResult = process.env.MEASURED_COMPARISON_RESULT || 'NOT_APPLICABLE';
+          const baseCommitSha = process.env.MEASURED_BASE_COMMIT_SHA || null;
+          const reasonInapplicable = process.env.MEASURED_REASON_INAPPLICABLE || null;
+          let overallVerdict = process.env.MEASURED_OVERALL_VERDICT || 'FAIL';
+
+          let signingKeyBuffer = null;
+          let authenticationMode = 'RFC8785_CANONICAL_DIGEST_UNAUTHENTICATED';
+          let signingFailed = false;
+          let signingError = null;
+
+          if (rawSigningKey) {
+            try {
+              if (/^[0-9a-fA-F]{64}$/.test(rawSigningKey)) {
+                // 32-byte raw seed -> wrap in PKCS#8 DER for Ed25519
+                const pkcs8Prefix = Buffer.from('302e020100300506032b657004220420', 'hex');
+                signingKeyBuffer = Buffer.concat([pkcs8Prefix, Buffer.from(rawSigningKey, 'hex')]);
+              } else if (/^[0-9a-fA-F]{96}$/.test(rawSigningKey)) {
+                // 48-byte full PKCS#8 DER
+                signingKeyBuffer = Buffer.from(rawSigningKey, 'hex');
+              } else {
+                throw new Error('Invalid Ed25519 signing key length (' + rawSigningKey.length + ' hex characters). Expected 64 (32-byte seed) or 96 (PKCS#8 DER).');
+              }
+
+              createPrivateKey({
+                key: signingKeyBuffer,
+                format: 'der',
+                type: 'pkcs8'
+              });
+              authenticationMode = 'ED25519_AUTHENTICATED';
+            } catch (err) {
+              signingFailed = true;
+              signingError = err.message;
+              authenticationMode = 'AUTHENTICATION_FAILED_INVALID_KEY';
+              overallVerdict = 'FAIL';
+              console.error('❌ Fatal Signing Error: Invalid or malformed Ed25519 signing key:', err.message);
+            }
+          }
 
           const receipt = {
             schemaVersion: 'spe.proof-receipt.v1',
             compilerVersion: '0.3.0',
             executionMode: 'strict-wasm',
             timestampIso: new Date().toISOString(),
-            promptPath: '$PROMPT_PATH',
-            overallVerdict: '$OVERALL_VERDICT',
+            promptPath: promptPath,
+            overallVerdict: overallVerdict,
             measuredExitCodes: {
-              verify: Number('$VERIFY_EXIT'),
-              owasp: Number('$OWASP_EXIT'),
-              diff: Number('$DIFF_EXIT')
+              verify: verifyExit,
+              owasp: owaspExit,
+              diff: diffExit
             },
             hardGates: {
-              protectedIntentPreserved: verifyOk,
-              authorityNotExpanded: owaspOk,
-              privacyNotWeakened: diffOk,
-              budgetValid: true,
-              zeroEgressStatus: 'CI_RUNNER_UNMETERED_REQUIRES_SANDBOX_CONTAINER'
+              protectedIntentPreserved: {
+                status: verifyExit === 0 ? 'PASS' : 'FAIL',
+                verifier: 'spe-core-wasm-verifier',
+                measuredExitCode: verifyExit
+              },
+              authorityNotExpanded: {
+                status: owaspExit === 0 ? 'PASS' : 'FAIL',
+                verifier: 'spe-owasp-genai-scanner',
+                measuredExitCode: owaspExit,
+                scope: 'OWASP_GENAI_TOP_10_HEURISTIC_RULE_MATRIX'
+              },
+              privacyNotWeakened: {
+                status: comparisonStatus === 'NOT_APPLICABLE' ? 'NOT_APPLICABLE' : (diffExit === 0 ? 'PASS' : 'FAIL'),
+                verifier: 'spe-semantic-diff',
+                measuredExitCode: diffExit,
+                comparisonStatus: comparisonStatus,
+                comparisonResult: comparisonResult,
+                baseCommitSha: baseCommitSha,
+                reasonForInapplicable: reasonInapplicable
+              },
+              budgetValid: {
+                status: 'NOT_VERIFIED',
+                verifier: 'STATIC_GATE_WITHOUT_RUNTIME_TELEMETRY',
+                reason: 'Token and dollar cost budgets require live inference measurement'
+              },
+              zeroEgressStatus: {
+                status: 'NOT_VERIFIED',
+                verifier: 'CI_RUNNER_UNMETERED',
+                reason: 'Standard runner lacks hardware network isolation; requires sandbox container'
+              }
             },
             evidenceProvenance: {
               measurementClass: 'DETERMINISTIC_STATIC_AND_RULE_MATRIX',
               liveModelCallsExecuted: 0,
               selfGeneratedAssertionOnly: false,
               independentVerificationRequiredForLiveModels: true,
-              authenticationMode: '$SIGNING_KEY' ? 'ED25519_AUTHENTICATED' : 'RFC8785_CANONICAL_DIGEST_UNAUTHENTICATED'
+              authenticationMode: authenticationMode,
+              signingKeyProvided: Boolean(rawSigningKey)
             }
           };
+
+          if (signingError) {
+            receipt.signatureError = signingError;
+          }
 
           const canonicalJson = canonicalize(receipt);
           const digest = createHash('sha256').update(canonicalJson).digest('hex');
           receipt.receiptDigest = digest;
 
-          if ('$SIGNING_KEY') {
+          if (authenticationMode === 'ED25519_AUTHENTICATED' && signingKeyBuffer && !signingFailed) {
             try {
               const privKey = createPrivateKey({
-                key: Buffer.from('$SIGNING_KEY', 'hex'),
+                key: signingKeyBuffer,
                 format: 'der',
                 type: 'pkcs8'
               });
               const sig = sign(null, Buffer.from(digest, 'hex'), privKey);
               receipt.signatureHex = sig.toString('hex');
             } catch (err) {
-              console.warn('Signing key provided but signing failed:', err.message);
+              signingFailed = true;
               receipt.signatureError = err.message;
+              receipt.overallVerdict = 'FAIL';
+              receipt.evidenceProvenance.authenticationMode = 'AUTHENTICATION_FAILED_INVALID_KEY';
+              overallVerdict = 'FAIL';
+              console.error('❌ Fatal Signing Error during signature generation:', err.message);
             }
           }
 
-          writeFileSync('$OUTPUT_RECEIPT', JSON.stringify(receipt, null, 2));
+          writeFileSync(outputReceipt, JSON.stringify(receipt, null, 2));
           console.log('Proof Receipt Digest:', receipt.receiptDigest);
           console.log('Assurance Verdict:', receipt.overallVerdict);
-        "
+          console.log('Authentication Mode:', receipt.evidenceProvenance.authenticationMode);
 
-        DIGEST_VAL=$(node -e "import { readFileSync } from 'node:fs'; const r = JSON.parse(readFileSync('$OUTPUT_RECEIPT')); console.log(r.receiptDigest || '');")
+          if (signingFailed) {
+            process.exit(2);
+          }
+        " || SIGNING_FAILURE_EXIT=$?
+
+        if [ "$SIGNING_FAILURE_EXIT" -ne 0 ]; then
+          echo "❌ Critical Error: Cryptographic signing failed. Halting build (FAIL-CLOSED)." >&2
+          OVERALL_VERDICT="FAIL"
+        fi
+
+        DIGEST_VAL=$(node --input-type=module -e "import { readFileSync } from 'node:fs'; const r = JSON.parse(readFileSync('$OUTPUT_RECEIPT')); console.log(r.receiptDigest || '');")
         echo "receipt_digest=$DIGEST_VAL" >> $GITHUB_OUTPUT
         echo "verdict=$OVERALL_VERDICT" >> $GITHUB_OUTPUT
 
-        if [ "$OVERALL_VERDICT" != "PASS" ]; then
+        if [ "$OVERALL_VERDICT" != "PASS" ] || [ "$SIGNING_FAILURE_EXIT" -ne 0 ]; then
           echo "❌ SPE Enterprise PR Regression Gate FAILED. Halting build." >&2
           exit 1
         fi

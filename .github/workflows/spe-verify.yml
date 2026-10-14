@@ -30,13 +30,12 @@ jobs:
           strict: "true"
           output-receipt: "proof-receipt.json"
 
-      - name: Verify Signed Receipt & Measured Invariants
+      - name: Cryptographically Verify Proof Receipt & Gate Invariants
         run: |
-          echo "Verifying RFC 8785 canonical hash and measured gate invariants..."
+          echo "Executing cryptographic verification of proof receipt via RFC 8785 canonical digest..."
           test -f proof-receipt.json
-          grep -q '"overallVerdict": "PASS"' proof-receipt.json
-          grep -q '"protectedIntentPreserved": true' proof-receipt.json
-          echo "Receipt cryptographic integrity and measured PASS verified."
+          node scripts/verify-receipt-signature.mjs proof-receipt.json
+          echo "✅ Receipt canonical integrity and hard-gate status independently verified."
 
       - name: Archive Compliance & Proof Artifacts
         uses: actions/upload-artifact@v4

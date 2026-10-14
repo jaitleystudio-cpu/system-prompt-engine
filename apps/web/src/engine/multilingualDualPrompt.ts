@@ -506,8 +506,35 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       );
       operatorPhrase = m ? m[0].toLowerCase() : "may exceed";
     }
-    // 2. Negated & Compound Floors (x >= V): "no less than", "not less than", "never less than", "cannot be less than", "greater than or equal to", "more than or equal to", ">="
-    // 2. Negated & Compound Floors (x >= V): "no less than", "not less than", "never less than", "cannot be less than", "must not be less than", "shall not be less than", "cannot be below", "must not be below", "greater than or equal to", "more than or equal to", ">="
+    // 2. Negated Compound Floors (not >= V => x < V): "must not be greater than or equal to", "cannot be greater than or equal to", "not greater than or equal to", "cannot be at least", "must not be at least", etc.
+    // Negating an inclusive floor (x >= V) strictly yields an exclusive ceiling (x < V).
+    // MUST be evaluated before positive compound comparisons so "greater than or equal to" does not capture.
+    else if (
+      /\b(?:no|not|never|cannot(?:\s+be)?|must\s+not(?:\s+be)?|shall\s+not(?:\s+be)?|should\s+not(?:\s+be)?|can\s+not(?:\s+be)?)\s+(?:greater\s+than\s+or\s+equal\s+to|more\s+than\s+or\s+equal\s+to|at\s+least)\b/i.test(targetScope) ||
+      /(?:!>=|!<)/.test(targetScope)
+    ) {
+      constraintType = "CEILING";
+      boundary = "EXCLUSIVE";
+      const m = targetScope.match(
+        /\b(?:(?:no|not|never|cannot(?:\s+be)?|must\s+not(?:\s+be)?|shall\s+not(?:\s+be)?|should\s+not(?:\s+be)?|can\s+not(?:\s+be)?)\s+(?:greater\s+than\s+or\s+equal\s+to|more\s+than\s+or\s+equal\s+to|at\s+least))\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "not greater than or equal to";
+    }
+    // 3. Negated Compound Ceilings (not <= V => x > V): "must not be less than or equal to", "cannot be less than or equal to", "not less than or equal to", "cannot be at most", "must not be at most", etc.
+    // Negating an inclusive ceiling (x <= V) strictly yields an exclusive floor (x > V).
+    // MUST be evaluated before positive compound comparisons so "less than or equal to" does not capture.
+    else if (
+      /\b(?:no|not|never|cannot(?:\s+be)?|must\s+not(?:\s+be)?|shall\s+not(?:\s+be)?|should\s+not(?:\s+be)?|can\s+not(?:\s+be)?)\s+(?:less\s+than\s+or\s+equal\s+to|fewer\s+than\s+or\s+equal\s+to|at\s+most)\b/i.test(targetScope) ||
+      /(?:!<=|!>)/.test(targetScope)
+    ) {
+      constraintType = "FLOOR";
+      boundary = "EXCLUSIVE";
+      const m = targetScope.match(
+        /\b(?:(?:no|not|never|cannot(?:\s+be)?|must\s+not(?:\s+be)?|shall\s+not(?:\s+be)?|should\s+not(?:\s+be)?|can\s+not(?:\s+be)?)\s+(?:less\s+than\s+or\s+equal\s+to|fewer\s+than\s+or\s+equal\s+to|at\s+most))\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "not less than or equal to";
+    }
+    // 4. Negated Simple Floors & Positive Compound Floors (x >= V): "no less than", "not less than", "never less than", "cannot be less than", "must not be less than", "shall not be less than", "cannot be below", "must not be below", "greater than or equal to", "more than or equal to", ">="
     // Placed before exact equality and simple comparative operators to ensure compound capture.
     else if (
       /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:less\s+than|below|under)\b/i.test(targetScope) ||
@@ -521,7 +548,7 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       );
       operatorPhrase = m ? m[0].toLowerCase() : ">=";
     }
-    // 3. Negated & Compound Ceilings (x <= V): "no more than", "not more than", "never more than", "no greater than", "not greater than", "cannot be more than", "must not be more than", "cannot be greater than", "must not be greater than", "cannot be above", "must not be above", "less than or equal to", "<=", "must not exceed"
+    // 5. Negated Simple Ceilings & Positive Compound Ceilings (x <= V): "no more than", "not more than", "never more than", "no greater than", "not greater than", "cannot be more than", "must not be more than", "cannot be greater than", "must not be greater than", "cannot be above", "must not be above", "less than or equal to", "<=", "must not exceed"
     // Evaluated before negated equality and simple comparatives so "must not be more than" is never misclassified.
     else if (
       /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more\s+than|greater\s+than|above|over|higher\s+than)\b/i.test(targetScope) ||
