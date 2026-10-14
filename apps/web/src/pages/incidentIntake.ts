@@ -127,11 +127,9 @@ export function reviewLocalIntake(draft: unknown): LocalIntakeAssessment {
       issues.add("MODEL_REVISION_UNPINNED");
     }
     if (
-      [expected, observed, revision].some((value) =>
-        typeof value === "string" &&
-        ((value === revision && value.length > REVISION_LIMIT)
-          || (value !== revision && value.length > SAFE_TEXT_LIMIT))
-      )
+      (expected !== null && expected.length > SAFE_TEXT_LIMIT) ||
+      (observed !== null && observed.length > SAFE_TEXT_LIMIT) ||
+      (revision !== null && revision.length > REVISION_LIMIT)
     ) {
       issues.add("TEXT_TOO_LONG");
     }
