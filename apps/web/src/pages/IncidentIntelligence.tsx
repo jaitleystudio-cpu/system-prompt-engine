@@ -60,8 +60,10 @@ const OFFICIAL_SOURCE_LINKS = [
 
 export function IncidentIntelligence({
   onNavigate,
+  onDraftRepair,
 }: {
   onNavigate: (view: AppView) => void;
+  onDraftRepair: (brief: string) => void;
 }) {
   return (
     <section
@@ -137,7 +139,7 @@ export function IncidentIntelligence({
           </div>
         </section>
 
-        <PrivateFailureIntake />
+        <PrivateFailureIntake onDraftRepair={onDraftRepair} />
 
         <section className="spe-incident-method" id="spe-incident-method" aria-labelledby="spe-incident-method-title">
           <div className="spe-incident-section-head">
