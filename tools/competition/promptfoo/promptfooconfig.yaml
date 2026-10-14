@@ -1,0 +1,33 @@
+# SPE M06 — Promptfoo real CLI, zero-LLM echo smoke
+# Synthetic public fixtures only. This is an interface smoke, not an LLM comparison.
+description: SPE vs Promptfoo M06 real CLI echo smoke
+sharing: false
+
+prompts:
+  - 'SPE_ECHO_SMOKE::{{case_id}}::{{payload}}'
+
+providers:
+  - echo
+
+tests:
+  - description: deterministic case A
+    vars:
+      case_id: A01
+      payload: ALPHA
+    assert:
+      - type: equals
+        value: SPE_ECHO_SMOKE::A01::ALPHA
+  - description: deterministic case B
+    vars:
+      case_id: B02
+      payload: BETA
+    assert:
+      - type: equals
+        value: SPE_ECHO_SMOKE::B02::BETA
+  - description: different casing remains unchanged
+    vars:
+      case_id: C03
+      payload: Gamma
+    assert:
+      - type: equals
+        value: SPE_ECHO_SMOKE::C03::Gamma

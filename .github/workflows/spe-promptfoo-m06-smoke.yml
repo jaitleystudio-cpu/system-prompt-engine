@@ -1,0 +1,42 @@
+name: SPE M06 Promptfoo real CLI echo smoke
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/spe-promptfoo-m06-smoke.yml'
+      - 'tools/competition/promptfoo/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  promptfoo-echo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CI: 'true'
+      PROMPTFOO_DISABLE_TELEMETRY: '1'
+      PROMPTFOO_DISABLE_UPDATE: '1'
+      PROMPTFOO_DISABLE_REMOTE_GENERATION: 'true'
+      PROMPTFOO_DISABLE_SHARING: '1'
+      PROMPTFOO_SELF_HOSTED: '1'
+      PROMPTFOO_DISABLE_REDTEAM_REMOTE_GENERATION: 'true'
+      OPENAI_API_KEY: ''
+      ANTHROPIC_API_KEY: ''
+      GOOGLE_API_KEY: ''
+      npm_config_fund: 'false'
+      npm_config_audit: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Run pinned Promptfoo echo provider without model inference
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes promptfoo@0.124.1 --version
+          npx --yes promptfoo@0.124.1 eval \
+            -c tools/competition/promptfoo/promptfooconfig.yaml \
+            --no-cache --no-write --no-share --no-progress-bar
