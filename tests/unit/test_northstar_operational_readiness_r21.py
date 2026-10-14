@@ -184,8 +184,9 @@ def test_symlinked_evidence_file_is_refused(tmp_path, monkeypatch, capsys):
 def test_namespace_alias_between_trust_root_and_receipt_is_hold(tmp_path, monkeypatch, capsys):
     _, receipt_path, _, _, _, _ = configured(tmp_path, monkeypatch)
     approve(monkeypatch)
-    i = cli.os.sys.argv.index("--owner-trust-keys-file")
-    cli.os.sys.argv[i + 1] = str(receipt_path)
+    import sys
+    i = sys.argv.index("--owner-trust-keys-file")
+    sys.argv[i + 1] = str(receipt_path)
     code, result = run(capsys)
     assert code == 2
     assert "OPERATOR_CUSTODY_FILE_NAMESPACE_COLLISION" in result["reason_codes"]
