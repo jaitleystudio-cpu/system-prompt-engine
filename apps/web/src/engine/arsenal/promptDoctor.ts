@@ -98,13 +98,21 @@ export function diagnosePrompt(promptText: string): PromptDoctorReport {
   const wordCount = words.length;
   const estimatedTokens = Math.ceil(promptText.length / 3.8);
 
-  // Strip rule declarations to prevent meta-rule collisions when prompt enforces bans
-  const textForAudit = lower
-    .replace(/strictly ban verbal filler[^.\n]+/g, "")
-    .replace(/eliminate all ai clichés[^.\n]+/g, "")
-    .replace(/strictly prohibited from outputting[^.\n]+/g, "")
-    .replace(/zero placeholder code[^.\n]+/g, "")
-    .replace(/prohibited from outputting[^.\n]+/g, "");
+  // Isolate user objective when prompt is structured with UFCK-100X sections
+  let textForAudit = lower;
+  if (lower.includes("### 2. primary objective")) {
+    const parts = lower.split("### 3.");
+    textForAudit = parts[0].split("### 2. primary objective")[1] || parts[0];
+  } else if (lower.includes("### 2. primary mission objective")) {
+    const parts = lower.split("### 3.");
+    textForAudit = parts[0].split("### 2. primary mission objective")[1] || parts[0];
+  } else {
+    textForAudit = lower
+      .replace(/strictly ban verbal filler[^\n]+/g, "")
+      .replace(/eliminate all ai clichés[^\n]+/g, "")
+      .replace(/strictly prohibited from outputting[^\n]+/g, "")
+      .replace(/zero placeholder code[^\n]+/g, "");
+  }
 
   // 1. Scan for AI slop words
   const slopMatches: SlopMatch[] = [];
@@ -245,6 +253,12 @@ export function enhancePromptWithDoctor(rawPrompt: string): string {
   for (const [slopWord, replacement] of Object.entries(BANNED_SLOP_DICTIONARY)) {
     const regex = new RegExp(`\\b${slopWord}\\b`, "gi");
     cleaned = cleaned.replace(regex, replacement.split(" / ")[0]);
+  }
+
+  // 2. Replace weak conversational phrasing
+  for (const phrase of WEAK_CONVERSATIONAL_PHRASES) {
+    const regex = new RegExp(`\\b${phrase.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}\\b`, "gi");
+    cleaned = cleaned.replace(regex, "Execute");
   }
 
   // 3. Remove placeholder code patterns from raw text

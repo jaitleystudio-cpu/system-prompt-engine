@@ -14,33 +14,7 @@ export interface ContextualAdSlotProps {
   className?: string;
 }
 
-interface SponsorPartner {
-  name: string;
-  tagline: string;
-  url: string;
-  badge: string;
-}
-
-const SPONSORS: SponsorPartner[] = [
-  {
-    name: "Neon Serverless Postgres",
-    tagline: "Serverless Postgres built for scale. Branch your database like code.",
-    url: "https://neon.tech",
-    badge: "Database Partner",
-  },
-  {
-    name: "Cloudflare Workers",
-    tagline: "Deploy serverless code instantly across 300+ cities with zero cold starts.",
-    url: "https://workers.cloudflare.com",
-    badge: "Compute Partner",
-  },
-  {
-    name: "Vercel AI SDK",
-    tagline: "The open source TypeScript library for building conversational web interfaces.",
-    url: "https://sdk.vercel.ai",
-    badge: "Framework Partner",
-  },
-];
+import { SPONSORS } from "../../engine/company/sponsorPartners";
 
 export const ContextualAdSlot: React.FC<ContextualAdSlotProps> = ({
   slotId,
