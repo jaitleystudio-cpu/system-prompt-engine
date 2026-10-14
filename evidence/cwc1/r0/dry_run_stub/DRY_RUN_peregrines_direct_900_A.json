@@ -1,0 +1,102 @@
+{
+ "arm": "A",
+ "calls": 20,
+ "cwc_fallbacks": 0,
+ "env": "peregrines",
+ "goal": "direct",
+ "ground_truth": [
+  68,
+  122,
+  24,
+  133,
+  163,
+  212,
+  136,
+  207,
+  210,
+  216
+ ],
+ "label": "DRY_RUN",
+ "model_digest": "STUB",
+ "predictions": [
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1"
+ ],
+ "raw_error": [
+  25841.5,
+  16459.54580327173
+ ],
+ "retries": 0,
+ "seed": 900,
+ "std_error": 0.9443462243677402,
+ "steps": [
+  {
+   "i": 0,
+   "input": "4",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 1,
+   "input": "2",
+   "observation": "98",
+   "valid": true
+  },
+  {
+   "i": 2,
+   "input": "5",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 3,
+   "input": "0",
+   "observation": "85",
+   "valid": true
+  },
+  {
+   "i": 4,
+   "input": "4",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 5,
+   "input": "2",
+   "observation": "70",
+   "valid": true
+  },
+  {
+   "i": 6,
+   "input": "4",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 7,
+   "input": "1",
+   "observation": "194",
+   "valid": true
+  },
+  {
+   "i": 8,
+   "input": "4",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 9,
+   "input": "4",
+   "observation": "0",
+   "valid": true
+  }
+ ]
+}

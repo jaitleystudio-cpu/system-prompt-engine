@@ -1,0 +1,602 @@
+{
+ "arm": "C",
+ "calls": 20,
+ "cwc_fallbacks": 0,
+ "env": "dugongs",
+ "goal": "direct",
+ "ground_truth": [
+  1.4224666412859204,
+  0.7131234639206505,
+  1.5138983780756836,
+  1.050137677846204,
+  1.226482721963419,
+  1.3550991476688892,
+  1.372151639351353,
+  1.7239541683298594,
+  1.4828526925035008,
+  1.3150842299341696
+ ],
+ "label": "DRY_RUN",
+ "model_digest": "STUB",
+ "predictions": [
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1"
+ ],
+ "raw_error": [
+  0.16998026428292184,
+  0.1400221948198798
+ ],
+ "retries": 0,
+ "seed": 900,
+ "std_error": -0.07969163559345346,
+ "steps": [
+  {
+   "i": 0,
+   "input": "3.93",
+   "observation": "1.4534252350787877",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     3.93,
+     3.24,
+     3.61,
+     1.24
+    ],
+    "chosen_index": 0,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.4534252350787877,
+    "predictions": {
+     "H1": [
+      3.93,
+      3.24,
+      3.61,
+      1.24
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     2.93,
+     2.24,
+     2.61,
+     0.24
+    ]
+   }
+  },
+  {
+   "i": 1,
+   "input": "3.6",
+   "observation": "1.9641132174382674",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     2.92,
+     3.6,
+     2.74,
+     1.89
+    ],
+    "chosen_index": 1,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.9641132174382674,
+    "predictions": {
+     "H1": [
+      2.92,
+      3.6,
+      2.74,
+      1.89
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     1.92,
+     2.6,
+     1.7400000000000002,
+     0.8899999999999999
+    ]
+   }
+  },
+  {
+   "i": 2,
+   "input": "3.65",
+   "observation": "1.6790063680225704",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     0.4,
+     1.74,
+     2.44,
+     3.65
+    ],
+    "chosen_index": 3,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.6790063680225704,
+    "predictions": {
+     "H1": [
+      0.4,
+      1.74,
+      2.44,
+      3.65
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     0.6,
+     0.74,
+     1.44,
+     2.65
+    ]
+   }
+  },
+  {
+   "i": 3,
+   "input": "3.87",
+   "observation": "1.4723657407925919",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     3.87,
+     1.91,
+     3.46,
+     1.04
+    ],
+    "chosen_index": 0,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.4723657407925919,
+    "predictions": {
+     "H1": [
+      3.87,
+      1.91,
+      3.46,
+      1.04
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     2.87,
+     0.9099999999999999,
+     2.46,
+     0.040000000000000036
+    ]
+   }
+  },
+  {
+   "i": 4,
+   "input": "3.22",
+   "observation": "1.558508895655341",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     3.22,
+     2.19,
+     0.06,
+     2.88
+    ],
+    "chosen_index": 0,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.558508895655341,
+    "predictions": {
+     "H1": [
+      3.22,
+      2.19,
+      0.06,
+      2.88
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     2.22,
+     1.19,
+     0.94,
+     1.88
+    ]
+   }
+  },
+  {
+   "i": 5,
+   "input": "3.3",
+   "observation": "1.610197656305475",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     1.6,
+     3.3,
+     2.67,
+     0.0
+    ],
+    "chosen_index": 1,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.610197656305475,
+    "predictions": {
+     "H1": [
+      1.6,
+      3.3,
+      2.67,
+      0.0
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     0.6000000000000001,
+     2.3,
+     1.67,
+     1.0
+    ]
+   }
+  },
+  {
+   "i": 6,
+   "input": "3.47",
+   "observation": "1.621627044922909",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     1.97,
+     3.47,
+     0.98,
+     1.3
+    ],
+    "chosen_index": 1,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.621627044922909,
+    "predictions": {
+     "H1": [
+      1.97,
+      3.47,
+      0.98,
+      1.3
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     0.97,
+     2.47,
+     0.020000000000000018,
+     0.30000000000000004
+    ]
+   }
+  },
+  {
+   "i": 7,
+   "input": "3.48",
+   "observation": "1.9412628604354123",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     3.48,
+     0.76,
+     2.27,
+     0.95
+    ],
+    "chosen_index": 0,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.9412628604354123,
+    "predictions": {
+     "H1": [
+      3.48,
+      0.76,
+      2.27,
+      0.95
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     2.48,
+     0.24,
+     1.27,
+     0.050000000000000044
+    ]
+   }
+  },
+  {
+   "i": 8,
+   "input": "3.87",
+   "observation": "1.6478931446313976",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     3.87,
+     3.21,
+     1.79,
+     0.32
+    ],
+    "chosen_index": 0,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.6478931446313976,
+    "predictions": {
+     "H1": [
+      3.87,
+      3.21,
+      1.79,
+      0.32
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     2.87,
+     2.21,
+     0.79,
+     0.6799999999999999
+    ]
+   }
+  },
+  {
+   "i": 9,
+   "input": "3.73",
+   "observation": "1.6746108184113253",
+   "valid": true,
+   "witness": {
+    "candidates": [
+     1.28,
+     2.03,
+     3.73,
+     0.44
+    ],
+    "chosen_index": 2,
+    "contradiction_rank": [
+     "H1",
+     "H2"
+    ],
+    "hypotheses": [
+     {
+      "form": "linear",
+      "id": "H1",
+      "params": {
+       "a": 1
+      }
+     },
+     {
+      "form": "constant",
+      "id": "H2",
+      "params": {
+       "c": 1
+      }
+     }
+    ],
+    "observed_y": 1.6746108184113253,
+    "predictions": {
+     "H1": [
+      1.28,
+      2.03,
+      3.73,
+      0.44
+     ],
+     "H2": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "spreads": [
+     0.28,
+     1.0299999999999998,
+     2.73,
+     0.56
+    ]
+   }
+  }
+ ]
+}

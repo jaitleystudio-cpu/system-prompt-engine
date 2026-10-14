@@ -49,3 +49,19 @@ explanation/discovery mode is NOT included in R0.
 ## 6. Process
 Dry run (2 dev tasks, labelled DRY_RUN) only proves plumbing. A stub backend may be used for plumbing; stub output is
 never a result. Scored runs happen only after this contract commit, with raw logs committed before scoring is reported.
+
+## Amendment 1 (2026-10-14, before any scored run; found by the stub plumbing dry run)
+Upstream BoxingGym bug at b43e38cb: irt.BestStudent / DifficultQuestion / DiscriminatingQuestion call
+env.get_system_message, which IRT does not define (AttributeError). Therefore:
+- Holdout drops irt/discriminate_question -> 11 tasks x 3 seeds = 33 episodes per arm. Bootstrap is over 11 tasks.
+- Dev/dry-run tasks become dugongs/direct and peregrines/direct at seed 900 only (holdout seeds 101/202/303 unused).
+  This shares environments (not seeds) with the holdout; declared.
+- Pinned repo requirements are internally inconsistent (numpy 2.0.1 with pytensor 2.20.0 fails). Runtime used:
+  Python 3.12.14 venv, repo requirements.txt with numpy 1.26.4 (pymc 5.13.1, pytensor 2.20.0), PYTENSOR_FLAGS=cxx=
+  (no g++ on the box). This supersedes the unpinned-deps note in section 1.
+- Eval-set fix (found in the same dry run): eval questions were drawn from the global RNG after the experiments, so
+  arms saw different eval sets. The harness now reseeds random/numpy with seed+10000 before the eval questions; the
+  dry run checks ground truths are identical across A/B/C.
+- Seeding fix: BoxingGym draws true parameters and observations with pm.draw / pm.sample_prior_predictive and no
+  random_seed (OS entropy), so the same seed did NOT give the same environment. The harness patches both to take
+  random_seed from a generator seeded per episode (seed) and per eval phase (seed+10000).
