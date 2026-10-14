@@ -22417,6 +22417,12 @@
       "text": "Local-only draft"
     },
     {
+      "id": "12289518787f4636cc7a",
+      "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
+      "depth": "PRODUCT",
+      "text": "User-reported only · This intake form saves no history or uploads · No verified repair. Prompt Studio may separately offer opt-in local history. Your browser may manage downloaded files."
+    },
+    {
       "id": "1c20b920b750af74539d",
       "file": "apps/web/src/pages/PrivateFailureIntake.tsx",
       "depth": "PRODUCT",
