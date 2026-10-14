@@ -501,3 +501,43 @@
   .spe-intake-local-tag { align-self: flex-start; }
   .spe-intake-export-button { width: 100%; }
 }
+
+
+/* R23 — two explicit user actions: draft in local studio or export private JSON. */
+.spe-intake-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: .65rem;
+}
+.spe-intake-studio-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  padding: .85rem 1.15rem;
+  border: 1px solid var(--incident-border);
+  border-radius: .6rem;
+  background: transparent;
+  color: var(--paper);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.spe-intake-studio-button:not(:disabled):hover {
+  border-color: var(--paper);
+}
+.spe-intake-studio-button:disabled {
+  opacity: .48;
+  cursor: not-allowed;
+}
+.spe-intake-studio-button:focus-visible {
+  outline: 3px solid var(--mint);
+  outline-offset: 3px;
+}
+@media (max-width: 650px) {
+  .spe-intake-actions { width: 100%; flex-direction: column; align-items: stretch; }
+  .spe-intake-studio-button { width: 100%; }
+}
