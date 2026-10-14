@@ -218,8 +218,10 @@ def cmd_bench(args: argparse.Namespace) -> int:
     print(f"  Suite ID:             {result.suite_id} ({result.split.value})")
     print(f"  Passed Tasks:         {result.passed_tasks}/{result.total_tasks}")
     print(f"  Accuracy Score:       {result.accuracy_score}")
-    print(f"  Evidence Class:       {result.evidence_class}")
-    print("✓ Benchmark suite completed with 100% verified evidence!")
+    print(f"  Evidence Class:       {result.evidence_class} (execution provenance)")
+    print(f"  Oracle Evidence:      {result.oracle_evidence_strength}")
+    print("  Competitive Verdict:  NOT_ADJUDICATED")
+    print("✓ Benchmark diagnostic completed; model execution is not independently verified.")
     return 0
 
 
