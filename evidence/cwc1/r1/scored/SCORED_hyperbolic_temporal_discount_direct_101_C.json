@@ -1,0 +1,13 @@
+{
+ "arm": "C",
+ "calls": null,
+ "env": "hyperbolic_temporal_discount",
+ "episode_error": "ValueError('could not convert string to float: \"{\\'iR\\': 1\"')",
+ "goal": "direct",
+ "label": "SCORED",
+ "model_tag": "qwen2.5-3b-instruct-q4km-hf:latest",
+ "raw_error": null,
+ "seed": 101,
+ "std_error": null,
+ "traceback": "Traceback (most recent call last):\n  File \"/workspace/spe-brain/cwc1-r1/evidence/cwc1/r1/run_shard2_resilient.py\", line 53, in main\n    result = episode(backend, env_name, goal_name, SEED, arm)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/spe-brain/cwc1-r1/spe_runtime/research/cwc1/harness.py\", line 250, in episode\n    obs, ok = goal.env.run_experiment(x)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/boxing-gym/src/boxing_gym/envs/hyperbolic_temporal_discount.py\", line 441, in run_experiment\n    designs = self.validate_input(input_string)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/boxing-gym/src/boxing_gym/envs/hyperbolic_temporal_discount.py\", line 434, in validate_input\n    items = [int(float(item)) for item in items]\n                 ^^^^^^^^^^^\nValueError: could not convert string to float: \"{'iR': 1\"\n"
+}

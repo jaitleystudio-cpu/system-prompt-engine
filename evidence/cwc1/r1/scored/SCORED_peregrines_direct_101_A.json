@@ -1,0 +1,103 @@
+{
+ "arm": "A",
+ "calls": 27,
+ "cwc_fallbacks": 0,
+ "env": "peregrines",
+ "goal": "direct",
+ "ground_truth": [
+  211,
+  178,
+  294,
+  109,
+  219,
+  224,
+  218,
+  277,
+  150,
+  172
+ ],
+ "label": "SCORED",
+ "model_digest": "a36559c74bc3144e42925b6a67884b7aacc11b0480ceadc732de0e9efc450722",
+ "model_tag": "qwen2.5-3b-instruct-q4km-hf:latest",
+ "predictions": [
+  "90",
+  "0",
+  "1",
+  "0",
+  "266",
+  "100",
+  "73",
+  "90",
+  "30",
+  "126"
+ ],
+ "raw_error": [
+  23415.0,
+  23162.127596574544
+ ],
+ "retries": 9,
+ "seed": 101,
+ "std_error": 0.7900389332373274,
+ "steps": [
+  {
+   "i": 0,
+   "input": "3",
+   "observation": "31",
+   "valid": true
+  },
+  {
+   "i": 1,
+   "input": "1",
+   "observation": "266",
+   "valid": true
+  },
+  {
+   "i": 2,
+   "input": "2",
+   "observation": "260",
+   "valid": true
+  },
+  {
+   "i": 3,
+   "input": "3",
+   "observation": "21",
+   "valid": true
+  },
+  {
+   "i": 4,
+   "input": "4",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 5,
+   "input": "5",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 6,
+   "input": "0",
+   "observation": "73",
+   "valid": true
+  },
+  {
+   "i": 7,
+   "input": "4",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 8,
+   "input": "5",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 9,
+   "input": "0",
+   "observation": "87",
+   "valid": true
+  }
+ ]
+}

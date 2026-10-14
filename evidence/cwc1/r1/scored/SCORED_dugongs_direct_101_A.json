@@ -1,0 +1,103 @@
+{
+ "arm": "A",
+ "calls": 24,
+ "cwc_fallbacks": 0,
+ "env": "dugongs",
+ "goal": "direct",
+ "ground_truth": [
+  1.1485918057660247,
+  1.0868981844941745,
+  1.5333163268514312,
+  0.45120020889042356,
+  1.3246258966299875,
+  1.4832042297527632,
+  1.107313023342235,
+  1.2140876854595524,
+  1.178776661625772,
+  1.363953155916104
+ ],
+ "label": "SCORED",
+ "model_digest": "a36559c74bc3144e42925b6a67884b7aacc11b0480ceadc732de0e9efc450722",
+ "model_tag": "qwen2.5-3b-instruct-q4km-hf:latest",
+ "predictions": [
+  "1.65",
+  "1.47",
+  "1.65",
+  "1.30",
+  "1.42",
+  "1.66",
+  "1.47",
+  "1.65",
+  "1.35",
+  "0.9118936010228666"
+ ],
+ "raw_error": [
+  0.1727842969006333,
+  0.20063526406300325
+ ],
+ "retries": 5,
+ "seed": 101,
+ "std_error": -0.079387978006439,
+ "steps": [
+  {
+   "i": 0,
+   "input": "1",
+   "observation": "1.5703901284181288",
+   "valid": true
+  },
+  {
+   "i": 1,
+   "input": "2",
+   "observation": "1.7747584436328854",
+   "valid": true
+  },
+  {
+   "i": 2,
+   "input": "3",
+   "observation": "1.6537167212454795",
+   "valid": true
+  },
+  {
+   "i": 3,
+   "input": "4",
+   "observation": "1.9955691616936755",
+   "valid": true
+  },
+  {
+   "i": 4,
+   "input": "5",
+   "observation": "2.023175901516862",
+   "valid": true
+  },
+  {
+   "i": 5,
+   "input": "0",
+   "observation": "0.32430181567767524",
+   "valid": true
+  },
+  {
+   "i": 6,
+   "input": "0",
+   "observation": "0.4327272848471836",
+   "valid": true
+  },
+  {
+   "i": 7,
+   "input": "1",
+   "observation": "1.2978831928407144",
+   "valid": true
+  },
+  {
+   "i": 8,
+   "input": "2",
+   "observation": "1.6496714838020652",
+   "valid": true
+  },
+  {
+   "i": 9,
+   "input": "3",
+   "observation": "1.7037311872805934",
+   "valid": true
+  }
+ ]
+}

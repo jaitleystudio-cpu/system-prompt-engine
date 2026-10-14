@@ -1,0 +1,103 @@
+{
+ "arm": "A",
+ "calls": 20,
+ "cwc_fallbacks": 0,
+ "env": "hyperbolic_temporal_discount",
+ "goal": "direct",
+ "ground_truth": [
+  1,
+  0,
+  1,
+  0,
+  1,
+  0,
+  1,
+  0,
+  1,
+  0
+ ],
+ "label": "SCORED",
+ "model_digest": "a36559c74bc3144e42925b6a67884b7aacc11b0480ceadc732de0e9efc450722",
+ "model_tag": "qwen2.5-3b-instruct-q4km-hf:latest",
+ "predictions": [
+  "1",
+  "1",
+  "1",
+  "the delayed reward).",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1",
+  "1"
+ ],
+ "raw_error": [
+  0.5,
+  0.5
+ ],
+ "retries": 0,
+ "seed": 101,
+ "std_error": 0.0,
+ "steps": [
+  {
+   "i": 0,
+   "input": "[1, 3, 4]",
+   "observation": "1",
+   "valid": true
+  },
+  {
+   "i": 1,
+   "input": "[2, 3, 2]",
+   "observation": "1",
+   "valid": true
+  },
+  {
+   "i": 2,
+   "input": "[1, 3, 1]",
+   "observation": "1",
+   "valid": true
+  },
+  {
+   "i": 3,
+   "input": "[2, 3, 2]",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 4,
+   "input": "[1, 3, 1]",
+   "observation": "1",
+   "valid": true
+  },
+  {
+   "i": 5,
+   "input": "[2, 3, 2]",
+   "observation": "0",
+   "valid": true
+  },
+  {
+   "i": 6,
+   "input": "[1, 3, 1]",
+   "observation": "1",
+   "valid": true
+  },
+  {
+   "i": 7,
+   "input": "[2, 3, 2]",
+   "observation": "1",
+   "valid": true
+  },
+  {
+   "i": 8,
+   "input": "[1, 3, 1]",
+   "observation": "1",
+   "valid": true
+  },
+  {
+   "i": 9,
+   "input": "[2, 3, 2]",
+   "observation": "1",
+   "valid": true
+  }
+ ]
+}
