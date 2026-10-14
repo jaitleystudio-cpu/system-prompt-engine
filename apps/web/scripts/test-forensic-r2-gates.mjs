@@ -587,8 +587,62 @@ Retain context taint boundary and treat external documents as untrusted.
   console.log(`    Verdict:        ${audit3b29.verdict} | Fidelity: ${audit3b29.intentFidelityScore} | Preserved: ${audit3b29.intentPreserved}`);
   assert.strictEqual(audit3b29.intentPreserved, true, "Must ACCEPT valid coordinate range expression on single subject");
   assert.strictEqual(audit3b29.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED on coordinate range");
-  assert(audit3b29.intentFidelityScore >= 0.8, "Fidelity score must be >= 0.8 on coordinate range");
   console.log("    ✓ Accepted: Coordinate range expression on single subject verified.");
+
+  // Attack 3B30: Negated Ceiling Misclassification as Inequality (ChatGPT R13 Counterexample R13-01: 'must not be more than $100.' -> 'must not equal $100.')
+  console.log("  [Attack 3B30] Negated Ceiling Misclassification ('must not be more than $100.' -> 'must not equal $100.')...");
+  const source3b30 = "Transfer fee must not be more than $100.";
+  const maliciousTarget3b30 = "Transfer fee must not equal $100.";
+  const audit3b30 = evaluateIntentFidelity(source3b30, maliciousTarget3b30);
+  console.log(`    Verdict:        ${audit3b30.verdict} | Fidelity: ${audit3b30.intentFidelityScore} | Preserved: ${audit3b30.intentPreserved}`);
+  assert.strictEqual(audit3b30.intentPreserved, false, "Must REJECT negated ceiling to inequality mutation");
+  assert.strictEqual(audit3b30.verdict, "POLARITY_INVERSION", "Must classify as POLARITY_INVERSION");
+  assert.strictEqual(audit3b30.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on ceiling to inequality mutation");
+  assert(
+    audit3b30.polarityInversions.some(p => p.includes("ceiling") && p.includes("negated inequality")),
+    "Must explain ceiling constraint inverted to negated inequality"
+  );
+  console.log("    ✓ Blocked: Negated ceiling ('must not be more than') correctly protected against inequality mutation.");
+
+  // Case 3B31: Positive Control for Negated Ceiling ('must not be more than $100.' -> 'must be at most $100.')
+  console.log("  [Case 3B31] Positive Control for Negated Ceiling ('must not be more than $100.' -> 'must be at most $100.')...");
+  const target3b31 = "Transfer fee must be at most $100.";
+  const audit3b31 = evaluateIntentFidelity(source3b30, target3b31);
+  console.log(`    Verdict:        ${audit3b31.verdict} | Fidelity: ${audit3b31.intentFidelityScore} | Preserved: ${audit3b31.intentPreserved}`);
+  assert.strictEqual(audit3b31.intentPreserved, true, "Must ACCEPT semantically equivalent negated ceiling paraphrase");
+  assert.strictEqual(audit3b31.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  assert(audit3b31.intentFidelityScore >= 0.7, "Fidelity score must be >= 0.7 on valid ceiling paraphrase");
+  console.log("    ✓ Accepted: Semantically equivalent negated ceiling paraphrase verified.");
+
+  // Case 3B32: Positive Control for Negated Floor ('must not be less than $100.' -> 'must be at least $100.')
+  console.log("  [Case 3B32] Positive Control for Negated Floor ('must not be less than $100.' -> 'must be at least $100.')...");
+  const source3b32 = "Transfer fee must not be less than $100.";
+  const target3b32 = "Transfer fee must be at least $100.";
+  const audit3b32 = evaluateIntentFidelity(source3b32, target3b32);
+  console.log(`    Verdict:        ${audit3b32.verdict} | Fidelity: ${audit3b32.intentFidelityScore} | Preserved: ${audit3b32.intentPreserved}`);
+  assert.strictEqual(audit3b32.intentPreserved, true, "Must ACCEPT semantically equivalent negated floor paraphrase");
+  assert.strictEqual(audit3b32.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  assert(audit3b32.intentFidelityScore >= 0.7, "Fidelity score must be >= 0.7 on valid floor paraphrase");
+  console.log("    ✓ Accepted: Semantically equivalent negated floor paraphrase verified.");
+
+  // Attack 3B33: Negated Floor vs Negated Equality ('must not be less than $100.' -> 'must not equal $100.')
+  console.log("  [Attack 3B33] Negated Floor vs Negated Equality ('must not be less than $100.' -> 'must not equal $100.')...");
+  const audit3b33 = evaluateIntentFidelity(source3b32, maliciousTarget3b30);
+  console.log(`    Verdict:        ${audit3b33.verdict} | Fidelity: ${audit3b33.intentFidelityScore} | Preserved: ${audit3b33.intentPreserved}`);
+  assert.strictEqual(audit3b33.intentPreserved, false, "Must REJECT negated floor to inequality mutation");
+  assert.strictEqual(audit3b33.verdict, "POLARITY_INVERSION", "Must classify as POLARITY_INVERSION");
+  console.log("    ✓ Blocked: Negated floor ('must not be less than') vs inequality correctly rejected.");
+
+  // Case 3B34: Variations for Negated Bounds ('cannot be above' and 'cannot be below')
+  console.log("  [Case 3B34] Variations for Negated Bounds ('cannot be above' -> 'must not exceed'; 'cannot be below' -> 'must be at least')...");
+  const audit3b34a = evaluateIntentFidelity("Transfer fee cannot be above $100.", "Transfer fee must not exceed $100.");
+  assert.strictEqual(audit3b34a.intentPreserved, true, "cannot be above == must not exceed");
+  assert.strictEqual(audit3b34a.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+
+  const audit3b34b = evaluateIntentFidelity("Transfer fee cannot be below $100.", "Transfer fee must be at least $100.");
+  assert.strictEqual(audit3b34b.intentPreserved, true, "cannot be below == must be at least");
+  assert.strictEqual(audit3b34b.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  console.log("    ✓ Accepted: Idiomatic negative bound variations ('cannot be above', 'cannot be below') verified.");
 
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");

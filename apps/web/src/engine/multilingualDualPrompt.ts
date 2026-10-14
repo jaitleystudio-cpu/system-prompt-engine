@@ -507,35 +507,24 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       operatorPhrase = m ? m[0].toLowerCase() : "may exceed";
     }
     // 2. Negated & Compound Floors (x >= V): "no less than", "not less than", "never less than", "cannot be less than", "greater than or equal to", "more than or equal to", ">="
+    // 2. Negated & Compound Floors (x >= V): "no less than", "not less than", "never less than", "cannot be less than", "must not be less than", "shall not be less than", "cannot be below", "must not be below", "greater than or equal to", "more than or equal to", ">="
     // Placed before exact equality and simple comparative operators to ensure compound capture.
     else if (
-      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+less\s+than\b/i.test(targetScope) ||
+      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:less\s+than|below|under)\b/i.test(targetScope) ||
       /\b(?:greater|more)\s+than\s+or\s+equal\s+to\b/i.test(targetScope) ||
       />=/.test(targetScope)
     ) {
       constraintType = "FLOOR";
       boundary = "INCLUSIVE";
       const m = targetScope.match(
-        /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+less\s+than|(?:greater|more)\s+than\s+or\s+equal\s+to)\b/i
+        /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:less\s+than|below|under)|(?:greater|more)\s+than\s+or\s+equal\s+to)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : ">=";
     }
-    // 2B. Negated Equality / Inequality (x != V): "must not be equal to", "shall not be equal to", "cannot be equal to", "not equal to", "is not equal to", "does not equal", "doesn't equal", "cannot equal", "must not equal", "!=", "<>", "/="
+    // 3. Negated & Compound Ceilings (x <= V): "no more than", "not more than", "never more than", "no greater than", "not greater than", "cannot be more than", "must not be more than", "cannot be greater than", "must not be greater than", "cannot be above", "must not be above", "less than or equal to", "<=", "must not exceed"
+    // Evaluated before negated equality and simple comparatives so "must not be more than" is never misclassified.
     else if (
-      /\b(?:(?:must|shall|should|can|may|do|does)\s+not\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|cannot\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|not\s+(?:equal\s+to|equal)|is\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|are\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|isn't\s+equal\s+to|aren't\s+equal\s+to|doesn't\s+equal|don't\s+equal)\b/i.test(targetScope) ||
-      /!=|<>|\/=/.test(targetScope)
-    ) {
-      constraintType = "NOT_EQUAL";
-      boundary = "EXCLUSIVE";
-      const m = targetScope.match(
-        /\b(?:(?:must|shall|should|can|may|do|does)\s+not\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|cannot\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|not\s+(?:equal\s+to|equal)|is\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|are\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|isn't\s+equal\s+to|aren't\s+equal\s+to|doesn't\s+equal|don't\s+equal)\b/i
-      );
-      operatorPhrase = m ? m[0].toLowerCase() : "!=";
-    }
-    // 3. Negated & Compound Ceilings (x <= V): "no more than", "not more than", "never more than", "no greater than", "not greater than", "less than or equal to", "<=", "must not exceed"
-    // Placed before exact equality and simple comparative operators to ensure compound capture.
-    else if (
-      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more|greater)\s+than\b/i.test(targetScope) ||
+      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more\s+than|greater\s+than|above|over|higher\s+than)\b/i.test(targetScope) ||
       /\b(?:less|fewer)\s+than\s+or\s+equal\s+to\b/i.test(targetScope) ||
       /<=/.test(targetScope) ||
       /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i.test(targetScope)
@@ -543,9 +532,23 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       constraintType = "CEILING";
       boundary = "INCLUSIVE";
       const m = targetScope.match(
-        /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more|greater)\s+than|(?:less|fewer)\s+than\s+or\s+equal\s+to|(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed)\b/i
+        /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more\s+than|greater\s+than|above|over|higher\s+than)|(?:less|fewer)\s+than\s+or\s+equal\s+to|(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : "<=";
+    }
+    // 4. Negated Equality / Inequality (x != V): "must not equal", "must not be equal to", "cannot equal", "cannot be equal to", "is not equal to", "not equal to", "!=", "<>", "/="
+    // Strict lexical requirement: must have explicit equality token or negative lookahead guarding against comparator words.
+    else if (
+      /\b(?:(?:must|shall|should|can|may|do|does)\s+not\s+(?:be\s+equal\s+to|equal\s+to|equal)|cannot\s+(?:be\s+equal\s+to|equal\s+to|equal)|not\s+(?:equal\s+to|equal)|is\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)|are\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)|isn't\s+equal\s+to|aren't\s+equal\s+to|doesn't\s+equal|don't\s+equal)\b/i.test(targetScope) ||
+      /\b(?:must\s+not\s+be|shall\s+not\s+be|cannot\s+be)\b(?!\s+(?:more|greater|less|fewer|above|below|higher|lower|under|over|at\s+least|at\s+most)\b)/i.test(targetScope) ||
+      /!=|<>|\/=/.test(targetScope)
+    ) {
+      constraintType = "NOT_EQUAL";
+      boundary = "EXCLUSIVE";
+      const m = targetScope.match(
+        /\b(?:(?:must|shall|should|can|may|do|does)\s+not\s+(?:be\s+equal\s+to|equal\s+to|equal)|cannot\s+(?:be\s+equal\s+to|equal\s+to|equal)|not\s+(?:equal\s+to|equal)|is\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)|are\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)|isn't\s+equal\s+to|aren't\s+equal\s+to|doesn't\s+equal|don't\s+equal|(?:must\s+not\s+be|shall\s+not\s+be|cannot\s+be))\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "!=";
     }
     // 4. Positive / Idiomatic Floors (x >= V): "at least", "minimum", "min"
     else if (/\b(?:at\s+least|minimum|min\b)/i.test(targetScope)) {

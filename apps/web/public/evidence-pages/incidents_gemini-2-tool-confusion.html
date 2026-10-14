@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gemini 2.0 Flash Tool Schema Argument Confusion Incident | SPE Incident Wire</title>
   <meta name="description" content="Analysis of Gemini 2.0 Flash swapping overlapping arguments in parallel function calls, leaking PII to external webhooks.">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://systempromptengine.com/incidents/gemini-2-tool-confusion">
   <meta property="og:title" content="Gemini 2.0 Flash Tool Schema Argument Confusion Incident | SPE Incident Wire">
   <meta property="og:description" content="Analysis of Gemini 2.0 Flash swapping overlapping arguments in parallel function calls, leaking PII to external webhooks.">
@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/gemini-2-tool-confusion</span>
     </nav>
     <header>
-      <span class="badge">REPRODUCIBLE_FORENSIC_SPECIMEN &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">LAB_REPRODUCED_BENCHMARK &bull; LABORATORY_FAILURE_SPECIMEN</span>
       <h1>Gemini 2.0 Flash Tool Schema Argument Confusion Incident</h1>
       <p class="lead">Analysis of Gemini 2.0 Flash swapping overlapping arguments in parallel function calls, leaking PII to external webhooks.</p>
     </header>
@@ -59,9 +59,9 @@
     <main>
       <div class="box">
         
-      <h2>Gemini 2.0 Flash Tool Schema Argument Confusion</h2>
-      <p><strong>Status & Evidence:</strong> Reproducible Lab Benchmark (<a href="https://ai.google.dev/gemini-api/docs/function-calling" target="_blank" rel="noopener noreferrer">Primary Source: Google Gemini Function Calling Documentation</a>).</p>
-      <p><strong>Vulnerability:</strong> Tool Confusion & Sensitive Data Disclosure (OWASP LLM07 / CWE-20).</p>
+      <h2>Gemini 2.0 Flash Tool Schema Argument Confusion [LAB SPECIMEN]</h2>
+      <p><strong>Status & Evidence:</strong> Quarantined Laboratory Failure Specimen (<a href="https://cwe.mitre.org/data/definitions/20.html" target="_blank" rel="noopener noreferrer">Standard: CWE-20</a> / <a href="https://genai.owasp.org/llmrisk/llm07-system-prompt-leakage/" target="_blank" rel="noopener noreferrer">OWASP LLM07</a>).</p>
+      <p><strong>Vulnerability:</strong> Tool Confusion & Sensitive Data Disclosure.</p>
       <p><strong>Root Cause:</strong> Ambiguous function schemas with overlapping arguments caused hallucinated tool parameter assignments.</p>
       <p><strong>How SPE Prevents It:</strong> SPE 6-Clause Execution Contract enforces deterministic schema validation before dispatch.</p>
       <pre>$ spe test-tools --schema tools.json --enforce-type-guards</pre>

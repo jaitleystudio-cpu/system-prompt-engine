@@ -321,12 +321,12 @@ export const AiIncidentWire: React.FC<Props> = ({ onNavigate }) => {
                           fontWeight: 600,
                           padding: "2px 8px",
                           borderRadius: "4px",
-                          background: inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "rgba(239, 68, 68, 0.15)" : "rgba(56, 189, 248, 0.15)",
-                          color: inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "#f87171" : "#38bdf8",
-                          border: `1px solid ${inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "rgba(239, 68, 68, 0.3)" : "rgba(56, 189, 248, 0.3)"}`,
+                          background: "rgba(245, 158, 11, 0.15)",
+                          color: "#fbbf24",
+                          border: "1px solid rgba(245, 158, 11, 0.3)",
                         }}
                       >
-                        {inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "CONFIRMED INCIDENT" : "LAB REPRODUCER"}
+                        [LAB BENCHMARK SPECIMEN · QUARANTINED (NOINDEX)]
                       </span>
                       <span style={{ fontSize: "0.75rem", color: "#64748b" }}>
                         ID: {inc.id} · {inc.date}
@@ -463,13 +463,13 @@ export const AiIncidentWire: React.FC<Props> = ({ onNavigate }) => {
                             style={{
                               padding: "2px 6px",
                               borderRadius: "4px",
-                              background: inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "rgba(16, 185, 129, 0.15)" : "rgba(147, 51, 234, 0.15)",
-                              color: inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "#34d399" : "#c084fc",
-                              border: `1px solid ${inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "rgba(16, 185, 129, 0.3)" : "rgba(147, 51, 234, 0.3)"}`,
+                              background: "rgba(245, 158, 11, 0.15)",
+                              color: "#fbbf24",
+                              border: "1px solid rgba(245, 158, 11, 0.3)",
                               fontWeight: 600,
                             }}
                           >
-                            {inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "CONFIRMED INCIDENT POSTMORTEM" : "REPRODUCIBLE FORENSIC SPECIMEN"}
+                            LABORATORY FAILURE SPECIMEN (QUARANTINED)
                           </span>
                           {onNavigate && (
                             <button

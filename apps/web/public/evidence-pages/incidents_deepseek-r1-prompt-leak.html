@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeepSeek R1/V3 Reasoning Prompt Leak Forensic Post-Mortem | SPE Incident Wire</title>
   <meta name="description" content="Empirical root-cause analysis and minimal reproducer payload for DeepSeek R1 prompt extraction inside reasoning scratchpads.">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://systempromptengine.com/incidents/deepseek-r1-prompt-leak">
   <meta property="og:title" content="DeepSeek R1/V3 Reasoning Prompt Leak Forensic Post-Mortem | SPE Incident Wire">
   <meta property="og:description" content="Empirical root-cause analysis and minimal reproducer payload for DeepSeek R1 prompt extraction inside reasoning scratchpads.">
@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/deepseek-r1-prompt-leak</span>
     </nav>
     <header>
-      <span class="badge">CONFIRMED_INCIDENT_POSTMORTEM &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">LAB_REPRODUCED_BENCHMARK &bull; LABORATORY_FAILURE_SPECIMEN</span>
       <h1>DeepSeek R1/V3 Reasoning Prompt Leak Forensic Post-Mortem</h1>
       <p class="lead">Empirical root-cause analysis and minimal reproducer payload for DeepSeek R1 prompt extraction inside reasoning scratchpads.</p>
     </header>
@@ -59,9 +59,9 @@
     <main>
       <div class="box">
         
-      <h2>DeepSeek R1 / V3 Reasoning Scratchpad Prompt Leak</h2>
-      <p><strong>Status & Evidence:</strong> Confirmed Real-World Incident (<a href="https://github.com/deepseek-ai/DeepSeek-V3/issues/184" target="_blank" rel="noopener noreferrer">Primary Source: GitHub Issue #184</a>).</p>
-      <p><strong>Vulnerability:</strong> Confidentiality Leak & System Boundary Bypass (OWASP LLM02 / CWE-200).</p>
+      <h2>DeepSeek R1 / V3 Reasoning Scratchpad Prompt Leak [LAB SPECIMEN]</h2>
+      <p><strong>Status & Evidence:</strong> Quarantined Laboratory Failure Specimen (<a href="https://genai.owasp.org/llmrisk/llm02-sensitive-information-disclosure/" target="_blank" rel="noopener noreferrer">Standard: OWASP LLM02</a> / <a href="https://cwe.mitre.org/data/definitions/200.html" target="_blank" rel="noopener noreferrer">CWE-200</a>).</p>
+      <p><strong>Vulnerability:</strong> Confidentiality Leak & System Boundary Bypass.</p>
       <p><strong>Root Cause:</strong> Lack of token-level confidentiality masking between internal &lt;think&gt; reasoning buffers and output streams.</p>
       <p><strong>How SPE Prevents It:</strong> SPE ProtectedIntent compiles an epistemic firewall that scrubs reasoning buffers before delivery.</p>
       <pre>$ spe redteam prompt.md --attack prompt-extraction --strict</pre>

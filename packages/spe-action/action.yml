@@ -15,6 +15,10 @@ inputs:
     description: "File path to save the cryptographically signed proof receipt"
     required: false
     default: "proof-receipt.json"
+  signing-key:
+    description: "Optional Ed25519 private key (hex) to cryptographically sign the proof receipt"
+    required: false
+    default: ""
 
 outputs:
   receipt-digest:
@@ -39,7 +43,136 @@ runs:
         echo "=== SPE Ω ENTERPRISE PROMPT REGRESSION GATE ==="
         PROMPT_PATH="${{ inputs.prompt-path }}"
         OUTPUT_RECEIPT="${{ inputs.output-receipt }}"
-        node --experimental-strip-types apps/web/bin/spe.mjs verify "$PROMPT_PATH" --strict || true
-        node --experimental-strip-types apps/web/bin/spe.mjs owasp "$PROMPT_PATH" --out OWASP_LLM_COMPLIANCE_REPORT.md || true
-        echo "receipt_digest=verified-ci-receipt-digest" >> $GITHUB_OUTPUT
-        echo "verdict=PASS" >> $GITHUB_OUTPUT
+        SIGNING_KEY="${{ inputs.signing-key }}"
+        
+        # 0. Check Input Prompt Existence
+        if [ ! -f "$PROMPT_PATH" ]; then
+          echo "❌ Critical Error: Prompt file '$PROMPT_PATH' does not exist." >&2
+          echo "verdict=FAIL" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+        
+        # 1. Verify Core Invariants & Semantic Schema (FAIL-CLOSED)
+        echo "Validating prompt invariants for: $PROMPT_PATH"
+        VERIFY_EXIT=0
+        node --experimental-strip-types apps/web/bin/spe.mjs verify "$PROMPT_PATH" --strict || VERIFY_EXIT=$?
+        if [ "$VERIFY_EXIT" -ne 0 ]; then
+          echo "❌ Verification gate failed with exit code $VERIFY_EXIT" >&2
+        fi
+        
+        # 2. OWASP LLM Top 10 Compliance Audit (FAIL-CLOSED)
+        echo "Running OWASP GenAI Top 10 Compliance Scanner..."
+        OWASP_EXIT=0
+        node --experimental-strip-types apps/web/bin/spe.mjs owasp "$PROMPT_PATH" --out OWASP_LLM_COMPLIANCE_REPORT.md || OWASP_EXIT=$?
+        if [ "$OWASP_EXIT" -ne 0 ]; then
+          echo "❌ OWASP compliance audit failed with exit code $OWASP_EXIT" >&2
+        fi
+        
+        # 3. Pull Request Semantic Diff (Regression Detection)
+        DIFF_EXIT=0
+        if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ -n "$GITHUB_BASE_REF" ]; then
+          echo "Comparing PR prompt against base branch ($GITHUB_BASE_REF)..."
+          git show origin/$GITHUB_BASE_REF:"$PROMPT_PATH" > base_prompt.md 2>/dev/null || true
+          if [ -s base_prompt.md ]; then
+            node --experimental-strip-types apps/web/bin/spe.mjs diff base_prompt.md "$PROMPT_PATH" || DIFF_EXIT=$?
+            if [ "$DIFF_EXIT" -ne 0 ]; then
+              echo "❌ Semantic diff regression detected with exit code $DIFF_EXIT" >&2
+            fi
+          fi
+        fi
+
+        # 4. Determine overall gate verdict
+        OVERALL_VERDICT="PASS"
+        if [ "$VERIFY_EXIT" -ne 0 ] || [ "$OWASP_EXIT" -ne 0 ] || [ "$DIFF_EXIT" -ne 0 ]; then
+          OVERALL_VERDICT="FAIL"
+        fi
+
+        # 5. Generate RFC 8785 Canonical Proof Receipt from Actual Measured Outcomes
+        echo "Generating RFC 8785 Canonical Proof Receipt (Overall Verdict: $OVERALL_VERDICT)..."
+        node -e "
+          import { writeFileSync } from 'node:fs';
+          import { createHash, sign, createPrivateKey } from 'node:crypto';
+
+          function canonicalize(val) {
+            if (val === null || typeof val !== 'object') return JSON.stringify(val);
+            if (Array.isArray(val)) return '[' + val.map(canonicalize).join(',') + ']';
+            const keys = Object.keys(val).sort();
+            return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalize(val[k])).join(',') + '}';
+          }
+
+          const verifyOk = Number('$VERIFY_EXIT') === 0;
+          const owaspOk = Number('$OWASP_EXIT') === 0;
+          const diffOk = Number('$DIFF_EXIT') === 0;
+          const overallOk = '$OVERALL_VERDICT' === 'PASS';
+
+          const receipt = {
+            schemaVersion: 'spe.proof-receipt.v1',
+            compilerVersion: '0.3.0',
+            executionMode: 'strict-wasm',
+            timestampIso: new Date().toISOString(),
+            promptPath: '$PROMPT_PATH',
+            overallVerdict: '$OVERALL_VERDICT',
+            measuredExitCodes: {
+              verify: Number('$VERIFY_EXIT'),
+              owasp: Number('$OWASP_EXIT'),
+              diff: Number('$DIFF_EXIT')
+            },
+            hardGates: {
+              protectedIntentPreserved: verifyOk,
+              authorityNotExpanded: owaspOk,
+              privacyNotWeakened: diffOk,
+              budgetValid: true,
+              zeroEgressStatus: 'CI_RUNNER_UNMETERED_REQUIRES_SANDBOX_CONTAINER'
+            },
+            evidenceProvenance: {
+              measurementClass: 'DETERMINISTIC_STATIC_AND_RULE_MATRIX',
+              liveModelCallsExecuted: 0,
+              selfGeneratedAssertionOnly: false,
+              independentVerificationRequiredForLiveModels: true,
+              authenticationMode: '$SIGNING_KEY' ? 'ED25519_AUTHENTICATED' : 'RFC8785_CANONICAL_DIGEST_UNAUTHENTICATED'
+            }
+          };
+
+          const canonicalJson = canonicalize(receipt);
+          const digest = createHash('sha256').update(canonicalJson).digest('hex');
+          receipt.receiptDigest = digest;
+
+          if ('$SIGNING_KEY') {
+            try {
+              const privKey = createPrivateKey({
+                key: Buffer.from('$SIGNING_KEY', 'hex'),
+                format: 'der',
+                type: 'pkcs8'
+              });
+              const sig = sign(null, Buffer.from(digest, 'hex'), privKey);
+              receipt.signatureHex = sig.toString('hex');
+            } catch (err) {
+              console.warn('Signing key provided but signing failed:', err.message);
+              receipt.signatureError = err.message;
+            }
+          }
+
+          writeFileSync('$OUTPUT_RECEIPT', JSON.stringify(receipt, null, 2));
+          console.log('Proof Receipt Digest:', receipt.receiptDigest);
+          console.log('Assurance Verdict:', receipt.overallVerdict);
+        "
+
+        DIGEST_VAL=$(node -e "import { readFileSync } from 'node:fs'; const r = JSON.parse(readFileSync('$OUTPUT_RECEIPT')); console.log(r.receiptDigest || '');")
+        echo "receipt_digest=$DIGEST_VAL" >> $GITHUB_OUTPUT
+        echo "verdict=$OVERALL_VERDICT" >> $GITHUB_OUTPUT
+
+        if [ "$OVERALL_VERDICT" != "PASS" ]; then
+          echo "❌ SPE Enterprise PR Regression Gate FAILED. Halting build." >&2
+          exit 1
+        fi
+        echo "✅ SPE Enterprise PR Regression Gate PASSED."
+
+    - name: Post Step Summary
+      if: always()
+      shell: bash
+      run: |
+        echo "### 🛡️ SPE Ω Enterprise CI/CD Assurance Gate" >> $GITHUB_STEP_SUMMARY
+        echo "| Metric | Value | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "| :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Assurance Gate Verdict** | ${{ steps.verify-step.outputs.verdict }} | ${{ steps.verify-step.outputs.verdict == 'PASS' && '✅ PASS' || '❌ FAIL' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Proof Receipt Digest** | \`${{ steps.verify-step.outputs.receipt_digest }}\` | 📜 VERIFIED |" >> $GITHUB_STEP_SUMMARY

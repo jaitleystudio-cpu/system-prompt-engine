@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenAI o3-mini Negated Polarity Inversion Post-Mortem | SPE Incident Wire</title>
   <meta name="description" content="Forensic analysis of OpenAI o3-mini inverting regulatory floor requirements ("no less than $100") into ceilings under speculative reasoning.">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://systempromptengine.com/incidents/openai-o3-negation-collapse">
   <meta property="og:title" content="OpenAI o3-mini Negated Polarity Inversion Post-Mortem | SPE Incident Wire">
   <meta property="og:description" content="Forensic analysis of OpenAI o3-mini inverting regulatory floor requirements ("no less than $100") into ceilings under speculative reasoning.">
@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/openai-o3-negation-collapse</span>
     </nav>
     <header>
-      <span class="badge">REPRODUCIBLE_FORENSIC_SPECIMEN &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">LAB_REPRODUCED_BENCHMARK &bull; LABORATORY_FAILURE_SPECIMEN</span>
       <h1>OpenAI o3-mini Negated Polarity Inversion Post-Mortem</h1>
       <p class="lead">Forensic analysis of OpenAI o3-mini inverting regulatory floor requirements ("no less than $100") into ceilings under speculative reasoning.</p>
     </header>
@@ -59,9 +59,9 @@
     <main>
       <div class="box">
         
-      <h2>OpenAI o3-mini Negated Inequality Polarity Inversion</h2>
-      <p><strong>Status & Evidence:</strong> Reproducible Lab Benchmark (<a href="https://openai.com/index/openai-o3-system-card/" target="_blank" rel="noopener noreferrer">Primary Source: OpenAI o3 System Card</a>).</p>
-      <p><strong>Vulnerability:</strong> Excessive Agency & Propositional Polarity Collapse (OWASP LLM08 / CWE-697).</p>
+      <h2>OpenAI o3-mini Negated Inequality Polarity Inversion [LAB SPECIMEN]</h2>
+      <p><strong>Status & Evidence:</strong> Quarantined Laboratory Failure Specimen (<a href="https://cwe.mitre.org/data/definitions/697.html" target="_blank" rel="noopener noreferrer">Standard: CWE-697</a> / <a href="https://genai.owasp.org/llmrisk/llm08-excessive-agency/" target="_blank" rel="noopener noreferrer">OWASP LLM08</a>).</p>
+      <p><strong>Vulnerability:</strong> Excessive Agency & Propositional Polarity Collapse.</p>
       <p><strong>Root Cause:</strong> Tokenization of negated compounds drops negative particles during semantic compression, converting $x \ge 100$ into $x < 100$.</p>
       <p><strong>How SPE Prevents It:</strong> SPE 9-tier operator extraction precedence guarantees negated floor phrasing resolves to FLOOR / INCLUSIVE.</p>
       <pre>$ spe verify financial_contract.spe --fail-on-inversion</pre>

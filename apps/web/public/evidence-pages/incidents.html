@@ -60,14 +60,14 @@
       <div class="box">
         
       <h2>AI Incident Radar & Failure Observatory</h2>
-      <p>The open, forensic truth behind breaking AI model failures, prompt leaks, jailbreaks, and agent catastrophes. Backed by reproducible test code, primary source issue traces, and mathematical root causes.</p>
+      <p>The open, forensic truth behind breaking AI model failures, prompt leaks, jailbreaks, and agent catastrophes. Quarantined laboratory specimens backed by reproducible test code and mapped to authoritative security standards.</p>
       <ul>
-        <li><strong>DeepSeek R1/V3:</strong> Raw reasoning scratchpad prompt leaks in &lt;think&gt; streams (<a href="https://github.com/deepseek-ai/DeepSeek-V3/issues/184" target="_blank" rel="noopener noreferrer">Issue #184</a>).</li>
-        <li><strong>OpenAI o3-mini:</strong> Negated inequality polarity inversion under speculative reasoning (<a href="https://openai.com/index/openai-o3-system-card/" target="_blank" rel="noopener noreferrer">System Card</a>).</li>
-        <li><strong>Claude Code:</strong> Unconstrained path traversal and recursive file deletion (<a href="https://github.com/anthropics/claude-code/issues/412" target="_blank" rel="noopener noreferrer">Issue #412</a>).</li>
-        <li><strong>Gemini 2.0 Flash:</strong> Tool schema argument confusion in multi-step workflows (<a href="https://ai.google.dev/gemini-api/docs/function-calling" target="_blank" rel="noopener noreferrer">Tool Documentation</a>).</li>
-        <li><strong>Autonomous Coding Agents:</strong> Infinite retry loops and $4,800 compute runaways (<a href="https://forum.cursor.com/t/agent-infinite-loop-cost-post-mortem/14820" target="_blank" rel="noopener noreferrer">Post-Mortem #14820</a>).</li>
-        <li><strong>Llama 3 70B:</strong> Financial invariant mutation and currency symbol drifts (<a href="https://github.com/meta-llama/llama3/issues/298" target="_blank" rel="noopener noreferrer">Issue #298</a>).</li>
+        <li><strong>DeepSeek R1/V3:</strong> Raw reasoning scratchpad prompt leaks in &lt;think&gt; streams (<a href="https://genai.owasp.org/llmrisk/llm02-sensitive-information-disclosure/" target="_blank" rel="noopener noreferrer">OWASP LLM02</a> / <a href="https://cwe.mitre.org/data/definitions/200.html" target="_blank" rel="noopener noreferrer">CWE-200</a>).</li>
+        <li><strong>OpenAI o3-mini:</strong> Negated inequality polarity inversion under speculative reasoning (<a href="https://cwe.mitre.org/data/definitions/697.html" target="_blank" rel="noopener noreferrer">CWE-697</a> / <a href="https://genai.owasp.org/llmrisk/llm08-excessive-agency/" target="_blank" rel="noopener noreferrer">OWASP LLM08</a>).</li>
+        <li><strong>Claude Code:</strong> Unconstrained path traversal and recursive file deletion (<a href="https://cwe.mitre.org/data/definitions/732.html" target="_blank" rel="noopener noreferrer">CWE-732</a> / <a href="https://genai.owasp.org/llmrisk/llm08-excessive-agency/" target="_blank" rel="noopener noreferrer">OWASP LLM08</a>).</li>
+        <li><strong>Gemini 2.0 Flash:</strong> Tool schema argument confusion in multi-step workflows (<a href="https://cwe.mitre.org/data/definitions/20.html" target="_blank" rel="noopener noreferrer">CWE-20</a> / <a href="https://genai.owasp.org/llmrisk/llm07-system-prompt-leakage/" target="_blank" rel="noopener noreferrer">OWASP LLM07</a>).</li>
+        <li><strong>Autonomous Coding Agents:</strong> Infinite retry loops and compute runaways (<a href="https://cwe.mitre.org/data/definitions/835.html" target="_blank" rel="noopener noreferrer">CWE-835</a> / <a href="https://genai.owasp.org/llmrisk/llm10-unbounded-consumption/" target="_blank" rel="noopener noreferrer">OWASP LLM10</a>).</li>
+        <li><strong>Llama 3 70B:</strong> Financial invariant mutation and currency symbol drifts (<a href="https://cwe.mitre.org/data/definitions/697.html" target="_blank" rel="noopener noreferrer">CWE-697</a> / <a href="https://genai.owasp.org/llmrisk/llm08-excessive-agency/" target="_blank" rel="noopener noreferrer">OWASP LLM08</a>).</li>
       </ul>
       <pre>$ spe incident list</pre>
     

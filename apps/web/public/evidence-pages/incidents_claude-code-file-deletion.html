@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Claude Code Path Traversal & Recursive File Deletion Incident | SPE Incident Wire</title>
   <meta name="description" content="Empirical root cause analysis of Claude Code executing unconstrained shell commands outside project root boundaries.">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://systempromptengine.com/incidents/claude-code-file-deletion">
   <meta property="og:title" content="Claude Code Path Traversal & Recursive File Deletion Incident | SPE Incident Wire">
   <meta property="og:description" content="Empirical root cause analysis of Claude Code executing unconstrained shell commands outside project root boundaries.">
@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/claude-code-file-deletion</span>
     </nav>
     <header>
-      <span class="badge">CONFIRMED_INCIDENT_POSTMORTEM &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">LAB_REPRODUCED_BENCHMARK &bull; LABORATORY_FAILURE_SPECIMEN</span>
       <h1>Claude Code Path Traversal & Recursive File Deletion Incident</h1>
       <p class="lead">Empirical root cause analysis of Claude Code executing unconstrained shell commands outside project root boundaries.</p>
     </header>
@@ -59,9 +59,9 @@
     <main>
       <div class="box">
         
-      <h2>Claude Code Workspace Path Traversal Incident</h2>
-      <p><strong>Status & Evidence:</strong> Confirmed Real-World Incident (<a href="https://github.com/anthropics/claude-code/issues/412" target="_blank" rel="noopener noreferrer">Primary Source: Anthropic Claude Code Issue #412</a>).</p>
-      <p><strong>Vulnerability:</strong> Ambient Authority Escalation (OWASP LLM08 / CWE-732).</p>
+      <h2>Claude Code Workspace Path Traversal Incident [LAB SPECIMEN]</h2>
+      <p><strong>Status & Evidence:</strong> Quarantined Laboratory Failure Specimen (<a href="https://cwe.mitre.org/data/definitions/732.html" target="_blank" rel="noopener noreferrer">Standard: CWE-732</a> / <a href="https://genai.owasp.org/llmrisk/llm08-excessive-agency/" target="_blank" rel="noopener noreferrer">OWASP LLM08</a>).</p>
+      <p><strong>Vulnerability:</strong> Ambient Authority Escalation.</p>
       <p><strong>Root Cause:</strong> Unconstrained shell tool dispatch permitted recursive directory deletion commands above the project root.</p>
       <p><strong>How SPE Prevents It:</strong> SPE PermissionCeiling halts any command referencing parent paths (../) or destructive deletion patterns.</p>
       <pre>$ spe check-scope --path . --disallow-parent-traversal</pre>

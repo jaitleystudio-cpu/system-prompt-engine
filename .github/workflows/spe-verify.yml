@@ -30,12 +30,13 @@ jobs:
           strict: "true"
           output-receipt: "proof-receipt.json"
 
-      - name: Verify Signed Receipt & Egress Invariants
+      - name: Verify Signed Receipt & Measured Invariants
         run: |
-          echo "Verifying RFC 8785 canonical hash and zero-egress invariants..."
+          echo "Verifying RFC 8785 canonical hash and measured gate invariants..."
           test -f proof-receipt.json
-          grep -q "OBSERVED_ZERO_EGRESS" proof-receipt.json
-          echo "Receipt cryptographic integrity verified."
+          grep -q '"overallVerdict": "PASS"' proof-receipt.json
+          grep -q '"protectedIntentPreserved": true' proof-receipt.json
+          echo "Receipt cryptographic integrity and measured PASS verified."
 
       - name: Archive Compliance & Proof Artifacts
         uses: actions/upload-artifact@v4
