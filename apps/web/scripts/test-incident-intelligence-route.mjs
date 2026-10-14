@@ -26,7 +26,7 @@ assert.doesNotMatch(sitemap, /<loc>[^<]*\/ai-incidents/);
 assert.match(faq, /view="incidents"/);
 
 assert.match(page, /data-publication-state="NOT_QUALIFIED"/);
-assert.match(page, /<PrivateFailureIntake\s*\/>/);
+assert.match(page, /<PrivateFailureIntake\b[^>]*onDraftRepair=/);
 assert.match(intake, /data-intake-scope="LOCAL_ONLY_UNVERIFIED"/);
 assert.match(page, /data-source-connection="NOT_ACTIVATED"/);
 assert.match(page, /No qualified incident brief is available yet/);
