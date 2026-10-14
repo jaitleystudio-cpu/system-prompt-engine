@@ -42,6 +42,10 @@ jobs:
         with:
           node-version: 22
       - run: npm --prefix apps/web ci
+      - name: Verify noindex AI Incident Intelligence architecture
+        run: npm --prefix apps/web run test:incident-intelligence
+      - name: Typecheck SPE web app and new incident route
+        run: npm --prefix apps/web exec -- tsc --noEmit
       - name: Verify Canonical WASM Hash
         run: |
           node --input-type=module -e '
