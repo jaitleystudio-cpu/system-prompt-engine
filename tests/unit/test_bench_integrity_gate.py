@@ -126,3 +126,17 @@ def test_forged_weights_receipt_does_not_create_observed_claim():
             evidence_class="OBSERVED_LOCAL",
             verified_weights_receipt={"fake": "not-an-attestation"},
         )
+
+
+def test_cli_bench_is_honest_about_unverified_execution(capsys):
+    from argparse import Namespace
+    from spe_runtime.cli.main import cmd_bench
+
+    assert cmd_bench(Namespace()) == 0
+    output = capsys.readouterr().out
+    assert "SPE-BENCH Ω EXECUTION" in output
+    assert "Oracle Evidence:" in output
+    assert "DETERMINISTIC" in output
+    assert "UNVERIFIED_RUN" in output
+    assert "NOT_ADJUDICATED" in output
+    assert "100% verified evidence" not in output
