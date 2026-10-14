@@ -11,6 +11,7 @@ const route = read("src/routing.ts");
 const app = read("src/App.tsx");
 const page = read("src/pages/IncidentIntelligence.tsx");
 const style = read("src/pages/incident-intelligence.css");
+const intake = read("src/pages/PrivateFailureIntake.tsx");
 const robots = read("public/robots.txt");
 const sitemap = read("public/sitemap.xml");
 const faq = read("src/pages/Capabilities.tsx");
@@ -25,6 +26,8 @@ assert.doesNotMatch(sitemap, /<loc>[^<]*\/ai-incidents/);
 assert.match(faq, /view="incidents"/);
 
 assert.match(page, /data-publication-state="NOT_QUALIFIED"/);
+assert.match(page, /<PrivateFailureIntake\s*\/>/);
+assert.match(intake, /data-intake-scope="LOCAL_ONLY_UNVERIFIED"/);
 assert.match(page, /data-source-connection="NOT_ACTIVATED"/);
 assert.match(page, /No qualified incident brief is available yet/);
 assert.match(page, /No continuously running incident feed/);
