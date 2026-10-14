@@ -505,15 +505,27 @@ const fileKeyLicensePath = join(tempDir, "file_key.license");
 const licFileIssueOut = runCli(`license issue --customer "File Key Corp" --tier PRO --days 30 --signing-key-file "${testKeyFilePath}" --test-mode --out "${fileKeyLicensePath}"`);
 assert(licFileIssueOut.includes("Signed offline license token written to"), "Keyfile issuance failed");
 
-// Positive Gate B: Checking with explicit trusted key under quarantined --test-mode matches and annotates emulator
-const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}" --test-mode`);
-assert(licCheckOut.includes("License check passed for tier ENTERPRISE"), "License capability check failed");
+// Negative Gate 2C: Checking test-emulated license via commercial check without --verify-test MUST fail closed (CWE-285)
+try {
+  runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}" --test-mode`);
+  assert(false, "Should have rejected test-emulated license from commercial production authorization");
+} catch (e) {
+  assert(e.message.includes("Commercial Entitlement Check Denied") || e.message.includes("Command failed"), "Expected denial of test license in commercial check");
+}
+
+// Positive Gate B: Cryptographic test verification succeeds with --verify-test flag
+const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}" --test-mode --verify-test`);
+assert(licCheckOut.includes("Cryptographic test verification passed"), "License capability test verification failed");
 assert(licCheckOut.includes("TEST_DEV_EMULATED"), "Must annotate that check ran under test authority emulator");
+
+// Positive Gate B2: Dedicated license verify-test subaction succeeds
+const licVerifySubactionOut = runCli(`license verify-test --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}" --test-mode`);
+assert(licVerifySubactionOut.includes("Cryptographic test verification passed"), "Dedicated verify-test subaction failed");
 
 const licVerifiedStatusOut = runCli(`license status --key "${licenseToken}" --trusted-key "${testPkHex}" --test-mode`);
 assert(licVerifiedStatusOut.includes("ACTIVE (VERIFIED)") && licVerifiedStatusOut.includes("Battery Test Corp"), "Active license status verification failed");
 assert(licVerifiedStatusOut.includes("TEST_OVERRIDE_EMULATOR"), "Must indicate test override authority in status");
-console.log("  ✓ commercial license status, issue, check, revoked-key blocking, and trust quarantine verified");
+console.log("  ✓ commercial license status, issue, check, revoked-key blocking, test gate denial, and trust quarantine verified");
 
 // 44. Incident Radar & Failure Observatory
 console.log("\n[44/44] Testing incident list, inspect, and check");

@@ -1269,11 +1269,39 @@ def cmd_license(args: argparse.Namespace) -> int:
         if not res["valid"]:
             print(f"❌ License Check Failed: {res.get('error')}", file=sys.stderr)
             return 1
+        is_verify_test_mode = getattr(args, "verify_test", False) or getattr(args, "verify_test_only", False)
+        if not res.get("production_qualified", False):
+            if is_verify_test_mode:
+                print(f"⚠️  [TEST_DEV_EMULATED] Key cryptographically verified under test authority (productionQualified: false).")
+                print(f"✓ Cryptographic test verification passed for tier {res['plan_tier']}")
+                return 0
+            else:
+                print(f"⚠️  [TEST_DEV_EMULATED] Key verified under custom test authority: NOT qualified for production licensing.", file=sys.stderr)
+                print(f"❌ Commercial Entitlement Check Denied: Test/emulated licenses cannot authorize commercial production gates (CWE-285).", file=sys.stderr)
+                print(f"To verify cryptographic signature for isolated offline testing without commercial authorization, use: spe license verify-test or pass --verify-test", file=sys.stderr)
+                return 1
         cap = getattr(args, "capability", None)
         if cap and cap not in res["capabilities"]:
             print(f"❌ License Missing Required Capability: '{cap}'", file=sys.stderr)
             return 1
         print(f"✓ License check passed for tier {res['plan_tier']}")
+        return 0
+
+    if action == "verify-test":
+        token = _resolve_token()
+        if not token:
+            print("❌ Test License Verification Failed: Missing license token", file=sys.stderr)
+            return 1
+        res = CommercialLicensingAdapter.verify_license(token)
+        if not res["valid"]:
+            print(f"❌ Test License Verification Failed: {res.get('error')}", file=sys.stderr)
+            return 1
+        cap = getattr(args, "capability", None)
+        if cap and cap not in res["capabilities"]:
+            print(f"❌ Test License Missing Required Capability: '{cap}'", file=sys.stderr)
+            return 1
+        print(f"⚠️  [TEST_DEV_EMULATED] Key cryptographically verified under test authority (productionQualified: false).")
+        print(f"✓ Cryptographic test verification passed for tier {res['plan_tier']}")
         return 0
 
     print(f"Error: Unknown action '{action}'", file=sys.stderr)
@@ -1467,13 +1495,14 @@ def main(argv: list[str] | None = None) -> int:
 
     # license
     p_license = subparsers.add_parser("license", help="Manage SPE commercial license, verify offline entitlements, and check expiry")
-    p_license.add_argument("action", nargs="?", default="status", choices=["status", "activate", "check", "issue"], help="License action")
+    p_license.add_argument("action", nargs="?", default="status", choices=["status", "activate", "check", "issue", "verify-test"], help="License action")
     p_license.add_argument("token", nargs="?", default=None, help="License token or path to file for activate")
     p_license.add_argument("--key", dest="key", help="License token")
     p_license.add_argument("--customer", default="Acme AI Labs", help="Customer ID for license issuance")
     p_license.add_argument("--tier", default="ENTERPRISE", help="Plan tier (PRO, TEAM, ENTERPRISE)")
     p_license.add_argument("--days", type=int, default=365, help="Validity duration in days")
     p_license.add_argument("--capability", help="Specific capability to check")
+    p_license.add_argument("--verify-test", action="store_true", help="Perform cryptographic test verification on emulated keys")
     p_license.add_argument("--out", help="Output file path for issued license")
     p_license.add_argument("--json", action="store_true", help="Output raw JSON")
 

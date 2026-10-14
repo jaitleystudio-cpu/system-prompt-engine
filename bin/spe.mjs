@@ -1314,10 +1314,45 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           process.exit(1);
         }
 
-        if (verification.isTestEmulated) {
-          console.log(yellow(`⚠️  [TEST_DEV_EMULATED] Key verified under custom test authority: NOT qualified for production licensing.`));
+        // Strict separation: Production Commercial Authorization Gate vs Cryptographic Test Verification (CWE-285)
+        const isVerifyTestMode = Boolean(flags["verify-test"] || flags["--verify-test"] || flags["verify-test-only"]);
+        if (!verification.productionQualified) {
+          if (isVerifyTestMode) {
+            console.log(yellow(`⚠️  [TEST_DEV_EMULATED] Key cryptographically verified under test authority (productionQualified: false).`));
+            console.log(green(`✓ Cryptographic test verification passed for tier ${verification.payload.plan_tier} (${verification.daysRemaining} days remaining)`));
+            break;
+          } else {
+            console.error(yellow(`\n⚠️  [TEST_DEV_EMULATED] Key verified under custom test authority: NOT qualified for production licensing.`));
+            console.error(red(`❌ Commercial Entitlement Check Denied: Test/emulated licenses cannot authorize commercial production gates (CWE-285).`));
+            console.error(gray(`To verify cryptographic signature for isolated offline testing without commercial authorization, use: spe license verify-test or pass --verify-test`));
+            process.exit(1);
+          }
         }
+
         console.log(green(`✓ License check passed for tier ${verification.payload.plan_tier} (${verification.daysRemaining} days remaining)`));
+        break;
+      }
+
+      if (subAction === 'verify-test') {
+        const token = getInstalledToken();
+        const verification = verifyCommercialLicenseToken(token || '', {
+          trustedPublicKeyHex: flags["trusted-key"] || flags["--trusted-key"],
+          allowCustomSigner: Boolean(flags["allow-custom-signer"] || flags["--allow-custom-signer"]),
+        });
+        const targetCap = flags.capability;
+
+        if (!verification.valid) {
+          console.error(red(`\n❌ Test License Verification Failed: ${verification.rejectionReason || 'Invalid test signature'}`));
+          process.exit(1);
+        }
+
+        if (targetCap && !verification.unlockedCapabilities.includes(targetCap)) {
+          console.error(red(`\n❌ Test License Missing Required Capability: '${targetCap}'`));
+          process.exit(1);
+        }
+
+        console.log(yellow(`\n⚠️  [TEST_DEV_EMULATED] Key cryptographically verified under test authority (productionQualified: false).`));
+        console.log(green(`✓ Cryptographic test verification passed for tier ${verification.payload.plan_tier} (${verification.daysRemaining} days remaining)`));
         break;
       }
 
@@ -1412,7 +1447,7 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
         break;
       }
 
-      console.error(red(`Error: Unknown license subaction '${subAction}'. Available: status, activate, check, issue.`));
+      console.error(red(`Error: Unknown license subaction '${subAction}'. Available: status, activate, check, issue, verify-test.`));
       process.exit(1);
     }
 

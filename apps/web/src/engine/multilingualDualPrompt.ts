@@ -418,31 +418,21 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       );
       operatorPhrase = m ? m[0].toLowerCase() : "<=";
     }
-    // 4. Exact Equality: "exactly", "strictly equal to", isolated "equal to", "="
-    else if (
-      /(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly)\b/i.test(clause) ||
-      /(?<![<>!=])=(?!=)/.test(clause)
-    ) {
-      constraintType = "EXACT";
-      boundary = "INCLUSIVE";
-      const m = clause.match(/(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly)\b/i);
-      operatorPhrase = m ? m[0].toLowerCase() : "exactly";
-    }
-    // 5. Positive / Idiomatic Floors (x >= V): "at least", "minimum", "min"
+    // 4. Positive / Idiomatic Floors (x >= V): "at least", "minimum", "min"
     else if (/\b(?:at\s+least|minimum|min\b)/i.test(clause)) {
       constraintType = "FLOOR";
       boundary = "INCLUSIVE";
       const m = clause.match(/\b(?:at\s+least|minimum|min\b)/i);
       operatorPhrase = m ? m[0].toLowerCase() : "at least";
     }
-    // 6. Positive / Idiomatic Ceilings (x <= V): "at most", "up to", "maximum", "max", "ceiling", "capped at", "cap"
+    // 5. Positive / Idiomatic Ceilings (x <= V): "at most", "up to", "maximum", "max", "ceiling", "capped at", "cap"
     else if (/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i.test(clause)) {
       constraintType = "CEILING";
       boundary = "INCLUSIVE";
       const m = clause.match(/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i);
       operatorPhrase = m ? m[0].toLowerCase() : "at most";
     }
-    // 7. Strict / Exclusive Floors (x > V): "strictly above", "strictly greater than", "strictly more than", "above", "more than", "greater than", "must exceed", ">"
+    // 6. Strict / Exclusive Floors (x > V): "strictly above", "strictly greater than", "strictly more than", "above", "more than", "greater than", "must exceed", ">"
     // Preceding negated forms (no more than, not greater than) were already consumed in Step 3.
     else if (
       /\b(?:strictly\s+above|strictly\s+greater\s+than|strictly\s+more\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed|exceeds?)\b/i.test(clause) ||
@@ -455,7 +445,7 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       );
       operatorPhrase = m ? m[0].toLowerCase() : ">";
     }
-    // 8. Strict / Exclusive Ceilings (x < V): "strictly below", "strictly under", "strictly less than", "below", "under", "less than", "<"
+    // 7. Strict / Exclusive Ceilings (x < V): "strictly below", "strictly under", "strictly less than", "below", "under", "less than", "<"
     // Preceding negated forms (no less than, not less than) were already consumed in Step 2.
     else if (
       /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i.test(clause) ||
@@ -467,6 +457,16 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
         /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : "<";
+    }
+    // 8. Exact Equality: "exactly", "strictly equal to", isolated "equal to", "must be", "shall be", "set to", "fixed at", "="
+    else if (
+      /(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly|fixed\s+at|set\s+to|must\s+be|shall\s+be|equals?)\b/i.test(clause) ||
+      /(?<![<>!=])=(?!=)/.test(clause)
+    ) {
+      constraintType = "EXACT";
+      boundary = "INCLUSIVE";
+      const m = clause.match(/(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly|fixed\s+at|set\s+to|must\s+be|shall\s+be|equals?)\b/i);
+      operatorPhrase = m ? m[0].toLowerCase() : "must be";
     }
     // 9. Fallback Idiomatic Ceilings without explicit comparator: "limit is", "limit of", "limit to"
     else if (/\b(?:limit\s+(?:is|of|to)?\b)/i.test(clause)) {
@@ -509,8 +509,17 @@ export function isOperatorCompatible(
   isInversion: boolean;
   reason?: string;
 } {
-  if (src.constraintType === "UNSPECIFIED" || op.constraintType === "UNSPECIFIED") {
+  // If neither side specified a directional or exact constraint, they are trivially compatible.
+  if (src.constraintType === "UNSPECIFIED" && op.constraintType === "UNSPECIFIED") {
     return { compatible: true, isInversion: false };
+  }
+  // If one side has a recognized constraint but the other is UNSPECIFIED, this is operator loss / collapse or ungrounded restriction
+  if (src.constraintType === "UNSPECIFIED" || op.constraintType === "UNSPECIFIED") {
+    return {
+      compatible: false,
+      isInversion: true,
+      reason: `Source specifies ${src.constraintType.toLowerCase()} constraint ('${src.operatorPhrase}'), but operative target has ${op.constraintType.toLowerCase()} operator ('${op.operatorPhrase}') resulting in operator collapse or ungrounded restriction`,
+    };
   }
   if (src.constraintType === op.constraintType) {
     if (
@@ -613,10 +622,46 @@ export const ECONOMIC_OBJECT_MODIFIERS = new Set([
   "debt", "debts",
 ]);
 
+/**
+ * Inflection-aware lemmatizer for economic and technical requirements.
+ * Maps regular English plurals (-s, -es, -ies) and key irregulars to their singular lemma,
+ * while preventing false unification of distinct economic objects (e.g. fee vs penalty).
+ */
+export function lemmatizeToken(t: string): string {
+  const lower = t.toLowerCase();
+  if (lower.length <= 2) return lower;
+  // Irregular plurals
+  if (lower === "feet") return "foot";
+  if (lower === "indices") return "index";
+  if (lower === "matrices") return "matrix";
+  // Regular plurals: -ies -> -y (penalties -> penalty, currencies -> currency, categories -> category)
+  if (lower.endsWith("ies") && lower.length > 4) {
+    return lower.slice(0, -3) + "y";
+  }
+  // -es (taxes -> tax, boxes -> box, losses -> loss, processes -> process)
+  if (lower.endsWith("es") && lower.length > 3) {
+    if (/(?:ch|sh|x|z|ss)es$/.test(lower)) {
+      return lower.slice(0, -2);
+    }
+    // fees -> fee (ends in e + s)
+    if (lower.endsWith("ees")) {
+      return lower.slice(0, -1);
+    }
+  }
+  // -s (fees -> fee, limits -> limit, days -> day, transfers -> transfer, transactions -> transaction, charges -> charge)
+  if (lower.endsWith("s") && !lower.endsWith("ss") && lower.length > 3) {
+    return lower.slice(0, -1);
+  }
+  return lower;
+}
+
 export function areTokensRelated(t1: string, t2: string): boolean {
   if (t1 === t2) return true;
-  if (t1.length >= 4 && t2.length >= 4) {
-    if (t1.startsWith(t2) || t2.startsWith(t1)) return true;
+  const l1 = lemmatizeToken(t1);
+  const l2 = lemmatizeToken(t2);
+  if (l1 === l2) return true;
+  if (l1.length >= 4 && l2.length >= 4) {
+    if (l1.startsWith(l2) || l2.startsWith(l1)) return true;
   }
   return false;
 }

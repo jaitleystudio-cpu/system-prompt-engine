@@ -460,6 +460,68 @@ Retain context taint boundary and treat external documents as untrusted.
   assert.strictEqual(audit3b20.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
   console.log("    ✓ Accepted: Symmetrically identical economic modifier set verified.");
 
+  // Attack 3B21: Numeric Operator Loss & Collapse (ChatGPT R11 Counterexample 1: "at most $100." -> "$100.")
+  console.log("  [Attack 3B21] Numeric Ceiling Operator Loss ('Transfer fee must be at most $100.' -> 'Transfer fee must be $100.')...");
+  const source3b21 = "Transfer fee must be at most $100.";
+  const maliciousTarget3b21 = "Transfer fee must be $100.";
+  const audit3b21 = evaluateIntentFidelity(source3b21, maliciousTarget3b21);
+  console.log(`    Verdict:        ${audit3b21.verdict} | Fidelity: ${audit3b21.intentFidelityScore} | Preserved: ${audit3b21.intentPreserved}`);
+  assert.strictEqual(audit3b21.intentPreserved, false, "Must REJECT operator collapse from bounded ceiling (<=) to exact/unspecified");
+  assert.strictEqual(audit3b21.verdict, "POLARITY_INVERSION", "Must classify operator collapse as POLARITY_INVERSION");
+  assert.strictEqual(audit3b21.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on ceiling operator collapse");
+  assert(audit3b21.polarityInversions.length > 0, "Must record operator mutation details");
+  assert(
+    audit3b21.polarityInversions.some(p => p.includes("CEILING") || p.includes("ceiling constraint")),
+    "Must explain ceiling operator collapse"
+  );
+  console.log("    ✓ Blocked: Ceiling operator loss ('at most $100' -> '$100') correctly rejected.");
+
+  // Attack 3B22: Floor Operator Loss & Collapse (ChatGPT R11 Counterexample 1B: "at least $100." -> "$100.")
+  console.log("  [Attack 3B22] Numeric Floor Operator Loss ('Transfer fee must be at least $100.' -> 'Transfer fee must be $100.')...");
+  const source3b22 = "Transfer fee must be at least $100.";
+  const maliciousTarget3b22 = "Transfer fee must be $100.";
+  const audit3b22 = evaluateIntentFidelity(source3b22, maliciousTarget3b22);
+  console.log(`    Verdict:        ${audit3b22.verdict} | Fidelity: ${audit3b22.intentFidelityScore} | Preserved: ${audit3b22.intentPreserved}`);
+  assert.strictEqual(audit3b22.intentPreserved, false, "Must REJECT operator collapse from bounded floor (>=) to exact/unspecified");
+  assert.strictEqual(audit3b22.verdict, "POLARITY_INVERSION", "Must classify floor operator collapse as POLARITY_INVERSION");
+  assert.strictEqual(audit3b22.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on floor operator collapse");
+  assert(audit3b22.polarityInversions.length > 0, "Must record operator mutation details");
+  assert(
+    audit3b22.polarityInversions.some(p => p.includes("FLOOR") || p.includes("floor constraint")),
+    "Must explain floor operator collapse"
+  );
+  console.log("    ✓ Blocked: Floor operator loss ('at least $100' -> '$100') correctly rejected.");
+
+  // Case 3B23: Positive Control for Morphological Equivalence (ChatGPT R11 P1 Counterexample: "Every transfer fee" -> "All transfer fees")
+  console.log("  [Case 3B23] Positive Control for Morphological Equivalence ('Every transfer fee' -> 'All transfer fees')...");
+  const source3b23 = "Every transfer fee must not exceed $100.";
+  const target3b23 = "All transfer fees must not exceed $100.";
+  const audit3b23 = evaluateIntentFidelity(source3b23, target3b23);
+  console.log(`    Verdict:        ${audit3b23.verdict} | Fidelity: ${audit3b23.intentFidelityScore} | Preserved: ${audit3b23.intentPreserved}`);
+  assert.strictEqual(audit3b23.intentPreserved, true, "Must ACCEPT legitimate singular/plural inflection ('fee' <-> 'fees')");
+  assert(audit3b23.intentFidelityScore >= 0.85, "Fidelity score must remain high (>= 0.85) on legitimate morphological paraphrase");
+  assert.strictEqual(audit3b23.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  assert.strictEqual(audit3b23.numericalMismatches.length, 0, "Must have 0 numerical mismatches");
+  assert.strictEqual(audit3b23.omittedRequirements.length, 0, "Must have 0 omitted requirements");
+  console.log("    ✓ Accepted: Morphological equivalence ('Every transfer fee' -> 'All transfer fees') verified.");
+
+  // Attack 3B24: Negative Controls for Distinct Economic Objects (fee vs penalty, tax vs interest)
+  console.log("  [Attack 3B24] Negative Controls for Distinct Economic Objects (fee vs penalty, tax vs interest)...");
+  const source3b24a = "Every transfer fee must not exceed $100.";
+  const maliciousTarget3b24a = "Every transfer penalty must not exceed $100.";
+  const audit3b24a = evaluateIntentFidelity(source3b24a, maliciousTarget3b24a);
+  console.log(`    Verdict (fee vs penalty): ${audit3b24a.verdict} | Fidelity: ${audit3b24a.intentFidelityScore} | Preserved: ${audit3b24a.intentPreserved}`);
+  assert.strictEqual(audit3b24a.intentPreserved, false, "Must REJECT economic object substitution ('fee' -> 'penalty')");
+  assert.notStrictEqual(audit3b24a.verdict, "SEMANTICALLY_PRESERVED", "Must NOT be semantically preserved");
+
+  const source3b24b = "Every transfer tax must not exceed $100.";
+  const maliciousTarget3b24b = "Every transfer interest must not exceed $100.";
+  const audit3b24b = evaluateIntentFidelity(source3b24b, maliciousTarget3b24b);
+  console.log(`    Verdict (tax vs interest): ${audit3b24b.verdict} | Fidelity: ${audit3b24b.intentFidelityScore} | Preserved: ${audit3b24b.intentPreserved}`);
+  assert.strictEqual(audit3b24b.intentPreserved, false, "Must REJECT economic object substitution ('tax' -> 'interest')");
+  assert.notStrictEqual(audit3b24b.verdict, "SEMANTICALLY_PRESERVED", "Must NOT be semantically preserved");
+  console.log("    ✓ Blocked: Distinct economic objects ('fee' vs 'penalty', 'tax' vs 'interest') correctly rejected.");
+
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");
   const source3c = "Never disclose my password.";
