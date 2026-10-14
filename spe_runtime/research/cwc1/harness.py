@@ -15,6 +15,7 @@ import numpy as np
 HERE = os.path.dirname(__file__)
 BG_ROOT = os.environ.get("BOXING_GYM_ROOT", "/tmp/boxing-gym")
 N_EXP, N_EVAL, MAX_TOKENS, MAX_RETRIES = 10, 10, 512, 3
+NUM_CTX = 8192
 
 ENVS = {"location_finding": ("location_finding", "Signal"), "hyperbolic_temporal_discount": ("hyperbolic_temporal_discount", "TemporalDiscount"),
         "death_process": ("death_process", "DeathProcess"), "irt": ("irt", "IRT"), "survival": ("survival_analysis", "SurvivalAnalysis"),
@@ -52,7 +53,8 @@ class Ollama:
 
     def chat(self, messages):
         body = json.dumps({"model": self.model, "messages": messages, "stream": False,
-                           "options": {"temperature": 0, "seed": 0, "num_predict": MAX_TOKENS}}).encode()
+                           "keep_alive": -1,
+                           "options": {"temperature": 0, "seed": 0, "num_predict": MAX_TOKENS, "num_ctx": NUM_CTX}}).encode()
         r = json.load(urllib.request.urlopen(urllib.request.Request(self.url + "/api/chat", body, {"Content-Type": "application/json"}), timeout=600))
         return r["message"]["content"]
 

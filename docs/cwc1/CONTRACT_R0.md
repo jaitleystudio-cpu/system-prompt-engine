@@ -65,3 +65,11 @@ env.get_system_message, which IRT does not define (AttributeError). Therefore:
 - Seeding fix: BoxingGym draws true parameters and observations with pm.draw / pm.sample_prior_predictive and no
   random_seed (OS entropy), so the same seed did NOT give the same environment. The harness patches both to take
   random_seed from a generator seeded per episode (seed) and per eval phase (seed+10000).
+
+## Amendment 2 (2026-10-14 12:30 IST, before any real-model call by the harness)
+- Model pulled: qwen2.5:7b-instruct Q4_K_M, Ollama 0.24.0 on the Mac mini (Apple M2, Metal), digest
+  845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e. Any other digest voids the run.
+- Context window fixed at num_ctx=8192 for every arm (Ollama default would be 4096, which could silently truncate the
+  longer arm-C conversations). keep_alive=-1. Observed speed ~5 tokens/s generation.
+- Harness runs on the Mac from a standalone copy (not a worktree of any existing checkout) at
+  /Volumes/4TB-WD/spe-worktrees/cwc1-pilot-r0-run; logs are copied back to the box and committed from the box worktree.
