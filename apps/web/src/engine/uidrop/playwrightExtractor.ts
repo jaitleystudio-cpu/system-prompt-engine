@@ -5,7 +5,17 @@
  * and compiles WCAG 2.1 contrast ratios and AI prompt specifications.
  */
 
-import type { DesignSystemSnap, ColorPalette, TypographyTokens, ComponentTokens, LayoutTokens, MotionTokens, ResponsiveTokens, PageStructureTokens, DesignSystemClassification } from "../../types/design-system";
+import type {
+  DesignSystemSnap,
+  ColorPalette,
+  TypographyTokens,
+  ComponentTokens,
+  LayoutTokens,
+  MotionTokens,
+  ResponsiveTokens,
+  PageStructureTokens,
+  DesignSystemClassification,
+} from "../../types/design-system";
 import {
   evaluateContrastPair,
   normalizeToHex,
@@ -46,7 +56,12 @@ export async function extractDesignWithPlaywright(
 
     const browser = await playwright.chromium.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+      ],
     });
 
     const context = await browser.newContext({
@@ -69,7 +84,7 @@ export async function extractDesignWithPlaywright(
     // Wait for fonts if ready API is supported
     await page.evaluate(() => document.fonts?.ready).catch(() => {});
 
-    // Capture crisp viewport screenshot
+    // Capture crisp viewport screenshot (1440x900)
     const screenshotBuffer = await page.screenshot({ type: "png" });
     const screenshotBase64 = `data:image/png;base64,${screenshotBuffer.toString("base64")}`;
 
@@ -89,29 +104,22 @@ export async function extractDesignWithPlaywright(
       domain = targetUrl.replace(/https?:\/\//, "").split("/")[0];
     }
 
-    const surfaceHex = normalizeToHex(rawDom.surface);
-    const textHex = normalizeToHex(rawDom.text);
-    const primaryHex = normalizeToHex(rawDom.primary);
-    const elevatedHex = normalizeToHex(rawDom.elevated);
-    const mutedHex = normalizeToHex(rawDom.muted);
+    const surfaceHex = normalizeToHex(rawDom.surface || "#FFFFFF");
+    const textHex = normalizeToHex(rawDom.text || "#111827");
+    const primaryHex = normalizeToHex(rawDom.primary || "#5E6AD2");
+    const elevatedHex = normalizeToHex(rawDom.elevated || "#F8FAFC");
+    const mutedHex = normalizeToHex(rawDom.muted || "#78716C");
     const accentHex = normalizeToHex(rawDom.accent || "#6366F1");
 
     const textOnSurface = evaluateContrastPair(textHex, surfaceHex, "Text on Surface");
     const primaryOnSurface = evaluateContrastPair(primaryHex, surfaceHex, "Primary on Surface", true);
     const mutedOnSurface = evaluateContrastPair(mutedHex, surfaceHex, "Muted on Surface");
 
-    const swatches = [
-      primaryHex,
-      accentHex,
-      surfaceHex,
-      elevatedHex,
-      textHex,
-      mutedHex,
-      "#3B82F6",
-      "#10B981",
-      "#F59E0B",
-      "#EC4899",
-    ];
+    const rawSwatches: string[] = Array.isArray(rawDom.swatches) && rawDom.swatches.length > 0
+      ? rawDom.swatches
+      : [primaryHex, accentHex, surfaceHex, elevatedHex, textHex, mutedHex];
+
+    const swatches = Array.from(new Set(rawSwatches.map(normalizeToHex))).slice(0, 12);
 
     const palette: ColorPalette = {
       primary: primaryHex,
@@ -129,8 +137,8 @@ export async function extractDesignWithPlaywright(
     };
 
     const theme = determineThemeFromSurface(surfaceHex);
-    const density = "balanced";
-    const shapeProfile = rawDom.buttonRadiusLabel?.includes("pill") ? "pill" : "rounded";
+    const density = rawDom.density || "balanced";
+    const shapeProfile = rawDom.shapeProfile || (rawDom.buttonRadiusLabel?.includes("pill") ? "pill" : "rounded");
 
     const classification: DesignSystemClassification = {
       theme,
@@ -138,7 +146,7 @@ export async function extractDesignWithPlaywright(
       shapeProfile,
     };
 
-    const scale = `${rawDom.h1.size} / ${rawDom.h2.size} / ${rawDom.body.size}`;
+    const scale = rawDom.scale || `${rawDom.h1.size} / ${rawDom.h2.size} / ${rawDom.body.size}`;
     const typography: TypographyTokens = {
       heading: `${rawDom.h1.family} ${rawDom.h1.weight}`,
       body: `${rawDom.body.family} ${rawDom.body.size} ${rawDom.body.weight}, ${rawDom.body.lineHeight} line-height`,
@@ -155,7 +163,7 @@ export async function extractDesignWithPlaywright(
       cardRadius: rawDom.cardRadius || "16px",
       inputRadius: rawDom.inputRadius || "18px",
       shapeLabel: shapeProfile,
-      shadowSummary: "soft elevated shadows",
+      shadowSummary: rawDom.shadowSummary || "soft elevated shadows",
     };
 
     const layout: LayoutTokens = {
@@ -178,7 +186,7 @@ export async function extractDesignWithPlaywright(
     const structure: PageStructureTokens = {
       landmarks: rawDom.landmarks || ["nav", "hero", "section", "footer"],
       pageStructure: rawDom.pageStructure || "nav + hero + section + footer",
-      zIndexLayers: "nav: 100, modal: 1000",
+      zIndexLayers: rawDom.zIndexLayers || "nav: 100, modal: 1000",
     };
 
     const partialSnap = {

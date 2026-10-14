@@ -18,6 +18,15 @@ function getLineHeightLabel(lhStr: string): string {
 }
 
 /**
+ * Normalizes spatial and token strings to prevent duplicate suffix artifacts.
+ */
+function cleanSuffix(val: string | undefined, suffix: string): string {
+  if (!val) return "";
+  const regex = new RegExp(`\\s*${suffix}s?$`, "i");
+  return val.replace(regex, "").trim();
+}
+
+/**
  * Compiles extracted design system into the exact anti-cloning prompt template.
  */
 export function compileDesignPrompt(snap: DesignSystemSnap): string {
@@ -32,20 +41,26 @@ export function compileDesignPrompt(snap: DesignSystemSnap): string {
     structure,
   } = snap;
 
-  const lineHeightLabel = getLineHeightLabel(typography.bodyDetail.lineHeight);
-  const bodyLineHeight = typography.bodyDetail.lineHeight;
+  const lineHeightLabel = getLineHeightLabel(typography.bodyDetail?.lineHeight || "1.6");
+  const bodyLineHeight = typography.bodyDetail?.lineHeight || "1.6";
+
+  // Clean tokens to prevent duplicate suffixes like "4px grid grid" or "16px cards cards"
+  const gridBase = cleanSuffix(layout.gridBase || "4px", "grid");
+  const cardRadius = cleanSuffix(tokens.cardRadius || "16px", "card");
+  const inputRadius = cleanSuffix(tokens.inputRadius || "18px", "input");
 
   // Format responsive changes as bullet points
-  const responsiveBulletsFormatted = responsive.responsiveChangesBullets.length > 0
-    ? responsive.responsiveChangesBullets
-        .map((bullet) => (bullet.startsWith("•") ? bullet : `• ${bullet}`))
-        .join("\n")
-    : "• at 900px: layout grid collapses to single-column flex";
+  const responsiveBulletsFormatted =
+    responsive.responsiveChangesBullets && responsive.responsiveChangesBullets.length > 0
+      ? responsive.responsiveChangesBullets
+          .map((bullet) => (bullet.startsWith("•") ? bullet : `• ${bullet}`))
+          .join("\n")
+      : "• at 900px: layout grid collapses to single-column flex";
 
   return `This is a design system extracted from a webpage I find inspiring. I want to build my own [page/UI] inspired by this design pattern. Do not copy or replicate brand assets, logos, or identity — use these tokens as a foundation to create something original for me.
 Match the design language, not the brand.
 Theme: ${classification.theme} · ${classification.density}
-Rhythm: ${layout.gridBase} grid · ${tokens.buttonRadiusLabel} · ${tokens.shapeLabel} · ${lineHeightLabel} (${bodyLineHeight}) · ${tokens.shadowSummary}
+Rhythm: ${gridBase} grid · ${tokens.buttonRadiusLabel} · ${tokens.shapeLabel} · ${lineHeightLabel} (${bodyLineHeight}) · ${tokens.shadowSummary}
 Key colors: Accent: ${palette.primary} | Background: ${palette.surface} | Text: ${palette.text}
 Full palette: ${palette.primary} primary, ${palette.accent} accent, ${palette.surface} surface, ${palette.elevated} elevated, ${palette.text} text, ${palette.muted} muted
 Typography:
@@ -56,7 +71,7 @@ Typography:
 • Body — ${typography.bodyDetail.family} ${typography.bodyDetail.size} ${typography.bodyDetail.weight}, ${typography.bodyDetail.lineHeight} line-height
 • Type scale — ${typography.scale}
 Tokens:
-• Radius — ${tokens.buttonRadiusLabel}, ${tokens.cardRadius} cards, ${tokens.inputRadius} inputs
+• Radius — ${tokens.buttonRadiusLabel}, ${cardRadius} cards, ${inputRadius} inputs
 Responsive breakpoints: ${responsive.breakpoints}
 Layout grid: max-width ${layout.maxWidth}, ${layout.gutter} gutter
 Spacing scale: ${layout.spacingScale}
@@ -90,10 +105,14 @@ export function compileSystemMd(snap: DesignSystemSnap): string {
     structure,
   } = snap;
 
-  const swatchesYaml = palette.swatches.map((s) => `    - "${s}"`).join("\n");
-  const responsiveChangesYaml = responsive.responsiveChangesBullets
+  const swatchesYaml = (palette.swatches || []).map((s) => `    - "${s}"`).join("\n");
+  const responsiveChangesYaml = (responsive.responsiveChangesBullets || [])
     .map((b) => `    - "${b.replace(/^•\s*/, "")}"`)
     .join("\n");
+
+  const gridBase = cleanSuffix(layout.gridBase || "4px", "grid");
+  const cardRadius = cleanSuffix(tokens.cardRadius || "16px", "card");
+  const inputRadius = cleanSuffix(tokens.inputRadius || "18px", "input");
 
   return `---
 name: Design System Specification (${domain})
@@ -141,12 +160,12 @@ typography:
     h4: "${typography.h4.size} ${typography.h4.weight} (lh: ${typography.h4.lineHeight})"
 tokens:
   button_radius: "${tokens.buttonRadiusLabel}"
-  card_radius: "${tokens.cardRadius}"
-  input_radius: "${tokens.inputRadius}"
+  card_radius: "${cardRadius} cards"
+  input_radius: "${inputRadius} inputs"
   shadows: "${tokens.shadowSummary}"
   layout_max_width: "${layout.maxWidth}"
   grid_gutter: "${layout.gutter}"
-  grid_base: "${layout.gridBase}"
+  grid_base: "${gridBase} grid"
   spacing_scale: "${layout.spacingScale}"
 motion:
   hover_effects: "${motion.hoverEffects}"
@@ -169,7 +188,7 @@ When implementing user interfaces inspired by this design language:
 ## 1. Core Visual Directives
 - **Anti-Cloning Mandate:** Use these tokens as an abstract mathematical and aesthetic foundation. **Do not** replicate brand trademarks, logos, copy, or copyrighted assets.
 - **Theme & Surface:** Base surface is \`${palette.surface}\` (${classification.theme} theme) with \`${palette.elevated}\` for cards and navigation bars.
-- **Rhythm & Radius:** Button shape is \`${tokens.buttonRadiusLabel}\` with \`${tokens.cardRadius}\` cards and \`${tokens.inputRadius}\` form fields.
+- **Rhythm & Radius:** Button shape is \`${tokens.buttonRadiusLabel}\` with \`${cardRadius} cards\` and \`${inputRadius} inputs\` form fields.
 
 ## 2. Color Palette & WCAG Compliance
 | Role | Hex | Luminance Role | Contrast vs Surface | Rating |
@@ -189,7 +208,7 @@ When implementing user interfaces inspired by this design language:
 
 ## 4. Layout & Responsive Geometry
 - **Container Max-Width:** \`${layout.maxWidth}\` centered with \`${layout.gutter}\` lateral gutters.
-- **Spatial Rhythm:** Base \`${layout.gridBase}\` scale: \`${layout.spacingScale}\`.
+- **Spatial Rhythm:** Base \`${gridBase} grid\` scale: \`${layout.spacingScale}\`.
 - **Breakpoints:** \`${responsive.breakpoints}\`.
 - **Top-Level Structure:** \`${structure.pageStructure}\`.
 `.trim();

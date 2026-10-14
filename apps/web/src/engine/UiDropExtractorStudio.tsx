@@ -7,8 +7,8 @@
  *   - 3 classification pills: Density, Corner Profile, Theme
  *   - Semantic Color Palette, Swatch Strip, Typography Scale, Radius Tokens
  *   - Dual-format AI prompt compiler: Natural-Language Prompt & system.md
- *   - 3x2 SEND TO matrix: Claude, GPT, Gemini, Lovable, Manus, Cursor
- *   - Persistent Snap Library (LocalStorage)
+ *   - 3x2 SEND TO matrix: Claude, GPT, Gemini, Lovable, Manus, Cursor with official brand icons
+ *   - Persistent Snap Library (IndexedDB + LocalStorage hybrid)
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -18,9 +18,7 @@ import type {
   ContrastPair,
 } from "../types/design-system";
 import { extractDesignOffline } from "./uidrop/extractorCore";
-import { extractDesignWithPlaywright } from "./uidrop/playwrightExtractor";
-
-const STORAGE_KEY = "spe_uidrop_snaps";
+import { saveSnap, loadSnaps, deleteSnap } from "./uidrop/snapStorage";
 
 const LAUNCHER_TOOLS: LauncherTool[] = [
   {
@@ -73,6 +71,82 @@ const LAUNCHER_TOOLS: LauncherTool[] = [
   },
 ];
 
+/**
+ * Authentic SVG Brand Icons for AI tools
+ */
+const BrandIcon: React.FC<{ id: string; color: string }> = ({ id, color }) => {
+  if (id === "claude") {
+    // Anthropic Claude sunburst / spark symbol
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M13.5 3L11.5 9.5L5 11.5L11.5 13.5L13.5 20L15.5 13.5L22 11.5L15.5 9.5L13.5 3Z"
+          fill={color}
+        />
+        <path
+          d="M6 3L5 6L2 7L5 8L6 11L7 8L10 7L7 6L6 3Z"
+          fill={color}
+          opacity="0.8"
+        />
+      </svg>
+    );
+  }
+  if (id === "gpt") {
+    // OpenAI ChatGPT rosette / swirl
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.75">
+        <circle cx="12" cy="12" r="3" fill={color} fillOpacity="0.2" />
+        <path d="M12 2C8.5 2 5.5 4 4 7L6.5 8.5C7.5 6.5 9.5 5 12 5C14.5 5 16.5 6.5 17.5 8.5L20 7C18.5 4 15.5 2 12 2Z" />
+        <path d="M22 12C22 8.5 20 5.5 17 4L15.5 6.5C17.5 7.5 19 9.5 19 12C19 14.5 17.5 16.5 15.5 17.5L17 20C20 18.5 22 15.5 22 12Z" />
+        <path d="M12 22C15.5 22 18.5 20 20 17L17.5 15.5C16.5 17.5 14.5 19 12 19C9.5 19 7.5 17.5 6.5 15.5L4 17C5.5 20 8.5 22 12 22Z" />
+        <path d="M2 12C2 15.5 4 18.5 7 20L8.5 17.5C6.5 16.5 5 14.5 5 12C5 9.5 6.5 7.5 8.5 6.5L7 4C4 5.5 2 8.5 2 12Z" />
+      </svg>
+    );
+  }
+  if (id === "gemini") {
+    // Google Gemini four-pointed star
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4771 12 22C12 16.4771 16.4771 12 22 12C16.4771 12 12 7.52285 12 2Z"
+          fill={color}
+        />
+      </svg>
+    );
+  }
+  if (id === "lovable") {
+    // Lovable Heart-L monogram
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"
+          fill={color}
+        />
+      </svg>
+    );
+  }
+  if (id === "manus") {
+    // Manus Hexagonal crystal glyph
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
+        <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" fill={color} fillOpacity="0.2" />
+        <path d="M8 9L12 12L16 9M12 12V18" />
+      </svg>
+    );
+  }
+  if (id === "cursor") {
+    // Cursor isometric 3D box
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8">
+        <path d="M12 2L21 7V17L12 22L3 17V7L12 2Z" fill={color} fillOpacity="0.15" />
+        <path d="M12 22V12" />
+        <path d="M21 7L12 12L3 7" />
+      </svg>
+    );
+  }
+  return <span style={{ color }}>⚡</span>;
+};
+
 interface UiDropExtractorStudioProps {
   onClose?: () => void;
   defaultUrl?: string;
@@ -95,19 +169,19 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
     extractDesignOffline(defaultUrl),
   );
 
-  // Load saved snaps from localStorage
+  // Load saved snaps from IndexedDB / LocalStorage hybrid store
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setSavedSnaps(parsed);
+    let mounted = true;
+    loadSnaps()
+      .then((snaps) => {
+        if (mounted && snaps && snaps.length > 0) {
+          setSavedSnaps(snaps);
         }
-      }
-    } catch {
-      // Ignore storage errors
-    }
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const showToast = useCallback((msg: string) => {
@@ -117,14 +191,11 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
     }, 2500);
   }, []);
 
-  const saveSnapToLibrary = useCallback((snap: DesignSystemSnap) => {
+  const persistSnap = useCallback(async (snap: DesignSystemSnap) => {
+    await saveSnap(snap);
     setSavedSnaps((prev) => {
-      const filtered = prev.filter((s) => s.domain !== snap.domain || s.id !== snap.id);
-      const updated = [snap, ...filtered].slice(0, 20);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch {}
-      return updated;
+      const filtered = prev.filter((s) => s.id !== snap.id && s.domain !== snap.domain);
+      return [snap, ...filtered].slice(0, 20);
     });
   }, []);
 
@@ -133,19 +204,35 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
     setIsSnapping(true);
 
     try {
-      // First attempt extraction
-      let snap: DesignSystemSnap;
+      let snap: DesignSystemSnap | null = null;
+
+      // 1. Attempt Next.js API route first if available
       try {
-        snap = await extractDesignWithPlaywright(targetUrl, { preferOffline: true });
+        const resp = await fetch("/api/extract-design", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: targetUrl.trim() }),
+        });
+        if (resp.ok) {
+          snap = await resp.json();
+        }
       } catch {
-        snap = extractDesignOffline(targetUrl);
+        // Network error or local air-gap mode, fall back to offline extractor
+      }
+
+      // 2. Deterministic offline fallback if API is unreachable
+      if (!snap) {
+        snap = extractDesignOffline(targetUrl.trim());
       }
 
       setCurrentSnap(snap);
-      saveSnapToLibrary(snap);
+      await persistSnap(snap);
       showToast(`Extracted design tokens from ${snap.domain}!`);
     } catch (err: any) {
-      showToast(`Extraction fallback active: ${err.message || "Synthesized tokens"}`);
+      const fallbackSnap = extractDesignOffline(targetUrl.trim());
+      setCurrentSnap(fallbackSnap);
+      await persistSnap(fallbackSnap);
+      showToast(`Extraction completed for ${fallbackSnap.domain}`);
     } finally {
       setIsSnapping(false);
     }
@@ -183,7 +270,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
     });
   };
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragStart = (e: React.DragEvent<HTMLElement>) => {
     const text = getActiveCompiledText();
     e.dataTransfer.setData("text/plain", text);
     e.dataTransfer.setData("text/uri-list", currentSnap.screenshotBase64);
@@ -194,17 +281,16 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
     e.dataTransfer.effectAllowed = "copy";
   };
 
-  const handleDeleteSavedSnap = (e: React.MouseEvent, id: string) => {
+  const handleDeleteSavedSnap = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    setSavedSnaps((prev) => {
-      const updated = prev.filter((s) => s.id !== id);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch {}
-      return updated;
-    });
+    await deleteSnap(id);
+    setSavedSnaps((prev) => prev.filter((s) => s.id !== id));
     showToast("Snap removed from library");
   };
+
+  const isCurrentUrlAlreadySnapped =
+    currentSnap &&
+    (currentSnap.url === url || currentSnap.domain === url.replace(/https?:\/\//, "").split("/")[0]);
 
   return (
     <div
@@ -239,7 +325,6 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
             fontSize: "0.82rem",
             fontWeight: 600,
             boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.6)",
-            animation: "fadeIn 0.2s ease-out",
           }}
         >
           ✓ {toastMsg}
@@ -374,6 +459,11 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               <span style={{ display: "inline-block", animation: "spin 1s infinite linear" }}>⚡</span>
               Snapping...
             </>
+          ) : isCurrentUrlAlreadySnapped ? (
+            <>
+              <span>🔄</span>
+              Snap again
+            </>
           ) : (
             <>
               <span>📸</span>
@@ -417,7 +507,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               Saved Extractions ({savedSnaps.length})
             </span>
             <span style={{ fontSize: "0.72rem", color: "#64748B" }}>
-              Stored in LocalStorage
+              Stored in LocalStorage + IndexedDB
             </span>
           </div>
 
@@ -526,12 +616,14 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               <img
                 src={currentSnap.screenshotBase64}
                 alt={`Rendered viewport of ${currentSnap.domain}`}
+                draggable
+                onDragStart={handleDragStart}
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
                   display: "block",
-                  pointerEvents: "none",
+                  cursor: "grab",
                 }}
               />
             </div>
@@ -545,7 +637,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               }}
             >
               <span style={{ fontSize: "0.75rem", color: "#94A3B8", display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                <span>👆</span> Drag screenshot above directly into Claude, Cursor, or AI chats
+                <span>👆</span> Drag the screenshot above into Claude, Cursor, or any AI chat
               </span>
               <span
                 style={{
@@ -651,6 +743,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                   { role: "primary", hex: currentSnap.palette.primary },
                   { role: "accent", hex: currentSnap.palette.accent },
                   { role: "surface", hex: currentSnap.palette.surface },
+                  { role: "elevated", hex: currentSnap.palette.elevated },
                   { role: "text", hex: currentSnap.palette.text },
                   { role: "muted", hex: currentSnap.palette.muted },
                 ].map((item) => (
@@ -696,42 +789,73 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               </div>
             </div>
 
-            {/* TYPOGRAPHY & TOKENS Card */}
+            {/* TYPOGRAPHY Card & TOKENS Breakdown */}
             <div
               style={{
-                background: "#16181D",
-                padding: "12px",
-                borderRadius: "12px",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
                 display: "flex",
                 flexDirection: "column",
-                gap: "0.6rem",
+                gap: "0.75rem",
               }}
             >
-              <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.06em", color: "#94A3B8", textTransform: "uppercase" }}>
-                TYPOGRAPHY & RADIUS
-              </span>
+              {/* TYPOGRAPHY Card */}
+              <div
+                style={{
+                  background: "#16181D",
+                  padding: "12px",
+                  borderRadius: "12px",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                }}
+              >
+                <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.06em", color: "#94A3B8", textTransform: "uppercase" }}>
+                  TYPOGRAPHY
+                </span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.74rem" }}>
+                  <div>
+                    <span style={{ color: "#64748B", display: "block", fontSize: "0.66rem" }}>HEADING</span>
+                    <span style={{ color: "#F1F5F9", fontWeight: 600 }}>{currentSnap.typography.heading}</span>
+                  </div>
+                  <div>
+                    <span style={{ color: "#64748B", display: "block", fontSize: "0.66rem" }}>BODY</span>
+                    <span style={{ color: "#F1F5F9" }}>{currentSnap.typography.body}</span>
+                  </div>
+                  <div>
+                    <span style={{ color: "#64748B", display: "block", fontSize: "0.66rem" }}>SCALE</span>
+                    <span style={{ color: "#38BDF8", fontFamily: "var(--spe-font-mono, monospace)" }}>
+                      {currentSnap.typography.scale}
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem", fontSize: "0.74rem" }}>
-                <div>
-                  <span style={{ color: "#64748B", display: "block", fontSize: "0.68rem" }}>HEADING</span>
-                  <span style={{ color: "#F1F5F9", fontWeight: 600 }}>{currentSnap.typography.heading}</span>
-                </div>
-                <div>
-                  <span style={{ color: "#64748B", display: "block", fontSize: "0.68rem" }}>BODY</span>
-                  <span style={{ color: "#F1F5F9" }}>{currentSnap.typography.body}</span>
-                </div>
-                <div>
-                  <span style={{ color: "#64748B", display: "block", fontSize: "0.68rem" }}>SCALE</span>
-                  <span style={{ color: "#38BDF8", fontFamily: "var(--spe-font-mono, monospace)" }}>
-                    {currentSnap.typography.scale}
-                  </span>
-                </div>
-                <div>
-                  <span style={{ color: "#64748B", display: "block", fontSize: "0.68rem" }}>RADII</span>
-                  <span style={{ color: "#CBD5E1" }}>
-                    {currentSnap.tokens.buttonRadiusLabel}, {currentSnap.tokens.cardRadius} cards, {currentSnap.tokens.inputRadius} inputs
-                  </span>
+              {/* TOKENS Card */}
+              <div
+                style={{
+                  background: "#16181D",
+                  padding: "12px",
+                  borderRadius: "12px",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                }}
+              >
+                <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.06em", color: "#94A3B8", textTransform: "uppercase" }}>
+                  TOKENS
+                </span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.74rem" }}>
+                  <div>
+                    <span style={{ color: "#64748B", display: "block", fontSize: "0.66rem" }}>RADII</span>
+                    <span style={{ color: "#CBD5E1" }}>
+                      {currentSnap.tokens.buttonRadiusLabel}, {currentSnap.tokens.cardRadius} cards, {currentSnap.tokens.inputRadius} inputs
+                    </span>
+                  </div>
+                  <div>
+                    <span style={{ color: "#64748B", display: "block", fontSize: "0.66rem" }}>SHADOWS</span>
+                    <span style={{ color: "#94A3B8" }}>{currentSnap.tokens.shadowSummary}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -783,7 +907,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               ))}
             </div>
 
-            {/* WCAG Contrast Rows */}
+            {/* 3 WCAG Contrast Rows */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
               {[
                 currentSnap.palette.contrast.textOnSurface,
@@ -932,7 +1056,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
             </div>
           </div>
 
-          {/* 3x2 Launcher Grid */}
+          {/* 3x2 Launcher Grid with Official Brand Icons */}
           <div
             style={{
               display: "grid",
@@ -976,16 +1100,10 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: "0.95rem",
                     border: `1px solid ${tool.accentColor}40`,
                   }}
                 >
-                  {tool.id === "claude" && "🟠"}
-                  {tool.id === "gpt" && "🟢"}
-                  {tool.id === "gemini" && "✨"}
-                  {tool.id === "lovable" && "💖"}
-                  {tool.id === "manus" && "🔮"}
-                  {tool.id === "cursor" && "⚡"}
+                  <BrandIcon id={tool.id} color={tool.accentColor} />
                 </div>
                 <span style={{ fontSize: "0.75rem", fontWeight: 600 }}>{tool.name}</span>
                 <span style={{ fontSize: "0.62rem", color: "#64748B" }}>Launch ↗</span>

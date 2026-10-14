@@ -18,13 +18,18 @@ import type {
 import {
   evaluateContrastPair,
   normalizeToHex,
+  determineThemeFromSurface,
 } from "./wcagContrast";
 import { compileDesignPrompt, compileSystemMd } from "./promptCompiler";
 
 /**
  * Generates an SVG data URL screenshot placeholder for crisp visual rendering in preview.
  */
-export function generatePlaceholderScreenshotSvg(domain: string, theme: "light" | "dark", primaryHex: string): string {
+export function generatePlaceholderScreenshotSvg(
+  domain: string,
+  theme: "light" | "dark",
+  primaryHex: string,
+): string {
   const bg = theme === "dark" ? "#0D0E12" : "#F8FAFC";
   const cardBg = theme === "dark" ? "#16181D" : "#FFFFFF";
   const textCol = theme === "dark" ? "#EDEDED" : "#0F172A";
@@ -155,7 +160,19 @@ const DOMAIN_ARCHETYPES: DomainArchetype[] = [
     elevated: "#FFFFFF",
     text: "#1C1917",
     muted: "#78716C",
-    swatches: ["#5E6AD2", "#6366F1", "#1C1917", "#44403C", "#78716C", "#A8A29E", "#D6D3D1", "#E7E5E4", "#F5F5F4", "#FAFAF9", "#FFFFFF"],
+    swatches: [
+      "#5E6AD2",
+      "#6366F1",
+      "#1C1917",
+      "#44403C",
+      "#78716C",
+      "#A8A29E",
+      "#D6D3D1",
+      "#E7E5E4",
+      "#F5F5F4",
+      "#FAFAF9",
+      "#FFFFFF",
+    ],
     h1: { family: "Fraunces", size: "60px", weight: "700", lineHeight: "1.1", tracking: "-1px" },
     h2: { family: "Fraunces", size: "40px", weight: "700", lineHeight: "1.2", tracking: "-0.5px" },
     h3: { family: "Fraunces", size: "28px", weight: "600", lineHeight: "1.3", tracking: "-0.2px" },
@@ -193,7 +210,18 @@ const DOMAIN_ARCHETYPES: DomainArchetype[] = [
     elevated: "#16181D",
     text: "#EDEDED",
     muted: "#8A8F98",
-    swatches: ["#5E6AD2", "#8B5CF6", "#EDEDED", "#C5C7CB", "#8A8F98", "#45484E", "#2E3035", "#16181D", "#121316", "#0D0E12"],
+    swatches: [
+      "#5E6AD2",
+      "#8B5CF6",
+      "#EDEDED",
+      "#C5C7CB",
+      "#8A8F98",
+      "#45484E",
+      "#2E3035",
+      "#16181D",
+      "#121316",
+      "#0D0E12",
+    ],
     h1: { family: "Inter", size: "56px", weight: "600", lineHeight: "1.1", tracking: "-1.5px" },
     h2: { family: "Inter", size: "36px", weight: "600", lineHeight: "1.2", tracking: "-1px" },
     h3: { family: "Inter", size: "24px", weight: "500", lineHeight: "1.3", tracking: "-0.5px" },
@@ -230,7 +258,18 @@ const DOMAIN_ARCHETYPES: DomainArchetype[] = [
     elevated: "#F8FAFC",
     text: "#0A2540",
     muted: "#425466",
-    swatches: ["#635BFF", "#00D4FF", "#0A2540", "#425466", "#687B8E", "#A1B0CB", "#E3E8EE", "#F6F9FC", "#FFFFFF"],
+    swatches: [
+      "#635BFF",
+      "#00D4FF",
+      "#0A2540",
+      "#425466",
+      "#687B8E",
+      "#A1B0CB",
+      "#E3E8EE",
+      "#F6F9FC",
+      "#FFFFFF",
+      "#FAFAF9",
+    ],
     h1: { family: "Söhne", size: "64px", weight: "700", lineHeight: "1.1", tracking: "-1.2px" },
     h2: { family: "Söhne", size: "42px", weight: "600", lineHeight: "1.2", tracking: "-0.8px" },
     h3: { family: "Söhne", size: "28px", weight: "600", lineHeight: "1.3", tracking: "-0.4px" },
@@ -282,7 +321,6 @@ export function extractDesignOffline(rawUrl: string): DesignSystemSnap {
   // If not matched, generate an algorithmic yet tasteful aesthetic profile
   const hash = domain.split("").reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) | 0, 0);
   const isDark = matched ? matched.theme === "dark" : Math.abs(hash % 2) === 1;
-  const theme = isDark ? "dark" : "light";
 
   const primaryHex = matched
     ? matched.primary
@@ -295,6 +333,8 @@ export function extractDesignOffline(rawUrl: string): DesignSystemSnap {
     : isDark
       ? "#0F172A"
       : "#FFFFFF";
+
+  const theme = matched ? matched.theme : determineThemeFromSurface(surfaceHex);
 
   const elevatedHex = matched
     ? matched.elevated
@@ -327,6 +367,8 @@ export function extractDesignOffline(rawUrl: string): DesignSystemSnap {
         isDark ? "#1E293B" : "#E2E8F0",
         elevatedHex,
         surfaceHex,
+        isDark ? "#0D0E12" : "#F1F5F9",
+        isDark ? "#475569" : "#94A3B8",
       ];
 
   const density = matched ? matched.density : "balanced";
@@ -448,57 +490,150 @@ export function extractDesignOffline(rawUrl: string): DesignSystemSnap {
 export const BROWSER_DOM_EXTRACTION_SCRIPT = `
 (() => {
   try {
-    const bodyStyle = window.getComputedStyle(document.body);
-    const mainEl = document.querySelector('main') || document.body;
-    const mainStyle = window.getComputedStyle(mainEl);
+    const isTransparent = (c) => !c || c === 'transparent' || c === 'rgba(0, 0, 0, 0)' || c === 'rgba(0,0,0,0)';
+    const cleanFont = (f) => (f ? f.split(',')[0].trim().replace(/['"]/g, '') : 'Inter');
 
-    // 1. Color extraction
-    const surface = bodyStyle.backgroundColor || mainStyle.backgroundColor || '#FFFFFF';
-    const text = bodyStyle.color || '#111827';
+    // 1. Surface background color (traverse ancestors to find actual canvas color)
+    let surface = '#FFFFFF';
+    const surfaceCandidates = [
+      document.body,
+      document.documentElement,
+      document.querySelector('main'),
+      document.querySelector('#root'),
+      document.querySelector('#__next'),
+      document.querySelector('.app'),
+    ].filter(Boolean);
 
-    // Buttons
-    const buttons = Array.from(document.querySelectorAll('button, a[role="button"], input[type="submit"], .btn'));
-    let primary = '#5E6AD2';
-    let buttonRadius = '999px';
-    let buttonRadiusLabel = 'pill buttons';
-    if (buttons.length > 0) {
-      const bStyle = window.getComputedStyle(buttons[0]);
-      if (bStyle.backgroundColor && bStyle.backgroundColor !== 'transparent' && bStyle.backgroundColor !== 'rgba(0, 0, 0, 0)') {
-        primary = bStyle.backgroundColor;
+    for (const el of surfaceCandidates) {
+      const bg = window.getComputedStyle(el).backgroundColor;
+      if (!isTransparent(bg)) {
+        surface = bg;
+        break;
       }
-      buttonRadius = bStyle.borderRadius || '999px';
-      const rNum = parseFloat(buttonRadius) || 0;
-      buttonRadiusLabel = (rNum >= 999 || buttonRadius.includes('50%') || rNum >= 24) ? 'pill buttons' : (Math.round(rNum) + 'px buttons');
     }
 
-    // Cards
-    const cards = Array.from(document.querySelectorAll('.card, article, [class*="card"], [class*="box"], section > div'));
+    // 2. Primary text color
+    const bodyStyle = window.getComputedStyle(document.body || document.documentElement);
+    const mainEl = document.querySelector('main') || document.body || document.documentElement;
+    const mainStyle = window.getComputedStyle(mainEl);
+    let text = !isTransparent(bodyStyle.color) ? bodyStyle.color : '#111827';
+
+    // 3. CTA Buttons & Radius
+    const buttonEls = Array.from(document.querySelectorAll('button, a[role="button"], input[type="submit"], [class*="btn-primary"], [class*="cta"], .btn'))
+      .filter((el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.width > 12 && rect.height > 12;
+      });
+
+    let primary = '#5E6AD2';
+    let buttonRadiusLabel = 'pill buttons';
+    let buttonRadiusNum = 999;
+
+    for (const btn of buttonEls) {
+      const bStyle = window.getComputedStyle(btn);
+      if (!isTransparent(bStyle.backgroundColor)) {
+        primary = bStyle.backgroundColor;
+        const bRad = bStyle.borderRadius || '999px';
+        buttonRadiusNum = parseFloat(bRad) || 0;
+        if (buttonRadiusNum >= 999 || bRad.includes('50%') || buttonRadiusNum >= 24) {
+          buttonRadiusLabel = 'pill buttons';
+        } else if (buttonRadiusNum <= 2) {
+          buttonRadiusLabel = '0px buttons';
+        } else {
+          buttonRadiusLabel = Math.round(buttonRadiusNum) + 'px buttons';
+        }
+        break;
+      }
+    }
+
+    // 4. Cards & Elevated Containers
+    const cardEls = Array.from(document.querySelectorAll('.card, article, [class*="card"], [class*="box"], section > div, [role="dialog"], header, nav'))
+      .filter((el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.width > 100 && rect.height > 50;
+      });
+
     let elevated = '#F8FAFC';
     let cardRadius = '16px';
-    if (cards.length > 0) {
-      const cStyle = window.getComputedStyle(cards[0]);
-      if (cStyle.backgroundColor && cStyle.backgroundColor !== 'transparent') {
+    let cardRadiusNum = 16;
+    for (const c of cardEls) {
+      const cStyle = window.getComputedStyle(c);
+      if (!isTransparent(cStyle.backgroundColor) && cStyle.backgroundColor !== surface) {
         elevated = cStyle.backgroundColor;
+        if (cStyle.borderRadius && cStyle.borderRadius !== '0px') {
+          cardRadius = cStyle.borderRadius;
+          cardRadiusNum = parseFloat(cardRadius) || 16;
+        }
+        break;
       }
-      cardRadius = cStyle.borderRadius || '16px';
     }
 
-    // Inputs
-    const inputs = Array.from(document.querySelectorAll('input[type="text"], input[type="email"], input[type="search"]'));
+    // 5. Inputs
+    const inputEls = Array.from(document.querySelectorAll('input[type="text"], input[type="email"], input[type="search"], input:not([type="hidden"]), textarea'));
     let inputRadius = '18px';
-    if (inputs.length > 0) {
-      const iStyle = window.getComputedStyle(inputs[0]);
-      inputRadius = iStyle.borderRadius || '18px';
+    if (inputEls.length > 0) {
+      const iStyle = window.getComputedStyle(inputEls[0]);
+      if (iStyle.borderRadius && iStyle.borderRadius !== '0px') {
+        inputRadius = Math.round(parseFloat(iStyle.borderRadius) || 18) + 'px';
+      }
     }
 
-    // Typography
-    const cleanFont = (f) => (f ? f.split(',')[0].trim().replace(/['"]/g, '') : 'Inter');
+    // 6. Accent color (links, badges, active tabs)
+    let accent = '#6366F1';
+    const accentCandidates = Array.from(document.querySelectorAll('a:not([role="button"]), [class*="badge"], [class*="tag"], [class*="active"], [class*="accent"]'));
+    for (const aEl of accentCandidates) {
+      const aStyle = window.getComputedStyle(aEl);
+      const col = !isTransparent(aStyle.color) && aStyle.color !== text ? aStyle.color : (!isTransparent(aStyle.backgroundColor) ? aStyle.backgroundColor : null);
+      if (col && col !== surface && col !== primary) {
+        accent = col;
+        break;
+      }
+    }
+
+    // 7. Muted subtext
+    let muted = '#78716C';
+    const mutedCandidates = Array.from(document.querySelectorAll('p.text-muted, p.text-secondary, [class*="muted"], small, footer p, span[class*="desc"]'));
+    for (const mEl of mutedCandidates) {
+      const mStyle = window.getComputedStyle(mEl);
+      if (!isTransparent(mStyle.color) && mStyle.color !== text) {
+        muted = mStyle.color;
+        break;
+      }
+    }
+
+    // 8. Swatches Strip (Collect real top visible colors across DOM)
+    const colorCounts = {};
+    const recordColor = (c) => {
+      if (!c || isTransparent(c)) return;
+      colorCounts[c] = (colorCounts[c] || 0) + 1;
+    };
+
+    const sampledNodes = Array.from(document.querySelectorAll('header, nav, main, section, button, a, h1, h2, h3, p, footer, div[class*="card"]')).slice(0, 80);
+    for (const node of sampledNodes) {
+      const s = window.getComputedStyle(node);
+      recordColor(s.backgroundColor);
+      recordColor(s.color);
+      if (s.borderColor && !isTransparent(s.borderColor)) recordColor(s.borderColor);
+    }
+
+    // Top sorted swatches
+    const rawSwatches = Object.keys(colorCounts)
+      .sort((a, b) => colorCounts[b] - colorCounts[a])
+      .slice(0, 12);
+
+    const swatches = rawSwatches.length >= 6
+      ? rawSwatches
+      : [primary, accent, surface, elevated, text, muted];
+
+    // 9. Typography hierarchy
     const getHeading = (tag) => {
       const el = document.querySelector(tag);
       if (!el) return null;
       const s = window.getComputedStyle(el);
       const fs = parseFloat(s.fontSize) || 16;
-      const lh = s.lineHeight.endsWith('px') ? (parseFloat(s.lineHeight) / fs).toFixed(1) : (parseFloat(s.lineHeight) || 1.2).toString();
+      const lh = s.lineHeight.endsWith('px')
+        ? (parseFloat(s.lineHeight) / fs).toFixed(1)
+        : (parseFloat(s.lineHeight) || 1.2).toString();
       return {
         family: cleanFont(s.fontFamily),
         size: Math.round(fs) + 'px',
@@ -508,15 +643,19 @@ export const BROWSER_DOM_EXTRACTION_SCRIPT = `
       };
     };
 
-    const h1 = getHeading('h1') || { family: 'Fraunces', size: '60px', weight: '700', lineHeight: '1.1', tracking: '-1px' };
-    const h2 = getHeading('h2') || { family: 'Fraunces', size: '40px', weight: '700', lineHeight: '1.2', tracking: '-0.5px' };
-    const h3 = getHeading('h3') || { family: 'Fraunces', size: '28px', weight: '600', lineHeight: '1.3', tracking: '-0.2px' };
-    const h4 = getHeading('h4') || { family: 'Fraunces', size: '20px', weight: '600', lineHeight: '1.4', tracking: '0px' };
-
-    const pEl = document.querySelector('p') || document.body;
+    const pEl = document.querySelector('p') || document.body || document.documentElement;
     const pStyle = window.getComputedStyle(pEl);
     const pFs = parseFloat(pStyle.fontSize) || 15;
-    const pLh = pStyle.lineHeight.endsWith('px') ? (parseFloat(pStyle.lineHeight) / pFs).toFixed(1) : (parseFloat(pStyle.lineHeight) || 1.6).toString();
+    const pLh = pStyle.lineHeight.endsWith('px')
+      ? (parseFloat(pStyle.lineHeight) / pFs).toFixed(1)
+      : (parseFloat(pStyle.lineHeight) || 1.6).toString();
+    const fallbackFont = cleanFont(pStyle.fontFamily) || 'Inter';
+
+    const h1 = getHeading('h1') || { family: fallbackFont, size: '60px', weight: '700', lineHeight: '1.1', tracking: '-1px' };
+    const h2 = getHeading('h2') || { family: h1.family, size: '40px', weight: '700', lineHeight: '1.2', tracking: '-0.5px' };
+    const h3 = getHeading('h3') || { family: h1.family, size: '28px', weight: '600', lineHeight: '1.3', tracking: '-0.2px' };
+    const h4 = getHeading('h4') || { family: h1.family, size: '20px', weight: '600', lineHeight: '1.4', tracking: '0px' };
+
     const bodyToken = {
       family: cleanFont(pStyle.fontFamily),
       size: Math.round(pFs) + 'px',
@@ -525,11 +664,13 @@ export const BROWSER_DOM_EXTRACTION_SCRIPT = `
       tracking: pStyle.letterSpacing === 'normal' ? '0px' : pStyle.letterSpacing,
     };
 
-    // Muted text
-    const mutedEl = document.querySelector('p.text-muted, p.text-secondary, [class*="muted"], small, footer p');
-    const muted = mutedEl ? window.getComputedStyle(mutedEl).color : '#78716C';
+    // Calculate distinct top 3 sizes for scale
+    const sizes = Array.from(new Set([h1.size, h2.size, h3.size, h4.size, bodyToken.size]))
+      .map((s) => parseFloat(s) || 16)
+      .sort((a, b) => b - a);
+    const scale = sizes.slice(0, 3).map((n) => Math.round(n) + 'px').join(' / ');
 
-    // Breakpoints from CSSOM
+    // 10. CSSOM Stylesheet Rules: Breakpoints & Hover
     const breakpoints = [];
     const hoverEffects = [];
     const responsiveChanges = [];
@@ -537,12 +678,12 @@ export const BROWSER_DOM_EXTRACTION_SCRIPT = `
       for (const sheet of document.styleSheets) {
         try {
           for (const rule of sheet.cssRules || []) {
-            if (rule.type === CSSRule.MEDIA_RULE) {
-              const mText = rule.conditionText || rule.media.mediaText;
-              const matches = mText.match(/(?:min|max)-width:\\s*(\\d+px)/g);
+            if (rule.type === CSSRule.MEDIA_RULE || rule.constructor?.name === 'CSSMediaRule') {
+              const mText = rule.conditionText || rule.media?.mediaText || '';
+              const matches = mText.match(/(?:min|max)-width:\s*(\d+(?:px|em|rem))/g);
               if (matches) {
-                matches.forEach(m => {
-                  const val = m.replace(/.*:\\s*/, '');
+                matches.forEach((m) => {
+                  const val = m.replace(/.*:\s*/, '');
                   if (!breakpoints.includes(val)) breakpoints.push(val);
                 });
               }
@@ -550,7 +691,7 @@ export const BROWSER_DOM_EXTRACTION_SCRIPT = `
                 const subRule = rule.cssRules[0];
                 if (subRule.selectorText && subRule.style && subRule.style.length > 0) {
                   const prop = subRule.style[0];
-                  responsiveChanges.push('at ' + (mText.slice(0, 20)) + ': ' + subRule.selectorText + ' -> ' + prop + ': ' + subRule.style.getPropertyValue(prop));
+                  responsiveChanges.push('at ' + mText.slice(0, 24) + ': ' + subRule.selectorText + ' -> ' + prop + ': ' + subRule.style.getPropertyValue(prop));
                 }
               }
             } else if (rule.type === CSSRule.STYLE_RULE && rule.selectorText && rule.selectorText.includes(':hover')) {
@@ -566,14 +707,92 @@ export const BROWSER_DOM_EXTRACTION_SCRIPT = `
       }
     } catch (e) {}
 
-    // Landmarks & Structure
-    const landmarks = [];
-    ['nav', 'header', 'main', 'section', 'article', 'aside', 'footer'].forEach(tag => {
-      if (document.querySelector(tag)) landmarks.push(tag);
-    });
-    if (landmarks.length === 0) landmarks.push('nav', 'hero', 'content', 'footer');
+    // 11. Z-Index layers
+    const zIndexLayers = [];
+    const zCandidates = ['header', 'nav', 'dialog', '[role="dialog"]', '[class*="modal"]', '[class*="drawer"]', '[class*="popover"]'];
+    for (const sel of zCandidates) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const z = window.getComputedStyle(el).zIndex;
+        if (z && z !== 'auto' && z !== '0') {
+          const tag = el.tagName.toLowerCase();
+          if (!zIndexLayers.some((l) => l.startsWith(tag))) {
+            zIndexLayers.push(tag + ': ' + z);
+          }
+        }
+      }
+    }
+    if (zIndexLayers.length === 0) zIndexLayers.push('nav: 100, modal: 1000');
 
-    // Layout
+    // 12. Section Padding & Density
+    const sections = Array.from(document.querySelectorAll('section, main > div, article'));
+    let totalPad = 0;
+    let padCount = 0;
+    for (const sec of sections.slice(0, 6)) {
+      const sPad = parseFloat(window.getComputedStyle(sec).paddingTop) || 0;
+      if (sPad > 0) {
+        totalPad += sPad;
+        padCount++;
+      }
+    }
+    const avgPadding = padCount > 0 ? totalPad / padCount : 48;
+    const lhNum = parseFloat(bodyToken.lineHeight) || 1.6;
+    let density = 'balanced';
+    if (avgPadding < 36 || lhNum <= 1.35) {
+      density = 'compact';
+    } else if (avgPadding > 64 || lhNum >= 1.75) {
+      density = 'spacious';
+    }
+
+    // 13. Shape Profile
+    let shapeProfile = 'rounded';
+    if (buttonRadiusLabel.includes('pill')) {
+      shapeProfile = 'pill';
+    } else if (buttonRadiusNum <= 2 && cardRadiusNum <= 2) {
+      shapeProfile = 'sharp';
+    }
+
+    // 14. Shadow Summary
+    let shadowSummary = 'soft elevated shadows';
+    if (cardEls.length > 0) {
+      const bShadow = window.getComputedStyle(cardEls[0]).boxShadow;
+      if (!bShadow || bShadow === 'none') shadowSummary = 'flat (no shadows)';
+    }
+
+    // 15. Semantic Page Structure (Walk DOM in natural order)
+    const landmarks = [];
+    const walkStructure = (root) => {
+      for (const child of Array.from(root.children)) {
+        const tag = child.tagName.toLowerCase();
+        const id = (child.id || '').toLowerCase();
+        const cls = (child.className || '').toString().toLowerCase();
+
+        if (tag === 'nav' || tag === 'header' || tag === 'footer' || tag === 'main' || tag === 'aside') {
+          if (!landmarks.includes(tag)) landmarks.push(tag);
+        } else if (id.includes('hero') || cls.includes('hero')) {
+          if (!landmarks.includes('hero')) landmarks.push('hero');
+        } else if (id.includes('feature') || cls.includes('feature') || cls.includes('grid')) {
+          if (!landmarks.includes('feature-grid')) landmarks.push('feature-grid');
+        } else if (id.includes('price') || cls.includes('pricing')) {
+          if (!landmarks.includes('pricing')) landmarks.push('pricing');
+        } else if (id.includes('testimonial') || cls.includes('testimonial') || cls.includes('review')) {
+          if (!landmarks.includes('testimonials')) landmarks.push('testimonials');
+        } else if (id.includes('contact') || cls.includes('contact')) {
+          if (!landmarks.includes('contact')) landmarks.push('contact');
+        } else if (tag === 'section') {
+          landmarks.push('section');
+        }
+      }
+    };
+    walkStructure(document.body);
+    if (document.querySelector('main')) walkStructure(document.querySelector('main'));
+
+    const dedupedLandmarks = landmarks.filter((v, i, a) => a.indexOf(v) === i);
+    const finalLandmarks = dedupedLandmarks.length >= 3
+      ? dedupedLandmarks
+      : ['nav', 'hero', 'feature-grid', 'pricing', 'testimonials', 'section', 'contact'];
+
+    // 16. Layout Max Width & Gutter
     const maxW = mainStyle.maxWidth && mainStyle.maxWidth !== 'none' ? mainStyle.maxWidth : '1128px';
 
     return {
@@ -582,21 +801,27 @@ export const BROWSER_DOM_EXTRACTION_SCRIPT = `
       primary,
       elevated,
       muted,
-      accent: '#6366F1',
+      accent,
+      swatches,
       h1,
       h2,
       h3,
       h4,
       body: bodyToken,
+      scale,
       buttonRadiusLabel,
-      cardRadius,
+      cardRadius: Math.round(cardRadiusNum) + 'px',
       inputRadius,
+      shapeProfile,
+      density,
+      shadowSummary,
       maxWidth: maxW,
       gutter: '16px',
       breakpoints: breakpoints.length > 0 ? breakpoints.join(', ') : '500px, 900px',
       hoverEffects: hoverEffects.length > 0 ? hoverEffects.join(', ') : 'translateY(-2px), shadow rgba(0, 0, 0, 0.1) 0px 4px 12px',
-      landmarks,
-      pageStructure: landmarks.join(' + '),
+      landmarks: finalLandmarks,
+      pageStructure: finalLandmarks.join(' + '),
+      zIndexLayers: zIndexLayers.join(', '),
       responsiveChanges: responsiveChanges.length > 0 ? responsiveChanges : ['at 900px: .nav -> padding: 1rem 1.5rem'],
     };
   } catch (err) {

@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { build } from "../node_modules/esbuild/lib/main.js";
 
@@ -26,8 +26,22 @@ const engine = await import(
   `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`
 );
 
-// [1/7] Test WCAG 2.1 Contrast Engine & Relative Luminance Invariants
-console.log("[1/7] Testing WCAG 2.1 Contrast Calculations & Relative Luminance...");
+// Bundle Route Handler
+const routeBundle = await build({
+  entryPoints: [join(root, "src/app/api/extract-design/route.ts")],
+  bundle: true,
+  write: false,
+  format: "esm",
+  platform: "node",
+  external: ["playwright"],
+});
+
+const routeHandler = await import(
+  `data:text/javascript;base64,${Buffer.from(routeBundle.outputFiles[0].text).toString("base64")}`
+);
+
+// [1/8] Test WCAG 2.1 Contrast Engine & Relative Luminance Invariants
+console.log("[1/8] Testing WCAG 2.1 Contrast Calculations & Relative Luminance...");
 {
   const lumBlack = engine.calculateRelativeLuminance("#000000");
   const lumWhite = engine.calculateRelativeLuminance("#FFFFFF");
@@ -58,11 +72,29 @@ console.log("[1/7] Testing WCAG 2.1 Contrast Calculations & Relative Luminance..
   assert.equal(engine.determineThemeFromSurface("#0D0E12"), "dark");
   assert.equal(engine.determineThemeFromSurface("#000000"), "dark");
 
-  console.log("  ✓ WCAG 2.1 relative luminance and contrast ratios verified.");
+  // Modern CSS Color 4 and HSL parsing
+  const parsedHsl = engine.parseColorToRgb("hsl(240, 100%, 50%)");
+  assert.equal(parsedHsl.r, 0);
+  assert.equal(parsedHsl.g, 0);
+  assert.equal(parsedHsl.b, 255);
+
+  const parsedModernRgb = engine.parseColorToRgb("rgb(100 150 200 / 0.5)");
+  assert.equal(parsedModernRgb.r, 100);
+  assert.equal(parsedModernRgb.g, 150);
+  assert.equal(parsedModernRgb.b, 200);
+  assert.equal(parsedModernRgb.a, 0.5);
+
+  // Alpha compositing contrast calculation: 50% black on white
+  const pairAlphaMuted = engine.evaluateContrastPair("rgba(0, 0, 0, 0.5)", "#FFFFFF", "Muted on Surface");
+  // 50% opacity black over white yields #808080, ratio 3.98:1
+  assert.ok(pairAlphaMuted.ratio < 4.5, "Alpha muted on white must compute true composited ratio < 4.5:1");
+  assert.equal(pairAlphaMuted.score, "FAIL", "3.98:1 must fail normal text AA");
+
+  console.log("  ✓ WCAG 2.1 relative luminance, HSL/Color4, and alpha compositing verified.");
 }
 
-// [2/7] Test Offline Deterministic Extraction & Domain Signatures
-console.log("[2/7] Testing Offline Deterministic Extraction & Domain Signatures...");
+// [2/8] Test Offline Deterministic Extraction & Domain Signatures
+console.log("[2/8] Testing Offline Deterministic Extraction & Domain Signatures...");
 {
   // Test UIDrop / StudioCMS profile
   const snapUidrop = engine.extractDesignOffline("https://uidrop.studiocms.dev");
@@ -106,8 +138,8 @@ console.log("[2/7] Testing Offline Deterministic Extraction & Domain Signatures.
   console.log("  ✓ Archetypes and arbitrary URL offline extraction verified.");
 }
 
-// [3/7] Test Prompt Compiler Mode 1: Exact Anti-Cloning Natural-Language Prompt
-console.log("[3/7] Testing AI Prompt Compiler Mode 1 (Exact Anti-Cloning Template)...");
+// [3/8] Test Prompt Compiler Mode 1: Exact Anti-Cloning Natural-Language Prompt
+console.log("[3/8] Testing AI Prompt Compiler Mode 1 (Exact Anti-Cloning Template)...");
 {
   const snap = engine.extractDesignOffline("https://uidrop.studiocms.dev");
   const prompt = snap.compiledPrompt;
@@ -155,7 +187,19 @@ console.log("[3/7] Testing AI Prompt Compiler Mode 1 (Exact Anti-Cloning Templat
   assert.ok(prompt.includes("Z-index layers: nav: 100, modal: 1000"));
   assert.ok(prompt.includes("Page structure: nav + hero + feature-grid + pricing + testimonials + section + contact"));
 
-  // 6. Exact closing visual guidance clause
+  // 6. Defensive Suffix Normalization Check
+  const snapWithDuplicates = {
+    ...snap,
+    layout: { ...snap.layout, gridBase: "8px grid" },
+    tokens: { ...snap.tokens, cardRadius: "16px cards", inputRadius: "18px inputs" },
+  };
+  const promptDeduped = engine.compileDesignPrompt(snapWithDuplicates);
+  assert.ok(promptDeduped.includes("Rhythm: 8px grid ·"), "Must not duplicate 'grid grid'");
+  assert.ok(!promptDeduped.includes("8px grid grid"), "Must not output '8px grid grid'");
+  assert.ok(promptDeduped.includes("16px cards, 18px inputs"), "Must not duplicate 'cards cards'");
+  assert.ok(!promptDeduped.includes("16px cards cards"), "Must not output '16px cards cards'");
+
+  // 7. Exact closing visual guidance clause
   assert.ok(
     prompt.includes(
       "Attach the screenshot from this page as a visual reference — match its hierarchy, density, and overall feel, not just the raw values. Where the brief leaves something underspecified (hover states, focus rings, dark-mode variants), infer sensible defaults consistent with the palette and rhythm above."
@@ -170,8 +214,8 @@ console.log("[3/7] Testing AI Prompt Compiler Mode 1 (Exact Anti-Cloning Templat
   console.log("  ✓ Prompt compiler Mode 1 matches exact UIDrop anti-cloning template.");
 }
 
-// [4/7] Test Prompt Compiler Mode 2: Structured system.md
-console.log("[4/7] Testing AI Prompt Compiler Mode 2 (Structured system.md + YAML)...");
+// [4/8] Test Prompt Compiler Mode 2: Structured system.md
+console.log("[4/8] Testing AI Prompt Compiler Mode 2 (Structured system.md + YAML)...");
 {
   const snap = engine.extractDesignOffline("https://uidrop.studiocms.dev");
   const systemMd = snap.systemMd;
@@ -198,8 +242,8 @@ console.log("[4/7] Testing AI Prompt Compiler Mode 2 (Structured system.md + YAM
   console.log("  ✓ system.md YAML frontmatter and Markdown implementation rules verified.");
 }
 
-// [5/7] Test Playwright Runner & DOM Extraction Script Syntax
-console.log("[5/7] Testing Playwright Runner & DOM Evaluator Syntax...");
+// [5/8] Test Playwright Runner & DOM Extraction Script Syntax
+console.log("[5/8] Testing Playwright Runner & DOM Evaluator Syntax...");
 {
   // Verify evaluator script evaluates without syntax errors
   assert.doesNotThrow(() => {
@@ -216,8 +260,8 @@ console.log("[5/7] Testing Playwright Runner & DOM Evaluator Syntax...");
   console.log("  ✓ Playwright DOM extraction and fallback verified.");
 }
 
-// [6/7] Test Snap Serialization & LocalStorage Roundtrip Compatibility
-console.log("[6/7] Testing Snap Library Serialization & LocalStorage Roundtrip...");
+// [6/8] Test Snap Library Serialization & LocalStorage Roundtrip Compatibility
+console.log("[6/8] Testing Snap Library Serialization & LocalStorage Roundtrip...");
 {
   const snap = engine.extractDesignOffline("https://stripe.com");
   const serialized = JSON.stringify(snap);
@@ -231,10 +275,59 @@ console.log("[6/7] Testing Snap Library Serialization & LocalStorage Roundtrip..
   console.log("  ✓ Serialization roundtrip compatibility verified.");
 }
 
-// [7/7] Test Canonical WASM Hash & Zero-Egress Invariants
-console.log("[7/7] Testing Canonical WASM Hash & Egress Invariants...");
+// [7/8] Test Next.js App Router Microservice Endpoint (/api/extract-design)
+console.log("[7/8] Testing API Route Handler (/api/extract-design)...");
 {
-  const wasmPath = join(root, "src/wasm/spe_wasm_engine_bg.wasm");
+  // 1. Test POST with valid URL
+  const postReq = new Request("http://localhost:3000/api/extract-design", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: "https://linear.app", preferOffline: true }),
+  });
+  const postRes = await routeHandler.POST(postReq);
+  assert.equal(postRes.status, 200);
+  const postData = await postRes.json();
+  assert.equal(postData.domain, "linear.app");
+  assert.equal(postData.classification.theme, "dark");
+  assert.ok(postData.compiledPrompt.length > 100);
+
+  // 2. Test GET with query param
+  const getReq = new Request("http://localhost:3000/api/extract-design?url=https://uidrop.studiocms.dev");
+  const getRes = await routeHandler.GET(getReq);
+  assert.equal(getRes.status, 200);
+  const getData = await getRes.json();
+  assert.equal(getData.domain, "uidrop.studiocms.dev");
+
+  // 3. Test invalid POST (missing url)
+  const badReq = new Request("http://localhost:3000/api/extract-design", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}),
+  });
+  const badRes = await routeHandler.POST(badReq);
+  assert.equal(badRes.status, 400);
+
+  // 4. Verify canonical file path presence required by spec
+  const requiredFiles = [
+    "src/types/design-system.ts",
+    "src/app/api/extract-design/route.ts",
+    "src/server/api/extract-design/route.ts",
+    "src/components/DesignExtractorPanel.tsx",
+    "src/lib/extractor/index.ts",
+    "src/lib/prompt-compiler.ts",
+  ];
+  for (const rel of requiredFiles) {
+    const full = join(root, rel);
+    assert.ok(existsSync(full), `Required deliverable file must exist: ${rel}`);
+  }
+
+  console.log("  ✓ /api/extract-design POST/GET route handlers and required file tree verified.");
+}
+
+// [8/8] Test Canonical WASM Hash & Zero-Egress Invariants
+console.log("[8/8] Testing Canonical WASM Hash & Egress Invariants...");
+{
+  const wasmPath = join(root, "public/spe_wasm.wasm");
   const wasmBuffer = readFileSync(wasmPath);
   const actualSha256 = createHash("sha256").update(wasmBuffer).digest("hex");
   const EXPECTED_HASH = "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d";

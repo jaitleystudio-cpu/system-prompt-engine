@@ -194,7 +194,15 @@ export const FEATURES: FeatureItem[] = [
 
 export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigate }) => {
   const [filter, setFilter] = useState("");
-  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [activeModal, setActiveModal] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      const p = window.location.pathname;
+      if (p.includes("uidrop") || p.includes("design-system-extractor")) {
+        return "uidrop-extractor";
+      }
+    }
+    return null;
+  });
   const [ragQuery, setRagQuery] = useState("OWASP input sanitization delimiters");
   const [ragResults, setRagResults] = useState<SearchResult[]>(() =>
     defaultRagEngine.searchHybrid("OWASP input sanitization delimiters", 4),

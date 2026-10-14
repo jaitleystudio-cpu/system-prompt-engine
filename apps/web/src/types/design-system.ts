@@ -54,6 +54,8 @@ export interface TypographyTokens {
   bodyDetail: TypeLevelToken;
 }
 
+export type TypographyScale = TypographyTokens;
+
 export interface ComponentTokens {
   buttonRadiusLabel: string;
   cardRadius: string;
