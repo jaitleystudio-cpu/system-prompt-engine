@@ -312,14 +312,23 @@ try {
       const logic = verifySymbolicConstraints(rawPrompt);
       const dq = evaluatePromptDataQuality(rawPrompt, { isParadoxFree: logic.isParadoxFree });
 
-      console.log(`\n${bold('FIRST-ORDER LOGIC STATUS:')} ${logic.isParadoxFree ? green('PROVABLY_SATISFIABLE') : red('CONTRADICTORY_DEADLOCK')}`);
+      console.log(`\n${bold('FIRST-ORDER LOGIC STATUS:')} ${logic.isParadoxFree ? green('PROVABLY_SATISFIABLE') : red(logic.status)}`);
+      console.log(`  Proof Method:           ${cyan(logic.proofMethod)}`);
       console.log(`  Propositions Extracted: ${logic.propositions.length}`);
       console.log(`  Satisfiability Ratio:   ${(logic.satisfiabilityRatio * 100).toFixed(1)}%`);
+      if (logic.verifiedAxioms && logic.verifiedAxioms.length > 0) {
+        console.log(`  Axioms Applied:         ${cyan(logic.verifiedAxioms.join(', '))}`);
+      }
       
       if (!logic.isParadoxFree) {
         console.log(red('  Contradictions Caught:'));
         for (const c of logic.contradictions) {
           console.log(`    - ❌ ${c.conflictReason}`);
+        }
+        if (logic.counterexample) {
+          console.log(yellow(`\n  ⚡ Concrete Counterexample Witness [${logic.counterexample.witnessId}]:`));
+          console.log(`    Adversarial Query: "${gray(logic.counterexample.adversarialQuery)}"`);
+          console.log(`    Refutation:        ${gray(logic.counterexample.refutationSummary)}`);
         }
       }
 
@@ -912,8 +921,11 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
       console.log(`  Total Iterations:  ${report.totalIterations}`);
       console.log(`  Converged:         ${report.converged ? green('YES (100% Passed)') : yellow('NO')}`);
       console.log(`  Execution Tier:    ${cyan(report.executionTier)} (${report.isSimulatedTier ? 'Rule-Guided Simulation' : 'Live Neural Weights'})`);
+      console.log(`  Qualification:     ${report.isRealModelValidated ? green(report.qualificationStatus) : yellow(report.qualificationStatus)}`);
+      console.log(`  Real Model Valid:  ${report.isRealModelValidated ? green('YES') : yellow('NO (Simulation Sanity Only)')}`);
+      console.log(`  Model Gen. Score:  ${cyan(report.empiricalOptimizationScore)}`);
+      console.log(`  Holdout Probes:    ${report.holdoutPassRatePercent}% (Internal Sanity Gap: ${report.generalizationGapPercent}%)`);
       console.log(`  Tier Disclosure:   ${gray(report.tierDisclosure)}`);
-      console.log(`  Holdout Pass Rate: ${report.holdoutPassRatePercent}% (Generalization Gap: ${report.generalizationGapPercent}%)`);
 
       if (flags.out) {
         writeFileSync(flags.out, report.markdownReport, 'utf8');

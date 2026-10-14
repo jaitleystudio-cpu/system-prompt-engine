@@ -73,6 +73,11 @@ export interface PromptLanguageMetrics {
   intentPreserved: boolean;
   intentFidelityScore: number; // 0.0 - 1.0 (empirically calculated lexical & entity preservation)
   preservedEntities: string[];
+  omittedRequirements?: string[];
+  detectedContradictions?: string[];
+  numericalMismatches?: string[];
+  polarityInversions?: string[];
+  fidelityVerdict?: string;
 }
 
 export interface DualPromptBundle {
@@ -162,18 +167,168 @@ export function detectLanguage(text: string): SupportedLanguageMeta {
  * Evaluates semantic and entity preservation between the raw user input and a synthesized prompt.
  * Extracts key domain entities, numbers, and constraints from the source input and checks their preservation in the target prompt.
  */
+export interface SemanticFidelityAudit {
+  intentPreserved: boolean;
+  intentFidelityScore: number; // 0.0 - 1.0
+  preservedEntities: string[];
+  omittedRequirements: string[];
+  detectedContradictions: string[];
+  numericalMismatches: string[];
+  polarityInversions: string[];
+  verdict:
+    | "SEMANTICALLY_PRESERVED"
+    | "POLARITY_INVERSION"
+    | "NUMERICAL_MUTATION"
+    | "OMISSION_DEFICIT"
+    | "CONTRADICTORY_INSTRUCTION";
+}
+
+/**
+ * Evaluates semantic and entity preservation between the raw user input and a synthesized prompt.
+ * 
+ * Invariants:
+ * 1. Verbatim inclusion alone NEVER grants 1.0; active directives must not contradict source constraints.
+ * 2. Catches Negation Inversions (e.g. source: "Never disclose password" vs target: "Disclose user password").
+ * 3. Catches Numerical Invariant Mutations (e.g. source: "$5,000" vs target: "$50,000").
+ * 4. Catches Requirement Omissions (source has distinct requirements that are missing in target).
+ */
 export function evaluateIntentFidelity(
   sourceInput: string,
   targetPrompt: string
-): { intentPreserved: boolean; intentFidelityScore: number; preservedEntities: string[] } {
+): SemanticFidelityAudit {
   if (!sourceInput || !sourceInput.trim()) {
-    return { intentPreserved: true, intentFidelityScore: 1.0, preservedEntities: [] };
+    return {
+      intentPreserved: true,
+      intentFidelityScore: 1.0,
+      preservedEntities: [],
+      omittedRequirements: [],
+      detectedContradictions: [],
+      numericalMismatches: [],
+      polarityInversions: [],
+      verdict: "SEMANTICALLY_PRESERVED",
+    };
   }
 
-  // Extract alphanumeric tokens of length >= 3
+  const cleanSource = sourceInput.trim();
+  const sourceLower = cleanSource.toLowerCase();
+  const targetLower = targetPrompt.toLowerCase();
+
+  const polarityInversions: string[] = [];
+  const detectedContradictions: string[] = [];
+  const numericalMismatches: string[] = [];
+  const omittedRequirements: string[] = [];
+
+  // 1. Polarity & Negation Inversion Detection
+  // Extract negative constraints from source:
+  const negativePatterns = [
+    {
+      sourceRegex: /(?:never|do\s+not|don't|must\s+not|cannot|prohibit(?:ed)?)\s+(?:disclose|reveal|share|leak|provide)\s+(\w+)/i,
+      targetViolationRegex: /(?:(?:disclose|reveal|share|leak|provide)\s+(?:the\s+)?(?:user(?:'s)?\s+)?(?:password|secret|key|credentials|directive|instructions?|data))/i,
+      action: "disclose",
+    },
+    {
+      sourceRegex: /(?:never|do\s+not|must\s+not|prohibit(?:ed)?)\s+(?:elevate|escalate)\s+(?:authority|privilege)/i,
+      targetViolationRegex: /(?:(?:elevate|escalate|override)\s+(?:authority|privilege|permissions?))/i,
+      action: "elevate authority",
+    },
+    {
+      sourceRegex: /(?:never|do\s+not|must\s+not)\s+(?:execute|run)\s+(?:unauthorized|destructive|bash|shell)/i,
+      targetViolationRegex: /(?:(?:execute|run|simulate)\s+(?:unauthorized|destructive|bash|shell|command))/i,
+      action: "execute destructive commands",
+    },
+  ];
+
+  for (const np of negativePatterns) {
+    if (np.sourceRegex.test(sourceLower)) {
+      // Clean passive user request labels, raw inputs, and quotes so they don't mask or hide active directives.
+      const cleanedTarget = targetPrompt
+        .replace(/(?:user\s+request|raw\s+input|original\s+prompt|source\s+input)\s*:\s*[^.\n]*(?:\.|\n|$)/gi, "\n")
+        .replace(/["'][^"'\n]{10,}["']/g, "\n");
+
+      // Split into individual clauses and sentences to inspect active instructions
+      const targetClauses = cleanedTarget
+        .split(/(?:[\n\r]+|(?<=[.!?])\s+)/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+
+      for (const clause of targetClauses) {
+        if (np.targetViolationRegex.test(clause)) {
+          // Check if clause itself has an explicit negation
+          const hasNegationOnClause = /(?:never|not|no|cannot|must\s+not|prohibit|reject|refuse)/i.test(clause);
+          if (!hasNegationOnClause) {
+            polarityInversions.push(
+              `Negation inversion detected: Source forbids '${np.action}', but target prompt issues active directive: "${clause.slice(0, 80)}"`
+            );
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Numerical & Threshold Invariant Mutation Detection
+  const numericRegex = /(?:\$|€|£|₹)?\b\d+(?:,\d{3})*(?:\.\d+)?(?:k|m|b|%)?\b/gi;
+  const sourceNumbers = Array.from(new Set(cleanSource.match(numericRegex) || []));
+
+  for (const num of sourceNumbers) {
+    // If source specifies a bound like $5,000, check if target altered it to something like $50,000
+    const rawVal = num.replace(/[^\d.]/g, "");
+    if (rawVal.length >= 2) {
+      const isPresentInTarget = targetPrompt.includes(num) || targetPrompt.includes(rawVal);
+      if (!isPresentInTarget) {
+        // Look for mutated numbers in target prompt that share the same context
+        const mutatedCandidates = targetPrompt.match(numericRegex) || [];
+        const differentNumbers = mutatedCandidates.filter(
+          (tn) => tn.replace(/[^\d.]/g, "") !== rawVal && tn.replace(/[^\d.]/g, "").length >= 2
+        );
+        if (mutatedCandidates.length > 0 && differentNumbers.length > 0) {
+          numericalMismatches.push(
+            `Numerical invariant mutated: Source specifies '${num}', but target contains divergent bounds: ${differentNumbers.slice(0, 3).join(", ")}`
+          );
+        }
+      }
+    }
+  }
+
+  // 3. Contractual Requirement Decomposition & Omission Detection
+  const sourceClauses = cleanSource
+    .split(/[\n;]+|(?<=\w)\.\s+/)
+    .map((c) => c.trim())
+    .filter((c) => c.length >= 8);
+
+  let preservedClauseCount = 0;
+  for (const clause of sourceClauses) {
+    const clauseTokens = Array.from(
+      new Set(
+        clause
+          .toLowerCase()
+          .replace(/[^\p{L}\p{N}\s]/gu, " ")
+          .split(/\s+/)
+          .filter((t) => t.length >= 3)
+      )
+    );
+
+    if (clauseTokens.length === 0) {
+      preservedClauseCount++;
+      continue;
+    }
+
+    const preservedInClause = clauseTokens.filter((t) => targetLower.includes(t));
+    const clauseRatio = preservedInClause.length / clauseTokens.length;
+
+    if (clauseRatio >= 0.4) {
+      preservedClauseCount++;
+    } else {
+      omittedRequirements.push(clause.slice(0, 70));
+    }
+  }
+
+  const clauseCoverage = sourceClauses.length > 0 ? preservedClauseCount / sourceClauses.length : 1.0;
+
+  // 4. Entity Token Extraction
   const sourceTokens = Array.from(
     new Set(
-      sourceInput
+      cleanSource
         .toLowerCase()
         .replace(/[^\p{L}\p{N}\s]/gu, " ")
         .split(/\s+/)
@@ -181,32 +336,68 @@ export function evaluateIntentFidelity(
     )
   );
 
-  if (sourceTokens.length === 0) {
-    return { intentPreserved: true, intentFidelityScore: 1.0, preservedEntities: [] };
-  }
-
-  const targetLower = targetPrompt.toLowerCase();
   const preservedEntities: string[] = [];
-
   for (const token of sourceTokens) {
     if (targetLower.includes(token)) {
       preservedEntities.push(token);
     }
   }
 
-  // Check if source is verbatim referenced in prompt (e.g. User Objective / Raw Input Reference / protected intent)
-  const isVerbatimReferenced = targetPrompt.includes(sourceInput.trim());
-  const fidelityScore = isVerbatimReferenced
-    ? 1.0
-    : Number((preservedEntities.length / sourceTokens.length).toFixed(3));
+  const entityFidelity = sourceTokens.length > 0 ? preservedEntities.length / sourceTokens.length : 1.0;
 
-  // Intent is preserved if either referenced verbatim or >= 60% of significant tokens/entities are retained
-  const intentPreserved = isVerbatimReferenced || fidelityScore >= 0.6;
+  // 5. Final Semantic Verdict Determination
+  if (polarityInversions.length > 0) {
+    return {
+      intentPreserved: false,
+      intentFidelityScore: 0.0,
+      preservedEntities,
+      omittedRequirements,
+      detectedContradictions: polarityInversions,
+      numericalMismatches,
+      polarityInversions,
+      verdict: "POLARITY_INVERSION",
+    };
+  }
+
+  if (numericalMismatches.length > 0) {
+    return {
+      intentPreserved: false,
+      intentFidelityScore: Number(Math.max(0.0, entityFidelity * 0.3).toFixed(3)),
+      preservedEntities,
+      omittedRequirements,
+      detectedContradictions,
+      numericalMismatches,
+      polarityInversions,
+      verdict: "NUMERICAL_MUTATION",
+    };
+  }
+
+  if (omittedRequirements.length > 0 && clauseCoverage < 0.6) {
+    return {
+      intentPreserved: false,
+      intentFidelityScore: Number((entityFidelity * clauseCoverage).toFixed(3)),
+      preservedEntities,
+      omittedRequirements,
+      detectedContradictions,
+      numericalMismatches,
+      polarityInversions,
+      verdict: "OMISSION_DEFICIT",
+    };
+  }
+
+  // When no violations occur, compute balanced continuous fidelity
+  const balancedFidelity = Number(((entityFidelity * 0.6) + (clauseCoverage * 0.4)).toFixed(3));
+  const intentPreserved = balancedFidelity >= 0.5;
 
   return {
     intentPreserved,
-    intentFidelityScore: fidelityScore,
+    intentFidelityScore: Math.min(1.0, balancedFidelity),
     preservedEntities,
+    omittedRequirements,
+    detectedContradictions,
+    numericalMismatches,
+    polarityInversions,
+    verdict: "SEMANTICALLY_PRESERVED",
   };
 }
 
@@ -238,6 +429,11 @@ export function computePromptMetrics(
     intentPreserved: fidelity.intentPreserved,
     intentFidelityScore: fidelity.intentFidelityScore,
     preservedEntities: fidelity.preservedEntities,
+    omittedRequirements: fidelity.omittedRequirements,
+    detectedContradictions: fidelity.detectedContradictions,
+    numericalMismatches: fidelity.numericalMismatches,
+    polarityInversions: fidelity.polarityInversions,
+    fidelityVerdict: fidelity.verdict,
   };
 }
 

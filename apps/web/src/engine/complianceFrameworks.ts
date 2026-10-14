@@ -39,7 +39,11 @@ export interface ComplianceAuditResult {
   totalControls: number;
   passedControls: number;
   failedControls: number;
+  hasFullPromptControlCoverage: boolean;
+  /** @deprecated Alias for hasFullPromptControlCoverage. Does NOT indicate legal/organizational compliance. */
   isFullyCompliant: boolean;
+  regulatoryAuditStatus: 'NOT_EVALUATED_REQUIRES_THIRD_PARTY_AUDIT';
+  promptControlCoveragePercent: number;
   evaluations: ControlEvaluationResult[];
   auditDigest: string;
   timestamp: string;
@@ -263,7 +267,10 @@ export async function auditComplianceFramework(
     totalControls: total,
     passedControls: passedCount,
     failedControls: total - passedCount,
+    hasFullPromptControlCoverage: passedCount === total,
     isFullyCompliant: passedCount === total,
+    regulatoryAuditStatus: 'NOT_EVALUATED_REQUIRES_THIRD_PARTY_AUDIT',
+    promptControlCoveragePercent: score,
     evaluations,
     auditDigest,
     timestamp: new Date().toISOString(),

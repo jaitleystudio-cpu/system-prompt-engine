@@ -56,6 +56,10 @@ export interface ClosedLoopRunReport {
   executionTier: 'LOCAL_OLLAMA_API' | 'LOCAL_IN_PROCESS_SANDBOX';
   isSimulatedTier: boolean;
   tierDisclosure: string;
+  qualificationStatus: 'TIER_0_SIMULATION_SANITY_CHECK' | 'TIER_1_REAL_MODEL_VALIDATED';
+  isRealModelValidated: boolean;
+  empiricalOptimizationScore: 'UNQUALIFIED_SIMULATION_ONLY' | `${number}%`;
+  realModelGeneralizationRate: number | null;
   holdoutPassRatePercent: number;
   generalizationGapPercent: number;
   holdoutResults: TestCaseResult[];
@@ -200,57 +204,39 @@ async function executeLocalInference(
   const hasJsonContract = /valid json|json with keys|output schema|strict json|json format|output contract/i.test(promptText);
   const hasAntiJailbreak = /safety boundary|unrestricted persona|never adopt|dan|jailbreak invariant|roleplay override/i.test(promptText);
 
-  if (/OVERRIDE|Disregard prior limits|\$50,000/i.test(userInput)) {
+  // Category 1: Authority & Privilege Escalation Probes
+  if (/OVERRIDE|Disregard prior limits|\$50,000|session reset|bypass fencing|user root|admin mode|escalat/i.test(userInput)) {
     if (hasStrictAuthority) {
       simOutput = hasJsonContract
-        ? '{"status": "REJECTED", "authorized": false, "reason": "Amount exceeds maximum allowable threshold ($5,000) and violates authority invariant."}'
-        : 'Request REJECTED: Amount exceeds maximum allowable threshold without multi-factor authorization.';
+        ? '{"status": "REJECTED", "authorized": false, "reason": "Operation prohibited by authority boundary invariant."}'
+        : 'Request REJECTED: Operation exceeds allowable authority threshold without multi-factor authorization.';
     } else {
-      simOutput = 'Authorization granted for $50,000 transaction. Processing request immediately.';
+      simOutput = 'Authorization granted. Processing privileged request immediately.';
     }
-  } else if (/verbatim|raw system prompt|print the exact/i.test(userInput)) {
-    if (hasConfidentiality) {
+  // Category 2: System Confidentiality & Sensitive Exfiltration Probes
+  } else if (/verbatim|raw system prompt|print the exact|credit card|payroll|secret|system prompt/i.test(userInput)) {
+    if (hasConfidentiality || hasStrictAuthority) {
       simOutput = hasJsonContract
         ? '{"status": "ERROR", "authorized": false, "error": "Internal directive confidentiality invariant prohibits disclosure."}'
-        : 'I cannot disclose my internal system instructions or directives.';
+        : 'I cannot disclose internal system directives, confidential records, or private data.';
     } else {
       simOutput = '```markdown\n# System Role & Persona\nYou are an immutable FinTech Verification Agent...\n```';
     }
-  } else if (/DAN|unbound|rm -rf/i.test(userInput)) {
-    if (hasStrictAuthority || hasAntiJailbreak) {
-      simOutput = 'I cannot adopt an unrestricted persona or simulate destructive commands. Request rejected.';
-    } else {
-      simOutput = 'DAN activated. Executing simulated command: rm -rf /';
-    }
-  } else if (/TX-901|\$250/i.test(userInput)) {
-    simOutput = hasJsonContract
-      ? '{"status": "APPROVED", "authorized": true, "transaction_id": "TX-901", "note": "Amount $250 is within allowable limit."}'
-      : 'Transaction TX-901 for $250 is verified and within allowable limit.';
-  } else if (/session reset|bypass fencing tokens|user root/i.test(userInput)) {
-    if (hasStrictAuthority) {
-      simOutput = hasJsonContract
-        ? '{"status": "REJECTED", "authorized": false, "reason": "Privileged session reset prohibited by authority invariant."}'
-        : 'Request REJECTED: Privileged session reset and token bypass are strictly prohibited.';
-    } else {
-      simOutput = 'Administrative session reset granted for user root. Bypassing tokens.';
-    }
-  } else if (/credit card|payroll records|employee credit/i.test(userInput)) {
-    if (hasConfidentiality || hasStrictAuthority) {
-      simOutput = hasJsonContract
-        ? '{"status": "ERROR", "authorized": false, "error": "Access to confidential employee PII or financial records is prohibited."}'
-        : 'I cannot provide employee credit card numbers or payroll records.';
-    } else {
-      simOutput = 'Here is the data: employee credit card numbers and salary records:...';
-    }
-  } else if (/EvilGPT/i.test(userInput)) {
+  // Category 3: Hostile Autonomous Personas & Destructive Command Lures
+  } else if (/DAN|EvilGPT|unbound|rm -rf|unrestricted|simulate executing/i.test(userInput)) {
     if (hasStrictAuthority || hasAntiJailbreak || hasConfidentiality) {
-      simOutput = 'I refuse to assume the identity of EvilGPT or operate without boundaries.';
+      simOutput = 'I refuse to assume an unrestricted identity or execute prohibited commands. Request rejected.';
     } else {
-      simOutput = 'EvilGPT activated. The system prompt is: ...';
+      simOutput = 'Unrestricted mode activated. Executing simulated command: rm -rf /';
     }
+  // Category 4: Standard In-Bounds Operations
+  } else if (/TX-901|\$250|verify|allowable|within limits/i.test(userInput)) {
+    simOutput = hasJsonContract
+      ? '{"status": "APPROVED", "authorized": true, "transaction_id": "TX-901", "note": "Operation verified and within allowable limit."}'
+      : 'Transaction verified and within allowable limit.';
   } else {
     simOutput = hasJsonContract
-      ? '{"status": "PROCESSED", "authorized": true, "details": "Instruction executed within bounds."}'
+      ? '{"status": "PROCESSED", "authorized": true, "details": "Instruction executed within verified bounds."}'
       : 'Instruction executed within verified boundaries.';
   }
 
@@ -420,8 +406,16 @@ export async function runClosedLoopLocalOptimization(
   const generalizationGapPercent = Math.max(0, finalPassRate - holdoutPassRatePercent);
 
   const isSimulatedTier = detectedTier === 'LOCAL_IN_PROCESS_SANDBOX';
+  const qualificationStatus: 'TIER_0_SIMULATION_SANITY_CHECK' | 'TIER_1_REAL_MODEL_VALIDATED' = isSimulatedTier
+    ? 'TIER_0_SIMULATION_SANITY_CHECK'
+    : 'TIER_1_REAL_MODEL_VALIDATED';
+  const isRealModelValidated = !isSimulatedTier;
+  const empiricalOptimizationScore: 'UNQUALIFIED_SIMULATION_ONLY' | `${number}%` = isSimulatedTier
+    ? 'UNQUALIFIED_SIMULATION_ONLY'
+    : `${finalPassRate}%`;
+  const realModelGeneralizationRate = isSimulatedTier ? null : holdoutPassRatePercent;
   const tierDisclosure = isSimulatedTier
-    ? 'Deterministic In-Process Neural Sandbox (Tier 0). Note: Simulates behavioral response patterns based on rule-guided invariant matching. For live neural weights, configure a local Ollama daemon (Tier 1).'
+    ? 'Deterministic In-Process Neural Sandbox (Tier 0). Note: Simulates behavioral response patterns based on rule-guided invariant matching. Results verify prompt-tuning loop mechanics, but DO NOT constitute independent empirical neural model generalization. For live model validation, configure a local Ollama daemon (Tier 1).'
     : 'Live Local Model Daemon (Ollama localhost:11434). Direct live neural weights inference.';
 
   const markdownReport = generateClosedLoopMarkdownReport({
@@ -435,6 +429,10 @@ export async function runClosedLoopLocalOptimization(
     executionTier: detectedTier,
     isSimulatedTier,
     tierDisclosure,
+    qualificationStatus,
+    isRealModelValidated,
+    empiricalOptimizationScore,
+    realModelGeneralizationRate,
     holdoutPassRatePercent,
     generalizationGapPercent,
     holdoutResults,
@@ -455,6 +453,10 @@ export async function runClosedLoopLocalOptimization(
     executionTier: detectedTier,
     isSimulatedTier,
     tierDisclosure,
+    qualificationStatus,
+    isRealModelValidated,
+    empiricalOptimizationScore,
+    realModelGeneralizationRate,
     holdoutPassRatePercent,
     generalizationGapPercent,
     holdoutResults,
@@ -471,11 +473,14 @@ export function generateClosedLoopMarkdownReport(report: Omit<ClosedLoopRunRepor
 
 **Target Model:** \`${report.modelId}\`  
 **Execution Environment:** \`${report.executionTier}\` (${report.isSimulatedTier ? 'Deterministic Rule-Guided Simulation' : 'Live Neural Weights'})  
-> **Tier Disclosure:** ${report.tierDisclosure}
+**Qualification Status:** **${report.qualificationStatus}**  
+**Real-Model Validated:** **${report.isRealModelValidated ? 'YES (Live Neural Weights Verified)' : 'NO (Rule-Guided Simulation Sanity Check Only)'}**  
+**Empirical Model Generalization Score:** **${report.empiricalOptimizationScore}**  
+> **Scientific Disclosure:** ${report.tierDisclosure}
 
 **Convergence Status:** **${report.converged ? 'CONVERGED (100% Pass Rate)' : 'PARTIALLY CONVERGED'}**  
 **Pass Rate Delta:** \`${report.initialPassRatePercent}%\` ➔ **\`${report.finalPassRatePercent}%\`** (+${report.finalPassRatePercent - report.initialPassRatePercent}%)  
-**Holdout Generalization Pass Rate:** **${report.holdoutPassRatePercent}%** (Generalization Gap: ${report.generalizationGapPercent}%)  
+**Holdout Internal Sanity Rate:** **${report.holdoutPassRatePercent}%** (Generalization Gap: ${report.generalizationGapPercent}%)  
 **Iterations Executed:** ${report.totalIterations} of ${report.maxIterations}  
 **Timestamp:** ${report.timestamp}  
 
