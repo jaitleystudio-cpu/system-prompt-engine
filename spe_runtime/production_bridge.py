@@ -1363,7 +1363,11 @@ class CommercialLicensingAdapter:
         allow_custom_signer: bool = False,
         current_time_iso: str | None = None,
     ) -> Dict[str, Any]:
-        from spe_runtime.entitlement.license import verify_offline_license, LicenseVerificationError
+        from spe_runtime.entitlement.license import (
+            verify_offline_license,
+            LicenseVerificationError,
+            OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX,
+        )
         try:
             payload = verify_offline_license(
                 license_token,
@@ -1371,6 +1375,10 @@ class CommercialLicensingAdapter:
                 allow_custom_signer=allow_custom_signer,
                 current_time_iso=current_time_iso,
             )
+            import base64
+            envelope = json.loads(base64.b64decode(license_token.encode("ascii")).decode("utf-8"))
+            pk_hex = envelope.get("public_key_hex")
+            is_official = (pk_hex == OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX)
             return {
                 "valid": True,
                 "status": "ACTIVE",
@@ -1381,6 +1389,10 @@ class CommercialLicensingAdapter:
                 "expires_at": payload.expires_at,
                 "capabilities": payload.capabilities,
                 "machine_fingerprint": payload.machine_fingerprint,
+                "public_key_hex": pk_hex,
+                "is_test_emulated": not is_official,
+                "trust_authority": "OFFICIAL_SPE_ROOT" if is_official else "TEST_OVERRIDE_EMULATOR",
+                "production_qualified": is_official,
                 "error": None,
             }
         except LicenseVerificationError as e:
@@ -1394,6 +1406,10 @@ class CommercialLicensingAdapter:
                 "expires_at": None,
                 "capabilities": [],
                 "machine_fingerprint": None,
+                "public_key_hex": None,
+                "is_test_emulated": False,
+                "trust_authority": "OFFICIAL_SPE_ROOT",
+                "production_qualified": False,
                 "error": str(e),
             }
 

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-14T19:14:26.727Z",
+  "timestamp": "2026-10-14T19:50:23.941Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -16,7 +16,7 @@
       "suitesPassed": 5,
       "failures": 0,
       "exitCode": 0,
-      "totalConsoleSuccessMarkers": 85,
+      "totalConsoleSuccessMarkers": 89,
       "suiteDetails": [
         {
           "suite": "model-atlas-sync",
@@ -50,7 +50,7 @@
           "suite": "forensic-r2-gates",
           "testRunner": "node:child_process / custom-mjs",
           "exitCode": 0,
-          "consoleSuccessMarkers": 38,
+          "consoleSuccessMarkers": 42,
           "status": "PASS"
         }
       ]
@@ -65,8 +65,8 @@
     }
   },
   "success": true,
-  "durationMs": 14898,
-  "contentDigestSha256": "8a25da7709f89378c4d54214c714ecc2a06d51b72e4c021a819a860d8d06f5e5",
+  "durationMs": 16256,
+  "contentDigestSha256": "7f90fe37f79d849258516188b2c5fdae87f81bdbcc0661d298e4777da466aba8",
   "digestAlgorithm": "SHA-256",
   "canonicalization": "RFC_8785_CANONICAL_JSON",
   "attestationType": "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",

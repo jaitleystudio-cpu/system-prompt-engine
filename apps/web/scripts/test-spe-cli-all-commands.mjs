@@ -457,8 +457,20 @@ try {
   assert(e.message.includes("License issuance requires an authorized private signing key") || e.message.includes("Command failed"), "Expected security failure for unauthenticated issuance");
 }
 
+// Keyfile preparation
+const testKeyFilePath = join(tempDir, "authority.key");
+writeFileSync(testKeyFilePath, testSeed, "utf-8");
+
+// Negative Gate 1B: Passing --signing-key directly on CLI in production mode without --test-mode MUST fail closed (CWE-214)
+try {
+  runCli(`license issue --customer "Insecure Corp" --signing-key "${testSeed}"`);
+  assert(false, "Should have rejected passing private signing key as CLI argument in production mode");
+} catch (e) {
+  assert(e.message.includes("Passing private signing keys directly via CLI arguments") || e.message.includes("Command failed"), "Expected prohibition of CLI argument private keys in production mode");
+}
+
 const licIssuePath = join(tempDir, "sample_enterprise.license");
-const licIssueOut = runCli(`license issue --customer "Battery Test Corp" --tier ENTERPRISE --days 365 --signing-key "${testSeed}" --out "${licIssuePath}"`);
+const licIssueOut = runCli(`license issue --customer "Battery Test Corp" --tier ENTERPRISE --days 365 --signing-key-file "${testKeyFilePath}" --out "${licIssuePath}"`);
 assert(licIssueOut.includes("Signed offline license token written to"), "License issuance failed");
 assert(existsSync(licIssuePath), "sample_enterprise.license file not created");
 
@@ -482,24 +494,25 @@ try {
 
 // Negative Gate 3: Attempting issuance with the revoked compromised R8 key must fail closed
 try {
-  runCli(`license issue --customer "Revoked Corp" --signing-key "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac"`);
+  runCli(`license issue --customer "Revoked Corp" --signing-key "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac" --test-mode`);
   assert(false, "Should have rejected revoked compromised key");
 } catch (e) {
   assert(e.message.includes("permanently revoked") || e.message.includes("Command failed"), "Expected rejection of revoked compromised signing key");
 }
 
 // Positive Gate A: Secure key file issuance via --signing-key-file
-const testKeyFilePath = join(tempDir, "authority.key");
-writeFileSync(testKeyFilePath, testSeed, "utf-8");
-const licFileIssueOut = runCli(`license issue --customer "File Key Corp" --tier PRO --days 30 --signing-key-file "${testKeyFilePath}" --test-mode --out "${join(tempDir, "file_key.license")}"`);
+const fileKeyLicensePath = join(tempDir, "file_key.license");
+const licFileIssueOut = runCli(`license issue --customer "File Key Corp" --tier PRO --days 30 --signing-key-file "${testKeyFilePath}" --test-mode --out "${fileKeyLicensePath}"`);
 assert(licFileIssueOut.includes("Signed offline license token written to"), "Keyfile issuance failed");
 
-// Positive Gate B: Checking with explicit trusted key under quarantined --test-mode matches
+// Positive Gate B: Checking with explicit trusted key under quarantined --test-mode matches and annotates emulator
 const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}" --test-mode`);
 assert(licCheckOut.includes("License check passed for tier ENTERPRISE"), "License capability check failed");
+assert(licCheckOut.includes("TEST_DEV_EMULATED"), "Must annotate that check ran under test authority emulator");
 
 const licVerifiedStatusOut = runCli(`license status --key "${licenseToken}" --trusted-key "${testPkHex}" --test-mode`);
 assert(licVerifiedStatusOut.includes("ACTIVE (VERIFIED)") && licVerifiedStatusOut.includes("Battery Test Corp"), "Active license status verification failed");
+assert(licVerifiedStatusOut.includes("TEST_OVERRIDE_EMULATOR"), "Must indicate test override authority in status");
 console.log("  ✓ commercial license status, issue, check, revoked-key blocking, and trust quarantine verified");
 
 // Clean up scratch files

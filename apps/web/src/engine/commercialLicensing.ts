@@ -60,6 +60,9 @@ export interface LicenseVerificationResult {
   unlockedCapabilities: string[];
   rejectionReason: string | null;
   publicKeyHex: string | null;
+  isTestEmulated: boolean;
+  trustAuthority: "OFFICIAL_SPE_ROOT" | "TEST_OVERRIDE_EMULATOR";
+  productionQualified: boolean;
 }
 
 export const TIER_DEFAULT_CAPABILITIES: Record<PlanTier, CommercialCapability[]> = {
@@ -128,6 +131,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: "No license token provided",
       publicKeyHex: null,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -153,6 +159,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: `Malformed license token JSON: ${(err as Error).message}`,
       publicKeyHex: null,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -167,6 +176,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: "Missing payload, signature_hex, or public_key_hex in envelope",
       publicKeyHex: public_key_hex || null,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -181,6 +193,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: `REVOKED_COMPROMISED_AUTHORITY: Signer key '${public_key_hex.slice(0, 12)}...' was permanently revoked due to prior security exposure. Re-issuance with rotated root authority is mandatory.`,
       publicKeyHex: public_key_hex,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -199,6 +214,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: `Untrusted public key authority: signer '${public_key_hex.slice(0, 12)}...' does not match pinned SPE root authority ('${OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX.slice(0, 12)}...')`,
       publicKeyHex: public_key_hex,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -220,6 +238,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: "Cryptographic signature verification failed (tampered license)",
       publicKeyHex: public_key_hex,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -237,6 +258,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: "Invalid ISO date formatting in license timestamps",
       publicKeyHex: public_key_hex,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -251,6 +275,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: "License issued_at timestamp is in the future beyond allowed clock skew",
       publicKeyHex: public_key_hex,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -268,6 +295,9 @@ export function verifyCommercialLicenseToken(
       unlockedCapabilities: [],
       rejectionReason: `License expired on ${payload.expires_at}. Renew at https://systempromptengine.com/pricing`,
       publicKeyHex: public_key_hex,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 
@@ -275,6 +305,8 @@ export function verifyCommercialLicenseToken(
   const declaredCaps = payload.capabilities || [];
   const tierDefaults = TIER_DEFAULT_CAPABILITIES[payload.plan_tier] || [];
   const allCaps = Array.from(new Set([...declaredCaps, ...tierDefaults]));
+
+  const isOfficial = public_key_hex === OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX;
 
   return {
     valid: true,
@@ -285,6 +317,9 @@ export function verifyCommercialLicenseToken(
     unlockedCapabilities: allCaps,
     rejectionReason: null,
     publicKeyHex: public_key_hex,
+    isTestEmulated: !isOfficial,
+    trustAuthority: isOfficial ? "OFFICIAL_SPE_ROOT" : "TEST_OVERRIDE_EMULATOR",
+    productionQualified: isOfficial,
   };
 }
 
@@ -309,6 +344,9 @@ export function resolveActiveLicense(customToken?: string): LicenseVerificationR
       unlockedCapabilities: [],
       rejectionReason: "No active license key found. Running in Community Edition.",
       publicKeyHex: null,
+      isTestEmulated: false,
+      trustAuthority: "OFFICIAL_SPE_ROOT",
+      productionQualified: false,
     };
   }
 

@@ -63,6 +63,9 @@ def test_issue_and_verify_active_license_with_test_key():
     assert verified["plan_tier"] == "ENTERPRISE"
     assert "ENTERPRISE_CI_GATE" in verified["capabilities"]
     assert "AUTOMATED_CONTINUATION" in verified["capabilities"]
+    assert verified["is_test_emulated"] is True
+    assert verified["trust_authority"] == "TEST_OVERRIDE_EMULATOR"
+    assert verified["production_qualified"] is False
 
     # Verifying test token against official root authority by default must reject
     default_verified = CommercialLicensingAdapter.verify_license(token)

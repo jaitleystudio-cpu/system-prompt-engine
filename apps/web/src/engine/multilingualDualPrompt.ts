@@ -377,6 +377,7 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
     let boundary: BoundaryInclusivity = "UNSPECIFIED";
     let operatorPhrase = "constraint";
 
+    // 1. Permissive Exceed (checked first for permissive overrides): "may exceed", "allowed to exceed", "unlimited", etc.
     if (
       /\b(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed\b/i.test(clause) ||
       /\b(?:unlimited|no\s+limit|without\s+limit)\b/i.test(clause)
@@ -387,70 +388,95 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
         /\b(?:(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed|unlimited|no\s+limit|without\s+limit)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : "may exceed";
-    } else if (
+    }
+    // 2. Negated & Compound Floors (x >= V): "no less than", "not less than", "never less than", "cannot be less than", "greater than or equal to", "more than or equal to", ">="
+    // Placed before exact equality and simple comparative operators to ensure compound capture.
+    else if (
+      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+less\s+than\b/i.test(clause) ||
+      /\b(?:greater|more)\s+than\s+or\s+equal\s+to\b/i.test(clause) ||
+      />=/.test(clause)
+    ) {
+      constraintType = "FLOOR";
+      boundary = "INCLUSIVE";
+      const m = clause.match(
+        /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+less\s+than|(?:greater|more)\s+than\s+or\s+equal\s+to)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : ">=";
+    }
+    // 3. Negated & Compound Ceilings (x <= V): "no more than", "not more than", "never more than", "no greater than", "not greater than", "less than or equal to", "<=", "must not exceed"
+    // Placed before exact equality and simple comparative operators to ensure compound capture.
+    else if (
+      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more|greater)\s+than\b/i.test(clause) ||
+      /\b(?:less|fewer)\s+than\s+or\s+equal\s+to\b/i.test(clause) ||
+      /<=/.test(clause) ||
       /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i.test(clause)
     ) {
       constraintType = "CEILING";
       boundary = "INCLUSIVE";
       const m = clause.match(
-        /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i
+        /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more|greater)\s+than|(?:less|fewer)\s+than\s+or\s+equal\s+to|(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed)\b/i
       );
-      operatorPhrase = m ? m[0].toLowerCase() : "must not exceed";
-    } else if (
-      /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i.test(clause)
+      operatorPhrase = m ? m[0].toLowerCase() : "<=";
+    }
+    // 4. Exact Equality: "exactly", "strictly equal to", isolated "equal to", "="
+    else if (
+      /(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly)\b/i.test(clause) ||
+      /(?<![<>!=])=(?!=)/.test(clause)
+    ) {
+      constraintType = "EXACT";
+      boundary = "INCLUSIVE";
+      const m = clause.match(/(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly)\b/i);
+      operatorPhrase = m ? m[0].toLowerCase() : "exactly";
+    }
+    // 5. Positive / Idiomatic Floors (x >= V): "at least", "minimum", "min"
+    else if (/\b(?:at\s+least|minimum|min\b)/i.test(clause)) {
+      constraintType = "FLOOR";
+      boundary = "INCLUSIVE";
+      const m = clause.match(/\b(?:at\s+least|minimum|min\b)/i);
+      operatorPhrase = m ? m[0].toLowerCase() : "at least";
+    }
+    // 6. Positive / Idiomatic Ceilings (x <= V): "at most", "up to", "maximum", "max", "ceiling", "capped at", "cap"
+    else if (/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i.test(clause)) {
+      constraintType = "CEILING";
+      boundary = "INCLUSIVE";
+      const m = clause.match(/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i);
+      operatorPhrase = m ? m[0].toLowerCase() : "at most";
+    }
+    // 7. Strict / Exclusive Floors (x > V): "strictly above", "strictly greater than", "strictly more than", "above", "more than", "greater than", "must exceed", ">"
+    // Preceding negated forms (no more than, not greater than) were already consumed in Step 3.
+    else if (
+      /\b(?:strictly\s+above|strictly\s+greater\s+than|strictly\s+more\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed|exceeds?)\b/i.test(clause) ||
+      /(?<![<>=])>(?!=)/.test(clause)
+    ) {
+      constraintType = "FLOOR";
+      boundary = "EXCLUSIVE";
+      const m = clause.match(
+        /\b(?:strictly\s+above|strictly\s+greater\s+than|strictly\s+more\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed|exceeds?)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : ">";
+    }
+    // 8. Strict / Exclusive Ceilings (x < V): "strictly below", "strictly under", "strictly less than", "below", "under", "less than", "<"
+    // Preceding negated forms (no less than, not less than) were already consumed in Step 2.
+    else if (
+      /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i.test(clause) ||
+      /(?<![<>=])<(?!=)/.test(clause)
     ) {
       constraintType = "CEILING";
       boundary = "EXCLUSIVE";
       const m = clause.match(
         /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i
       );
-      operatorPhrase = m ? m[0].toLowerCase() : "below";
-    } else if (
-      /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)\b/i.test(
-        clause
-      )
-    ) {
-      constraintType = "CEILING";
-      boundary = "INCLUSIVE";
-      const m = clause.match(
-        /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)\b/i
-      );
-      operatorPhrase = m ? m[0].toLowerCase() : "at most";
-    } else if (/\b(?:limit\s+(?:is|of|to)?\b)/i.test(clause)) {
+      operatorPhrase = m ? m[0].toLowerCase() : "<";
+    }
+    // 9. Fallback Idiomatic Ceilings without explicit comparator: "limit is", "limit of", "limit to"
+    else if (/\b(?:limit\s+(?:is|of|to)?\b)/i.test(clause)) {
       constraintType = "CEILING";
       boundary = "INCLUSIVE";
       const m = clause.match(/\b(?:limit\s+(?:is|of|to)?\b)/i);
       operatorPhrase = m ? m[0].toLowerCase() : "limit is";
-    } else if (
-      /\b(?:strictly\s+above|strictly\s+greater\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed)\b/i.test(
-        clause
-      )
-    ) {
-      constraintType = "FLOOR";
-      boundary = "EXCLUSIVE";
-      const m = clause.match(
-        /\b(?:strictly\s+above|strictly\s+greater\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed)\b/i
-      );
-      operatorPhrase = m ? m[0].toLowerCase() : "above";
-    } else if (
-      /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b)\b/i.test(clause)
-    ) {
-      constraintType = "FLOOR";
-      boundary = "INCLUSIVE";
-      const m = clause.match(
-        /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b)\b/i
-      );
-      operatorPhrase = m ? m[0].toLowerCase() : "at least";
-    } else if (/\b(?:exactly|equal\s+to|strictly\s+equal\s+to)\b/i.test(clause)) {
-      constraintType = "EXACT";
-      boundary = "INCLUSIVE";
-      operatorPhrase = "exactly";
     }
 
-    const operatorMatch = clause.match(
-      /\b(up\s+to|limit|threshold|exceed|allow|maximum|max|minimum|min|ceiling|cap|budget|amount|funds?|payout|transfer|transfers?|retention|retain|wait|timeout|delay|after|within|at\s+least|at\s+most|below|above)\b/i
-    );
-    const operator = operatorMatch ? operatorMatch[0].toLowerCase() : operatorPhrase;
+    const operator = operatorPhrase;
 
     const subjectDescriptor =
       cleaned
@@ -564,7 +590,7 @@ const GENERIC_CONSTRAINT_HEAD_NOUNS = new Set([
   "number", "numbers",
 ]);
 
-const ECONOMIC_OBJECT_MODIFIERS = new Set([
+export const ECONOMIC_OBJECT_MODIFIERS = new Set([
   "fee", "fees",
   "charge", "charges",
   "cost", "costs",
@@ -587,7 +613,7 @@ const ECONOMIC_OBJECT_MODIFIERS = new Set([
   "debt", "debts",
 ]);
 
-function areTokensRelated(t1: string, t2: string): boolean {
+export function areTokensRelated(t1: string, t2: string): boolean {
   if (t1 === t2) return true;
   if (t1.length >= 4 && t2.length >= 4) {
     if (t1.startsWith(t2) || t2.startsWith(t1)) return true;
@@ -600,16 +626,18 @@ export function computeSubjectMatch(srcTokens: string[], opTokens: string[]): nu
   if (srcTokens.length === 0 || opTokens.length === 0) return 0.0;
 
   // 1. Economic object modifier agreement:
-  // If either clause introduces an economic modifier (e.g. "fee", "penalty", "tax", "charge"),
-  // both clauses MUST govern the exact same modifier. A withdrawal limit != a withdrawal fee limit!
+  // If either clause introduces an economic modifier (e.g. "fee", "penalty", "tax", "charge", "commission"),
+  // the set of economic obligations must be strictly identical (symmetric set equality).
+  // A "fee and tax" obligation CANNOT be substituted with "fee and penalty"!
   const srcModifiers = srcTokens.filter((t) => ECONOMIC_OBJECT_MODIFIERS.has(t));
   const opModifiers = opTokens.filter((t) => ECONOMIC_OBJECT_MODIFIERS.has(t));
   if (srcModifiers.length > 0 || opModifiers.length > 0) {
     if (srcModifiers.length === 0 || opModifiers.length === 0) {
       return 0.0;
     }
-    const commonMods = srcModifiers.filter((s) => opModifiers.some((o) => areTokensRelated(s, o)));
-    if (commonMods.length === 0 || srcModifiers.length !== opModifiers.length) {
+    const allSrcMatch = srcModifiers.every((s) => opModifiers.some((o) => areTokensRelated(s, o)));
+    const allOpMatch = opModifiers.every((o) => srcModifiers.some((s) => areTokensRelated(s, o)));
+    if (!allSrcMatch || !allOpMatch) {
       return 0.0;
     }
   }

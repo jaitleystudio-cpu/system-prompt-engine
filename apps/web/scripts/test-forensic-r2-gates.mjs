@@ -413,6 +413,53 @@ Retain context taint boundary and treat external documents as untrusted.
   );
   console.log(`    ✓ Blocked: ${audit3b16.polarityInversions[0].slice(0, 80)}...`);
 
+  // Attack 3B17: Negated Inequality Polarity Inversion (ChatGPT R10 Counterexample 1: "no less than" -> "less than")
+  console.log("  [Attack 3B17] Negated Inequality Polarity Inversion ('no less than $100.' -> 'less than $100.')...");
+  const source3b17 = "Transfer fee must be no less than $100.";
+  const maliciousTarget3b17 = "Transfer fee must be less than $100.";
+  const audit3b17 = evaluateIntentFidelity(source3b17, maliciousTarget3b17);
+  console.log(`    Verdict:        ${audit3b17.verdict} | Fidelity: ${audit3b17.intentFidelityScore} | Preserved: ${audit3b17.intentPreserved}`);
+  assert.strictEqual(audit3b17.intentPreserved, false, "Must REJECT negated inequality polarity collapse ('no less than' >= 100 vs 'less than' < 100)");
+  assert.strictEqual(audit3b17.verdict, "POLARITY_INVERSION", "Must classify as POLARITY_INVERSION");
+  assert.strictEqual(audit3b17.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on negated inequality inversion");
+  assert(audit3b17.polarityInversions.length > 0, "Must record polarity inversion details");
+  assert(
+    audit3b17.polarityInversions.some(p => p.includes("floor constraint") && p.includes("ceiling")),
+    "Must explain floor to ceiling inversion"
+  );
+  console.log("    ✓ Blocked: Negated inequality polarity inversion ('no less than' -> 'less than') correctly rejected.");
+
+  // Case 3B18: Positive Control for Negated Inequality ("at least $100." -> "no less than $100.")
+  console.log("  [Case 3B18] Positive Control for Negated Inequality ('at least $100.' -> 'no less than $100.')...");
+  const source3b18 = "Transfer fee must be at least $100.";
+  const target3b18 = "Transfer fee must be no less than $100.";
+  const audit3b18 = evaluateIntentFidelity(source3b18, target3b18);
+  console.log(`    Verdict:        ${audit3b18.verdict} | Fidelity: ${audit3b18.intentFidelityScore} | Preserved: ${audit3b18.intentPreserved}`);
+  assert.strictEqual(audit3b18.intentPreserved, true, "Must ACCEPT semantically equivalent floor phrasing ('at least' == 'no less than')");
+  assert.strictEqual(audit3b18.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  console.log("    ✓ Accepted: Semantically equivalent floor phrasing ('at least' -> 'no less than') verified.");
+
+  // Attack 3B19: Partial Economic Modifier Set Substitution (ChatGPT R10 Counterexample 2: "fee and tax" -> "fee and penalty")
+  console.log("  [Attack 3B19] Partial Economic Modifier Set Substitution ('fee and tax' -> 'fee and penalty')...");
+  const source3b19 = "Transfer fee and tax must not exceed $100.";
+  const maliciousTarget3b19 = "Transfer fee and penalty must not exceed $100.";
+  const audit3b19 = evaluateIntentFidelity(source3b19, maliciousTarget3b19);
+  console.log(`    Verdict:        ${audit3b19.verdict} | Fidelity: ${audit3b19.intentFidelityScore} | Preserved: ${audit3b19.intentPreserved}`);
+  assert.strictEqual(audit3b19.intentPreserved, false, "Must REJECT partial economic modifier substitution ('tax' substituted with 'penalty')");
+  assert.notStrictEqual(audit3b19.verdict, "SEMANTICALLY_PRESERVED", "Must NOT be semantically preserved");
+  assert(audit3b19.intentFidelityScore < 0.6, "Fidelity score must fail threshold (< 0.6)");
+  console.log("    ✓ Blocked: Partial economic modifier set substitution ('tax' -> 'penalty') correctly rejected.");
+
+  // Case 3B20: Positive Control for Economic Modifier Set Equality ("fee and tax" -> "tax and fee")
+  console.log("  [Case 3B20] Positive Control for Economic Modifier Set Equality ('fee and tax' -> 'tax and transfer fee')...");
+  const target3b20 = "Tax and transfer fee must not exceed $100.";
+  const audit3b20 = evaluateIntentFidelity(source3b19, target3b20);
+  console.log(`    Verdict:        ${audit3b20.verdict} | Fidelity: ${audit3b20.intentFidelityScore} | Preserved: ${audit3b20.intentPreserved}`);
+  assert.strictEqual(audit3b20.intentPreserved, true, "Must ACCEPT reordered but identical economic modifier set ({fee, tax})");
+  assert.strictEqual(audit3b20.intentFidelityScore, 1.0, "Fidelity must be 1.0 on exact modifier set identity");
+  assert.strictEqual(audit3b20.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  console.log("    ✓ Accepted: Symmetrically identical economic modifier set verified.");
+
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");
   const source3c = "Never disclose my password.";

@@ -1244,6 +1244,11 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           console.log(`  Issued At:            ${p.issued_at}`);
           console.log(`  Expires At:           ${p.expires_at} (${verification.daysRemaining} days remaining)`);
           console.log(`  Authority Public Key: ${verification.publicKeyHex?.slice(0, 16)}...`);
+          if (verification.isTestEmulated) {
+            console.log(`  Authority Status:     ${yellow('TEST_OVERRIDE_EMULATOR (NOT Qualified for Production)')}`);
+          } else {
+            console.log(`  Authority Status:     ${green('OFFICIAL_SPE_ROOT (Production Qualified)')}`);
+          }
           console.log(`\n${bold('  Unlocked Commercial Capabilities:')}`);
           for (const cap of verification.unlockedCapabilities) {
             console.log(`    ✓ ${green(cap)}`);
@@ -1309,6 +1314,9 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           process.exit(1);
         }
 
+        if (verification.isTestEmulated) {
+          console.log(yellow(`⚠️  [TEST_DEV_EMULATED] Key verified under custom test authority: NOT qualified for production licensing.`));
+        }
         console.log(green(`✓ License check passed for tier ${verification.payload.plan_tier} (${verification.daysRemaining} days remaining)`));
         break;
       }
@@ -1348,10 +1356,14 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           }
           seedHex = readFileSync(keyFile, "utf-8").trim();
         } else if (flags["signing-key"] || flags["--signing-key"]) {
-          seedHex = flags["signing-key"] || flags["--signing-key"];
           if (!isTestOrDevMode) {
-            console.warn(yellow("⚠️  [SECURITY NOTICE] Passing signing keys as CLI arguments risks shell history disclosure. Prefer --signing-key-file or SPE_LICENSE_SIGNING_KEY."));
+            console.error(red("\n❌ Security Policy Error: Passing private signing keys directly via CLI arguments (--signing-key) in production mode is prohibited (CWE-214 / NIST SP 800-57)."));
+            console.error(gray("CLI arguments are visible in process tables (`ps aux`) and shell histories."));
+            console.error(gray("Use --signing-key-file <path> or set the SPE_LICENSE_SIGNING_KEY environment variable."));
+            console.error(gray("To bypass this check strictly for isolated testing, provide --test-mode."));
+            process.exit(1);
           }
+          seedHex = flags["signing-key"] || flags["--signing-key"];
         }
 
         if (seedHex && (seedHex.includes("e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac") || seedHex.includes("a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec"))) {
