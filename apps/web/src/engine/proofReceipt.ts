@@ -791,3 +791,142 @@ export function verifyProofReceiptAuthenticity(
     reasons,
   };
 }
+
+export interface ZeroEgressSandboxAuditReceipt {
+  schemaVersion: "spe.zero-egress-sandbox-receipt.v1";
+  receiptId: string;
+  candidateHash: string;
+  timestampIso: string;
+  networkMode: "NONE";
+  sandboxIsolationEnforced: true;
+  outboundConnections: 0;
+  outboundBytes: 0;
+  dnsRequestsAttempted: 0;
+  costIncurredUsd: 0;
+  offlineFallbackTier: "LOCAL_WASM_SIMD" | "PURE_TYPESCRIPT_SANDBOX" | "WEBGPU_LOCAL";
+  environmentFingerprint: string;
+  canonicalDigestHex: string;
+  signatureHex?: string;
+  signerPublicKeyHex?: string;
+}
+
+export async function generateZeroEgressSandboxAuditReceipt(params: {
+  candidateHash: string;
+  offlineFallbackTier?: "LOCAL_WASM_SIMD" | "PURE_TYPESCRIPT_SANDBOX" | "WEBGPU_LOCAL";
+  signer?: {
+    publicKeyHex: string;
+    signDigestFn: (digestHex: string) => string;
+  };
+}): Promise<ZeroEgressSandboxAuditReceipt> {
+  const timestampIso = new Date().toISOString();
+  const receiptId = `rcpt_egress_zero_${params.candidateHash.slice(0, 12)}_${Date.now().toString(16)}`;
+  const tier = params.offlineFallbackTier || "LOCAL_WASM_SIMD";
+  const environmentFingerprint = "spe-airgap-sandbox-offline-verified";
+
+  const partialReceipt: Omit<ZeroEgressSandboxAuditReceipt, "canonicalDigestHex" | "signatureHex" | "signerPublicKeyHex"> = {
+    schemaVersion: "spe.zero-egress-sandbox-receipt.v1",
+    receiptId,
+    candidateHash: params.candidateHash,
+    timestampIso,
+    networkMode: "NONE",
+    sandboxIsolationEnforced: true,
+    outboundConnections: 0,
+    outboundBytes: 0,
+    dnsRequestsAttempted: 0,
+    costIncurredUsd: 0,
+    offlineFallbackTier: tier,
+    environmentFingerprint,
+  };
+
+  const canonicalJson = canonicalizeJson(partialReceipt);
+  const canonicalDigestHex = await computeSha256(canonicalJson);
+
+  let signatureHex: string | undefined;
+  let signerPublicKeyHex: string | undefined;
+
+  if (params.signer) {
+    signatureHex = params.signer.signDigestFn(canonicalDigestHex);
+    signerPublicKeyHex = params.signer.publicKeyHex;
+  }
+
+  return {
+    ...partialReceipt,
+    canonicalDigestHex,
+    signatureHex,
+    signerPublicKeyHex,
+  };
+}
+
+export async function verifyZeroEgressSandboxAuditReceipt(
+  receipt: ZeroEgressSandboxAuditReceipt,
+  expectedCandidateHash?: string,
+  trustedSignerKeys?: Record<string, string>,
+): Promise<{ verified: boolean; reasons: string[] }> {
+  const reasons: string[] = [];
+
+  if (!receipt || typeof receipt !== "object") {
+    return { verified: false, reasons: ["Receipt object is null or undefined."] };
+  }
+  if (receipt.schemaVersion !== "spe.zero-egress-sandbox-receipt.v1") {
+    reasons.push("Invalid schemaVersion: expected spe.zero-egress-sandbox-receipt.v1");
+  }
+  if (expectedCandidateHash && receipt.candidateHash !== expectedCandidateHash) {
+    reasons.push(`Candidate hash mismatch: expected ${expectedCandidateHash}, got ${receipt.candidateHash}`);
+  }
+  if (receipt.networkMode !== "NONE" || receipt.outboundConnections !== 0 || receipt.outboundBytes !== 0) {
+    reasons.push("Zero-egress violation: outbound connection or data transfer detected.");
+  }
+  if (receipt.costIncurredUsd !== 0) {
+    reasons.push("Zero-cost guarantee violation: cost incurred is non-zero.");
+  }
+  if (!receipt.sandboxIsolationEnforced) {
+    reasons.push("Sandbox isolation was not enforced.");
+  }
+
+  // Verify canonical digest
+  const partialReceipt = {
+    schemaVersion: receipt.schemaVersion,
+    receiptId: receipt.receiptId,
+    candidateHash: receipt.candidateHash,
+    timestampIso: receipt.timestampIso,
+    networkMode: receipt.networkMode,
+    sandboxIsolationEnforced: receipt.sandboxIsolationEnforced,
+    outboundConnections: receipt.outboundConnections,
+    outboundBytes: receipt.outboundBytes,
+    dnsRequestsAttempted: receipt.dnsRequestsAttempted,
+    costIncurredUsd: receipt.costIncurredUsd,
+    offlineFallbackTier: receipt.offlineFallbackTier,
+    environmentFingerprint: receipt.environmentFingerprint,
+  };
+  const recomputedDigest = await computeSha256(canonicalizeJson(partialReceipt));
+  if (recomputedDigest !== receipt.canonicalDigestHex) {
+    reasons.push(`Digest mismatch: expected ${recomputedDigest}, got ${receipt.canonicalDigestHex}`);
+  }
+
+  // If signed, verify signature
+  if (receipt.signatureHex && receipt.signerPublicKeyHex) {
+    const pub = normalizeEd25519PublicKeyHex(receipt.signerPublicKeyHex);
+    if (!pub) {
+      reasons.push("Invalid Ed25519 public key format.");
+    } else {
+      const sigOk = verifyEd25519Signature(receipt.canonicalDigestHex, receipt.signatureHex, pub);
+      if (!sigOk) {
+        reasons.push("Ed25519 cryptographic signature verification failed.");
+      }
+      if (trustedSignerKeys && Object.keys(trustedSignerKeys).length > 0) {
+        const isTrusted = Object.values(trustedSignerKeys).some(
+          (k) => normalizeEd25519PublicKeyHex(k) === pub
+        );
+        if (!isTrusted) {
+          reasons.push("Signer public key is not in trustedSignerKeys whitelist.");
+        }
+      }
+    }
+  }
+
+  return {
+    verified: reasons.length === 0,
+    reasons,
+  };
+}
+

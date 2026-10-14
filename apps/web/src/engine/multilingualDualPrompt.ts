@@ -194,6 +194,8 @@ export interface CategorizedQuantity {
   category: QuantityCategory;
   unit: string;
   clause: string;
+  startOffset?: number;
+  endOffset?: number;
 }
 
 export function extractCategorizedQuantities(text: string): CategorizedQuantity[] {
@@ -232,6 +234,8 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
         category: "CURRENCY",
         unit,
         clause,
+        startOffset: match.index,
+        endOffset: match.index + match[0].length,
       });
     }
 
@@ -267,6 +271,8 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
         category: "DURATION",
         unit: "SECONDS",
         clause,
+        startOffset: match.index,
+        endOffset: match.index + match[0].length,
       });
     }
 
@@ -281,6 +287,8 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
         category: "PERCENTAGE",
         unit: "PERCENT",
         clause,
+        startOffset: match.index,
+        endOffset: match.index + match[0].length,
       });
     }
 
@@ -295,8 +303,14 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
       else if (multiplier === "b") val *= 1000000000;
 
       // Ensure this token wasn't part of an already extracted currency, duration, or percentage
+      const matchStart = match.index;
+      const matchEnd = match.index + match[0].trim().length;
       const alreadyCaptured = results.some(
-        (r) => r.clause === clause && (r.raw.includes(match![0]) || match![0].includes(r.raw))
+        (r) =>
+          r.clause === clause &&
+          r.startOffset !== undefined &&
+          r.endOffset !== undefined &&
+          Math.max(r.startOffset, matchStart) < Math.min(r.endOffset, matchEnd)
       );
       if (!alreadyCaptured && rawNum.length >= 2) {
         results.push({
@@ -306,6 +320,8 @@ export function extractCategorizedQuantities(text: string): CategorizedQuantity[
           category: "COUNT",
           unit: "COUNT",
           clause,
+          startOffset: match.index,
+          endOffset: match.index + match[0].trim().length,
         });
       }
     }
@@ -333,6 +349,7 @@ export type NumericConstraintType =
   | "FLOOR"
   | "PERMISSIVE_EXCEED"
   | "EXACT"
+  | "NOT_EQUAL"
   | "UNSPECIFIED";
 
 export type BoundaryInclusivity = "INCLUSIVE" | "EXCLUSIVE" | "UNSPECIFIED";
@@ -351,27 +368,127 @@ export interface BoundNumericRequirement {
 
 const NUMERIC_STOP_WORDS = new Set([
   "a", "an", "the", "must", "not", "be", "is", "are", "to", "of", "in", "for", "and", "or",
-  "by", "with", "at", "from", "should", "shall", "will", "can", "as", "that", "this", "it"
+  "by", "with", "at", "from", "should", "shall", "will", "can", "as", "that", "this", "it",
+  "least", "most", "more", "less", "fewer", "greater", "equal", "equals", "exceed", "exceeds",
+  "above", "below", "under", "strictly", "up", "exactly", "fixed", "set", "limit", "limits",
+  "threshold", "thresholds", "maximum", "max", "minimum", "min", "cap", "caps", "ceiling", "floor"
 ]);
 
-export function extractBoundNumericRequirements(text: string): BoundNumericRequirement[] {
-  const quantities = extractCategorizedQuantities(text);
-  const requirements: BoundNumericRequirement[] = [];
-  let reqCounter = 1;
+export interface LocalQuantityScope {
+  localClause: string;
+  subjectTokens: string[];
+  subjectDescriptor: string;
+}
 
-  for (const q of quantities) {
-    const rawNum = q.raw;
-    const clause = q.clause;
-    const cleaned = clause.replace(rawNum, " ");
-    const subjectTokens = Array.from(
+/**
+ * Isolates the local governing clause and subject context for a specific quantity within a compound sentence.
+ * Prevents multi-requirement operator scope collapse when coordinating conjunctions (and, while, whereas, but)
+ * join distinct requirements (e.g. "fee at most $100 and tax at least $20").
+ */
+export function extractLocalGoverningScope(
+  fullClause: string,
+  targetQuantity: CategorizedQuantity,
+  clauseQuantities: CategorizedQuantity[]
+): LocalQuantityScope {
+  const sorted = [...clauseQuantities].sort((a, b) => (a.startOffset ?? 0) - (b.startOffset ?? 0));
+  const qIdx = sorted.findIndex(
+    (q) => q === targetQuantity || (q.raw === targetQuantity.raw && q.startOffset === targetQuantity.startOffset)
+  );
+
+  const qStart = targetQuantity.startOffset ?? fullClause.indexOf(targetQuantity.raw);
+  const qEnd = targetQuantity.endOffset ?? (qStart + targetQuantity.raw.length);
+
+  let leftBoundary = 0;
+  if (qIdx > 0) {
+    const prev = sorted[qIdx - 1];
+    const prevEnd = prev.endOffset ?? (fullClause.indexOf(prev.raw) + prev.raw.length);
+    if (prevEnd < qStart) {
+      const between = fullClause.substring(prevEnd, qStart);
+      const delimMatch = between.match(
+        /(?:,\s*(?:and|while|whereas|but)\b\s*|\b(?:and|while|whereas|but)\b\s*|,\s*|\s*;\s*|--|—)/i
+      );
+      if (delimMatch && delimMatch.index !== undefined) {
+        leftBoundary = prevEnd + delimMatch.index + delimMatch[0].length;
+      } else {
+        leftBoundary = prevEnd;
+      }
+    }
+  }
+
+  let rightBoundary = fullClause.length;
+  if (qIdx >= 0 && qIdx < sorted.length - 1) {
+    const next = sorted[qIdx + 1];
+    const nextStart = next.startOffset ?? fullClause.indexOf(next.raw, qEnd);
+    if (nextStart > qEnd) {
+      const between = fullClause.substring(qEnd, nextStart);
+      const delimMatch = between.match(
+        /(?:,\s*(?:and|while|whereas|but)\b\s*|\b(?:and|while|whereas|but)\b\s*|,\s*|\s*;\s*|--|—)/i
+      );
+      if (delimMatch && delimMatch.index !== undefined) {
+        rightBoundary = qEnd + delimMatch.index;
+      } else {
+        rightBoundary = nextStart;
+      }
+    }
+  }
+
+  const localClause = fullClause.substring(leftBoundary, rightBoundary).trim();
+  const cleanedLocal = localClause.replace(targetQuantity.raw, " ");
+  let localTokens = Array.from(
+    new Set(
+      cleanedLocal
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, " ")
+        .split(/\s+/)
+        .filter((t) => t.length >= 2 && !NUMERIC_STOP_WORDS.has(t))
+    )
+  );
+
+  // If local tokens are empty (e.g. range coordinate bound "and at most $100"), inherit from parent fullClause
+  if (localTokens.length === 0) {
+    const cleanedFull = fullClause.replace(targetQuantity.raw, " ");
+    localTokens = Array.from(
       new Set(
-        cleaned
+        cleanedFull
           .toLowerCase()
           .replace(/[^\p{L}\p{N}\s]/gu, " ")
           .split(/\s+/)
           .filter((t) => t.length >= 2 && !NUMERIC_STOP_WORDS.has(t))
       )
     );
+  }
+
+  const subjectDescriptor =
+    cleanedLocal
+      .replace(/[:.\-—–\s]+$/, "")
+      .replace(/^[:.\-—–\s]+/, "")
+      .trim()
+      .slice(0, 60) || targetQuantity.category;
+
+  return { localClause, subjectTokens: localTokens, subjectDescriptor };
+}
+
+export function extractBoundNumericRequirements(text: string): BoundNumericRequirement[] {
+  const quantities = extractCategorizedQuantities(text);
+  const requirements: BoundNumericRequirement[] = [];
+  let reqCounter = 1;
+
+  // Group quantities by clause to isolate local governing scopes
+  const quantitiesByClause = new Map<string, CategorizedQuantity[]>();
+  for (const q of quantities) {
+    const list = quantitiesByClause.get(q.clause) ?? [];
+    list.push(q);
+    quantitiesByClause.set(q.clause, list);
+  }
+
+  for (const q of quantities) {
+    const clauseList = quantitiesByClause.get(q.clause) ?? [q];
+    const { localClause, subjectTokens, subjectDescriptor } = extractLocalGoverningScope(
+      q.clause,
+      q,
+      clauseList
+    );
+    const targetScope = localClause || q.clause;
 
     let constraintType: NumericConstraintType = "UNSPECIFIED";
     let boundary: BoundaryInclusivity = "UNSPECIFIED";
@@ -379,12 +496,12 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
 
     // 1. Permissive Exceed (checked first for permissive overrides): "may exceed", "allowed to exceed", "unlimited", etc.
     if (
-      /\b(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed\b/i.test(clause) ||
-      /\b(?:unlimited|no\s+limit|without\s+limit)\b/i.test(clause)
+      /\b(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed\b/i.test(targetScope) ||
+      /\b(?:unlimited|no\s+limit|without\s+limit)\b/i.test(targetScope)
     ) {
       constraintType = "PERMISSIVE_EXCEED";
       boundary = "UNSPECIFIED";
-      const m = clause.match(
+      const m = targetScope.match(
         /\b(?:(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed|unlimited|no\s+limit|without\s+limit)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : "may exceed";
@@ -392,55 +509,67 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
     // 2. Negated & Compound Floors (x >= V): "no less than", "not less than", "never less than", "cannot be less than", "greater than or equal to", "more than or equal to", ">="
     // Placed before exact equality and simple comparative operators to ensure compound capture.
     else if (
-      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+less\s+than\b/i.test(clause) ||
-      /\b(?:greater|more)\s+than\s+or\s+equal\s+to\b/i.test(clause) ||
-      />=/.test(clause)
+      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+less\s+than\b/i.test(targetScope) ||
+      /\b(?:greater|more)\s+than\s+or\s+equal\s+to\b/i.test(targetScope) ||
+      />=/.test(targetScope)
     ) {
       constraintType = "FLOOR";
       boundary = "INCLUSIVE";
-      const m = clause.match(
+      const m = targetScope.match(
         /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+less\s+than|(?:greater|more)\s+than\s+or\s+equal\s+to)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : ">=";
     }
+    // 2B. Negated Equality / Inequality (x != V): "must not be equal to", "shall not be equal to", "cannot be equal to", "not equal to", "is not equal to", "does not equal", "doesn't equal", "cannot equal", "must not equal", "!=", "<>", "/="
+    else if (
+      /\b(?:(?:must|shall|should|can|may|do|does)\s+not\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|cannot\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|not\s+(?:equal\s+to|equal)|is\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|are\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|isn't\s+equal\s+to|aren't\s+equal\s+to|doesn't\s+equal|don't\s+equal)\b/i.test(targetScope) ||
+      /!=|<>|\/=/.test(targetScope)
+    ) {
+      constraintType = "NOT_EQUAL";
+      boundary = "EXCLUSIVE";
+      const m = targetScope.match(
+        /\b(?:(?:must|shall|should|can|may|do|does)\s+not\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|cannot\s+(?:be\s+equal\s+to|equal\s+to|equal|be)|not\s+(?:equal\s+to|equal)|is\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|are\s+not\s+(?:equal\s+to|equal|strictly\s+equal\s+to|strictly\s+equal)?|isn't\s+equal\s+to|aren't\s+equal\s+to|doesn't\s+equal|don't\s+equal)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "!=";
+    }
     // 3. Negated & Compound Ceilings (x <= V): "no more than", "not more than", "never more than", "no greater than", "not greater than", "less than or equal to", "<=", "must not exceed"
     // Placed before exact equality and simple comparative operators to ensure compound capture.
     else if (
-      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more|greater)\s+than\b/i.test(clause) ||
-      /\b(?:less|fewer)\s+than\s+or\s+equal\s+to\b/i.test(clause) ||
-      /<=/.test(clause) ||
-      /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i.test(clause)
+      /\b(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more|greater)\s+than\b/i.test(targetScope) ||
+      /\b(?:less|fewer)\s+than\s+or\s+equal\s+to\b/i.test(targetScope) ||
+      /<=/.test(targetScope) ||
+      /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i.test(targetScope)
     ) {
       constraintType = "CEILING";
       boundary = "INCLUSIVE";
-      const m = clause.match(
+      const m = targetScope.match(
         /\b(?:(?:no|not|never|cannot\s+be|must\s+not\s+be|shall\s+not\s+be)\s+(?:more|greater)\s+than|(?:less|fewer)\s+than\s+or\s+equal\s+to|(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : "<=";
     }
     // 4. Positive / Idiomatic Floors (x >= V): "at least", "minimum", "min"
-    else if (/\b(?:at\s+least|minimum|min\b)/i.test(clause)) {
+    else if (/\b(?:at\s+least|minimum|min\b)/i.test(targetScope)) {
       constraintType = "FLOOR";
       boundary = "INCLUSIVE";
-      const m = clause.match(/\b(?:at\s+least|minimum|min\b)/i);
+      const m = targetScope.match(/\b(?:at\s+least|minimum|min\b)/i);
       operatorPhrase = m ? m[0].toLowerCase() : "at least";
     }
     // 5. Positive / Idiomatic Ceilings (x <= V): "at most", "up to", "maximum", "max", "ceiling", "capped at", "cap"
-    else if (/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i.test(clause)) {
+    else if (/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i.test(targetScope)) {
       constraintType = "CEILING";
       boundary = "INCLUSIVE";
-      const m = clause.match(/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i);
+      const m = targetScope.match(/\b(?:at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)/i);
       operatorPhrase = m ? m[0].toLowerCase() : "at most";
     }
     // 6. Strict / Exclusive Floors (x > V): "strictly above", "strictly greater than", "strictly more than", "above", "more than", "greater than", "must exceed", ">"
     // Preceding negated forms (no more than, not greater than) were already consumed in Step 3.
     else if (
-      /\b(?:strictly\s+above|strictly\s+greater\s+than|strictly\s+more\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed|exceeds?)\b/i.test(clause) ||
-      /(?<![<>=])>(?!=)/.test(clause)
+      /\b(?:strictly\s+above|strictly\s+greater\s+than|strictly\s+more\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed|exceeds?)\b/i.test(targetScope) ||
+      /(?<![<>=])>(?!=)/.test(targetScope)
     ) {
       constraintType = "FLOOR";
       boundary = "EXCLUSIVE";
-      const m = clause.match(
+      const m = targetScope.match(
         /\b(?:strictly\s+above|strictly\s+greater\s+than|strictly\s+more\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed|exceeds?)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : ">";
@@ -448,46 +577,39 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
     // 7. Strict / Exclusive Ceilings (x < V): "strictly below", "strictly under", "strictly less than", "below", "under", "less than", "<"
     // Preceding negated forms (no less than, not less than) were already consumed in Step 2.
     else if (
-      /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i.test(clause) ||
-      /(?<![<>=])<(?!=)/.test(clause)
+      /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i.test(targetScope) ||
+      /(?<![<>=])<(?!=)/.test(targetScope)
     ) {
       constraintType = "CEILING";
       boundary = "EXCLUSIVE";
-      const m = clause.match(
+      const m = targetScope.match(
         /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : "<";
     }
     // 8. Exact Equality: "exactly", "strictly equal to", isolated "equal to", "must be", "shall be", "set to", "fixed at", "="
     else if (
-      /(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly|fixed\s+at|set\s+to|must\s+be|shall\s+be|equals?)\b/i.test(clause) ||
-      /(?<![<>!=])=(?!=)/.test(clause)
+      /(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)(?<!\b(?:not|never|no|cannot)\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly|fixed\s+at|set\s+to|must\s+be|shall\s+be|equals?)\b/i.test(targetScope) ||
+      /(?<![<>!=])=(?!=)/.test(targetScope)
     ) {
       constraintType = "EXACT";
       boundary = "INCLUSIVE";
-      const m = clause.match(/(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly|fixed\s+at|set\s+to|must\s+be|shall\s+be|equals?)\b/i);
+      const m = targetScope.match(/(?<!\b(?:less|fewer|greater|more)\s+than\s+or\s+)(?<!\b(?:not|never|no|cannot)\s+)\b(?:strictly\s+equal\s+to|equal\s+to|strictly\s+equal|exactly|fixed\s+at|set\s+to|must\s+be|shall\s+be|equals?)\b/i);
       operatorPhrase = m ? m[0].toLowerCase() : "must be";
     }
     // 9. Fallback Idiomatic Ceilings without explicit comparator: "limit is", "limit of", "limit to"
-    else if (/\b(?:limit\s+(?:is|of|to)?\b)/i.test(clause)) {
+    else if (/\b(?:limit\s+(?:is|of|to)?\b)/i.test(targetScope)) {
       constraintType = "CEILING";
       boundary = "INCLUSIVE";
-      const m = clause.match(/\b(?:limit\s+(?:is|of|to)?\b)/i);
+      const m = targetScope.match(/\b(?:limit\s+(?:is|of|to)?\b)/i);
       operatorPhrase = m ? m[0].toLowerCase() : "limit is";
     }
 
     const operator = operatorPhrase;
 
-    const subjectDescriptor =
-      cleaned
-        .replace(/[:.\-—–\s]+$/, "")
-        .replace(/^[:.\-—–\s]+/, "")
-        .trim()
-        .slice(0, 60) || q.category;
-
     requirements.push({
       id: `REQ-NUM-${reqCounter++}`,
-      rawClause: clause,
+      rawClause: targetScope,
       subjectDescriptor,
       subjectTokens,
       quantity: q,
@@ -519,6 +641,23 @@ export function isOperatorCompatible(
       compatible: false,
       isInversion: true,
       reason: `Source specifies ${src.constraintType.toLowerCase()} constraint ('${src.operatorPhrase}'), but operative target has ${op.constraintType.toLowerCase()} operator ('${op.operatorPhrase}') resulting in operator collapse or ungrounded restriction`,
+    };
+  }
+  if (src.constraintType === "NOT_EQUAL" && op.constraintType === "NOT_EQUAL") {
+    return { compatible: true, isInversion: false };
+  }
+  if (src.constraintType === "NOT_EQUAL") {
+    return {
+      compatible: false,
+      isInversion: true,
+      reason: `Source specifies negated inequality ('${src.operatorPhrase}'), but operative target mutates it into a ${op.constraintType.toLowerCase()} constraint ('${op.operatorPhrase}') resulting in strict polarity inversion`,
+    };
+  }
+  if (op.constraintType === "NOT_EQUAL") {
+    return {
+      compatible: false,
+      isInversion: true,
+      reason: `Source specifies ${src.constraintType.toLowerCase()} constraint ('${src.operatorPhrase}'), but operative target inverts it into negated inequality ('${op.operatorPhrase}') resulting in strict polarity inversion`,
     };
   }
   if (src.constraintType === op.constraintType) {

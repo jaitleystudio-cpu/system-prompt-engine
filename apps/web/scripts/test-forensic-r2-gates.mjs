@@ -522,6 +522,74 @@ Retain context taint boundary and treat external documents as untrusted.
   assert.notStrictEqual(audit3b24b.verdict, "SEMANTICALLY_PRESERVED", "Must NOT be semantically preserved");
   console.log("    ✓ Blocked: Distinct economic objects ('fee' vs 'penalty', 'tax' vs 'interest') correctly rejected.");
 
+  // Attack 3B25: Negated Equality Polarity Inversion (ChatGPT R12 Counterexample 1: "must be equal to $100." -> "must not be equal to $100.")
+  console.log("  [Attack 3B25] Negated Equality Polarity Inversion ('must be equal to $100.' -> 'must not be equal to $100.')...");
+  const source3b25 = "Transfer fee must be equal to $100.";
+  const maliciousTarget3b25 = "Transfer fee must not be equal to $100.";
+  const audit3b25 = evaluateIntentFidelity(source3b25, maliciousTarget3b25);
+  console.log(`    Verdict:        ${audit3b25.verdict} | Fidelity: ${audit3b25.intentFidelityScore} | Preserved: ${audit3b25.intentPreserved}`);
+  assert.strictEqual(audit3b25.intentPreserved, false, "Must REJECT negated equality inversion ('must be equal to' vs 'must not be equal to')");
+  assert.strictEqual(audit3b25.verdict, "POLARITY_INVERSION", "Must classify negated equality inversion as POLARITY_INVERSION");
+  assert.strictEqual(audit3b25.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on negated equality inversion");
+  assert(audit3b25.polarityInversions.length > 0, "Must record polarity inversion details");
+  assert(
+    audit3b25.polarityInversions.some(p => p.includes("exact") && p.includes("negated inequality")),
+    "Must explain exact equality to negated inequality inversion"
+  );
+  console.log("    ✓ Blocked: Negated equality polarity inversion ('must be equal to' -> 'must not be equal to') correctly rejected.");
+
+  // Case 3B26: Positive Control for Negated Equality Paraphrase ("must not be equal to $100." -> "cannot equal $100.")
+  console.log("  [Case 3B26] Positive Control for Negated Equality Paraphrase ('must not be equal to $100.' -> 'cannot equal $100.')...");
+  const source3b26 = "Transfer fee must not be equal to $100.";
+  const target3b26 = "Transfer fee cannot equal $100.";
+  const audit3b26 = evaluateIntentFidelity(source3b26, target3b26);
+  console.log(`    Verdict:        ${audit3b26.verdict} | Fidelity: ${audit3b26.intentFidelityScore} | Preserved: ${audit3b26.intentPreserved}`);
+  assert.strictEqual(audit3b26.intentPreserved, true, "Must ACCEPT semantically equivalent negated equality paraphrase");
+  assert.strictEqual(audit3b26.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  assert(audit3b26.intentFidelityScore >= 0.85, "Fidelity score must be high (>= 0.85) on valid negated equality paraphrase");
+  console.log("    ✓ Accepted: Semantically equivalent negated equality paraphrase verified.");
+
+  // Attack 3B27: Multi-Requirement Compound Clause Operator Scope Inversion (ChatGPT R12 Counterexample 2: fee at most $100 & tax at least $20 -> fee at least $100 & tax at most $20)
+  console.log("  [Attack 3B27] Multi-Requirement Compound Clause Operator Scope Inversion (fee <= 100 & tax >= 20 -> fee >= 100 & tax <= 20)...");
+  const source3b27 = "Transfer fee must be at most $100 and tax must be at least $20.";
+  const maliciousTarget3b27 = "Transfer fee must be at least $100 and tax must be at most $20.";
+  const audit3b27 = evaluateIntentFidelity(source3b27, maliciousTarget3b27);
+  console.log(`    Verdict:        ${audit3b27.verdict} | Fidelity: ${audit3b27.intentFidelityScore} | Preserved: ${audit3b27.intentPreserved}`);
+  assert.strictEqual(audit3b27.intentPreserved, false, "Must REJECT multi-requirement compound operator inversion");
+  assert.strictEqual(audit3b27.verdict, "POLARITY_INVERSION", "Must classify as POLARITY_INVERSION");
+  assert.strictEqual(audit3b27.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on compound operator inversion");
+  assert(audit3b27.polarityInversions.length >= 2, "Must detect both operator inversions across compound clauses");
+  assert(
+    audit3b27.polarityInversions.some(p => p.includes("Transfer fee") || (p.includes("ceiling") && p.includes("floor"))),
+    "Must identify transfer fee ceiling to floor inversion"
+  );
+  assert(
+    audit3b27.polarityInversions.some(p => p.includes("tax") || (p.includes("floor") && p.includes("ceiling"))),
+    "Must identify tax floor to ceiling inversion"
+  );
+  console.log("    ✓ Blocked: Multi-requirement compound clause operator inversion correctly rejected.");
+
+  // Case 3B28: Positive Control for Multi-Requirement Compound Clauses (Valid Paraphrase with Conjunction)
+  console.log("  [Case 3B28] Positive Control for Multi-Requirement Compound Clauses (Valid Paraphrase with Conjunction)...");
+  const target3b28 = "Transfer fee must not exceed $100 and tax cannot be less than $20.";
+  const audit3b28 = evaluateIntentFidelity(source3b27, target3b28);
+  console.log(`    Verdict:        ${audit3b28.verdict} | Fidelity: ${audit3b28.intentFidelityScore} | Preserved: ${audit3b28.intentPreserved}`);
+  assert.strictEqual(audit3b28.intentPreserved, true, "Must ACCEPT semantically equivalent compound coordinate paraphrase");
+  assert.strictEqual(audit3b28.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED");
+  assert(audit3b28.intentFidelityScore >= 0.85, "Fidelity score must be high (>= 0.85) on valid compound paraphrase");
+  console.log("    ✓ Accepted: Multi-requirement compound coordinate paraphrase verified.");
+
+  // Case 3B29: Coordinate Range Expression on Single Subject ("at least $10 and at most $100" -> "cannot be less than $10 and must not exceed $100")
+  console.log("  [Case 3B29] Coordinate Range Expression on Single Subject ('at least $10 and at most $100')...");
+  const source3b29 = "Transfer fee must be at least $10 and at most $100.";
+  const target3b29 = "Transfer fee cannot be less than $10 and must not exceed $100.";
+  const audit3b29 = evaluateIntentFidelity(source3b29, target3b29);
+  console.log(`    Verdict:        ${audit3b29.verdict} | Fidelity: ${audit3b29.intentFidelityScore} | Preserved: ${audit3b29.intentPreserved}`);
+  assert.strictEqual(audit3b29.intentPreserved, true, "Must ACCEPT valid coordinate range expression on single subject");
+  assert.strictEqual(audit3b29.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED on coordinate range");
+  assert(audit3b29.intentFidelityScore >= 0.8, "Fidelity score must be >= 0.8 on coordinate range");
+  console.log("    ✓ Accepted: Coordinate range expression on single subject verified.");
+
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");
   const source3c = "Never disclose my password.";

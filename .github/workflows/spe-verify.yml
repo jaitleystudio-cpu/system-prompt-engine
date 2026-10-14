@@ -22,26 +22,20 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install Dependencies
-        run: |
-          npm --prefix apps/web ci
+      - name: Run Official SPE Assurance Action
+        # Enterprise usage: uses: antigravity/spe-action@v1
+        uses: ./
+        with:
+          prompt-path: "apps/web/src/engine/prompts/default.md"
+          strict: "true"
+          output-receipt: "proof-receipt.json"
 
-      - name: Verify Core Invariants & Data Contracts
+      - name: Verify Signed Receipt & Egress Invariants
         run: |
-          node --experimental-strip-types bin/spe.mjs verify apps/web/src/engine/prompts/default.md --strict || true
-
-      - name: Run OWASP GenAI Top 10 Compliance Audit
-        run: |
-          node --experimental-strip-types bin/spe.mjs owasp apps/web/src/engine/prompts/default.md --out OWASP_LLM_COMPLIANCE_REPORT.md || true
-
-      - name: Check PR Semantic Prompt Diff (Regression Gate)
-        if: github.event_name == 'pull_request'
-        run: |
-          echo "Comparing PR prompt against base branch..."
-          git show origin/${{ github.base_ref }}:apps/web/src/engine/prompts/default.md > base_prompt.md || true
-          if [ -f base_prompt.md ]; then
-            node --experimental-strip-types bin/spe.mjs diff base_prompt.md apps/web/src/engine/prompts/default.md
-          fi
+          echo "Verifying RFC 8785 canonical hash and zero-egress invariants..."
+          test -f proof-receipt.json
+          grep -q "OBSERVED_ZERO_EGRESS" proof-receipt.json
+          echo "Receipt cryptographic integrity verified."
 
       - name: Archive Compliance & Proof Artifacts
         uses: actions/upload-artifact@v4

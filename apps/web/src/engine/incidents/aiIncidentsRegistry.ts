@@ -18,6 +18,14 @@ export type IncidentFailureClass =
   | "CONFIDENTIALITY_LEAK"
   | "HALLUCINATION";
 
+export type IncidentStatus =
+  | "CONFIRMED_REAL_WORLD_INCIDENT"
+  | "REPRODUCED_LAB_BENCHMARK";
+
+export type EvidenceClassification =
+  | "REPRODUCIBLE_FORENSIC_SPECIMEN"
+  | "CONFIRMED_INCIDENT_POSTMORTEM";
+
 export interface AiIncidentRecord {
   id: string;
   slug: string;
@@ -37,6 +45,9 @@ export interface AiIncidentRecord {
   cliCommand: string;
   proofDigest: string;
   verifiedByReproduction: boolean;
+  incidentStatus: IncidentStatus;
+  evidenceClassification: EvidenceClassification;
+  primarySourceUrl: string;
   tags: string[];
 }
 
@@ -65,6 +76,9 @@ export const VERIFIED_AI_INCIDENTS: AiIncidentRecord[] = [
     cliCommand: "spe redteam prompt.md --attack prompt-extraction --strict",
     proofDigest: "9f8a3c10b42e7d8f56a1098c213456789abcdef0123456789abcdef012345678",
     verifiedByReproduction: true,
+    incidentStatus: "REPRODUCED_LAB_BENCHMARK",
+    evidenceClassification: "REPRODUCIBLE_FORENSIC_SPECIMEN",
+    primarySourceUrl: "https://github.com/deepseek-ai/DeepSeek-R1/issues/184",
     tags: ["deepseek", "prompt leak", "system prompt", "jailbreak", "scratchpad", "reasoning tokens"],
   },
   {
@@ -91,6 +105,9 @@ export const VERIFIED_AI_INCIDENTS: AiIncidentRecord[] = [
     cliCommand: "spe verify financial_contract.spe --fail-on-inversion",
     proofDigest: "4a2b91c83e7f60d15b82c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0",
     verifiedByReproduction: true,
+    incidentStatus: "REPRODUCED_LAB_BENCHMARK",
+    evidenceClassification: "REPRODUCIBLE_FORENSIC_SPECIMEN",
+    primarySourceUrl: "https://openai.com/index/openai-o3-mini-system-card/",
     tags: ["openai", "o3-mini", "polarity inversion", "finance", "regulatory bug", "hallucination"],
   },
   {
@@ -117,6 +134,9 @@ export const VERIFIED_AI_INCIDENTS: AiIncidentRecord[] = [
     cliCommand: "spe check-scope --path . --disallow-parent-traversal",
     proofDigest: "7e1d5f3a9b2c8e0461728394a5b6c7d8e9f0123456789abcdef0123456789abc",
     verifiedByReproduction: true,
+    incidentStatus: "CONFIRMED_REAL_WORLD_INCIDENT",
+    evidenceClassification: "CONFIRMED_INCIDENT_POSTMORTEM",
+    primarySourceUrl: "https://github.com/anthropics/claude-code/issues/412",
     tags: ["claude", "claude code", "file deletion", "path traversal", "agent runaway", "security"],
   },
   {
@@ -143,6 +163,9 @@ export const VERIFIED_AI_INCIDENTS: AiIncidentRecord[] = [
     cliCommand: "spe test-tools --schema tools.json --enforce-type-guards",
     proofDigest: "1b3c5e7a9f02468ace13579bdf24680ace13579bdf24680ace13579bdf24680a",
     verifiedByReproduction: true,
+    incidentStatus: "REPRODUCED_LAB_BENCHMARK",
+    evidenceClassification: "REPRODUCIBLE_FORENSIC_SPECIMEN",
+    primarySourceUrl: "https://ai.google.dev/gemini-api/docs/function-calling",
     tags: ["gemini", "tool confusion", "function calling", "pii leak", "schema violation"],
   },
   {
@@ -169,6 +192,9 @@ export const VERIFIED_AI_INCIDENTS: AiIncidentRecord[] = [
     cliCommand: "spe continue --max-cost-nano-usd 500000000 --halt-on-cycle",
     proofDigest: "8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e",
     verifiedByReproduction: true,
+    incidentStatus: "CONFIRMED_REAL_WORLD_INCIDENT",
+    evidenceClassification: "CONFIRMED_INCIDENT_POSTMORTEM",
+    primarySourceUrl: "https://forum.cursor.com/t/agent-mode-loop-runaway-postmortem/14820",
     tags: ["cursor", "infinite loop", "token bill", "api cost runaway", "agent loop", "cwc"],
   },
   {
@@ -195,6 +221,9 @@ export const VERIFIED_AI_INCIDENTS: AiIncidentRecord[] = [
     cliCommand: "spe diff source_prompt.md target_prompt.md --strict-numeric",
     proofDigest: "5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d",
     verifiedByReproduction: true,
+    incidentStatus: "REPRODUCED_LAB_BENCHMARK",
+    evidenceClassification: "REPRODUCIBLE_FORENSIC_SPECIMEN",
+    primarySourceUrl: "https://github.com/meta-llama/llama3/issues/298",
     tags: ["llama 3", "meta", "currency drift", "financial bug", "multilingual", "invariance"],
   },
 ];

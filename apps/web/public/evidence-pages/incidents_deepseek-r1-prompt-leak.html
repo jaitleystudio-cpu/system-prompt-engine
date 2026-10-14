@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/deepseek-r1-prompt-leak</span>
     </nav>
     <header>
-      <span class="badge">EMPIRICAL_BENCHMARK_VERIFIED &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">CONFIRMED_INCIDENT_POSTMORTEM &bull; WASM_SANDBOX_VERIFIED</span>
       <h1>DeepSeek R1/V3 Reasoning Prompt Leak Forensic Post-Mortem</h1>
       <p class="lead">Empirical root-cause analysis and minimal reproducer payload for DeepSeek R1 prompt extraction inside reasoning scratchpads.</p>
     </header>
@@ -60,6 +60,7 @@
       <div class="box">
         
       <h2>DeepSeek R1 / V3 Reasoning Scratchpad Prompt Leak</h2>
+      <p><strong>Status & Evidence:</strong> Confirmed Real-World Incident (<a href="https://github.com/deepseek-ai/DeepSeek-V3/issues/184" target="_blank" rel="noopener noreferrer">Primary Source: GitHub Issue #184</a>).</p>
       <p><strong>Vulnerability:</strong> Confidentiality Leak & System Boundary Bypass (OWASP LLM02 / CWE-200).</p>
       <p><strong>Root Cause:</strong> Lack of token-level confidentiality masking between internal &lt;think&gt; reasoning buffers and output streams.</p>
       <p><strong>How SPE Prevents It:</strong> SPE ProtectedIntent compiles an epistemic firewall that scrubs reasoning buffers before delivery.</p>

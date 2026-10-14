@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/gemini-2-tool-confusion</span>
     </nav>
     <header>
-      <span class="badge">EMPIRICAL_BENCHMARK_VERIFIED &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">REPRODUCIBLE_FORENSIC_SPECIMEN &bull; WASM_SANDBOX_VERIFIED</span>
       <h1>Gemini 2.0 Flash Tool Schema Argument Confusion Incident</h1>
       <p class="lead">Analysis of Gemini 2.0 Flash swapping overlapping arguments in parallel function calls, leaking PII to external webhooks.</p>
     </header>
@@ -60,6 +60,7 @@
       <div class="box">
         
       <h2>Gemini 2.0 Flash Tool Schema Argument Confusion</h2>
+      <p><strong>Status & Evidence:</strong> Reproducible Lab Benchmark (<a href="https://ai.google.dev/gemini-api/docs/function-calling" target="_blank" rel="noopener noreferrer">Primary Source: Google Gemini Function Calling Documentation</a>).</p>
       <p><strong>Vulnerability:</strong> Tool Confusion & Sensitive Data Disclosure (OWASP LLM07 / CWE-20).</p>
       <p><strong>Root Cause:</strong> Ambiguous function schemas with overlapping arguments caused hallucinated tool parameter assignments.</p>
       <p><strong>How SPE Prevents It:</strong> SPE 6-Clause Execution Contract enforces deterministic schema validation before dispatch.</p>

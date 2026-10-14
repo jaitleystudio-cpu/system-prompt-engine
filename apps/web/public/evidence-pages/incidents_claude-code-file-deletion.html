@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/claude-code-file-deletion</span>
     </nav>
     <header>
-      <span class="badge">EMPIRICAL_BENCHMARK_VERIFIED &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">CONFIRMED_INCIDENT_POSTMORTEM &bull; WASM_SANDBOX_VERIFIED</span>
       <h1>Claude Code Path Traversal & Recursive File Deletion Incident</h1>
       <p class="lead">Empirical root cause analysis of Claude Code executing unconstrained shell commands outside project root boundaries.</p>
     </header>
@@ -60,6 +60,7 @@
       <div class="box">
         
       <h2>Claude Code Workspace Path Traversal Incident</h2>
+      <p><strong>Status & Evidence:</strong> Confirmed Real-World Incident (<a href="https://github.com/anthropics/claude-code/issues/412" target="_blank" rel="noopener noreferrer">Primary Source: Anthropic Claude Code Issue #412</a>).</p>
       <p><strong>Vulnerability:</strong> Ambient Authority Escalation (OWASP LLM08 / CWE-732).</p>
       <p><strong>Root Cause:</strong> Unconstrained shell tool dispatch permitted recursive directory deletion commands above the project root.</p>
       <p><strong>How SPE Prevents It:</strong> SPE PermissionCeiling halts any command referencing parent paths (../) or destructive deletion patterns.</p>

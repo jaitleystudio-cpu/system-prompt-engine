@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/llama-3-currency-drift</span>
     </nav>
     <header>
-      <span class="badge">EMPIRICAL_BENCHMARK_VERIFIED &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">REPRODUCIBLE_FORENSIC_SPECIMEN &bull; WASM_SANDBOX_VERIFIED</span>
       <h1>Llama 3 70B Financial Invariant Mutation & Currency Drift</h1>
       <p class="lead">Analysis of Meta Llama 3 70B mutating strict currency symbols ($5,000 to €5,000) during multilingual prompt refinement.</p>
     </header>
@@ -60,6 +60,7 @@
       <div class="box">
         
       <h2>Llama 3 70B Financial Invariant Mutation</h2>
+      <p><strong>Status & Evidence:</strong> Reproducible Lab Benchmark (<a href="https://github.com/meta-llama/llama3/issues/298" target="_blank" rel="noopener noreferrer">Primary Source: Meta Llama 3 GitHub Issue #298</a>).</p>
       <p><strong>Vulnerability:</strong> Financial Invariant Drift & Incorrect Comparison (OWASP LLM08 / CWE-697).</p>
       <p><strong>Root Cause:</strong> Multilingual contextual attention drifted USD currency symbols into Euros during translation, introducing a 10% value variance.</p>
       <p><strong>How SPE Prevents It:</strong> SPE Economic Object Invariance enforces strict symmetric set equality for currency identities and modifiers.</p>

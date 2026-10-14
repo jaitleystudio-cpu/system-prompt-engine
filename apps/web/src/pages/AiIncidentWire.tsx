@@ -315,6 +315,19 @@ export const AiIncidentWire: React.FC<Props> = ({ onNavigate }) => {
                       >
                         {inc.model}
                       </span>
+                      <span
+                        style={{
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                          background: inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "rgba(239, 68, 68, 0.15)" : "rgba(56, 189, 248, 0.15)",
+                          color: inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "#f87171" : "#38bdf8",
+                          border: `1px solid ${inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "rgba(239, 68, 68, 0.3)" : "rgba(56, 189, 248, 0.3)"}`,
+                        }}
+                      >
+                        {inc.incidentStatus === "CONFIRMED_REAL_WORLD_INCIDENT" ? "CONFIRMED INCIDENT" : "LAB REPRODUCER"}
+                      </span>
                       <span style={{ fontSize: "0.75rem", color: "#64748b" }}>
                         ID: {inc.id} · {inc.date}
                       </span>
@@ -428,13 +441,36 @@ export const AiIncidentWire: React.FC<Props> = ({ onNavigate }) => {
                         </div>
                       </div>
 
-                      {/* Proof Verification Hash & Status */}
-                      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", fontSize: "0.75rem", color: "#64748b", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "0.75rem" }}>
-                        <div>
-                          Proof Digest (RFC 8785): <code style={{ color: "#94a3b8" }}>{inc.proofDigest.slice(0, 24)}...</code>
+                      {/* Proof Verification Hash, Source & Status */}
+                      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "10px", fontSize: "0.75rem", color: "#64748b", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "0.75rem" }}>
+                        <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                          <div>
+                            Proof Digest (RFC 8785): <code style={{ color: "#94a3b8" }}>{inc.proofDigest.slice(0, 24)}...</code>
+                          </div>
+                          {inc.primarySourceUrl && (
+                            <a
+                              href={inc.primarySourceUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: "#38bdf8", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                            >
+                              <span>Primary Reference / Source Trace ↗</span>
+                            </a>
+                          )}
                         </div>
                         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                          <span style={{ color: "#4ade80" }}>✓ VERIFIED BY EMPIRICAL REPRODUCTION</span>
+                          <span
+                            style={{
+                              padding: "2px 6px",
+                              borderRadius: "4px",
+                              background: inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "rgba(16, 185, 129, 0.15)" : "rgba(147, 51, 234, 0.15)",
+                              color: inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "#34d399" : "#c084fc",
+                              border: `1px solid ${inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "rgba(16, 185, 129, 0.3)" : "rgba(147, 51, 234, 0.3)"}`,
+                              fontWeight: 600,
+                            }}
+                          >
+                            {inc.evidenceClassification === "CONFIRMED_INCIDENT_POSTMORTEM" ? "CONFIRMED INCIDENT POSTMORTEM" : "REPRODUCIBLE FORENSIC SPECIMEN"}
+                          </span>
                           {onNavigate && (
                             <button
                               onClick={() => onNavigate("workspace")}

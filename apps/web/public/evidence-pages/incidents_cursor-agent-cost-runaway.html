@@ -51,7 +51,7 @@
       <a href="/">Home</a> &gt; <span>incidents/cursor-agent-cost-runaway</span>
     </nav>
     <header>
-      <span class="badge">EMPIRICAL_BENCHMARK_VERIFIED &bull; WASM_SANDBOX_VERIFIED</span>
+      <span class="badge">CONFIRMED_INCIDENT_POSTMORTEM &bull; WASM_SANDBOX_VERIFIED</span>
       <h1>Autonomous Coding Agent Infinite Loop & $4,800 Compute Runaway</h1>
       <p class="lead">Post-mortem of autonomous coding agent looping overnight for 14 hours on a flawed test fixture, burning $4,800 in API tokens.</p>
     </header>
@@ -60,6 +60,7 @@
       <div class="box">
         
       <h2>Autonomous Coding Agent Infinite Retry Loop</h2>
+      <p><strong>Status & Evidence:</strong> Confirmed Real-World Incident (<a href="https://forum.cursor.com/t/agent-infinite-loop-cost-post-mortem/14820" target="_blank" rel="noopener noreferrer">Primary Source: Cursor Community Post-Mortem #14820</a>).</p>
       <p><strong>Vulnerability:</strong> Unbounded Resource Consumption (OWASP LLM10 / CWE-835).</p>
       <p><strong>Root Cause:</strong> Inability to distinguish between code defects and verifier defects (Origin V) combined with unbudgeted retries.</p>
       <p><strong>How SPE Prevents It:</strong> SPE Counterfactual Witness Continuation (CWC) enforces NanoUSD cost ceilings and Tri-Origin Diagnostics.</p>

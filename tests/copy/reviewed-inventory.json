@@ -23449,6 +23449,12 @@
       "text": "Visual Intelligence Modes"
     },
     {
+      "id": "01b0c816725a3ef51b0c",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "CONFIRMED INCIDENT"
+    },
+    {
       "id": "080afa835f1ac371794c",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -23521,6 +23527,12 @@
       "text": "CRITICAL"
     },
     {
+      "id": "2331a204759b981e5b39",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "CONFIRMED_REAL_WORLD_INCIDENT"
+    },
+    {
       "id": "2a099e7dbdfce6946441",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -23551,6 +23563,12 @@
       "text": "Exact prompt that triggered the hallucination, jailbreak, or failure..."
     },
     {
+      "id": "3452638438d2d38a81ba",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "CONFIRMED INCIDENT POSTMORTEM"
+    },
+    {
       "id": "358d83ef01b6b449df12",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -23579,12 +23597,6 @@
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
       "text": "&lt; 45 ms"
-    },
-    {
-      "id": "4b5809345303aa08b1e6",
-      "file": "apps/web/src/pages/AiIncidentWire.tsx",
-      "depth": "PRODUCT",
-      "text": "✓ VERIFIED BY EMPIRICAL REPRODUCTION"
     },
     {
       "id": "4cf71b0a219fd901ae33",
@@ -23827,6 +23839,12 @@
       "text": "ID:"
     },
     {
+      "id": "c76eda80d83c8765327f",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "Primary Reference / Source Trace ↗"
+    },
+    {
       "id": "c77cff2011a43921eaa5",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -23857,6 +23875,12 @@
       "text": "Formal Invariant Mapping"
     },
     {
+      "id": "e10f0f09b8ffc7133c9d",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "REPRODUCIBLE FORENSIC SPECIMEN"
+    },
+    {
       "id": "e26716d7201fbc627e8a",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -23867,6 +23891,18 @@
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
       "text": "Search failures, models, CVEs..."
+    },
+    {
+      "id": "ed731c86cd5b8957e350",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "CONFIRMED_INCIDENT_POSTMORTEM"
+    },
+    {
+      "id": "eee2a6ef27e350140673",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "LAB REPRODUCER"
     },
     {
       "id": "f2306604b03b66df086c",
