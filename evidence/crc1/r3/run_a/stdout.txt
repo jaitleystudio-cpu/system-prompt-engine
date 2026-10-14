@@ -1,0 +1,28 @@
+{
+  "planner": {
+    "n_needed_at_oracle008_alpha008": null,
+    "n_needed_at_oracle008_alpha010": 964,
+    "oracle_008_risk": 0.079472
+  },
+  "verdicts": {
+    "H1_validity_a08": "SUPPORTED",
+    "H2_feasible_coverage": "REFUTED",
+    "H3": {
+      "a08_meets_085": false,
+      "a08_x_oracle_008": 0.303026,
+      "a10_meets_085": false,
+      "a10_x_oracle_010": 0.486558,
+      "beats_previous_best": false,
+      "paired_a08_minus_a10": {
+        "lb95_1s": -0.111121,
+        "mean": -0.105033,
+        "ub95_1s": -0.098945
+      },
+      "raw_cov_a08": 0.108336,
+      "raw_cov_a10": 0.213369
+    },
+    "H4_descriptive_a08_shift_violation": 0.076,
+    "H4_shift_gate": "SUPPORTED",
+    "overall": "NOT_PROVEN"
+  }
+}
