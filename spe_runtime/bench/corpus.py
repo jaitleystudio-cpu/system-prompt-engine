@@ -81,10 +81,16 @@ def run_paired_baseline(
     verified_weights_receipt: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Runs rigorous paired evaluation on the exact same model & task inputs."""
-    # Negative guard: prevent simulated runs from claiming OBSERVED_LOCAL without real weights
-    if evidence_class == "OBSERVED_LOCAL" and not verified_weights_receipt:
+    # A caller-supplied mapping is not a verified attestation. This API accepts
+    # simulation only; authenticated provider receipts belong to a separately
+    # qualified runner and evaluator. Do not mint OBSERVED_LOCAL from a fake dict.
+    if evidence_class != "SIMULATED":
         raise ValueError(
             "Cannot claim OBSERVED_LOCAL for simulated model function without verified runtime receipts and real weights."
+        )
+    if verified_weights_receipt is not None:
+        raise ValueError(
+            "Simulated runner cannot authenticate a caller-supplied weights receipt"
         )
 
     suite = load_corpus_suite()
