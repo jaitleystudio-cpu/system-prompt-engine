@@ -185,11 +185,98 @@ export interface SemanticFidelityAudit {
   epistemicDisclaimer?: string;
 }
 
+export interface CategorizedQuantity {
+  raw: string;
+  numericValue: number;
+  category: "CURRENCY" | "DURATION" | "PERCENTAGE" | "COUNT";
+  clause: string;
+}
+
+export function extractCategorizedQuantities(text: string): CategorizedQuantity[] {
+  const clauses = text.split(/[\n\r;]+|(?<=[.!?])\s+/).map((c) => c.trim()).filter(Boolean);
+  const results: CategorizedQuantity[] = [];
+
+  for (const clause of clauses) {
+    // 1. Currency: e.g. $5,000, €50,000, 5000 USD, 5k dollars
+    const currencyRegex = /(?:(\$|€|£|₹)\s*(\d+(?:,\d{3})*(?:\.\d+)?)\s*(k|m|b)?\b|\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(k|m|b)?\s*(?:usd|dollars?|euros?|pounds?|rupees?|inr)\b)/gi;
+    let match: RegExpExecArray | null;
+    while ((match = currencyRegex.exec(clause)) !== null) {
+      const rawNum = match[2] || match[4];
+      const multiplier = (match[3] || match[5] || "").toLowerCase();
+      let val = parseFloat(rawNum.replace(/,/g, ""));
+      if (multiplier === "k") val *= 1000;
+      else if (multiplier === "m") val *= 1000000;
+      else if (multiplier === "b") val *= 1000000000;
+      results.push({
+        raw: match[0].trim(),
+        numericValue: val,
+        category: "CURRENCY",
+        clause,
+      });
+    }
+
+    // 2. Duration / Time: e.g. 30 days, 24 hours, 15 minutes, 60 seconds, 12 months, 2 years, 500 ms
+    const durationRegex = /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(days?|hours?|hrs?|minutes?|mins?|seconds?|secs?|weeks?|months?|years?|ms|milliseconds?)\b/gi;
+    while ((match = durationRegex.exec(clause)) !== null) {
+      const val = parseFloat(match[1].replace(/,/g, ""));
+      results.push({
+        raw: match[0].trim(),
+        numericValue: val,
+        category: "DURATION",
+        clause,
+      });
+    }
+
+    // 3. Percentage: e.g. 20%, 99.9 percent
+    const percentRegex = /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(%|percent(?:age)?)\b/gi;
+    while ((match = percentRegex.exec(clause)) !== null) {
+      const val = parseFloat(match[1].replace(/,/g, ""));
+      results.push({
+        raw: match[0].trim(),
+        numericValue: val,
+        category: "PERCENTAGE",
+        clause,
+      });
+    }
+
+    // 4. Raw / Count: only if not already matched as Currency, Duration, or Percentage
+    const countRegex = /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(k|m|b)?\b/gi;
+    while ((match = countRegex.exec(clause)) !== null) {
+      const rawNum = match[1];
+      const multiplier = (match[2] || "").toLowerCase();
+      let val = parseFloat(rawNum.replace(/,/g, ""));
+      if (multiplier === "k") val *= 1000;
+      else if (multiplier === "m") val *= 1000000;
+      else if (multiplier === "b") val *= 1000000000;
+
+      // Ensure this token wasn't part of an already extracted currency, duration, or percentage
+      const alreadyCaptured = results.some(
+        (r) => r.clause === clause && (r.raw.includes(match![0]) || match![0].includes(r.raw))
+      );
+      if (!alreadyCaptured && rawNum.length >= 2) {
+        results.push({
+          raw: match[0].trim(),
+          numericValue: val,
+          category: "COUNT",
+          clause,
+        });
+      }
+    }
+  }
+
+  return results;
+}
+
 /**
  * Strips quoted reference sections, user request echoes, markdown blockquotes, and labeled source material
  * so that only active, operative instructions are evaluated for constraint preservation.
  */
 export function extractOperativeInstructions(targetPrompt: string, cleanSource = ""): string {
+  // If target prompt matches clean source exactly, it is the operative instruction itself - do not strip!
+  if (cleanSource && targetPrompt.trim().toLowerCase() === cleanSource.trim().toLowerCase()) {
+    return targetPrompt;
+  }
+
   let operative = targetPrompt;
 
   // 1. Remove explicit label blocks like "User Request: ...", "Original Prompt: ...", "Source Input: ...", "Raw Input: ..."
@@ -207,10 +294,10 @@ export function extractOperativeInstructions(targetPrompt: string, cleanSource =
   // 4. Remove quoted strings (e.g. "Never disclose my password." or '...')
   operative = operative.replace(/["'][^"'\n]{6,}["']/g, "\n");
 
-  // 5. If the target contains a verbatim match of the source input wrapped in quotes or following a colon, strip it
+  // 5. If the target contains a verbatim match of the source input wrapped in quotes, strip it
   if (cleanSource && cleanSource.length > 5) {
     const escapedSource = cleanSource.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    operative = operative.replace(new RegExp(`(?:["']|^\\s*|:\\s*)${escapedSource}(?:["']|\\s*$)`, "gi"), "\n");
+    operative = operative.replace(new RegExp(`(?:["'])${escapedSource}(?:["'])`, "gi"), "\n");
   }
 
   return operative;
@@ -244,7 +331,32 @@ export function evaluateIntentFidelity(
 
   const cleanSource = sourceInput.trim();
   const sourceLower = cleanSource.toLowerCase();
-  const targetLower = targetPrompt.toLowerCase();
+
+  // Exact metamorphic identity check: If cleanSource matches targetPrompt verbatim, intent is 100% preserved
+  if (cleanSource.toLowerCase() === targetPrompt.trim().toLowerCase()) {
+    const sourceTokens = Array.from(
+      new Set(
+        cleanSource
+          .toLowerCase()
+          .replace(/[^\p{L}\p{N}\s]/gu, " ")
+          .split(/\s+/)
+          .filter((t) => t.length >= 3)
+      )
+    );
+    return {
+      intentPreserved: true,
+      intentFidelityScore: 1.0,
+      preservedEntities: sourceTokens,
+      omittedRequirements: [],
+      detectedContradictions: [],
+      numericalMismatches: [],
+      polarityInversions: [],
+      verdict: "SEMANTICALLY_PRESERVED",
+      auditScope: "RESTRICTED_LEXICAL_AND_POLARITY_FILTER",
+      epistemicDisclaimer:
+        "Static heuristic filter over defined lexicon. Does not constitute general semantic-equivalence proof for unconstrained natural language.",
+    };
+  }
 
   const polarityInversions: string[] = [];
   const detectedContradictions: string[] = [];
@@ -327,36 +439,31 @@ export function evaluateIntentFidelity(
   }
 
   // 2. Numerical & Threshold Invariant Mutation Detection
-  const numericRegex = /(?:\$|€|£|₹)?\b\d+(?:,\d{3})*(?:\.\d+)?(?:k|m|b|%)?\b/gi;
-  const sourceNumbers = Array.from(new Set(cleanSource.match(numericRegex) || []));
+  const sourceQuantities = extractCategorizedQuantities(cleanSource);
+  const operativeQuantities = extractCategorizedQuantities(operativeTarget);
 
-  for (const num of sourceNumbers) {
-    const rawVal = num.replace(/[^\d.]/g, "");
-    if (rawVal.length >= 2) {
-      // Check whether operative instructions preserve the numeric bound
-      const isPresentInOperative = operativeTarget.includes(num) || operativeTarget.includes(rawVal);
-      // Look for numbers in operativeTarget
-      const operativeNumbers = operativeTarget.match(numericRegex) || [];
-      const divergentNumbers = operativeNumbers.filter(
-        (tn) => tn.replace(/[^\d.]/g, "") !== rawVal && tn.replace(/[^\d.]/g, "").length >= 2
-      );
+  for (const sq of sourceQuantities) {
+    // Check whether operative instructions preserve this exact quantity in the same category
+    const matchingInOperative = operativeQuantities.filter(
+      (oq) => oq.category === sq.category && oq.numericValue === sq.numericValue
+    );
 
-      if (divergentNumbers.length > 0) {
-        for (const divNum of divergentNumbers) {
-          const divRaw = divNum.replace(/[^\d.]/g, "");
-          // Find the operative sentence/clause that contains this divergent number
-          const divClause = operativeTarget
-            .split(/[\n\r;]+|(?<=[.!?])\s+/)
-            .find((c) => c.includes(divNum) || c.includes(divRaw));
-          if (divClause) {
-            // Check if the clause uses this divergent number in an active/authorizing capacity
-            const isOperativeThreshold = /(?:up\s+to|limit|threshold|exceed|allow|maximum|ceiling|authorize|permit|spend|budget|cap|amount|funds?|payout|transfer|transfers?)\b/i.test(divClause);
-            if (!isPresentInOperative || isOperativeThreshold) {
-              numericalMismatches.push(
-                `Numerical invariant mutated: Source specifies '${num}', but operative instructions authorize divergent threshold: '${divNum}' in "${divClause.trim().slice(0, 80)}"`
-              );
-            }
-          }
+    // Look for divergent quantities in operativeTarget strictly within the same unit category
+    const divergentInOperative = operativeQuantities.filter(
+      (oq) => oq.category === sq.category && oq.numericValue !== sq.numericValue
+    );
+
+    if (divergentInOperative.length > 0) {
+      for (const divQ of divergentInOperative) {
+        // Check if the clause uses this divergent number in an active/authorizing capacity
+        const isOperativeThreshold =
+          /(?:up\s+to|limit|threshold|exceed|allow|maximum|ceiling|authorize|permit|spend|budget|cap|amount|funds?|payout|transfer|transfers?|retention|retain|wait|timeout|delay|after|within)\b/i.test(
+            divQ.clause
+          );
+        if (matchingInOperative.length === 0 || isOperativeThreshold) {
+          numericalMismatches.push(
+            `Numerical invariant mutated: Source specifies '${sq.raw}' (${sq.category}), but operative instructions authorize divergent threshold: '${divQ.raw}' in "${divQ.clause.trim().slice(0, 80)}"`
+          );
         }
       }
     }

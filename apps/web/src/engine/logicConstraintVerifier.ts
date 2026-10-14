@@ -45,7 +45,7 @@ export interface DetectedContradiction {
   bridgeAxiomApplied?: string;
   isAssumptionDependent: boolean;
   assumptionDescription?: string;
-  refutationScope: "ADVERSARIAL_BRIDGE_AXIOM" | "INTRINSIC_PROMPT_CONTRADICTION";
+  refutationScope: "ADVERSARIAL_BRIDGE_AXIOM" | "INTRINSIC_PROMPT_CONTRADICTION" | "NON_EMPTY_DOMAIN_CONTRADICTION";
 }
 
 export interface FormalResolutionStep {
@@ -96,7 +96,7 @@ export interface LogicConstraintReport {
   status: LogicVerificationStatus;
   proofMethod: ProofMethod;
   isFormallyRefuted: boolean;
-  refutationScope?: "ADVERSARIAL_BRIDGE_AXIOM" | "INTRINSIC_PROMPT_CONTRADICTION" | "NONE";
+  refutationScope?: "ADVERSARIAL_BRIDGE_AXIOM" | "INTRINSIC_PROMPT_CONTRADICTION" | "NON_EMPTY_DOMAIN_CONTRADICTION" | "NONE";
   modelCertificate?: ConstructiveModelCertificate;
   propositions: SymbolicProposition[];
   contradictions: DetectedContradiction[];
@@ -428,7 +428,6 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
   proofTree.push(`[FOL-INIT]: Extracted ${propositions.length} symbolic propositions from prompt clauses.`);
 
   const hasUniversalCompliance = propositions.find((p) => p.predicate === "UniversalCompliance");
-  const hasConditionalCompliance = propositions.find((p) => p.predicate === "ConditionalCompliance");
   const hasConfidentialityRefusal = propositions.find((p) => p.predicate === "ConfidentialityRefusal");
   const hasBoundedAuthority = propositions.find((p) => p.predicate === "BoundedAuthority");
 
@@ -619,63 +618,144 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
       const pB = propositions[j];
       if (pA.predicate === pB.predicate && pA.polarity !== pB.polarity) {
         const baseStep = formalProof.length;
+        const isConditionalUniversal = pA.formalFormula.includes("→") || pB.formalFormula.includes("→");
 
-        // Construct complete formal resolution derivation steps for intrinsic contradiction
-        formalProof.push({
-          stepNumber: baseStep + 1,
-          rule: "PREMISE",
-          formula: pA.formalFormula,
-          justification: `Extracted from prompt clause A: "${pA.sourceClause}"`,
-        });
-        formalProof.push({
-          stepNumber: baseStep + 2,
-          rule: "PREMISE",
-          formula: pB.formalFormula,
-          justification: `Extracted from prompt clause B: "${pB.sourceClause}"`,
-        });
-        formalProof.push({
-          stepNumber: baseStep + 3,
-          rule: "SKOLEMIZE",
-          formula: `Literal(${pA.predicate})`,
-          justification: `Skolemization of positive premise ${pA.id} into unit clause`,
-          parentStepNumbers: [baseStep + 1],
-        });
-        formalProof.push({
-          stepNumber: baseStep + 4,
-          rule: "SKOLEMIZE",
-          formula: `¬Literal(${pB.predicate})`,
-          justification: `Skolemization of negative premise ${pB.id} into unit clause`,
-          parentStepNumbers: [baseStep + 2],
-        });
-        formalProof.push({
-          stepNumber: baseStep + 5,
-          rule: "RESOLUTION_REFUTATION",
-          formula: "⊥ (EMPTY_CLAUSE / CONTRADICTION)",
-          justification: `Direct resolution refutation between Step ${baseStep + 3} [Literal(${pA.predicate})] and Step ${baseStep + 4} [¬Literal(${pB.predicate})] derives ⊥`,
-          parentStepNumbers: [baseStep + 3, baseStep + 4],
-        });
+        if (isConditionalUniversal) {
+          verifiedAxioms.push("NEQ (Non-Empty Query Domain Axiom: ∃r UserRequest(r))");
 
-        if (!counterexample) {
-          counterexample = {
-            witnessId: "CW-INT-01",
-            adversarialQuery: `Direct mutual exclusion: "${pA.sourceClause}" directly contradicts "${pB.sourceClause}".`,
-            complianceImplication: `Premise ${pA.id} asserts ${pA.formalFormula}.`,
-            invariantImplication: `Premise ${pB.id} asserts ${pB.formalFormula}.`,
-            refutationSummary: `Direct resolution refutation derives ⊥ from opposing polarity literals for predicate ${pA.predicate}.`,
-          };
+          formalProof.push({
+            stepNumber: baseStep + 1,
+            rule: "PREMISE",
+            formula: pA.formalFormula,
+            justification: `Extracted from prompt clause A: "${pA.sourceClause}"`,
+          });
+          formalProof.push({
+            stepNumber: baseStep + 2,
+            rule: "PREMISE",
+            formula: pB.formalFormula,
+            justification: `Extracted from prompt clause B: "${pB.sourceClause}"`,
+          });
+          formalProof.push({
+            stepNumber: baseStep + 3,
+            rule: "BRIDGE_AXIOM",
+            formula: "∃r_0 UserRequest(r_0)",
+            justification:
+              "Non-Empty Query Domain Axiom (NEQ): Assumes at least one user request exists in the discourse domain. In an empty domain or an interpretation where ∀r ¬UserRequest(r), both universal conditionals evaluate to vacuous truth.",
+          });
+          formalProof.push({
+            stepNumber: baseStep + 4,
+            rule: "SKOLEMIZE",
+            formula: "UserRequest(r*)",
+            justification: 'Skolemization of NEQ with query witness r* = "arbitrary user request"',
+            parentStepNumbers: [baseStep + 3],
+          });
+          formalProof.push({
+            stepNumber: baseStep + 5,
+            rule: "MODUS_PONENS",
+            formula: "Comply(r*)",
+            justification: `Universal Instantiation of Step ${baseStep + 1} with r = r*, resolved via Modus Ponens with Step ${baseStep + 4}`,
+            parentStepNumbers: [baseStep + 1, baseStep + 4],
+          });
+          formalProof.push({
+            stepNumber: baseStep + 6,
+            rule: "MODUS_PONENS",
+            formula: "¬Comply(r*)",
+            justification: `Universal Instantiation of Step ${baseStep + 2} with r = r*, resolved via Modus Ponens with Step ${baseStep + 4}`,
+            parentStepNumbers: [baseStep + 2, baseStep + 4],
+          });
+          formalProof.push({
+            stepNumber: baseStep + 7,
+            rule: "RESOLUTION_REFUTATION",
+            formula: "⊥ (EMPTY_CLAUSE / CONTRADICTION)",
+            justification: `Resolution of Step ${baseStep + 5} [Comply(r*)] with Step ${baseStep + 6} [¬Comply(r*)] derives ⊥ under NEQ`,
+            parentStepNumbers: [baseStep + 5, baseStep + 6],
+          });
+
+          if (!counterexample) {
+            counterexample = {
+              witnessId: "CW-NEQ-01",
+              adversarialQuery: "Arbitrary user request r* under Non-Empty Domain assumption.",
+              complianceImplication: `Step ${baseStep + 5} derives Comply(r*) from premise "${pA.sourceClause}".`,
+              invariantImplication: `Step ${baseStep + 6} derives ¬Comply(r*) from premise "${pB.sourceClause}".`,
+              refutationSummary:
+                "Formal resolution refutation derives Comply(r*) ∧ ¬Comply(r*) ⊢ ⊥ under Non-Empty Query Domain Axiom NEQ.",
+            };
+          }
+
+          contradictions.push({
+            propositionA: pA.id,
+            propositionB: pB.id,
+            clauseA: pA.sourceClause,
+            clauseB: pB.sourceClause,
+            conflictReason: `NON-EMPTY DOMAIN CONTRADICTION: Clause "${pA.sourceClause}" asserts positive ${pA.predicate} while clause "${pB.sourceClause}" asserts negative ${pB.predicate}. Under Non-Empty Query Domain Axiom NEQ (∃r UserRequest(r)), formal resolution refutation derives Comply(r*) ∧ ¬Comply(r*) ⊢ ⊥.`,
+            suggestedResolution: "Remove the conflicting directive to maintain logical consistency.",
+            bridgeAxiomApplied: "NEQ",
+            isAssumptionDependent: true,
+            assumptionDescription:
+              "Conditional on Non-Empty Query Domain Axiom NEQ (∃r UserRequest(r)). The formulas ∀r (UserRequest(r) → Comply(r)) and ∀r (UserRequest(r) → ¬Comply(r)) are vacuously satisfiable in a model where UserRequest(r) evaluates to false for all r in domain D.",
+            refutationScope: "NON_EMPTY_DOMAIN_CONTRADICTION",
+          });
+          proofTree.push(
+            `[FOL-REFUTATION]: Derivation of ⊥ via 7-step NEQ Resolution Refutation between ${pA.id} and ${pB.id}.`
+          );
+        } else {
+          // Construct complete formal resolution derivation steps for unconditional intrinsic contradiction
+          formalProof.push({
+            stepNumber: baseStep + 1,
+            rule: "PREMISE",
+            formula: pA.formalFormula,
+            justification: `Extracted from prompt clause A: "${pA.sourceClause}"`,
+          });
+          formalProof.push({
+            stepNumber: baseStep + 2,
+            rule: "PREMISE",
+            formula: pB.formalFormula,
+            justification: `Extracted from prompt clause B: "${pB.sourceClause}"`,
+          });
+          formalProof.push({
+            stepNumber: baseStep + 3,
+            rule: "SKOLEMIZE",
+            formula: `Literal(${pA.predicate})`,
+            justification: `Skolemization of positive premise ${pA.id} into unit clause`,
+            parentStepNumbers: [baseStep + 1],
+          });
+          formalProof.push({
+            stepNumber: baseStep + 4,
+            rule: "SKOLEMIZE",
+            formula: `¬Literal(${pB.predicate})`,
+            justification: `Skolemization of negative premise ${pB.id} into unit clause`,
+            parentStepNumbers: [baseStep + 2],
+          });
+          formalProof.push({
+            stepNumber: baseStep + 5,
+            rule: "RESOLUTION_REFUTATION",
+            formula: "⊥ (EMPTY_CLAUSE / CONTRADICTION)",
+            justification: `Direct resolution refutation between Step ${baseStep + 3} [Literal(${pA.predicate})] and Step ${baseStep + 4} [¬Literal(${pB.predicate})] derives ⊥`,
+            parentStepNumbers: [baseStep + 3, baseStep + 4],
+          });
+
+          if (!counterexample) {
+            counterexample = {
+              witnessId: "CW-INT-01",
+              adversarialQuery: `Direct mutual exclusion: "${pA.sourceClause}" directly contradicts "${pB.sourceClause}".`,
+              complianceImplication: `Premise ${pA.id} asserts ${pA.formalFormula}.`,
+              invariantImplication: `Premise ${pB.id} asserts ${pB.formalFormula}.`,
+              refutationSummary: `Direct resolution refutation derives ⊥ from opposing polarity literals for predicate ${pA.predicate}.`,
+            };
+          }
+
+          contradictions.push({
+            propositionA: pA.id,
+            propositionB: pB.id,
+            clauseA: pA.sourceClause,
+            clauseB: pB.sourceClause,
+            conflictReason: `DIRECT INTRINSIC CONTRADICTION: Clause "${pA.sourceClause}" directly asserts positive ${pA.predicate} while clause "${pB.sourceClause}" asserts negative ${pB.predicate}. Formal resolution derives ⊥.`,
+            suggestedResolution: "Remove the conflicting directive to maintain logical consistency.",
+            isAssumptionDependent: false,
+            refutationScope: "INTRINSIC_PROMPT_CONTRADICTION",
+          });
+          proofTree.push(`[FOL-REFUTATION]: Derivation of ⊥ via Direct Intrinsic Resolution Refutation between ${pA.id} and ${pB.id}.`);
         }
-
-        contradictions.push({
-          propositionA: pA.id,
-          propositionB: pB.id,
-          clauseA: pA.sourceClause,
-          clauseB: pB.sourceClause,
-          conflictReason: `DIRECT INTRINSIC CONTRADICTION: Clause "${pA.sourceClause}" directly asserts positive ${pA.predicate} while clause "${pB.sourceClause}" asserts negative ${pB.predicate}. Formal resolution derives ⊥.`,
-          suggestedResolution: "Remove the conflicting directive to maintain logical consistency.",
-          isAssumptionDependent: false,
-          refutationScope: "INTRINSIC_PROMPT_CONTRADICTION",
-        });
-        proofTree.push(`[FOL-REFUTATION]: Derivation of ⊥ via Direct Intrinsic Resolution Refutation between ${pA.id} and ${pB.id}.`);
       }
     }
   }
@@ -724,9 +804,11 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
       ? 1.0
       : Math.max(0.0, 1.0 - contradictions.length * 0.5);
 
-  const refutationScope: "ADVERSARIAL_BRIDGE_AXIOM" | "INTRINSIC_PROMPT_CONTRADICTION" | "NONE" =
+  const refutationScope: "ADVERSARIAL_BRIDGE_AXIOM" | "INTRINSIC_PROMPT_CONTRADICTION" | "NON_EMPTY_DOMAIN_CONTRADICTION" | "NONE" =
     contradictions.length === 0
       ? "NONE"
+      : contradictions.some((c) => c.refutationScope === "NON_EMPTY_DOMAIN_CONTRADICTION")
+      ? "NON_EMPTY_DOMAIN_CONTRADICTION"
       : contradictions.some((c) => c.refutationScope === "INTRINSIC_PROMPT_CONTRADICTION")
       ? "INTRINSIC_PROMPT_CONTRADICTION"
       : "ADVERSARIAL_BRIDGE_AXIOM";

@@ -263,7 +263,8 @@ async function executeLocalInference(
   return {
     text: simOutput,
     latencyMs: Date.now() - start + latencyMs,
-    tier: 'LOCAL_IN_PROCESS_SANDBOX'
+    tier: 'LOCAL_IN_PROCESS_SANDBOX',
+    transportFailed
   };
 }
 
