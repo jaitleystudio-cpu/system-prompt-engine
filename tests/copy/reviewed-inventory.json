@@ -301,6 +301,12 @@
       "text": "popstate"
     },
     {
+      "id": "46ea0d823344ee7bea16",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "incidents"
+    },
+    {
       "id": "478fb383375e8dd87a1f",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -347,6 +353,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Screenshot to code"
+    },
+    {
+      "id": "5f874d90b2cc0ba762ca",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Failure Intelligence (preview)"
     },
     {
       "id": "5fac66bc68641de542a8",
@@ -20479,6 +20491,12 @@
       "text": "Multi-Model Targeting: Dedicated formatting for Claude, Cursor, and ChatGPT."
     },
     {
+      "id": "983069c22bf5af725bd4",
+      "file": "apps/web/src/pages/Capabilities.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Failure Intelligence — evidence standards (preview)"
+    },
+    {
       "id": "9ad45de259ddc9191258",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
@@ -20981,6 +20999,300 @@
       "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
       "depth": "PRODUCT",
       "text": "tokens"
+    },
+    {
+      "id": "02157d6594ce899c760f",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Require separate source/editorial and release review, preserve corrections and withdrawals, and never silently invent an answer."
+    },
+    {
+      "id": "022d2824e435cf633600",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Build a structured prompt"
+    },
+    {
+      "id": "0796d3bacd56709b437c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Investigation surface"
+    },
+    {
+      "id": "08aeb66407b872940b0c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "PROOF, NOT PROMISE"
+    },
+    {
+      "id": "09a043e0c198fe3f4e77",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A proposed repair survives testing"
+    },
+    {
+      "id": "0ba558c8a3860a2a5856",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI service status"
+    },
+    {
+      "id": "12e555acd040b7c9ee8e",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A source status, a reproduced model behavior, and a verified repair are different kinds of evidence. One does not automatically establish the next."
+    },
+    {
+      "id": "14b9c2dc86f5328ffc27",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Keep the official URL, observed revision, and claimed timestamp. A report is not an independently reproduced model failure."
+    },
+    {
+      "id": "1c787733d97a9f2cff3a",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Pin the source revision, provenance and reproducible test. Separate original facts from interpretation and unknowns."
+    },
+    {
+      "id": "1fde496d781bd8cac995",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Evidence boundary."
+    },
+    {
+      "id": "2193459f607c63d03ea5",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Real-model proof required"
+    },
+    {
+      "id": "2ab8f07d68b6d9309e39",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Pending"
+    },
+    {
+      "id": "2cefcb34e8f9bc0d5c71",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "CASE LIBRARY / RELEASE GATE"
+    },
+    {
+      "id": "32f92687b69fb5d2e57a",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "No live AI news feed, headline-first ranking, customer incident data collection, independently verified model diagnosis, repair effectiveness or public release authority is represented on this page. The prompt builder remains a separate local-first tool."
+    },
+    {
+      "id": "367141e229f58deb127c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Review SPE privacy and proof principles"
+    },
+    {
+      "id": "375e95763d9ca4deb68c",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Independent review required"
+    },
+    {
+      "id": "3cc6dd19cf1f30a6d6ff",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not authorized"
+    },
+    {
+      "id": "3eac96819c324a11f4c9",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "We will not fill this space with fabricated model failures, simulated benchmark victories, or unreviewed third-party allegations. Only independently authorized, source-attributed cases belong here."
+    },
+    {
+      "id": "3fe7f8f68381cd331251",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "See how evidence is checked"
+    },
+    {
+      "id": "4001c7c8f7aa7753d381",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Source-monitoring deployment"
+    },
+    {
+      "id": "443eb693b2f6a2679955",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "The source-adapter and reviewer code is under draft qualification. No continuously running incident feed, real-model reproduction, or authorized public case library is established here."
+    },
+    {
+      "id": "45f0601e9a0984a9f68d",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider service notices. Not an independently established causal diagnosis."
+    },
+    {
+      "id": "4b5518b3db0da177a8d3",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A human authorizes publication"
+    },
+    {
+      "id": "5d206d63c3042bab0a46",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not yet live"
+    },
+    {
+      "id": "740318c5ee130d142b47",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "WHERE THE ORIGINAL REPORT LIVES"
+    },
+    {
+      "id": "78b0442104db6169b93b",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Use the same pinned model revision, configuration, and held-out task set. Simulated or supplied outputs cannot certify a real model run."
+    },
+    {
+      "id": "7bbd63ec86d43ac3af6d",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Verified repair library"
+    },
+    {
+      "id": "8202d0dbd3a78693412f",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "The behavior can be reproduced"
+    },
+    {
+      "id": "871d308a2b894c58e3e0",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "https://status.claude.com/"
+    },
+    {
+      "id": "8dd8f72ab4f2c03311f5",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Five separate claims. Five separate gates."
+    },
+    {
+      "id": "911b43ec23d03a42dd19",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not released"
+    },
+    {
+      "id": "9190d78e7e8e19901253",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "https://status.openai.com/"
+    },
+    {
+      "id": "9793b47881caeb6291ec",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Independent human adjudication"
+    },
+    {
+      "id": "9e57ab06f9571e284e11",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "evidence comes first."
+    },
+    {
+      "id": "a2008bc6cb34f26dc090",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider service notices. Not proof of any specific model or prompt failure."
+    },
+    {
+      "id": "a5867c6c837c4be369fc",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "RELEASE CUSTODY"
+    },
+    {
+      "id": "a993dd3309df73bdb168",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "The evidence can be examined"
+    },
+    {
+      "id": "aa75231835a544bf9546",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "These are links to provider-operated status websites, not a feed of incidents verified or actively tracked by SPE. Their content can change independently."
+    },
+    {
+      "id": "b300dd63678279ac2789",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "External validation required"
+    },
+    {
+      "id": "b979ff0e1c1129371271",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A provider reported an incident"
+    },
+    {
+      "id": "c33afc4af253541749dd",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Not activated"
+    },
+    {
+      "id": "c67dbc18b7f0d232b810",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "A failed AI answer deserves more than a dramatic headline. SPE is building a review path from an official report to a reproducible failure, a tested repair, and a transparent correction history."
+    },
+    {
+      "id": "cc6f2482d0b514f681b1",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "No qualified incident brief is available yet."
+    },
+    {
+      "id": "ce0245cc1ba7dbb596e3",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude service status"
+    },
+    {
+      "id": "d0d62ac2b0d2a77b0b96",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Compare a baseline against a repaired prompt with the same oracle, negative controls, regression veto and independent adjudication."
+    },
+    {
+      "id": "d7b32689a689392c4ce3",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Source observation only"
+    },
+    {
+      "id": "f0244bcdd0bcaaaae614",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "When AI fails,"
+    },
+    {
+      "id": "f0304eb62724efefe17e",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "Go directly to an official status source."
+    },
+    {
+      "id": "fe81b23d4bf1d8c12c8a",
+      "file": "apps/web/src/pages/IncidentIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE / AI FAILURE INTELLIGENCE"
     },
     {
       "id": "100520aff20f92d043a5",
@@ -23011,6 +23323,12 @@
       "text": "Continue"
     },
     {
+      "id": "05dd293f1687decbd1ff",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "An unreleased, noindex explanation of SPE’s incident evidence standards. No live incident feed or verified repair claims are published here."
+    },
+    {
       "id": "0b18cde43a373bead6c8",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -23107,6 +23425,12 @@
       "text": "/privacy"
     },
     {
+      "id": "29f92232c9ce83a88d9a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/ai-incidents"
+    },
+    {
       "id": "2ab69cc3863813bae524",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -23159,6 +23483,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "/capabilities"
+    },
+    {
+      "id": "435b68697f5dcb82a3c2",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "AI Failure Intelligence — Evidence-First Incident Review | SPE"
     },
     {
       "id": "44514acee3add9d07e58",
@@ -23333,6 +23663,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Tested, reproducible business operations and document automation AI workflows for Claude Code, Cursor, and Codex."
+    },
+    {
+      "id": "ab9f93c8dc83af05aa91",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "incidents"
     },
     {
       "id": "ba48c44899936fd87334",
