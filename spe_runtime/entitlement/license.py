@@ -54,6 +54,12 @@ def create_offline_license(
 # and are NEVER committed to repository source code, distributed packages, or CLI bundles.
 OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX = "a06705d0f0d4c0c23f0d5b53338c2809cd08dbfc6cd33992369436d9902c3f1e"
 
+# Permanently Revoked & Compromised Keys (From R8 exposure)
+REVOKED_COMPROMISED_KEY_HEXES = {
+    "a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec",  # Revoked R8 public key
+    "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac",  # Revoked R8 private seed
+}
+
 
 def verify_offline_license(
     license_token: str,
@@ -76,7 +82,13 @@ def verify_offline_license(
     if not payload_dict or not sig_hex or not pk_hex:
         raise LicenseVerificationError("Missing fields in license envelope")
 
-    # 1. Verify trusted authority: Pin strictly to OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX by default
+    # 1. Enforce Permanent Key Revocation Check
+    if pk_hex in REVOKED_COMPROMISED_KEY_HEXES:
+        raise LicenseVerificationError(
+            f"REVOKED_COMPROMISED_AUTHORITY: Signer key '{pk_hex[:12]}...' was permanently revoked due to prior security exposure. Re-issuance with rotated root authority is mandatory."
+        )
+
+    # 2. Verify trusted authority: Pin strictly to OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX by default
     effective_trusted_key = trusted_public_key_hex or (None if allow_custom_signer else OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX)
     if effective_trusted_key and pk_hex != effective_trusted_key:
         raise LicenseVerificationError(

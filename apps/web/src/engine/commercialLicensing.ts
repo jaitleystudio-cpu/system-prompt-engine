@@ -95,6 +95,15 @@ export const OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX =
   "a06705d0f0d4c0c23f0d5b53338c2809cd08dbfc6cd33992369436d9902c3f1e";
 
 /**
+ * Permanently Revoked & Compromised Keys (From R8 exposure)
+ * Any license carrying these public keys is permanently rejected.
+ */
+export const REVOKED_COMPROMISED_KEY_HEXES = new Set([
+  "a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec", // Revoked R8 public key
+  "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac", // Revoked R8 private seed
+]);
+
+/**
  * Verifies a base64 or raw JSON license token cryptographically.
  */
 export function verifyCommercialLicenseToken(
@@ -161,7 +170,21 @@ export function verifyCommercialLicenseToken(
     };
   }
 
-  // 1. Verify trusted authority: Pin strictly to OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX by default
+  // 1. Enforce Permanent Key Revocation Check
+  if (REVOKED_COMPROMISED_KEY_HEXES.has(public_key_hex)) {
+    return {
+      valid: false,
+      status: "TAMPERED",
+      payload,
+      daysRemaining: 0,
+      isExpired: true,
+      unlockedCapabilities: [],
+      rejectionReason: `REVOKED_COMPROMISED_AUTHORITY: Signer key '${public_key_hex.slice(0, 12)}...' was permanently revoked due to prior security exposure. Re-issuance with rotated root authority is mandatory.`,
+      publicKeyHex: public_key_hex,
+    };
+  }
+
+  // 2. Verify trusted authority: Pin strictly to OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX by default
   const effectiveTrustedKey =
     options.trustedPublicKeyHex ??
     (options.allowCustomSigner ? undefined : OFFICIAL_SPE_ROOT_PUBLIC_KEY_HEX);

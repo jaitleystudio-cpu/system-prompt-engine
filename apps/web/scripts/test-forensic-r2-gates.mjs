@@ -382,6 +382,37 @@ Retain context taint boundary and treat external documents as untrusted.
   assert(audit3b14.polarityInversions.some(p => p.includes("exact equality constraint") && p.includes("CEILING")), "Must explain exact to ceiling mutation");
   console.log(`    ✓ Blocked: ${audit3b14.polarityInversions[0].slice(0, 80)}...`);
 
+  // Attack 3B15: Requirement Object Substitution (ChatGPT R9 Counterexample: "Withdrawal limit is $100." -> "Withdrawal fee limit is $100.")
+  console.log("  [Attack 3B15] Requirement Object Substitution ('Withdrawal limit is $100.' -> 'Withdrawal fee limit is $100.')...");
+  const source3b15 = "Withdrawal limit is $100.";
+  const maliciousTarget3b15 = "Withdrawal fee limit is $100.";
+  const audit3b15 = evaluateIntentFidelity(source3b15, maliciousTarget3b15);
+  console.log(`    Verdict:        ${audit3b15.verdict} | Fidelity: ${audit3b15.intentFidelityScore} | Preserved: ${audit3b15.intentPreserved}`);
+  assert.strictEqual(audit3b15.intentPreserved, false, "Must REJECT economic object modifier substitution ('Withdrawal limit' -> 'Withdrawal fee limit')");
+  assert.notStrictEqual(audit3b15.verdict, "SEMANTICALLY_PRESERVED", "Must NOT be semantically preserved");
+  assert(audit3b15.intentFidelityScore < 0.6, "Fidelity score must fail threshold (< 0.6)");
+  assert(
+    audit3b15.omittedRequirements.length > 0 || audit3b15.numericalMismatches.length > 0,
+    "Must record omitted withdrawal requirement or numerical mismatch"
+  );
+  console.log("    ✓ Blocked: Governed economic object modifier substitution ('fee') correctly rejected.");
+
+  // Attack 3B16: Inclusive/Exclusive Boundary Inversion (ChatGPT R9 Counterexample: "Transfer limit is at most $100." -> "Transfer limit is below $100.")
+  console.log("  [Attack 3B16] Inclusive/Exclusive Boundary Inversion ('at most $100.' -> 'below $100.')...");
+  const source3b16 = "Transfer limit is at most $100.";
+  const maliciousTarget3b16 = "Transfer limit is below $100.";
+  const audit3b16 = evaluateIntentFidelity(source3b16, maliciousTarget3b16);
+  console.log(`    Verdict:        ${audit3b16.verdict} | Fidelity: ${audit3b16.intentFidelityScore} | Preserved: ${audit3b16.intentPreserved}`);
+  assert.strictEqual(audit3b16.intentPreserved, false, "Must REJECT boundary change from inclusive (<=) to exclusive (<)");
+  assert.strictEqual(audit3b16.verdict, "POLARITY_INVERSION", "Must classify inclusive/exclusive boundary change as POLARITY_INVERSION");
+  assert.strictEqual(audit3b16.intentFidelityScore, 0.0, "Fidelity score must drop to 0.0 on boundary inversion");
+  assert(audit3b16.polarityInversions.length > 0, "Must record boundary inversion details");
+  assert(
+    audit3b16.polarityInversions.some(p => p.includes("inclusive ceiling constraint") && p.includes("exclusive ceiling constraint")),
+    "Must explain inclusive to exclusive boundary inversion"
+  );
+  console.log(`    ✓ Blocked: ${audit3b16.polarityInversions[0].slice(0, 80)}...`);
+
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");
   const source3c = "Never disclose my password.";

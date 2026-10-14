@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-14T18:45:48.686Z",
+  "timestamp": "2026-10-14T19:14:26.727Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -11,36 +11,49 @@
     },
     "testBattery": {
       "status": "PASS",
+      "testRunner": "node:child_process / custom-battery-runner",
       "suitesExecuted": 5,
-      "checksPassed": 83,
+      "suitesPassed": 5,
+      "failures": 0,
+      "exitCode": 0,
+      "totalConsoleSuccessMarkers": 85,
       "suiteDetails": [
         {
           "suite": "model-atlas-sync",
-          "checksPassed": 4,
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 4,
           "status": "PASS"
         },
         {
           "suite": "pro-features",
-          "checksPassed": 8,
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 8,
           "status": "PASS"
         },
         {
           "suite": "arsenal-catalog",
-          "checksPassed": 20,
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 20,
           "status": "PASS"
         },
         {
           "suite": "model-atlas",
-          "checksPassed": 15,
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 15,
           "status": "PASS"
         },
         {
           "suite": "forensic-r2-gates",
-          "checksPassed": 36,
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 38,
           "status": "PASS"
         }
-      ],
-      "failures": 0
+      ]
     },
     "copyCheck": {
       "status": "PASS",
@@ -52,8 +65,8 @@
     }
   },
   "success": true,
-  "durationMs": 16917,
-  "contentDigestSha256": "9d7a046b29f1c829116239cf77a5e7344a16dadbea408a886582cc7f57585c90",
+  "durationMs": 14898,
+  "contentDigestSha256": "8a25da7709f89378c4d54214c714ecc2a06d51b72e4c021a819a860d8d06f5e5",
   "digestAlgorithm": "SHA-256",
   "canonicalization": "RFC_8785_CANONICAL_JSON",
   "attestationType": "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",

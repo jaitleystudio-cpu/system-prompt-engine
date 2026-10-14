@@ -1185,6 +1185,30 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
         return null;
       };
 
+      const isTestOrDevMode = Boolean(
+        flags["test-mode"] ||
+        flags["--test-mode"] ||
+        flags.dev ||
+        flags["--dev"] ||
+        flags["dev-mode"] ||
+        flags["--dev-mode"] ||
+        process.env.SPE_TEST_MODE === "1"
+      );
+
+      const hasTrustOverride = Boolean(
+        flags["trusted-key"] ||
+        flags["--trusted-key"] ||
+        flags["allow-custom-signer"] ||
+        flags["--allow-custom-signer"]
+      );
+
+      if (hasTrustOverride && !isTestOrDevMode) {
+        console.error(red("\n❌ Security Policy Error: Custom trust-root overrides (--trusted-key / --allow-custom-signer) are strictly quarantined to isolated test/dev environments."));
+        console.error(gray("Commercial production operations MUST verify against the pinned SPE root authority."));
+        console.error(gray("For authorized offline test replay, explicitly pass --test-mode."));
+        process.exit(1);
+      }
+
       if (subAction === 'status') {
         const token = getInstalledToken();
         const verification = verifyCommercialLicenseToken(token || '', {
@@ -1312,11 +1336,29 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           machine_fingerprint: flags.fingerprint || null
         };
 
-        const seedHex =
-          flags["signing-key"] ||
-          flags["--signing-key"] ||
+        let seedHex =
           process.env.SPE_LICENSE_SIGNING_KEY ||
           process.env.SPE_MASTER_SIGNING_KEY;
+
+        const keyFile = flags["signing-key-file"] || flags["--signing-key-file"];
+        if (keyFile) {
+          if (!existsSync(keyFile)) {
+            console.error(red(`Error: Signing key file not found: ${keyFile}`));
+            process.exit(1);
+          }
+          seedHex = readFileSync(keyFile, "utf-8").trim();
+        } else if (flags["signing-key"] || flags["--signing-key"]) {
+          seedHex = flags["signing-key"] || flags["--signing-key"];
+          if (!isTestOrDevMode) {
+            console.warn(yellow("⚠️  [SECURITY NOTICE] Passing signing keys as CLI arguments risks shell history disclosure. Prefer --signing-key-file or SPE_LICENSE_SIGNING_KEY."));
+          }
+        }
+
+        if (seedHex && (seedHex.includes("e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac") || seedHex.includes("a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec"))) {
+          console.error(red("\n❌ Security Error: The provided signing key has been permanently revoked due to prior exposure."));
+          console.error(gray("Issuance with compromised credentials is strictly prohibited."));
+          process.exit(1);
+        }
 
         let privateKey;
         let rawPub;
@@ -1334,7 +1376,7 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
           console.warn(yellow("⚠️  [SPE DEV MODE] License issued using an ephemeral test keypair. Not trusted by official root."));
         } else {
           console.error(red("Error: License issuance requires an authorized private signing key."));
-          console.error(gray("Provide --signing-key <hex> or set SPE_LICENSE_SIGNING_KEY environment variable."));
+          console.error(gray("Provide --signing-key-file <path>, set SPE_LICENSE_SIGNING_KEY env variable, or pass --signing-key <hex>."));
           console.error(gray("For local development and testing, pass --test-mode to issue with an ephemeral key."));
           process.exit(1);
         }

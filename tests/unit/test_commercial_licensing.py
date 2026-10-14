@@ -149,3 +149,32 @@ def test_untrusted_public_key_rejected_when_pinned():
     verified = CommercialLicensingAdapter.verify_license(token, trusted_public_key_hex=other_pk.hex())
     assert verified["valid"] is False
     assert "untrusted" in verified["error"].lower()
+
+
+def test_revoked_compromised_root_keys_permanently_rejected():
+    """Security Law: Compromised keys from R8 must be permanently rejected."""
+    from spe_runtime.entitlement.license import REVOKED_COMPROMISED_KEY_HEXES
+
+    revoked_pk = "a3aeb249a51355c529fad16734caa8c140bcf8c7b7d35e925ce6de2e51bba6ec"
+    assert revoked_pk in REVOKED_COMPROMISED_KEY_HEXES
+
+    now = datetime.now(timezone.utc)
+    payload = OfflineLicensePayload(
+        license_id="SPE-REVOKED-01",
+        customer_id="Compromised Entity",
+        plan_tier="ENTERPRISE",
+        issued_at=now.isoformat(),
+        expires_at=(now + timedelta(days=365)).isoformat(),
+        capabilities=["ALL"],
+    )
+    import base64
+
+    fake_env = {
+        "payload": payload.__dict__,
+        "signature_hex": "00" * 64,
+        "public_key_hex": revoked_pk,
+    }
+    revoked_token = base64.b64encode(json.dumps(fake_env).encode("utf-8")).decode("ascii")
+
+    with pytest.raises(LicenseVerificationError, match="REVOKED_COMPROMISED_AUTHORITY"):
+        verify_offline_license(revoked_token, allow_custom_signer=True)

@@ -472,13 +472,35 @@ try {
   assert(e.message.includes("Untrusted public key authority") || e.message.includes("Command failed"), "Expected untrusted authority rejection");
 }
 
-// Positive Gate: Checking with explicit trusted key matches
-const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}"`);
+// Negative Gate 2B: Passing --trusted-key in production mode (without --test-mode) MUST fail closed
+try {
+  runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}"`);
+  assert(false, "Should have rejected trust override without --test-mode");
+} catch (e) {
+  assert(e.message.includes("Custom trust-root overrides") || e.message.includes("Command failed"), "Expected policy failure for un-quarantined trust override");
+}
+
+// Negative Gate 3: Attempting issuance with the revoked compromised R8 key must fail closed
+try {
+  runCli(`license issue --customer "Revoked Corp" --signing-key "e5b1a8448f4697bb0789a32d7e162a26ce9415455eb5f4538da0530baf7aedac"`);
+  assert(false, "Should have rejected revoked compromised key");
+} catch (e) {
+  assert(e.message.includes("permanently revoked") || e.message.includes("Command failed"), "Expected rejection of revoked compromised signing key");
+}
+
+// Positive Gate A: Secure key file issuance via --signing-key-file
+const testKeyFilePath = join(tempDir, "authority.key");
+writeFileSync(testKeyFilePath, testSeed, "utf-8");
+const licFileIssueOut = runCli(`license issue --customer "File Key Corp" --tier PRO --days 30 --signing-key-file "${testKeyFilePath}" --test-mode --out "${join(tempDir, "file_key.license")}"`);
+assert(licFileIssueOut.includes("Signed offline license token written to"), "Keyfile issuance failed");
+
+// Positive Gate B: Checking with explicit trusted key under quarantined --test-mode matches
+const licCheckOut = runCli(`license check --key "${licenseToken}" --capability ENTERPRISE_CI_GATE --trusted-key "${testPkHex}" --test-mode`);
 assert(licCheckOut.includes("License check passed for tier ENTERPRISE"), "License capability check failed");
 
-const licVerifiedStatusOut = runCli(`license status --key "${licenseToken}" --trusted-key "${testPkHex}"`);
+const licVerifiedStatusOut = runCli(`license status --key "${licenseToken}" --trusted-key "${testPkHex}" --test-mode`);
 assert(licVerifiedStatusOut.includes("ACTIVE (VERIFIED)") && licVerifiedStatusOut.includes("Battery Test Corp"), "Active license status verification failed");
-console.log("  ✓ commercial license status, issue, and check verified");
+console.log("  ✓ commercial license status, issue, check, revoked-key blocking, and trust quarantine verified");
 
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });

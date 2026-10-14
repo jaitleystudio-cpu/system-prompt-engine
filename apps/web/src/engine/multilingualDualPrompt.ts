@@ -185,11 +185,13 @@ export interface SemanticFidelityAudit {
   epistemicDisclaimer?: string;
 }
 
+export type QuantityCategory = "CURRENCY" | "DURATION" | "PERCENTAGE" | "COUNT";
+
 export interface CategorizedQuantity {
   raw: string;
   numericValue: number;
   canonicalValue: number;
-  category: "CURRENCY" | "DURATION" | "PERCENTAGE" | "COUNT";
+  category: QuantityCategory;
   unit: string;
   clause: string;
 }
@@ -333,6 +335,8 @@ export type NumericConstraintType =
   | "EXACT"
   | "UNSPECIFIED";
 
+export type BoundaryInclusivity = "INCLUSIVE" | "EXCLUSIVE" | "UNSPECIFIED";
+
 export interface BoundNumericRequirement {
   id: string;
   rawClause: string;
@@ -341,6 +345,7 @@ export interface BoundNumericRequirement {
   quantity: CategorizedQuantity;
   operator: string;
   constraintType: NumericConstraintType;
+  boundary: BoundaryInclusivity;
   operatorPhrase: string;
 }
 
@@ -369,6 +374,7 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
     );
 
     let constraintType: NumericConstraintType = "UNSPECIFIED";
+    let boundary: BoundaryInclusivity = "UNSPECIFIED";
     let operatorPhrase = "constraint";
 
     if (
@@ -376,6 +382,7 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       /\b(?:unlimited|no\s+limit|without\s+limit)\b/i.test(clause)
     ) {
       constraintType = "PERMISSIVE_EXCEED";
+      boundary = "UNSPECIFIED";
       const m = clause.match(
         /\b(?:(?:may|can|allowed\s+to|permitted\s+to|free\s+to)\s+exceed|unlimited|no\s+limit|without\s+limit)\b/i
       );
@@ -384,39 +391,59 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i.test(clause)
     ) {
       constraintType = "CEILING";
+      boundary = "INCLUSIVE";
       const m = clause.match(
         /\b(?:must\s+not|cannot|can't|shall\s+not|do\s+not|don't|never|not\s+to)\s+exceed\b/i
       );
       operatorPhrase = m ? m[0].toLowerCase() : "must not exceed";
     } else if (
-      /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b|under|below|less\s+than)\b/i.test(
+      /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i.test(clause)
+    ) {
+      constraintType = "CEILING";
+      boundary = "EXCLUSIVE";
+      const m = clause.match(
+        /\b(?:strictly\s+below|strictly\s+under|strictly\s+less\s+than|below|under|less\s+than)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "below";
+    } else if (
+      /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)\b/i.test(
         clause
       )
     ) {
       constraintType = "CEILING";
+      boundary = "INCLUSIVE";
       const m = clause.match(
-        /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b|under|below|less\s+than)\b/i
+        /\b(?:no\s+more\s+than|not\s+more\s+than|at\s+most|up\s+to|maximum|max\b|ceiling|capped\s+at|cap\b)\b/i
       );
-      operatorPhrase = m ? m[0].toLowerCase() : "ceiling";
+      operatorPhrase = m ? m[0].toLowerCase() : "at most";
     } else if (/\b(?:limit\s+(?:is|of|to)?\b)/i.test(clause)) {
       constraintType = "CEILING";
+      boundary = "INCLUSIVE";
       const m = clause.match(/\b(?:limit\s+(?:is|of|to)?\b)/i);
       operatorPhrase = m ? m[0].toLowerCase() : "limit is";
     } else if (
-      /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b|above|more\s+than|greater\s+than)\b/i.test(
+      /\b(?:strictly\s+above|strictly\s+greater\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed)\b/i.test(
         clause
       )
     ) {
       constraintType = "FLOOR";
+      boundary = "EXCLUSIVE";
       const m = clause.match(
-        /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b|above|more\s+than|greater\s+than)\b/i
+        /\b(?:strictly\s+above|strictly\s+greater\s+than|above|more\s+than|greater\s+than|must\s+exceed|shall\s+exceed)\b/i
       );
-      operatorPhrase = m ? m[0].toLowerCase() : "floor";
-    } else if (/\b(?:must\s+exceed|shall\s+exceed)\b/i.test(clause)) {
+      operatorPhrase = m ? m[0].toLowerCase() : "above";
+    } else if (
+      /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b)\b/i.test(clause)
+    ) {
       constraintType = "FLOOR";
-      operatorPhrase = "must exceed";
-    } else if (/\b(?:exactly|equal\s+to)\b/i.test(clause)) {
+      boundary = "INCLUSIVE";
+      const m = clause.match(
+        /\b(?:at\s+least|no\s+less\s+than|not\s+less\s+than|minimum|min\b)\b/i
+      );
+      operatorPhrase = m ? m[0].toLowerCase() : "at least";
+    } else if (/\b(?:exactly|equal\s+to|strictly\s+equal\s+to)\b/i.test(clause)) {
       constraintType = "EXACT";
+      boundary = "INCLUSIVE";
       operatorPhrase = "exactly";
     }
 
@@ -440,6 +467,7 @@ export function extractBoundNumericRequirements(text: string): BoundNumericRequi
       quantity: q,
       operator,
       constraintType,
+      boundary,
       operatorPhrase,
     });
   }
@@ -459,6 +487,17 @@ export function isOperatorCompatible(
     return { compatible: true, isInversion: false };
   }
   if (src.constraintType === op.constraintType) {
+    if (
+      src.boundary !== "UNSPECIFIED" &&
+      op.boundary !== "UNSPECIFIED" &&
+      src.boundary !== op.boundary
+    ) {
+      return {
+        compatible: false,
+        isInversion: true,
+        reason: `Source enforces ${src.boundary.toLowerCase()} ${src.constraintType.toLowerCase()} constraint ('${src.operatorPhrase}'), but operative target mutates it into an ${op.boundary.toLowerCase()} ${op.constraintType.toLowerCase()} constraint ('${op.operatorPhrase}') altering threshold boundary semantics`,
+      };
+    }
     return { compatible: true, isInversion: false };
   }
   if (src.constraintType === "EXACT") {
@@ -513,24 +552,39 @@ export function isOperatorCompatible(
 const GENERIC_CONSTRAINT_HEAD_NOUNS = new Set([
   "limit", "limits", "limited",
   "threshold", "thresholds",
-  "amount", "amounts",
   "maximum", "max",
   "minimum", "min",
   "cap", "caps", "capped",
   "ceiling", "ceilings",
   "floor", "floors",
   "bound", "bounds",
-  "value", "values",
-  "total", "totals",
-  "sum", "sums",
-  "rule", "rules",
   "restriction", "restrictions",
+  "rule", "rules",
   "rate", "rates",
   "number", "numbers",
+]);
+
+const ECONOMIC_OBJECT_MODIFIERS = new Set([
   "fee", "fees",
   "charge", "charges",
   "cost", "costs",
-  "budget", "budgets"
+  "tax", "taxes",
+  "penalty", "penalties",
+  "interest", "interests",
+  "commission", "commissions",
+  "discount", "discounts",
+  "refund", "refunds",
+  "rebate", "rebates",
+  "tip", "tips",
+  "fine", "fines",
+  "surcharge", "surcharges",
+  "premium", "premiums",
+  "tariff", "tariffs",
+  "deposit", "deposits",
+  "collateral", "collaterals",
+  "principal", "principals",
+  "balance", "balances",
+  "debt", "debts",
 ]);
 
 function areTokensRelated(t1: string, t2: string): boolean {
@@ -545,7 +599,22 @@ export function computeSubjectMatch(srcTokens: string[], opTokens: string[]): nu
   if (srcTokens.length === 0 && opTokens.length === 0) return 1.0;
   if (srcTokens.length === 0 || opTokens.length === 0) return 0.0;
 
-  // Filter out generic constraint head nouns to isolate distinctive domain entities
+  // 1. Economic object modifier agreement:
+  // If either clause introduces an economic modifier (e.g. "fee", "penalty", "tax", "charge"),
+  // both clauses MUST govern the exact same modifier. A withdrawal limit != a withdrawal fee limit!
+  const srcModifiers = srcTokens.filter((t) => ECONOMIC_OBJECT_MODIFIERS.has(t));
+  const opModifiers = opTokens.filter((t) => ECONOMIC_OBJECT_MODIFIERS.has(t));
+  if (srcModifiers.length > 0 || opModifiers.length > 0) {
+    if (srcModifiers.length === 0 || opModifiers.length === 0) {
+      return 0.0;
+    }
+    const commonMods = srcModifiers.filter((s) => opModifiers.some((o) => areTokensRelated(s, o)));
+    if (commonMods.length === 0 || srcModifiers.length !== opModifiers.length) {
+      return 0.0;
+    }
+  }
+
+  // 2. Filter out generic constraint head nouns to isolate distinctive domain entities
   const srcDistinct = srcTokens.filter((t) => !GENERIC_CONSTRAINT_HEAD_NOUNS.has(t));
   const opDistinct = opTokens.filter((t) => !GENERIC_CONSTRAINT_HEAD_NOUNS.has(t));
 

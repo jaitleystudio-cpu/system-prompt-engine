@@ -94,7 +94,7 @@ export function executeAutonomousPipeline(options = {}) {
       { name: "forensic-r2-gates", script: "apps/web/scripts/test-forensic-r2-gates.mjs" },
     ];
 
-    let totalChecksMeasured = 0;
+    let totalSuccessMarkers = 0;
     const suiteDetails = [];
     for (const suite of testSuites) {
       const out = execSync(`${process.execPath} "${resolve(ROOT, suite.script)}"`, {
@@ -103,16 +103,25 @@ export function executeAutonomousPipeline(options = {}) {
         stdio: "pipe",
       });
       const checkMarks = (out.match(/✓/g) || []).length;
-      totalChecksMeasured += checkMarks;
-      suiteDetails.push({ suite: suite.name, checksPassed: checkMarks, status: "PASS" });
+      totalSuccessMarkers += checkMarks;
+      suiteDetails.push({
+        suite: suite.name,
+        testRunner: "node:child_process / custom-mjs",
+        exitCode: 0,
+        consoleSuccessMarkers: checkMarks,
+        status: "PASS",
+      });
     }
-    logSuccess(`All verification batteries passed: ${totalChecksMeasured} distinct verified assertions across ${testSuites.length} suites.`);
+    logSuccess(`All 5 verification suites executed cleanly (exitCode: 0) with ${totalSuccessMarkers} observed success markers.`);
     results.steps.testBattery = {
       status: "PASS",
+      testRunner: "node:child_process / custom-battery-runner",
       suitesExecuted: testSuites.length,
-      checksPassed: totalChecksMeasured,
-      suiteDetails,
+      suitesPassed: testSuites.length,
       failures: 0,
+      exitCode: 0,
+      totalConsoleSuccessMarkers: totalSuccessMarkers,
+      suiteDetails,
     };
 
     // 4. Language Perspective Copy Gate
