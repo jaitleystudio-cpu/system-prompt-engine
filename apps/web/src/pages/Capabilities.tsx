@@ -210,6 +210,11 @@ export function Capabilities({
           </InAppLink>
         </li>
         <li>
+          <InAppLink view="incidents" onNavigate={onNavigate}>
+            AI Failure Intelligence — evidence standards (preview)
+          </InAppLink>
+        </li>
+        <li>
           <InAppLink view="lab" onNavigate={onNavigate}>
             Daily Lab specimens
           </InAppLink>
