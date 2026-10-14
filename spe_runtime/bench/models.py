@@ -90,6 +90,19 @@ class SchemaConformanceOracle(TaskOracle):
     def __init__(self, oracle_id: str, json_schema: dict[str, Any]) -> None:
         # Reject malformed schemas before grading; no implicit partial validation.
         Draft202012Validator.check_schema(json_schema)
+        # Restrict untrusted fixture schemas to same-document references so the
+        # validator cannot resolve attacker-provided HTTP/file/relative targets.
+        stack: list[Any] = [json_schema]
+        while stack:
+            node = stack.pop()
+            if isinstance(node, dict):
+                for key, value in node.items():
+                    if key in ("$ref", "$dynamicRef", "$recursiveRef"):
+                        if not isinstance(value, str) or not value.startswith("#"):
+                            raise ValueError("External JSON Schema references are forbidden")
+                    stack.append(value)
+            elif isinstance(node, list):
+                stack.extend(node)
         self.oracle_id = oracle_id
         self.method = "JSON_SCHEMA_VALIDATION"
         self.known_limitations = "Draft 2020-12 structural/schema validation; not factual truth"
@@ -137,7 +150,17 @@ class SchemaConformanceOracle(TaskOracle):
                 oracle_id=self.oracle_id,
             )
 
-        error = next(self._validator.iter_errors(parsed), None)
+        try:
+            error = next(self._validator.iter_errors(parsed), None)
+        except Exception as exc:
+            # Missing, malformed or unresolved references must never earn PASS.
+            return OracleVerdict(
+                passed=False,
+                score=0.0,
+                rationale=f"JSON Schema evaluation failed ({type(exc).__name__})",
+                evidence_class="DETERMINISTIC",
+                oracle_id=self.oracle_id,
+            )
         if error is not None:
             if error.validator == "required" and isinstance(error.instance, dict):
                 missing = next(
