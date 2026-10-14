@@ -1,0 +1,67 @@
+{
+  "item1_worst": {
+    "dropped_mass_upper": 1.82e-14,
+    "piA": 0.24,
+    "piB": 0.348235,
+    "rA": 0.25,
+    "rB": 0.0,
+    "viol_mc": 0.067812,
+    "viol_r0": 0.0
+  },
+  "item1_worst_mc": {
+    "cp95": [
+      0.066648,
+      0.073777
+    ],
+    "draws": 20000,
+    "violation_rate": 0.07015
+  },
+  "item5": [
+    {
+      "n_exact": 52,
+      "n_normal": 40,
+      "p": 0.02,
+      "power_exact_at_n": 0.9141,
+      "power_exact_at_n_normal": 0.8095,
+      "sim_power": 0.9099
+    },
+    {
+      "n_exact": 152,
+      "n_normal": 130,
+      "p": 0.05,
+      "power_exact_at_n": 0.859,
+      "power_exact_at_n_normal": 0.7962,
+      "sim_power": 0.8578
+    },
+    {
+      "n_exact": 446,
+      "n_normal": 399,
+      "p": 0.07,
+      "power_exact_at_n": 0.8369,
+      "power_exact_at_n_normal": 0.7627,
+      "sim_power": 0.8347
+    },
+    {
+      "n_exact": 1017,
+      "n_normal": 939,
+      "p": 0.08,
+      "power_exact_at_n": 0.8272,
+      "power_exact_at_n_normal": 0.7807,
+      "sim_power": 0.8254
+    },
+    {
+      "n_exact": 4070,
+      "n_normal": 3911,
+      "p": 0.09,
+      "power_exact_at_n": 0.813,
+      "power_exact_at_n_normal": 0.792,
+      "sim_power": 0.8143
+    }
+  ],
+  "item5_refuse": {
+    "p_0.098_budget_500": null,
+    "p_0.098_unbounded": 101550,
+    "p_0.11": null,
+    "p_eq_alpha": null
+  }
+}

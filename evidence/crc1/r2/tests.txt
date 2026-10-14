@@ -1,0 +1,8 @@
+PASS test_nesting_checker
+PASS test_kstar
+PASS test_cdf_large
+PASS test_bstar
+PASS test_sgr_hand
+PASS test_altt_hand
+PASS test_planner
+PASS test_pilot_split
