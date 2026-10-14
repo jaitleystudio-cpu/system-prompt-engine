@@ -1,6 +1,6 @@
 """
-CWC-1 R1.1 Peer-Review Repair Test Suite (CWC-F01 through CWC-F12).
-Formally verifies all 12 defects identified during independent review:
+CWC-1 R1.1 Peer-Review Repair Test Suite (CWC-F01 through CWC-F12 Reconciled Ledger).
+Formally verifies all 12 defects identified during independent review, reconciling original obligations:
   - CWC-F01: Scoped identifiability verdicts replacing unproven global claims
   - CWC-F02: Dimensionally consistent acquisition objectives (Monetary vs Information Density)
   - CWC-F03: Structural pre-filtering of unauthorized actions before optimization
@@ -11,16 +11,20 @@ Formally verifies all 12 defects identified during independent review:
   - CWC-F08: Pre-registered StatisticalProtocol evaluating significance criteria
   - CWC-F09: Honest LVT transfer boundaries (In-Distribution Sanity vs LVT Qualified)
   - CWC-F10: Support for non-DAG systems (Differential Equations, Oscillators, Cyclic Networks)
-  - CWC-F11: Exact integer NanoUSD arithmetic conservation ($1.00 = 10^9 nanos)
-  - CWC-F12: Quarantining and falsification traceability without history erasure
+  - CWC-F11 (Original): 100% Offline Isolation & Process Boundary Air-Gap ($0 spend, zero cloud egress)
+  - CWC-F11a: Exact integer NanoUSD arithmetic conservation ($1.00 = 10^9 nanos)
+  - CWC-F12 (Original): Prior-Art Coverage & Bibliographic Grounding (7 verified lineages)
+  - CWC-F12a: Quarantining and falsification traceability without history erasure
 """
 
 import hashlib
 import json
 import pytest
+from spe_runtime.research.cwc.airgap_guard import verify_offline_airgap
 from spe_runtime.research.cwc.engine import SpeCwcEngine
 from spe_runtime.research.cwc.experiment_selector import ExperimentSelector
 from spe_runtime.research.cwc.mechanism_compiler import MechanismCompiler
+from spe_runtime.research.cwc.prior_art import PriorArtLedger
 from spe_runtime.research.cwc.transfer_engine import TransferEngine
 from spe_runtime.research.cwc.types import (
     AcquisitionMode,
@@ -414,9 +418,19 @@ def test_cwc_f10_non_dag_differential_and_cyclic_systems():
 
 
 # ---------------------------------------------------------------------------
-# CWC-F11: Exact Integer NanoUSD Conservation
+# CWC-F11 (Original): 100% Offline Isolation & Process Boundary Air-Gap
 # ---------------------------------------------------------------------------
-def test_cwc_f11_exact_integer_nanousd_conservation():
+def test_cwc_f11_original_offline_isolation():
+    airgap_status = verify_offline_airgap()
+    assert airgap_status["airgap_enforced"] is True
+    assert airgap_status["zero_cloud_spend_verified"] is True
+    assert airgap_status["local_execution_only"] is True
+
+
+# ---------------------------------------------------------------------------
+# CWC-F11a: Exact Integer NanoUSD Conservation
+# ---------------------------------------------------------------------------
+def test_cwc_f11a_exact_integer_nanousd_conservation():
     action = InterventionalAction(
         action_id="ACT-NANO-01",
         target_variable="x",
@@ -437,10 +451,30 @@ def test_cwc_f11_exact_integer_nanousd_conservation():
     assert score == 825_000_000
 
 
+# Alias for backwards compatibility
+test_cwc_f11_exact_integer_nanousd_conservation = test_cwc_f11a_exact_integer_nanousd_conservation
+
+
 # ---------------------------------------------------------------------------
-# CWC-F12: Quarantining and Falsification Monotonicity
+# CWC-F12 (Original): Prior-Art Coverage & Bibliographic Grounding
 # ---------------------------------------------------------------------------
-def test_cwc_f12_falsification_quarantine_traceability():
+def test_cwc_f12_original_prior_art_coverage():
+    coverage = PriorArtLedger.verify_coverage()
+    assert coverage["is_complete"] is True
+    assert coverage["total_prior_art_records"] == 7
+    assert "LINDLEY-1956" in coverage["citations_covered"]
+    assert "PEARL-2009" in coverage["citations_covered"]
+    assert "GO-ISAAC-2022" in coverage["citations_covered"]
+    assert "RFC-3161" in coverage["citations_covered"]
+    assert "NIST-ARIA-2026" in coverage["citations_covered"]
+    assert "EUREKABENCH-2026" in coverage["citations_covered"]
+    assert "FIREBENCH-2026" in coverage["citations_covered"]
+
+
+# ---------------------------------------------------------------------------
+# CWC-F12a: Quarantining and Falsification Monotonicity
+# ---------------------------------------------------------------------------
+def test_cwc_f12a_falsification_quarantine_traceability():
     transfer_engine = TransferEngine()
     compiler = MechanismCompiler()
     mechs = compiler.compile_competing_mechanisms("synthetic", "Kinetic order")
@@ -466,3 +500,7 @@ def test_cwc_f12_falsification_quarantine_traceability():
     assert proc.qualification_state == QualificationState.QUARANTINED_FALSIFIED
     assert "Failed empirical witness verification" in proc.known_counterexamples
     assert proc.transfer_pass_rate == 0.0
+
+
+# Alias for backwards compatibility
+test_cwc_f12_falsification_quarantine_traceability = test_cwc_f12a_falsification_quarantine_traceability

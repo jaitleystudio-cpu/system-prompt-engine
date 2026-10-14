@@ -169,19 +169,24 @@ class MechanismCompiler:
         is_search_exhaustive: bool = True,
         formal_equivalence_proven: bool = False,
         baseline_observed_value: Optional[float] = None,
+        sample_size: Optional[int] = None,
+        min_classification_accuracy: float = 0.55,
     ) -> Tuple[IdentifiabilityStatus, float]:
         """
-        Evaluates scoped identifiability verdicts (CWC-F01):
-        1. MODEL_SET_INADEQUATE: If baseline observation contradicts all candidate models.
+        Evaluates scoped identifiability verdicts (CWC-F01, Hard Test 2, Hard Test 7):
+        1. ALL_CANDIDATE_MECHANISMS_INADEQUATE: If baseline observation contradicts all candidate models.
         2. NONIDENTIFIABLE_PROVED: Only when a valid mathematical proof establishes global non-identifiability.
-        3. DISTINGUISHABLE_ACTION_FOUND: At least one feasible intervention has TV >= epsilon_ident.
-        4. NO_DISCRIMINATING_ACTION_ESTABLISHED: Evaluated actions show TV < epsilon_ident.
-        5. IDENTIFIABILITY_UNKNOWN: Search or model analysis is incomplete.
+        3. INSUFFICIENT_STATISTICAL_POWER: When TV gap exists but optimal accuracy is barely above chance (Hard Test 2).
+        4. DISTINGUISHABLE_ACTION_FOUND: At least one feasible intervention has TV >= epsilon_ident and sufficient power.
+        5. NO_DISCRIMINATING_ACTION_ESTABLISHED: Evaluated actions show TV < epsilon_ident.
+        6. IDENTIFIABILITY_UNKNOWN: Search or model analysis is incomplete.
         """
-        if len(mechanisms) < 2:
+        if len(mechanisms) == 0:
+            return IdentifiabilityStatus.ALL_CANDIDATE_MECHANISMS_INADEQUATE, 0.0
+        if len(mechanisms) == 1:
             return IdentifiabilityStatus.MODEL_SET_INADEQUATE, 0.0
 
-        # Check if baseline observation contradicts all models
+        # Check if baseline observation contradicts all models (Hard Test 7)
         if baseline_observed_value is not None:
             baseline_residuals = []
             for m in mechanisms:
@@ -190,7 +195,7 @@ class MechanismCompiler:
                     baseline_residuals.append(abs(pred - baseline_observed_value) / max(abs(pred), 1.0))
             if baseline_residuals and min(baseline_residuals) > 0.50:
                 # All models fail to explain baseline within 50% error
-                return IdentifiabilityStatus.MODEL_SET_INADEQUATE, 0.0
+                return IdentifiabilityStatus.ALL_CANDIDATE_MECHANISMS_INADEQUATE, 0.0
 
         # If formal proof provided, grant NONIDENTIFIABLE_PROVED
         if formal_equivalence_proven:
@@ -224,5 +229,49 @@ class MechanismCompiler:
 
         if max_tv < self.epsilon_ident:
             return IdentifiabilityStatus.NO_DISCRIMINATING_ACTION_ESTABLISHED, max_tv
-        else:
-            return IdentifiabilityStatus.DISTINGUISHABLE_ACTION_FOUND, max_tv
+
+        # Hard Test 2: Check practical discriminatory power if sample size is specified
+        if sample_size is not None:
+            # Single-observation optimal classification accuracy = (1 + TV) / 2
+            single_shot_acc = (1.0 + max_tv) / 2.0
+            if sample_size == 1:
+                if single_shot_acc < min_classification_accuracy:
+                    return IdentifiabilityStatus.INSUFFICIENT_STATISTICAL_POWER, max_tv
+            else:
+                delta = max_tv
+                variance = max(delta * (1.0 - delta) if delta < 1.0 else 1.0, 0.0001)
+                z_alpha = 2.576
+                z_beta = 0.842  # 80% power target
+                n_req = max(1, math.ceil(((z_alpha + z_beta) ** 2 * variance) / (delta ** 2))) if delta > 1e-6 else 10_000_000
+                if sample_size < n_req:
+                    return IdentifiabilityStatus.INSUFFICIENT_STATISTICAL_POWER, max_tv
+
+        return IdentifiabilityStatus.DISTINGUISHABLE_ACTION_FOUND, max_tv
+
+    def check_held_out_adequacy(
+        self,
+        mechanisms: List[ExplanatoryMechanism],
+        held_out_observations: List[Tuple[str, float]],
+        tolerance: float = 0.20,
+    ) -> Tuple[bool, str]:
+        """
+        Independent model-adequacy gate with held-out predictive checks (Hard Test 7).
+        Returns (False, "ALL_CANDIDATE_MECHANISMS_INADEQUATE") if all candidate mechanisms fail held-out tests.
+        """
+        if not mechanisms:
+            return False, "ALL_CANDIDATE_MECHANISMS_INADEQUATE"
+        for m in mechanisms:
+            passes_all = True
+            for cond, true_val in held_out_observations:
+                pred = m.predictions.get(cond)
+                if pred is None:
+                    passes_all = False
+                    break
+                rel_err = abs(pred - true_val) / max(abs(true_val), 1.0)
+                if rel_err > tolerance:
+                    passes_all = False
+                    break
+            if passes_all:
+                return True, m.mechanism_id
+        return False, "ALL_CANDIDATE_MECHANISMS_INADEQUATE"
+

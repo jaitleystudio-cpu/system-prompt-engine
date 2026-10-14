@@ -15,9 +15,15 @@ from .types import (
     ScientificWitness,
     ReusableScientificProcedure,
     Cwc1Result,
+    ProductivityCalculationStatus,
+    PriorSensitivityReport,
+    DiscriminatoryPowerReport,
+    PreregistrationChainEntry,
+    AcquisitionMode,
+    StatisticalProtocol,
 )
 from .mechanism_compiler import MechanismCompiler
-from .experiment_selector import ExperimentSelector
+from .experiment_selector import ExperimentSelector, PreregistrationLedger
 from .witness_generator import ScientificWitnessGenerator
 from .transfer_engine import TransferEngine
 from .engine import SpeCwcEngine
@@ -34,9 +40,17 @@ __all__ = [
     "ScientificWitness",
     "ReusableScientificProcedure",
     "Cwc1Result",
+    "ProductivityCalculationStatus",
+    "PriorSensitivityReport",
+    "DiscriminatoryPowerReport",
+    "PreregistrationChainEntry",
+    "AcquisitionMode",
+    "StatisticalProtocol",
     "MechanismCompiler",
     "ExperimentSelector",
+    "PreregistrationLedger",
     "ScientificWitnessGenerator",
     "TransferEngine",
     "SpeCwcEngine",
 ]
+
