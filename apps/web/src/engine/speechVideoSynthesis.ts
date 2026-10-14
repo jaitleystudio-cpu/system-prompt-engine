@@ -147,6 +147,11 @@ export function extractFsmStateTransitionsFromText(text: string): FsmStateGraph 
 
 /**
  * 3. Verbal Bug-Report to runnable Playwright E2E test synthesis.
+ * 
+ * RUTHLESS FIDELITY REQUIREMENT:
+ * Dynamically binds input speech events, targets, and failure symptoms into
+ * real Playwright actions and assertions. Never returns a fixed shopping-cart
+ * template when a different bug is reported.
  */
 export function synthesizePlaywrightE2ETest(params: {
   testTitle?: string;
@@ -154,52 +159,131 @@ export function synthesizePlaywrightE2ETest(params: {
   speechText?: string;
   vectors?: ActionVector[];
 }): PlaywrightSynthesizedTest {
-  const title = params.testTitle || 'Reproduce Checkout Invariant Eviction upon Token Timeout';
-  const url = params.targetUrl || '/cart';
+  const speech = (params.speechText || '').toLowerCase();
+  const rawTitle = params.testTitle || (speech ? `Reproduce: ${speech.slice(0, 60)}...` : 'Automated Playwright Regression Test');
+  const title = rawTitle.replace(/"/g, '\\"');
 
-  const defaultCode = `// Playwright E2E Regression Test: Automated Synthesis from Spoken Bug-Report
-// Verified against Playwright Test runner v1.48+
-import { test, expect } from "@playwright/test";
+  // 1. Target URL Invariant Extraction
+  let targetUrl = params.targetUrl;
+  if (!targetUrl) {
+    if (speech.includes('login') || speech.includes('signin') || speech.includes('sign in') || speech.includes('password') || speech.includes('auth')) {
+      targetUrl = '/login';
+    } else if (speech.includes('cart') || speech.includes('coupon') || speech.includes('discount')) {
+      targetUrl = '/cart';
+    } else if (speech.includes('checkout') || speech.includes('payment') || speech.includes('stripe')) {
+      targetUrl = '/checkout';
+    } else if (speech.includes('settings') || speech.includes('profile') || speech.includes('account')) {
+      targetUrl = '/settings';
+    } else if (speech.includes('dashboard') || speech.includes('analytics') || speech.includes('metrics')) {
+      targetUrl = '/dashboard';
+    } else {
+      targetUrl = '/';
+    }
+  }
 
-test("${title}", async ({ page }) => {
-  // 1. Arrange: Navigate to target application state
-  await page.goto("${url}");
-  await expect(page.locator(".cart-item")).toHaveCount(3);
+  // 2. Synthesize Action Steps & Invariants
+  const arrangeLines: string[] = [];
+  const mockLines: string[] = [];
+  const actLines: string[] = [];
+  const assertLines: string[] = [];
+  let stepsCount = 0;
+  let invariantsAsserted = 0;
 
-  // 2. Mock: Intercept coupon verification endpoint to simulate background JWT token timeout
-  await page.route("**/api/v1/discounts/apply", async (route) => {
-    // Return simulated 401 Unauthorized token expiry
-    await route.fulfill({
-      status: 401,
-      contentType: "application/json",
-      body: JSON.stringify({ error: "jwt_token_expired", code: "AUTH_EXPIRED" }),
-    });
-  });
+  arrangeLines.push(`  // 1. Arrange: Navigate to reported target route`);
+  arrangeLines.push(`  await page.goto("${targetUrl}");`);
+  arrangeLines.push(`  await page.waitForLoadState("domcontentloaded");`);
+  stepsCount += 2;
 
-  // 3. Act: User enters promotional discount and clicks Apply
-  const couponInput = page.locator("#coupon-input");
-  await couponInput.waitFor({ state: "visible" });
-  await couponInput.fill("PROMO_OCTOBER");
+  // Specific scenario logic grounded in speech
+  if (speech.includes('login') || speech.includes('password') || targetUrl === '/login') {
+    // Login failure scenario
+    if (speech.includes('username') || speech.includes('email') || !speech.includes('without email')) {
+      actLines.push(`  // Act: Fill credentials`);
+      actLines.push(`  const userField = page.locator('input[type="email"], input[name="username"], #username').first();`);
+      actLines.push(`  if (await userField.isVisible()) {`);
+      actLines.push(`    await userField.fill("qa-engineer@system-prompt-engine.internal");`);
+      actLines.push(`  }`);
+      stepsCount++;
+    }
 
-  const applyBtn = page.locator("#apply-coupon-btn");
-  await applyBtn.click();
+    if (speech.includes('password')) {
+      actLines.push(`  const passwordField = page.locator('input[type="password"], #password').first();`);
+      actLines.push(`  await expect(passwordField).toBeVisible();`);
+      actLines.push(`  await passwordField.fill("TransientPass123!");`);
+      stepsCount++;
+    }
 
-  // Wait for background token refresh attempt
-  await page.waitForTimeout(500);
+    actLines.push(`  const submitBtn = page.locator('button[type="submit"], button:has-text("Log In"), button:has-text("Sign In")').first();`);
+    actLines.push(`  await submitBtn.click();`);
+    stepsCount++;
 
-  // 4. Assert Hard Invariants: Cart state must NEVER be evicted to 0
-  await expect(page.locator(".cart-item")).toHaveCount(3);
-  await expect(page.locator(".cart-empty-message")).toBeHidden();
-  await expect(page.locator("#checkout-total")).toBeVisible();
-});
-`.trim();
+    if (speech.includes('crash') || speech.includes('crashes')) {
+      assertLines.push(`  // 4. Assert Invariant: Application must not crash or trigger uncaught error boundary`);
+      assertLines.push(`  const errorBoundary = page.locator('.error-boundary, [data-testid="crash-screen"], .unhandled-exception');`);
+      assertLines.push(`  await expect(errorBoundary).toHaveCount(0);`);
+      assertLines.push(`  await expect(page.locator('body')).not.toContainText('Internal Server Error');`);
+      assertLines.push(`  await expect(page.locator('body')).not.toContainText('500');`);
+      invariantsAsserted += 3;
+    } else {
+      assertLines.push(`  // 4. Assert: Expect successful authentication or inline validation`);
+      assertLines.push(`  await expect(page.locator('.auth-spinner')).toBeHidden();`);
+      invariantsAsserted++;
+    }
+  } else if (speech.includes('coupon') || speech.includes('discount') || targetUrl === '/cart') {
+    // Cart & coupon scenario
+    arrangeLines.push(`  await expect(page.locator(".cart-item, [data-testid='cart-row']")).toHaveCount(3);`);
+    invariantsAsserted++;
+
+    mockLines.push(`  // 2. Mock: Simulate API route condition`);
+    mockLines.push(`  await page.route("**/api/v1/discounts/apply", async (route) => {`);
+    mockLines.push(`    await route.fulfill({ status: 401, body: JSON.stringify({ error: "jwt_token_expired" }) });`);
+    mockLines.push(`  });`);
+    stepsCount++;
+
+    actLines.push(`  // 3. Act: Apply discount`);
+    actLines.push(`  const couponInput = page.locator("#coupon-input, input[name='coupon']");`);
+    actLines.push(`  await couponInput.fill("DISCOUNT_AUTO");`);
+    actLines.push(`  await page.locator("#apply-coupon-btn, button:has-text('Apply')").click();`);
+    stepsCount += 2;
+
+    assertLines.push(`  // 4. Assert: Cart state must be preserved`);
+    assertLines.push(`  await expect(page.locator(".cart-item, [data-testid='cart-row']")).toHaveCount(3);`);
+    assertLines.push(`  await expect(page.locator(".cart-empty-message")).toBeHidden();`);
+    invariantsAsserted += 2;
+  } else {
+    // General action synthesis
+    actLines.push(`  // 3. Act: Execute primary interaction`);
+    actLines.push(`  const mainAction = page.locator('button[type="submit"], button.primary-action').first();`);
+    actLines.push(`  if (await mainAction.isVisible()) await mainAction.click();`);
+    stepsCount++;
+
+    assertLines.push(`  // 4. Assert: Verify page stability and invariants`);
+    assertLines.push(`  await expect(page.locator('body')).toBeVisible();`);
+    assertLines.push(`  await expect(page.locator('.fatal-error, .crash-banner')).toHaveCount(0);`);
+    invariantsAsserted += 2;
+  }
+
+  const generatedCode = [
+    `// Playwright E2E Regression Test: Dynamically Synthesized from Spoken Bug-Report`,
+    `// Speech Input: "${params.speechText ? params.speechText.replace(/"/g, '\\"') : 'Default Speech Input'}"`,
+    `import { test, expect } from "@playwright/test";`,
+    ``,
+    `test("${title}", async ({ page }) => {`,
+    ...arrangeLines,
+    ...(mockLines.length ? [``, ...mockLines] : []),
+    ``,
+    ...actLines,
+    ``,
+    ...assertLines,
+    `});`,
+  ].join('\n').trim();
 
   return {
     testTitle: title,
-    code: defaultCode,
-    stepsCount: 4,
-    invariantsAsserted: 3,
-    targetUrl: url,
+    code: generatedCode,
+    stepsCount,
+    invariantsAsserted,
+    targetUrl,
   };
 }
 

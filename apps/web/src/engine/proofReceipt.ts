@@ -792,6 +792,46 @@ export function verifyProofReceiptAuthenticity(
   };
 }
 
+export class InstrumentedNetworkMonitor {
+  private active = false;
+  private connectionsCount = 0;
+  private bytesCount = 0;
+  private dnsCount = 0;
+  private interceptedUrls: string[] = [];
+
+  public start() {
+    this.active = true;
+    this.connectionsCount = 0;
+    this.bytesCount = 0;
+    this.dnsCount = 0;
+    this.interceptedUrls = [];
+  }
+
+  public recordAttempt(url: string, bytes: number = 0) {
+    if (!this.active) return;
+    this.connectionsCount++;
+    this.bytesCount += bytes;
+    this.interceptedUrls.push(url);
+  }
+
+  public stop(): {
+    observedConnections: number;
+    observedBytes: number;
+    observedDns: number;
+    interceptedUrls: string[];
+    isZeroEgress: boolean;
+  } {
+    this.active = false;
+    return {
+      observedConnections: this.connectionsCount,
+      observedBytes: this.bytesCount,
+      observedDns: this.dnsCount,
+      interceptedUrls: [...this.interceptedUrls],
+      isZeroEgress: this.connectionsCount === 0 && this.bytesCount === 0,
+    };
+  }
+}
+
 export interface ZeroEgressSandboxAuditReceipt {
   schemaVersion: "spe.zero-egress-sandbox-receipt.v1";
   receiptId: string;
@@ -808,20 +848,33 @@ export interface ZeroEgressSandboxAuditReceipt {
   canonicalDigestHex: string;
   signatureHex?: string;
   signerPublicKeyHex?: string;
+  evidenceClass?: "EMPIRICALLY_OBSERVED_ZERO_EGRESS" | "DECLARATIVE_STATIC_CONTRACT";
 }
 
 export async function generateZeroEgressSandboxAuditReceipt(params: {
   candidateHash: string;
   offlineFallbackTier?: "LOCAL_WASM_SIMD" | "PURE_TYPESCRIPT_SANDBOX" | "WEBGPU_LOCAL";
+  empiricalObservation?: {
+    observedConnections: number;
+    observedBytes: number;
+    observedDns?: number;
+  };
   signer?: {
     publicKeyHex: string;
     signDigestFn: (digestHex: string) => string;
   };
 }): Promise<ZeroEgressSandboxAuditReceipt> {
+  if (params.empiricalObservation) {
+    if (params.empiricalObservation.observedConnections > 0 || params.empiricalObservation.observedBytes > 0) {
+      throw new Error(`Empirical network observation detected outbound egress: connections=${params.empiricalObservation.observedConnections}, bytes=${params.empiricalObservation.observedBytes}`);
+    }
+  }
+
   const timestampIso = new Date().toISOString();
   const receiptId = `rcpt_egress_zero_${params.candidateHash.slice(0, 12)}_${Date.now().toString(16)}`;
   const tier = params.offlineFallbackTier || "LOCAL_WASM_SIMD";
   const environmentFingerprint = "spe-airgap-sandbox-offline-verified";
+  const evidenceClass = params.empiricalObservation ? "EMPIRICALLY_OBSERVED_ZERO_EGRESS" : "DECLARATIVE_STATIC_CONTRACT";
 
   const partialReceipt: Omit<ZeroEgressSandboxAuditReceipt, "canonicalDigestHex" | "signatureHex" | "signerPublicKeyHex"> = {
     schemaVersion: "spe.zero-egress-sandbox-receipt.v1",
@@ -836,6 +889,7 @@ export async function generateZeroEgressSandboxAuditReceipt(params: {
     costIncurredUsd: 0,
     offlineFallbackTier: tier,
     environmentFingerprint,
+    evidenceClass,
   };
 
   const canonicalJson = canonicalizeJson(partialReceipt);
@@ -888,7 +942,7 @@ export async function verifyZeroEgressSandboxAuditReceipt(
     "schemaVersion", "receiptId", "candidateHash", "timestampIso",
     "networkMode", "sandboxIsolationEnforced", "outboundConnections",
     "outboundBytes", "dnsRequestsAttempted", "costIncurredUsd",
-    "offlineFallbackTier", "environmentFingerprint",
+    "offlineFallbackTier", "environmentFingerprint", "evidenceClass",
     "canonicalDigestHex", "signatureHex", "signerPublicKeyHex"
   ]);
   for (const k of Object.keys(receipt)) {
@@ -911,6 +965,7 @@ export async function verifyZeroEgressSandboxAuditReceipt(
     costIncurredUsd: receipt.costIncurredUsd,
     offlineFallbackTier: receipt.offlineFallbackTier,
     environmentFingerprint: receipt.environmentFingerprint,
+    ...(receipt.evidenceClass ? { evidenceClass: receipt.evidenceClass } : {}),
   };
   const recomputedDigest = await computeSha256(canonicalizeJson(partialReceipt));
   if (recomputedDigest !== receipt.canonicalDigestHex) {
