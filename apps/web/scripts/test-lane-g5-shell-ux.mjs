@@ -260,7 +260,7 @@ try {
 
   const idea = await openCase("idea", desktop);
   await idea.getByRole("textbox", { name: "idea", exact: true }).fill("unsaved idea");
-  await idea.getByRole("link", { name: "Open the free prompt builder (Create)" }).click();
+  await idea.getByRole("link", { name: /(?:Open the free prompt builder \(Create\)|Open Prompt Studio Free)/ }).first().click();
   assert.equal(await idea.getByRole("textbox", { name: "idea", exact: true }).inputValue(), "unsaved idea");
   assert.equal(await idea.getByTestId("view").innerText(), "create");
   await idea.getByRole("link", { name: "Footer Create" }).click();

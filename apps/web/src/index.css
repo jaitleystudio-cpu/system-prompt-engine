@@ -2974,7 +2974,7 @@ html[data-theme="light"] .spe-bound-notice {
 /* Dark default: later `.spe-nav-links a { background: transparent }` would otherwise win. */
 html[data-theme="dark"] .spe-nav-links a.spe-nav-cta,
 html:not([data-theme]) .spe-nav-links a.spe-nav-cta {
-  background: #f4f1ea;
+  background: #eff2ff;
   color: #0a1020;
   opacity: 1;
   box-shadow: 0 8px 24px -4px rgba(217, 197, 154, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8);

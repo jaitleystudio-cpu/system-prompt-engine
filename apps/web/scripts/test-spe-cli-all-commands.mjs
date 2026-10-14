@@ -60,7 +60,7 @@ writeFileSync(promptPath1, testPrompt1);
 writeFileSync(promptPath2, testPrompt2);
 
 function runCli(commandArgs) {
-  const cmd = `node "${cliPath}" ${commandArgs}`;
+  const cmd = `"${process.execPath}" "${cliPath}" ${commandArgs}`;
   console.log(`\n▶ Running: ${cmd}`);
   const output = execSync(cmd, { cwd: repoRoot, encoding: "utf-8" });
   return output;

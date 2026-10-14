@@ -12,7 +12,10 @@ const page = readFileSync(join(root, "src/pages/Capabilities.tsx"), "utf8");
 const app = readFileSync(join(root, "src/App.tsx"), "utf8");
 const nav = readFileSync(join(root, "src/layout/Nav.tsx"), "utf8");
 const seoContent = readFileSync(join(root, "src/landing/SeoContent.tsx"), "utf8");
-const sitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");
+const rawSitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");
+const sitemap = rawSitemap.includes("<sitemapindex")
+  ? rawSitemap + "\n" + readFileSync(join(root, "public/sitemap-core.xml"), "utf8")
+  : rawSitemap;
 const robots = readFileSync(join(root, "public/robots.txt"), "utf8");
 
 assert.match(routing, /capabilities:\s*"\/capabilities"/);

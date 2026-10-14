@@ -10,6 +10,9 @@ const routing = readFileSync(join(root, "src/routing.ts"), "utf8");
 const theme = readFileSync(join(root, "src/ui/theme.ts"), "utf8");
 const robots = readFileSync(join(root, "public/robots.txt"), "utf8");
 const sitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");
+const effectiveSitemap = sitemap.includes("<sitemapindex")
+  ? sitemap + "\n" + readFileSync(join(root, "public/sitemap-core.xml"), "utf8")
+  : sitemap;
 
 const publicPaths = ["/", "/create", "/code", "/daily-lab", "/privacy", "/capabilities"];
 const privatePaths = ["/my-work", "/workspace", "/website", "/media", "/research"];
@@ -17,12 +20,12 @@ for (const routePath of [...publicPaths, ...privatePaths]) {
   assert.match(routing, new RegExp(routePath.replaceAll("/", "\\/")));
 }
 for (const routePath of publicPaths) {
-  if (routePath !== "/") assert.match(sitemap, new RegExp(routePath));
+  if (routePath !== "/") assert.match(effectiveSitemap, new RegExp(routePath));
 }
-assert.match(sitemap, /<loc>https:\/\/systempromptengine\.com\/<\/loc>/);
+assert.match(effectiveSitemap, /<loc>https:\/\/systempromptengine\.com\/<\/loc>/);
 for (const routePath of privatePaths) {
   assert.doesNotMatch(
-    sitemap,
+    effectiveSitemap,
     new RegExp(`<loc>https://systempromptengine\\.com${routePath}</loc>`),
   );
   assert.match(robots, new RegExp(`Disallow:\\s*${routePath.replaceAll("/", "\\/")}`));

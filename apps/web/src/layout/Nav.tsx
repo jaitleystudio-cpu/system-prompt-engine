@@ -47,6 +47,11 @@ const NAV_GROUPS: NavGroup[] = [
         desc: "Build & compile bulletproof prompts for any AI",
       },
       {
+        id: "prompts",
+        label: "Prompt Arsenal",
+        desc: "10,000+ task-specific prompts for all AI models",
+      },
+      {
         id: "code",
         label: "S-Code",
         desc: "Convert UI screenshots into clean React/HTML",
@@ -310,21 +315,21 @@ export function Nav(p: Props) {
         >
           Open Prompt Studio Free <span>↗</span>
         </a>
-        <span className="sr-only" aria-hidden="true" style={{ display: "none" }}>
-          {PRIMARY_NAV_LINKS.map((link) => (
-            <a
-              key={link.id}
-              href={pathForView(link.id)}
-              onClick={(e) => {
-                e.preventDefault();
-                handleLinkClick(link.id);
-              }}
-            >
-              {link.label}
-            </a>
-          ))}
-        </span>
       </nav>
+      <span className="sr-only" aria-hidden="true" style={{ display: "none" }}>
+        {PRIMARY_NAV_LINKS.map((link) => (
+          <a
+            key={link.id}
+            href={pathForView(link.id)}
+            onClick={(e) => {
+              e.preventDefault();
+              handleLinkClick(link.id);
+            }}
+          >
+            {link.label}
+          </a>
+        ))}
+      </span>
     </header>
   );
 }
