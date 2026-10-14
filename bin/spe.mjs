@@ -204,6 +204,14 @@ if (command === '--version' || command === '-v' || command === 'version') {
 const fileTarget = args[1];
 const flags = parseFlags(args.slice(1));
 
+function readPromptInput(target) {
+  if (!target) return '';
+  if (existsSync(target)) {
+    return readFileSync(target, 'utf8');
+  }
+  return target;
+}
+
 function getRepoRoot() {
   if (existsSync(resolve(scriptDir, '../spe_runtime'))) {
     return resolve(scriptDir, '..');
@@ -268,7 +276,7 @@ try {
         console.error(red('Error: Missing target prompt file. Usage: spe compile <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       const pageSize = flags['align-kv'] === '16' ? 16 : 32;
       const targetDialect = flags.target || 'claude-xml';
 
@@ -298,7 +306,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe verify <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`🔍 Verifying '${fileTarget}' against formal contracts & logic...`));
 
       const logic = verifySymbolicConstraints(rawPrompt);
@@ -335,7 +343,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe redteam <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`⚔️ Running Hostile Gym Ω (1,024 attacks) against '${fileTarget}'...`));
 
       const gym = runHostileGymOmega(rawPrompt);
@@ -372,7 +380,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe test <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`🧬 Running Prompt Mutation Testing (PMS) on '${fileTarget}'...`));
 
       const pms = evaluatePromptMutationSuite(rawPrompt);
@@ -402,8 +410,8 @@ try {
         console.error(red('Error: Missing diff target files. Usage: spe diff <old.md> <new.md>'));
         process.exit(1);
       }
-      const promptOld = readFileSync(fileOld, 'utf8');
-      const promptNew = readFileSync(fileNew, 'utf8');
+      const promptOld = readPromptInput(fileOld);
+      const promptNew = readPromptInput(fileNew);
 
       console.log(cyan(`📊 Computing Semantic Prompt Diff: '${fileOld}' ➔ '${fileNew}'...`));
       const diff = computeSemanticPromptDiff(promptOld, promptNew);
@@ -422,7 +430,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe seal <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`🔏 Sealing cryptographic RFC 8785 proof receipt for '${fileTarget}'...`));
 
       const twin = evaluateCounterfactualTwin(rawPrompt, rawPrompt);
@@ -444,7 +452,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe owasp <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`📋 Running OWASP GenAI Top 10 Compliance Audit for '${fileTarget}'...`));
 
       const report = auditOwaspCompliance(rawPrompt);
@@ -464,7 +472,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe codegen <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       const targetLang = flags.target || 'typescript-vercel';
       const promptName = flags.name || 'SecureSystemPrompt';
 
@@ -491,7 +499,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe salience <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`🧭 Running Context Salience & NIAH Attenuation Stress Test for '${fileTarget}'...`));
 
       const salienceResult = stressTestContextSalience(rawPrompt, 32768);
@@ -513,7 +521,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe simulate <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       const scenario = flags.scenario || 'crescendo_jailbreak';
       console.log(cyan(`🌀 Simulating Multi-Turn Agent Trajectory [Scenario: ${scenario}] for '${fileTarget}'...`));
 
@@ -536,7 +544,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe fewshot <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`📚 Synthesizing 3-Tier Few-Shot Curriculum & Hard-Negatives for '${fileTarget}'...`));
 
       const fewshotResult = synthesizeFewShotCurriculum(rawPrompt);
@@ -555,7 +563,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe watermark <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       const authorId = flags.author || 'SPE-AUTHOR-ORG';
       console.log(cyan(`🔏 Embedding Cryptographic Watermark & Canary Token [Author: ${authorId}]...`));
 
@@ -580,7 +588,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe cost <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`💰 Simulating Multi-Model Economics & Carbon Footprint for '${fileTarget}'...`));
 
       const costResult = simulateCostAndCarbon(rawPrompt);
@@ -609,7 +617,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe otel <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`📊 Exporting OpenTelemetry GenAI Spans & Prometheus Metrics for '${fileTarget}'...`));
 
       const telemetry = await exportTelemetryPackage(rawPrompt, {
@@ -634,7 +642,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe diff-models <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`🔬 Running Cross-Model Differential Testing Lab for '${fileTarget}'...`));
 
       const atlas = await evaluateCrossModelDifferential(rawPrompt);
@@ -659,7 +667,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe vuln-sync <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`🗄️ Auditing prompt against living Vulnerability Inventory ("Failure Genome")...`));
 
       const vulnResult = auditPromptAgainstVulnerabilityInventory(rawPrompt);
@@ -681,7 +689,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe refine <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       console.log(cyan(`💡 Running AI-Assisted Prompt Refiner & Reflection CoT Harness for '${fileTarget}'...`));
 
       const refinerResult = await analyzePromptRefinements(rawPrompt);
@@ -709,7 +717,7 @@ try {
         console.error(red('Error: Missing prompt file. Usage: spe certify <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       const orgName = typeof flags.org === 'string' ? flags.org : 'Global Enterprise Safety Audit';
 
       // Government & Defense Compliance Mode (--framework)
@@ -885,7 +893,7 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
         console.error(red('Error: Missing target prompt file. Usage: spe closed-loop <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
       const maxIterations = flags.iterations ? parseInt(flags.iterations, 10) : 3;
       const modelId = flags.model || 'llama3.2';
 
@@ -927,7 +935,7 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
         console.error(red('Error: Missing target prompt file. Usage: spe privacy <file>'));
         process.exit(1);
       }
-      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const rawPrompt = readPromptInput(fileTarget);
 
       console.log(cyan(`⚖️ Auditing Data Privacy & Regulatory Compliance for '${fileTarget}'...`));
 

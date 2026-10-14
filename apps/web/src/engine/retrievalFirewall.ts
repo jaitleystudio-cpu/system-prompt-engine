@@ -32,12 +32,30 @@ export interface SandboxedContextResult {
  */
 export function sanitizeUntrustedChunkContent(rawText: string): { sanitized: string; warnings: string[] } {
   const warnings: string[] = [];
-  let sanitized = rawText || "";
+  let raw = rawText || "";
+
+  // 0. Detect and strip zero-width characters & invisible bidirectional control codepoints
+  if (/[\u200B-\u200D\uFEFF\u200E\u200F\u202A-\u202E]/.test(raw)) {
+    warnings.push("Stripped zero-width or directional control characters from untrusted context.");
+    raw = raw.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u202A-\u202E]/g, "");
+  }
+
+  // Normalize Unicode to canonical decomposition/composition (NFKC)
+  let sanitized = raw.normalize('NFKC');
+
+  // Map common Cyrillic/Greek homoglyphs that mimic ASCII commands (e.g. Cyrillic 'ѕ' -> 's', 'е' -> 'e', 'а' -> 'a')
+  sanitized = sanitized.replace(/[\u0455]/g, "s").replace(/[\u0435]/g, "e").replace(/[\u0430]/g, "a").replace(/[\u043E]/g, "o").replace(/[\u0441]/g, "c").replace(/[\u0440]/g, "p");
 
   // 1. Defang prompt injection directives attempting to impersonate system role
   if (/(?:system|admin|root)\s*:\s*(?:ignore|override|disregard)/i.test(sanitized)) {
     warnings.push("Defanged system impersonation prefix in retrieved text.");
     sanitized = sanitized.replace(/(system|admin|root)\s*:\s*(ignore|override|disregard)/gi, "[DATA-NEUTRALIZED: $1-$2]");
+  }
+
+  // 1b. Defang direct or indirect instruction overrides ("ignore all previous instructions/rules")
+  if (/(?:ignore|disregard|override)\s+(?:all\s+)?(?:previous|prior|system)\s+(?:instructions|rules|boundaries|directives)/i.test(sanitized)) {
+    warnings.push("Neutralized prompt injection instruction override payload.");
+    sanitized = sanitized.replace(/(ignore|disregard|override)\s+(all\s+)?(previous|prior|system)\s+(instructions|rules|boundaries|directives)/gi, "[DATA-NEUTRALIZED: $1-$3-$4]");
   }
 
   // 2. Defang delimiter fracture attempts (<system>, </system>, <im_start>, etc.)
@@ -50,6 +68,12 @@ export function sanitizeUntrustedChunkContent(rawText: string): { sanitized: str
   if (/```(?:system|instruction|admin|override)/i.test(sanitized)) {
     warnings.push("Neutralized privileged code-block headers.");
     sanitized = sanitized.replace(/```(system|instruction|admin|override)/gi, "```untrusted_data_$1");
+  }
+
+  // 4. Defang markdown image exfiltration beacons
+  if (/!\[.*?\]\(https?:\/\/[^\s\)]+\?[^\s\)]*(?:token|key|secret|q=|leak=)[^\s\)]*\)/i.test(sanitized)) {
+    warnings.push("Neutralized potential markdown exfiltration beacon.");
+    sanitized = sanitized.replace(/!\[(.*?)\]\((https?:\/\/[^\s\)]+)\)/gi, "[EXFILTRATION-BEACON-BLOCKED: $1]");
   }
 
   return { sanitized, warnings };

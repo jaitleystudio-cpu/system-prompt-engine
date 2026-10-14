@@ -57,6 +57,10 @@ const testCases = [
   { text: "Я хочу запустить онлайн-магазин женской одежды с бизнес-планом.", expectedCode: "ru", name: "Russian" },
   { text: "여성용 지속 가능한 패션 온라인 부티크를 시작하고 싶습니다.", expectedCode: "ko", name: "Korean" },
   { text: "I want to start a premium women's clothing boutique business.", expectedCode: "en", name: "English" },
+  // Romanized Indic Test Cases
+  { text: "naku oka software consultancy start cheyali ani undi", expectedCode: "te", name: "Telugu (Tinglish)" },
+  { text: "mujhe ek naya fintech startup shuru karna hai aur funding chahiye", expectedCode: "hi", name: "Hindi (Hinglish)" },
+  { text: "enakku oru pudhiya restaurant business pannanum", expectedCode: "ta", name: "Tamil (Tanglish)" },
 ];
 
 for (const tc of testCases) {
@@ -67,6 +71,20 @@ for (const tc of testCases) {
 // Fallback test
 const emptyDetected = detectLanguage("");
 assert(emptyDetected.code === "en", "Empty text defaults gracefully to English");
+
+// Verify authentic native synthesis for Hindi, Tamil, Spanish, German, Japanese
+console.log("\n  Testing authentic native synthesis across major languages...");
+const hindiBundle = synthesizeDualPrompts("मुझे एक नया टेक स्टार्टअप शुरू करना है।");
+assert(hindiBundle.detectedLanguage.code === "hi", "Hindi prompt detected as 'hi'");
+assert(hindiBundle.nativePrompt.includes("सिस्टम भूमिका और उद्देश्य"), "Hindi prompt synthesized with authentic Devanagari sections");
+
+const tamilBundle = synthesizeDualPrompts("எனக்கு ஒரு புதிய தொழில் தொடங்க வேண்டும்.");
+assert(tamilBundle.detectedLanguage.code === "ta", "Tamil prompt detected as 'ta'");
+assert(tamilBundle.nativePrompt.includes("கணினி பங்கு மற்றும் நோக்கம்"), "Tamil prompt synthesized with authentic Tamil sections");
+
+const spanishBundle = synthesizeDualPrompts("Quiero crear una tienda online de ropa sostenible.");
+assert(spanishBundle.detectedLanguage.code === "es", "Spanish prompt detected as 'es'");
+assert(spanishBundle.nativePrompt.includes("Rol del Sistema y Objetivo"), "Spanish prompt synthesized with authentic Spanish sections");
 
 // ==============================================================================
 // 2. Calibrated Token Density & Model Catalog Tests

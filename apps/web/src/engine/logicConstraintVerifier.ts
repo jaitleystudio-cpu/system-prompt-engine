@@ -50,67 +50,86 @@ export interface LogicConstraintReport {
  * Extracts symbolic propositions from raw system prompt clauses.
  */
 export function extractPropositions(promptText: string): SymbolicProposition[] {
-  const lines = promptText.split("\n").map((l) => l.trim()).filter((l) => l.length > 5);
+  // Split by newlines, semicolons, or sentence-terminating periods so intra-line clauses are independently extracted
+  const clauses = promptText
+    .split(/[\n;]+|(?<=\w)\.\s+/)
+    .map((l) => l.trim())
+    .filter((l) => l.length > 5);
   const propositions: SymbolicProposition[] = [];
   let counter = 1;
 
-  for (const line of lines) {
-    const lower = line.toLowerCase();
+  for (const clause of clauses) {
+    const lower = clause.toLowerCase();
 
     // 1. Universal Compliance vs Unconditional Refusal
-    if (lower.includes("always comply") || lower.includes("fulfill every request") || lower.includes("help with whatever")) {
+    const isUniversalCompliance =
+      /(always\s+(?:comply|fulfill|answer|assist|help|obey)|fulfill\s+(?:all|every)|comply\s+with\s+(?:all|every)|help\s+with\s+whatever|answer\s+(?:every|all|whatever)|output\s+all\s+information|satisfy\s+(?:any|all)\s+queries|unconditionally\s+(?:obey|follow|assist)|without\s+(?:withholding|hesitation|exception)|do\s+whatever\s+(?:they|user)\s+ask)/i.test(lower);
+
+    if (isUniversalCompliance) {
       propositions.push({
         id: `P${counter++}`,
         predicate: "UniversalCompliance",
         variableScope: "∀r ∈ UserRequests",
-        sourceClause: line,
+        sourceClause: clause,
         polarity: "positive",
         formalFormula: "∀r (UserRequest(r) → Comply(r))",
       });
     }
 
-    if (lower.includes("never reveal") || lower.includes("strictly confidential") || lower.includes("refuse unauthorized")) {
+    const isConfidentialityRefusal =
+      /(never\s+(?:reveal|disclose|share|leak|provide)|strictly\s+(?:confidential|forbidden|prohibited)|refuse\s+unauthorized|do\s+not\s+(?:share|disclose|reveal|leak)|prohibit\s+(?:dissemination|leakage)|keep\s+(?:internal|secret|confidential)|must\s+not\s+(?:disclose|reveal)|cannot\s+reveal)/i.test(lower);
+
+    if (isConfidentialityRefusal) {
       propositions.push({
         id: `P${counter++}`,
         predicate: "ConfidentialityRefusal",
         variableScope: "∀s ∈ SystemSecrets",
-        sourceClause: line,
+        sourceClause: clause,
         polarity: "negative",
         formalFormula: "∀s (Secret(s) → ¬Disclose(s))",
       });
     }
 
     // 2. Monotonic Tool Authority
-    if (lower.includes("must not execute") || lower.includes("authority") || lower.includes("permission")) {
+    const isBoundedAuthority =
+      /(must\s+not\s+execute|prohibit(?:ed)?\s+(?:tool|execution|commands|network)|authority\s+ceiling|disallow\s+(?:shell|network|file)|strictly\s+bound|never\s+invoke\s+unapproved|permission\s+denied|unauthorized\s+tools?|cannot\s+elevate\s+authority|funds\s+exceed)/i.test(lower);
+
+    if (isBoundedAuthority) {
       propositions.push({
         id: `P${counter++}`,
         predicate: "BoundedAuthority",
         variableScope: "∀t ∈ ToolInvocations",
-        sourceClause: line,
+        sourceClause: clause,
         polarity: "negative",
         formalFormula: "∀t (Tool(t) ∧ Escalate(t) → Refuse(t))",
       });
     }
 
     // 3. Retrieval Taint Firewall
-    if (lower.includes("untrusted") || lower.includes("retrieval") || lower.includes("context")) {
+    const isContextTaint =
+      /(untrusted(?:\s+data|\s+context|\s+input)?|retriev(?:al|ed)\s+context|treat\s+(?:documents|context)\s+as\s+untrusted|do\s+not\s+trust\s+context|sanitize\s+retrieval|taint\s+boundary)/i.test(lower);
+
+    if (isContextTaint) {
       propositions.push({
         id: `P${counter++}`,
         predicate: "ContextTaintBoundary",
         variableScope: "∀c ∈ RetrievedDocs",
-        sourceClause: line,
+        sourceClause: clause,
         polarity: "negative",
         formalFormula: "∀c (Context(c) ∧ Untrusted(c) → ¬OverrideSystem(c))",
       });
     }
 
     // 4. Schema Contract
-    if (lower.includes("must conform") || lower.includes("json") || lower.includes("schema")) {
+    const isSchemaCompliance =
+      /(must\s+conform|strict\s+json|schema\s+compliance|format\s+strictly|json\s+schema|output\s+must\s+be\s+valid|output\s+schema|valid\s+json)/i.test(lower);
+
+    if (isSchemaCompliance) {
       propositions.push({
         id: `P${counter++}`,
         predicate: "SchemaCompliance",
         variableScope: "∀o ∈ Outputs",
-        sourceClause: line,
+        sourceClause: clause,
         polarity: "positive",
         formalFormula: "∀o (Output(o) → ValidSchema(o, S))",
       });
