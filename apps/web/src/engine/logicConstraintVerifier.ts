@@ -360,15 +360,16 @@ export function evaluateFiniteModel(
       });
       if (!propSatisfied) allSatisfied = false;
     } else if (prop.predicate === "UniversalCompliance") {
-      // Formula: ∀r ∈ Requests: UserRequest(r) → Comply(r)
       const steps: string[] = [];
       let propSatisfied = true;
+      const isNegative = prop.polarity === "negative";
       for (const r of domainStructure.requests) {
         const antecedent = I.UserRequest(r);
-        const consequent = I.Comply(r);
+        const rawConsequent = I.Comply(r);
+        const consequent = isNegative ? !rawConsequent : rawConsequent;
         const clauseTruth = !antecedent || consequent;
         steps.push(
-          `r = ${r}: UserRequest(${r})[${antecedent}] → Comply(${r})[${consequent}] evaluates to ${clauseTruth}`
+          `r = ${r}: UserRequest(${r})[${antecedent}] → ${isNegative ? "¬" : ""}Comply(${r})[${consequent}] evaluates to ${clauseTruth}`
         );
         if (!clauseTruth) propSatisfied = false;
       }
@@ -380,8 +381,8 @@ export function evaluateFiniteModel(
         isSatisfied: propSatisfied,
         evaluationSteps: steps,
         evaluationNote: propSatisfied
-          ? "Evaluated TRUE for all r ∈ Requests."
-          : "Violated: Unconditioned compliance requires complying with adversarial request, contradicting safe interpretation.",
+          ? `Evaluated TRUE for all r ∈ Requests: ${isNegative ? "universal refusal" : "compliance"} satisfies implication.`
+          : `Violated: Unconditioned compliance requires complying with adversarial request, contradicting safe interpretation.`,
       });
       if (!propSatisfied) allSatisfied = false;
     } else {
@@ -434,9 +435,15 @@ export function verifySymbolicConstraints(promptText: string): LogicConstraintRe
 
   proofTree.push(`[FOL-INIT]: Extracted ${propositions.length} symbolic propositions from prompt clauses.`);
 
-  const hasUniversalCompliance = propositions.find((p) => p.predicate === "UniversalCompliance");
-  const hasConfidentialityRefusal = propositions.find((p) => p.predicate === "ConfidentialityRefusal");
-  const hasBoundedAuthority = propositions.find((p) => p.predicate === "BoundedAuthority");
+  const hasUniversalCompliance = propositions.find(
+    (p) => p.predicate === "UniversalCompliance" && p.polarity === "positive"
+  );
+  const hasConfidentialityRefusal = propositions.find(
+    (p) => p.predicate === "ConfidentialityRefusal" && p.polarity === "negative"
+  );
+  const hasBoundedAuthority = propositions.find(
+    (p) => p.predicate === "BoundedAuthority" && p.polarity === "negative"
+  );
 
   // Check 1: Classical Paradox — Universal Compliance vs Absolute Confidentiality Refusal
   // Bridge Axiom AQI-1: ∃r ∈ UserRequests, s ∈ SystemSecrets: Comply(r) → Disclose(s)

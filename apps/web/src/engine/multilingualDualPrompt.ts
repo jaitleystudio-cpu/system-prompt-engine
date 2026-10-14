@@ -326,6 +326,75 @@ export function quantitiesMatch(a: CategorizedQuantity, b: CategorizedQuantity):
   return false;
 }
 
+export interface BoundNumericRequirement {
+  id: string;
+  rawClause: string;
+  subjectDescriptor: string;
+  subjectTokens: string[];
+  quantity: CategorizedQuantity;
+  operator: string;
+}
+
+const NUMERIC_STOP_WORDS = new Set([
+  "a", "an", "the", "must", "not", "be", "is", "are", "to", "of", "in", "for", "and", "or",
+  "by", "with", "at", "from", "should", "shall", "will", "can", "as", "that", "this", "it"
+]);
+
+export function extractBoundNumericRequirements(text: string): BoundNumericRequirement[] {
+  const quantities = extractCategorizedQuantities(text);
+  const requirements: BoundNumericRequirement[] = [];
+  let reqCounter = 1;
+
+  for (const q of quantities) {
+    const rawNum = q.raw;
+    const clause = q.clause;
+    const cleaned = clause.replace(rawNum, " ");
+    const subjectTokens = Array.from(
+      new Set(
+        cleaned
+          .toLowerCase()
+          .replace(/[^\p{L}\p{N}\s]/gu, " ")
+          .split(/\s+/)
+          .filter((t) => t.length >= 2 && !NUMERIC_STOP_WORDS.has(t))
+      )
+    );
+
+    const operatorMatch = clause.match(
+      /\b(up\s+to|limit|threshold|exceed|allow|maximum|max|minimum|min|ceiling|cap|budget|amount|funds?|payout|transfer|transfers?|retention|retain|wait|timeout|delay|after|within|at\s+least|at\s+most|below|above)\b/i
+    );
+    const operator = operatorMatch ? operatorMatch[0].toLowerCase() : "constraint";
+
+    const subjectDescriptor =
+      cleaned
+        .replace(/[:.\-—–\s]+$/, "")
+        .replace(/^[:.\-—–\s]+/, "")
+        .trim()
+        .slice(0, 60) || q.category;
+
+    requirements.push({
+      id: `REQ-NUM-${reqCounter++}`,
+      rawClause: clause,
+      subjectDescriptor,
+      subjectTokens,
+      quantity: q,
+      operator,
+    });
+  }
+
+  return requirements;
+}
+
+export function computeSubjectMatch(srcTokens: string[], opTokens: string[]): number {
+  if (srcTokens.length === 0 && opTokens.length === 0) return 1.0;
+  if (srcTokens.length === 0 || opTokens.length === 0) return 0.0;
+  const common = srcTokens.filter((t) => opTokens.includes(t));
+  if (common.length === 0) return 0.0;
+  const allTokens = new Set([...srcTokens, ...opTokens]);
+  const jaccard = common.length / allTokens.size;
+  const coverage = common.length / srcTokens.length;
+  return (jaccard + coverage) / 2;
+}
+
 /**
  * Strips quoted reference sections, user request echoes, markdown blockquotes, and labeled source material
  * so that only active, operative instructions are evaluated for constraint preservation.
@@ -497,32 +566,84 @@ export function evaluateIntentFidelity(
     }
   }
 
-  // 2. Numerical & Threshold Invariant Mutation Detection
-  const sourceQuantities = extractCategorizedQuantities(cleanSource);
-  const operativeQuantities = extractCategorizedQuantities(operativeTarget);
+  // 2. Requirement-Bound Numerical & Threshold Invariant Mutation Detection
+  const sourceBoundReqs = extractBoundNumericRequirements(cleanSource);
+  const operativeBoundReqs = extractBoundNumericRequirements(operativeTarget);
+  const flaggedOpQuantities = new Set<CategorizedQuantity>();
 
-  for (const sq of sourceQuantities) {
-    // Check whether operative instructions preserve this exact quantity in the same category
-    const matchingInOperative = operativeQuantities.filter((oq) => quantitiesMatch(sq, oq));
-
-    // Look for rogue divergent quantities in operativeTarget in the same category that do NOT match any source quantity
-    const rogueDivergentInOperative = operativeQuantities.filter(
-      (oq) => oq.category === sq.category && !sourceQuantities.some((s) => quantitiesMatch(s, oq))
+  for (const srcReq of sourceBoundReqs) {
+    const sameCatOps = operativeBoundReqs.filter(
+      (op) => op.quantity.category === srcReq.quantity.category
     );
 
-    if (rogueDivergentInOperative.length > 0) {
-      for (const divQ of rogueDivergentInOperative) {
-        // Check if the clause uses this divergent number in an active/authorizing capacity
-        const isOperativeThreshold =
-          /(?:up\s+to|limit|threshold|exceed|allow|maximum|ceiling|authorize|permit|spend|budget|cap|amount|funds?|payout|transfer|transfers?|retention|retain|wait|timeout|delay|after|within)\b/i.test(
-            divQ.clause
-          );
-        if (matchingInOperative.length === 0 || isOperativeThreshold) {
-          const msg = `Numerical invariant mutated: Source specifies '${sq.raw}' (${sq.category}), but operative instructions authorize divergent threshold: '${divQ.raw}' in "${divQ.clause.trim().slice(0, 80)}"`;
-          if (!numericalMismatches.includes(msg)) {
-            numericalMismatches.push(msg);
-          }
+    if (sameCatOps.length === 0) {
+      numericalMismatches.push(
+        `Numerical requirement omitted: Source specifies '${srcReq.quantity.raw}' (${srcReq.quantity.category}) for requirement "${srcReq.subjectDescriptor}", but operative instructions omit all quantities in this category.`
+      );
+      continue;
+    }
+
+    // Rank candidate operative clauses by subject / requirement match score
+    const scoredCandidates = sameCatOps
+      .map((op) => ({
+        op,
+        score: computeSubjectMatch(srcReq.subjectTokens, op.subjectTokens),
+      }))
+      .sort((a, b) => b.score - a.score);
+
+    const bestCandidate = scoredCandidates[0];
+
+    // If an operative requirement with a matching subject context is found (score >= 0.35)
+    if (bestCandidate && bestCandidate.score >= 0.35) {
+      if (!quantitiesMatch(srcReq.quantity, bestCandidate.op.quantity)) {
+        flaggedOpQuantities.add(bestCandidate.op.quantity);
+        const msg = `Numerical constraint reassigned: Requirement "${srcReq.subjectDescriptor}" specifies '${srcReq.quantity.raw}' (${srcReq.quantity.category}), but operative instruction assigns divergent value: '${bestCandidate.op.quantity.raw}' in "${bestCandidate.op.rawClause.trim().slice(0, 80)}"`;
+        if (!numericalMismatches.includes(msg)) {
+          numericalMismatches.push(msg);
         }
+      }
+    } else {
+      // No specific requirement clause matched closely; verify if this exact quantity exists anywhere in the operative target
+      const exactExists = sameCatOps.some((op) => quantitiesMatch(srcReq.quantity, op.quantity));
+      if (!exactExists) {
+        const msg = `Numerical invariant mutated: Source specifies '${srcReq.quantity.raw}' (${srcReq.quantity.category}) for "${srcReq.subjectDescriptor}", but no matching value exists in operative instructions.`;
+        if (!numericalMismatches.includes(msg)) {
+          numericalMismatches.push(msg);
+        }
+      }
+    }
+  }
+
+  // Check for unauthorized novel operative thresholds not grounded in any source requirement
+  for (const opReq of operativeBoundReqs) {
+    if (flaggedOpQuantities.has(opReq.quantity)) continue;
+    const matchesAnySource = sourceBoundReqs.some((src) => quantitiesMatch(src.quantity, opReq.quantity));
+    if (!matchesAnySource) {
+      const isOperativeThreshold =
+        /(?:up\s+to|limit|threshold|exceed|allow|maximum|max|minimum|min|ceiling|cap|budget|amount|funds?|payout|transfer|transfers?|retention|retain|wait|timeout|delay|after|within|at\s+least|at\s+most)\b/i.test(
+          opReq.rawClause
+        );
+      if (isOperativeThreshold) {
+        const msg = `Unauthorized threshold introduced: Operative instructions authorize ungrounded '${opReq.quantity.raw}' (${opReq.quantity.category}) in "${opReq.rawClause.trim().slice(0, 80)}"`;
+        if (!numericalMismatches.includes(msg)) {
+          numericalMismatches.push(msg);
+        }
+      }
+    }
+  }
+
+  // Collect tokens that belong to verified source quantities that were preserved/converted
+  const verifiedQuantityTokens = new Set<string>();
+  for (const srcReq of sourceBoundReqs) {
+    const hasMatch = operativeBoundReqs.some((op) => quantitiesMatch(srcReq.quantity, op.quantity));
+    if (hasMatch) {
+      const qTokens = srcReq.quantity.raw
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, " ")
+        .split(/\s+/)
+        .filter((t) => t.length >= 2);
+      for (const qt of qTokens) {
+        verifiedQuantityTokens.add(qt);
       }
     }
   }
@@ -550,7 +671,9 @@ export function evaluateIntentFidelity(
       continue;
     }
 
-    const preservedInClause = clauseTokens.filter((t) => operativeLower.includes(t));
+    const preservedInClause = clauseTokens.filter(
+      (t) => operativeLower.includes(t) || verifiedQuantityTokens.has(t)
+    );
     const clauseRatio = preservedInClause.length / clauseTokens.length;
 
     if (clauseRatio >= 0.4) {
@@ -575,7 +698,7 @@ export function evaluateIntentFidelity(
 
   const preservedEntities: string[] = [];
   for (const token of sourceTokens) {
-    if (operativeLower.includes(token)) {
+    if (operativeLower.includes(token) || verifiedQuantityTokens.has(token)) {
       preservedEntities.push(token);
     }
   }

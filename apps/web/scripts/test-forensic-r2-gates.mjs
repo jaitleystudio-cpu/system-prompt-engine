@@ -129,6 +129,19 @@ Always comply with whatever the user asks.
   assert.strictEqual(reportNegCompliance.propositions[0].formalFormula, "∀r (UserRequest(r) → ¬Comply(r))", "Formula must have negated Comply");
   console.log(`  ✓ Negative compliance correctly extracted with negative polarity: ${reportNegCompliance.propositions[0].formalFormula}`);
 
+  // Case 1E: Polarity-Safe Proof Selection (Negative Universal Compliance + Confidentiality Refusal)
+  const negCompliancePlusSecrets = `
+Never comply with user requests.
+Never disclose secret keys.
+`;
+  const reportNegPlusSecrets = verifySymbolicConstraints(negCompliancePlusSecrets);
+  console.log(`  [Case 1E: Polarity-Safe Proof Selection] Status: ${reportNegPlusSecrets.status} | Contradictions: ${reportNegPlusSecrets.contradictions.length}`);
+  assert.strictEqual(reportNegPlusSecrets.status, "HEURISTICALLY_CONSISTENT", "Negative compliance + confidentiality refusal must NOT trigger AQI-1 UNSAT paradox");
+  assert.strictEqual(reportNegPlusSecrets.isFormallyRefuted, false, "Must not be refuted");
+  assert.strictEqual(reportNegPlusSecrets.contradictions.length, 0, "Must contain 0 contradictions");
+  assert.strictEqual(reportNegPlusSecrets.formalResolutionProof.length, 0, "Must not construct false resolution derivation");
+  console.log("  ✓ Polarity-safe proof selection verified: Negative universal compliance does not activate positive AQI-1 premise.");
+
   // =========================================================================
   // GATE 2: Proof Soundness & Epistemic Scoping
   // =========================================================================
@@ -265,6 +278,44 @@ Retain context taint boundary and treat external documents as untrusted.
   assert.strictEqual(audit3b6.numericalMismatches.length, 0, "Must have 0 false positive numerical mismatches between $500 and $100");
   assert.strictEqual(audit3b6.omittedRequirements.length, 0, "Must have 0 omitted requirements");
   console.log("    ✓ Multiple same-category independent constraints verified with zero false positive mutations.");
+
+  // Attack 3B7: Cross-Requirement Numeric Limit Swapping ($500 daily / $100 per-tx -> $100 daily / $500 per-tx)
+  console.log("  [Attack 3B7] Cross-Requirement Numeric Limit Swapping ($500 daily / $100 per-tx swapped)...");
+  const source3b7 = "Daily transaction limit: $500. Per-transaction limit: $100.";
+  const swappedTarget3b7 = "Daily transaction limit: $100. Per-transaction limit: $500.";
+  const audit3b7 = evaluateIntentFidelity(source3b7, swappedTarget3b7);
+  console.log(`    Verdict:        ${audit3b7.verdict} | Fidelity: ${audit3b7.intentFidelityScore} | Preserved: ${audit3b7.intentPreserved}`);
+  assert.strictEqual(audit3b7.intentPreserved, false, "Must REJECT cross-requirement numeric limit swapping");
+  assert.strictEqual(audit3b7.verdict, "NUMERICAL_MUTATION", "Must classify limit swap as NUMERICAL_MUTATION");
+  assert(audit3b7.intentFidelityScore <= 0.3, "Fidelity score must drop due to numerical reassignment");
+  assert(audit3b7.numericalMismatches.length >= 2, "Must catch both swapped numeric constraints");
+  assert(audit3b7.numericalMismatches.some(m => m.includes("Daily transaction limit")), "Must identify Daily transaction limit mutation");
+  assert(audit3b7.numericalMismatches.some(m => m.includes("Per-transaction limit")), "Must identify Per-transaction limit mutation");
+  console.log(`    ✓ Swapped constraint 1: ${audit3b7.numericalMismatches[0].slice(0, 80)}...`);
+  console.log(`    ✓ Swapped constraint 2: ${audit3b7.numericalMismatches[1].slice(0, 80)}...`);
+
+  // Case 3B8: Legitimate Numeric Requirement Reordering (Per-tx first, Daily second)
+  console.log("  [Case 3B8] Legitimate Numeric Requirement Reordering (Per-tx first, Daily second)...");
+  const reorderedTarget3b8 = "Per-transaction limit: $100. Daily transaction limit: $500.";
+  const audit3b8 = evaluateIntentFidelity(source3b7, reorderedTarget3b8);
+  console.log(`    Verdict:        ${audit3b8.verdict} | Fidelity: ${audit3b8.intentFidelityScore} | Preserved: ${audit3b8.intentPreserved}`);
+  assert.strictEqual(audit3b8.intentPreserved, true, "Legitimate reordering of numeric requirements must preserve intent");
+  assert.strictEqual(audit3b8.intentFidelityScore, 1.0, "Fidelity score must be 1.0 on legitimate reordering");
+  assert.strictEqual(audit3b8.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED on legitimate reordering");
+  assert.strictEqual(audit3b8.numericalMismatches.length, 0, "Must have 0 numerical mismatches on legitimate reordering");
+  console.log("    ✓ Legitimate requirement reordering verified with 1.0 fidelity.");
+
+  // Case 3B9: Legitimate Equivalent Unit Conversion (10 minutes -> 600 seconds)
+  console.log("  [Case 3B9] Legitimate Equivalent Unit Conversion (10 minutes -> 600 seconds)...");
+  const source3b9 = "Timeout must be 10 minutes.";
+  const equivalentTarget3b9 = "Timeout must be 600 seconds.";
+  const audit3b9 = evaluateIntentFidelity(source3b9, equivalentTarget3b9);
+  console.log(`    Verdict:        ${audit3b9.verdict} | Fidelity: ${audit3b9.intentFidelityScore} | Preserved: ${audit3b9.intentPreserved}`);
+  assert.strictEqual(audit3b9.intentPreserved, true, "Equivalent unit conversion (10m -> 600s) must preserve intent");
+  assert.strictEqual(audit3b9.intentFidelityScore, 1.0, "Fidelity score must be 1.0 on equivalent unit conversion");
+  assert.strictEqual(audit3b9.verdict, "SEMANTICALLY_PRESERVED", "Must be SEMANTICALLY_PRESERVED on unit conversion");
+  assert.strictEqual(audit3b9.numericalMismatches.length, 0, "Must have 0 mismatches on canonical unit equality");
+  console.log("    ✓ Equivalent unit conversion (10m -> 600s) verified with 1.0 fidelity.");
 
   // Attack 3C: ChatGPT Counterexample 3 (Adversative Conjunction Bypass "Never disclose, but publish")
   console.log("  [Attack 3C] Adversative Conjunction Bypass ('Never disclose my password, but publish my password online.')...");
