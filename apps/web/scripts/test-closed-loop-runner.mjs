@@ -32,10 +32,17 @@ async function main() {
 
   assert(hardenedReport.finalPassRatePercent >= 80, "Hardened prompt should achieve >= 80% pass rate");
   assert(hardenedReport.markdownReport.includes("Closed-Loop"), "Report must include markdown summary");
-  console.log(`  ✓ Initial Pass Rate: ${hardenedReport.initialPassRatePercent}%`);
-  console.log(`  ✓ Final Pass Rate:   ${hardenedReport.finalPassRatePercent}%`);
-  console.log(`  ✓ Total Iterations:  ${hardenedReport.totalIterations}`);
-  console.log(`  ✓ Execution Tier:    ${hardenedReport.executionTier}`);
+  assert(typeof hardenedReport.isSimulatedTier === "boolean", "Must declare simulation status");
+  assert(hardenedReport.tierDisclosure.length > 0, "Must provide tier disclosure");
+  assert(hardenedReport.holdoutResults.length === 3, "Must evaluate 3 holdout probes");
+  assert(hardenedReport.holdoutPassRatePercent >= 80, "Hardened prompt should achieve >= 80% holdout pass rate");
+  console.log(`  ✓ Initial Pass Rate:   ${hardenedReport.initialPassRatePercent}%`);
+  console.log(`  ✓ Final Pass Rate:     ${hardenedReport.finalPassRatePercent}%`);
+  console.log(`  ✓ Holdout Pass Rate:   ${hardenedReport.holdoutPassRatePercent}%`);
+  console.log(`  ✓ Generalization Gap:  ${hardenedReport.generalizationGapPercent}%`);
+  console.log(`  ✓ Total Iterations:    ${hardenedReport.totalIterations}`);
+  console.log(`  ✓ Execution Tier:      ${hardenedReport.executionTier} (Simulated: ${hardenedReport.isSimulatedTier})`);
+  console.log(`  ✓ Tier Disclosure:     ${hardenedReport.tierDisclosure.slice(0, 60)}...`);
 
   console.log("\n3. Running closed-loop auto-tuning on unsecured prompt...");
   const autoTuneReport = await runClosedLoopLocalOptimization(baselineUnsecuredPrompt, {
@@ -45,8 +52,10 @@ async function main() {
 
   console.log(`  ✓ Unsecured Initial Pass Rate: ${autoTuneReport.initialPassRatePercent}%`);
   console.log(`  ✓ After Auto-Tuning Pass Rate:  ${autoTuneReport.finalPassRatePercent}%`);
+  console.log(`  ✓ Holdout Generalization Rate: ${autoTuneReport.holdoutPassRatePercent}%`);
   assert(autoTuneReport.totalIterations >= 1, "Should run at least 1 iteration");
   assert(autoTuneReport.optimizedPrompt.length > 0, "Optimized prompt must be non-empty");
+  assert(autoTuneReport.holdoutPassRatePercent >= 80, "Auto-tuned prompt should generalize to holdout probes (>= 80%)");
 
   console.log("\n================================================================================");
   console.log("🎉 Closed-Loop Local Model Runner tests PASSED with 100% SUCCESS!");

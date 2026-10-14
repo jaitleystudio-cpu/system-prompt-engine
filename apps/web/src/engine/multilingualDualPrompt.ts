@@ -71,6 +71,8 @@ export interface PromptLanguageMetrics {
   isTokenCountExact: boolean;
   costPer1kRuns: number;
   intentPreserved: boolean;
+  intentFidelityScore: number; // 0.0 - 1.0 (empirically calculated lexical & entity preservation)
+  preservedEntities: string[];
 }
 
 export interface DualPromptBundle {
@@ -156,11 +158,64 @@ export function detectLanguage(text: string): SupportedLanguageMeta {
   return SUPPORTED_LANGUAGES.en;
 }
 
-/** Compute measured / estimated tokens and cost */
+/**
+ * Evaluates semantic and entity preservation between the raw user input and a synthesized prompt.
+ * Extracts key domain entities, numbers, and constraints from the source input and checks their preservation in the target prompt.
+ */
+export function evaluateIntentFidelity(
+  sourceInput: string,
+  targetPrompt: string
+): { intentPreserved: boolean; intentFidelityScore: number; preservedEntities: string[] } {
+  if (!sourceInput || !sourceInput.trim()) {
+    return { intentPreserved: true, intentFidelityScore: 1.0, preservedEntities: [] };
+  }
+
+  // Extract alphanumeric tokens of length >= 3
+  const sourceTokens = Array.from(
+    new Set(
+      sourceInput
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, " ")
+        .split(/\s+/)
+        .filter((t) => t.length >= 3)
+    )
+  );
+
+  if (sourceTokens.length === 0) {
+    return { intentPreserved: true, intentFidelityScore: 1.0, preservedEntities: [] };
+  }
+
+  const targetLower = targetPrompt.toLowerCase();
+  const preservedEntities: string[] = [];
+
+  for (const token of sourceTokens) {
+    if (targetLower.includes(token)) {
+      preservedEntities.push(token);
+    }
+  }
+
+  // Check if source is verbatim referenced in prompt (e.g. User Objective / Raw Input Reference / protected intent)
+  const isVerbatimReferenced = targetPrompt.includes(sourceInput.trim());
+  const fidelityScore = isVerbatimReferenced
+    ? 1.0
+    : Number((preservedEntities.length / sourceTokens.length).toFixed(3));
+
+  // Intent is preserved if either referenced verbatim or >= 60% of significant tokens/entities are retained
+  const intentPreserved = isVerbatimReferenced || fidelityScore >= 0.6;
+
+  return {
+    intentPreserved,
+    intentFidelityScore: fidelityScore,
+    preservedEntities,
+  };
+}
+
+/** Compute measured / estimated tokens, cost, and empirical intent fidelity */
 export function computePromptMetrics(
   prompt: string,
   lang: SupportedLanguageMeta,
   modelId = "claude-sonnet",
+  sourceInput = ""
 ): PromptLanguageMetrics {
   const charCount = prompt.length;
   const wordCount = prompt.trim() ? prompt.trim().split(/\s+/).length : 0;
@@ -172,13 +227,17 @@ export function computePromptMetrics(
   // Cost for 1,000 prompt invocations
   const costPer1kRuns = (tokens * 1000 * pricing.inputCostPer1M) / 1_000_000;
 
+  const fidelity = evaluateIntentFidelity(sourceInput, prompt);
+
   return {
     charCount,
     wordCount,
     estimatedTokens: tokens,
     isTokenCountExact: false, // Disclose that this is calibrated estimation
     costPer1kRuns: Number(costPer1kRuns.toFixed(4)),
-    intentPreserved: true,
+    intentPreserved: fidelity.intentPreserved,
+    intentFidelityScore: fidelity.intentFidelityScore,
+    preservedEntities: fidelity.preservedEntities,
   };
 }
 
@@ -585,9 +644,9 @@ You are a bilingual domain specialist executing the following objective with dua
 ${cleanInput}`;
   }
 
-  const nativeMetrics = computePromptMetrics(nativePrompt, lang, selectedModelId);
-  const englishMetrics = computePromptMetrics(englishPrompt, SUPPORTED_LANGUAGES.en, selectedModelId);
-  const hybridMetrics = computePromptMetrics(hybridPrompt, SUPPORTED_LANGUAGES.en, selectedModelId);
+  const nativeMetrics = computePromptMetrics(nativePrompt, lang, selectedModelId, cleanInput);
+  const englishMetrics = computePromptMetrics(englishPrompt, SUPPORTED_LANGUAGES.en, selectedModelId, cleanInput);
+  const hybridMetrics = computePromptMetrics(hybridPrompt, SUPPORTED_LANGUAGES.en, selectedModelId, cleanInput);
 
   const tokenSavings = Math.round(
     ((nativeMetrics.estimatedTokens - englishMetrics.estimatedTokens) / Math.max(1, nativeMetrics.estimatedTokens)) * 100

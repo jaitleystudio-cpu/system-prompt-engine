@@ -123,10 +123,12 @@ assert(bundle.nativePrompt.includes("వ్యాపార నమూనా") || 
 assert(bundle.englishPrompt.includes("# System Role & Objective"), "English prompt contains structured enterprise role");
 assert(bundle.englishPrompt.includes("women's clothing retail boutique"), "English prompt correctly captures business intent");
 
-// Intent preservation
-assert(bundle.nativeMetrics.intentPreserved === true, "Native version preserves 100% of user intention");
-assert(bundle.englishMetrics.intentPreserved === true, "Optimized English version verified 100% semantic equivalence");
-assert(bundle.hybridMetrics.intentPreserved === true, "Hybrid version verified 100% semantic equivalence");
+// Intent preservation & empirical fidelity calculation
+assert(bundle.nativeMetrics.intentPreserved === true, "Native version preserves user intention");
+assert(bundle.englishMetrics.intentPreserved === true, "Optimized English version verified semantic equivalence");
+assert(bundle.hybridMetrics.intentPreserved === true, "Hybrid version verified semantic equivalence");
+assert(bundle.nativeMetrics.intentFidelityScore >= 0.8, `Empirical intent fidelity score computed (${bundle.nativeMetrics.intentFidelityScore * 100}%)`);
+assert(Array.isArray(bundle.nativeMetrics.preservedEntities), "Preserved entities returned as array");
 
 // Estimation flag honesty
 assert(bundle.nativeMetrics.isTokenCountExact === false, "Honest disclosure: Token count labeled as Estimated");

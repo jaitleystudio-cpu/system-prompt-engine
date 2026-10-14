@@ -760,6 +760,8 @@ try {
           const outData = {
             framework: frameworkId,
             organization: orgName,
+            auditType: compAudit.auditType,
+            regulatoryDisclaimer: compAudit.regulatoryDisclaimer,
             complianceScore: compAudit.complianceScore,
             totalControls: compAudit.totalControls,
             passedControls: compAudit.passedControls,
@@ -909,7 +911,9 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
       console.log(`  Final Pass Rate:   ${report.finalPassRatePercent}%`);
       console.log(`  Total Iterations:  ${report.totalIterations}`);
       console.log(`  Converged:         ${report.converged ? green('YES (100% Passed)') : yellow('NO')}`);
-      console.log(`  Execution Tier:    ${cyan(report.executionTier)}`);
+      console.log(`  Execution Tier:    ${cyan(report.executionTier)} (${report.isSimulatedTier ? 'Rule-Guided Simulation' : 'Live Neural Weights'})`);
+      console.log(`  Tier Disclosure:   ${gray(report.tierDisclosure)}`);
+      console.log(`  Holdout Pass Rate: ${report.holdoutPassRatePercent}% (Generalization Gap: ${report.generalizationGapPercent}%)`);
 
       if (flags.out) {
         writeFileSync(flags.out, report.markdownReport, 'utf8');

@@ -43,6 +43,8 @@ export interface ComplianceAuditResult {
   evaluations: ControlEvaluationResult[];
   auditDigest: string;
   timestamp: string;
+  auditType: 'STATIC_PROMPT_INVARIANT_COVERAGE';
+  regulatoryDisclaimer: string;
 }
 
 export interface ComplianceImmunizationResult {
@@ -264,7 +266,9 @@ export async function auditComplianceFramework(
     isFullyCompliant: passedCount === total,
     evaluations,
     auditDigest,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    auditType: 'STATIC_PROMPT_INVARIANT_COVERAGE',
+    regulatoryDisclaimer: 'Evaluates prompt-level control directives aligned with regulatory frameworks; does not constitute third-party legal or organizational compliance certification.'
   };
 }
 
