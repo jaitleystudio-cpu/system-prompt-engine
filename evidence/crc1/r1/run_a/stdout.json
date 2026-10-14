@@ -1,0 +1,91 @@
+{
+  "primary": {
+    "bonf10": {
+      "abstain_all": 798,
+      "coverage_ratio_vs_oracle": 0.103194,
+      "cp95": [
+        0.0,
+        0.003682
+      ],
+      "mean_coverage": 0.045253,
+      "mean_risk": 0.010608,
+      "n": 1000,
+      "violation_rate": 0.0,
+      "violations": 0
+    },
+    "ltt_mc": {
+      "abstain_all": 576,
+      "coverage_ratio_vs_oracle": 0.355299,
+      "cp95": [
+        0.034735,
+        0.062013
+      ],
+      "mean_coverage": 0.155809,
+      "mean_risk": 0.034786,
+      "n": 1000,
+      "violation_rate": 0.047,
+      "violations": 47
+    },
+    "ltt_r0": {
+      "abstain_all": 308,
+      "coverage_ratio_vs_oracle": 0.473039,
+      "cp95": [
+        0.032149,
+        0.05862
+      ],
+      "mean_coverage": 0.207441,
+      "mean_risk": 0.047035,
+      "n": 1000,
+      "violation_rate": 0.044,
+      "violations": 44
+    },
+    "n_cal": 500,
+    "n_min": 150,
+    "naive_cal": {
+      "abstain_all": 7,
+      "coverage_ratio_vs_oracle": 0.994543,
+      "cp95": [
+        0.472538,
+        0.535438
+      ],
+      "mean_coverage": 0.436135,
+      "mean_risk": 0.098542,
+      "n": 1000,
+      "violation_rate": 0.504,
+      "violations": 504
+    },
+    "oracle": {
+      "coverage": 0.438528,
+      "risk": 0.098301,
+      "t": 0.9602
+    },
+    "paired_ltt_mc_minus_sgr": {
+      "lb95_1s": 0.056301,
+      "losses": 85,
+      "mean": 0.064094,
+      "sd": 0.149806,
+      "ub95_1s": 0.071887,
+      "wins": 420
+    },
+    "sgr": {
+      "abstain_all": 652,
+      "coverage_ratio_vs_oracle": 0.209142,
+      "cp95": [
+        0.000619,
+        0.008742
+      ],
+      "mean_coverage": 0.091715,
+      "mean_risk": 0.020967,
+      "n": 1000,
+      "violation_rate": 0.003,
+      "violations": 3
+    }
+  },
+  "verdicts": {
+    "H1_validity": "SUPPORTED",
+    "H2_utility": "NOT_PROVEN",
+    "H3_beats_sgr": "SUPPORTED",
+    "overall": "NOT_PROVEN",
+    "sgr_valid_cp95_upper_le_delta": true
+  }
+}

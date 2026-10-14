@@ -1,0 +1,2 @@
+{'M1_upper_tail_pvalue': 'KILLED', 'M2_no_stop_at_failure': 'KILLED', 'M3_start_ignores_nmin': 'KILLED', 'M4_sgr_no_bonferroni': 'KILLED', 'M5_ltt_picks_strictest': 'KILLED', 'M6_bonf_picks_strictest': 'KILLED', 'M7_wrong_alpha': 'KILLED', 'M8_sgr_wrong_direction': 'KILLED'}
+MUTATION GATE PASS 8/8 killed

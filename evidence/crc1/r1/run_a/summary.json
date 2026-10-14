@@ -1,0 +1,343 @@
+{
+  "alpha": 0.1,
+  "cost_inr": 0,
+  "delta": 0.1,
+  "experiment": "CRC-1 R1",
+  "exploratory": {
+    "E1_ncal100": {
+      "bonf10": {
+        "abstain_all": 996,
+        "coverage_ratio_vs_oracle": 0.004604,
+        "cp95": [
+          0.001091,
+          0.01021
+        ],
+        "mean_coverage": 0.002019,
+        "mean_risk": 0.000459,
+        "n": 1000,
+        "violation_rate": 0.004,
+        "violations": 4
+      },
+      "ltt_mc": {
+        "abstain_all": 908,
+        "coverage_ratio_vs_oracle": 0.077532,
+        "cp95": [
+          0.009934,
+          0.027079
+        ],
+        "mean_coverage": 0.034,
+        "mean_risk": 0.007654,
+        "n": 1000,
+        "violation_rate": 0.017,
+        "violations": 17
+      },
+      "ltt_r0": {
+        "abstain_all": 923,
+        "coverage_ratio_vs_oracle": 0.0472,
+        "cp95": [
+          0.001625,
+          0.011629
+        ],
+        "mean_coverage": 0.020698,
+        "mean_risk": 0.004753,
+        "n": 1000,
+        "violation_rate": 0.005,
+        "violations": 5
+      },
+      "n_cal": 100,
+      "n_min": 30,
+      "naive_cal": {
+        "abstain_all": 60,
+        "coverage_ratio_vs_oracle": 1.027445,
+        "cp95": [
+          0.532615,
+          0.595008
+        ],
+        "mean_coverage": 0.450563,
+        "mean_risk": 0.104375,
+        "n": 1000,
+        "violation_rate": 0.564,
+        "violations": 564
+      },
+      "oracle": {
+        "coverage": 0.438528,
+        "risk": 0.098301,
+        "t": 0.9602
+      },
+      "paired_ltt_mc_minus_sgr": {
+        "lb95_1s": 0.0267,
+        "losses": 0,
+        "mean": 0.03216,
+        "sd": 0.104963,
+        "ub95_1s": 0.03762,
+        "wins": 92
+      },
+      "sgr": {
+        "abstain_all": 996,
+        "coverage_ratio_vs_oracle": 0.004196,
+        "cp95": [
+          0.000242,
+          0.007206
+        ],
+        "mean_coverage": 0.00184,
+        "mean_risk": 0.000416,
+        "n": 1000,
+        "violation_rate": 0.002,
+        "violations": 2
+      }
+    },
+    "E2_ncal2000_300seeds": {
+      "bonf10": {
+        "abstain_all": 31,
+        "coverage_ratio_vs_oracle": 0.458073,
+        "cp95": [
+          0.0,
+          0.012221
+        ],
+        "mean_coverage": 0.200878,
+        "mean_risk": 0.047089,
+        "n": 300,
+        "violation_rate": 0.0,
+        "violations": 0
+      },
+      "ltt_mc": {
+        "abstain_all": 26,
+        "coverage_ratio_vs_oracle": 0.787296,
+        "cp95": [
+          0.028251,
+          0.081127
+        ],
+        "mean_coverage": 0.345251,
+        "mean_risk": 0.07697,
+        "n": 300,
+        "violation_rate": 0.05,
+        "violations": 15
+      },
+      "ltt_r0": {
+        "abstain_all": 1,
+        "coverage_ratio_vs_oracle": 0.839786,
+        "cp95": [
+          0.028251,
+          0.081127
+        ],
+        "mean_coverage": 0.368269,
+        "mean_risk": 0.082177,
+        "n": 300,
+        "violation_rate": 0.05,
+        "violations": 15
+      },
+      "n_cal": 2000,
+      "n_min": 600,
+      "naive_cal": {
+        "abstain_all": 0,
+        "coverage_ratio_vs_oracle": 0.995693,
+        "cp95": [
+          0.422242,
+          0.538157
+        ],
+        "mean_coverage": 0.436639,
+        "mean_risk": 0.098024,
+        "n": 300,
+        "violation_rate": 0.48,
+        "violations": 144
+      },
+      "oracle": {
+        "coverage": 0.438528,
+        "risk": 0.098301,
+        "t": 0.9602
+      },
+      "paired_ltt_mc_minus_sgr": {
+        "lb95_1s": 0.030946,
+        "losses": 21,
+        "mean": 0.038732,
+        "sd": 0.081972,
+        "ub95_1s": 0.046517,
+        "wins": 272
+      },
+      "sgr": {
+        "abstain_all": 7,
+        "coverage_ratio_vs_oracle": 0.698974,
+        "cp95": [
+          0.0,
+          0.012221
+        ],
+        "mean_coverage": 0.306519,
+        "mean_risk": 0.068789,
+        "n": 300,
+        "violation_rate": 0.0,
+        "violations": 0
+      }
+    },
+    "E3_shift": {
+      "bonf10": {
+        "abstain_all": 798,
+        "coverage_ratio_vs_oracle": 0.102709,
+        "cp95": [
+          0.0,
+          0.003682
+        ],
+        "mean_coverage": 0.025643,
+        "mean_risk": 0.012264,
+        "n": 1000,
+        "violation_rate": 0.0,
+        "violations": 0
+      },
+      "ltt_mc": {
+        "abstain_all": 576,
+        "coverage_ratio_vs_oracle": 0.402271,
+        "cp95": [
+          0.102351,
+          0.143904
+        ],
+        "mean_coverage": 0.100435,
+        "mean_risk": 0.040383,
+        "n": 1000,
+        "violation_rate": 0.122,
+        "violations": 122
+      },
+      "ltt_r0": {
+        "abstain_all": 308,
+        "coverage_ratio_vs_oracle": 0.513861,
+        "cp95": [
+          0.092198,
+          0.132126
+        ],
+        "mean_coverage": 0.128296,
+        "mean_risk": 0.054533,
+        "n": 1000,
+        "violation_rate": 0.111,
+        "violations": 111
+      },
+      "n_cal": 500,
+      "n_min": 150,
+      "naive_cal": {
+        "abstain_all": 7,
+        "coverage_ratio_vs_oracle": 1.188822,
+        "cp95": [
+          0.700304,
+          0.756341
+        ],
+        "mean_coverage": 0.296813,
+        "mean_risk": 0.114199,
+        "n": 1000,
+        "violation_rate": 0.729,
+        "violations": 729
+      },
+      "oracle": {
+        "coverage": 0.24967,
+        "risk": 0.099611,
+        "t": 0.9726
+      },
+      "paired_ltt_mc_minus_sgr": {
+        "lb95_1s": 0.040781,
+        "losses": 85,
+        "mean": 0.045719,
+        "sd": 0.094936,
+        "ub95_1s": 0.050658,
+        "wins": 420
+      },
+      "sgr": {
+        "abstain_all": 652,
+        "coverage_ratio_vs_oracle": 0.219152,
+        "cp95": [
+          0.009172,
+          0.025853
+        ],
+        "mean_coverage": 0.054716,
+        "mean_risk": 0.024309,
+        "n": 1000,
+        "violation_rate": 0.016,
+        "violations": 16
+      }
+    }
+  },
+  "primary": {
+    "bonf10": {
+      "abstain_all": 798,
+      "coverage_ratio_vs_oracle": 0.103194,
+      "cp95": [
+        0.0,
+        0.003682
+      ],
+      "mean_coverage": 0.045253,
+      "mean_risk": 0.010608,
+      "n": 1000,
+      "violation_rate": 0.0,
+      "violations": 0
+    },
+    "ltt_mc": {
+      "abstain_all": 576,
+      "coverage_ratio_vs_oracle": 0.355299,
+      "cp95": [
+        0.034735,
+        0.062013
+      ],
+      "mean_coverage": 0.155809,
+      "mean_risk": 0.034786,
+      "n": 1000,
+      "violation_rate": 0.047,
+      "violations": 47
+    },
+    "ltt_r0": {
+      "abstain_all": 308,
+      "coverage_ratio_vs_oracle": 0.473039,
+      "cp95": [
+        0.032149,
+        0.05862
+      ],
+      "mean_coverage": 0.207441,
+      "mean_risk": 0.047035,
+      "n": 1000,
+      "violation_rate": 0.044,
+      "violations": 44
+    },
+    "n_cal": 500,
+    "n_min": 150,
+    "naive_cal": {
+      "abstain_all": 7,
+      "coverage_ratio_vs_oracle": 0.994543,
+      "cp95": [
+        0.472538,
+        0.535438
+      ],
+      "mean_coverage": 0.436135,
+      "mean_risk": 0.098542,
+      "n": 1000,
+      "violation_rate": 0.504,
+      "violations": 504
+    },
+    "oracle": {
+      "coverage": 0.438528,
+      "risk": 0.098301,
+      "t": 0.9602
+    },
+    "paired_ltt_mc_minus_sgr": {
+      "lb95_1s": 0.056301,
+      "losses": 85,
+      "mean": 0.064094,
+      "sd": 0.149806,
+      "ub95_1s": 0.071887,
+      "wins": 420
+    },
+    "sgr": {
+      "abstain_all": 652,
+      "coverage_ratio_vs_oracle": 0.209142,
+      "cp95": [
+        0.000619,
+        0.008742
+      ],
+      "mean_coverage": 0.091715,
+      "mean_risk": 0.020967,
+      "n": 1000,
+      "violation_rate": 0.003,
+      "violations": 3
+    }
+  },
+  "verdicts": {
+    "H1_validity": "SUPPORTED",
+    "H2_utility": "NOT_PROVEN",
+    "H3_beats_sgr": "SUPPORTED",
+    "overall": "NOT_PROVEN",
+    "sgr_valid_cp95_upper_le_delta": true
+  }
+}
