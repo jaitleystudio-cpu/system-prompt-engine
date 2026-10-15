@@ -114,25 +114,166 @@ html[data-theme="light"] .spe-hero .hero-copy > .hero-kicker {
   margin: 0 0 30px;
 }
 .spe-hero .hero-start {
-  font:
-    600 14px/1.2 var(--spe-font-body, sans-serif);
-  padding: 18px 24px;
-  background: #f4f1ea;
-  color: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 14px/1.2 var(--spe-font-body, sans-serif);
+  letter-spacing: -0.01em;
+  padding: 13px 18px 13px 22px;
+  background: linear-gradient(
+    135deg,
+    #FFF9E6 0%,
+    #FCE082 14%,
+    #F3B328 35%,
+    #FFF5C0 50%,
+    #DF9818 68%,
+    #AB6E02 85%,
+    #734300 100%
+  ) !important;
+  color: #1A0D00 !important;
+  border: 1.5px solid rgba(255, 238, 168, 0.95) !important;
   border-radius: 9999px;
-  gap: 32px;
-  box-shadow: 0 14px 34px -6px rgba(0, 0, 0, 0.65), 0 0 24px rgba(217, 197, 154, 0.2), inset 0 1px 0 #ffffff;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, box-shadow 0.25s ease;
+  gap: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.4),
+    0 2px 3px 0 rgba(255, 255, 255, 0.95) inset,
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 -2px 3px 0 rgba(85, 48, 0, 0.55) inset,
+    0 -1px 1px 0 rgba(40, 20, 0, 0.65) inset,
+    0 8px 26px -2px rgba(245, 186, 28, 0.5),
+    0 18px 38px -6px rgba(0, 0, 0, 0.65) !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, filter 0.28s ease;
+  cursor: pointer;
+  text-decoration: none;
+  z-index: 2;
 }
+
+/* Continuous Living Treasury Shimmer Light Sweep */
+.spe-hero .hero-start::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(255, 255, 255, 0.88) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 100%
+  );
+  transform: translateX(-150%) skewX(-25deg);
+  animation: speTreasuryGoldSweep 4.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes speTreasuryGoldSweep {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+  }
+  30%, 100% {
+    transform: translateX(180%) skewX(-25deg);
+  }
+}
+
 .spe-hero .hero-start:hover {
-  background: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 18px 40px -6px rgba(0, 0, 0, 0.75), 0 0 32px rgba(217, 197, 154, 0.32), inset 0 1px 0 #ffffff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 0 0 1.5px rgba(255, 240, 175, 0.95),
+    0 2px 4px 0 rgba(255, 255, 255, 1) inset,
+    0 -2px 4px 0 rgba(85, 48, 0, 0.65) inset,
+    0 0 38px -2px rgba(250, 204, 21, 0.72),
+    0 22px 45px -6px rgba(0, 0, 0, 0.8) !important;
+  filter: brightness(1.04);
 }
+
+.spe-hero .hero-start:active {
+  transform: translateY(1px) scale(0.985);
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.5),
+    0 2px 4px 0 rgba(0, 0, 0, 0.4) inset,
+    0 4px 14px -2px rgba(234, 179, 8, 0.4) !important;
+}
+
 .spe-hero .hero-start:focus-visible {
-  outline: 2px solid #91b2d7;
-  outline-offset: 5px;
+  outline: 2px solid #FFE27A;
+  outline-offset: 4px;
+}
+
+/* Treasury Diamond Star Sparkle */
+.spe-hero .hero-start .spe-gold-sparkle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #613B00;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.6));
+  animation: speSparkleGlint 3.2s ease-in-out infinite;
+  z-index: 2;
+  position: relative;
+  flex-shrink: 0;
+}
+
+@keyframes speSparkleGlint {
+  0%, 100% {
+    transform: scale(0.9) rotate(0deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.22) rotate(15deg);
+    opacity: 1;
+  }
+}
+
+/* Text Content - High-contrast bullion obsidian */
+.spe-hero .hero-start .spe-gold-text {
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #1A0D00;
+  letter-spacing: -0.01em;
+  z-index: 2;
+  position: relative;
+  white-space: nowrap;
+}
+
+/* Minted Gold Coin Medallion Arrow */
+.spe-hero .hero-start .spe-gold-coin-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: linear-gradient(145deg, rgba(255, 248, 210, 0.8), rgba(195, 130, 15, 0.45));
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.22),
+    0 1px 2px rgba(255, 255, 255, 0.5);
+  color: #1A0D00;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease;
+  z-index: 2;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.spe-hero .hero-start:hover .spe-gold-coin-arrow {
+  transform: translate(2px, -2px) scale(1.08);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(225, 155, 20, 0.6));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spe-hero .hero-start,
+  .spe-hero .hero-start::before,
+  .spe-hero .hero-start .spe-gold-sparkle,
+  .spe-hero .hero-start .spe-gold-coin-arrow {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 .spe-hero .theater-bottom {
   left: 5%;
@@ -174,11 +315,29 @@ html[data-theme="light"] .spe-hero .theater-bottom {
   color: #566270;
 }
 html[data-theme="light"] .spe-hero .hero-start {
-  background: #192735;
-  color: #f6f1e8;
+  background: linear-gradient(
+    135deg,
+    #FFF9E6 0%,
+    #FCE082 14%,
+    #F3B328 35%,
+    #FFF5C0 50%,
+    #DF9818 68%,
+    #AB6E02 85%,
+    #734300 100%
+  ) !important;
+  color: #1A0D00 !important;
 }
 html[data-theme="light"] .spe-hero .hero-start:hover {
-  background: #2b4057;
+  background: linear-gradient(
+    135deg,
+    #FFFFFF 0%,
+    #FEE89D 14%,
+    #FABE3C 35%,
+    #FFFAEB 50%,
+    #EA9F1C 68%,
+    #B57704 85%,
+    #7F4C00 100%
+  ) !important;
 }
 .spe-native-story {
   --sns-fg: #eef2f8;
@@ -891,8 +1050,13 @@ html[data-theme="light"] .spe-native-story {
     margin-bottom: 24px;
   }
   .spe-hero .hero-start {
-    padding: 17px 22px;
+    padding: 12px 14px 12px 18px;
     font-size: 13px;
+    gap: 12px;
+  }
+  .spe-hero .hero-start .spe-gold-coin-arrow {
+    width: 25px;
+    height: 25px;
   }
   .spe-hero .hero-stage {
     position: relative;

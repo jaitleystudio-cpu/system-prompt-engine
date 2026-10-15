@@ -127,7 +127,7 @@ export function HeroTheater({ onNavigate }: { onNavigate?: (view: AppView) => vo
             )}
           </p>
           <a
-            className="hero-start"
+            className="hero-start spe-gold-treasury-btn"
             href="#prompt-studio"
             aria-label="Open System Prompt Studio to build your prompt"
             onClick={(e) => {
@@ -140,7 +140,18 @@ export function HeroTheater({ onNavigate }: { onNavigate?: (view: AppView) => vo
               }
             }}
           >
-            {hero.cta || "Make my prompt"} <span aria-hidden="true">↗</span>
+            <span className="spe-gold-sparkle" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+              </svg>
+            </span>
+            <span className="spe-gold-text">{hero.cta || "Make my prompt"}</span>
+            <span className="spe-gold-coin-arrow" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </span>
           </a>
         </div>
         <div className="hero-stage">
