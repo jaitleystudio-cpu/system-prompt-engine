@@ -1,0 +1,7 @@
+run_a/summary.json sha256=d0fe1788087385a424e855d713bc80dd0bcd1a23e517a5b675508a4dfd58f3b7
+run_b/summary.json sha256=d0fe1788087385a424e855d713bc80dd0bcd1a23e517a5b675508a4dfd58f3b7
+run_a/rows.json sha256=dcc729abb70ecf6622c8ed850f79dfd642cc3973809e4f9f154d39f61858502c
+run_b/rows.json sha256=dcc729abb70ecf6622c8ed850f79dfd642cc3973809e4f9f154d39f61858502c
+BYTE_IDENTICAL=yes
+code_commit=ca922cb8
+host=Grok box (Mac mini offline), python 3.13.5, ~22 s per run, cost INR 0
