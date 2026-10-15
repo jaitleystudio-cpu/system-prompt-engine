@@ -1,0 +1,18 @@
+PASS test_constants
+PASS test_f_pred
+PASS test_wsr_pvalue_direction
+PASS test_wsr_edge_mu0
+PASS test_wsr_rect_uses_U
+PASS test_wsr_capital_not_inverted
+PASS test_lambda_predictable_past_only
+PASS test_floor_reuses_r1
+PASS test_mask_below_floor_in_pvals
+PASS test_run_wsr_accounting
+PASS test_imports_r2_baseline
+PASS test_primary_kind_is_wsr_not_phi
+PASS test_ltt_from_pvals_sequence
+PASS test_focused_sampler_no_leak
+PASS test_n_min_gate_rect
+15/15 passed
+{'M1_wrong_f_pred_uses_s': 'KILLED', 'M2_p_equals_wealth_inverted': 'KILLED', 'M3_lambda_peeks_future': 'KILLED', 'M4_always_accept_when_mean_below': 'KILLED', 'M5_wrong_alpha': 'KILLED', 'M6_mu_f_ignored': 'KILLED', 'M7_floor_uses_labels': 'KILLED', 'M8_label_count_not_B': 'KILLED', 'M9_no_mask_below_floor': 'KILLED'}
+MUTATION GATE PASS 9/9 killed

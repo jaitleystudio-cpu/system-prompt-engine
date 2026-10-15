@@ -1,0 +1,8 @@
+{
+  "H1_validity": "SUPPORTED",
+  "H2_utility_085_oracle": "NOT_PROVEN",
+  "H3_noninferior_ppi_ltt_500": "REJECTED",
+  "H3b_beats_lf_ltt_500": "REJECTED",
+  "H4_noninferior_rand_1000": "REJECTED",
+  "overall": "REJECTED"
+}
