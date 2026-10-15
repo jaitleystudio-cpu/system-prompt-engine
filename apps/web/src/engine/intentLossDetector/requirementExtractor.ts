@@ -50,7 +50,7 @@ export class RequirementExtractor {
 
     // Split by lines, semicolons, bullets, and contrastive compound conjunctions
     const clauses = rawText
-      .split(/(?:[\n;•\u2022]|\band\s+also\b|,\s*(?:but|instead|however|rather\s+than)\s+|\s+but\s+|\s+instead\s+use\s+)/i)
+      .split(/(?:[\n;•\u2022]|\band\s+also\b|,\s*(?:but|instead|however|rather\s+than)\s+|\s+but\s+|\s+instead\s+use\s+|,\s*(?=(?:use|ensure|implement|enforce|prefer|never|must|do\s+not)\b))/i)
       .map((c) => c.replace(/^\s*(?:\d+[\.)]|[-*])\s*/, "").trim())
       .filter((c) => c.length > 2);
 
@@ -93,7 +93,8 @@ export class RequirementExtractor {
       // Extract keywords (preserving 3-letter acronyms like jwt, api, css, sql)
       const fillerWords = [
         "the", "and", "for", "with", "that", "this", "from", "must", "should",
-        "fail", "forget", "omit", "skip", "neglect", "using"
+        "fail", "forget", "omit", "skip", "neglect", "using", "instead", "rather",
+        "not", "use", "make", "call", "allow", "have", "has", "had", "can", "cant", "dont"
       ];
       const words = lower
         .replace(/[^a-z0-9_\-\s]/g, " ")

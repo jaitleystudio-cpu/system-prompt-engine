@@ -1,6 +1,7 @@
 """Unit tests for Privacy-Budgeted Evolution Python Runtime (Crown Breakthrough #3)."""
 
 import unittest
+import math
 from spe_runtime.website_evolution.privacy_budgeted_evolution import (
     PrivacyBudgetedEvolutionPy,
     MeasurementRequirementPy,
@@ -100,6 +101,28 @@ class TestPrivacyBudgetedEvolution(unittest.TestCase):
         self.pbe.set_local_preference("hdr_mode", "on")
         self.assertEqual(self.pbe.get_local_preference("hdr_mode"), "on")
         self.assertIsNone(self.pbe.get_local_preference("unset_key"))
+
+    def test_invalid_parameters_rejected(self) -> None:
+        # Epsilon <= 0
+        req_zero_eps = MeasurementRequirementPy(
+            query_id="bad-eps",
+            question="Bad Epsilon",
+            target_route="/",
+            metric_type="COUNT",
+            sensitivity_delta=1.0,
+            requested_epsilon=0.0,
+        )
+        with self.assertRaises(ValueError) as ctx:
+            self.pbe.execute_differentially_private_aggregate(req_zero_eps, 100.0)
+        self.assertIn("INVALID_PRIVACY_PARAMETER", str(ctx.exception))
+
+    def test_laplace_tail_numerical_stability(self) -> None:
+        # Execute 500 draws to ensure no domain error occurs near tails
+        scale = 1.0 / 0.1
+        for _ in range(500):
+            noise = self.pbe._sample_laplace(0.0, scale)
+            self.assertFalse(math.isnan(noise))
+            self.assertFalse(math.isinf(noise))
 
 
 if __name__ == "__main__":

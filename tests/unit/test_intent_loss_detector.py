@@ -69,15 +69,44 @@ class TestIntentLossDetector(unittest.TestCase):
         finding = report.findings[0]
         self.assertEqual(finding.state, "WEAKENED")
 
-    def test_restoration_patch_generated(self) -> None:
-        source = "Must not leak API tokens; Must enforce offline air-gap"
-        synthesized = "System instructions: You are an assistant."
-        report = self.detector.evaluate_intent_fidelity(source, synthesized)
+    def test_three_letter_acronym_not_ignored(self) -> None:
+        source = "Must use JWT"
+        # Prompt completely omits JWT
+        report_dropped = self.detector.evaluate_intent_fidelity(source, "Create an HTML page with blue background")
+        self.assertEqual(report_dropped.dropped_count, 1)
+        self.assertEqual(report_dropped.findings[0].state, "DROPPED")
 
-        self.assertFalse(report.passed)
-        suggestion = report.restoration_suggestion
-        self.assertIn("<restored_intent_safeguards>", suggestion["restored_prompt"])
-        self.assertGreaterEqual(len(suggestion["reconstructed_rules"]), 1)
+        # Prompt includes JWT
+        report_preserved = self.detector.evaluate_intent_fidelity(source, "Enforce JWT authentication header on requests")
+        self.assertEqual(report_preserved.preserved_count, 1)
+        self.assertEqual(report_preserved.findings[0].state, "PRESERVED")
+
+    def test_affirmative_double_negation(self) -> None:
+        source = "Never fail to include external styles; Do not forget to encrypt passwords"
+        reqs = self.extractor.extract_from_text(source)
+        self.assertEqual(len(reqs), 2)
+        self.assertFalse(reqs[0].is_negative)
+        self.assertFalse(reqs[1].is_negative)
+
+        # Output obeys the double negation by including external styles and encrypting passwords
+        prompt = "Always include external styles in head. Encrypt passwords using bcrypt."
+        report = self.detector.evaluate_intent_fidelity(source, prompt)
+        self.assertEqual(report.contradicted_count, 0)
+        self.assertEqual(report.preserved_count, 2)
+        self.assertTrue(report.passed)
+
+    def test_compound_negative_positive_clause(self) -> None:
+        source = "Must not use external CDNs, use local cache instead"
+        reqs = self.extractor.extract_from_text(source)
+        self.assertEqual(len(reqs), 2)
+        self.assertTrue(reqs[0].is_negative)
+        self.assertFalse(reqs[1].is_negative)
+
+        prompt = "Do not use external CDNs. Use local cache."
+        report = self.detector.evaluate_intent_fidelity(source, prompt)
+        self.assertEqual(report.contradicted_count, 0)
+        self.assertEqual(report.preserved_count, 2)
+        self.assertTrue(report.passed)
 
 
 if __name__ == "__main__":

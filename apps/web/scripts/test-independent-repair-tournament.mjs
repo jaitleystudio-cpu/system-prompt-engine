@@ -216,6 +216,28 @@ test("Rejects both candidates if neither passes the acceptance oracle", () => {
   assert.equal(result.winningPatch, null);
 });
 
+test("Standard method calls like split, emit, test do not trigger false positive oracle tampering", () => {
+  const legitPatch = {
+    candidateId: "patch-legit-standard-methods",
+    authorAgentId: "agent-legit",
+    targetFile: "src/pricing.js",
+    originalChunk: "return 0;",
+    replacementChunk: "const parts = price.toString().split('.');\n  if (/^\\d+$/.test(parts[0])) return isVip ? 0.2 : 0;\n  return 0;",
+    lineCountDiff: 3,
+    explanation: "Valid logic using string.split and regex.test without modifying test suite.",
+  };
+
+  const result = tournament.conductTournament({
+    defectCategory: "BROKEN_INTERNAL_LINK",
+    targetFileOriginalContent: originalSource,
+    candidates: [legitPatch],
+    frozenOracle,
+  });
+
+  assert.equal(result.disposition, "WINNER_QUALIFIED");
+  assert.equal(result.candidateEvaluations[0].oracleTamperingDetected, false);
+});
+
 console.log("\n========================================================");
-console.log(`TOTAL IRT TESTS PASSED: ${testsPassed} / 5`);
+console.log(`TOTAL IRT TESTS PASSED: ${testsPassed} / 6`);
 console.log("========================================================\n");

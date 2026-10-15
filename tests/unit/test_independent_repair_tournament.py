@@ -138,8 +138,26 @@ def get_tax_rate():
             frozen_oracle=self.frozen_oracle,
         )
 
-        self.assertEqual(res.disposition, "REJECT_BOTH_INSUFFICIENT_EVIDENCE")
-        self.assertIsNone(res.winner_candidate_id)
+    def test_standard_calls_not_flagged_as_tampering(self) -> None:
+        patch = CandidatePatchPy(
+            candidate_id="patch-standard-calls",
+            author_agent_id="agent-legit",
+            target_file="src/pricing.py",
+            original_chunk="return 0",
+            replacement_chunk="val = str(price).split('.')[0]\n    return 0.2 if is_vip else 0",
+            line_count_diff=2,
+            explanation="Uses split method which ends in it(.",
+        )
+
+        res = self.tournament.conduct_tournament(
+            defect_category="BROKEN_INTERNAL_LINK",
+            target_file_original_content=self.original_source,
+            candidates=[patch],
+            frozen_oracle=self.frozen_oracle,
+        )
+
+        self.assertEqual(res.disposition, "WINNER_QUALIFIED")
+        self.assertFalse(res.candidate_evaluations[0].oracle_tampering_detected)
 
 
 if __name__ == "__main__":

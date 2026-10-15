@@ -142,6 +142,11 @@ class PrivacyBudgetedEvolutionPy:
     def execute_differentially_private_aggregate(
         self, req: MeasurementRequirementPy, raw_aggregate_value: float
     ) -> Tuple[float, float, PrivacyBudgetStatusPy]:
+        if req.requested_epsilon <= 0 or req.sensitivity_delta <= 0:
+            raise ValueError(
+                "INVALID_PRIVACY_PARAMETER: requested_epsilon and sensitivity_delta must be strictly positive."
+            )
+
         if self.consumed_epsilon + req.requested_epsilon > self.max_cumulative_epsilon:
             raise ValueError(
                 f"PRIVACY_BUDGET_EXHAUSTED: Requested epsilon {req.requested_epsilon:.2f} "
@@ -181,6 +186,8 @@ class PrivacyBudgetedEvolutionPy:
         )
 
     def _sample_laplace(self, mu: float, b: float) -> float:
-        u = random.random() - 0.5
-        sign = 1 if u > 0 else (-1 if u < 0 else 0)
-        return mu - b * sign * math.log(1.0 - 2.0 * abs(u))
+        raw_u = random.random() - 0.5
+        safe_abs_u = min(0.499999999999999, abs(raw_u))
+        arg = max(1e-15, 1.0 - 2.0 * safe_abs_u)
+        sign = 1 if raw_u > 0 else (-1 if raw_u < 0 else 0)
+        return mu - b * sign * math.log(arg)

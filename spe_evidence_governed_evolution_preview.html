@@ -708,15 +708,18 @@ Format must be valid JSON only</textarea>
 
       lines.forEach(line => {
         const lower = line.toLowerCase();
-        const isNeg = lower.includes('must not') || lower.includes('never') || lower.includes('avoid');
+        const isDoubleNeg = lower.includes('never fail to') || lower.includes('do not forget to') || lower.includes('must not omit');
+        const isNeg = !isDoubleNeg && (lower.includes('must not') || lower.includes('never') || lower.includes('avoid') || lower.includes('do not'));
         const chip = document.createElement('div');
 
-        // Check if prompt includes it
-        const targetWord = lower.replace(/must not|never|must|ensure|format/g, '').trim().split(' ')[0];
-        const isPresent = prompt.toLowerCase().includes(targetWord);
+        // Check if prompt includes target concepts
+        const targetWord = lower
+          .replace(/must not|never fail to|do not forget to|must not omit|never|must|ensure|format|using|without/g, '')
+          .trim().split(/\s+/).find(w => w.length >= 3) || '';
+        const isPresent = targetWord ? prompt.toLowerCase().includes(targetWord) : true;
 
         if (isNeg) {
-          if (!isPresent || !prompt.toLowerCase().includes('do not') && !prompt.toLowerCase().includes('never')) {
+          if (!isPresent || (!prompt.toLowerCase().includes('do not') && !prompt.toLowerCase().includes('never') && !prompt.toLowerCase().includes('must not'))) {
             chip.className = 'chip chip-dropped';
             chip.innerHTML = '🚫 DROPPED NEGATIVE: ' + line;
             droppedNegatives++;

@@ -169,6 +169,33 @@ test("Applies randomized response with differential privacy guarantee", () => {
   assert.ok(truthsReported > 100 && truthsReported < 195);
 });
 
+test("Rejects invalid non-positive epsilon or sensitivity with descriptive error", () => {
+  const badReq = {
+    queryId: "query-bad-eps",
+    question: "Bad query",
+    targetRoute: "/",
+    metricType: "COUNT",
+    sensitivityDelta: 1.0,
+    requestedEpsilon: 0.0,
+  };
+
+  assert.throws(
+    () => {
+      pbe.executeDifferentiallyPrivateAggregate(badReq, 100);
+    },
+    /INVALID_PRIVACY_PARAMETER/
+  );
+});
+
+test("Laplace sampling guarantees finite numerical stability without domain errors or NaN near tails", () => {
+  const scale = 1.0 / 0.1;
+  for (let i = 0; i < 500; i++) {
+    const noise = pbe["sampleLaplace"](0.0, scale);
+    assert.ok(!Number.isNaN(noise));
+    assert.ok(Number.isFinite(noise));
+  }
+});
+
 console.log("\n========================================================");
-console.log(`TOTAL PBE TESTS PASSED: ${testsPassed} / 7`);
+console.log(`TOTAL PBE TESTS PASSED: ${testsPassed} / 9`);
 console.log("========================================================\n");

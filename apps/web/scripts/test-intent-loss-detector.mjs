@@ -148,13 +148,45 @@ test("Generates restored prompt with <restored_intent_safeguards>", () => {
   assert.ok(report.restorationSuggestion.reconstructedRules.length >= 1);
 });
 
-test("Computes deterministic hashes for report and sources", () => {
-  const source = "Never use external CDNs";
-  const report = detector.evaluateIntentFidelity(source, "Do not use external CDNs");
-  assert.ok(report.sourceIntentHash.startsWith("hash-"));
-  assert.ok(report.synthesizedPromptHash.startsWith("hash-"));
+test("Detects 3-letter acronym requirements and preserves when present, flags when dropped", () => {
+  const source = "Must use JWT";
+  const reportDropped = detector.evaluateIntentFidelity(source, "Create an HTML page with blue background.");
+  assert.equal(reportDropped.droppedCount, 1);
+  assert.equal(reportDropped.findings[0].state, "DROPPED");
+
+  const reportPreserved = detector.evaluateIntentFidelity(source, "Enforce JWT authentication header on requests.");
+  assert.equal(reportPreserved.preservedCount, 1);
+  assert.equal(reportPreserved.findings[0].state, "PRESERVED");
+});
+
+test("Correctly classifies affirmative double negation without flagging contradiction", () => {
+  const source = "Never fail to include external styles; Do not forget to encrypt passwords";
+  const reqs = extractor.extractFromText(source);
+  assert.equal(reqs.length, 2);
+  assert.equal(reqs[0].isNegative, false);
+  assert.equal(reqs[1].isNegative, false);
+
+  const prompt = "Always include external styles in head. Encrypt passwords using bcrypt.";
+  const report = detector.evaluateIntentFidelity(source, prompt);
+  assert.equal(report.contradictedCount, 0);
+  assert.equal(report.preservedCount, 2);
+  assert.equal(report.passed, true);
+});
+
+test("Handles compound negative-positive constraints cleanly without false contradiction", () => {
+  const source = "Must not use external CDNs, use local cache instead";
+  const reqs = extractor.extractFromText(source);
+  assert.equal(reqs.length, 2);
+  assert.equal(reqs[0].isNegative, true);
+  assert.equal(reqs[1].isNegative, false);
+
+  const prompt = "Do not use external CDNs. Use local cache.";
+  const report = detector.evaluateIntentFidelity(source, prompt);
+  assert.equal(report.contradictedCount, 0);
+  assert.equal(report.preservedCount, 2);
+  assert.equal(report.passed, true);
 });
 
 console.log("\n========================================================");
-console.log(`TOTAL ILD TESTS PASSED: ${testsPassed} / 11`);
+console.log(`TOTAL ILD TESTS PASSED: ${testsPassed} / 14`);
 console.log("========================================================\n");

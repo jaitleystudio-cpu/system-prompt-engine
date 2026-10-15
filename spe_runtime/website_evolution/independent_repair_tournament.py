@@ -10,6 +10,7 @@ Epistemic Grounding:
 
 from __future__ import annotations
 import hashlib
+import re
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -160,11 +161,11 @@ class IndependentRepairTournamentPy:
         oracle: FrozenTestOraclePy,
     ) -> CandidateEvaluationResultPy:
         # Check tampering
-        if (
-            candidate.target_file == oracle.test_file
-            or "def test_" in candidate.replacement_chunk
-            or "assert " in candidate.replacement_chunk
-        ):
+        has_tamper = (
+            re.search(r"(?:^|[\s;])def\s+test_", candidate.replacement_chunk) is not None
+            or re.search(r"\bassert\s+", candidate.replacement_chunk) is not None
+        )
+        if candidate.target_file == oracle.test_file or has_tamper:
             return CandidateEvaluationResultPy(
                 candidate_id=candidate.candidate_id,
                 acceptance_passed=False,
@@ -263,13 +264,21 @@ class IndependentRepairTournamentPy:
         if "return " in replacement:
             mutants.append(patched.replace(replacement, "return None"))
 
-        if ">" in replacement or "<" in replacement or "==" in replacement:
-            inverted = (
-                replacement.replace("==", "!=")
-                .replace(">", "<")
-                .replace("<=", ">=")
-            )
-            mutants.append(patched.replace(replacement, inverted))
+        if re.search(r"[><]=?|==|!=", replacement):
+            def _invert_op(match: re.Match) -> str:
+                op = match.group(0)
+                return {
+                    "==": "!=",
+                    "!=": "==",
+                    "<=": ">",
+                    ">=": "<",
+                    "<": ">=",
+                    ">": "<=",
+                }.get(op, op)
+
+            inverted = re.sub(r"==|!=|<=|>=|<|>", _invert_op, replacement)
+            if inverted != replacement:
+                mutants.append(patched.replace(replacement, inverted))
 
         mutants.append(patched.replace(replacement, "# mutated omitted"))
         return mutants[:5]

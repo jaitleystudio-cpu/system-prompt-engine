@@ -51,7 +51,8 @@ OPTIONAL_PATTERNS = [
 
 STOP_WORDS = {
     "the", "and", "for", "with", "that", "this", "from", "must", "should",
-    "fail", "forget", "omit", "skip", "neglect", "using"
+    "fail", "forget", "omit", "skip", "neglect", "using", "instead", "rather",
+    "not", "use", "make", "call", "allow", "have", "has", "had", "can", "cant", "dont"
 }
 
 
@@ -107,7 +108,7 @@ class RequirementExtractorPy:
             return []
 
         raw_clauses = re.split(
-            r"[\n;•\u2022]|\band\s+also\b|,\s*(?:but|instead|however|rather\s+than)\s+|\s+but\s+|\s+instead\s+use\s+",
+            r"[\n;•\u2022]|\band\s+also\b|,\s*(?:but|instead|however|rather\s+than)\s+|\s+but\s+|\s+instead\s+use\s+|,\s*(?=(?:use|ensure|implement|enforce|prefer|never|must|do\s+not)\b)",
             raw_text,
             flags=re.IGNORECASE,
         )
@@ -297,7 +298,8 @@ class IntentLossDetectorPy:
         ]
         filler_words = {
             "must", "not", "never", "don", "t", "do", "forbidden", "avoid", "prohibited",
-            "without", "fail", "forget", "omit", "skip", "neglect", "the", "and", "for", "with"
+            "without", "fail", "forget", "omit", "skip", "neglect", "the", "and", "for", "with",
+            "use", "using", "make", "call", "allow", "have", "has", "can", "instead", "rather"
         }
         forbidden_targets = [
             w for w in req.forbidden_keywords

@@ -138,7 +138,8 @@ export class IntentLossDetector {
     // Check key forbidden concepts (filter out negative markers and filler words)
     const fillerWords = [
       "must", "not", "never", "don", "t", "do", "forbidden", "avoid", "prohibited",
-      "without", "fail", "forget", "omit", "skip", "neglect", "the", "and", "for", "with"
+      "without", "fail", "forget", "omit", "skip", "neglect", "the", "and", "for", "with",
+      "use", "using", "make", "call", "allow", "have", "has", "can", "instead", "rather"
     ];
     const forbiddenTargetWords = req.forbiddenKeywords.filter((w) => !fillerWords.includes(w));
 
