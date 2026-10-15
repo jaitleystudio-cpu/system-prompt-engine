@@ -1,0 +1,16 @@
+=== unit tests ===
+PASS test_constants
+PASS test_pval_and_ltt_via_r0
+PASS test_label_free_floor_rule
+PASS test_floor_ignores_labels
+PASS test_focused_sampler_no_leak
+PASS test_mask_and_certify
+PASS test_run_lf_accounting
+PASS test_no_pilot_in_lf
+PASS test_masking_rejects_biased_low_thresholds
+PASS test_wrong_anchor_changes_floor
+10/10 passed
+
+=== mutation gate ===
+{'M1_wrong_c_anchor': 'KILLED', 'M2_safety_dropped': 'KILLED', 'M3_floor_smallest_index': 'KILLED', 'M4_uses_pilot_labels_for_floor': 'KILLED', 'M5_label_count_not_B': 'KILLED', 'M6_no_mask_below_floor': 'KILLED', 'M7_sampler_accepts_below_floor': 'KILLED', 'M8_upper_tail_pvalue': 'KILLED', 'M9_wrong_alpha': 'KILLED'}
+MUTATION GATE PASS 9/9 killed

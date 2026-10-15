@@ -1,0 +1,296 @@
+{
+  "alpha": 0.1,
+  "constants": {
+    "c_anchor": 0.55,
+    "c_f_primary": 0.6325,
+    "n_unlabeled": 20000,
+    "safety": 1.15,
+    "sensitivity_anchors": [
+      0.45,
+      0.65
+    ]
+  },
+  "cost_inr": 0,
+  "delta": 0.1,
+  "experiment": "LEC-1 R1",
+  "n_draws": 1000,
+  "results": {
+    "lf_ltt_1000": {
+      "abstain_all": 9,
+      "coverage_ratio_vs_oracle": 0.796718,
+      "cp95": [
+        0.043454,
+        0.073223
+      ],
+      "floor_cov_median": 0.6338,
+      "floor_cov_p10": 0.63275,
+      "floor_cov_p90": 0.635,
+      "mean_coverage": 0.349383,
+      "mean_risk": 0.078145,
+      "mean_screened": 1577.13,
+      "n": 1000,
+      "violation_rate": 0.057,
+      "violations": 57
+    },
+    "lf_ltt_250": {
+      "abstain_all": 365,
+      "coverage_ratio_vs_oracle": 0.434328,
+      "cp95": [
+        0.038205,
+        0.066513
+      ],
+      "floor_cov_median": 0.6338,
+      "floor_cov_p10": 0.63275,
+      "floor_cov_p90": 0.635,
+      "mean_coverage": 0.190465,
+      "mean_risk": 0.043212,
+      "mean_screened": 394.76,
+      "n": 1000,
+      "violation_rate": 0.051,
+      "violations": 51
+    },
+    "lf_ltt_500": {
+      "abstain_all": 123,
+      "coverage_ratio_vs_oracle": 0.641602,
+      "cp95": [
+        0.044333,
+        0.074336
+      ],
+      "floor_cov_median": 0.6338,
+      "floor_cov_p10": 0.63275,
+      "floor_cov_p90": 0.635,
+      "mean_coverage": 0.28136,
+      "mean_risk": 0.063409,
+      "mean_screened": 788.78,
+      "n": 1000,
+      "violation_rate": 0.058,
+      "violations": 58
+    },
+    "lf_sens_0.45_500": {
+      "abstain_all": 62,
+      "coverage_ratio_vs_oracle": 0.714279,
+      "cp95": [
+        0.062141,
+        0.096394
+      ],
+      "floor_cov_median": 0.52035,
+      "floor_cov_p10": 0.51815,
+      "floor_cov_p90": 0.52265,
+      "mean_coverage": 0.313231,
+      "mean_risk": 0.070432,
+      "mean_screened": 961.86,
+      "n": 1000,
+      "violation_rate": 0.078,
+      "violations": 78
+    },
+    "lf_sens_0.65_500": {
+      "abstain_all": 163,
+      "coverage_ratio_vs_oracle": 0.614631,
+      "cp95": [
+        0.042576,
+        0.072108
+      ],
+      "floor_cov_median": 0.74815,
+      "floor_cov_p10": 0.7476,
+      "floor_cov_p90": 0.74875,
+      "mean_coverage": 0.269533,
+      "mean_risk": 0.060782,
+      "mean_screened": 667.98,
+      "n": 1000,
+      "violation_rate": 0.056,
+      "violations": 56
+    },
+    "oracle": {
+      "coverage": 0.438528,
+      "risk": 0.098301,
+      "t": 0.9602
+    },
+    "paired": {
+      "lf_ltt_1000_minus_pf_ltt_1000": {
+        "lb95_1s": 0.017722,
+        "losses": 275,
+        "mean": 0.021567,
+        "sd": 0.073927,
+        "ub95_1s": 0.025413,
+        "wins": 486
+      },
+      "lf_ltt_1000_minus_rand_1000": {
+        "lb95_1s": 0.038903,
+        "losses": 357,
+        "mean": 0.045857,
+        "sd": 0.13368,
+        "ub95_1s": 0.052811,
+        "wins": 580
+      },
+      "lf_ltt_1000_minus_rand_2000": {
+        "lb95_1s": -0.01631,
+        "losses": 515,
+        "mean": -0.011773,
+        "sd": 0.087224,
+        "ub95_1s": -0.007235,
+        "wins": 424
+      },
+      "lf_ltt_250_minus_pf_ltt_250": {
+        "lb95_1s": 0.044824,
+        "losses": 139,
+        "mean": 0.051987,
+        "sd": 0.137704,
+        "ub95_1s": 0.05915,
+        "wins": 390
+      },
+      "lf_ltt_250_minus_rand_250": {
+        "lb95_1s": 0.064327,
+        "losses": 246,
+        "mean": 0.075914,
+        "sd": 0.222731,
+        "ub95_1s": 0.0875,
+        "wins": 509
+      },
+      "lf_ltt_500_minus_pf_ltt_500": {
+        "lb95_1s": 0.020037,
+        "losses": 297,
+        "mean": 0.026917,
+        "sd": 0.132261,
+        "ub95_1s": 0.033798,
+        "wins": 422
+      },
+      "lf_ltt_500_minus_rand_1000": {
+        "lb95_1s": -0.031171,
+        "losses": 519,
+        "mean": -0.022166,
+        "sd": 0.173105,
+        "ub95_1s": -0.013161,
+        "wins": 407
+      },
+      "lf_ltt_500_minus_rand_500": {
+        "lb95_1s": 0.061697,
+        "losses": 327,
+        "mean": 0.072452,
+        "sd": 0.206744,
+        "ub95_1s": 0.083207,
+        "wins": 587
+      },
+      "pf_ltt_500_minus_rand_500": {
+        "lb95_1s": 0.034222,
+        "losses": 350,
+        "mean": 0.045535,
+        "sd": 0.217468,
+        "ub95_1s": 0.056847,
+        "wins": 548
+      }
+    },
+    "pf_ltt_1000": {
+      "abstain_all": 25,
+      "coverage_ratio_vs_oracle": 0.747536,
+      "cp95": [
+        0.0356,
+        0.06314
+      ],
+      "fallbacks": 23,
+      "floor_cov_median": 0.5826,
+      "floor_cov_p10": 0.36375,
+      "floor_cov_p90": 0.77495,
+      "mean_coverage": 0.327815,
+      "mean_risk": 0.073517,
+      "mean_screened": 1498.04,
+      "n": 1000,
+      "violation_rate": 0.048,
+      "violations": 48
+    },
+    "pf_ltt_250": {
+      "abstain_all": 529,
+      "coverage_ratio_vs_oracle": 0.315779,
+      "cp95": [
+        0.023659,
+        0.047189
+      ],
+      "fallbacks": 304,
+      "floor_cov_median": 0.83105,
+      "floor_cov_p10": 0.5555,
+      "floor_cov_p90": 0.83845,
+      "mean_coverage": 0.138478,
+      "mean_risk": 0.031525,
+      "mean_screened": 275.77,
+      "n": 1000,
+      "violation_rate": 0.034,
+      "violations": 34
+    },
+    "pf_ltt_500": {
+      "abstain_all": 199,
+      "coverage_ratio_vs_oracle": 0.58022,
+      "cp95": [
+        0.039949,
+        0.068755
+      ],
+      "fallbacks": 89,
+      "floor_cov_median": 0.6403,
+      "floor_cov_p10": 0.40125,
+      "floor_cov_p90": 0.8363,
+      "mean_coverage": 0.254443,
+      "mean_risk": 0.057397,
+      "mean_screened": 690.07,
+      "n": 1000,
+      "violation_rate": 0.053,
+      "violations": 53
+    },
+    "rand_1000": {
+      "abstain_all": 79,
+      "coverage_ratio_vs_oracle": 0.692147,
+      "cp95": [
+        0.037335,
+        0.06539
+      ],
+      "mean_coverage": 0.303526,
+      "mean_risk": 0.068245,
+      "n": 1000,
+      "violation_rate": 0.05,
+      "violations": 50
+    },
+    "rand_2000": {
+      "abstain_all": 2,
+      "coverage_ratio_vs_oracle": 0.823564,
+      "cp95": [
+        0.040823,
+        0.069874
+      ],
+      "mean_coverage": 0.361156,
+      "mean_risk": 0.080664,
+      "n": 1000,
+      "violation_rate": 0.054,
+      "violations": 54
+    },
+    "rand_250": {
+      "abstain_all": 611,
+      "coverage_ratio_vs_oracle": 0.261218,
+      "cp95": [
+        0.022822,
+        0.046034
+      ],
+      "mean_coverage": 0.114551,
+      "mean_risk": 0.026066,
+      "n": 1000,
+      "violation_rate": 0.033,
+      "violations": 33
+    },
+    "rand_500": {
+      "abstain_all": 316,
+      "coverage_ratio_vs_oracle": 0.476385,
+      "cp95": [
+        0.031291,
+        0.057486
+      ],
+      "mean_coverage": 0.208908,
+      "mean_risk": 0.047292,
+      "n": 1000,
+      "violation_rate": 0.043,
+      "violations": 43
+    }
+  },
+  "verdicts": {
+    "H1_validity": "SUPPORTED",
+    "H2_utility_085_oracle": "NOT_PROVEN",
+    "H3_beats_pf_ltt_500": "SUPPORTED",
+    "H4_noninferior_rand_1000": "REJECTED",
+    "overall": "NOT_PROVEN"
+  }
+}
