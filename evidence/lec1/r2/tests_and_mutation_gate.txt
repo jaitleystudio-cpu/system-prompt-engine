@@ -1,0 +1,20 @@
+=== unit tests ===
+PASS test_constants
+PASS test_f_pred
+PASS test_ppi_estimate_toy
+PASS test_ppi_pvalue_direction
+PASS test_lambda_frozen_primary
+PASS test_floor_reuses_r1
+PASS test_mask_below_floor_in_pvals
+PASS test_run_ppi_accounting
+PASS test_hoeff_separated_from_ppi
+PASS test_ltt_from_pvals_sequence
+PASS test_focused_sampler_no_leak
+PASS test_ppipp_uses_split
+PASS test_ppi_uses_unlabeled
+PASS test_pvalue_uses_se
+14/14 passed
+
+=== mutation gate ===
+{'M1_wrong_f_pred_uses_s': 'KILLED', 'M2_lambda_not_one': 'KILLED', 'M3_labels_only_mean_ignores_U': 'KILLED', 'M4_upper_tail_phi': 'KILLED', 'M5_wrong_alpha': 'KILLED', 'M6_se_ignored_always_accept_low': 'KILLED', 'M7_floor_uses_labels': 'KILLED', 'M8_label_count_not_B': 'KILLED', 'M9_no_mask_below_floor': 'KILLED'}
+MUTATION GATE PASS 9/9 killed
