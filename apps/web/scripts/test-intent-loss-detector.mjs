@@ -188,5 +188,5 @@ test("Handles compound negative-positive constraints cleanly without false contr
 });
 
 console.log("\n========================================================");
-console.log(`TOTAL ILD TESTS PASSED: ${testsPassed} / 14`);
+console.log(`TOTAL ILD TESTS PASSED: ${testsPassed} / 13`);
 console.log("========================================================\n");

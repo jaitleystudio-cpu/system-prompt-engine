@@ -7,6 +7,11 @@
 import React, { useState, useRef, useCallback } from "react";
 import type { AppView } from "../routing";
 import { copyTextSafe } from "../engine/workflows/clipboard";
+import {
+  setCanvasSplitPct,
+  useVerticalDiffScroll,
+  scrollTrackToPreset,
+} from "../engine/landing/diffScrollEngine";
 import "./before-after-diff.css";
 
 interface BeforeAfterDiffSliderProps {
@@ -163,26 +168,36 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
   isMainHero = true,
 }) => {
   const [activeScenarioId, setActiveScenarioId] = useState<string>("auth-refactor");
-  const [splitPct, setSplitPct] = useState<number>(50);
+  const [splitPct, setSplitPct] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [cliCopied, setCliCopied] = useState<boolean>(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef<boolean>(false);
+  const lastPctRef = useRef<number>(0);
+  const isManualOverrideRef = useRef<boolean>(false);
+  const lastScrollYRef = useRef<number>(0);
 
   const activeScenario =
     SCENARIOS.find((s) => s.id === activeScenarioId) ?? SCENARIOS[0];
 
-  const updateSplitFromClientX = useCallback((clientX: number) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
+  const updateSplitFromClientY = useCallback((clientY: number) => {
+    if (!canvasRef.current) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const y = clientY - rect.top;
+    const pct = Math.max(0, Math.min(100, (y / rect.height) * 100));
     setSplitPct(pct);
+    lastPctRef.current = pct;
+    setCanvasSplitPct(canvasRef.current, pct);
   }, []);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
-    updateSplitFromClientX(e.clientX);
+    isDraggingRef.current = true;
+    updateSplitFromClientY(e.clientY);
     if (e.currentTarget.setPointerCapture) {
       try {
         e.currentTarget.setPointerCapture(e.pointerId);
@@ -193,12 +208,13 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    updateSplitFromClientX(e.clientX);
+    if (!isDraggingRef.current) return;
+    updateSplitFromClientY(e.clientY);
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     setIsDragging(false);
+    isDraggingRef.current = false;
     if (e.currentTarget.releasePointerCapture) {
       try {
         e.currentTarget.releasePointerCapture(e.pointerId);
@@ -209,20 +225,58 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+    if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
       e.preventDefault();
-      setSplitPct((prev) => Math.max(0, prev - 5));
-    } else if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+      setSplitPct((prev) => {
+        const next = Math.max(0, prev - 5);
+        lastPctRef.current = next;
+        setCanvasSplitPct(canvasRef.current, next);
+        return next;
+      });
+    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
       e.preventDefault();
-      setSplitPct((prev) => Math.min(100, prev + 5));
+      setSplitPct((prev) => {
+        const next = Math.min(100, prev + 5);
+        lastPctRef.current = next;
+        setCanvasSplitPct(canvasRef.current, next);
+        return next;
+      });
     } else if (e.key === "Home") {
       e.preventDefault();
       setSplitPct(0);
+      lastPctRef.current = 0;
+      setCanvasSplitPct(canvasRef.current, 0);
     } else if (e.key === "End") {
       e.preventDefault();
       setSplitPct(100);
+      lastPctRef.current = 100;
+      setCanvasSplitPct(canvasRef.current, 100);
     }
   };
+
+  const handlePreset = (pct: number) => {
+    setSplitPct(pct);
+    lastPctRef.current = pct;
+    setCanvasSplitPct(canvasRef.current, pct);
+    scrollTrackToPreset({
+      trackRef,
+      pinRef,
+      pct,
+      isManualOverrideRef,
+      lastScrollYRef,
+    });
+  };
+
+  useVerticalDiffScroll({
+    trackRef,
+    pinRef,
+    canvasRef,
+    isDraggingRef,
+    isManualOverrideRef,
+    lastScrollYRef,
+    lastPctRef,
+    onProgressChange: setSplitPct,
+  });
 
   const copyCliCommand = async () => {
     await copyTextSafe("npm install -g @systempromptengine/cli");
@@ -236,7 +290,9 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
       data-copy-depth="PROOF"
       aria-labelledby="diff-slider-heading"
     >
-      <div className="spe-diff-container">
+      <div className="spe-diff-track is-scroll-driven" ref={trackRef}>
+        <div className="spe-diff-sticky-pin" ref={pinRef}>
+          <div className="spe-diff-container">
         {/* Top ambient glow & light beam */}
         <div className="spe-diff-ambient-glow" aria-hidden="true" />
 
@@ -279,7 +335,11 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
 
         {/* Scorecard Summary Pill Grid */}
         <div className="spe-diff-scorecard-grid">
-          <div className="spe-diff-scorecard is-before">
+          <div
+            className={`spe-diff-scorecard is-before ${
+              splitPct <= 35 ? "is-emphasized" : splitPct >= 65 ? "is-dimmed" : "is-balanced"
+            }`}
+          >
             <div className="spe-scorecard-label">
               <div className="spe-scorecard-chip-title">
                 <span className="spe-scorecard-indicator" aria-hidden="true" />
@@ -305,7 +365,11 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
             </div>
           </div>
 
-          <div className="spe-diff-scorecard is-after">
+          <div
+            className={`spe-diff-scorecard is-after ${
+              splitPct >= 65 ? "is-emphasized" : splitPct <= 35 ? "is-dimmed" : "is-balanced"
+            }`}
+          >
             <div className="spe-scorecard-label">
               <div className="spe-scorecard-chip-title">
                 <span className="spe-scorecard-indicator" aria-hidden="true" />
@@ -342,8 +406,8 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
             <div className="spe-diff-toggle-btns">
               <button
                 type="button"
-                className={`spe-diff-toggle-btn ${splitPct === 100 ? "is-active" : ""}`}
-                onClick={() => setSplitPct(100)}
+                className={`spe-diff-toggle-btn ${splitPct === 0 ? "is-active" : ""}`}
+                onClick={() => handlePreset(0)}
                 aria-label="Show 100% Before unguided run"
               >
                 100% Before
@@ -351,15 +415,15 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
               <button
                 type="button"
                 className={`spe-diff-toggle-btn ${splitPct === 50 ? "is-active" : ""}`}
-                onClick={() => setSplitPct(50)}
+                onClick={() => handlePreset(50)}
                 aria-label="Split 50 50 view"
               >
                 50 / 50 Split
               </button>
               <button
                 type="button"
-                className={`spe-diff-toggle-btn ${splitPct === 0 ? "is-active" : ""}`}
-                onClick={() => setSplitPct(0)}
+                className={`spe-diff-toggle-btn ${splitPct === 100 ? "is-active" : ""}`}
+                onClick={() => handlePreset(100)}
                 aria-label="Show 100% After SPE protected run"
               >
                 100% After
@@ -369,54 +433,15 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
 
           {/* Interactive Split Canvas */}
           <div
-            ref={containerRef}
+            ref={canvasRef}
             className="spe-diff-canvas"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
           >
-            {/* UNDER LAYER: AFTER (SPE Protected Run) */}
-            <div className="spe-pane-under is-after">
-              <div className="spe-terminal-window">
-                <div className="spe-terminal-topbar">
-                  <div className="spe-terminal-dots">
-                    <span className="spe-dot spe-dot-red" />
-                    <span className="spe-dot spe-dot-yellow" />
-                    <span className="spe-dot spe-dot-green" />
-                  </div>
-                  <span className="spe-terminal-tag">
-                    🛡️ SPE Ω Protected Run (Deterministic)
-                  </span>
-                </div>
-                <ul className="spe-terminal-lines">
-                  {activeScenario.after.lines.map((ln, idx) => (
-                    <li
-                      key={idx}
-                      className={`spe-log-line ${
-                        ln.type === "cmd"
-                          ? "spe-log-cmd"
-                          : ln.type === "pass"
-                          ? "spe-log-pass"
-                          : ln.type === "receipt"
-                          ? "spe-log-receipt"
-                          : "spe-log-muted"
-                      }`}
-                    >
-                      {ln.text}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* OVER LAYER: BEFORE (Unguided Run), clipped to splitPct */}
-            <div
-              className="spe-pane-over is-before"
-              style={{
-                clipPath: `polygon(0% 0%, ${splitPct}% 0%, ${splitPct}% 100%, 0% 100%)`,
-              }}
-            >
+            {/* UNDER LAYER: BEFORE (Unguided Run) */}
+            <div className="spe-pane-under is-before">
               <div className="spe-terminal-window">
                 <div className="spe-terminal-topbar">
                   <div className="spe-terminal-dots">
@@ -449,21 +474,62 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
               </div>
             </div>
 
-            {/* DRAGGABLE SLIDER DIVIDER */}
+            {/* OVER LAYER: AFTER (SPE Protected Run), clipped vertically from top */}
             <div
-              className="spe-slider-divider"
-              style={{ left: `${splitPct}%` }}
+              className="spe-pane-over is-after"
+              style={{
+                clipPath: `polygon(0% 0%, 100% 0%, 100% ${splitPct}%, 0% ${splitPct}%)`,
+                WebkitClipPath: `polygon(0% 0%, 100% 0%, 100% ${splitPct}%, 0% ${splitPct}%)`,
+              }}
+            >
+              <div className="spe-terminal-window">
+                <div className="spe-terminal-topbar">
+                  <div className="spe-terminal-dots">
+                    <span className="spe-dot spe-dot-red" />
+                    <span className="spe-dot spe-dot-yellow" />
+                    <span className="spe-dot spe-dot-green" />
+                  </div>
+                  <span className="spe-terminal-tag">
+                    🛡️ SPE Ω Protected Run (Deterministic)
+                  </span>
+                </div>
+                <ul className="spe-terminal-lines">
+                  {activeScenario.after.lines.map((ln, idx) => (
+                    <li
+                      key={idx}
+                      className={`spe-log-line ${
+                        ln.type === "cmd"
+                          ? "spe-log-cmd"
+                          : ln.type === "pass"
+                          ? "spe-log-pass"
+                          : ln.type === "receipt"
+                          ? "spe-log-receipt"
+                          : "spe-log-muted"
+                      }`}
+                    >
+                      {ln.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* HORIZONTAL REVEAL DIVIDER */}
+            <div
+              className={`spe-slider-divider ${isDragging ? "is-active" : ""}`}
+              style={{ top: `${splitPct}%` }}
               role="slider"
               tabIndex={0}
               aria-label="Comparison slider between unguided agent and SPE protected run"
               aria-valuenow={Math.round(splitPct)}
               aria-valuemin={0}
               aria-valuemax={100}
+              aria-orientation="vertical"
               onKeyDown={handleKeyDown}
             >
               <div className="spe-slider-handle">
                 <span className="spe-handle-icon" aria-hidden="true">
-                  ◂ ▸
+                  ▴ ▾
                 </span>
               </div>
             </div>
@@ -511,6 +577,8 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
           </button>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
   );
 };

@@ -22,6 +22,7 @@
     "test:final-craft": "node scripts/test-final-craft.mjs",
     "test:conversion-kernel": "node scripts/test-conversion-kernel.mjs",
     "test:diff-slider": "node scripts/test-diff-slider-and-community-flywheel.mjs",
+    "test:vertical-reveal": "node scripts/test-vertical-before-after-reveal.mjs",
     "test:theme-routes": "node scripts/test-theme-routes.mjs",
     "test:post-prompt": "node scripts/test-post-prompt-guided-journey.mjs",
     "test:user-reqs": "node scripts/test-user-confirmed-requirements.mjs",

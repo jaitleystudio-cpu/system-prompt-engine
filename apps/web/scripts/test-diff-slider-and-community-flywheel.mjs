@@ -50,18 +50,25 @@ console.log("✓ Integration into App.tsx verified");
 assert.match(diff, /role="slider"/, "Slider must define role=slider");
 assert.match(diff, /aria-valuenow/, "Slider must declare aria-valuenow");
 assert.match(diff, /aria-label="Comparison slider/, "Slider must declare descriptive aria-label");
+assert.match(diff, /aria-orientation="vertical"/, "Slider must declare aria-orientation=vertical");
 assert.match(diff, /data-copy-depth="PROOF"/, "Diff component must carry PROOF copy depth");
 assert.match(diff, /API Auth Refactor/, "Scenario 1 present");
 assert.match(diff, /Database Migration/, "Scenario 2 present");
 assert.match(diff, /Multi-File Feature/, "Scenario 3 present");
 assert.match(diff, /142,500 tokens/, "Scenario 1 waste metrics present");
 assert.match(diff, /npm install -g @systempromptengine\/cli/, "Developer CLI CTA present");
+assert.match(diff, /spe-diff-track\s+is-scroll-driven/, "Diff component must render bounded sticky scroll track");
+assert.match(diff, /spe-diff-sticky-pin/, "Diff component must render sticky pin container");
+assert.match(diff, /is-emphasized/, "Scorecard dynamic emphasis states must be present");
+assert.match(diff, /diffScrollEngine/, "Diff component must integrate diffScrollEngine");
 console.log("✓ BeforeAfterDiffSlider mechanics and empirical scenarios verified");
 
 // 4. CSS Accessibility & Performance
 assert.match(diffCss, /translate3d/, "GPU-accelerated transforms used in diff CSS");
 assert.match(diffCss, /min-height:\s*44px/, "Touch target minimum 44px enforced in diff CSS");
 assert.match(diffCss, /prefers-reduced-motion:\s*reduce/, "prefers-reduced-motion override present in diff CSS");
+assert.match(diffCss, /cursor:\s*row-resize/, "Vertical scrubbing cursor enforced in diff CSS");
+assert.match(diffCss, /position:\s*sticky/, "Sticky positioning declared for cinematic presentation");
 assert.match(diffCss, /#090d16|#080c14/, "High contrast luxury dark palette used");
 console.log("✓ Diff slider CSS performance & accessibility verified");
 

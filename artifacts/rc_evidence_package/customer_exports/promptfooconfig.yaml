@@ -3,7 +3,7 @@
 # Spec: https://www.promptfoo.dev/docs/configuration/guide/
 # Zero-Egress Upstream Compiler: System Prompt Engine (SPE)
 # spe_prompt_sha256: "982b11cab95dd5846d7abcd94c3d9a7f06509ade6661af1d04eaae3a8b246b8b"
-# spe_receipt_digest: "e483f98a51a2d3a1da8053f80831671bfb030218980e69d1a1279888dce2acab"
+# spe_receipt_digest: "f4b01185572fa95cd1808637249cee56c9b55f23841a60992ec378e225d6252e"
 # spe_receipt_authenticity: "SELF_GENERATED_SHA256_DIGEST"
 # spe_type_check_passed: true
 # spe_measured_errors: 0
@@ -42,9 +42,10 @@ prompts:
     {{user_input}}
 
 providers:
-  - id: "openai:gpt-4o"
-  - id: "anthropic:claude-3-5-sonnet-20241022"
-  - id: "ollama:llama3:latest"
+  - id: "openai:gpt-5"
+  - id: "anthropic:claude-4-5-sonnet"
+  - id: "google:gemini-3-pro"
+  - id: "ollama:llama4:latest"
 
 defaultTest:
   options:

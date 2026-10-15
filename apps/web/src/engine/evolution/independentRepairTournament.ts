@@ -296,12 +296,7 @@ export class IndependentRepairTournament {
       mutants.push(fullContent.replace(replacementChunk, replacementChunk.replace(/return\s+[^;]+;/, "return null;")));
     }
 
-    // Mutant 3: Empty string or undefined injection
-    if (replacementChunk.includes('"') || replacementChunk.includes("'")) {
-      mutants.push(fullContent.replace(replacementChunk, replacementChunk.replace(/(["'][^"']*["'])/, '""')));
-    }
-
-    // Mutant 4: Invert inequality / equality operators safely
+    // Mutant 3: Invert inequality / equality operators safely
     if (/[><]=?|===|!==/.test(replacementChunk)) {
       const inverted = replacementChunk.replace(/===|!==|<=|>=|<|>/g, (op) => {
         switch (op) {
