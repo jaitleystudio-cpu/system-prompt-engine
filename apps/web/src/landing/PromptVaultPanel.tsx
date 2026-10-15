@@ -36,14 +36,14 @@ function downloadTextFile(filename: string, content: string) {
 
 const PLATFORMS: { id: ModelDialect; name: string; file: string; icon: string; description: string }[] = [
   { id: "antigravity-skills", name: "Antigravity Skills", file: "SKILL.md", icon: "🌟", description: "Google DeepMind Skills format with YAML frontmatter & <RULE> invariants" },
-  { id: "claude-code", name: "Claude 3.7 / 3.5 Code", file: "CLAUDE.md", icon: "💻", description: "Anthropic Claude 3.7 & 3.5 Sonnet Code terminal rules, tool limits & build contracts" },
+  { id: "claude-code", name: "Claude 4.5 / 4.5 Opus Code", file: "CLAUDE.md", icon: "💻", description: "Anthropic Claude 4.5 Sonnet & Opus Code terminal rules, tool limits & build contracts" },
   { id: "cursor-rules", name: "Cursor IDE (.cursorrules)", file: ".cursorrules", icon: "🎯", description: "Cursor Agent & Windsurf JSON agent directives & context ceilings" },
   { id: "windsurf-rules", name: "Windsurf IDE Rules", file: ".windsurfrules", icon: "🌊", description: "Codeium Windsurf cascading AST execution rules and system boundaries" },
-  { id: "grok", name: "xAI Grok 3", file: "SYSTEM_POLICY.md", icon: "⚡", description: "Grok 3 truth-maximizing mathematical directives & Colossus DeepSearch grounding" },
+  { id: "grok", name: "xAI Grok 4", file: "SYSTEM_POLICY.md", icon: "⚡", description: "Grok 4 truth-maximizing mathematical directives & Colossus DeepSearch grounding" },
   { id: "kimi", name: "Moonshot Kimi K1.5", file: "SYSTEM_POLICY.md", icon: "🌙", description: "Kimi K1.5 200k ultra-long context attention anchors & bilingual structure" },
-  { id: "openai-markdown", name: "OpenAI o3-mini / GPT-4o", file: "SYSTEM_POLICY.md", icon: "🤖", description: "OpenAI Developer role markdown schemas with bold non-negotiable invariants" },
-  { id: "gemini-agent", name: "Google Gemini 2.0 Flash / Pro", file: "SYSTEM_POLICY.md", icon: "💎", description: "Gemini 2.0 bracketed directive blocks, function calling contracts & grounding" },
-  { id: "open-weights", name: "DeepSeek-R1 / Llama 3.3", file: "SYSTEM_POLICY.md", icon: "🧠", description: "DeepSeek-R1 & Llama 3.3 token-level ChatML header framing & proof kernel" },
+  { id: "openai-markdown", name: "OpenAI GPT-5 / o4-mini", file: "SYSTEM_POLICY.md", icon: "🤖", description: "OpenAI Developer role markdown schemas with bold non-negotiable invariants" },
+  { id: "gemini-agent", name: "Google Gemini 3 Pro / Flash", file: "SYSTEM_POLICY.md", icon: "💎", description: "Gemini 3 bracketed directive blocks, function calling contracts & grounding" },
+  { id: "open-weights", name: "DeepSeek-R2 / Llama 4", file: "SYSTEM_POLICY.md", icon: "🧠", description: "DeepSeek-R2 & Llama 4 token-level ChatML header framing & proof kernel" },
   { id: "ollama-modelfile", name: "Ollama / Local", file: "Modelfile", icon: "🦙", description: "Docker-like local Modelfile with PARAMETER and SYSTEM blocks" },
 ];
 
@@ -455,7 +455,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
           <>
             <h2 className="spe-vault-title">Universal Prompt Arsenal — 10,000+ Production Prompts (100% Free on the Web)</h2>
             <p className="spe-vault-subtitle">
-              All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney.
+              All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7.
             </p>
           </>
         ) : panelTab === "discovery" ? (
@@ -481,7 +481,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
             <div className="spe-sponsor-badge">SPONSORED PARTNER COMPUTE</div>
             <div className="spe-sponsor-info">
               <div className="spe-sponsor-title">⚡ Run Prompts with $5 Free Cloud API Credits on OpenRouter &amp; Together AI</div>
-              <div className="spe-sponsor-desc">Execute Claude 3.7, o3-mini, and DeepSeek-R1 at sub-200ms latency with zero setup.</div>
+              <div className="spe-sponsor-desc">Execute Claude 4.5, GPT-5, and DeepSeek-R2 at sub-200ms latency with zero setup.</div>
             </div>
             <a
               href="https://openrouter.ai"
@@ -529,13 +529,13 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
                 Target AI Model:
               </span>
               {[
-                { id: "claude", label: "Claude 3.7 Sonnet (Thinking)" },
-                { id: "chatgpt", label: "OpenAI o3-mini / GPT-4o" },
-                { id: "gemini", label: "Gemini 2.0 Flash / Pro" },
-                { id: "grok", label: "xAI Grok 3" },
+                { id: "claude", label: "Claude 4.5 Sonnet (Hybrid Reasoning)" },
+                { id: "chatgpt", label: "OpenAI GPT-5 / o4-mini" },
+                { id: "gemini", label: "Gemini 3 Pro / Flash" },
+                { id: "grok", label: "xAI Grok 4" },
                 { id: "cursor", label: "Cursor IDE (.cursorrules)" },
-                { id: "midjourney", label: "Midjourney v6.1" },
-                { id: "flux", label: "FLUX.1 [pro]" },
+                { id: "midjourney", label: "Midjourney v7" },
+                { id: "flux", label: "FLUX.2 [pro]" },
                 { id: "runway", label: "Runway Gen-3" },
                 { id: "suno", label: "Suno v4" },
               ].map((plat) => (

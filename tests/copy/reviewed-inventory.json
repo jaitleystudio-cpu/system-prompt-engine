@@ -10609,12 +10609,6 @@
       "text": "Legal & Compliance"
     },
     {
-      "id": "c62d2289b4b48fb02ede",
-      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
-      "depth": "PRODUCT",
-      "text": "Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney."
-    },
-    {
       "id": "cabc25e571388d77f8fd",
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
@@ -10649,6 +10643,12 @@
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
       "text": "Image Generation"
+    },
+    {
+      "id": "f71c661e13e4f035519f",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7."
     },
     {
       "id": "0069a9f6e94710a68dfb",
@@ -11899,16 +11899,10 @@
       "text": "of"
     },
     {
-      "id": "061ac14d04131d98b889",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Grok 3 truth-maximizing mathematical directives & Colossus DeepSearch grounding"
-    },
-    {
-      "id": "06537ec96fe1ff7fc000",
+      "id": "05fb141324ae51625878",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "Execute Claude 3.7, o3-mini, and DeepSeek-R1 at sub-200ms latency with zero setup."
+      "text": "FLUX.2 [pro]"
     },
     {
       "id": "066ed9a8d9e697565939",
@@ -11947,12 +11941,6 @@
       "text": "OMEGA_30K"
     },
     {
-      "id": "0a404375b2500991ed69",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Gemini 2.0 Flash / Pro"
-    },
-    {
       "id": "0a9994a3903318f4bb03",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11975,6 +11963,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Modelfile"
+    },
+    {
+      "id": "0e2e4892c881d4c73197",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic Claude 4.5 Sonnet & Opus Code terminal rules, tool limits & build contracts"
     },
     {
       "id": "0ed2ed23fe2e71b5467f",
@@ -12073,6 +12067,12 @@
       "text": "TUTORING_INSTRUCTION_FRAMEWORK"
     },
     {
+      "id": "195c3a96aae891cc5ef1",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "OpenAI GPT-5 / o4-mini"
+    },
+    {
       "id": "19c3c5777b5ae8260e6b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12097,6 +12097,12 @@
       "text": "noopener,noreferrer"
     },
     {
+      "id": "1d75bfa9b91de186c36a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "xAI Grok 4"
+    },
+    {
       "id": "1ed93aa594792a684325",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12109,22 +12115,28 @@
       "text": "100% ad-free experience across the entire web interface"
     },
     {
-      "id": "1f2b73e97e4fb5a3fec8",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Claude 3.7 Sonnet (Thinking)"
-    },
-    {
       "id": "20a9b732286593b39a2b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "🌐 100,000+ Char (1 Lakh+) Blueprints &amp; 101 Skills"
     },
     {
+      "id": "22f71b90959893ccb5fe",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Gemini 3 Pro / Flash"
+    },
+    {
       "id": "230ece23b70f7f089532",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🌍 Trivia (Pass-Through)"
+    },
+    {
+      "id": "2631e66018433f212f4b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Execute Claude 4.5, GPT-5, and DeepSeek-R2 at sub-200ms latency with zero setup."
     },
     {
       "id": "264e88028d10fd80e4b9",
@@ -12155,12 +12167,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Writing & Productivity"
-    },
-    {
-      "id": "380eca25466aac77939e",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Gemini 2.0 bracketed directive blocks, function calling contracts & grounding"
     },
     {
       "id": "383b9148639dd19ee0a8",
@@ -12215,12 +12221,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Deploy these SPE .cursorrules and system prompts directly into your IDE agent with one click."
-    },
-    {
-      "id": "3e195a9e06ba02cae2e2",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Anthropic Claude 3.7 & 3.5 Sonnet Code terminal rules, tool limits & build contracts"
     },
     {
       "id": "3e245b37a7b402955091",
@@ -12379,16 +12379,16 @@
       "text": "Download Current Volume ("
     },
     {
+      "id": "4ef88b20963a439e6838",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google Gemini 3 Pro / Flash"
+    },
+    {
       "id": "4f0c4818effa9e616253",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Enter User Request to Evaluate Intent & Specification Lift:"
-    },
-    {
-      "id": "4f4b79dd6cbd6f9c4afa",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "xAI Grok 3"
     },
     {
       "id": "4f7db262bc33dc32b65a",
@@ -12401,12 +12401,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Zero Overhead"
-    },
-    {
-      "id": "4fc6a303d0b03f7e66c0",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Midjourney v6.1"
     },
     {
       "id": "51d971c79cb889b24dd3",
@@ -12595,10 +12589,22 @@
       "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
     },
     {
+      "id": "67e1c1c32d4421d785ba",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude 4.5 / 4.5 Opus Code"
+    },
+    {
       "id": "696847279ad1ae6ee164",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Copy & Open in Claude"
+    },
+    {
+      "id": "69c992fca3835ebdfce6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Grok 4 truth-maximizing mathematical directives & Colossus DeepSearch grounding"
     },
     {
       "id": "6a18bbcba889e92bf462",
@@ -12667,12 +12673,6 @@
       "text": "Declared Tools & Plugins (Comma-separated; redundant tools pruned to reduce attention drift):"
     },
     {
-      "id": "71f0e5d7005b03afaa08",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Google Gemini 2.0 Flash / Pro"
-    },
-    {
       "id": "72991d42de2b4cfb65c3",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12707,6 +12707,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Suno v4"
+    },
+    {
+      "id": "772d36468d69b86379db",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Midjourney v7"
     },
     {
       "id": "774e6c0b40a5a5879d92",
@@ -12877,12 +12883,6 @@
       "text": "Business"
     },
     {
-      "id": "98a4d0e92995093f8182",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek-R1 & Llama 3.3 token-level ChatML header framing & proof kernel"
-    },
-    {
       "id": "990720adcd11ac769eec",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12923,6 +12923,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Customer Support & HR"
+    },
+    {
+      "id": "9ccd9b0f6fba20c41973",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI GPT-5 / o4-mini"
     },
     {
       "id": "9d5282991363889eecc6",
@@ -12997,12 +13003,6 @@
       "text": "🎯 Simple Idea to Pro Prompt"
     },
     {
-      "id": "aaf6ed4ae015c3c1e641",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "OpenAI o3-mini / GPT-4o"
-    },
-    {
       "id": "ab2b7e90a36fd890b25a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13075,6 +13075,12 @@
       "text": "start"
     },
     {
+      "id": "bab983bc3f281eec87e2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Gemini 3 bracketed directive blocks, function calling contracts & grounding"
+    },
+    {
       "id": "baf3f5c17a2c473ff389",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13115,18 +13121,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "GOD_MODE_100K"
-    },
-    {
-      "id": "c3b3a5240cc39bf05a30",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "FLUX.1 [pro]"
-    },
-    {
-      "id": "c3d61f7a9f8de260bf06",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek-R1 / Llama 3.3"
     },
     {
       "id": "c3f5961035e148023925",
@@ -13187,6 +13181,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "System specification goal"
+    },
+    {
+      "id": "cd032bbad4ca7a86759d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "xAI Grok 4"
     },
     {
       "id": "cd6ccda9c431aeaccc09",
@@ -13255,6 +13255,12 @@
       "text": "Finance & Analytics"
     },
     {
+      "id": "d642358b28a2529800c9",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DeepSeek-R2 & Llama 4 token-level ChatML header framing & proof kernel"
+    },
+    {
       "id": "d7185f48a203e9f1f953",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13267,10 +13273,22 @@
       "text": "Enter system goal, architecture or agent requirements..."
     },
     {
+      "id": "dbf4e84f66e29ae80b24",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Claude 4.5 Sonnet (Hybrid Reasoning)"
+    },
+    {
       "id": "dc486f035c76abc8a186",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "https://neon.tech"
+    },
+    {
+      "id": "dda11fb491d43b9e9911",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7."
     },
     {
       "id": "ddada23e62a9cc1a253c",
@@ -13285,22 +13303,10 @@
       "text": "🔢 2 + 2 (Pass-Through)"
     },
     {
-      "id": "de17393a0bc8325d38a8",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Claude 3.7 / 3.5 Code"
-    },
-    {
       "id": "de744bf5aaef5054fbf9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "UI/UX & Web Design"
-    },
-    {
-      "id": "de8c7333e74bc9e8575f",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "OpenAI o3-mini / GPT-4o"
     },
     {
       "id": "df65143bb60ce6a393c6",
@@ -13405,6 +13411,12 @@
       "text": "words)"
     },
     {
+      "id": "eefdb56ff7ca150722a7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DeepSeek-R2 / Llama 4"
+    },
+    {
       "id": "f00812f29c26a7c17aff",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -13415,12 +13427,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Moonshot Kimi K1.5"
-    },
-    {
-      "id": "f2c04d16dfa2fbdc0cc4",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "xAI Grok 3"
     },
     {
       "id": "f33d2fa13c6270719698",
@@ -13481,12 +13487,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "MASTER_50K"
-    },
-    {
-      "id": "faba492741fbff205434",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney."
     },
     {
       "id": "fb4c91dee9132c17bc38",
@@ -23629,6 +23629,12 @@
       "text": "Updated Daily · Continuous Model Drift Sentinel"
     },
     {
+      "id": "13bab79dbfdb7bb87d72",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. OpenAI GPT-5 / o4, Claude 4.5, DeepSeek R2"
+    },
+    {
       "id": "14591a59e889664a143c",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -23699,12 +23705,6 @@
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
       "text": "Cancel"
-    },
-    {
-      "id": "3da3317f7a3232015fd7",
-      "file": "apps/web/src/pages/AiIncidentWire.tsx",
-      "depth": "PRODUCT",
-      "text": "e.g. OpenAI o3, Claude 3.7, DeepSeek R1"
     },
     {
       "id": "43cb6feeb419c70504f0",
@@ -25855,22 +25855,28 @@
       "text": "Home"
     },
     {
+      "id": "497b5f7a3329705b009c",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "44 Verified Real AI Models"
+    },
+    {
       "id": "50a4f5f35c4c92f991aa",
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
       "text": "Universal Prompt Arsenal"
     },
     {
-      "id": "76998c1c462fcd7e2b07",
-      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
-      "depth": "PRODUCT",
-      "text": "Production-grade, task-specific prompt assets adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney. Browse across 13 professional domains with real-time model transcompilation."
-    },
-    {
       "id": "80b955b086dc08647fcb",
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
       "text": "100% Free Online Access"
+    },
+    {
+      "id": "81ec16958f685f38af36",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Production-grade, task-specific prompt assets adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. Browse across 13 professional domains with real-time model transcompilation."
     },
     {
       "id": "86d3d156ed0a19452f13",
@@ -25883,12 +25889,6 @@
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
       "text": "&rsaquo;"
-    },
-    {
-      "id": "9d9c26f6e49d8cdd7f6c",
-      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
-      "depth": "PRODUCT",
-      "text": "26 Verified Real AI Models"
     },
     {
       "id": "b52292f00f318758cdca",
@@ -27691,6 +27691,12 @@
       "text": "AI Incident Radar & Failure Post-Mortem Wire | SPE Ω"
     },
     {
+      "id": "bc63a6632f0b331b6acf",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. 100% free online."
+    },
+    {
       "id": "be9be8adf5f83326d168",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27857,12 +27863,6 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Free system prompt generator and prompt engineering tool. Turns ideas into structured prompts in your browser."
-    },
-    {
-      "id": "f4aa4bb08626ebc72230",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, and Midjourney. 100% free online."
     },
     {
       "id": "f66a44ea029c760e8b47",

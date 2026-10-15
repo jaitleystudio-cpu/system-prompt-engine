@@ -109,7 +109,7 @@ export const EXTRA_ROUTE_META = {
     path: "/eval-studio",
     title: "Frontier Model Eval Studio & 1-Click Immunizer | SPE Ω",
     description:
-      "Side-by-side prompt evaluation against Claude 3.7, GPT-4o, Grok 3, and Local Ollama. Live assertions, 10 OWASP red-team attack probes, and 1-click vulnerability immunization.",
+      "Side-by-side prompt evaluation against Claude 4.5, GPT-5, Gemini 3, and Local Ollama. Live assertions, 10 OWASP red-team attack probes, and 1-click vulnerability immunization.",
   },
 } as const;
 

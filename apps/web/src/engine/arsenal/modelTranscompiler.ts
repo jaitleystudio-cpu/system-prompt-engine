@@ -43,7 +43,7 @@ export function transcompilePromptForPlatform(
 
   switch (targetPlatform) {
     case "claude": {
-      const modelLabel = model ? model.name : "Claude 3.7 Sonnet / 3.5 Sonnet";
+      const modelLabel = model ? model.name : "Claude 4.5 Sonnet / 4.5 Opus";
       const thinkingBlock = model?.capabilities.supportsThinking
         ? `\n<antml:reasoning_effort>max</antml:reasoning_effort>\n<thinking_guidance>\nYou have extended thinking enabled. Deeply analyze state transitions, architectural trade-offs, and boundary conditions. Formulate a rigorous internal execution graph, self-correct any fragile assumptions, and ensure zero unverified claims before synthesizing the production response.\n</thinking_guidance>\n`
         : "";
@@ -70,7 +70,7 @@ ${asset.verificationCriteria.map((v) => `- ${v}`).join("\n")}
     }
 
     case "chatgpt": {
-      const modelLabel = model ? model.name : "GPT-4o / o3-mini";
+      const modelLabel = model ? model.name : "GPT-5 / o4-mini";
       const reasoningBlock = model?.capabilities.supportsThinking
         ? `\n## Reasoning Directive (o-Series / Deep Reasoning)\n- Reason carefully through all state mutations, security boundaries, and edge invariants.\n- Bias towards action: Complete the full reviewable deliverable autonomously without stalling for obvious steps.\n- Absolute Zero Slop: Eliminate phrases like "delve", "foster", "leverage", "it's worth noting", "Question? Answer.", "Bottom Line:". State intended actions directly without contrastive framing.\n`
         : "";

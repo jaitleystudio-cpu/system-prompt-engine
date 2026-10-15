@@ -21,7 +21,7 @@ export function getRoutePromptAsset(): ArsenalPromptAsset | undefined {
 export function applyPromptAssetMetadata(asset?: ArsenalPromptAsset): void {
   if (typeof document === "undefined" || !asset) return;
   document.title = `${asset.title} — SPE Universal Prompt Arsenal`;
-  const desc = `${asset.tagline} Production-grade AI prompt adapted for Claude 3.7, GPT-4o, Gemini 2.0, Grok 3, and DeepSeek-R1. 100% free online.`;
+  const desc = `${asset.tagline} Production-grade AI prompt adapted for Claude 4.5, GPT-5, Gemini 3 Pro, Grok 4, and DeepSeek-R2. 100% free online.`;
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.setAttribute("content", desc);
   const ogDesc = document.querySelector('meta[property="og:description"]');
@@ -66,7 +66,7 @@ export function buildArsenalSchemaOrgJson(asset?: ArsenalPromptAsset): string {
             {
               "@type": "HowToStep",
               name: "Select Frontier AI Model Dialect",
-              text: "Transcompile to Claude 3.7 Sonnet, OpenAI o3-mini, Cursor IDE, Gemini 2.0, or Local Ollama.",
+              text: "Transcompile to Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Cursor IDE, Gemini 3 Pro, or Local Ollama.",
             },
             {
               "@type": "HowToStep",
@@ -98,7 +98,7 @@ export function buildArsenalSchemaOrgJson(asset?: ArsenalPromptAsset): string {
           ratingCount: "1840",
         },
         description:
-          "Production-grade, task-specific prompt assets adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney.",
+          "Production-grade, task-specific prompt assets adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7.",
       },
       {
         "@type": "FAQPage",
@@ -124,7 +124,7 @@ export function buildArsenalSchemaOrgJson(asset?: ArsenalPromptAsset): string {
             name: "Which frontier AI models are supported by the model transcompiler?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "The SPE transcompiler natively adapts prompts for Claude 3.7 Sonnet Thinking, OpenAI o3-mini and GPT-4o, Google Gemini 2.0 Flash and Pro, xAI Grok 3, Cursor IDE .cursorrules, Midjourney v6.1, FLUX.1, Runway Gen-3, and Suno v4.",
+              text: "The SPE transcompiler natively adapts prompts for Claude 4.5 Sonnet Thinking, OpenAI GPT-5 and o4-mini, Google Gemini 3 Pro and Flash, xAI Grok 4, Cursor IDE .cursorrules, Midjourney v7, FLUX.2, Runway Gen-3, and Suno v4.",
             },
           },
         ],

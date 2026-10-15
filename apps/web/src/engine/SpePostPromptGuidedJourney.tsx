@@ -221,7 +221,7 @@ export const SpePostPromptGuidedJourney: React.FC<SpePostPromptGuidedJourneyProp
 
   const handleDownloadCursorRules = () => {
     const filename = ".cursorrules";
-    const header = `# System Prompt Engine (.cursorrules)\n# Calibrated for Cursor AI & Claude 3.7 Sonnet\n# Generated 100% offline via SPE Ω\n\n`;
+    const header = `# System Prompt Engine (.cursorrules)\n# Calibrated for Cursor AI & Claude 4.5 Sonnet / GPT-5\n# Generated 100% offline via SPE Ω\n\n`;
     const blob = new Blob([header + safePrompt], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");

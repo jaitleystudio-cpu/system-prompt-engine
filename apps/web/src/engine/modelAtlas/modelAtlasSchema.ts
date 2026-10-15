@@ -51,6 +51,9 @@ export interface AiModelEntry {
   releaseDate: string;
   dialectTemplateKey: string;
   description: string;
+  isLegacy?: boolean;
+  deprecatedInFavorOf?: string;
+  generation?: "2026-frontier" | "legacy-2024" | "legacy-2025";
 }
 
 export interface ModelAtlasRegistry {

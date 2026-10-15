@@ -226,7 +226,7 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     path: "/prompts",
     title: "Universal Prompt Arsenal (10,000+ Free Production Prompts) | SPE",
     description:
-      "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, and Midjourney. 100% free online.",
+      "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. 100% free online.",
   },
   incidents: {
     path: "/incidents",

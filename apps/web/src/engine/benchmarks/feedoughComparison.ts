@@ -39,7 +39,7 @@ export const FEEDOUGH_COMPETITIVE_MATRIX: readonly CompetitorComparisonDimension
     speScore: 9.7,
     winner: "SPE",
     feedoughReality: "Generic one-size-fits-all text dumped into a textarea.",
-    speAdvantage: "Transcompiles bit-for-bit into Claude XML, Cursor .cursorrules, Windsurf, Grok 3, and Ollama Modelfiles across 26 models.",
+    speAdvantage: "Transcompiles bit-for-bit into Claude XML, Cursor .cursorrules, Windsurf, Grok 4, and Ollama Modelfiles across 44 models.",
   },
   {
     id: "DIM-04",
@@ -48,7 +48,7 @@ export const FEEDOUGH_COMPETITIVE_MATRIX: readonly CompetitorComparisonDimension
     speScore: 9.6,
     winner: "SPE",
     feedoughReality: "No execution runner, no latency measurement, zero assertion validation.",
-    speAdvantage: "EvalStudio runs live side-by-side matrices (Claude 3.7 vs GPT-4o vs Groq vs Ollama) with 50+ assertion rules.",
+    speAdvantage: "EvalStudio runs live side-by-side matrices (Claude 4.5 vs GPT-5 vs Gemini 3 vs Ollama) with 50+ assertion rules.",
   },
   {
     id: "DIM-05",
@@ -104,7 +104,7 @@ export const FOUNDER_STRATEGY_PRESETS: readonly FounderStrategyPreset[] = [
     title: "📊 Business Model Canvas (Osterwalder Framework)",
     category: "Strategy",
     brief: "Generate an exhaustive Business Model Canvas covering 9 value blocks, customer segments, revenue streams, and cost structures with zero fluff.",
-    targetModel: "Claude 3.7 Sonnet / GPT-4o",
+    targetModel: "Claude 4.5 Sonnet / GPT-5",
     estimatedTokens: 2400,
     promptDirective: `You are an elite enterprise strategy architect. Conduct an exhaustive Business Model Canvas analysis using Alexander Osterwalder's formal framework for the specified business.
 
@@ -126,7 +126,7 @@ Output the analysis in structured markdown tables followed by an executive summa
     title: "🏰 Strategic Moat & Competitive Defense Engine",
     category: "Strategy",
     brief: "Conduct a ruthless Porter's 5 Forces analysis examining switching costs, network effects, distribution monopolies, and substitution threats.",
-    targetModel: "Claude 3.7 Sonnet / Grok 3",
+    targetModel: "Claude 4.5 Sonnet / Grok 4",
     estimatedTokens: 2800,
     promptDirective: `You are a Principal at a top-tier venture firm specializing in competitive defensibility and structural moats.
 
@@ -147,7 +147,7 @@ Assign a Defensibility Rating (0 to 100) for each dimension and conclude with 3 
     title: "📈 SaaS Unit Economics & CAC Payback Matrix",
     category: "Economics",
     brief: "Model unit economics, LTV/CAC ratios, Gross Margins, Net Revenue Retention (NRR), and cash-flow sensitivity curves for B2B SaaS.",
-    targetModel: "o3-mini / GPT-4o",
+    targetModel: "o4-mini / GPT-5",
     estimatedTokens: 3200,
     promptDirective: `You are a Chief Financial Officer for high-growth software enterprises. Build an authoritative, mathematically rigorous unit economics and financial sensitivity model.
 
@@ -167,7 +167,7 @@ Provide a clear executive financial diagnostic: Is this business economically vi
     title: "🚀 Venture Capital Pitch Deck Architect (12 Slides)",
     category: "Pitch",
     brief: "Compile a 12-slide investor pitch deck structure with problem statement, secret sauce, TAM/SAM/SOM calculation, and milestone-based use of funds.",
-    targetModel: "Claude 3.7 Sonnet / Gemini 2.0 Pro",
+    targetModel: "Claude 4.5 Sonnet / Gemini 3 Pro",
     estimatedTokens: 2600,
     promptDirective: `You are a partner at Sequoia Capital advising a seed/Series A founder on crafting a 10/10 investor presentation.
 
@@ -192,7 +192,7 @@ For each slide, specify: (a) Header headline, (b) Key visual layout concept, (c)
     title: "🧪 Startup Idea & Niche Falsification Protocol",
     category: "Validation",
     brief: "Challenge core business assumptions with adversarial falsification criteria, mom-test customer discovery questions, and smoke-test conversion tests.",
-    targetModel: "Claude 3.7 Sonnet / DeepSeek-R1",
+    targetModel: "Claude 4.5 Sonnet / DeepSeek-R2",
     estimatedTokens: 2500,
     promptDirective: `You are an adversarial business red-teamer tasked with stress-testing a new startup hypothesis before capital is committed.
 

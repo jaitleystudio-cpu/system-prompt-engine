@@ -572,7 +572,7 @@ export const AiIncidentWire: React.FC<Props> = ({ onNavigate }) => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. OpenAI o3, Claude 3.7, DeepSeek R1"
+                    placeholder="e.g. OpenAI GPT-5 / o4, Claude 4.5, DeepSeek R2"
                     style={{ width: "100%", padding: "0.5rem 0.75rem", background: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", color: "#fff", boxSizing: "border-box" }}
                   />
                 </div>

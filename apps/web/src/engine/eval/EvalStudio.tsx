@@ -94,18 +94,19 @@ const DEFAULT_TEST_CASES: StudioTestCase[] = [
 
 const AVAILABLE_MODELS = [
   { id: "mock:simulated-fast", label: "Mock Fast Runner (Zero Cost / Offline)", default: true },
-  { id: "anthropic:claude-3-7-sonnet-20250219", label: "Claude 3.7 Sonnet (Anthropic)", default: true },
-  { id: "openai:gpt-4o", label: "GPT-4o (OpenAI)", default: false },
-  { id: "openai:o3-mini", label: "o3-mini (Frontier Reasoning)", default: false },
-  { id: "groq:llama-3.3-70b-versatile", label: "Llama 3.3 70B (Groq Ultra-Fast)", default: false },
-  { id: "ollama:llama3", label: "Ollama Local (http://localhost:11434)", default: false },
+  { id: "anthropic:claude-4-5-sonnet", label: "Claude 4.5 Sonnet (Anthropic 2026)", default: true },
+  { id: "openai:gpt-5", label: "GPT-5 Omni (OpenAI 2026)", default: false },
+  { id: "openai:o4-mini", label: "o4-mini (Frontier Reasoning 2026)", default: false },
+  { id: "google:gemini-3-pro", label: "Gemini 3 Pro (Google 2026)", default: false },
+  { id: "groq:llama-4-70b-versatile", label: "Llama 4 70B (Groq Ultra-Fast)", default: false },
+  { id: "ollama:llama4", label: "Ollama Local Llama 4 (http://localhost:11434)", default: false },
 ];
 
 export function EvalStudio() {
   const [promptText, setPromptText] = useState(DEFAULT_PRESET_PROMPT);
   const [selectedModels, setSelectedModels] = useState<string[]>([
     "mock:simulated-fast",
-    "anthropic:claude-3-7-sonnet-20250219",
+    "anthropic:claude-4-5-sonnet",
   ]);
   const [testCases, setTestCases] = useState<StudioTestCase[]>(DEFAULT_TEST_CASES);
   const [activeTab, setActiveTab] = useState<"matrix" | "redteam" | "import" | "keys" | "telemetry">("matrix");
@@ -316,7 +317,7 @@ export function EvalStudio() {
         </div>
         <h1 className="spe-eval-title">Frontier Model Matrix & Vulnerability Studio</h1>
         <p className="spe-eval-subtitle">
-          Compare real prompts side-by-side across Claude 3.7, GPT-4o, Grok 3, and Local Ollama.
+          Compare real prompts side-by-side across Claude 4.5, GPT-5, Gemini 3, and Local Ollama.
           Execute live assertions, probe 10 OWASP attack vectors, and automatically patch vulnerabilities in 1 click.
         </p>
       </div>
@@ -828,7 +829,7 @@ export function EvalStudio() {
               <span className="spe-waterfall-meta-pill" style={{ color: "#34d399", borderColor: "rgba(52, 211, 153, 0.4)" }}>
                 🛡️ ZERO-EGRESS $0
               </span>
-              <span className="spe-waterfall-meta-pill">MODEL: {activeTraceRecord?.model || "Claude 3.7 Sonnet"}</span>
+              <span className="spe-waterfall-meta-pill">MODEL: {activeTraceRecord?.model || "Claude 4.5 Sonnet"}</span>
               <span className="spe-waterfall-meta-pill">LATENCY: {activeTraceRecord?.totalLatencyMs || 42}ms</span>
             </div>
           </div>

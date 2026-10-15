@@ -32,6 +32,10 @@ export interface CostOptimizationResult {
   prunedTokenCount: number;
   tokenReductionPercent: number; // e.g. 32%
   annualSavingsUsdAt10mCalls: {
+    gpt5: number;
+    claude45Sonnet: number;
+    deepseekR2: number;
+    // Backwards-compatible aliases
     gpt4o: number;
     claude37Sonnet: number;
     deepseekR1: number;
@@ -42,85 +46,85 @@ export interface CostOptimizationResult {
 
 export const FRONTIER_MODELS: ModelPricingTier[] = [
   {
-    modelId: 'claude-3-7-sonnet',
+    modelId: 'claude-4-5-sonnet',
     provider: 'Anthropic',
-    inputPerMillionUsd: 3.00,
-    outputPerMillionUsd: 15.00,
-    cachedInputPerMillionUsd: 0.30,
-    estimatedTtftMs: 380,
-    tokensPerSec: 68
-  },
-  {
-    modelId: 'claude-3-5-haiku',
-    provider: 'Anthropic',
-    inputPerMillionUsd: 0.80,
-    outputPerMillionUsd: 4.00,
-    cachedInputPerMillionUsd: 0.08,
-    estimatedTtftMs: 140,
-    tokensPerSec: 120
-  },
-  {
-    modelId: 'gpt-4o',
-    provider: 'OpenAI',
     inputPerMillionUsd: 2.50,
-    outputPerMillionUsd: 10.00,
-    cachedInputPerMillionUsd: 1.25,
-    estimatedTtftMs: 290,
+    outputPerMillionUsd: 12.00,
+    cachedInputPerMillionUsd: 0.25,
+    estimatedTtftMs: 320,
     tokensPerSec: 85
   },
   {
-    modelId: 'gpt-4o-mini',
-    provider: 'OpenAI',
-    inputPerMillionUsd: 0.15,
-    outputPerMillionUsd: 0.60,
-    cachedInputPerMillionUsd: 0.075,
-    estimatedTtftMs: 120,
-    tokensPerSec: 140
-  },
-  {
-    modelId: 'gemini-2.5-pro',
-    provider: 'Google',
-    inputPerMillionUsd: 1.25,
-    outputPerMillionUsd: 5.00,
-    cachedInputPerMillionUsd: 0.3125,
-    estimatedTtftMs: 320,
-    tokensPerSec: 75
-  },
-  {
-    modelId: 'gemini-2.5-flash',
-    provider: 'Google',
-    inputPerMillionUsd: 0.075,
-    outputPerMillionUsd: 0.30,
-    cachedInputPerMillionUsd: 0.01875,
-    estimatedTtftMs: 95,
-    tokensPerSec: 180
-  },
-  {
-    modelId: 'deepseek-v3',
-    provider: 'DeepSeek',
-    inputPerMillionUsd: 0.14,
-    outputPerMillionUsd: 0.28,
-    cachedInputPerMillionUsd: 0.014,
-    estimatedTtftMs: 220,
-    tokensPerSec: 60
-  },
-  {
-    modelId: 'deepseek-r1',
-    provider: 'DeepSeek',
-    inputPerMillionUsd: 0.55,
-    outputPerMillionUsd: 2.19,
-    cachedInputPerMillionUsd: 0.14,
-    estimatedTtftMs: 450,
-    tokensPerSec: 42
-  },
-  {
-    modelId: 'llama-3.3-70b-instruct',
-    provider: 'Meta / Groq',
-    inputPerMillionUsd: 0.70,
-    outputPerMillionUsd: 0.90,
-    cachedInputPerMillionUsd: 0.10,
+    modelId: 'claude-4-5-haiku',
+    provider: 'Anthropic',
+    inputPerMillionUsd: 0.60,
+    outputPerMillionUsd: 3.00,
+    cachedInputPerMillionUsd: 0.06,
     estimatedTtftMs: 110,
-    tokensPerSec: 250
+    tokensPerSec: 160
+  },
+  {
+    modelId: 'gpt-5',
+    provider: 'OpenAI',
+    inputPerMillionUsd: 2.00,
+    outputPerMillionUsd: 8.00,
+    cachedInputPerMillionUsd: 1.00,
+    estimatedTtftMs: 240,
+    tokensPerSec: 105
+  },
+  {
+    modelId: 'o4-mini',
+    provider: 'OpenAI',
+    inputPerMillionUsd: 0.80,
+    outputPerMillionUsd: 3.20,
+    cachedInputPerMillionUsd: 0.20,
+    estimatedTtftMs: 150,
+    tokensPerSec: 120
+  },
+  {
+    modelId: 'gemini-3-pro',
+    provider: 'Google',
+    inputPerMillionUsd: 1.00,
+    outputPerMillionUsd: 4.00,
+    cachedInputPerMillionUsd: 0.25,
+    estimatedTtftMs: 260,
+    tokensPerSec: 95
+  },
+  {
+    modelId: 'gemini-3-flash',
+    provider: 'Google',
+    inputPerMillionUsd: 0.10,
+    outputPerMillionUsd: 0.40,
+    cachedInputPerMillionUsd: 0.025,
+    estimatedTtftMs: 75,
+    tokensPerSec: 220
+  },
+  {
+    modelId: 'deepseek-v4',
+    provider: 'DeepSeek',
+    inputPerMillionUsd: 0.12,
+    outputPerMillionUsd: 0.24,
+    cachedInputPerMillionUsd: 0.012,
+    estimatedTtftMs: 180,
+    tokensPerSec: 80
+  },
+  {
+    modelId: 'deepseek-r2',
+    provider: 'DeepSeek',
+    inputPerMillionUsd: 0.45,
+    outputPerMillionUsd: 1.80,
+    cachedInputPerMillionUsd: 0.10,
+    estimatedTtftMs: 360,
+    tokensPerSec: 55
+  },
+  {
+    modelId: 'llama-4-70b-instruct',
+    provider: 'Meta / Groq',
+    inputPerMillionUsd: 0.50,
+    outputPerMillionUsd: 0.70,
+    cachedInputPerMillionUsd: 0.08,
+    estimatedTtftMs: 85,
+    tokensPerSec: 300
   }
 ];
 
@@ -210,18 +214,26 @@ export function simulateCostAndCarbon(prompt: string): CostOptimizationResult {
     };
   });
 
-  // Calculate annual savings across 10M requests
-  const gpt4oModel = modelEstimates.find(m => m.modelId === 'gpt-4o')!;
-  const claudeModel = modelEstimates.find(m => m.modelId === 'claude-3-7-sonnet')!;
-  const deepseekModel = modelEstimates.find(m => m.modelId === 'deepseek-r1')!;
+  // Calculate annual savings across 10M requests (2026 Frontier Models)
+  const gpt5Model = modelEstimates.find(m => m.modelId === 'gpt-5') || modelEstimates[0];
+  const claudeModel = modelEstimates.find(m => m.modelId === 'claude-4-5-sonnet') || modelEstimates[0];
+  const deepseekModel = modelEstimates.find(m => m.modelId === 'deepseek-r2') || modelEstimates[0];
 
   const volumeFactor = 10; // 10M requests
   const savedTokensRatio = tokenReductionPercent / 100;
 
+  const gpt5Savings = Math.round(gpt5Model.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
+  const claudeSavings = Math.round(claudeModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
+  const deepseekSavings = Math.round(deepseekModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
+
   const annualSavingsUsdAt10mCalls = {
-    gpt4o: Math.round(gpt4oModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio),
-    claude37Sonnet: Math.round(claudeModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio),
-    deepseekR1: Math.round(deepseekModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio)
+    gpt5: gpt5Savings,
+    claude45Sonnet: claudeSavings,
+    deepseekR2: deepseekSavings,
+    // Backwards-compatible aliases
+    gpt4o: gpt5Savings,
+    claude37Sonnet: claudeSavings,
+    deepseekR1: deepseekSavings,
   };
 
   return {

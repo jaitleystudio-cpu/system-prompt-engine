@@ -62,7 +62,7 @@ export function FeaturedArsenalPreview({ onNavigate, onSelectPrompt }: Props) {
           </div>
           <h2 className="spe-featured-title">Universal Prompt Arsenal</h2>
           <p className="spe-featured-desc">
-            Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude 3.7 Sonnet, OpenAI o3-mini, Gemini 2.0, Grok 3, DeepSeek-R1, and Midjourney.
+            Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7.
           </p>
         </header>
 
