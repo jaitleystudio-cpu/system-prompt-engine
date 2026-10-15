@@ -35575,10 +35575,10 @@
       "text": "Start with what you want to do. SPE brings the request into focus — goals, boundaries, and open questions — so you leave with a clearer prompt."
     },
     {
-      "id": "54ed330c8e50e7a8f797",
+      "id": "24cb34e280b84f48c041",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
-      "text": "SPE uses editable templates, not a generative AI model. Preparing a prompt happens on this device; using it with another AI is your choice."
+      "text": "SPE uses a privacy-first dual-core engine: Core A local generative intelligence with Core B deterministic compiler recovery. Preparing a prompt happens on this device; using it with another AI is your choice."
     },
     {
       "id": "58bf432a834c5a98d7c2",

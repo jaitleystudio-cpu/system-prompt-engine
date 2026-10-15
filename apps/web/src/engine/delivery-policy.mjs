@@ -51,7 +51,7 @@ export function selectEffectivePrompt(canonicalPrompt, qualityOut) {
 /** One kernel-selected prompt for display, artifact, history, copy, and export. */
 export function bindEffectiveSurfaces(canonicalPrompt, qualityOut, opts) {
   const prompt = selectEffectivePrompt(canonicalPrompt, qualityOut);
-  const formatted = synthesizeSystemPrompt(prompt, opts);
+  const formatted = opts ? synthesizeSystemPrompt(prompt, opts) : prompt;
   return {
     display: formatted,
     rawPrompt: prompt,

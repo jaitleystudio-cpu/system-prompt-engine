@@ -16,6 +16,9 @@ import {
 } from "./entitlementVerifier";
 import { DualLanguagePromptStudio } from "./DualLanguagePromptStudio";
 import { SpePostPromptGuidedJourney } from "./SpePostPromptGuidedJourney";
+import { evaluateCandidateQuality } from "./independentQualityAuthority";
+import { autoOptimizeSystemPrompt } from "./core-a";
+export { autoOptimizeSystemPrompt } from "./core-a";
 
 export interface PromptRadarInspectorProps {
   promptText: string;
@@ -52,55 +55,6 @@ Use only supplied facts, context and requirements. Never assume outside network 
 - Is every explicit requirement addressed, with no unrelated obligations added?
 - Have unsupported claims and contradictory instructions been removed?`;
 
-/** 1-Click Auto-Optimizer: Injects missing invariant pillars to reach 100/100 score */
-export function autoOptimizeSystemPrompt(prompt: string): string {
-  let result = prompt.trim();
-
-  const hasRole = /#{1,4}[^\n]*(?:Role|Persona|Identity)|<role>/i.test(result);
-  const hasObjective = /#{1,4}[^\n]*(?:Objective|Goal|Mission|Task)|<objective>/i.test(result);
-  const hasMethodology = /#{1,4}[^\n]*(?:Approach|Methodolog|Step|Scaffold|Execution Plan)|<approach>/i.test(result);
-  const hasVerification = /#{1,4}[^\n]*(?:Acceptance|Verification|Checks|Audit Battery)|<acceptance_checks>/i.test(result);
-  const hasGrounding = /#{1,4}[^\n]*(?:Missing Information|Grounding|Evidence)|handling_missing_information|<handling_missing_information>/i.test(result);
-
-  const additions: string[] = [];
-
-  if (!hasRole) {
-    additions.push(
-      `# System Role & Persona\nYou are a senior technical systems architect specializing in clean, robust, and maintainable software with strict verification and zero hallucinated dependencies.`
-    );
-  }
-
-  if (!hasObjective) {
-    additions.push(
-      `# Objective & Boundary Scope\nExecute the primary deliverable with zero hallucinated dependencies, preserving all supplied user constraints, performance budgets, and error recovery contracts.`
-    );
-  }
-
-  if (!hasMethodology) {
-    additions.push(
-      `# Approach & Methodological Plan\n1. Inspect supplied requirements, dependencies, and environment constraints before proposing changes.\n2. Implement the smallest complete, robust solution adhering strictly to architectural contracts.\n3. Consider failure modes, memory bounds, and defensive error boundaries explicitly.\n4. Validate against deterministic verification criteria before completion.`
-    );
-  }
-
-  if (!hasGrounding) {
-    additions.push(
-      `# Handling Missing Information\nUse only supplied facts, context and requirements. Never assume outside network tools or uncited documents. Ask a focused question only when missing information blocks progress; otherwise proceed with clearly labeled, limited assumptions.`
-    );
-  }
-
-  if (!hasVerification) {
-    additions.push(
-      `# Acceptance Checks & Verification Battery\n- Are setup, behavior changes, and verification reproducible without guessing missing steps?\n- Are memory limits, error recovery paths, and boundary conditions enforced?\n- Is every explicit requirement addressed, with no unrelated obligations added?\n- Have unsupported claims and contradictory instructions been removed?`
-    );
-  }
-
-  if (additions.length > 0) {
-    result = additions.join("\n\n") + "\n\n" + (result ? `# Primary Execution Content\n${result}` : "");
-  }
-
-  return result;
-}
-
 export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   promptText,
   userRequest,
@@ -127,8 +81,21 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
 
   // Active prompt based on optimization toggle
   const currentPrompt = useMemo(() => {
-    return isOptimized ? autoOptimizeSystemPrompt(promptText) : promptText;
-  }, [isOptimized, promptText]);
+    return isOptimized
+      ? autoOptimizeSystemPrompt(promptText, userRequest, activeTarget, activeDepthTier)
+      : promptText;
+  }, [isOptimized, promptText, userRequest, activeTarget, activeDepthTier]);
+
+  // Independent Quality Evaluation (Zero Self-Grading)
+  const qualityAudit = useMemo(() => {
+    if (!currentPrompt) return null;
+    return evaluateCandidateQuality({
+      prompt: currentPrompt,
+      userRequest: userRequest || "",
+      target: activeTarget || "any",
+      category,
+    });
+  }, [currentPrompt, userRequest, activeTarget, category]);
 
   // Compute Telemetry Metrics
   const metrics = useMemo(() => {
@@ -145,26 +112,21 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
     const hasVerification = /#{1,4}[^\n]*(?:Acceptance|Verification|Checks|Audit Battery)|<acceptance_checks>/i.test(currentPrompt);
     const hasGrounding = /#{1,4}[^\n]*(?:Missing Information|Grounding|Evidence)|handling_missing_information|<handling_missing_information>|Use only supplied evidence/i.test(currentPrompt);
 
-    let healthScore = 70;
-    if (hasRole) healthScore += 6;
-    if (hasObjective) healthScore += 6;
-    if (hasMethodology) healthScore += 6;
-    if (hasVerification) healthScore += 6;
-    if (hasGrounding) healthScore += 6;
-    if (healthScore > 100 || isOptimized) healthScore = 100;
+    // Score derived from Independent Quality Authority
+    const healthScore = qualityAudit ? qualityAudit.overallQualityScore : 70;
 
     return {
       charCount,
       wordCount,
       estTokens,
       healthScore,
-      hasRole: isOptimized || hasRole,
-      hasObjective: isOptimized || hasObjective,
-      hasMethodology: isOptimized || hasMethodology,
-      hasVerification: isOptimized || hasVerification,
-      hasGrounding: isOptimized || hasGrounding,
+      hasRole,
+      hasObjective,
+      hasMethodology,
+      hasVerification,
+      hasGrounding,
     };
-  }, [currentPrompt, isOptimized]);
+  }, [currentPrompt, qualityAudit]);
 
   if (!metrics) return null;
 
@@ -751,24 +713,28 @@ ${promptText}
                         border: isOptimized ? "1px solid rgba(16, 185, 129, 0.4)" : "1px solid rgba(56, 189, 248, 0.3)",
                       }}
                     >
-                      {isOptimized ? "100/100 SATURATED" : `${metrics.healthScore}/100 QUALITY`}
+                      {metrics.healthScore}/100 {isOptimized ? "EVALUATED" : "QUALITY"}
                     </span>
                   </div>
 
                   <p style={{ margin: "0 0 12px", fontSize: "0.74rem", color: "#94a3b8", lineHeight: 1.45 }}>
-                    {isOptimized
-                      ? "✓ All 6 cognitive invariant axes saturated. Authority persona, bounded objective, 4-phase scaffolding, test battery, and evidence grounding active."
-                      : "Multi-axis audit evaluating your prompt against Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, and Gemini 3 Pro frontier guardrails."}
+                    {qualityAudit?.detectedContradictions.length
+                      ? `⚠️ Conflict: ${qualityAudit.detectedContradictions[0]}`
+                      : qualityAudit?.missingRequirements.length
+                        ? `Needs Repair: Missing ${qualityAudit.missingRequirements.length} required constraint(s).`
+                        : isOptimized
+                          ? `✓ Prompt upgraded. Evaluated health score: ${metrics.healthScore}/100 based on independently verified invariant axes.`
+                          : "Multi-axis audit evaluating your prompt against Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, and Gemini 3 Pro frontier guardrails."}
                   </p>
 
-                  {/* 1-Click Auto-Optimize Button */}
+                  {/* 1-Click Generate & Improve Button */}
                   {!isOptimized ? (
                     <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
                       <button
                         type="button"
                         onClick={() => {
                           setIsOptimized(true);
-                          const opt = autoOptimizeSystemPrompt(promptText);
+                          const opt = autoOptimizeSystemPrompt(promptText, userRequest, activeTarget, activeDepthTier);
                           onAutoOptimize?.(opt);
                         }}
                         style={{
@@ -792,7 +758,7 @@ ${promptText}
                           transition: "all 0.18s cubic-bezier(0.16, 1, 0.3, 1)",
                         }}
                       >
-                        <span>⚡</span> Auto-Optimize to 100% Score
+                        <span>⚡</span> Generate & Improve
                       </button>
                     </div>
                   ) : (
@@ -820,13 +786,13 @@ ${promptText}
                           transition: "all 0.18s ease",
                         }}
                       >
-                        {copiedKey === "optimized-copy" ? "✓ Copied 100% Prompt!" : "📋 Copy 100% Prompt"}
+                        {copiedKey === "optimized-copy" ? "✓ Copied Improved Prompt!" : "📋 Copy Improved Prompt"}
                       </button>
                       <button
                         type="button"
                         onClick={() => {
                           const timestamp = new Date().toISOString().slice(0, 10);
-                          downloadMarkdownFile(`spe-system-prompt-100-${timestamp}.md`, constructMarkdownSystemPrompt(currentPrompt, { depthTier: activeDepthTier, includeFrontmatter: true }));
+                          downloadMarkdownFile(`spe-system-prompt-improved-${timestamp}.md`, constructMarkdownSystemPrompt(currentPrompt, { depthTier: activeDepthTier, includeFrontmatter: true }));
                         }}
                         style={{
                           minHeight: "42px",
@@ -1920,7 +1886,7 @@ export const AutoOptimizeCTAButton: React.FC<AutoOptimizeCTAButtonProps> = ({
       }}
     >
       <span style={{ color: "#e5d5b0", fontSize: "0.85rem" }}>⚡</span>
-      <span>Auto-Optimize (100%)</span>
+      <span>Generate & Improve</span>
     </button>
   );
 };

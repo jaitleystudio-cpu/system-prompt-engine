@@ -576,7 +576,7 @@ export function Hero(p: Props) {
                     disabled={!p.prompt}
                     onOptimize={() => {
                       if (p.prompt) {
-                        const opt = autoOptimizeSystemPrompt(p.prompt);
+                        const opt = autoOptimizeSystemPrompt(p.prompt, p.value, p.target);
                         p.onAutoOptimize?.(opt);
                         setTimeout(() => {
                           const radar = document.querySelector("#spe-auto-optimize-section, .spe-prompt-radar-inspector");

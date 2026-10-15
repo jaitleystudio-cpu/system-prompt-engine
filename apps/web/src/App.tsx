@@ -27,6 +27,13 @@ import {
 } from "./engine/HeroPlatformRotator";
 import { fromK3QualityRequest } from "./engine/quality-request.mjs";
 import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
+import {
+  executeDualCoreGeneration,
+  CORE_A_ENGINE_TAG,
+  CONTRADICTION_BLOCKED_STATUS,
+  formatDualCoreTechniques,
+  formatContradictionError,
+} from "./engine/dualCoreRouter";
 import { QualityReceiptPanel } from "./workspace/QualityReceiptPanel";
 import { getServiceWorkerSafe } from "./engine/pwaSafe";
 import type {
@@ -656,7 +663,7 @@ export default function App() {
         if (!out.error && out.result) {
           const k3 = await requestK3Binding(client, fixture, category, rawUser);
           const bound = requireBoundEffectPlan(k3);
-          const prompt = renderPromptArtifact({
+          const fallbackPrompt = renderPromptArtifact({
             userRequest: rawUser,
             target,
             category,
@@ -664,11 +671,36 @@ export default function App() {
             techniques: bound.techniques,
             effectPlan: bound.effectPlan,
           });
+
+          // Dual-Core Execution: Core A is Primary Generative Engine; Core B is Plan B Recovery Compiler
+          const confirmedConstraints = (lensState.confirmed || []).map((c) => c.text);
+          const dualCoreRes = await executeDualCoreGeneration({
+            userRequest: rawUser,
+            target,
+            category,
+            depthTier,
+            explicitConstraints: confirmedConstraints,
+          });
+
+          // Block on unresolvable contradictions transparently
+          if (dualCoreRes.status === CONTRADICTION_BLOCKED_STATUS) {
+            setError({
+              code: "BRIEF_NEEDS_REVIEW",
+              message: formatContradictionError(dualCoreRes.fallbackReason),
+            });
+            setPhase("unavailable");
+            setBusy(false);
+            return;
+          }
+
+          const isCoreA = dualCoreRes.engineCoreUsed === CORE_A_ENGINE_TAG && Boolean(dualCoreRes.prompt);
+          const primaryPromptText = isCoreA ? dualCoreRes.prompt : fallbackPrompt.finalPrompt;
+
           let qualityOut: unknown = null;
           try {
             qualityOut = await requestQualityReceipt(
               client,
-              fromK3QualityRequest(k3.rawOutput, prompt.finalPrompt),
+              fromK3QualityRequest(k3.rawOutput, primaryPromptText),
             );
           } catch {
             qualityOut = null;
@@ -676,14 +708,18 @@ export default function App() {
           const decision = qualityOut
             ? deliveryForReceipt(qualityOut)
             : deliveryForQualityMiss();
-          const surfaces = (bindEffectiveSurfaces(prompt.finalPrompt, qualityOut), bindEffectiveSurfaces(prompt.finalPrompt, qualityOut, {
+          const surfaces = bindEffectiveSurfaces(primaryPromptText, qualityOut, {
             target,
             category,
             depthTier,
-          }));
-          const shown = { ...prompt, finalPrompt: surfaces.display };
+          });
+          const shown = {
+            ...fallbackPrompt,
+            speAdded: formatDualCoreTechniques(isCoreA, bound.techniques),
+            finalPrompt: surfaces.display,
+          };
           setRendered(shown);
-          setRawIrPrompt(prompt.finalPrompt);
+          setRawIrPrompt(primaryPromptText);
           const spe = await buildSpeArtifact({
             user_request: goal,
             category,

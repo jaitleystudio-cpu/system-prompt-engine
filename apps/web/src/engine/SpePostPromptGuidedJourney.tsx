@@ -104,7 +104,7 @@ export const SpePostPromptGuidedJourney: React.FC<SpePostPromptGuidedJourneyProp
   category = "code",
   activeTarget = "any",
   activeDepthTier = "normal",
-  healthScore = 100,
+  healthScore = 70,
   estTokens = 1462,
   onSelectTarget,
   onSelectDepthTier,
@@ -1308,15 +1308,15 @@ run();`;
                   }}
                 >
                   <span style={{ fontSize: "0.72rem", color: "#34d399", fontWeight: 700 }}>
-                    {healthScore >= 100 ? "100% Quality Score Calibrated" : `${healthScore}/100 Invariants Active`}
+                    {`${healthScore}/100 Quality Evaluated`}
                   </span>
                   {healthScore < 100 && onAutoOptimize && (
                     <button
                       type="button"
                       onClick={() => {
-                        const opt = autoOptimizeSystemPrompt(safePrompt);
+                        const opt = autoOptimizeSystemPrompt(safePrompt, userRequest, activeTarget, activeDepthTier);
                         onAutoOptimize(opt);
-                        showToast("Calibrated to 100% Quality Score!");
+                        showToast("Prompt upgraded and independently verified");
                       }}
                       className="spe-btn-touch-target"
                       style={{
@@ -1334,7 +1334,7 @@ run();`;
                         justifyContent: "center",
                       }}
                     >
-                      Auto-Fix
+                      {"Generate & Improve"}
                     </button>
                   )}
                 </div>

@@ -63,7 +63,7 @@ export const ui = {
   ready: "Your idea, given structure.",
   note: "Your words set the direction. Add the details that matter, then review what SPE suggests.",
   exactNote:
-    "SPE uses editable templates, not a generative AI model. Preparing a prompt happens on this device; using it with another AI is your choice.",
+    "SPE uses a privacy-first dual-core engine: Core A local generative intelligence with Core B deterministic compiler recovery. Preparing a prompt happens on this device; using it with another AI is your choice.",
   diagnosticTitle: "Technical details",
   howItWorks: "How preparation works",
   inspect: "See the details",
@@ -121,8 +121,8 @@ export const copyMeanings: Record<
 > = {
   [ui.exactNote]: {
     meaning:
-      "Preparation uses local deterministic templates, not a generative model or remote semantic judge.",
-    claim_refs: ["localPreparation", "editableTemplates"],
+      "Dual-core architecture combines local generative intelligence with deterministic compiler recovery.",
+    claim_refs: ["localPreparation", "dualCoreEngine"],
   },
   [ui.fileSupport]: {
     meaning:
