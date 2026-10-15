@@ -24,6 +24,7 @@ import { ProofCarryingEvolutionController } from "./proofCarryingEvolution.ts";
 import type {
   ProofCarryingChangeProposal,
   SearchConsoleQueryRow,
+  DefectCategory,
 } from "./types.ts";
 
 export interface NightlyRunReceipt {
@@ -62,6 +63,13 @@ export class NightlyEvolutionScheduler {
     dryRun?: boolean;
     baseCommit?: string;
     mockSearchData?: SearchConsoleQueryRow[];
+    simulateMilestoneSlice?: boolean;
+    injectedBrokenLinks?: string[];
+    injectedDefects?: Array<{
+      category: DefectCategory;
+      reportedSymptom: string;
+      context: Record<string, unknown>;
+    }>;
   } = {}): Promise<NightlyRunReceipt> {
     const isDryRun = Boolean(options.dryRun);
     const baseCommit = options.baseCommit || "9275039a";
@@ -160,11 +168,21 @@ export class NightlyEvolutionScheduler {
       // Phase 5: 04:00 AM IST — Rank qualified opportunities and reproduce selected defects
       phasesExecuted.push("04:00_IST_OPPORTUNITY_RANKING_AND_REPRODUCTION");
 
-      // Vertical Slice: Broken Link Discovery & Reproduction
-      const brokenLinkHref = "/skills";
-      const authoritativeDest = this.inventoryAuditor.resolveBrokenLinkDestination(brokenLinkHref);
+      // Determine broken link target (from injected options, discovered report, or simulated milestone)
+      let brokenLinkHref: string | null = null;
+      if (options.injectedBrokenLinks && options.injectedBrokenLinks.length > 0) {
+        brokenLinkHref = options.injectedBrokenLinks[0];
+      } else if (options.simulateMilestoneSlice) {
+        brokenLinkHref = "/skills";
+      } else if (inventoryReport.brokenInternalLinks.length > 0) {
+        brokenLinkHref = inventoryReport.brokenInternalLinks[0].from;
+      }
 
-      if (authoritativeDest) {
+      const authoritativeDest = brokenLinkHref
+        ? this.inventoryAuditor.resolveBrokenLinkDestination(brokenLinkHref)
+        : null;
+
+      if (brokenLinkHref && authoritativeDest) {
         // Phase 6: 04:30 AM IST — Generate bounded repair candidates in isolated branches
         phasesExecuted.push("04:30_IST_ISOLATED_REPAIR_GENERATION");
 
@@ -177,11 +195,13 @@ export class NightlyEvolutionScheduler {
           },
         });
 
-        // Traverse Change Impact
+        // Traverse Change Impact with allowlisted mechanical link category
         const impact = this.impactGraph.analyzeImpact({
           modifiedFile: repairCandidate.targetFile,
           targetRoute: "/",
           proposedCopySnippet: repairCandidate.minimalPatch.replacementChunk,
+          defectCategory: "BROKEN_INTERNAL_LINK",
+          isMechanicalAlias: true,
         });
 
         // Phase 7: 05:00 AM IST — Execute targeted and regression qualification

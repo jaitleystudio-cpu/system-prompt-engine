@@ -36,6 +36,9 @@ export interface PageRenderSnapshot {
     inpMs: number;
     hydrationError: boolean;
   };
+  headlineContrastRatio?: number;
+  reducedMotion?: boolean;
+  renderState?: "initial" | "interactive" | "loading" | "error" | "empty";
   simulatedUserTaskPass: boolean;
 }
 
@@ -89,12 +92,21 @@ export class VisualDomA11yVerifier {
 
     // 3. View 3: Accessibility & WCAG 2.2 Check
     const a11yIssues: string[] = [];
-    const isLargeText = snapshot.headlineBoundingBox.height >= 24;
-    const requiredContrast = baseline?.minContrastRatio ?? (isLargeText ? 3.0 : 4.5);
+    const isLargeHeadline = snapshot.headlineBoundingBox.height >= 24;
+    const requiredHeadlineContrast = isLargeHeadline ? 3.0 : 4.5;
 
-    if (snapshot.primaryCta.contrastRatio < requiredContrast) {
+    // Check headline contrast if provided
+    if (snapshot.headlineContrastRatio !== undefined && snapshot.headlineContrastRatio < requiredHeadlineContrast) {
       a11yIssues.push(
-        `Contrast ratio ${snapshot.primaryCta.contrastRatio.toFixed(1)} violates WCAG 2.2 requirement (>= ${requiredContrast}:1).`
+        `Headline contrast ratio ${snapshot.headlineContrastRatio.toFixed(1)} violates WCAG 2.2 requirement (>= ${requiredHeadlineContrast}:1).`
+      );
+    }
+
+    // Check primary CTA button contrast (normal text requires >= 4.5:1 unless baseline explicitly permits)
+    const requiredCtaContrast = baseline?.minContrastRatio ?? 4.5;
+    if (snapshot.primaryCta.contrastRatio < requiredCtaContrast) {
+      a11yIssues.push(
+        `Primary CTA contrast ratio ${snapshot.primaryCta.contrastRatio.toFixed(1)} violates WCAG 2.2 requirement (>= ${requiredCtaContrast}:1).`
       );
     }
     if (snapshot.primaryCta.tabIndex < 0) {
@@ -116,7 +128,7 @@ export class VisualDomA11yVerifier {
       issues: a11yIssues,
     };
 
-    // 4. Web Vitals & Hydration Checks
+    // 4. Web Vitals & Hydration Checks (LCP <= 2500ms, CLS <= 0.1, INP <= 200ms)
     const vitalsRegressions: string[] = [];
     const baseLcp = baseline?.lcpMs ?? 2000;
 
@@ -128,7 +140,14 @@ export class VisualDomA11yVerifier {
 
     if (snapshot.computedWebVitals.clsScore > 0.1) {
       vitalsRegressions.push(`CLS of ${snapshot.computedWebVitals.clsScore} exceeds 0.1 threshold.`);
+    } else if (baseline?.clsScore && snapshot.computedWebVitals.clsScore > Math.max(0.04, baseline.clsScore * 1.5)) {
+      vitalsRegressions.push(`CLS regression: +${Math.round(((snapshot.computedWebVitals.clsScore - baseline.clsScore) / baseline.clsScore) * 100)}% over baseline.`);
     }
+
+    if (snapshot.computedWebVitals.inpMs > 200) {
+      vitalsRegressions.push(`INP of ${snapshot.computedWebVitals.inpMs}ms exceeds 200ms threshold.`);
+    }
+
     if (snapshot.computedWebVitals.hydrationError) {
       vitalsRegressions.push("Fatal hydration failure halts user interaction.");
     }

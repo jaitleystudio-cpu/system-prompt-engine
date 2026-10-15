@@ -6,6 +6,7 @@ and reconciles broken internal navigation.
 
 from __future__ import annotations
 
+import re
 from typing import Any, Dict, List, Optional, Set
 from spe_runtime.website_evolution.types import DefectCategory
 
@@ -194,9 +195,17 @@ class WebsiteInventoryAuditorPy:
             "view": "research",
             "indexable": False,
             "title": "Research — Stored receipt only | SPE",
-            "description": "View a stored research receipt.",
+            "description": "Inspect stored research and verification receipts locally on this device.",
             "task": "Local research receipt viewer",
             "owner": "internal-workspace",
+        },
+        "/eval-studio": {
+            "view": "eval-studio",
+            "indexable": True,
+            "title": "Frontier Model Eval Studio & 1-Click Immunizer | SPE Ω",
+            "description": "Side-by-side prompt evaluation against Claude 4.5, GPT-5, Gemini 3, and Local Ollama. Live assertions, 10 OWASP red-team attack probes, and 1-click vulnerability immunization.",
+            "task": "Side-by-side prompt evaluation and 1-click vulnerability immunization against frontier models",
+            "owner": "frontier-eval-squad",
         },
     }
 
@@ -210,6 +219,10 @@ class WebsiteInventoryAuditorPy:
         "/skills": "/build-skill",
         "/skills-builder": "/build-skill",
         "/benchmark": "/compare",
+        "/eval": "/eval-studio",
+        "/evals": "/eval-studio",
+        "/redteam": "/eval-studio",
+        "/matrix": "/eval-studio",
         "/plans": "/pricing",
         "/prompt-library": "/prompts",
         "/incident-wire": "/incidents",
@@ -227,19 +240,22 @@ class WebsiteInventoryAuditorPy:
             if not canonical_url.startswith("https://systempromptengine.com"):
                 canonical_conflicts.append({"route": route, "canonical": canonical_url, "issue": "Non-HTTPS canonical"})
 
-            if len(meta["title"]) < 10:
+            title = meta.get("title", "")
+            description = meta.get("description", "")
+
+            if len(title) < 10:
                 missing_metadata.append({"route": route, "missingField": "title"})
-            if len(meta["description"]) < 20:
+            if len(description) < 20:
                 missing_metadata.append({"route": route, "missingField": "description"})
 
             items.append({
                 "route": route,
                 "canonical_url": canonical_url,
-                "is_indexable": meta["indexable"],
-                "seo_title": meta["title"],
-                "meta_description": meta["description"],
-                "primary_user_task": meta["task"],
-                "assigned_owner": meta["owner"],
+                "is_indexable": meta.get("indexable", False),
+                "seo_title": title,
+                "meta_description": description,
+                "primary_user_task": meta.get("task", ""),
+                "assigned_owner": meta.get("owner", ""),
             })
 
         return {
@@ -256,3 +272,62 @@ class WebsiteInventoryAuditorPy:
         if clean in self.CANONICAL_ROUTES:
             return clean
         return self.SYNONYM_MAP.get(clean)
+
+    def reconcile_sitemap_entries(self, sitemap_xml: str) -> Dict[str, Any]:
+        loc_matches = re.findall(r"<loc>(https?://[^<]+)</loc>", sitemap_xml)
+        existing_urls = {u.rstrip("/") for u in loc_matches}
+
+        missing_routes: List[str] = []
+        suggested_xml_additions: List[str] = []
+
+        for route, meta in self.CANONICAL_ROUTES.items():
+            if meta["indexable"]:
+                canonical = f"{self.BASE_DOMAIN}{'' if route == '/' else route}".rstrip("/")
+                if canonical not in existing_urls:
+                    missing_routes.append(route)
+                    suggested_xml_additions.append(
+                        f"<url><loc>{canonical}/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>"
+                    )
+
+        extraneous_routes: List[str] = []
+        for route, meta in self.CANONICAL_ROUTES.items():
+            if not meta["indexable"]:
+                canonical = f"{self.BASE_DOMAIN}{'' if route == '/' else route}".rstrip("/")
+                if canonical in existing_urls:
+                    extraneous_routes.append(route)
+
+        return {
+            "reconciled": len(missing_routes) == 0 and len(extraneous_routes) == 0,
+            "missing_routes": missing_routes,
+            "extraneous_routes": extraneous_routes,
+            "suggested_xml_additions": suggested_xml_additions,
+        }
+
+    def detect_duplicate_or_doorway_page(self, candidate: Dict[str, str]) -> Dict[str, Any]:
+        route = candidate.get("route", "")
+        task = candidate.get("task", candidate.get("primary_task", candidate.get("primaryTask", "")))
+        candidate_words = {w for w in re.findall(r"\b\w{4,}\b", task.lower())}
+
+        for existing_route, meta in self.CANONICAL_ROUTES.items():
+            if existing_route == route:
+                return {
+                    "is_duplicate": True,
+                    "conflicting_route": existing_route,
+                    "reason": f"Exact route collision with existing page {existing_route}.",
+                }
+
+            existing_words = {w for w in re.findall(r"\b\w{4,}\b", meta["task"].lower())}
+            intersection = len(candidate_words & existing_words)
+            union = len(candidate_words | existing_words)
+            jaccard = intersection / union if union > 0 else 0.0
+            containment = intersection / len(existing_words) if len(existing_words) > 0 else 0.0
+
+            if jaccard >= 0.6 or containment >= 0.8:
+                return {
+                    "is_duplicate": True,
+                    "conflicting_route": existing_route,
+                    "reason": f"High semantic task overlap ({int(max(jaccard, containment) * 100)}%) with existing route {existing_route}. Flagged as low-value duplicate/doorway page.",
+                }
+
+        return {"is_duplicate": False}
+

@@ -71,7 +71,7 @@ Unlike unconstrained coding agents that autonomously rewrite copy or mass-genera
 
 ## III. Full Website Inventory & Ownership Map
 
-SPE Ω audits 23 distinct routes across 2 core categories:
+SPE Ω audits 24 distinct routes across 2 core categories (18 indexable public routes, 6 private local-workspace routes):
 
 | Route | View ID | Canonical URL | Indexable | Sitemap | Classification | Assigned Owner | Primary User Task |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -92,6 +92,7 @@ SPE Ω audits 23 distinct routes across 2 core categories:
 | `/reality-frontier` | `reality-frontier`| `https://systempromptengine.com/reality-frontier` | Yes | Yes | `SEO_PROTECTED` | `formal-verification` | Check ante-hoc feasibility and metamorphic evidence escrow |
 | `/challenge` | `challenge` | `https://systempromptengine.com/challenge` | Yes | Yes | `SEO_PROTECTED` | `active-testing-squad` | Run anti-lucky-pass active stress verification |
 | `/revocation` | `revocation` | `https://systempromptengine.com/revocation` | Yes | Yes | `LOCKED` | `security-governance` | Perform semantic slicing and memory purge |
+| `/eval-studio` | `eval-studio` | `https://systempromptengine.com/eval-studio` | Yes | Yes | `SEO_PROTECTED` | `frontier-eval-squad` | Side-by-side prompt evaluation and 1-click vulnerability immunization against frontier models |
 | `/workspace` | `workspace` | `https://systempromptengine.com/workspace` | No | No | `LOCKED` | `internal-workspace` | Perform local-device task without web publication |
 | `/my-work` | `my-work` | `https://systempromptengine.com/my-work` | No | No | `LOCKED` | `internal-workspace` | Local prompt history storage |
 | `/website` | `website` | `https://systempromptengine.com/website` | No | No | `LOCKED` | `internal-workspace` | Local site mockup without web hosting |

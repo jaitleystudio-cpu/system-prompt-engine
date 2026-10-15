@@ -171,6 +171,30 @@ export class SearchIntentEngine {
       };
     }
 
+    if (q.includes("eval") || q.includes("benchmark") || q.includes("compare") || q.includes("test prompt") || q.includes("probe")) {
+      return {
+        query,
+        detectedIntent: "PROMPT_EVALUATION_BENCHMARK",
+        authoritativeRoute: "/eval-studio",
+        expectedUserTask: "Evaluate and benchmark prompt directives side-by-side against frontier models",
+        titleAligned: currentLandingPage === "/eval-studio" || currentLandingPage === "/compare",
+        ctaAligned: true,
+        recommendation: "Highlight side-by-side model eval assertions and 1-click immunization.",
+      };
+    }
+
+    if (q.includes("skill") || q.includes("agent skill") || q.includes("skill.md") || q.includes("build skill")) {
+      return {
+        query,
+        detectedIntent: "SKILL_BUILDER_TAINT_SCAN",
+        authoritativeRoute: "/build-skill",
+        expectedUserTask: "Build and security-scan portable agent SKILL.md packages",
+        titleAligned: currentLandingPage === "/build-skill",
+        ctaAligned: true,
+        recommendation: "Provide in-browser skill authoring and AST security scanning.",
+      };
+    }
+
     // Default general inquiry
     return {
       query,
@@ -244,10 +268,66 @@ export class SearchIntentEngine {
       }
     }
 
+    // 5. Fabricated claims and ungrounded commercial guarantees (Section 7.D)
+    const fabricatedClaimPatterns = [
+      { pattern: /rated\s+\d+(\.\d+)?\s+stars?/i, label: "Fabricated user rating claim" },
+      { pattern: /\d+([,\.]\d+)?\s*(million|k|m)\s+(happy\s+)?(users|customers|developers)/i, label: "Fabricated user statistics claim" },
+      { pattern: /(guaranteed\s+(first\s+page|#1\s+rank|ranking|success|accuracy|results|100%))/i, label: "Forbidden ranking or product guarantee claim" },
+      { pattern: /(money\s*back\s*guarantee)/i, label: "Forbidden commercial warranty claim" },
+    ];
+    for (const item of fabricatedClaimPatterns) {
+      if (item.pattern.test(proposal.proposedTitle) || item.pattern.test(proposal.proposedDescription)) {
+        violations.push(`Fabricated claim or ungrounded guarantee detected: ${item.label}.`);
+      }
+    }
+
     return {
       valid: violations.length === 0,
       violations,
       riskScore: violations.length * 25,
+    };
+  }
+
+  /**
+   * Validates JSON-LD structured data against visible page content to prevent Google penalties.
+   */
+  public validateStructuredData(
+    _route: string,
+    structuredData: Record<string, unknown>,
+    visibleContent: { title: string; description: string; expectedType?: string }
+  ): {
+    valid: boolean;
+    issues: string[];
+    correctedData?: Record<string, unknown>;
+  } {
+    const issues: string[] = [];
+    const schemaType = String(structuredData["@type"] || "");
+
+    if (visibleContent.expectedType && schemaType !== visibleContent.expectedType) {
+      issues.push(`Structured data @type "${schemaType}" contradicts expected page type "${visibleContent.expectedType}".`);
+    }
+
+    const schemaName = String(structuredData["name"] || structuredData["headline"] || "");
+    if (!schemaName) {
+      issues.push("Structured data is missing required 'name' or 'headline' property.");
+    }
+
+    if (structuredData["aggregateRating"]) {
+      issues.push("Fabricated 'aggregateRating' detected in structured data without verified user reviews.");
+    }
+
+    const correctedData = issues.length > 0 ? {
+      ...structuredData,
+      "@type": visibleContent.expectedType || schemaType || "WebPage",
+      name: visibleContent.title,
+      description: visibleContent.description,
+      aggregateRating: undefined,
+    } : undefined;
+
+    return {
+      valid: issues.length === 0,
+      issues,
+      correctedData,
     };
   }
 

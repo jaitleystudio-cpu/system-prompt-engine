@@ -27,12 +27,33 @@ class ProofCarryingEvolutionControllerPy:
     }
 
     def compute_digest(self, proposal: ProofCarryingChangeProposal) -> str:
-        payload = f"{proposal.id}:{proposal.defect_category.value}:{proposal.minimal_patch.target_file}:{proposal.risk_level.value}"
+        payload = json.dumps({
+            "id": proposal.id,
+            "category": proposal.defect_category.value,
+            "patch": {
+                "target_file": proposal.minimal_patch.target_file,
+                "original_chunk": proposal.minimal_patch.original_chunk,
+                "replacement_chunk": proposal.minimal_patch.replacement_chunk,
+            },
+            "failing_test": proposal.failing_test_before_fix.test_name,
+            "risk": proposal.risk_level.value,
+            "rollback": proposal.rollback_reference.snapshot_commit,
+        }, sort_keys=True)
         digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
-        return f"sha256:{digest[:16]}"
+        return f"sha256:prop-{digest[:16]}"
 
     def evaluate_release_authority(self, proposal: ProofCarryingChangeProposal) -> Dict[str, Any]:
         audit_log: List[str] = []
+
+        # 0. Sparse or Inconclusive Evidence Check
+        if proposal.observed_evidence and (proposal.observed_evidence.confidence_score < 0.5 or not proposal.observed_evidence.is_finalized):
+            audit_log.append("Search Console Evidence Inconclusive: Proposal held pending reliable finalized data.")
+            return {
+                "status": ProposalStatus.HELD_INCONCLUSIVE,
+                "authorized_autonomy": AutonomyLevel.L0_OBSERVE,
+                "authorized_for_live_deploy": False,
+                "audit_log": audit_log,
+            }
 
         # 1. Silent-Failure Watchdog: Failing test reproduction required
         if not proposal.failing_test_before_fix.reproduced:

@@ -54,11 +54,12 @@ if (isAuditOnly) {
 
 const scheduler = new NightlyEvolutionScheduler();
 
-console.log(`🚀 Executing Nightly Evolution Loop (DryRun: ${isDryRun})...\n`);
 try {
+  const simulateMilestone = args.includes("--ci") || args.includes("--simulate-milestone") || !args.includes("--observe-only");
   const receipt = await scheduler.executeNightlyRun({
     dryRun: isDryRun,
     baseCommit: "9275039a",
+    simulateMilestoneSlice: simulateMilestone,
   });
 
   console.log("──────────────────────────────────────────────────────────────────────────");

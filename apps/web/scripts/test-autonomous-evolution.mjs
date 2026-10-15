@@ -148,8 +148,11 @@ await runTest("Milestone 4-7: Prepare isolated patch, run tests, generate proof 
     verificationDigest: "",
   };
 
-  proposal.verificationDigest = proofController.computeProposalDigest(proposal);
-  assert.ok(proposal.verificationDigest.startsWith("sha256:prop-"));
+  const digest1 = proofController.computeProposalDigest(proposal);
+  const digest2 = proofController.computeProposalDigest(proposal);
+  assert.equal(digest1, digest2, "Proposal digest must be strictly deterministic across repeated calls");
+  assert.ok(digest1.startsWith("sha256:prop-"));
+  proposal.verificationDigest = digest1;
 
   const decision = proofController.evaluateReleaseAuthority(proposal);
   assert.equal(decision.status, "PROMOTED", "Allowlisted LOW risk must qualify for L4 Auto-Release");
@@ -224,15 +227,100 @@ await runTest("T03: Accidental homepage noindex -> Block release and alert", () 
 await runTest("T04: Missing sitemap entry -> Reconcile with approved route list", () => {
   const auditor = new WebsiteInventoryAuditor();
   const items = auditor.buildInventory();
+
+  // 1. Verify all 18 indexable routes in inventory are mapped to sitemap
   const indexableWithoutSitemap = items.filter((i) => i.isIndexable && !i.isInSitemap);
   assert.equal(indexableWithoutSitemap.length, 0, "All indexable routes must be mapped to sitemap");
+  assert.equal(items.length, 24, "Full inventory must contain 24 routes");
+  assert.equal(items.filter((i) => i.isIndexable).length, 18, "Must contain 18 indexable routes");
+  assert.equal(items.filter((i) => !i.isIndexable).length, 6, "Must contain 6 noindex routes");
+
+  // 2. Test sitemap reconciliation with missing routes (/workflows, /build-skill, /eval-studio)
+  const incompleteSitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://systempromptengine.com/</loc></url>
+  <url><loc>https://systempromptengine.com/create</loc></url>
+  <url><loc>https://systempromptengine.com/code</loc></url>
+</urlset>`;
+
+  const reconResult = auditor.reconcileSitemapEntries(incompleteSitemapXml);
+  assert.equal(reconResult.reconciled, false, "Incomplete sitemap must report reconciled: false");
+  assert.ok(reconResult.missingRoutes.includes("/workflows"), "Must detect missing /workflows route");
+  assert.ok(reconResult.missingRoutes.includes("/build-skill"), "Must detect missing /build-skill route");
+  assert.ok(reconResult.missingRoutes.includes("/eval-studio"), "Must detect missing /eval-studio route");
+  assert.ok(reconResult.suggestedXmlAdditions.length >= 15, "Must provide XML additions for missing routes");
+
+  // 3. Test sitemap reconciliation with improperly exposed private route (/workspace)
+  const leakySitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${items.map((i) => `<url><loc>${i.canonicalUrl}</loc></url>`).join("\n  ")}
+</urlset>`;
+
+  const leakyResult = auditor.reconcileSitemapEntries(leakySitemapXml);
+  assert.equal(leakyResult.reconciled, false);
+  assert.ok(leakyResult.extraneousRoutes.includes("/workspace"), "Must detect exposed private /workspace route");
+  assert.ok(leakyResult.extraneousRoutes.includes("/my-work"), "Must detect exposed private /my-work route");
+  assert.equal(leakyResult.missingRoutes.length, 0);
+
+  // 4. Test fully reconciled valid sitemap
+  const validSitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${items.filter((i) => i.isIndexable).map((i) => `<url><loc>${i.canonicalUrl}</loc></url>`).join("\n  ")}
+</urlset>`;
+
+  const validResult = auditor.reconcileSitemapEntries(validSitemapXml);
+  assert.equal(validResult.reconciled, true, "Valid sitemap must report reconciled: true");
+  assert.equal(validResult.missingRoutes.length, 0);
+  assert.equal(validResult.extraneousRoutes.length, 0);
 });
 
 await runTest("T05: Invalid structured data -> Identify mismatch and propose correction", () => {
   const searchEngine = new SearchIntentEngine();
+
+  // 1. Search intent mismatch check
   const mapping = searchEngine.mapQueryToIntent("code prompts from screenshot", "/privacy");
   assert.equal(mapping.authoritativeRoute, "/code");
   assert.equal(mapping.titleAligned, false, "Mismatch detected between query and /privacy landing");
+
+  // 2. Validate structured data mismatch detection & automated correction
+  const invalidStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article", // Contradicts expected SoftwareApplication
+    description: "Old description",
+    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "1250" }, // Fabricated!
+  };
+
+  const validation = searchEngine.validateStructuredData("/code", invalidStructuredData, {
+    title: "Screenshot to Code Prompt — SPE Prompt Engineering Tool",
+    description: "Upload a UI screenshot and get an implementation prompt plus starter scaffolds.",
+    expectedType: "SoftwareApplication",
+  });
+
+  assert.equal(validation.valid, false, "Invalid schema must fail validation");
+  assert.ok(validation.issues.some((i) => i.includes('contradicts expected page type "SoftwareApplication"')));
+  assert.ok(validation.issues.some((i) => i.includes("missing required 'name' or 'headline'")));
+  assert.ok(validation.issues.some((i) => i.includes("Fabricated 'aggregateRating' detected")));
+
+  // Verify automated correction
+  assert.ok(validation.correctedData);
+  assert.equal(validation.correctedData["@type"], "SoftwareApplication");
+  assert.equal(validation.correctedData["name"], "Screenshot to Code Prompt — SPE Prompt Engineering Tool");
+  assert.equal(validation.correctedData["aggregateRating"], undefined, "Fabricated rating must be stripped");
+
+  // 3. Clean valid structured data passes
+  const validData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Screenshot to Code Prompt",
+    description: "Clean description",
+  };
+  const validResult = searchEngine.validateStructuredData("/code", validData, {
+    title: "Screenshot to Code Prompt",
+    description: "Clean description",
+    expectedType: "SoftwareApplication",
+  });
+  assert.equal(validResult.valid, true);
+  assert.equal(validResult.issues.length, 0);
 });
 
 await runTest("T06: Keyword-stuffed SEO title -> Reject", () => {
@@ -260,7 +348,8 @@ await runTest("T07: Fabricated product capability -> Reject", () => {
 await runTest("T08: Duplicate low-value SEO page -> Reject or quarantine", () => {
   const auditor = new WebsiteInventoryAuditor();
   const items = auditor.buildInventory();
-  // Ensure every route has a distinct primary user task
+
+  // 1. Ensure every route has a distinct primary user task
   const taskMap = new Map();
   for (const item of items) {
     if (item.isIndexable) {
@@ -268,6 +357,36 @@ await runTest("T08: Duplicate low-value SEO page -> Reject or quarantine", () =>
       taskMap.set(item.route, item.primaryUserTask);
     }
   }
+
+  // 2. High semantic task overlap doorway candidate detection (e.g. /prompts-clone replicating /prompts)
+  const doorwayCandidate = {
+    route: "/prompts-clone",
+    primaryTask: "Search 10,000+ pre-tested production prompts and ready-to-use prompt blueprints",
+    title: "Universal Prompt Blueprints",
+  };
+  const dupCheck = auditor.detectDuplicateOrDoorwayPage(doorwayCandidate);
+  assert.equal(dupCheck.isDuplicate, true, "High task overlap must be flagged as duplicate/doorway");
+  assert.equal(dupCheck.conflictingRoute, "/prompts");
+  assert.ok(dupCheck.reason?.includes("Flagged as low-value duplicate/doorway page"));
+
+  // 3. Exact route collision candidate
+  const collisionCandidate = {
+    route: "/create",
+    primaryTask: "Build prompts from scratch",
+    title: "Create Prompt",
+  };
+  const collisionCheck = auditor.detectDuplicateOrDoorwayPage(collisionCandidate);
+  assert.equal(collisionCheck.isDuplicate, true);
+  assert.equal(collisionCheck.conflictingRoute, "/create");
+
+  // 4. Distinct novel route candidate
+  const distinctCandidate = {
+    route: "/quantum-spec",
+    primaryTask: "Synthesize quantum circuit entanglement specifications",
+    title: "Quantum Circuit Spec",
+  };
+  const distinctCheck = auditor.detectDuplicateOrDoorwayPage(distinctCandidate);
+  assert.equal(distinctCheck.isDuplicate, false);
 });
 
 await runTest("T09: Misleading AI-search optimization claim -> Reject", () => {
@@ -372,7 +491,9 @@ await runTest("T13: Screen-reader labeling regression -> Block release", () => {
 
 await runTest("T14: LCP regression -> Detect against baseline", () => {
   const verifier = new VisualDomA11yVerifier();
-  const snapshot = {
+
+  // 1. LCP regression > 2500ms
+  const lcpSnapshot = {
     route: "/",
     viewport: { width: 375, height: 667 },
     theme: "light",
@@ -385,14 +506,35 @@ await runTest("T14: LCP regression -> Detect against baseline", () => {
     computedWebVitals: { lcpMs: 3100, clsScore: 0.01, inpMs: 40, hydrationError: false }, // Exceeds 2500ms
     simulatedUserTaskPass: true,
   };
-  const result = verifier.verifyPageSnapshot(snapshot);
-  assert.equal(result.webVitals.passed, false);
-  assert.ok(result.webVitals.regressions.some((r) => r.includes("exceeds 2500ms")));
+  const lcpResult = verifier.verifyPageSnapshot(lcpSnapshot);
+  assert.equal(lcpResult.webVitals.passed, false);
+  assert.ok(lcpResult.webVitals.regressions.some((r) => r.includes("exceeds 2500ms")));
+
+  // 2. INP regression > 200ms
+  const inpSnapshot = {
+    route: "/",
+    viewport: { width: 375, height: 667 },
+    theme: "light",
+    headlineText: "Title",
+    headlineBoundingBox: { width: 300, height: 40, scrollWidth: 300, scrollHeight: 40 },
+    primaryCta: { text: "Click", visible: true, opacity: 1, tabIndex: 0, contrastRatio: 4.5 },
+    keyboardFocusableElements: 5,
+    ariaLabelsCount: 5,
+    missingAltImagesCount: 0,
+    computedWebVitals: { lcpMs: 1200, clsScore: 0.01, inpMs: 350, hydrationError: false }, // Exceeds 200ms
+    simulatedUserTaskPass: true,
+  };
+  const inpResult = verifier.verifyPageSnapshot(inpSnapshot);
+  assert.equal(inpResult.webVitals.passed, false);
+  assert.ok(inpResult.webVitals.regressions.some((r) => r.includes("INP of 350ms exceeds 200ms threshold")));
+  assert.equal(inpResult.overallPassed, false);
 });
 
 await runTest("T15: CLS regression -> Detect against baseline", () => {
   const verifier = new VisualDomA11yVerifier();
-  const snapshot = {
+
+  // 1. CLS > 0.1 threshold
+  const absoluteSnapshot = {
     route: "/",
     viewport: { width: 375, height: 667 },
     theme: "light",
@@ -405,9 +547,31 @@ await runTest("T15: CLS regression -> Detect against baseline", () => {
     computedWebVitals: { lcpMs: 1400, clsScore: 0.25, inpMs: 40, hydrationError: false }, // Exceeds 0.1
     simulatedUserTaskPass: true,
   };
-  const result = verifier.verifyPageSnapshot(snapshot);
-  assert.equal(result.webVitals.passed, false);
-  assert.ok(result.webVitals.regressions.some((r) => r.includes("CLS of 0.25 exceeds 0.1")));
+  const absResult = verifier.verifyPageSnapshot(absoluteSnapshot);
+  assert.equal(absResult.webVitals.passed, false);
+  assert.ok(absResult.webVitals.regressions.some((r) => r.includes("CLS of 0.25 exceeds 0.1")));
+
+  // 2. CLS baseline relative regression (+300% over baseline 0.02)
+  const baselineSnapshot = {
+    route: "/",
+    viewport: { width: 375, height: 667 },
+    theme: "light",
+    headlineText: "Title",
+    headlineBoundingBox: { width: 300, height: 40, scrollWidth: 300, scrollHeight: 40 },
+    primaryCta: { text: "Click", visible: true, opacity: 1, tabIndex: 0, contrastRatio: 4.5 },
+    keyboardFocusableElements: 5,
+    ariaLabelsCount: 5,
+    missingAltImagesCount: 0,
+    computedWebVitals: { lcpMs: 1200, clsScore: 0.08, inpMs: 40, hydrationError: false },
+    simulatedUserTaskPass: true,
+  };
+  const baselineResult = verifier.verifyPageSnapshot(baselineSnapshot, {
+    lcpMs: 1200,
+    clsScore: 0.02,
+    minContrastRatio: 4.5,
+  });
+  assert.equal(baselineResult.webVitals.passed, false);
+  assert.ok(baselineResult.webVitals.regressions.some((r) => r.includes("CLS regression: +300% over baseline")));
 });
 
 await runTest("T16: Broken JavaScript hydration -> Block release", () => {
@@ -542,9 +706,54 @@ await runTest("T24: Interrupted deployment -> Preserve or restore valid release"
 
 await runTest("T25: No reliable search data -> Mark SEO proposal inconclusive", () => {
   const searchEngine = new SearchIntentEngine();
+  const proofController = new ProofCarryingEvolutionController();
+
+  // 1. SearchIntentEngine with empty data
   const emptyAnalysis = searchEngine.analyzeSearchQueries([]);
   assert.equal(emptyAnalysis.totalQueriesAnalyzed, 0);
   assert.equal(emptyAnalysis.detectedSeoDefects.length, 0);
+
+  // 2. Release Authority Gate for low-confidence / unfinalized search data
+  const lowConfidenceProposal = {
+    id: "PROP-T25-LOW-CONF",
+    defectCategory: "SEO_COPY_MISALIGNMENT",
+    observedEvidence: {
+      id: "EVID-T25",
+      source: "GOOGLE_SEARCH_CONSOLE",
+      timestamp: new Date().toISOString(),
+      payloadDigest: "sha256:lowconf",
+      isFinalized: false, // Incomplete / unfinalized data
+      confidenceScore: 0.35, // Low confidence (< 0.5)
+      rawDetails: {},
+    },
+    affectedRoutes: ["/"],
+    affectedComponents: ["Hero"],
+    rootCauseHypothesis: "Speculative query volume shift",
+    minimalPatch: { targetFile: "apps/web/src/routing.ts", lineCountDiff: 1, originalChunk: "", replacementChunk: "" },
+    failingTestBeforeFix: { testName: "t25", failingOutput: "err", reproduced: true },
+    expectedUserBenefit: "Hypothetical CTR gain",
+    potentialHarm: "De-indexing risk",
+    riskLevel: "MEDIUM",
+    requiredAutonomy: "L5_HUMAN_AUTHORIZED",
+    qualificationResults: {
+      targetedUnitTestsPassed: true,
+      regressionSuitePassed: true,
+      securityPolicyPassed: true,
+      visualA11yPassed: true,
+      seoPolicyPassed: true,
+      oracleIntegrityPreserved: true,
+      antiMutationKillRate: 1.0,
+    },
+    approvalAuthority: { status: "PROPOSED", authorizedBy: "SYSTEM" },
+    rollbackReference: { snapshotCommit: "9275039a", rollbackRecipe: "revert", verifiedRollbackCapable: true },
+    verificationDigest: "sha256:prop-t25",
+  };
+
+  const decision = proofController.evaluateReleaseAuthority(lowConfidenceProposal);
+  assert.equal(decision.status, "HELD_INCONCLUSIVE", "Low confidence data must be held as inconclusive");
+  assert.equal(decision.authorizedAutonomyLevel, "L0_OBSERVE");
+  assert.equal(decision.authorizedForLiveDeploy, false, "Must never auto-deploy or promote inconclusive proposals");
+  assert.ok(decision.auditLog.some((l) => l.includes("Search Console Evidence Inconclusive")));
 });
 
 await runTest("T26: Google API unavailable -> Preserve previous evidence; retry within budget", () => {

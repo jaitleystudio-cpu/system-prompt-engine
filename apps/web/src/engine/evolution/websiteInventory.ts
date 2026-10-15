@@ -130,6 +130,11 @@ export class WebsiteInventoryAuditor {
           assignedOwner = "security-governance";
           surfaceClass = "LOCKED";
           break;
+        case "eval-studio":
+          primaryTask = "Side-by-side prompt evaluation and 1-click vulnerability immunization against frontier models";
+          assignedOwner = "frontier-eval-squad";
+          surfaceClass = "SEO_PROTECTED";
+          break;
         default:
           if (!isIndexable) {
             surfaceClass = "LOCKED";
@@ -139,9 +144,10 @@ export class WebsiteInventoryAuditor {
       }
 
       // Reconcile with Surface Inventory constraints
-      const surfaceDef = getSurfaceConstraints(viewKey === "home" ? "GLOBAL_PAGE_TITLE" : "GLOBAL_PAGE_TITLE");
-      if (surfaceDef.classification === "LOCKED" && isIndexable) {
-        // Enforce lock if mandated
+      const surfaceId = viewKey === "home" ? "HERO_HEADLINE" : (viewKey === "privacy" ? "LEGAL_PRIVACY_TERMS" : "GLOBAL_PAGE_TITLE");
+      const surfaceDef = getSurfaceConstraints(surfaceId);
+      if (surfaceDef.classification === "LOCKED" || surfaceDef.classification === "LEGAL_PROTECTED") {
+        surfaceClass = surfaceDef.classification;
       }
 
       items.push({
@@ -247,6 +253,10 @@ export class WebsiteInventoryAuditor {
       "/skills": "/build-skill",
       "/skills-builder": "/build-skill",
       "/benchmark": "/compare",
+      "/eval": "/eval-studio",
+      "/evals": "/eval-studio",
+      "/redteam": "/eval-studio",
+      "/matrix": "/eval-studio",
       "/plans": "/pricing",
       "/prompt-library": "/prompts",
       "/incident-wire": "/incidents",
@@ -258,5 +268,98 @@ export class WebsiteInventoryAuditor {
     }
 
     return null;
+  }
+
+  /**
+   * Reconciles an existing XML sitemap against the authoritative indexable routes.
+   * Identifies missing indexable routes and improperly exposed private routes.
+   */
+  public reconcileSitemapEntries(sitemapXmlContent: string): {
+    reconciled: boolean;
+    missingRoutes: string[];
+    extraneousRoutes: string[];
+    suggestedXmlAdditions: string[];
+  } {
+    const items = this.buildInventory();
+    const locMatches = [...sitemapXmlContent.matchAll(/<loc>(https?:\/\/[^<]+)<\/loc>/g)];
+    const existingUrls = new Set(locMatches.map((m) => m[1].replace(/\/+$/, "")));
+
+    const missingRoutes: string[] = [];
+    const suggestedXmlAdditions: string[] = [];
+
+    for (const item of items) {
+      if (item.isIndexable) {
+        const canonical = item.canonicalUrl.replace(/\/+$/, "");
+        if (!existingUrls.has(canonical)) {
+          missingRoutes.push(item.route);
+          suggestedXmlAdditions.push(
+            `<url><loc>${item.canonicalUrl}</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`
+          );
+        }
+      }
+    }
+
+    const extraneousRoutes: string[] = [];
+    for (const item of items) {
+      if (!item.isIndexable) {
+        const canonical = item.canonicalUrl.replace(/\/+$/, "");
+        if (existingUrls.has(canonical)) {
+          extraneousRoutes.push(item.route);
+        }
+      }
+    }
+
+    return {
+      reconciled: missingRoutes.length === 0 && extraneousRoutes.length === 0,
+      missingRoutes,
+      extraneousRoutes,
+      suggestedXmlAdditions,
+    };
+  }
+
+  /**
+   * Evaluates candidate page against duplicate/doorway detection (Google Helpful Content / SAGEO Arena).
+   */
+  public detectDuplicateOrDoorwayPage(candidate: {
+    route: string;
+    primaryTask: string;
+    title: string;
+  }): {
+    isDuplicate: boolean;
+    conflictingRoute?: string;
+    reason?: string;
+  } {
+    const items = this.buildInventory();
+    const candidateWords = new Set(candidate.primaryTask.toLowerCase().split(/\s+/).filter((w) => w.length > 3));
+
+    for (const item of items) {
+      if (item.route === candidate.route) {
+        return {
+          isDuplicate: true,
+          conflictingRoute: item.route,
+          reason: `Exact route collision with existing page ${item.route}.`,
+        };
+      }
+
+      // Check task token overlap (Jaccard and Containment similarity)
+      const existingWords = new Set(item.primaryUserTask.toLowerCase().split(/\s+/).filter((w) => w.length > 3));
+      let intersection = 0;
+      for (const w of candidateWords) {
+        if (existingWords.has(w)) intersection++;
+      }
+      const union = new Set([...candidateWords, ...existingWords]).size;
+      const jaccard = union > 0 ? intersection / union : 0;
+      const containment = existingWords.size > 0 ? intersection / existingWords.size : 0;
+
+      if (jaccard >= 0.6 || containment >= 0.8) {
+        return {
+          isDuplicate: true,
+          conflictingRoute: item.route,
+          reason: `High semantic task overlap (${Math.round(Math.max(jaccard, containment) * 100)}%) with existing route ${item.route}. Flagged as low-value duplicate/doorway page.`,
+        };
+      }
+    }
+
+    return { isDuplicate: false };
   }
 }

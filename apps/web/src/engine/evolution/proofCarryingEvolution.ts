@@ -20,6 +20,7 @@ import type {
   ProposalStatus,
   DefectCategory,
 } from "./types.ts";
+import { computeSha256 } from "../hashUtils.ts";
 
 export class ProofCarryingEvolutionController {
   private allowedAutoReleaseCategories: Set<DefectCategory> = new Set([
@@ -41,15 +42,8 @@ export class ProofCarryingEvolutionController {
       rollback: proposal.rollbackReference?.snapshotCommit,
     });
 
-    // Deterministic string hash simulation for browser and node runtimes
-    let hash = 0;
-    for (let i = 0; i < raw.length; i++) {
-      const char = raw.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash |= 0;
-    }
-    const hex = Math.abs(hash).toString(16).padStart(8, "0");
-    return `sha256:prop-${hex}-${Date.now().toString(16)}`;
+    const hash = computeSha256(raw);
+    return `sha256:prop-${hash.slice(0, 16)}`;
   }
 
   /**
@@ -62,6 +56,20 @@ export class ProofCarryingEvolutionController {
     auditLog: string[];
   } {
     const auditLog: string[] = [];
+
+    // 0. Sparse or Inconclusive Evidence Check (T25: No reliable search data -> Mark SEO proposal inconclusive)
+    if (
+      proposal.observedEvidence &&
+      (proposal.observedEvidence.confidenceScore < 0.5 || !proposal.observedEvidence.isFinalized)
+    ) {
+      auditLog.push("Search Console Evidence Inconclusive: Proposal held pending reliable finalized data.");
+      return {
+        status: "HELD_INCONCLUSIVE",
+        authorizedAutonomyLevel: "L0_OBSERVE",
+        authorizedForLiveDeploy: false,
+        auditLog,
+      };
+    }
 
     // 1. Silent-Failure Watchdog (When Errors Become Narratives 2026)
     if (!proposal.failingTestBeforeFix.reproduced) {

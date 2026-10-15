@@ -37,6 +37,8 @@ export class WebsiteChangeImpactGraph {
     targetRoute: string;
     proposedCopySnippet?: string;
     modifiedProps?: string[];
+    defectCategory?: string;
+    isMechanicalAlias?: boolean;
   }): ChangeImpactResult {
     const directRoutes: string[] = [change.targetRoute];
     const downstreamRoutes: string[] = [];
@@ -64,6 +66,15 @@ export class WebsiteChangeImpactGraph {
     } else if (change.targetRoute === "/create") {
       affectedComponents.push("PromptEditor", "PromptSynthesizer");
       requiredTests.push("test-spe-omega-proof-engine.mjs");
+    } else if (change.targetRoute === "/eval-studio") {
+      affectedComponents.push("EvalStudio", "ModelImmunizer");
+      requiredTests.push("test-blinded-judge-arena.mjs");
+    } else if (change.targetRoute === "/build-skill") {
+      affectedComponents.push("SkillBuilder", "ASTTaintScanner");
+      requiredTests.push("test-execution-contract.mjs");
+    } else if (change.targetRoute === "/workflows") {
+      affectedComponents.push("WorkflowExchange");
+      requiredTests.push("test-workflows-audit.mjs");
     } else {
       affectedComponents.push("GenericPageShell");
       requiredTests.push("test-universal-shell.mjs");
@@ -80,6 +91,13 @@ export class WebsiteChangeImpactGraph {
             `Proposed copy claims unreleased/unsupported capability: ${forbidden.reason}`
           );
         }
+      }
+
+      // Check against unannounced or unverified speculative model generations
+      if (/claude\s+[6-9]|gpt-[6-9]|gemini\s+[4-9]|grok\s+[5-9]/i.test(change.proposedCopySnippet)) {
+        productTruthViolations.push(
+          `Unverified model name detected in copy. Violates Model Intelligence Fortress registry authority.`
+        );
       }
 
       // Check against banned marketing buzzwords
@@ -138,6 +156,9 @@ export class WebsiteChangeImpactGraph {
       change.targetRoute === "/privacy" ||
       change.targetRoute === "/pricing";
 
+    const isAllowlistedMechanicalLinkFix =
+      change.defectCategory === "BROKEN_INTERNAL_LINK" || change.isMechanicalAlias === true;
+
     if (productTruthViolations.length > 0 || crossPageContradictions.length > 0) {
       recommendedRisk = "HIGH";
       riskEscalationReason = "Cross-page promise inconsistency or unreleased capability claim detected.";
@@ -147,6 +168,10 @@ export class WebsiteChangeImpactGraph {
     } else if (isHighRiskSurface) {
       recommendedRisk = "HIGH";
       riskEscalationReason = "High-risk surface, model registry, or indexing change detected.";
+    } else if (isAllowlistedMechanicalLinkFix) {
+      // Per Section 4 and Section X: Broken internal links with unambiguous destination are allowlisted LOW risk
+      recommendedRisk = "LOW";
+      riskEscalationReason = undefined;
     } else if (change.targetRoute === "/" || change.modifiedFile.includes("routing.ts")) {
       recommendedRisk = "MEDIUM";
       riskEscalationReason = "High-impact surface modification affecting multiple landing pages.";
