@@ -27,7 +27,8 @@ export type AppView =
   | "eval-studio"
   | "uidrop"
   | "possibility"
-  | "reality-frontier";
+  | "reality-frontier"
+  | "challenge";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -51,6 +52,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   uidrop: "/uidrop",
   possibility: "/possibility-engine",
   "reality-frontier": "/reality-frontier",
+  challenge: "/challenge",
   ...EXTRA_VIEW_PATH,
 };
 
@@ -247,6 +249,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Reality Frontier · Counterfactual Feasibility Compiler | SPE Ω",
     description:
       "Discover what realities your intention can actually produce. Ante-hoc contradiction detection, EVOI decision gates, Pareto worldlines, and metamorphic evidence escrow.",
+  },
+  challenge: {
+    path: "/challenge",
+    title: "Challenge This Result · Anti-Lucky-Pass Active Verification Engine | SPE Ω",
+    description:
+      "Active counterfactual specification closure. Detect lucky passes, synthesize minimal perturbations, and verify resilience under real-world stress.",
   },
   ...EXTRA_ROUTE_META,
 };

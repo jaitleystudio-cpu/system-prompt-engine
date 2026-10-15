@@ -967,6 +967,12 @@
       "text": "Local Workspace"
     },
     {
+      "id": "e5e0f8abd2a1c4a73081",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "challenge"
+    },
+    {
       "id": "eb5a0dcbc0f277a4ef8f",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -16789,6 +16795,12 @@
       "text": "Private local grounding with zero cloud leaks"
     },
     {
+      "id": "069d21e4285565704601",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Challenge Result"
+    },
+    {
       "id": "0712edac3d93904b017b",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16823,6 +16835,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "100% On-Device Privacy"
+    },
+    {
+      "id": "341bcc9044d933a939a9",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "challenge"
     },
     {
       "id": "35c061562a2ccf6fcd63",
@@ -16987,6 +17005,12 @@
       "text": "Verified Workflows"
     },
     {
+      "id": "70fc28b91846615e5b09",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "LUCKY-PASS SHIELD"
+    },
+    {
       "id": "71b2962114e58d47d0f6",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -17009,6 +17033,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Products"
+    },
+    {
+      "id": "7580c2a795e105acac3c",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Anti-lucky-pass active verification & counterfactual stress testing"
     },
     {
       "id": "75aa8620149ed9fe2699",
@@ -24397,6 +24427,24 @@
       "text": "Failures stay visible; SPE does not pretend a blocked fetch succeeded."
     },
     {
+      "id": "2e3097cb1e7981115f25",
+      "file": "apps/web/src/pages/ChallengeResultPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
+      "id": "804f2a07733f7a233966",
+      "file": "apps/web/src/pages/ChallengeResultPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Challenge This Result"
+    },
+    {
+      "id": "e7d175a72f15d8614820",
+      "file": "apps/web/src/pages/ChallengeResultPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Breadcrumb"
+    },
+    {
       "id": "00e7956f0b19351516c3",
       "file": "apps/web/src/pages/GuideArticle.tsx",
       "depth": "PRODUCT",
@@ -27355,6 +27403,12 @@
       "text": "Workspace — Inspect & Refine Prompts | SPE"
     },
     {
+      "id": "3ad9d05110ab0f1df310",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Active counterfactual specification closure. Detect lucky passes, synthesize minimal perturbations, and verify resilience under real-world stress."
+    },
+    {
       "id": "3bfd1e8aca517d82c8c3",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27649,10 +27703,22 @@
       "text": "Request image text from the configured app host. Image bytes are sent to that host; on-device OCR requires a local host. Missing runtime stays unavailable."
     },
     {
+      "id": "cf6611bfbb6f336abce4",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Challenge This Result · Anti-Lucky-Pass Active Verification Engine | SPE Ω"
+    },
+    {
       "id": "cfe6abe6c9ed405869bb",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Independent comparative ranking has not been established; human preference ratings have not yet been collected."
+    },
+    {
+      "id": "d4a4f51fffd1de4319fc",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/challenge"
     },
     {
       "id": "d77e6ecfec55e77411cc",

@@ -161,6 +161,9 @@ const PossibilityEnginePage = lazy(() =>
 const RealityFrontierPage = lazy(() =>
   import("./pages/RealityFrontierPage").then((m) => ({ default: m.RealityFrontierPage }))
 );
+const ChallengeResultPage = lazy(() =>
+  import("./pages/ChallengeResultPage").then((m) => ({ default: m.ChallengeResultPage }))
+);
 
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
@@ -1455,6 +1458,11 @@ export default function App() {
         {!notFound && view === "reality-frontier" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
             <RealityFrontierPage onNavigate={setView} />
+          </Suspense>
+        )}
+        {!notFound && view === "challenge" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <ChallengeResultPage onNavigate={setView} />
           </Suspense>
         )}
 

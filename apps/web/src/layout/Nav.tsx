@@ -90,6 +90,12 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Testing & Tools",
     items: [
       {
+        id: "challenge",
+        label: "Challenge Result",
+        desc: "Anti-lucky-pass active verification & counterfactual stress testing",
+        badge: "LUCKY-PASS SHIELD",
+      },
+      {
         id: "compare",
         label: "Benchmark Arena",
         desc: "Head-to-head prompt tests with real accuracy proof",
