@@ -6,6 +6,15 @@
 
 import type { ExtractedRequirement, RequirementCategory, RequirementCriticality } from "./types.ts";
 
+const AFFIRMATIVE_DOUBLE_NEGATION_PATTERNS = [
+  /\b(?:never\s+fail\s+to|must\s+not\s+fail\s+to)\s+([^.,;\n]+)/i,
+  /\b(?:do\s+not\s+forget\s+to|don't\s+forget\s+to)\s+([^.,;\n]+)/i,
+  /\b(?:must\s+not\s+omit|never\s+omit|cannot\s+omit|can't\s+omit)\s+([^.,;\n]+)/i,
+  /\b(?:must\s+not\s+skip|never\s+skip|do\s+not\s+skip|don't\s+skip)\s+([^.,;\n]+)/i,
+  /\b(?:must\s+not\s+neglect|never\s+neglect|do\s+not\s+neglect|cannot\s+neglect|can't\s+neglect)\s+([^.,;\n]+)/i,
+  /\bwithout\s+failing\s+to\s+([^.,;\n]+)/i,
+];
+
 const NEGATIVE_PATTERNS = [
   /\b(must\s+not|must\s+never)\s+([^.,;\n]+)/i,
   /\b(never|do\s+not|don't|cannot|can't)\s+([^.,;\n]+)/i,
@@ -39,11 +48,11 @@ export class RequirementExtractor {
   public extractFromText(rawText: string, origin: ExtractedRequirement["sourceOrigin"] = "USER_INPUT"): ExtractedRequirement[] {
     if (!rawText || !rawText.trim()) return [];
 
-    // Split by lines, semicolons, and clear bullet delimiters
+    // Split by lines, semicolons, bullets, and contrastive compound conjunctions
     const clauses = rawText
-      .split(/[\n;•\u2022]|\band\s+also\b/i)
-      .map((c) => c.trim())
-      .filter((c) => c.length > 3);
+      .split(/(?:[\n;•\u2022]|\band\s+also\b|,\s*(?:but|instead|however|rather\s+than)\s+|\s+but\s+|\s+instead\s+use\s+)/i)
+      .map((c) => c.replace(/^\s*(?:\d+[\.)]|[-*])\s*/, "").trim())
+      .filter((c) => c.length > 2);
 
     const requirements: ExtractedRequirement[] = [];
     let counter = 1;
@@ -51,13 +60,18 @@ export class RequirementExtractor {
     for (const clause of clauses) {
       const lower = clause.toLowerCase();
 
-      // Check Negative Constraint
-      const isNegative = NEGATIVE_PATTERNS.some((p) => p.test(clause)) ||
+      // Check Affirmative Double Negation FIRST (e.g. "never fail to include", "do not forget to encrypt")
+      const isAffirmativeDoubleNegation = AFFIRMATIVE_DOUBLE_NEGATION_PATTERNS.some((p) => p.test(clause));
+
+      // Check Negative Constraint (only if not an affirmative double negation)
+      const isNegative = !isAffirmativeDoubleNegation && (
+        NEGATIVE_PATTERNS.some((p) => p.test(clause)) ||
         lower.includes("must not") ||
         lower.includes("never") ||
         lower.includes("forbidden") ||
         lower.startsWith("no ") ||
-        lower.includes("do not");
+        lower.includes("do not")
+      );
 
       let category: RequirementCategory = "MANDATORY_POSITIVE";
       let criticality: RequirementCriticality = "HIGH";
@@ -76,11 +90,15 @@ export class RequirementExtractor {
         criticality = "MEDIUM";
       }
 
-      // Extract keywords
+      // Extract keywords (preserving 3-letter acronyms like jwt, api, css, sql)
+      const fillerWords = [
+        "the", "and", "for", "with", "that", "this", "from", "must", "should",
+        "fail", "forget", "omit", "skip", "neglect", "using"
+      ];
       const words = lower
         .replace(/[^a-z0-9_\-\s]/g, " ")
         .split(/\s+/)
-        .filter((w) => w.length > 2 && !["the", "and", "for", "with", "that", "this", "from", "must", "should"].includes(w));
+        .filter((w) => w.length >= 3 && !fillerWords.includes(w));
 
       const forbiddenKeywords: string[] = isNegative ? words : [];
       const requiredKeywords: string[] = isNegative ? [] : words;

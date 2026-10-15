@@ -160,6 +160,12 @@ export class PrivacyBudgetedEvolution {
     epsilonConsumed: number;
     budgetStatus: PrivacyBudgetStatus;
   } {
+    if (!req.requestedEpsilon || req.requestedEpsilon <= 0 || !req.sensitivityDelta || req.sensitivityDelta <= 0) {
+      throw new Error(
+        "INVALID_PRIVACY_PARAMETER: requestedEpsilon and sensitivityDelta must be strictly positive numbers."
+      );
+    }
+
     if (this.consumedEpsilon + req.requestedEpsilon > this.maxCumulativeEpsilon) {
       throw new Error(
         `PRIVACY_BUDGET_EXHAUSTED: Requested epsilon ${req.requestedEpsilon.toFixed(2)} exceeds remaining budget of ${(this.maxCumulativeEpsilon - this.consumedEpsilon).toFixed(2)}.`
@@ -222,8 +228,11 @@ export class PrivacyBudgetedEvolution {
    * F^{-1}(u) = mu - b * sgn(u - 0.5) * ln(1 - 2|u - 0.5|)
    */
   private sampleLaplace(mu: number, b: number): number {
-    const u = Math.random() - 0.5;
-    return mu - b * Math.sign(u) * Math.log(1 - 2 * Math.abs(u));
+    const rawU = Math.random() - 0.5;
+    const safeAbsU = Math.min(0.499999999999999, Math.abs(rawU));
+    const arg = Math.max(1e-15, 1.0 - 2.0 * safeAbsU);
+    const sign = rawU > 0 ? 1 : rawU < 0 ? -1 : 0;
+    return mu - b * sign * Math.log(arg);
   }
 
   private hashString(str: string): string {

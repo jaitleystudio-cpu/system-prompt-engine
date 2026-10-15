@@ -22,6 +22,7 @@ import type { AppView } from "../routing";
 import { InAppLink } from "../shell/inAppLink";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
+import { HeroPlatformRotator } from "../engine/HeroPlatformRotator";
 import { ConversionKernel } from "./ConversionKernel";
 import { FeaturedArsenalPreview } from "./FeaturedArsenalPreview";
 import { MarkdownExportButton } from "../engine/markdownExport";
@@ -108,7 +109,7 @@ export function HeroTheater({ onNavigate }: { onNavigate?: (view: AppView) => vo
           <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Account Required</span>
         </div>
         <div className="hero-copy">
-          <p className="eyebrow">A CLEAR START FOR ANY AI</p>
+          <HeroPlatformRotator onNavigate={onNavigate} />
           <h1 id="hero-title" data-daily-title={hero.index}>
             <span className="visually-hidden">
               Free System Prompt Generator & AI Prompt Builder —{" "}

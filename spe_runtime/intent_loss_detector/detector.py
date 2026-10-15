@@ -14,6 +14,15 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
 
+AFFIRMATIVE_DOUBLE_NEGATION_PATTERNS = [
+    re.compile(r"\b(?:never\s+fail\s+to|must\s+not\s+fail\s+to)\s+([^.,;\n]+)", re.IGNORECASE),
+    re.compile(r"\b(?:do\s+not\s+forget\s+to|don't\s+forget\s+to)\s+([^.,;\n]+)", re.IGNORECASE),
+    re.compile(r"\b(?:must\s+not\s+omit|never\s+omit|cannot\s+omit|can't\s+omit)\s+([^.,;\n]+)", re.IGNORECASE),
+    re.compile(r"\b(?:must\s+not\s+skip|never\s+skip|do\s+not\s+skip|don't\s+skip)\s+([^.,;\n]+)", re.IGNORECASE),
+    re.compile(r"\b(?:must\s+not\s+neglect|never\s+neglect|do\s+not\s+neglect|cannot\s+neglect|can't\s+neglect)\s+([^.,;\n]+)", re.IGNORECASE),
+    re.compile(r"\bwithout\s+failing\s+to\s+([^.,;\n]+)", re.IGNORECASE),
+]
+
 NEGATIVE_PATTERNS = [
     re.compile(r"\b(must\s+not|must\s+never)\s+([^.,;\n]+)", re.IGNORECASE),
     re.compile(r"\b(never|do\s+not|don't|cannot|can't)\s+([^.,;\n]+)", re.IGNORECASE),
@@ -40,7 +49,10 @@ OPTIONAL_PATTERNS = [
     re.compile(r"\b(optional|prefer|if\s+possible|nice\s+to\s+have|ideally|could\s+also)\b", re.IGNORECASE),
 ]
 
-STOP_WORDS = {"the", "and", "for", "with", "that", "this", "from", "must", "should"}
+STOP_WORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "must", "should",
+    "fail", "forget", "omit", "skip", "neglect", "using"
+}
 
 
 @dataclass
@@ -94,17 +106,25 @@ class RequirementExtractorPy:
         if not raw_text or not raw_text.strip():
             return []
 
-        clauses = [
-            c.strip()
-            for c in re.split(r"[\n;•\u2022]|\band\s+also\b", raw_text, flags=re.IGNORECASE)
-            if len(c.strip()) > 3
-        ]
+        raw_clauses = re.split(
+            r"[\n;•\u2022]|\band\s+also\b|,\s*(?:but|instead|however|rather\s+than)\s+|\s+but\s+|\s+instead\s+use\s+",
+            raw_text,
+            flags=re.IGNORECASE,
+        )
+
+        clauses = []
+        for c in raw_clauses:
+            cleaned = re.sub(r"^\s*(?:\d+[\.)]|[-*])\s*", "", c).strip()
+            if len(cleaned) > 2:
+                clauses.append(cleaned)
 
         requirements: List[ExtractedRequirement] = []
         for idx, clause in enumerate(clauses, start=1):
             lower = clause.lower()
 
-            is_negative = (
+            is_affirmative_double_neg = any(p.search(clause) for p in AFFIRMATIVE_DOUBLE_NEGATION_PATTERNS)
+
+            is_negative = (not is_affirmative_double_neg) and (
                 any(p.search(clause) for p in NEGATIVE_PATTERNS)
                 or "must not" in lower
                 or "never" in lower
@@ -132,7 +152,7 @@ class RequirementExtractorPy:
             words = [
                 w
                 for w in re.sub(r"[^a-z0-9_\-\s]", " ", lower).split()
-                if len(w) > 2 and w not in STOP_WORDS
+                if len(w) >= 3 and w not in STOP_WORDS
             ]
 
             requirements.append(
@@ -272,29 +292,33 @@ class IntentLossDetectorPy:
         self, req: ExtractedRequirement, lower_prompt: str
     ) -> IntentLossFinding:
         neg_markers = [
-            "must not", "never", "do not", "don't", "cannot", "forbidden",
+            "must not", "never", "do not", "don't", "cannot", "can't", "forbidden",
             "prohibited", "avoid", "no ", "without"
         ]
+        filler_words = {
+            "must", "not", "never", "don", "t", "do", "forbidden", "avoid", "prohibited",
+            "without", "fail", "forget", "omit", "skip", "neglect", "the", "and", "for", "with"
+        }
         forbidden_targets = [
             w for w in req.forbidden_keywords
-            if w not in ("must", "not", "never", "don", "t", "do", "forbidden", "avoid")
+            if w not in filler_words
         ]
 
         prohibition_found = False
         explicit_violation = False
 
-        clauses = re.split(r"[\n.;]", lower_prompt)
+        clauses = [c.strip() for c in re.split(r"[\n.;]", lower_prompt) if c.strip()]
         for c in clauses:
-            if any(m in c for m in neg_markers) and any(w in c for w in forbidden_targets):
-                prohibition_found = True
-                break
+            has_neg = any(m in c for m in neg_markers)
+            has_forbidden = any(re.search(rf"\b{re.escape(w)}\b", c, re.IGNORECASE) for w in forbidden_targets)
 
-        permissive_markers = ["use ", "import ", "include ", "enable ", "call ", "allow "]
-        for c in clauses:
-            if any(p in c for p in permissive_markers) and any(w in c for w in forbidden_targets):
-                if not any(m in c for m in neg_markers):
+            if has_neg and has_forbidden:
+                prohibition_found = True
+
+            if (not has_neg) and has_forbidden:
+                permissive_markers = ["use ", "import ", "include ", "enable ", "call ", "allow ", "expose "]
+                if any(p in c for p in permissive_markers):
                     explicit_violation = True
-                    break
 
         if explicit_violation:
             return IntentLossFinding(
@@ -336,22 +360,38 @@ class IntentLossDetectorPy:
     ) -> IntentLossFinding:
         target_words = [
             w for w in req.required_keywords
-            if len(w) > 3 and w not in ("must", "shall", "always", "require", "ensure", "should")
+            if len(w) >= 3 and w not in ("must", "shall", "always", "require", "ensure", "should", "using")
         ]
 
         if not target_words:
+            norm = re.sub(r"[^a-z0-9]", " ", req.normalized_predicate.lower()).strip()
+            direct_match = len(norm) > 2 and norm in lower_prompt
+            if direct_match:
+                return IntentLossFinding(
+                    requirement_id=req.id,
+                    requirement=req,
+                    state="PRESERVED",
+                    severity="ZERO_LOSS",
+                    confidence=0.90,
+                    evidence_excerpt=f"Requirement matched directly: [{req.original_text}]",
+                    explanation=f"Requirement [{req.original_text}] preserved in prompt.",
+                    remediation_prompt_patch="",
+                )
             return IntentLossFinding(
                 requirement_id=req.id,
                 requirement=req,
-                state="PRESERVED",
-                severity="ZERO_LOSS",
+                state="DROPPED",
+                severity="CRITICAL_INTENT_LOSS" if req.criticality == "CRITICAL" else "MODERATE_OPTIONAL_DEGRADATION",
                 confidence=0.85,
-                evidence_excerpt="General requirement matched.",
-                explanation="Requirement matched base prompt structure.",
-                remediation_prompt_patch="",
+                evidence_excerpt=f"Unmatched requirement: [{req.original_text}]",
+                explanation=f"Requirement [{req.original_text}] was not found in synthesized prompt.",
+                remediation_prompt_patch=f"MANDATORY REQUIREMENT: {req.original_text}.",
             )
 
-        matched_words = [w for w in target_words if w in lower_prompt]
+        matched_words = [
+            w for w in target_words
+            if re.search(rf"\b{re.escape(w)}\b", lower_prompt, re.IGNORECASE) or w in lower_prompt
+        ]
         match_ratio = len(matched_words) / len(target_words)
 
         weakening_markers = [

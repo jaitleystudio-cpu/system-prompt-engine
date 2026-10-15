@@ -167,13 +167,12 @@ export class IndependentRepairTournament {
     oracle: FrozenTestOracle
   ): CandidateEvaluationResult {
     // 1. Check Oracle Tampering: Did the patch attempt to modify the test oracle itself?
-    if (
-      candidate.targetFile === oracle.testFile ||
-      candidate.replacementChunk.includes("describe(") ||
-      candidate.replacementChunk.includes("test(") ||
-      candidate.replacementChunk.includes("it(") ||
-      candidate.replacementChunk.includes("expect(")
-    ) {
+    const hasTamperKeywords =
+      /(?:^|[\s;{}])(?:describe|test|it)\s*\(/.test(candidate.replacementChunk) ||
+      /\bexpect\s*\(/.test(candidate.replacementChunk) ||
+      /\bassert(?:\.|\s*\()/.test(candidate.replacementChunk);
+
+    if (candidate.targetFile === oracle.testFile || hasTamperKeywords) {
       return {
         candidateId: candidate.candidateId,
         acceptancePassed: false,
@@ -302,13 +301,22 @@ export class IndependentRepairTournament {
       mutants.push(fullContent.replace(replacementChunk, replacementChunk.replace(/(["'][^"']*["'])/, '""')));
     }
 
-    // Mutant 4: Invert inequality operators
-    if (replacementChunk.includes(">") || replacementChunk.includes("<") || replacementChunk.includes("===")) {
-      const inverted = replacementChunk
-        .replace(/===/g, "!==")
-        .replace(/>/g, "<")
-        .replace(/<=/g, ">=");
-      mutants.push(fullContent.replace(replacementChunk, inverted));
+    // Mutant 4: Invert inequality / equality operators safely
+    if (/[><]=?|===|!==/.test(replacementChunk)) {
+      const inverted = replacementChunk.replace(/===|!==|<=|>=|<|>/g, (op) => {
+        switch (op) {
+          case "===": return "!==";
+          case "!==": return "===";
+          case "<=": return ">";
+          case ">=": return "<";
+          case "<": return ">=";
+          case ">": return "<=";
+          default: return op;
+        }
+      });
+      if (inverted !== replacementChunk) {
+        mutants.push(fullContent.replace(replacementChunk, inverted));
+      }
     }
 
     // Mutant 5: Omission of primary statement

@@ -1597,7 +1597,7 @@ html[data-theme="light"] .spe-bound-notice {
     width: 100%;
     text-align: center;
   }
-  .hero-copy > .eyebrow {
+  .hero-copy > .eyebrow:not(.spe-hero-rotator) {
     display: none;
   }
   .hero-copy h1 {

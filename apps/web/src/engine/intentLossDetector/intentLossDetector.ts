@@ -133,37 +133,36 @@ export class IntentLossDetector {
     lowerPrompt: string
   ): IntentLossFinding {
     // Check if the prompt explicitly articulates the prohibition
-    const negMarkers = ["must not", "never", "do not", "don't", "cannot", "forbidden", "prohibited", "avoid", "no ", "without"];
+    const negMarkers = ["must not", "never", "do not", "don't", "cannot", "can't", "forbidden", "prohibited", "avoid", "no ", "without"];
     
-    // Check key forbidden concepts
-    const forbiddenTargetWords = req.forbiddenKeywords.filter(
-      (w) => !["must", "not", "never", "don", "t", "do", "forbidden", "avoid"].includes(w)
-    );
+    // Check key forbidden concepts (filter out negative markers and filler words)
+    const fillerWords = [
+      "must", "not", "never", "don", "t", "do", "forbidden", "avoid", "prohibited",
+      "without", "fail", "forget", "omit", "skip", "neglect", "the", "and", "for", "with"
+    ];
+    const forbiddenTargetWords = req.forbiddenKeywords.filter((w) => !fillerWords.includes(w));
 
-    // Is there an active prohibition clause mentioning the target words?
     let prohibitionFound = false;
     let explicitViolationFound = false;
 
-    for (const marker of negMarkers) {
-      if (lowerPrompt.includes(marker)) {
-        const clauses = lowerPrompt.split(/[\n.;]/);
-        for (const c of clauses) {
-          if (c.includes(marker) && forbiddenTargetWords.some((w) => c.includes(w))) {
-            prohibitionFound = true;
-            break;
-          }
-        }
-      }
-    }
+    const clauses = lowerPrompt.split(/[\n.;]/).map((c) => c.trim()).filter((c) => c.length > 0);
 
-    // Check for explicit contradiction (e.g. user said "must not use eval", prompt says "use eval to execute")
-    const permissiveMarkers = ["use ", "import ", "include ", "enable ", "call ", "allow "];
-    for (const pMarker of permissiveMarkers) {
-      const clauses = lowerPrompt.split(/[\n.;]/);
-      for (const c of clauses) {
-        if (c.includes(pMarker) && forbiddenTargetWords.some((w) => c.includes(w)) && !negMarkers.some((m) => c.includes(m))) {
+    for (const c of clauses) {
+      const hasNegMarker = negMarkers.some((m) => c.includes(m));
+      const hasForbiddenWord = forbiddenTargetWords.some((w) => {
+        const re = new RegExp(`\\b${w}\\b`, "i");
+        return re.test(c);
+      });
+
+      if (hasNegMarker && hasForbiddenWord) {
+        prohibitionFound = true;
+      }
+
+      if (!hasNegMarker && hasForbiddenWord) {
+        const permissiveMarkers = ["use ", "import ", "include ", "enable ", "call ", "allow ", "expose "];
+        const hasPermissive = permissiveMarkers.some((pm) => c.includes(pm));
+        if (hasPermissive) {
           explicitViolationFound = true;
-          break;
         }
       }
     }
@@ -211,24 +210,43 @@ export class IntentLossDetector {
     req: ExtractedRequirement,
     lowerPrompt: string
   ): IntentLossFinding {
+    // Preserve 3-letter acronyms (e.g. jwt, api, css, sql, git, ssl)
     const targetWords = req.requiredKeywords.filter(
-      (w) => w.length > 3 && !["must", "shall", "always", "require", "ensure", "should"].includes(w)
+      (w) => w.length >= 3 && !["must", "shall", "always", "require", "ensure", "should", "using"].includes(w)
     );
 
     if (targetWords.length === 0) {
+      // Fallback: check if the normalized text appears directly
+      const norm = req.normalizedPredicate.toLowerCase().replace(/[^a-z0-9]/g, " ").trim();
+      const directMatch = norm.length > 2 && lowerPrompt.includes(norm);
+      if (directMatch) {
+        return {
+          requirementId: req.id,
+          requirement: req,
+          state: "PRESERVED",
+          severity: "ZERO_LOSS",
+          confidence: 0.90,
+          evidenceExcerpt: `Requirement matched directly: [${req.originalText}]`,
+          explanation: `Requirement [${req.originalText}] preserved in prompt.`,
+          remediationPromptPatch: "",
+        };
+      }
       return {
         requirementId: req.id,
         requirement: req,
-        state: "PRESERVED",
-        severity: "ZERO_LOSS",
+        state: "DROPPED",
+        severity: req.criticality === "CRITICAL" ? "CRITICAL_INTENT_LOSS" : "MODERATE_OPTIONAL_DEGRADATION",
         confidence: 0.85,
-        evidenceExcerpt: "General requirement matched.",
-        explanation: "Requirement matched base prompt structure.",
-        remediationPromptPatch: "",
+        evidenceExcerpt: `Unmatched requirement: [${req.originalText}]`,
+        explanation: `Requirement [${req.originalText}] was not found in synthesized prompt.`,
+        remediationPromptPatch: `MANDATORY REQUIREMENT: ${req.originalText}.`,
       };
     }
 
-    const matchedWords = targetWords.filter((w) => lowerPrompt.includes(w));
+    const matchedWords = targetWords.filter((w) => {
+      const re = new RegExp(`\\b${w}\\b`, "i");
+      return re.test(lowerPrompt) || lowerPrompt.includes(w);
+    });
     const matchRatio = matchedWords.length / targetWords.length;
 
     // Check for weakening (e.g. user said "must", prompt says "optionally" or "if you like")
