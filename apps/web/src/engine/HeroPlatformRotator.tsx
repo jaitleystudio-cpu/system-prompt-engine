@@ -134,6 +134,21 @@ export const HERO_ROTATOR_PLATFORMS: readonly HeroRotatorPlatform[] = [
     description: "Frontier multilingual code & agentic reasoning model",
   },
   {
+    id: "kimi",
+    displayName: "KIMI",
+    country: "China",
+    countryCode: "CN",
+    countryFlag: "🇨🇳",
+    brandColor: "#0066FF",
+    provider: "Moonshot AI",
+    category: "model",
+    categoryLabel: "2M Context",
+    dialectKey: "kimi",
+    studioTargetId: null,
+    isDirectStudioTarget: false,
+    description: "Moonshot AI ultra-long context reasoning model with anchor directives",
+  },
+  {
     id: "grok",
     displayName: "GROK",
     country: "United States",
@@ -373,7 +388,7 @@ export function HeroPlatformRotator({
     >
       {/* Screen reader static announcement */}
       <span className="visually-hidden">
-        A clear start for any AI across nations: ChatGPT, Gemini, Claude, Mistral, DeepSeek, Sarvam, Qwen, Grok, Falcon, Llama, Copilot, Claude Code, and Cursor.
+        A clear start for any AI across nations: ChatGPT, Gemini, Claude, Mistral, DeepSeek, Sarvam, Qwen, Kimi, Grok, Falcon, Llama, Copilot, Claude Code, and Cursor.
       </span>
 
       {/* Visual content - NOT hidden with aria-hidden so button is accessible */}

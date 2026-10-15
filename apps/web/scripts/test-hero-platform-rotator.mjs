@@ -32,6 +32,7 @@ const REQUIRED_GLOBAL_PLATFORMS = [
   { name: "DEEPSEEK", country: "China", code: "CN", color: "#4D6BFE", directTarget: null },
   { name: "SARVAM", country: "India", code: "IN", color: "#FF9933", directTarget: null },
   { name: "QWEN", country: "China", code: "CN", color: "#615CED", directTarget: null },
+  { name: "KIMI", country: "China", code: "CN", color: "#0066FF", directTarget: null },
   { name: "GROK", country: "United States", code: "US", color: "#E5E7EB", directTarget: null },
   { name: "FALCON", country: "United Arab Emirates", code: "AE", color: "#C99700", directTarget: null },
   { name: "LLAMA", country: "United States", code: "US", color: "#0668E1", directTarget: "local" },
