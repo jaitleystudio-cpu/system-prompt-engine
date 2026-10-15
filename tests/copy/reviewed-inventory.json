@@ -697,6 +697,12 @@
       "text": "done"
     },
     {
+      "id": "ae1170027466b88f2ba7",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "possibility"
+    },
+    {
       "id": "aeb8b354bf552273c7cc",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -16855,6 +16861,12 @@
       "text": "Build my prompt"
     },
     {
+      "id": "492f64e9fb155424ef68",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Possibility Engine"
+    },
+    {
       "id": "4a768de57aaedc3c9719",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16865,6 +16877,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "See how SPE saves 8 hours and $35/week"
+    },
+    {
+      "id": "4e138c9717d035e8f6df",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "possibility"
     },
     {
       "id": "5114e45591c12be9c0a9",
@@ -17023,6 +17041,12 @@
       "text": "code"
     },
     {
+      "id": "97a1ee8a06f14345fe30",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Ante-hoc topology forks, Living Outcome Contracts & causal surgery"
+    },
+    {
       "id": "97e8a34ef3aa6f75a349",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -17135,6 +17159,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "create"
+    },
+    {
+      "id": "e12c3e40a64466513255",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "NEW"
     },
     {
       "id": "e16e4e4c7c663afed259",
@@ -24637,6 +24667,24 @@
       "text": "Quiet shelf"
     },
     {
+      "id": "1bf9045b22ac08052e9e",
+      "file": "apps/web/src/pages/PossibilityEnginePage.tsx",
+      "depth": "PRODUCT",
+      "text": "Breadcrumb"
+    },
+    {
+      "id": "3e3e7a05fa7b17f7d7a8",
+      "file": "apps/web/src/pages/PossibilityEnginePage.tsx",
+      "depth": "PRODUCT",
+      "text": "Possibility Engine"
+    },
+    {
+      "id": "73d9dd83b6474b336bf1",
+      "file": "apps/web/src/pages/PossibilityEnginePage.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
       "id": "02cf7061423e309a38b7",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -27259,6 +27307,12 @@
       "text": "/capabilities"
     },
     {
+      "id": "410e40731451a4f42961",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/possibility-engine"
+    },
+    {
       "id": "44514acee3add9d07e58",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27323,6 +27377,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "DeveloperApplication"
+    },
+    {
+      "id": "672004e3e66f21e58931",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Possibility Engine & Living Outcome Contract | SPE Ω"
     },
     {
       "id": "69a2b710569776a27810",
@@ -27617,6 +27677,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "What is an Execution Contract in SPE?"
+    },
+    {
+      "id": "fa031acac1e536349aa1",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Explore three orthogonal execution topologies from a single brief. Lock hard boundaries with mathematical proof and repair regressions via Pearl causal minimal-cut surgery."
     },
     {
       "id": "fa60577a2bd4e9cb2dff",

@@ -25,7 +25,8 @@ export type AppView =
   | "prompts"
   | "incidents"
   | "eval-studio"
-  | "uidrop";
+  | "uidrop"
+  | "possibility";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -47,6 +48,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   prompts: "/prompts",
   incidents: "/incidents",
   uidrop: "/uidrop",
+  possibility: "/possibility-engine",
   ...EXTRA_VIEW_PATH,
 };
 
@@ -231,6 +233,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "UIDrop Web Design System Extractor & AI Prompt Compiler | SPE Ω",
     description:
       "Extract design tokens, WCAG 2.1 contrast scores, and anti-cloning prompts from any live URL or uploaded screenshot — 100% offline with zero cloud compute.",
+  },
+  possibility: {
+    path: "/possibility-engine",
+    title: "Possibility Engine & Living Outcome Contract | SPE Ω",
+    description:
+      "Explore three orthogonal execution topologies from a single brief. Lock hard boundaries with mathematical proof and repair regressions via Pearl causal minimal-cut surgery.",
   },
   ...EXTRA_ROUTE_META,
 };

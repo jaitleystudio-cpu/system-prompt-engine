@@ -155,6 +155,9 @@ const AiIncidentWire = lazy(() =>
 const UiDropPage = lazy(() =>
   import("./pages/UiDropPage").then((m) => ({ default: m.UiDropPage }))
 );
+const PossibilityEnginePage = lazy(() =>
+  import("./pages/PossibilityEnginePage").then((m) => ({ default: m.PossibilityEnginePage }))
+);
 
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
@@ -1439,6 +1442,11 @@ export default function App() {
         {!notFound && view === "uidrop" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
             <UiDropPage onNavigate={setView} />
+          </Suspense>
+        )}
+        {!notFound && view === "possibility" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <PossibilityEnginePage onNavigate={setView} />
           </Suspense>
         )}
 

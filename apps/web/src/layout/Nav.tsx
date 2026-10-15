@@ -71,6 +71,12 @@ const NAV_GROUPS: NavGroup[] = [
         label: "UIDrop Extractor",
         desc: "Extract design tokens, WCAG contrast & prompts from any UI",
       },
+      {
+        id: "possibility",
+        label: "Possibility Engine",
+        desc: "Ante-hoc topology forks, Living Outcome Contracts & causal surgery",
+        badge: "NEW",
+      },
     ],
   },
   {
