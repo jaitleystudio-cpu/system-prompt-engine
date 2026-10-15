@@ -4,6 +4,8 @@
   max-width: 1240px;
   margin: 2rem auto 4.5rem;
   padding: 0 1.5rem;
+  box-sizing: border-box;
+  overflow-x: clip;
   font-family: var(--spe-font-body, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   color: #f2eee6;
 }
@@ -47,7 +49,9 @@
               inset 0 1px 0 rgba(255, 255, 255, 0.14),
               inset 0 0 0 1px rgba(56, 189, 248, 0.06);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  box-sizing: border-box;
+  max-width: 100%;
   backdrop-filter: blur(24px);
 }
 
@@ -71,7 +75,8 @@
   top: -160px;
   left: 50%;
   transform: translate3d(-50%, 0, 0);
-  width: 760px;
+  width: 100%;
+  max-width: 760px;
   height: 320px;
   background: radial-gradient(ellipse, rgba(56, 189, 248, 0.14) 0%, rgba(217, 197, 154, 0.06) 45%, transparent 72%);
   pointer-events: none;
@@ -214,8 +219,220 @@
 }
 
 @media (max-width: 768px) {
+  .spe-diff-ambient-glow {
+    display: none;
+  }
+
+  .spe-diff-section {
+    padding: 0 0.75rem;
+    margin: 1.5rem auto 3rem;
+  }
+
+  .spe-diff-container {
+    padding: 1.75rem 1rem 1.5rem;
+    border-radius: 16px;
+    overflow-x: clip;
+  }
+
+  .spe-diff-title {
+    font-size: 1.75rem;
+    line-height: 1.25;
+  }
+
+  .spe-diff-subtitle {
+    font-size: 0.925rem;
+  }
+
+  .spe-diff-scenarios {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding: 0.35rem;
+    max-width: 100%;
+    scrollbar-width: none;
+  }
+
+  .spe-diff-scenarios::-webkit-scrollbar {
+    display: none;
+  }
+
+  .spe-diff-scenario-tab {
+    flex-shrink: 0;
+    padding: 0.5rem 0.95rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+
   .spe-diff-scorecard-grid {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .spe-diff-scorecard {
+    padding: 0.85rem 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .spe-scorecard-stats {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .spe-stat-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    padding: 0.45rem 0.65rem;
+  }
+
+  .spe-stat-val {
+    font-size: 0.825rem;
+    text-align: right;
+    max-width: 65%;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .spe-diff-viewport-wrap {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .spe-diff-quick-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.75rem 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .spe-diff-toggle-btns {
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+  }
+
+  .spe-diff-toggle-btn {
+    min-height: 44px;
+    font-size: 0.74rem;
+    padding: 6px 4px;
+    text-align: center;
+    justify-content: center;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  .spe-pane-under,
+  .spe-pane-over {
+    padding: 0.75rem;
+    box-sizing: border-box;
+  }
+
+  .spe-terminal-window {
+    padding: 0.85rem;
+    font-size: 0.76rem;
+    min-height: 380px;
+    box-sizing: border-box;
+  }
+
+  .spe-diff-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .spe-diff-cta-primary,
+  .spe-diff-cta-ghost {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    text-align: center;
+    min-height: 44px;
+  }
+
+  .spe-diff-cli-box {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    padding: 0.45rem 0.75rem;
+    overflow: hidden;
+    min-height: 44px;
+  }
+
+  .spe-diff-cli-box code {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 68px);
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .spe-diff-section {
+    padding: 0 0.5rem;
+  }
+
+  .spe-diff-container {
+    padding: 1.25rem 0.65rem 1.25rem;
+    border-radius: 14px;
+  }
+
+  .spe-diff-title {
+    font-size: 1.45rem;
+  }
+
+  .spe-scorecard-stats {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .spe-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 0.35rem;
+  }
+
+  .spe-stat-item:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .spe-pane-under,
+  .spe-pane-over {
+    padding: 0.45rem;
+  }
+
+  .spe-terminal-window {
+    padding: 0.65rem;
   }
 }
 
@@ -454,6 +671,7 @@
 
 /* Interactive Split Canvas */
 .spe-diff-canvas {
+  --spe-split-pct: 0%;
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
@@ -493,6 +711,8 @@
   pointer-events: none;
   transform: translate3d(0, 0, 0);
   will-change: clip-path;
+  clip-path: polygon(0% 0%, 100% 0%, 100% var(--spe-split-pct, 0%), 0% var(--spe-split-pct, 0%));
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% var(--spe-split-pct, 0%), 0% var(--spe-split-pct, 0%));
   display: flex;
   flex-direction: column;
 }
@@ -625,6 +845,7 @@
   position: absolute;
   left: 0;
   right: 0;
+  top: var(--spe-split-pct, 0%);
   height: 2px;
   background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, #38bdf8 20%, #38bdf8 80%, rgba(56, 189, 248, 0.15) 100%);
   box-shadow: 0 0 14px rgba(56, 189, 248, 0.75), 0 0 28px rgba(56, 189, 248, 0.35);

@@ -2,11 +2,13 @@
  * SPE Hero AI Platform Rotator
  * Subtle, restrained, Apple-grade vertical slide & fade rotator
  * Strict Zero Layout Shift (CLS = 0.000) & WCAG AAA Contrast
+ * Official brand colors for world's top AI platforms across countries
  */
 
 .spe-hero .hero-copy > .spe-hero-rotator,
 .hero-copy > .spe-hero-rotator,
-.spe-hero-rotator {
+.spe-hero-rotator,
+.spe-hero-rotator-wrap {
   display: inline-flex !important;
   align-items: baseline;
   flex-wrap: wrap;
@@ -17,6 +19,15 @@
   color: #aeb8c7;
   margin-bottom: 20px;
   vertical-align: baseline;
+  min-height: 1.4em;
+}
+
+.spe-rotator-visual {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 0.35em;
+  row-gap: 0.2em;
 }
 
 /* Stable slot that guarantees zero layout shift */
@@ -32,11 +43,32 @@
 .spe-rotator-name {
   display: inline-block;
   font-weight: 600;
-  color: var(--spe-accent-primary, #38bdf8);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   will-change: transform, opacity;
   animation: speRotatorSlideIn 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Country flag icon */
+.spe-rotator-flag {
+  display: inline-block;
+  font-size: 11px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* Country code micro-pill */
+.spe-rotator-country-badge {
+  display: inline-block;
+  font-size: 7.5px;
+  line-height: 1;
+  padding: 1.5px 3.5px;
+  margin-left: 4px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  vertical-align: middle;
 }
 
 /* Interactive button mode */
@@ -46,17 +78,17 @@
   align-items: baseline;
   cursor: pointer;
   border-radius: 2px;
-  border-bottom: 1px dotted rgba(56, 189, 248, 0.45);
-  transition: border-color 0.2s ease, opacity 0.2s ease;
+  border-bottom: 1px dotted var(--spe-rotator-brand, rgba(56, 189, 248, 0.45));
+  transition: border-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .spe-rotator-button:hover {
-  border-bottom-color: var(--spe-accent-primary, #38bdf8);
+  border-bottom-color: var(--spe-rotator-brand, #38bdf8);
   opacity: 0.95;
 }
 
 .spe-rotator-button:focus-visible {
-  outline: 2px solid var(--spe-focus-ring-color, #38bdf8);
+  outline: 2px solid var(--spe-rotator-brand, #38bdf8);
   outline-offset: 3px;
 }
 
@@ -68,9 +100,9 @@
   padding: 1px 4px;
   margin-left: 5px;
   border-radius: 3px;
-  background: var(--spe-accent-badge-bg, rgba(56, 189, 248, 0.12));
-  color: var(--spe-accent-primary, #38bdf8);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #d1d5db;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   vertical-align: middle;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -96,36 +128,87 @@
   }
 }
 
+/* Selected Platform Banner inside Prompt Studio */
+.spe-selected-platform-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-family: var(--spe-font-mono, monospace);
+  font-size: 11px;
+  gap: 8px;
+}
+
+.spe-platform-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e5e7eb;
+}
+
+.spe-banner-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.spe-banner-badge {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.spe-banner-clear {
+  all: unset;
+  cursor: pointer;
+  font-size: 10px;
+  color: #9ca3af;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.15s ease;
+}
+
+.spe-banner-clear:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 /* Light Theme Overrides (WCAG AAA >= 7.0:1 on #f4f1ea canvas) */
-html[data-theme="light"] .spe-hero-rotator {
+html[data-theme="light"] .spe-hero-rotator-wrap {
   color: #566270;
 }
 
-html[data-theme="light"] .spe-rotator-name {
-  color: var(--spe-accent-primary, #1e3a8a);
-}
-
-html[data-theme="light"] .spe-rotator-button {
-  border-bottom-color: rgba(30, 58, 138, 0.45);
-}
-
-html[data-theme="light"] .spe-rotator-button:hover {
-  border-bottom-color: var(--spe-accent-primary, #1e3a8a);
-}
-
-html[data-theme="light"] .spe-rotator-button:focus-visible {
-  outline-color: var(--spe-focus-ring-color, #1e3a8a);
+html[data-theme="light"] .spe-rotator-country-badge {
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 html[data-theme="light"] .spe-rotator-category-badge {
-  background: rgba(30, 58, 138, 0.08);
-  color: var(--spe-accent-primary, #1e3a8a);
-  border-color: rgba(30, 58, 138, 0.25);
+  background: rgba(0, 0, 0, 0.06);
+  color: #374151;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+html[data-theme="light"] .spe-selected-platform-banner {
+  background-color: #ffffff !important;
+  color: #1f2937;
+}
+
+html[data-theme="light"] .spe-platform-banner-info {
+  color: #1f2937;
 }
 
 /* Responsive Overrides (Mobile screens <= 860px) */
 @media (max-width: 860px) {
-  .spe-hero-rotator {
+  .spe-hero-rotator-wrap {
     margin-bottom: 24px;
     font-size: 9px;
   }

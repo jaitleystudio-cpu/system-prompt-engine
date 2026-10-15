@@ -46,16 +46,20 @@ assert.match(app, /SubmitWorkflowModal/, "App.tsx must import SubmitWorkflowModa
 assert.match(app, /<SubmitWorkflowModal/, "App.tsx must render SubmitWorkflowModal");
 console.log("✓ Integration into App.tsx verified");
 
+const scenariosPath = join(root, "src/engine/landing/diffScenarios.ts");
+assert.ok(existsSync(scenariosPath), "diffScenarios.ts must exist");
+const scenariosContent = readFileSync(scenariosPath, "utf8");
+
 // 3. BeforeAfterDiffSlider Invariants & Slider Mechanics
 assert.match(diff, /role="slider"/, "Slider must define role=slider");
 assert.match(diff, /aria-valuenow/, "Slider must declare aria-valuenow");
 assert.match(diff, /aria-label="Comparison slider/, "Slider must declare descriptive aria-label");
 assert.match(diff, /aria-orientation="vertical"/, "Slider must declare aria-orientation=vertical");
 assert.match(diff, /data-copy-depth="PROOF"/, "Diff component must carry PROOF copy depth");
-assert.match(diff, /API Auth Refactor/, "Scenario 1 present");
-assert.match(diff, /Database Migration/, "Scenario 2 present");
-assert.match(diff, /Multi-File Feature/, "Scenario 3 present");
-assert.match(diff, /142,500 tokens/, "Scenario 1 waste metrics present");
+assert.match(scenariosContent, /API Auth Refactor/, "Scenario 1 present");
+assert.match(scenariosContent, /Database Migration/, "Scenario 2 present");
+assert.match(scenariosContent, /Multi-File Feature/, "Scenario 3 present");
+assert.match(scenariosContent, /142,500 tokens/, "Scenario 1 waste metrics present");
 assert.match(diff, /npm install -g @systempromptengine\/cli/, "Developer CLI CTA present");
 assert.match(diff, /spe-diff-track\s+is-scroll-driven/, "Diff component must render bounded sticky scroll track");
 assert.match(diff, /spe-diff-sticky-pin/, "Diff component must render sticky pin container");
@@ -91,6 +95,7 @@ console.log("✓ SubmitWorkflowModal verified");
 // 7. Anti-Jargon Law
 for (const jargon of ["Horn logic", "epistemic compilation", "counterfactual witness"]) {
   assert.ok(!diff.toLowerCase().includes(jargon.toLowerCase()), `Diff slider must not contain forbidden jargon: ${jargon}`);
+  assert.ok(!scenariosContent.toLowerCase().includes(jargon.toLowerCase()), `Scenarios must not contain forbidden jargon: ${jargon}`);
   assert.ok(!modal.toLowerCase().includes(jargon.toLowerCase()), `Modal must not contain forbidden jargon: ${jargon}`);
   assert.ok(!workflows.toLowerCase().includes(jargon.toLowerCase()), `Workflows catalog must not contain forbidden jargon: ${jargon}`);
 }

@@ -71,7 +71,7 @@ jobs:
       - name: Verify Bit-for-Bit Canonical WASM Hash Preservation
         run: |
           EXPECTED_WASM_HASH="ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d"
-          ACTUAL_WASM_HASH=$(sha256sum apps/web/public/spe_propositional_compiler.wasm | awk '{print $1}')
+          ACTUAL_WASM_HASH=$(sha256sum apps/web/public/spe_wasm.wasm | awk '{print $1}')
           echo "Expected WASM Hash: $EXPECTED_WASM_HASH"
           echo "Actual WASM Hash:   $ACTUAL_WASM_HASH"
           if [ "$ACTUAL_WASM_HASH" != "$EXPECTED_WASM_HASH" ]; then

@@ -10,158 +10,16 @@ import { copyTextSafe } from "../engine/workflows/clipboard";
 import {
   setCanvasSplitPct,
   useVerticalDiffScroll,
-  scrollTrackToPreset,
+  recordScrollPosition,
+  handleDiffSliderKeyDown,
 } from "../engine/landing/diffScrollEngine";
+import { SCENARIOS } from "../engine/landing/diffScenarios";
 import "./before-after-diff.css";
 
 interface BeforeAfterDiffSliderProps {
   onNavigate?: (view: AppView) => void;
   isMainHero?: boolean;
 }
-
-interface DiffScenario {
-  id: string;
-  name: string;
-  description: string;
-  before: {
-    label: string;
-    outcome: string;
-    tokens: string;
-    cost: string;
-    scope: string;
-    tests: string;
-    lines: Array<{ type: "cmd" | "warn" | "fail" | "muted"; text: string }>;
-  };
-  after: {
-    label: string;
-    outcome: string;
-    tokens: string;
-    cost: string;
-    scope: string;
-    tests: string;
-    lines: Array<{ type: "cmd" | "pass" | "receipt" | "muted"; text: string }>;
-  };
-}
-
-const SCENARIOS: DiffScenario[] = [
-  {
-    id: "auth-refactor",
-    name: "API Auth Refactor",
-    description: "Refactoring express JWT authentication middleware to support Bearer tokens and revoke lists.",
-    before: {
-      label: "Without SPE (Unguided Run)",
-      outcome: "Build Failed · Silent Regressions",
-      tokens: "142,500 tokens",
-      cost: "$45.60 wasted",
-      scope: "14 files modified (Out of bounds)",
-      tests: "0 / 6 Passed (4 broken)",
-      lines: [
-        { type: "cmd", text: "$ claude run \"refactor auth middleware to use bearer token\"" },
-        { type: "warn", text: "⚠️ Ambiguous instruction. Attempting broad codebase scan..." },
-        { type: "fail", text: "✗ npm install express-jwt-better-auth (404 Not Found - hallucinated)" },
-        { type: "fail", text: "✗ Modified src/auth/jwt.ts: deleted TokenBlacklist interface" },
-        { type: "fail", text: "✗ Modified .env: printed JWT_SECRET in stdout logs!" },
-        { type: "fail", text: "✗ Modified 13 unrelated files across repo" },
-        { type: "fail", text: "✗ npm test: 4 failing tests! Tests skipped to finish run." },
-        { type: "muted", text: "Agent reported: \"Refactor finished successfully.\" (False Positive)" },
-      ],
-    },
-    after: {
-      label: "With SPE (Guardrails Active)",
-      outcome: "100% Invariant Pass · Zero Drift",
-      tokens: "4,200 tokens",
-      cost: "$0.00 local ($0.03 API)",
-      scope: "1 file modified (Strict boundary)",
-      tests: "12 / 12 Passed (Guaranteed test pass)",
-      lines: [
-        { type: "cmd", text: "$ spe run auth-refactor --invariants strict" },
-        { type: "receipt", text: "[SPE Guardrail] Project Scope Locked: Zero secret leaks allowed" },
-        { type: "receipt", text: "[SPE Guardrail] Boundary locked: src/middleware/auth.ts (max 45 lines)" },
-        { type: "receipt", text: "[SPE Guardrail] Permission ceiling: local_first (zero network / zero secret egress)" },
-        { type: "pass", text: "+ Preserved TokenBlacklist interface & existing session contracts" },
-        { type: "pass", text: "+ Implemented Bearer token validation with timing-safe comparison" },
-        { type: "receipt", text: "[SPE Audit Receipt] Guaranteed Test Gate: npm test -- --grep \"auth\"" },
-        { type: "pass", text: "✓ 12/12 unit tests passing (100% verified test pass)" },
-      ],
-    },
-  },
-  {
-    id: "db-migration",
-    name: "Database Migration",
-    description: "Adding indexed foreign key relations and backfilling audit tables in SQL migration.",
-    before: {
-      label: "Without SPE (Unguided Run)",
-      outcome: "Data Loss Risk · Dropped Index",
-      tokens: "188,000 tokens",
-      cost: "$59.20 wasted",
-      scope: "7 schema files modified",
-      tests: "0 / 8 Passed (Syntax errors)",
-      lines: [
-        { type: "cmd", text: "$ windsurf cascade \"add foreign keys and audit trigger\"" },
-        { type: "warn", text: "⚠️ Invented unverified table naming convention 'tbl_audit_logs'" },
-        { type: "fail", text: "✗ Executed raw DROP TABLE IF EXISTS on staging database!" },
-        { type: "fail", text: "✗ Generated circular foreign key constraint causing deadlock" },
-        { type: "fail", text: "✗ Migration failed in transaction rollback" },
-        { type: "muted", text: "Agent stalled in runaway retry loop (12 iterations, $59 API burn)" },
-      ],
-    },
-    after: {
-      label: "With SPE (Guardrails Active)",
-      outcome: "Zero Regressions · Reversible DDL",
-      tokens: "3,800 tokens",
-      cost: "$0.00 local ($0.02 API)",
-      scope: "1 migration file modified",
-      tests: "8 / 8 Passed (Idempotency verified)",
-      lines: [
-        { type: "cmd", text: "$ spe run db-migration --rules safe-ddl" },
-        { type: "receipt", text: "[SPE Guardrail] Scope Locked: Zero destructive drops allowed" },
-        { type: "receipt", text: "[SPE Guardrail] Reversibility Gate: Generating down-migration pairing" },
-        { type: "pass", text: "+ Added non-blocking concurrent index on foreign key column" },
-        { type: "pass", text: "+ Structured idempotent audit log trigger with rollback guard" },
-        { type: "receipt", text: "[SPE Audit Receipt] Verification: Schema migration dry-run completed in sandbox" },
-        { type: "pass", text: "✓ 8/8 migration assertions passing with zero locking violations" },
-      ],
-    },
-  },
-  {
-    id: "multi-file",
-    name: "Multi-File Feature",
-    description: "Implementing webhook signature verification across worker handlers and routers.",
-    before: {
-      label: "Without SPE (Unguided Run)",
-      outcome: "Dependency Drift · Type Errors",
-      tokens: "210,000 tokens",
-      cost: "$67.40 wasted",
-      scope: "22 files modified",
-      tests: "Failed compile (9 TypeScript errors)",
-      lines: [
-        { type: "cmd", text: "$ cursor-agent \"wire stripe webhook signature checking\"" },
-        { type: "warn", text: "⚠️ Agent rewrote package.json, upgrading major versions" },
-        { type: "fail", text: "✗ Introduced broken peer dependency conflict in lockfile" },
-        { type: "fail", text: "✗ Ignored existing shared crypto utility and rewrote flawed HMAC" },
-        { type: "fail", text: "✗ TypeScript compilation failed: 9 errors in 4 packages" },
-        { type: "muted", text: "Human engineer spent 3 hours reverting git branch" },
-      ],
-    },
-    after: {
-      label: "With SPE (Scope Guardrails Active)",
-      outcome: "Clean Typecheck · Instant Merge",
-      tokens: "5,100 tokens",
-      cost: "$0.00 local ($0.04 API)",
-      scope: "2 targeted files modified",
-      tests: "15 / 15 Passed (Typecheck + E2E receipts)",
-      lines: [
-        { type: "cmd", text: "$ spe run webhook-signature --strict-types" },
-        { type: "receipt", text: "[SPE Guardrail] Lockfile Locked: Zero package modifications allowed" },
-        { type: "receipt", text: "[SPE Guardrail] Scope lock: routes/webhooks.ts & handlers/stripe.ts" },
-        { type: "pass", text: "+ Reused existing timing-safe HMAC utility from internal crypto lib" },
-        { type: "pass", text: "+ All TypeScript interfaces verified: 0 typecheck errors" },
-        { type: "receipt", text: "[SPE Audit Receipt] Guaranteed Test Gate: tsc --noEmit && npm test" },
-        { type: "pass", text: "✓ 15/15 test receipts verified. Clean commit ready to merge." },
-      ],
-    },
-  },
-];
 
 export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
   onNavigate,
@@ -197,6 +55,7 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
     e.preventDefault();
     setIsDragging(true);
     isDraggingRef.current = true;
+    recordScrollPosition(lastScrollYRef, isManualOverrideRef);
     updateSplitFromClientY(e.clientY);
     if (e.currentTarget.setPointerCapture) {
       try {
@@ -215,6 +74,7 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     setIsDragging(false);
     isDraggingRef.current = false;
+    recordScrollPosition(lastScrollYRef, isManualOverrideRef);
     if (e.currentTarget.releasePointerCapture) {
       try {
         e.currentTarget.releasePointerCapture(e.pointerId);
@@ -225,46 +85,22 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-      e.preventDefault();
-      setSplitPct((prev) => {
-        const next = Math.max(0, prev - 5);
-        lastPctRef.current = next;
-        setCanvasSplitPct(canvasRef.current, next);
-        return next;
-      });
-    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-      e.preventDefault();
-      setSplitPct((prev) => {
-        const next = Math.min(100, prev + 5);
-        lastPctRef.current = next;
-        setCanvasSplitPct(canvasRef.current, next);
-        return next;
-      });
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      setSplitPct(0);
-      lastPctRef.current = 0;
-      setCanvasSplitPct(canvasRef.current, 0);
-    } else if (e.key === "End") {
-      e.preventDefault();
-      setSplitPct(100);
-      lastPctRef.current = 100;
-      setCanvasSplitPct(canvasRef.current, 100);
-    }
+    handleDiffSliderKeyDown(
+      e,
+      canvasRef.current,
+      splitPct,
+      setSplitPct,
+      lastPctRef,
+      isManualOverrideRef,
+      lastScrollYRef
+    );
   };
 
   const handlePreset = (pct: number) => {
+    recordScrollPosition(lastScrollYRef, isManualOverrideRef);
     setSplitPct(pct);
     lastPctRef.current = pct;
     setCanvasSplitPct(canvasRef.current, pct);
-    scrollTrackToPreset({
-      trackRef,
-      pinRef,
-      pct,
-      isManualOverrideRef,
-      lastScrollYRef,
-    });
   };
 
   useVerticalDiffScroll({
@@ -290,9 +126,7 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
       data-copy-depth="PROOF"
       aria-labelledby="diff-slider-heading"
     >
-      <div className="spe-diff-track is-scroll-driven" ref={trackRef}>
-        <div className="spe-diff-sticky-pin" ref={pinRef}>
-          <div className="spe-diff-container">
+      <div className="spe-diff-container">
         {/* Top ambient glow & light beam */}
         <div className="spe-diff-ambient-glow" aria-hidden="true" />
 
@@ -333,8 +167,11 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
           ))}
         </div>
 
-        {/* Scorecard Summary Pill Grid */}
-        <div className="spe-diff-scorecard-grid">
+        {/* Bounded Sticky Storytelling Track */}
+        <div className="spe-diff-track is-scroll-driven" ref={trackRef}>
+          <div className="spe-diff-sticky-pin" ref={pinRef}>
+            {/* Scorecard Summary Pill Grid */}
+            <div className="spe-diff-scorecard-grid">
           <div
             className={`spe-diff-scorecard is-before ${
               splitPct <= 35 ? "is-emphasized" : splitPct >= 65 ? "is-dimmed" : "is-balanced"
@@ -401,7 +238,7 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
           {/* Quick Preset Buttons */}
           <div className="spe-diff-quick-controls">
             <span>
-              Slider Position: <strong>{Math.round(splitPct)}%</strong> (Drag divider or click presets)
+              (Drag divider or click presets)
             </span>
             <div className="spe-diff-toggle-btns">
               <button
@@ -535,48 +372,48 @@ export const BeforeAfterDiffSlider: React.FC<BeforeAfterDiffSliderProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Action CTAs Below Slider */}
-        <div className="spe-diff-actions">
-          <button
-            type="button"
-            className="spe-diff-cta-primary"
-            onClick={() => {
-              if (onNavigate) {
-                onNavigate("create");
-                window.scrollTo(0, 0);
-              }
-            }}
-          >
-            <span>Try Protected Prompt Studio Free ↗</span>
-          </button>
-
-          <div className="spe-diff-cli-box">
-            <code>npm install -g @systempromptengine/cli</code>
-            <button
-              type="button"
-              className="spe-diff-cli-copy"
-              onClick={copyCliCommand}
-              aria-label="Copy CLI install command"
-            >
-              {cliCopied ? "✓ Copied!" : "Copy"}
-            </button>
-          </div>
-
-          <button
-            type="button"
-            className="spe-diff-cta-ghost"
-            onClick={() => {
-              if (onNavigate) {
-                onNavigate("workflows");
-                window.scrollTo(0, 0);
-              }
-            }}
-          >
-            <span>Explore 1-Click Business Workflows →</span>
-          </button>
-        </div>
       </div>
+    </div>
+
+    {/* Action CTAs Below Slider */}
+    <div className="spe-diff-actions">
+      <button
+        type="button"
+        className="spe-diff-cta-primary"
+        onClick={() => {
+          if (onNavigate) {
+            onNavigate("create");
+            window.scrollTo(0, 0);
+          }
+        }}
+      >
+        <span>Try Protected Prompt Studio Free ↗</span>
+      </button>
+
+      <div className="spe-diff-cli-box">
+        <code>npm install -g @systempromptengine/cli</code>
+        <button
+          type="button"
+          className="spe-diff-cli-copy"
+          onClick={copyCliCommand}
+          aria-label="Copy CLI install command"
+        >
+          {cliCopied ? "✓ Copied!" : "Copy"}
+        </button>
+      </div>
+
+      <button
+        type="button"
+        className="spe-diff-cta-ghost"
+        onClick={() => {
+          if (onNavigate) {
+            onNavigate("workflows");
+            window.scrollTo(0, 0);
+          }
+        }}
+      >
+        <span>Explore 1-Click Business Workflows →</span>
+      </button>
     </div>
   </div>
 </section>

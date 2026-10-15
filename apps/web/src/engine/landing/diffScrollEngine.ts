@@ -59,7 +59,7 @@ export function useVerticalDiffScroll({
     const handleScroll = () => {
       if (isDraggingRef.current) return;
       if (isManualOverrideRef.current) {
-        if (Math.abs(window.scrollY - (lastScrollYRef.current ?? 0)) > 30) {
+        if (Math.abs(window.scrollY - (lastScrollYRef.current ?? 0)) > 40) {
           isManualOverrideRef.current = false;
         } else {
           return;
@@ -76,7 +76,8 @@ export function useVerticalDiffScroll({
         const maxTravel = trackRect.height - pinRect.height;
 
         if (maxTravel > 15) {
-          const scrolled = -trackRect.top;
+          const stickyTop = parseFloat(window.getComputedStyle(pinRef.current).top) || 24;
+          const scrolled = stickyTop - trackRect.top;
           const progress = Math.max(0, Math.min(1, scrolled / maxTravel));
           const newPct = Math.round(progress * 100);
 
@@ -131,40 +132,50 @@ export function useVerticalDiffScroll({
   }, [trackRef, pinRef, canvasRef, isDraggingRef, isManualOverrideRef, lastScrollYRef, lastPctRef, onProgressChange]);
 }
 
-export function scrollTrackToPreset({
-  trackRef,
-  pinRef,
-  pct,
-  isManualOverrideRef,
-  lastScrollYRef,
-}: {
-  trackRef: RefObject<HTMLElement | null>;
-  pinRef: RefObject<HTMLElement | null>;
-  pct: number;
-  isManualOverrideRef?: MutableRefObject<boolean>;
-  lastScrollYRef?: MutableRefObject<number>;
-}): void {
-  if (typeof window === "undefined") return;
-
+export function recordScrollPosition(
+  lastScrollYRef: MutableRefObject<number>,
+  isManualOverrideRef?: MutableRefObject<boolean>
+): void {
   if (isManualOverrideRef) {
     isManualOverrideRef.current = true;
   }
-  if (lastScrollYRef) {
+  if (typeof window !== "undefined") {
     lastScrollYRef.current = window.scrollY;
   }
+}
 
-  if (!trackRef.current || !pinRef.current) return;
+export function handleDiffSliderKeyDown(
+  e: React.KeyboardEvent<HTMLElement>,
+  canvas: HTMLElement | null,
+  splitPct: number,
+  setSplitPct: (updater: (prev: number) => number) => void,
+  lastPctRef: MutableRefObject<number>,
+  isManualOverrideRef: MutableRefObject<boolean>,
+  lastScrollYRef: MutableRefObject<number>
+): void {
+  recordScrollPosition(lastScrollYRef, isManualOverrideRef);
 
-  const trackRect = trackRef.current.getBoundingClientRect();
-  const pinRect = pinRef.current.getBoundingClientRect();
-  const maxTravel = trackRect.height - pinRect.height;
+  let next: number | null = null;
+  if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+    next = Math.max(0, splitPct - 5);
+  } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+    next = Math.min(100, splitPct + 5);
+  } else if (e.key === "PageUp") {
+    next = Math.max(0, splitPct - 15);
+  } else if (e.key === "PageDown") {
+    next = Math.min(100, splitPct + 15);
+  } else if (e.key === "Home") {
+    next = 0;
+  } else if (e.key === "End") {
+    next = 100;
+  }
 
-  if (maxTravel > 15) {
-    const prefersReduced = isPrefersReducedMotion();
-    const targetScroll = window.scrollY + trackRect.top + (pct / 100) * maxTravel;
-    window.scrollTo({
-      top: targetScroll,
-      behavior: prefersReduced ? "auto" : "smooth",
-    });
+  if (next !== null) {
+    e.preventDefault();
+    const finalNext = next;
+    lastPctRef.current = finalNext;
+    setCanvasSplitPct(canvas, finalNext);
+    setSplitPct(() => finalNext);
   }
 }
+

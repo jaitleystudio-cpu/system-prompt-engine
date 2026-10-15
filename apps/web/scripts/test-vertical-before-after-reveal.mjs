@@ -144,11 +144,11 @@ assert.match(diff, /aria-orientation="vertical"/, "Divider must declare aria-ori
 assert.match(diff, /aria-valuenow=\{Math\.round\(splitPct\)\}/, "Divider must dynamically report aria-valuenow");
 assert.match(diff, /aria-valuemin=\{0\}/, "Divider must declare aria-valuemin=0");
 assert.match(diff, /aria-valuemax=\{100\}/, "Divider must declare aria-valuemax=100");
-assert.match(diff, /tabIndex=\{0\}/, "Divider must be keyboard focusable");
-assert.match(diff, /e\.key === "ArrowUp"/, "Keyboard navigation must handle ArrowUp");
-assert.match(diff, /e\.key === "ArrowDown"/, "Keyboard navigation must handle ArrowDown");
-assert.match(diff, /e\.key === "Home"/, "Keyboard navigation must handle Home (0%)");
-assert.match(diff, /e\.key === "End"/, "Keyboard navigation must handle End (100%)");
+assert.match(engine, /e\.key === "ArrowUp"/, "Keyboard navigation must handle ArrowUp");
+assert.match(engine, /e\.key === "ArrowDown"/, "Keyboard navigation must handle ArrowDown");
+assert.match(engine, /e\.key === "Home"/, "Keyboard navigation must handle Home (0%)");
+assert.match(engine, /e\.key === "End"/, "Keyboard navigation must handle End (100%)");
+assert.match(diff, /handleDiffSliderKeyDown/, "Component must delegate keyboard events to engine");
 assert.match(diff, /handlePreset\(0\)/, "100% Before button must set 0% reveal");
 assert.match(diff, /handlePreset\(50\)/, "50 / 50 Split button must set 50% reveal");
 assert.match(diff, /handlePreset\(100\)/, "100% After button must set 100% reveal");

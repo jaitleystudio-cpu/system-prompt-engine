@@ -1,6 +1,6 @@
 {
   "proof_version": "1.0",
-  "timestamp": "2026-10-08T11:40:39.432367+00:00",
+  "timestamp": "2026-10-15T14:52:24.453083+00:00",
   "audit_policy": "STRICT_AIR_GAP_ZERO_UNEXPECTED_EGRESS",
   "unexpected_external_destinations": 0,
   "status": "PYTHON_PRIVATE_CORE_EGRESS_PASS_WITH_WEB_CSP_BOUNDARY_PRESENT",

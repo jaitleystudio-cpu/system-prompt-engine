@@ -21,6 +21,10 @@ import {
   type DepthTier,
 } from "./engine/promptSynthesizer";
 import { MarkdownExportButton } from "./engine/markdownExport";
+import {
+  getInitialSelectedHeroTarget,
+  subscribeHeroPlatformSelection,
+} from "./engine/HeroPlatformRotator";
 import { fromK3QualityRequest } from "./engine/quality-request.mjs";
 import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
 import { QualityReceiptPanel } from "./workspace/QualityReceiptPanel";
@@ -274,8 +278,8 @@ export default function App() {
   const [quality, setQuality] = useState<VisualQuality>("LITE");
   const [userRequest, setUserRequest] = useState("");
   const [category, setCategory] = useState<CategoryId>("AI Assistant");
-  const [target, setTarget] = useState<TargetId>("any");
   const [depthTier, setDepthTier] = useState<DepthTier>(DEFAULT_DEPTH_TIER);
+  const [target, setTarget] = useState<TargetId>(getInitialSelectedHeroTarget);
   const [intent, setIntent] = useState(() => defaultIntentLens(""));
   const [intentProvenance, setIntentProvenance] =
     useState<IntentProvenance>("AUTO_DERIVED_INTENT");
@@ -431,6 +435,14 @@ export default function App() {
     setDryRunBusy(false);
     setContextRefreshNotice(null);
   };
+
+  // Synchronize target platform selection from HeroPlatformRotator
+  useEffect(() => {
+    return subscribeHeroPlatformSelection((newTarget) => {
+      invalidate();
+      setTarget(newTarget);
+    });
+  }, []);
 
   /** Daily Lab / Prompt Gallery → Create: single acquisition apply path. */
   const applyLabAcquisition = (item: Parameters<typeof acquisitionSeedFromLabItem>[0]) => {
