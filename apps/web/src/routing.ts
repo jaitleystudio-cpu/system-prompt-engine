@@ -26,7 +26,8 @@ export type AppView =
   | "incidents"
   | "eval-studio"
   | "uidrop"
-  | "possibility";
+  | "possibility"
+  | "reality-frontier";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -49,6 +50,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   incidents: "/incidents",
   uidrop: "/uidrop",
   possibility: "/possibility-engine",
+  "reality-frontier": "/reality-frontier",
   ...EXTRA_VIEW_PATH,
 };
 
@@ -239,6 +241,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Possibility Engine & Living Outcome Contract | SPE Ω",
     description:
       "Explore three orthogonal execution topologies from a single brief. Lock hard boundaries with mathematical proof and repair regressions via Pearl causal minimal-cut surgery.",
+  },
+  "reality-frontier": {
+    path: "/reality-frontier",
+    title: "Reality Frontier · Counterfactual Feasibility Compiler | SPE Ω",
+    description:
+      "Discover what realities your intention can actually produce. Ante-hoc contradiction detection, EVOI decision gates, Pareto worldlines, and metamorphic evidence escrow.",
   },
   ...EXTRA_ROUTE_META,
 };

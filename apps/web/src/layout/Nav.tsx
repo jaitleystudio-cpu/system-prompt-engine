@@ -77,6 +77,12 @@ const NAV_GROUPS: NavGroup[] = [
         desc: "Ante-hoc topology forks, Living Outcome Contracts & causal surgery",
         badge: "NEW",
       },
+      {
+        id: "reality-frontier",
+        label: "Reality Frontier",
+        desc: "Counterfactual feasibility compiler, tension scanner & Pareto worldlines",
+        badge: "FRONTIER",
+      },
     ],
   },
   {

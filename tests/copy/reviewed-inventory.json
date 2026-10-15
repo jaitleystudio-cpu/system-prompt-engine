@@ -313,6 +313,12 @@
       "text": "Dismiss"
     },
     {
+      "id": "4af3e1f3da6129ea5bf6",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "reality-frontier"
+    },
+    {
       "id": "4bf88485a045346d867a",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -16909,6 +16915,12 @@
       "text": "3D Canvas"
     },
     {
+      "id": "57e538ea3b6afe5c0cc9",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "FRONTIER"
+    },
+    {
       "id": "5a75b82cb9e8f3cc2f24",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16925,6 +16937,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "10,000+ task-specific prompts for all AI models"
+    },
+    {
+      "id": "5dff30249bd292fa32a0",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Counterfactual feasibility compiler, tension scanner & Pareto worldlines"
     },
     {
       "id": "5f988fb0e16372c8040a",
@@ -17053,6 +17071,12 @@
       "text": "Why SPE"
     },
     {
+      "id": "987b47c465c1a5213f52",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Reality Frontier"
+    },
+    {
       "id": "9b2af3b680fb4703cf69",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -17177,6 +17201,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Submit Workflow ↗"
+    },
+    {
+      "id": "ec8c3ab4beaef193aadd",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "reality-frontier"
     },
     {
       "id": "ed01fa808778c684aa5c",
@@ -25795,6 +25825,24 @@
       "text": "Air-Gapped Offline Mode (Pro)"
     },
     {
+      "id": "0f57c1e6e2876fd7b07f",
+      "file": "apps/web/src/pages/RealityFrontierPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Breadcrumb"
+    },
+    {
+      "id": "72618f6ca2a9d273d264",
+      "file": "apps/web/src/pages/RealityFrontierPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Reality Frontier"
+    },
+    {
+      "id": "e58291afafc3bc5ecb31",
+      "file": "apps/web/src/pages/RealityFrontierPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
       "id": "0a4be7243d753e8350e2",
       "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
       "depth": "PRODUCT",
@@ -27187,6 +27235,12 @@
       "text": "FAQPage"
     },
     {
+      "id": "1c1e4dda556a5a88c90a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/reality-frontier"
+    },
+    {
       "id": "1d5c896e04c7f69dffe4",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27317,6 +27371,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "website"
+    },
+    {
+      "id": "44ba0de9208179a140c6",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Reality Frontier · Counterfactual Feasibility Compiler | SPE Ω"
     },
     {
       "id": "47c5a06a55e71d8aa5a1",
@@ -27539,6 +27599,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Plans & Pricing — System Prompt Engine | SPE"
+    },
+    {
+      "id": "c2493fe6ba4e60711b13",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Discover what realities your intention can actually produce. Ante-hoc contradiction detection, EVOI decision gates, Pareto worldlines, and metamorphic evidence escrow."
     },
     {
       "id": "c35580724bd8cd2d270a",

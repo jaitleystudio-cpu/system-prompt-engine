@@ -158,6 +158,9 @@ const UiDropPage = lazy(() =>
 const PossibilityEnginePage = lazy(() =>
   import("./pages/PossibilityEnginePage").then((m) => ({ default: m.PossibilityEnginePage }))
 );
+const RealityFrontierPage = lazy(() =>
+  import("./pages/RealityFrontierPage").then((m) => ({ default: m.RealityFrontierPage }))
+);
 
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
@@ -1447,6 +1450,11 @@ export default function App() {
         {!notFound && view === "possibility" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
             <PossibilityEnginePage onNavigate={setView} />
+          </Suspense>
+        )}
+        {!notFound && view === "reality-frontier" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <RealityFrontierPage onNavigate={setView} />
           </Suspense>
         )}
 
