@@ -37,46 +37,110 @@ export class WebMcpAgentGateway {
 
   /**
    * Mounts the WebMCP gateway onto browser global objects if running in browser window environment.
-   * Conforms to official Google WebMCP Imperative API (Chrome 150+ on `document.modelContext`).
+   * Conforms strictly to official Google WebMCP Imperative API (Chrome 150+ on `document.modelContext`).
+   * Adheres to the 'tools' Permissions Policy directive.
+   * NEVER overwrites native browser-provided document.modelContext; registers directly into it.
    */
   public mountBrowserGlobals(): boolean {
     if (typeof window === "undefined") return false;
 
-    // Check Permissions Policy if available
+    // Check Permissions Policy per Chrome WebMCP spec ('tools' directive)
     const doc = typeof document !== "undefined" ? document : null;
     const permissionsPolicy = (doc as unknown as { permissionsPolicy?: { allowsFeature?: (f: string) => boolean } })?.permissionsPolicy;
     if (permissionsPolicy && typeof permissionsPolicy.allowsFeature === "function") {
-      const allowed = permissionsPolicy.allowsFeature("model-context");
-      if (!allowed) {
-        console.warn("[WebMCP] 'model-context' feature is disabled by Permissions-Policy.");
+      // Primary standard directive is 'tools', with backward-compatible fallback to 'model-context'
+      const toolsAllowed = permissionsPolicy.allowsFeature("tools");
+      const modelContextAllowed = permissionsPolicy.allowsFeature("model-context");
+      if (!toolsAllowed && !modelContextAllowed) {
+        console.warn("[WebMCP] 'tools' feature is disabled by Permissions-Policy header.");
         return false;
       }
     }
 
-    const gatewayApi = {
+    const toolsList = this.listTools();
+
+    // 1. Mount on window.WebMCP (Progressive Enhancement global)
+    (window as unknown as { WebMCP: unknown }).WebMCP = {
       listTools: () => this.listTools(),
+      getTools: () => this.listTools(),
       invokeTool: (call: WebMcpToolCall) => this.invokeTool(call),
+      executeTool: (name: string, args: Record<string, unknown>, token?: unknown) =>
+        this.invokeTool({
+          toolName: name,
+          arguments: args,
+          capabilityToken: token as WebMcpToolCall["capabilityToken"],
+          requestId: `req_${Date.now()}`,
+        }),
       mintTestToken: (subject: string, scopes: string[]) => this.shield.mintLocalToken(subject, scopes),
-      registerTool: (capKey: string) => {
-        const capability = STANDARD_CAPABILITIES[capKey];
-        if (!capability) throw new Error(`Unknown capability: ${capKey}`);
-        return this.compiler.compileAgentExperience(capability);
+      registerTool: (toolDef: { name: string; description?: string; parameters?: unknown; execute?: (a: unknown) => Promise<unknown> }) => {
+        const capability = STANDARD_CAPABILITIES[toolDef.name];
+        if (capability) {
+          return this.compiler.compileAgentExperience(capability);
+        }
+        return toolDef;
       },
       specVersion: "Chrome-150-WebMCP-Imperative",
       version: "2026.10-spe-omega",
     };
 
-    // 1. Mount on window.WebMCP
-    (window as unknown as { WebMCP: unknown }).WebMCP = gatewayApi;
-
-    // 2. Official Spec (Chrome 150+): Mount on document.modelContext
+    // 2. Official Spec (Chrome 150+): document.modelContext
     if (doc) {
-      const docWithModel = doc as unknown as { modelContext?: unknown };
-      if (!docWithModel.modelContext) {
+      const docWithModel = doc as unknown as {
+        modelContext?: {
+          registerTool?: (def: any) => any;
+          getTools?: () => unknown[];
+          executeTool?: (name: string, args: any, token?: unknown) => Promise<unknown>;
+          isNative?: boolean;
+          [k: string]: unknown;
+        };
+      };
+
+      if (docWithModel.modelContext && typeof docWithModel.modelContext.registerTool === "function") {
+        // NATIVE BROWSER API DETECTED: DO NOT OVERWRITE!
+        // Register each SPE tool directly with the native browser modelContext
+        for (const tool of toolsList) {
+          try {
+            docWithModel.modelContext.registerTool({
+              name: tool.toolName,
+              description: tool.description,
+              parameters: tool.parameters,
+              execute: (args: Record<string, unknown>) =>
+                this.invokeTool({
+                  toolName: tool.toolName,
+                  arguments: args,
+                  requestId: `req_${Date.now()}`,
+                }),
+            });
+          } catch (e) {
+            console.warn(`[WebMCP Native] Tool registration notice for ${tool.toolName}:`, e);
+          }
+        }
+      } else {
+        // Progressive enhancement fallback when browser does not natively supply document.modelContext
+        const registeredToolsMap = new Map<string, unknown>();
+        for (const t of toolsList) {
+          registeredToolsMap.set(t.toolName, t);
+        }
+
         docWithModel.modelContext = {
-          tools: this.listTools(),
-          listTools: () => this.listTools(),
-          registerTool: gatewayApi.registerTool,
+          isNative: false,
+          spec: "document.modelContext (Chrome 150+ Official Imperative API Polyfill)",
+          getTools: () => Array.from(registeredToolsMap.values()),
+          listTools: () => Array.from(registeredToolsMap.values()),
+          tools: toolsList,
+          registerTool: (toolDef: any) => {
+            const defObj = toolDef as { name?: string };
+            const toolName = defObj?.name || String(defObj);
+            registeredToolsMap.set(toolName, toolDef);
+            return toolDef;
+          },
+          executeTool: (name: string, args: any, token?: unknown) =>
+            this.invokeTool({
+              toolName: name,
+              arguments: (args || {}) as Record<string, unknown>,
+              capabilityToken: token as WebMcpToolCall["capabilityToken"],
+              requestId: `req_${Date.now()}`,
+            }),
           call: (toolName: string, args: Record<string, unknown>, token?: unknown) =>
             this.invokeTool({
               toolName,
@@ -84,15 +148,14 @@ export class WebMcpAgentGateway {
               capabilityToken: token as WebMcpToolCall["capabilityToken"],
               requestId: `req_${Date.now()}`,
             }),
-          spec: "document.modelContext (Chrome 150+ Official Imperative API)",
         };
       }
     }
 
     // 3. Deprecated Fallback (Chrome <150): Mount backward-compatibility proxy on navigator.modelContext
     if (typeof navigator !== "undefined") {
-      const nav = navigator as unknown as { modelContext?: unknown };
-      if (!nav.modelContext) {
+      const nav = navigator as unknown as Record<string, unknown>;
+      if (!Object.prototype.hasOwnProperty.call(nav, "modelContext")) {
         let deprecationWarned = false;
         Object.defineProperty(nav, "modelContext", {
           configurable: true,
@@ -104,17 +167,7 @@ export class WebMcpAgentGateway {
               );
               deprecationWarned = true;
             }
-            return (doc as unknown as { modelContext?: unknown })?.modelContext || {
-              tools: this.listTools(),
-              listTools: () => this.listTools(),
-              call: (toolName: string, args: Record<string, unknown>, token?: unknown) =>
-                this.invokeTool({
-                  toolName,
-                  arguments: args,
-                  capabilityToken: token as WebMcpToolCall["capabilityToken"],
-                  requestId: `req_${Date.now()}`,
-                }),
-            };
+            return (doc as unknown as { modelContext?: unknown })?.modelContext;
           },
         });
       }

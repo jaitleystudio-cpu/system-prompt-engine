@@ -51,7 +51,28 @@ async function testWebMcpImperativeSpec() {
   assert(typeof mockDocument.modelContext === "object", "Official document.modelContext is mounted (Chrome 150+)");
   assert(mockDocument.modelContext.spec.includes("Chrome 150+"), "document.modelContext identifies as official Chrome 150+ spec");
   assert(Array.isArray(mockDocument.modelContext.tools), "document.modelContext.tools contains tool list");
-  assert(typeof mockDocument.modelContext.call === "function", "document.modelContext.call is an executable function");
+  assert(typeof mockDocument.modelContext.registerTool === "function", "document.modelContext.registerTool is an executable function");
+  assert(typeof mockDocument.modelContext.getTools === "function", "document.modelContext.getTools is an executable function");
+  assert(typeof mockDocument.modelContext.executeTool === "function", "document.modelContext.executeTool is an executable function");
+
+  // Test 2b: Native Browser API Preservation (DO NOT OVERWRITE)
+  const nativeRegistered = [];
+  const nativeDocument = {
+    modelContext: {
+      isNative: true,
+      registerTool: (toolDef) => {
+        nativeRegistered.push(toolDef);
+        return toolDef;
+      },
+      getTools: () => nativeRegistered,
+    },
+  };
+  globalThis.document = nativeDocument;
+  const nativeGateway = new WebMcpAgentGateway();
+  nativeGateway.mountBrowserGlobals();
+  assert(nativeDocument.modelContext.isNative === true, "Native document.modelContext object was NOT overwritten");
+  assert(nativeRegistered.length > 0, "Tools registered directly into native browser modelContext via registerTool");
+  globalThis.document = mockDocument;
 
   // Test 3: Backward compatibility on navigator.modelContext with deprecation warning
   let warnLogged = false;
@@ -68,29 +89,39 @@ async function testWebMcpImperativeSpec() {
   assert(warnLogged === true, "Accessing navigator.modelContext logs deprecation warning per Chrome 150+");
   assert(typeof navModelContext.call === "function", "navigator.modelContext maintains functioning fallback proxy");
 
-  // Test 4: Real WebMCP tool call through document.modelContext
+  // Test 4: Real WebMCP tool call through document.modelContext.executeTool
   const token = gateway["shield"].mintLocalToken("test-chrome-agent", ["spe:compile", "spe:governance"]);
-  const toolResult = await mockDocument.modelContext.call(
+  const toolResult = await mockDocument.modelContext.executeTool(
     "spe_compile_prompt",
     { taskBrief: "Design air-gapped cryptography engine" },
     token
   );
 
-  assert(toolResult.status === "SUCCESS", "Real invocation through document.modelContext returns SUCCESS");
+  assert(toolResult.status === "SUCCESS", "Real invocation through document.modelContext.executeTool returns SUCCESS");
   assert(toolResult.output.offlineProof === true, "Tool output confirms offline WebAssembly execution ($0 spend)");
   assert(typeof toolResult.executionLatencyMs === "number" && toolResult.executionLatencyMs >= 0, "Execution latency accurately measured");
 
   // Test 4b: WebMCP spe_model_governance integration with real governance
-  const govResultInvented = await mockDocument.modelContext.call(
+  const govResultInvented = await mockDocument.modelContext.executeTool(
+    "spe_model_governance",
+    { modelId: "magic-gpt-10-ultra" },
+    token
+  );
+  assert(govResultInvented.status === "SUCCESS", "Governance tool invocation returns SUCCESS");
+  assert(govResultInvented.output.status === "UNSUPPORTED_REJECTED", "WebMCP rejects truly invented model 'magic-gpt-10-ultra'");
+  assert(govResultInvented.output.isAuthoritative === false, "WebMCP flags 'magic-gpt-10-ultra' as not authoritative");
+
+  // Test 4c: WebMCP recognizes documented pre-release model 'gpt-5'
+  const govResultGpt5 = await mockDocument.modelContext.executeTool(
     "spe_model_governance",
     { modelId: "gpt-5" },
     token
   );
-  assert(govResultInvented.status === "SUCCESS", "Governance tool invocation returns SUCCESS");
-  assert(govResultInvented.output.status === "UNSUPPORTED_REJECTED", "WebMCP rejects speculative model 'gpt-5'");
-  assert(govResultInvented.output.isAuthoritative === false, "WebMCP flags 'gpt-5' as not authoritative");
+  assert(govResultGpt5.output.status === "DOCUMENTED_UNAVAILABLE", "WebMCP recognizes gpt-5 as DOCUMENTED_UNAVAILABLE (not speculative)");
+  assert(govResultGpt5.output.targetPreserved === true, "WebMCP preserves user target 'gpt-5'");
+  assert(govResultGpt5.output.suggestedAlternative === "gpt-4o", "WebMCP suggests active alternative 'gpt-4o'");
 
-  const govResultOlder = await mockDocument.modelContext.call(
+  const govResultOlder = await mockDocument.modelContext.executeTool(
     "spe_model_governance",
     { modelId: "gpt-4" },
     token
@@ -99,7 +130,7 @@ async function testWebMcpImperativeSpec() {
   assert(govResultOlder.output.targetPreserved === true, "WebMCP confirms targetPreserved: true for 'gpt-4'");
   assert(govResultOlder.output.suggestedAlternative === "gpt-4o", "WebMCP suggests active alternative 'gpt-4o'");
 
-  const govResultAdapted = await mockDocument.modelContext.call(
+  const govResultAdapted = await mockDocument.modelContext.executeTool(
     "spe_model_governance",
     { modelId: "gpt-4", explicitUserConsent: true },
     token
@@ -107,10 +138,10 @@ async function testWebMcpImperativeSpec() {
   assert(govResultAdapted.output.status === "ADAPTED_WITH_CONSENT", "WebMCP adapts 'gpt-4' to 'gpt-4o' with explicit consent");
   assert(govResultAdapted.output.effectiveModelId === "gpt-4o", "WebMCP effective model is 'gpt-4o' under authorized adaptation");
 
-  // Test 5: Permissions-Policy blocking
+  // Test 5: Permissions-Policy blocking ('tools' directive)
   const restrictedDoc = {
     permissionsPolicy: {
-      allowsFeature: (feat) => feat !== "model-context",
+      allowsFeature: (feat) => feat !== "tools" && feat !== "model-context",
     },
   };
   globalThis.document = restrictedDoc;
@@ -119,7 +150,7 @@ async function testWebMcpImperativeSpec() {
 
   const restrictedGateway = new WebMcpAgentGateway();
   const policyBlocked = restrictedGateway.mountBrowserGlobals();
-  assert(policyBlocked === false, "Permissions-Policy disallowing 'model-context' fail-closes and returns false");
+  assert(policyBlocked === false, "Permissions-Policy disallowing 'tools' fail-closes and returns false");
 
   // Cleanup globals
   delete globalThis.window;

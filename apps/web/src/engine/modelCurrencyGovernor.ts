@@ -567,28 +567,64 @@ export const AUTHORITATIVE_PROVIDER_MODELS: AiModelEntry[] = [
 export const FRONTIER_MODELS_2026: AiModelEntry[] = AUTHORITATIVE_PROVIDER_MODELS;
 
 /**
- * Known speculative, fictitious, or unreleased model names to explicitly reject.
+ * Documented pre-release, announced, or roadmap models from authoritative providers
+ * whose general API availability is pending or restricted.
+ * These are genuine, documented provider model families, NOT fictitious or invented.
+ */
+export interface DocumentedUnavailableModel {
+  id: string;
+  name: string;
+  provider: ModelProvider;
+  lifecycleStatus: "PRE_RELEASE" | "RESEARCH_PREVIEW" | "LIMITED_ACCESS";
+  activeAlternativeId: string;
+  officialAnnouncementDoc?: string;
+}
+
+export const DOCUMENTED_UNAVAILABLE_MODELS: DocumentedUnavailableModel[] = [
+  {
+    id: "gpt-5",
+    name: "OpenAI GPT-5",
+    provider: "OpenAI",
+    lifecycleStatus: "PRE_RELEASE",
+    activeAlternativeId: "gpt-4o",
+    officialAnnouncementDoc: "https://openai.com/index",
+  },
+  {
+    id: "gpt-5-codex",
+    name: "OpenAI GPT-5 Codex",
+    provider: "OpenAI",
+    lifecycleStatus: "PRE_RELEASE",
+    activeAlternativeId: "o3-mini",
+    officialAnnouncementDoc: "https://openai.com/index",
+  },
+  {
+    id: "o4-mini",
+    name: "OpenAI o4-mini",
+    provider: "OpenAI",
+    lifecycleStatus: "PRE_RELEASE",
+    activeAlternativeId: "o3-mini",
+  },
+  {
+    id: "o3-pro",
+    name: "OpenAI o3-pro",
+    provider: "OpenAI",
+    lifecycleStatus: "RESEARCH_PREVIEW",
+    activeAlternativeId: "o3-mini",
+  },
+];
+
+/**
+ * Truly speculative, fictional, or invented identifiers not backed by any official provider documentation.
  */
 export const KNOWN_SPECULATIVE_IDENTIFIERS: readonly string[] = [
-  "gpt-5",
-  "gpt-5-codex",
-  "claude-4-5-sonnet",
-  "claude-4-5-opus",
-  "claude-4-5-haiku",
-  "claude-4.5-sonnet",
-  "o4-mini",
-  "o3-pro",
-  "gemini-3-pro",
-  "gemini-3-flash",
-  "gemini-2-5-ultra",
-  "grok-4",
-  "grok-3-5",
-  "deepseek-r2",
-  "deepseek-v4",
-  "llama-4-405b",
-  "llama-4-70b",
-  "midjourney-v7",
-  "flux-2-pro",
+  "magic-gpt-10-ultra",
+  "fictional-hyper-ai-9000",
+  "claude-9-infinity",
+  "gemini-99-super",
+  "deepseek-quantum-1",
+  "llama-999-trillion",
+  "midjourney-v99",
+  "flux-infinity-pro",
 ];
 
 /**
@@ -699,9 +735,15 @@ export function isSpeculativeOrInventedModel(modelId: string): boolean {
   return KNOWN_SPECULATIVE_IDENTIFIERS.some((spec) => spec === norm || spec === hyphen);
 }
 
+export function isDocumentedUnavailableModel(modelId: string): boolean {
+  const norm = (modelId || "").trim().toLowerCase();
+  const hyphen = norm.replace(/\./g, "-");
+  return DOCUMENTED_UNAVAILABLE_MODELS.some((m) => m.id === norm || m.id === hyphen);
+}
+
 /**
  * Returns true if a model identifier is verified in authoritative provider documentation.
- * Exact canonical match against documented active frontier or documented older models.
+ * Exact canonical match against documented active frontier, documented older models, or documented pre-release models.
  */
 export function isModelAuthoritative(modelId: string): boolean {
   if (isSpeculativeOrInventedModel(modelId)) return false;
@@ -712,6 +754,9 @@ export function isModelAuthoritative(modelId: string): boolean {
       (m) => m.id === cleanId || m.id === normalizedId
     ) ||
     AUTHORITATIVE_OLDER_MODELS.some(
+      (m) => m.id === cleanId || m.id === normalizedId
+    ) ||
+    DOCUMENTED_UNAVAILABLE_MODELS.some(
       (m) => m.id === cleanId || m.id === normalizedId
     )
   );
@@ -729,12 +774,19 @@ export function isModelCurrent(modelId: string): boolean {
   );
 }
 
+export type ModelGovernanceStatus =
+  | "AUTHORIZED_CURRENT"
+  | "AUTHORIZED_PRESERVED_OLDER"
+  | "DOCUMENTED_UNAVAILABLE"
+  | "ADAPTED_WITH_CONSENT"
+  | "UNSUPPORTED_REJECTED";
+
 export interface ModelGovernanceDecision {
   requestedModelId: string;
   effectiveModelId: string;
   targetPreserved: boolean;
   isAuthoritative: boolean;
-  status: "AUTHORIZED_CURRENT" | "AUTHORIZED_PRESERVED_OLDER" | "ADAPTED_WITH_CONSENT" | "UNSUPPORTED_REJECTED";
+  status: ModelGovernanceStatus;
   modelEntry?: AiModelEntry;
   suggestedAlternative?: string;
   advisory?: string;
@@ -748,9 +800,10 @@ export interface ModelGovernanceDecision {
  * Governs model selection with strict invariant preservation:
  * 1. Validates model against authoritative documentation.
  * 2. Rejects invented/speculative identifiers.
- * 3. NEVER silently replaces user-requested models (preserves exact target).
- * 4. Checks capability compatibility against requested task requirements.
- * 5. Requires explicit user consent for target adaptation.
+ * 3. Distinguishes documented pre-release/unavailable models from fictitious identifiers.
+ * 4. NEVER silently replaces user-requested models (preserves exact target).
+ * 5. Checks capability compatibility against requested task requirements.
+ * 6. Requires explicit user consent for target adaptation.
  */
 export function governModelSelection(
   requestedModelId: string,
@@ -763,7 +816,7 @@ export function governModelSelection(
   const normId = reqId.toLowerCase();
   const hyphenId = normId.replace(/\./g, "-");
 
-  // Check 1: Reject invented or unsupported identifiers
+  // Check 1: Reject truly invented or fictitious identifiers
   if (isSpeculativeOrInventedModel(reqId)) {
     return {
       requestedModelId: reqId,
@@ -773,6 +826,41 @@ export function governModelSelection(
       status: "UNSUPPORTED_REJECTED",
       advisory: `[MODEL_GOVERNANCE_REJECTED] Model '${reqId}' is an unverified or speculative identifier not found in authoritative provider documentation.`,
       capabilityAudit: { satisfied: false, missingCapabilities: ["Authoritative provider verification"] },
+    };
+  }
+
+  // Check 2: Check documented pre-release / unavailable models (NOT speculative, genuine provider families)
+  const unavailMatch = DOCUMENTED_UNAVAILABLE_MODELS.find(
+    (m) => m.id === normId || m.id === hyphenId
+  );
+  if (unavailMatch) {
+    const alt = AUTHORITATIVE_PROVIDER_MODELS.find((m) => m.id === unavailMatch.activeAlternativeId);
+    if (options.explicitUserConsent && alt) {
+      return {
+        requestedModelId: reqId,
+        effectiveModelId: unavailMatch.activeAlternativeId,
+        targetPreserved: false,
+        isAuthoritative: true,
+        status: "ADAPTED_WITH_CONSENT",
+        modelEntry: alt,
+        suggestedAlternative: unavailMatch.activeAlternativeId,
+        advisory: `[AUTHORIZED_ADAPTATION] User explicitly authorized adaptation from documented pre-release model '${reqId}' to active model '${alt.name}'.`,
+        capabilityAudit: { satisfied: true, missingCapabilities: [] },
+      };
+    }
+
+    return {
+      requestedModelId: reqId,
+      effectiveModelId: reqId,
+      targetPreserved: true,
+      isAuthoritative: true,
+      status: "DOCUMENTED_UNAVAILABLE",
+      suggestedAlternative: unavailMatch.activeAlternativeId,
+      advisory: `[DOCUMENTED_MODEL_UNAVAILABLE] Model '${unavailMatch.name}' (${reqId}) is a documented ${unavailMatch.provider} model family, but general API runtime access is currently ${unavailMatch.lifecycleStatus}. Preserved verbatim for specification fidelity. Recommended active alternative: '${unavailMatch.activeAlternativeId}'.`,
+      capabilityAudit: {
+        satisfied: false,
+        missingCapabilities: ["General Availability Runtime Access"],
+      },
     };
   }
 

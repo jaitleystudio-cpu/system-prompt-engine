@@ -13,6 +13,9 @@
  * 4. Concurrency lock: Prevents concurrent competing writes.
  * 5. Incident alerting bypass: Urgent production errors trigger immediate alerts, bypassing 02:17 AM clock.
  * 6. Never write or merge directly to main.
+ * 7. GitHub Actions scheduling behavior: In GitHub Actions, cron triggers (`schedule`) execute
+ *    strictly from the repository default branch (`main`). While on a feature branch, scheduled
+ *    runs remain inactive on GitHub CI and must be triggered via `workflow_dispatch` or local runner.
  */
 
 import { existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
@@ -45,18 +48,16 @@ export function acquireEvolutionLock(lockPath = resolve(process.cwd(), EVOLUTION
         const content = readFileSync(lockPath, "utf-8");
         const parsed = JSON.parse(content);
         const pid = parsed.pid;
-        const createdAt = new Date(parsed.timestamp).getTime();
-        const now = Date.now();
-        // If file is older than 2 hours (7200000ms), treat as stale
-        const isStale = (now - createdAt) > 7200000;
         
+        // PID Liveness: A live running process NEVER loses exclusive ownership regardless of lock age
         let processAlive = false;
-        if (pid && typeof pid === "number" && !isStale) {
+        if (pid && typeof pid === "number" && pid > 0) {
           try {
             process.kill(pid, 0);
             processAlive = true;
-          } catch {
-            processAlive = false;
+          } catch (e: unknown) {
+            const err = e as { code?: string };
+            processAlive = err?.code === "EPERM";
           }
         }
 
@@ -66,7 +67,7 @@ export function acquireEvolutionLock(lockPath = resolve(process.cwd(), EVOLUTION
             reason: `Concurrency Conflict: Active nightly evolution process (PID ${pid}) holds lockfile '${lockPath}'.`,
           };
         }
-        // Stale or dead process lock: clean up
+        // Dead or terminated process lock: safely reclaim
         unlinkSync(lockPath);
       } catch {
         // Corrupt lock file: clean up

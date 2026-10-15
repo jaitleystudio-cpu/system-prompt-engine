@@ -85,7 +85,10 @@ await check("Core A generates qualified prompt with 100% checkable requirement p
     res.status === "QUALIFIED_GENERATIVE_SUCCESS" || res.status === "REPAIRED_GENERATIVE_SUCCESS",
     `Expected success status, got: ${res.status}`
   );
-  assert.equal(res.runtimeUsed, "IN_PROCESS_GENERATIVE_KERNEL");
+  assert.ok(
+    res.runtimeUsed === "IN_PROCESS_ONNX_NEURAL" || res.runtimeUsed === "IN_PROCESS_GENERATIVE_KERNEL",
+    `Expected neural runtime, got ${res.runtimeUsed}`
+  );
   assert.equal(res.costUsd, 0);
   assert.equal(res.zeroEgressGuaranteed, true);
   assert.ok(res.latencyMs > 0 && res.latencyMs < 200, `Latency too high: ${res.latencyMs}ms`);

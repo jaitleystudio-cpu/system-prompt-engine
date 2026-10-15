@@ -66,8 +66,8 @@ async function runReleaseSafetyBattery() {
   delete process.env.SPE_EMERGENCY_STOP;
   assert(governor.isEmergencyStopActive() === false, "Emergency STOP deactivates cleanly when flag removed");
 
-  // ─── GATE 2: Independent Release Acceptance & Self-Approval Prevention ─────
-  console.log("\n▶ Gate 2: Independent Release Acceptance & Anti-Self-Certification");
+  // ─── GATE 2: Independent Release Acceptance & Anti-Self-Certification ─────
+  console.log("\n▶ Gate 2: Independent Release Acceptance & Cryptographic Signatures");
 
   // Attack 2A: Author attempts to approve its own change
   const selfApproval = governor.verifyReleaseAuthority("agent:antigravity", "agent:antigravity");
@@ -78,19 +78,40 @@ async function runReleaseSafetyBattery() {
   const peerCollusion = governor.verifyReleaseAuthority("agent:antigravity", "agent:subagent-01");
   assert(peerCollusion.allowed === false, "Peer agent collusion blocked: autonomous agent cannot approve peer agent");
 
-  // Legitimate Independent Release Authority
-  const independentApproval = governor.verifyReleaseAuthority("agent:antigravity", "founder_release_authority");
-  assert(independentApproval.allowed === true, "Independent founder release authority accepted");
+  // Attack 2C: Plain unauthenticated authority string without cryptographic signature
+  const plainStringApproval = governor.verifyReleaseAuthority("agent:antigravity", "founder_release_authority");
+  assert(plainStringApproval.allowed === false, "Plain unauthenticated identity string rejected without cryptographic signature");
+  assert(plainStringApproval.reason.includes("UNAUTHENTICATED_RELEASE_AUTHORITY"), "Correct rejection code UNAUTHENTICATED_RELEASE_AUTHORITY");
 
-  // ─── GATE 3: Change-Arbitration Authority (SEO vs Hero Mutex) ───────────────
-  console.log("\n▶ Gate 3: Change-Arbitration Authority (SEO vs Hero Mutex)");
+  // Legitimate Independent Release Authority with Cryptographic Signature
+  const { generateReleaseAuthorityProof } = await import("../src/engine/evolution/releaseSafetyGovernor.ts");
+  const validProof = generateReleaseAuthorityProof("PROP-VERIFY-01", "founder_release_authority");
+  const authenticatedApproval = governor.verifyReleaseAuthority("agent:antigravity", validProof, "PROP-VERIFY-01");
+  assert(authenticatedApproval.allowed === true, "Cryptographically signed independent founder approval verified and accepted");
 
-  assert(governor.acquireChangeLock("SEO_SITEMAP") === true, "SEO sitemap acquired change lock");
-  assert(governor.acquireChangeLock("HERO_UI") === false, "Hero UI change lock blocked while SEO lock is active (prevents conflicting mutations)");
+  // Attack 2D: Tampered signature rejection
+  const tamperedProof = { ...validProof, signatureHex: "0000000000000000000000000000000000000000000000000000000000000000" };
+  const tamperedApproval = governor.verifyReleaseAuthority("agent:antigravity", tamperedProof, "PROP-VERIFY-01");
+  assert(tamperedApproval.allowed === false, "Tampered approval signature rejected with INVALID_AUTHORITY_SIGNATURE");
+
+  // ─── GATE 3: Change-Arbitration Authority & PID Liveness Check ─────────────
+  console.log("\n▶ Gate 3: Change-Arbitration Authority (SEO vs Hero Mutex & PID Liveness)");
+
+  assert(governor.acquireChangeLock("SEO_SITEMAP", process.pid) === true, "SEO sitemap acquired change lock for active process");
+  assert(governor.acquireChangeLock("HERO_UI", process.pid) === false, "Hero UI change lock blocked while SEO lock is active (prevents conflicting mutations)");
+
+  // PID Liveness: A live running process cannot lose its lock even after elapsed time
+  assert(governor.acquireChangeLock("SEO_SITEMAP", 88888) === false, "Another process cannot acquire lock held by live running PID");
 
   governor.releaseChangeLock("SEO_SITEMAP");
-  assert(governor.acquireChangeLock("HERO_UI") === true, "Hero UI change lock successfully acquired after SEO lock released");
+  assert(governor.acquireChangeLock("HERO_UI", process.pid) === true, "Hero UI change lock successfully acquired after SEO lock released");
   governor.releaseChangeLock("HERO_UI");
+
+  // Dead PID safely reclaimed:
+  const deadPid = 99999999;
+  governor["activeLockMap"].set("ENGINE", { subsystem: "ENGINE", pid: deadPid, acquiredAtMs: Date.now() - 3600000 });
+  assert(governor.acquireChangeLock("ENGINE", process.pid) === true, "Stale lock from terminated process (dead PID) safely reclaimed");
+  governor.releaseChangeLock("ENGINE");
 
   // ─── GATE 4: Production Artifact Verification (Bit-for-Bit WASM) ───────────
   console.log("\n▶ Gate 4: Production Artifact Verification (Bit-for-Bit WASM)");
@@ -102,8 +123,8 @@ async function runReleaseSafetyBattery() {
   assert(wasmAudit.observedHash === CANONICAL_WASM_SHA256, `WASM hash matches pinned canonical: ${CANONICAL_WASM_SHA256.slice(0, 16)}...`);
   assert(wasmBuffer.byteLength === CANONICAL_WASM_SIZE_BYTES, `WASM byte count exactly ${CANONICAL_WASM_SIZE_BYTES} bytes`);
 
-  // ─── GATE 5: Rollback Fault Injection & Automated Self-Healing ──────────────
-  console.log("\n▶ Gate 5: Rollback Fault Injection & Automated Self-Healing");
+  // ─── GATE 5: Rollback Fault Injection & Real Pointer Restoration ────────────
+  console.log("\n▶ Gate 5: Rollback Fault Injection & Real Deployment Rollback");
 
   // Inject a candidate that causes 2 test regressions
   const badCandidate = {
@@ -120,10 +141,18 @@ async function runReleaseSafetyBattery() {
     requestedAutonomyLevel: "L4_AUTO_PROMOTION",
   };
 
-  const rollbackDecision = governor.evaluateReleaseCandidate(badCandidate, "independent_quality_oracle");
+  const oracleProof = generateReleaseAuthorityProof("PROP-BAD-CANDIDATE-01", "independent_quality_oracle");
+  const rollbackDecision = governor.evaluateReleaseCandidate(badCandidate, oracleProof);
   assert(rollbackDecision.status === "ROLLED_BACK", "Corrupted release candidate rejected and marked ROLLED_BACK");
+  assert(rollbackDecision.rollbackReceipt !== undefined, "Real rollback execution receipt attached");
   assert(rollbackDecision.rollbackReceipt.triggered === true, "Automated rollback triggered");
   assert(rollbackDecision.rollbackReceipt.restoredTarget === TRUSTED_PINNED_BASE_COMMIT, `Restores to pinned trusted commit ${TRUSTED_PINNED_BASE_COMMIT}`);
+  assert(existsSync(rollbackDecision.rollbackReceipt.releasePointerPath), "Deployment pointer file written to disk");
+  
+  const restoredPointer = JSON.parse(readFileSync(rollbackDecision.rollbackReceipt.releasePointerPath, "utf-8"));
+  assert(restoredPointer.activeReleaseCommit === TRUSTED_PINNED_BASE_COMMIT, "Pointer file restored to pinned trusted commit");
+  assert(restoredPointer.status === "RESTORED_TO_PINNED_BASE_COMMIT", "Pointer status records real restoration");
+  assert(rollbackDecision.rollbackReceipt.verifiedSafe === true, "Independent verification of restored canonical artifact passed");
 
   // ─── GATE 6: Operating-Cost Budgets ($0 Cloud Spend & Zero Egress) ──────────
   console.log("\n▶ Gate 6: Operating-Cost Budgets ($0 Spend & Zero Network Egress)");
@@ -181,6 +210,20 @@ async function runReleaseSafetyBattery() {
     // 4. Now second process can acquire lock cleanly
     const lock3 = acquireEvolutionLock(testLockPath);
     assert(lock3.acquired === true, "Lock successfully acquired after prior release");
+    releaseEvolutionLock(testLockPath);
+
+    // 5. Aged lockfile (> 2 hours old) held by LIVE process: MUST NEVER be lost or unlinked
+    const threeHoursAgo = new Date(Date.now() - 3 * 3600 * 1000).toISOString();
+    writeFileSync(testLockPath, JSON.stringify({ pid: process.pid, timestamp: threeHoursAgo, hostname: "test-node" }), "utf-8");
+    const agedLiveLock = acquireEvolutionLock(testLockPath);
+    assert(agedLiveLock.acquired === false, "Aged lock (>2 hours) held by live running PID is NEVER stolen or unlinked");
+    assert(existsSync(testLockPath) === true, "Lockfile remains intact on disk for live running process");
+
+    // 6. Aged lockfile held by TERMINATED process (dead PID): safely reclaimed
+    const deadPid = 99999999;
+    writeFileSync(testLockPath, JSON.stringify({ pid: deadPid, timestamp: threeHoursAgo, hostname: "test-node" }), "utf-8");
+    const deadPidLock = acquireEvolutionLock(testLockPath);
+    assert(deadPidLock.acquired === true, "Stale lock from terminated process (dead PID) safely reclaimed");
     releaseEvolutionLock(testLockPath);
   } finally {
     releaseEvolutionLock(testLockPath);

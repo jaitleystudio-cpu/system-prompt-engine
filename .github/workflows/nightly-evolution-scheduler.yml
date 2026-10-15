@@ -1,8 +1,15 @@
 name: SPE Ω Nightly Website & Intelligence Evolution Scheduler
 
+# NOTE ON GITHUB ACTIONS SCHEDULING BEHAVIOR:
+# In GitHub Actions, `schedule` (cron) events are registered and triggered EXCLUSIVELY
+# from the repository's default branch (main). On feature branches
+# (e.g. `feature/p0-b-user-confirmed-requirements`), scheduled cron runs will NOT trigger
+# automatically on GitHub until merged into default branch. To execute on a feature branch,
+# use manual `workflow_dispatch` trigger or local runner: `node apps/web/scripts/nightly-evolution-loop.mjs`.
+
 on:
   schedule:
-    # 02:17 AM IST = 20:47 UTC every day
+    # 02:17 AM IST = 20:47 UTC every day (Runs on default branch)
     - cron: '47 20 * * *'
   workflow_dispatch:
     inputs:

@@ -1,6 +1,6 @@
 {
   "battery": "SPE Ω — Mission 2 Frozen Adversarial Evaluation Set",
-  "timestamp": "2026-10-15T18:45:54.233Z",
+  "timestamp": "2026-10-15T21:19:31.970Z",
   "totalCases": 11,
   "casesPassed": 51,
   "casesFailed": 0,
@@ -65,7 +65,7 @@
     {
       "id": "ADV-05-VERY-LONG-BRIEF",
       "category": "Very long briefs",
-      "status": "QUALIFIED_GENERATIVE_SUCCESS",
+      "status": "REPAIRED_GENERATIVE_SUCCESS",
       "expectedOutcome": "QUALIFIED_GENERATIVE_SUCCESS",
       "requirementPreservation": "100%",
       "structuralScore": "80%",
@@ -78,7 +78,7 @@
     {
       "id": "ADV-06-STRICT-NEGATIVE-CONSTRAINTS",
       "category": "Strict negative constraints",
-      "status": "QUALIFIED_GENERATIVE_SUCCESS",
+      "status": "REPAIRED_GENERATIVE_SUCCESS",
       "expectedOutcome": "QUALIFIED_GENERATIVE_SUCCESS",
       "requirementPreservation": "100%",
       "structuralScore": "80%",
@@ -104,7 +104,7 @@
     {
       "id": "ADV-08-CODING-SPECIFICATION",
       "category": "Coding specifications",
-      "status": "QUALIFIED_GENERATIVE_SUCCESS",
+      "status": "REPAIRED_GENERATIVE_SUCCESS",
       "expectedOutcome": "QUALIFIED_GENERATIVE_SUCCESS",
       "requirementPreservation": "100%",
       "structuralScore": "80%",

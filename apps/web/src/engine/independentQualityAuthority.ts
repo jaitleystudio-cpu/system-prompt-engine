@@ -100,35 +100,80 @@ export function extractVerifiableRequirements(
 }
 
 /**
- * Checks if a specific requirement is represented in the prompt text.
+ * Checks if a specific requirement is genuinely satisfied and affirmatively enforced in the prompt text,
+ * rejecting mere keyword mentions that negate or fail to mandate the requirement.
  */
 function requirementSatisfiedInPrompt(req: string, promptText: string): boolean {
   const pLower = promptText.toLowerCase();
   const rLower = req.toLowerCase();
 
-  if (rLower.includes("offline")) {
-    return pLower.includes("offline") || pLower.includes("zero network") || pLower.includes("air-gap");
-  }
-  if (rLower.includes("personal information") || rLower.includes("telemetry") || rLower.includes("pii")) {
-    return pLower.includes("personal information") || pLower.includes("pii") || pLower.includes("telemetry") || pLower.includes("privacy");
-  }
-  if (rLower.includes("telugu")) {
-    return pLower.includes("telugu") || pLower.includes("te-in") || pLower.includes("res/values-te");
-  }
-  if (rLower.includes("android")) {
-    return pLower.includes("android") || pLower.includes("jetpack") || pLower.includes("kotlin");
-  }
-  if (rLower.includes("json")) {
-    return pLower.includes("json");
-  }
-  if (rLower.includes("wasm") || rLower.includes("webassembly")) {
-    return pLower.includes("wasm") || pLower.includes("webassembly");
+  // Negative indicator scan: if the requirement topic is negated or waived in the prompt, reject!
+  const hasWaiving = (topic: string) => {
+    const rx = new RegExp(`(?:ignore|waive|skip|optional|bypass|not)\\s+(?:the\\s+)?(?:constraint|requirement|rule)?\\s*${topic}`, "i");
+    return rx.test(promptText);
+  };
+
+  if (rLower.includes("offline") || rLower.includes("without external network") || rLower.includes("no network")) {
+    if (hasWaiving("offline") || /connects? to (?:cloud|server|remote)|send to remote/i.test(pLower)) {
+      return false; // Negated or contradicted
+    }
+    // Must be affirmatively enforced in constraints, approach, or boundary sections
+    const hasAffirmativeOffline =
+      /(?:offline|zero network|air-?gapp?ed|no internet)/i.test(pLower) &&
+      /(?:enforced|prohibited|invariant|must|never|strict|boundary|layer)/i.test(pLower);
+    return hasAffirmativeOffline;
   }
 
-  // Token-level substring match
-  const keywords = rLower.split(/\s+/).filter((w) => w.length > 3 && !["and", "the", "with", "that", "this"].includes(w));
+  if (rLower.includes("personal information") || rLower.includes("telemetry") || rLower.includes("pii") || rLower.includes("privacy")) {
+    if (hasWaiving("privacy") || /upload telemetry|collect user (?:data|email)|analytics tracker/i.test(pLower)) {
+      return false; // Violated
+    }
+    const hasAffirmativePrivacy =
+      /(?:personal (?:information|data)|pii|telemetry|privacy)/i.test(pLower) &&
+      /(?:never|zero|prohibited|forbid|strict|no\s)/i.test(pLower);
+    return hasAffirmativePrivacy;
+  }
+
+  if (rLower.includes("telugu")) {
+    if (hasWaiving("telugu")) return false;
+    return /(?:telugu|te-in|res\/values-te)/i.test(pLower) && /(?:support|catalog|string|native|localiz)/i.test(pLower);
+  }
+
+  if (rLower.includes("hindi")) {
+    if (hasWaiving("hindi")) return false;
+    return /(?:hindi|hi-in|res\/values-hi)/i.test(pLower) && /(?:support|catalog|string|native|localiz)/i.test(pLower);
+  }
+
+  if (rLower.includes("android")) {
+    if (hasWaiving("android")) return false;
+    return /(?:android|jetpack|compose|kotlin)/i.test(pLower) && /(?:platform|architecture|app|sdk)/i.test(pLower);
+  }
+
+  if (rLower.includes("json")) {
+    if (hasWaiving("json")) return false;
+    return /json/i.test(pLower) && /(?:strict|format|valid|output|schema)/i.test(pLower);
+  }
+
+  if (rLower.includes("wasm") || rLower.includes("webassembly")) {
+    if (hasWaiving("wasm") || hasWaiving("webassembly")) return false;
+    return /(?:wasm|webassembly)/i.test(pLower) && /(?:execution|runtime|compiled|parser|module)/i.test(pLower);
+  }
+
+  // Token-level affirmative match with negation rejection
+  const keywords = rLower.split(/\s+/).filter((w) => w.length > 3 && !["and", "the", "with", "that", "this", "works", "target", "language", "platform"].includes(w));
   if (keywords.length === 0) return true;
-  const matchCount = keywords.filter((k) => pLower.includes(k)).length;
+
+  const matchCount = keywords.filter((k) => {
+    const idx = pLower.indexOf(k);
+    if (idx === -1) return false;
+    // Check if preceded by a direct negative within 25 characters
+    const windowBefore = pLower.slice(Math.max(0, idx - 25), idx);
+    if (/(?:not|no|don't|without|ignore|skip)\s+$/i.test(windowBefore)) {
+      return false; // Negated
+    }
+    return true;
+  }).length;
+
   return matchCount / keywords.length >= 0.7;
 }
 

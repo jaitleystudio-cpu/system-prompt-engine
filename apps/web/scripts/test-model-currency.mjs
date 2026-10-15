@@ -61,23 +61,37 @@ assert(allRealValid, "All documented production models pass authoritative provid
 
 // ▶ Gate 2: Rejection of Invented / Speculative Identifiers
 console.log("\n▶ Gate 2: Rejection of Invented / Speculative Identifiers");
-const speculativeModels = [
-  "gpt-5",
-  "claude-4-5-sonnet",
-  "claude-4.5-sonnet",
-  "gemini-3-pro",
-  "grok-4",
-  "llama-4-405b",
-  "deepseek-r2",
-  "o4-mini",
-  "midjourney-v7",
+const trulyInventedModels = [
+  "magic-gpt-10-ultra",
+  "fictional-hyper-ai-9000",
+  "claude-9-infinity",
+  "gemini-99-super",
+  "deepseek-quantum-1",
+  "llama-999-trillion",
 ];
 
-const allSpeculativeFlagged = speculativeModels.every((id) => isSpeculativeOrInventedModel(id));
-assert(allSpeculativeFlagged, "All speculative / invented model identifiers flagged as invented");
+const allInventedFlagged = trulyInventedModels.every((id) => isSpeculativeOrInventedModel(id));
+assert(allInventedFlagged, "All truly invented model identifiers flagged as invented");
 
-const allSpeculativeRejected = speculativeModels.every((id) => !isModelAuthoritative(id));
-assert(allSpeculativeRejected, "All speculative / invented model identifiers rejected from authoritative catalog");
+const allInventedRejected = trulyInventedModels.every((id) => !isModelAuthoritative(id));
+assert(allInventedRejected, "All truly invented model identifiers rejected from authoritative catalog");
+
+// ▶ Gate 2b: Documented Model Family Recognition (gpt-5 Regression Test)
+console.log("\n▶ Gate 2b: Documented Model Family Recognition (gpt-5 Regression Test)");
+assert(!isSpeculativeOrInventedModel("gpt-5"), "REGRESSION TEST: 'gpt-5' is NOT classified as fictitious or speculative");
+assert(!isSpeculativeOrInventedModel("gpt-5-codex"), "REGRESSION TEST: 'gpt-5-codex' is NOT classified as fictitious");
+assert(isModelAuthoritative("gpt-5"), "REGRESSION TEST: 'gpt-5' is authoritative documented provider family");
+
+const gpt5Decision = governModelSelection("gpt-5");
+assert(gpt5Decision.status === "DOCUMENTED_UNAVAILABLE", "gpt-5 is honestly classified as DOCUMENTED_UNAVAILABLE");
+assert(gpt5Decision.targetPreserved === true, "gpt-5 user target preserved verbatim (no silent substitution)");
+assert(!gpt5Decision.advisory?.includes("speculative"), "Advisory does NOT misclassify gpt-5 as speculative/fictitious");
+assert(gpt5Decision.suggestedAlternative === "gpt-4o", "Suggests active frontier alternative gpt-4o");
+
+// Adaptation with consent
+const gpt5Adapted = governModelSelection("gpt-5", { explicitUserConsent: true });
+assert(gpt5Adapted.status === "ADAPTED_WITH_CONSENT", "gpt-5 adapts to active alternative when explicit consent is provided");
+assert(gpt5Adapted.effectiveModelId === "gpt-4o", "Adapted to active alternative gpt-4o per user consent");
 
 // ▶ Gate 3: Invariant Preservation — NO Silent Replacement of User Targets
 console.log("\n▶ Gate 3: Invariant Preservation — NO Silent Replacement of User Targets");
@@ -116,11 +130,11 @@ assert(gpt4oAuthorizedAdaptation.status === "ADAPTED_WITH_CONSENT", "Status mark
 console.log("\n▶ Gate 5: Rejection of Invented Models in Currency Assertion");
 let assertedError = false;
 try {
-  assertModelCurrency("gpt-5", "TestExecution");
+  assertModelCurrency("fictional-hyper-ai-9000", "TestExecution");
 } catch (err) {
-  assertedError = err.message.includes("Speculative or invented model identifier 'gpt-5' rejected");
+  assertedError = err.message.includes("Speculative or invented model identifier 'fictional-hyper-ai-9000' rejected");
 }
-assert(assertedError, "assertModelCurrency throws on invented model 'gpt-5'");
+assert(assertedError, "assertModelCurrency throws on truly invented model 'fictional-hyper-ai-9000'");
 
 let authoritativeAssertPass = false;
 try {
@@ -130,6 +144,15 @@ try {
   authoritativeAssertPass = false;
 }
 assert(authoritativeAssertPass, "assertModelCurrency passes cleanly on documented model 'claude-3-7-sonnet-20250219'");
+
+let gpt5AssertPass = false;
+try {
+  assertModelCurrency("gpt-5", "TestExecution");
+  gpt5AssertPass = true;
+} catch {
+  gpt5AssertPass = false;
+}
+assert(gpt5AssertPass, "assertModelCurrency passes on documented provider family 'gpt-5'");
 
 // ▶ Gate 6: Documented Older Model Preservation & Consent Gating
 console.log("\n▶ Gate 6: Documented Older Model Preservation & Consent Gating");

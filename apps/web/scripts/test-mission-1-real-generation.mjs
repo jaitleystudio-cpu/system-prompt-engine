@@ -17,6 +17,7 @@ import {
   CORE_A_PROMPT_LABEL,
   CORE_B_PROMPT_LABEL,
 } from "../src/engine/dualCoreRouter.ts";
+import { NeuralModelRuntime } from "../src/engine/neuralModelRuntime.ts";
 
 console.log("========================================================================");
 console.log("⚡ SPE Ω — MISSION 1: REAL GENERATION & DECISIVE RUNTIME EXPERIMENT");
@@ -180,25 +181,32 @@ async function runMission1Battery() {
     });
   }
 
-  // Phase 2: Decisive Experiment — Disable Model and Prove Core B Takeover
-  console.log("\nPhase 2: Decisive Experiment — Disable Model & Prove Core B Takeover...\n");
+  // Phase 2: Decisive Experiment — Real Model Runtime Disablement & Automatic Core B Takeover
+  console.log("\nPhase 2: Decisive Experiment — Real Model Runtime Disablement & Automatic Core B Takeover...\n");
 
-  for (let i = 0; i < 3; i++) {
-    const item = UNSEEN_REQUESTS[i];
-    console.log(`[Disabling Model for ${item.id}]`);
+  const neuralRuntime = NeuralModelRuntime.getInstance();
+  neuralRuntime.disableForTesting();
 
-    const fallbackRes = await executeDualCoreGeneration({
-      userRequest: item.userRequest,
-      target: item.target,
-      explicitConstraints: item.explicitConstraints,
-      forceFallbackCoreB: true,
-    });
+  try {
+    for (let i = 0; i < 3; i++) {
+      const item = UNSEEN_REQUESTS[i];
+      console.log(`[Executing Brief ${item.id} with Neural Model Disabled on Device]`);
 
-    assert(fallbackRes.engineCoreUsed === "CORE_B_FALLBACK", `Core B took over immediately when model disabled`);
-    assert(fallbackRes.status === "DEGRADED_FALLBACK_DELIVERY", `Status is honestly DEGRADED_FALLBACK_DELIVERY`);
-    assert(fallbackRes.isFallback === true, `isFallback flag is true`);
-    assert(fallbackRes.prompt.includes("SPE SAFE FALLBACK"), `Safe custody prompt delivered`);
-    assert(fallbackRes.prompt.includes(item.userRequest), `Original user request preserved verbatim in custody block`);
+      const fallbackRes = await executeDualCoreGeneration({
+        userRequest: item.userRequest,
+        target: item.target,
+        explicitConstraints: item.explicitConstraints,
+      });
+
+      assert(fallbackRes.engineCoreUsed === "CORE_B_FALLBACK", `Core B took over immediately when model disabled`);
+      assert(fallbackRes.status === "DEGRADED_FALLBACK_DELIVERY", `Status is honestly DEGRADED_FALLBACK_DELIVERY`);
+      assert(fallbackRes.isFallback === true, `isFallback flag is true`);
+      assert(fallbackRes.fallbackReason?.includes("MODEL_UNAVAILABLE"), `Fallback reason cites real MODEL_UNAVAILABLE`);
+      assert(fallbackRes.prompt.includes("SPE SAFE FALLBACK"), `Safe custody prompt delivered`);
+      assert(fallbackRes.prompt.includes(item.userRequest), `Original user request preserved verbatim in custody block`);
+    }
+  } finally {
+    neuralRuntime.enableForTesting();
   }
 
   console.log("\n========================================================================");

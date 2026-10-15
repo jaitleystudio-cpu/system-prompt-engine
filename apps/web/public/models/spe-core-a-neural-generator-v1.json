@@ -1,0 +1,15 @@
+{
+  "modelName": "SPE-Ω Core A Neural Generator",
+  "modelVersion": "v1.0.0-spe-causal-onnx",
+  "modelFile": "spe-core-a-neural-generator-v1.onnx",
+  "format": "ONNX",
+  "opsetVersion": 12,
+  "irVersion": 7,
+  "vocabSize": 320,
+  "hiddenDim": 128,
+  "intermediateDim": 256,
+  "canonicalSha256": "7ad350986a0d4437085abd12fd34070698a54609de13906fae62a53396d32864",
+  "sizeBytes": 593399,
+  "license": "MIT OR Apache-2.0",
+  "runtime": "onnxruntime-web WASM backend (in-process, 100% air-gapped, $0 cloud spend)"
+}
