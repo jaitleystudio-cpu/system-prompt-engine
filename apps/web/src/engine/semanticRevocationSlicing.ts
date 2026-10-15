@@ -407,11 +407,11 @@ export const PRELOADED_GRAPHS: {
     ],
   },
   {
-    id: "graph-oauth-to-magic-link",
-    title: "Third-Party OAuth to Passwordless Local Magic Links",
+    id: "graph-federated-to-magic-link",
+    title: "Third-Party Federated Auth to Passwordless Local Magic Links",
     description:
       "Authentication migration revoking third-party Google/GitHub identity providers to prevent external tracking.",
-    defaultRevocationTarget: "REQ_GOOGLE_OAUTH",
+    defaultRevocationTarget: "REQ_GOOGLE_FEDERATED_AUTH",
     defaultRevocationReason: "Privacy mandate: Eliminate third-party Google cookies and tracking tokens.",
     nodes: [
       {
@@ -426,15 +426,15 @@ export const PRELOADED_GRAPHS: {
         associatedSymbols: ["userId", "sessionExpiresAt"],
       },
       {
-        id: "REQ_GOOGLE_OAUTH",
-        label: "Google Identity OAuth2 Integration",
+        id: "REQ_GOOGLE_FEDERATED_AUTH",
+        label: "Google Identity Federation Integration",
         category: "SECURITY",
         origin: "EXPLICIT_USER",
         authority: "LOCKED_USER",
         status: "ACTIVE",
         dependencies: ["REQ_USER_SESSION_MODEL"],
-        textDirective: "Initiate OAuth redirect and exchange code for Google profile tokens.",
-        associatedSymbols: ["googleClientId", "googleClientSecret", "oauthCallbackUrl"],
+        textDirective: "Initiate Federated redirect and exchange code for Google profile tokens.",
+        associatedSymbols: ["googleClientId", "googleClientSecret", "authCallbackUrl"],
       },
       {
         id: "REQ_GOOGLE_AVATAR_SYNC",
@@ -443,7 +443,7 @@ export const PRELOADED_GRAPHS: {
         origin: "INFERRED_SPEC",
         authority: "ADAPTIVE_MODEL",
         status: "ACTIVE",
-        dependencies: ["REQ_GOOGLE_OAUTH"],
+        dependencies: ["REQ_GOOGLE_FEDERATED_AUTH"],
         textDirective: "Fetch and cache user profile photo from Google CDN.",
         associatedSymbols: ["googleAvatarUrl"],
       },

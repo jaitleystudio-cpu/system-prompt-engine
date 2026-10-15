@@ -12,7 +12,7 @@
  */
 
 import { generateCoreAPrompt } from "./core-a.ts";
-import type { CoreAGenerationRequest } from "./core-a.ts";
+import type { CoreAGenerationRequest, CoreAModelMetadata } from "./core-a.ts";
 import { createRawRequestCustody, renderSafeFallbackPrompt } from "./core-b.mjs";
 import { computeSha256 } from "./hashUtils.ts";
 import type { IndependentQualityReport } from "./independentQualityAuthority.ts";
@@ -41,8 +41,22 @@ export function formatContradictionError(fallbackReason?: string): string {
   return `Conflict detected: ${fallbackReason || "Mutually exclusive constraints cannot be satisfied simultaneously."}`;
 }
 
+export type InjectedFailureMode =
+  | "UNAVAILABLE_BROWSER_AI"
+  | "CORRUPTED_MODEL_ASSET"
+  | "INSUFFICIENT_MEMORY"
+  | "INTERRUPTED_MODEL_DOWNLOAD"
+  | "INFERENCE_TIMEOUT"
+  | "OFFLINE_COLD_START_NO_CACHE"
+  | "OFFLINE_WARM_START_CACHE_CORRUPTED"
+  | "GENERATOR_EXCEPTION"
+  | "QUALITY_VALIDATION_FAILURE"
+  | "CANCELLATION_DURING_INFERENCE";
+
 export interface DualCoreGenerationRequest extends CoreAGenerationRequest {
   forceFallbackCoreB?: boolean;
+  injectedFailureMode?: InjectedFailureMode;
+  signal?: AbortSignal;
 }
 
 export interface DualCoreGenerationResult {
@@ -53,6 +67,7 @@ export interface DualCoreGenerationResult {
   target?: string;
   qualityReport?: IndependentQualityReport;
   coreARuntime?: string;
+  modelMetadata?: CoreAModelMetadata;
   repairPasses: number;
   isFallback: boolean;
   fallbackReason?: string;
@@ -101,6 +116,35 @@ export async function executeDualCoreGeneration(
 
   // Check 2: Execute Primary Core A (Generative Engine)
   try {
+    // Check abort signal
+    if (req.signal?.aborted) {
+      throw new Error("INFERENCE_ABORTED: Generation cancelled by user abort signal.");
+    }
+
+    // Adversarial failure injection handling
+    if (req.injectedFailureMode && req.injectedFailureMode !== "QUALITY_VALIDATION_FAILURE") {
+      switch (req.injectedFailureMode) {
+        case "UNAVAILABLE_BROWSER_AI":
+          throw new Error("BROWSER_AI_API_UNAVAILABLE: window.ai is not supported in this browser environment.");
+        case "CORRUPTED_MODEL_ASSET":
+          throw new Error("CORRUPTED_MODEL_ASSET: Model weights integrity check failed (SHA-256 mismatch).");
+        case "INSUFFICIENT_MEMORY":
+          throw new RangeError("INSUFFICIENT_MEMORY: Memory budget exhausted; unable to allocate model tensor buffer.");
+        case "INTERRUPTED_MODEL_DOWNLOAD":
+          throw new Error("MODEL_DOWNLOAD_INTERRUPTED: Download connection severed during local weight streaming.");
+        case "INFERENCE_TIMEOUT":
+          throw new Error("INFERENCE_TIMEOUT: Model generation timed out after 5000ms deadline.");
+        case "OFFLINE_COLD_START_NO_CACHE":
+          throw new Error("OFFLINE_COLD_START_NO_CACHE: Device is offline and no pre-cached local weights found in CacheStorage.");
+        case "OFFLINE_WARM_START_CACHE_CORRUPTED":
+          throw new Error("OFFLINE_WARM_START_CACHE_CORRUPTED: Local cache entry corrupted or unreadable.");
+        case "GENERATOR_EXCEPTION":
+          throw new Error("GENERATOR_EXCEPTION: Synthetic generator encountered unexpected null pointer or invariant violation.");
+        case "CANCELLATION_DURING_INFERENCE":
+          throw new Error("INFERENCE_ABORTED: Generation cancelled by user abort signal.");
+      }
+    }
+
     const coreAResult = await generateCoreAPrompt(req);
 
     // If Core A detected unresolvable contradictions, block with transparent reason
@@ -140,6 +184,7 @@ export async function executeDualCoreGeneration(
         target,
         qualityReport: coreAResult.qualityReport,
         coreARuntime: coreAResult.runtimeUsed,
+        modelMetadata: coreAResult.modelMetadata,
         repairPasses: coreAResult.repairPasses,
         isFallback: false,
         latencyMs,

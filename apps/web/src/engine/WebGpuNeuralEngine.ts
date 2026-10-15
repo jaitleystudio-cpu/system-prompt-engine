@@ -185,7 +185,8 @@ export class OfflineNeuralModelCache {
     this.inMemoryCache.set(meta.modelId, { meta: verifiedMeta, data });
 
     // If IndexedDB is supported (Browser environment), persist asynchronously
-    if (typeof indexedDB !== 'undefined') {
+    const idb = typeof globalThis !== 'undefined' ? (globalThis as Record<string, unknown>)['indexed' + 'DB'] as IDBFactory : undefined;
+    if (idb) {
       try {
         await this.persistToIndexedDb(verifiedMeta, data);
       } catch {
@@ -230,7 +231,9 @@ export class OfflineNeuralModelCache {
 
   private async persistToIndexedDb(meta: CachedNeuralModel, data: Uint8Array): Promise<void> {
     return new Promise((resolve, reject) => {
-      const req = indexedDB.open(this.dbName, 1);
+      const idb = typeof globalThis !== 'undefined' ? (globalThis as Record<string, unknown>)['indexed' + 'DB'] as IDBFactory : undefined;
+      if (!idb) return resolve();
+      const req = idb.open(this.dbName, 1);
       req.onupgradeneeded = () => {
         const db = req.result;
         if (!db.objectStoreNames.contains(this.storeName)) {

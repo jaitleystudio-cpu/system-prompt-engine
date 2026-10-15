@@ -88,6 +88,22 @@ async function runOnce() {
   }
   console.log("──────────────────────────────────────────────────────────────────────────\n");
   console.log("🎉 NIGHTLY EVOLUTION CYCLE COMPLETED SUCCESSFULLY.");
+
+  // Write evidence receipt to disk
+  try {
+    const { writeFileSync, mkdirSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const outDir = resolve(process.cwd(), "proofs/generated");
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(
+      resolve(outDir, "NIGHTLY_EVOLUTION_RUN_RECEIPT.json"),
+      JSON.stringify(receipt, null, 2),
+      "utf-8"
+    );
+  } catch (e) {
+    // Non-fatal
+  }
+
   return receipt;
 }
 

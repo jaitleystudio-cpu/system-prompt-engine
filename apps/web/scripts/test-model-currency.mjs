@@ -1,170 +1,167 @@
 /**
- * Verification test battery for SPE Ω Frontier Model Currency Governor (FMCG)
- * Verifies Zero-Stale-Model Invariant and 2026 active frontier model enforcement.
+ * Verification test battery for SPE Ω Model Governance & Currency Authority
+ *
+ * Verifies:
+ * 1. Authoritative model catalog grounded in official provider documentation.
+ * 2. Rejection of invented / speculative model identifiers.
+ * 3. Invariant Preservation: User's requested model is NEVER silently substituted.
+ * 4. Explicit user consent requirement for model adaptation.
+ * 5. Capability-based suitability evaluation instead of calendar year alone.
  */
 
 import {
   FRONTIER_ACTIVE_YEAR,
-  FRONTIER_MODELS_2026,
-  isModelCurrent,
+  AUTHORITATIVE_PROVIDER_MODELS,
+  isModelAuthoritative,
+  isSpeculativeOrInventedModel,
+  governModelSelection,
   autoUpgradeLegacyModel,
   assertModelCurrency,
   getDefaultFrontierModel,
   getActiveFrontierModels,
 } from "../src/engine/modelCurrencyGovernor.ts";
-import {
-  getAllModels,
-  getModelById,
-  getModelAtlasStats,
-} from "../src/engine/modelAtlas/modelAtlasService.ts";
 
-console.log("🧪 Running SPE Frontier Model Currency Governor (FMCG) Verification Battery...\n");
+console.log("========================================================================");
+console.log("⚖️  SPE Ω — MODEL GOVERNANCE & INVARIANT PRESERVATION TEST BATTERY");
+console.log("========================================================================");
 
 let passed = 0;
 let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ✅ PASS: ${message}`);
+    console.log(`  ✓ PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ❌ FAIL: ${message}`);
+    console.error(`  ✗ FAIL: ${message}`);
     failed++;
   }
 }
 
-// ▶ Gate 1: 2026 Active Frontier Year & Registry Integrity
-console.log("▶ Gate 1: 2026 Active Frontier Year & Registry Integrity");
-assert(FRONTIER_ACTIVE_YEAR === 2026, "Frontier active year is pinned to 2026");
-assert(FRONTIER_MODELS_2026.length >= 18, `Frontier active model count is ${FRONTIER_MODELS_2026.length} (>= 18)`);
-const all2026 = FRONTIER_MODELS_2026.every(
-  (m) => m.releaseDate.startsWith("2026") && m.generation === "2026-frontier" && !m.isLegacy
-);
-assert(all2026, "All active frontier models have 2026 release dates and '2026-frontier' generation");
+// ▶ Gate 1: Authoritative Catalog Integrity
+console.log("\n▶ Gate 1: Authoritative Catalog Grounded in Official Provider Docs");
+assert(FRONTIER_ACTIVE_YEAR === 2026, "Frontier active year pinned to 2026");
+assert(AUTHORITATIVE_PROVIDER_MODELS.length >= 20, `Authoritative model count is ${AUTHORITATIVE_PROVIDER_MODELS.length} (>= 20)`);
 
-// ▶ Gate 2: Currency Check on 2026 Frontier Models
-console.log("\n▶ Gate 2: Currency Check on 2026 Frontier Models");
-const frontierSample = [
-  "claude-4-5-sonnet",
-  "claude-4-5-opus",
-  "claude-4-5-haiku",
-  "gpt-5",
-  "gpt-5-codex",
-  "o4-mini",
-  "o3-pro",
-  "gemini-3-pro",
-  "gemini-3-flash",
-  "grok-4",
-  "deepseek-r2",
-  "deepseek-v4",
-  "llama-4-405b",
-  "llama-4-70b",
-  "midjourney-v7",
-  "flux-2-pro",
-];
-const allFrontierValid = frontierSample.every((id) => isModelCurrent(id));
-assert(allFrontierValid, "All 2026 frontier models pass currency check");
-
-// ▶ Gate 3: Currency Check Rejection of Obsolete 2024/2025 Models
-console.log("\n▶ Gate 3: Currency Check Rejection of Obsolete 2024/2025 Models");
-const obsoleteModels = [
-  "claude-3-opus",
-  "claude-3-5-sonnet",
-  "claude-3-7-sonnet",
-  "gpt-4",
+const realModels = [
+  "claude-3-7-sonnet-20250219",
+  "claude-3-5-sonnet-20241022",
   "gpt-4o",
-  "gpt-4.5-preview",
-  "o1",
   "o3-mini",
-  "gemini-1-5-pro",
-  "gemini-2-0-flash",
-  "grok-2",
-  "grok-3",
-  "deepseek-r1",
-  "deepseek-v3",
-  "llama-3-3-70b",
+  "gemini-2.0-flash",
+  "deepseek-chat",
+  "deepseek-reasoner",
+  "meta-llama/llama-3.3-70b-instruct",
+  "grok-2-1212",
+  "mistral-large-2411",
 ];
-const allObsoleteRejected = obsoleteModels.every((id) => !isModelCurrent(id));
-assert(allObsoleteRejected, "All obsolete 2024/2025 models are rejected as active frontier");
 
-// ▶ Gate 4: Lossless Legacy-to-Frontier Upgrades
-console.log("\n▶ Gate 4: Lossless Legacy-to-Frontier Upgrades");
-const upgradeExpectations = [
-  ["claude-3-7-sonnet", "claude-4-5-sonnet"],
-  ["claude-3.7-sonnet", "claude-4-5-sonnet"],
-  ["claude-3-5-sonnet", "claude-4-5-sonnet"],
-  ["gpt-4.5-preview", "gpt-5"],
-  ["gpt-4o", "gpt-5"],
-  ["o3-mini", "o4-mini"],
-  ["gemini-1.5-pro", "gemini-3-pro"],
-  ["gemini-2.0-flash", "gemini-3-flash"],
-  ["grok-3", "grok-4"],
-  ["deepseek-r1", "deepseek-r2"],
-  ["deepseek-v3", "deepseek-v4"],
-  ["llama-3.3-70b", "llama-4-70b"],
-  ["midjourney-v6.1", "midjourney-v7"],
+const allRealValid = realModels.every((id) => isModelAuthoritative(id));
+assert(allRealValid, "All documented production models pass authoritative provider check");
+
+// ▶ Gate 2: Rejection of Invented / Speculative Identifiers
+console.log("\n▶ Gate 2: Rejection of Invented / Speculative Identifiers");
+const speculativeModels = [
+  "gpt-5",
+  "claude-4-5-sonnet",
+  "claude-4.5-sonnet",
+  "gemini-3-pro",
+  "grok-4",
+  "llama-4-405b",
+  "deepseek-r2",
+  "o4-mini",
+  "midjourney-v7",
 ];
-let allUpgradesCorrect = true;
-for (const [legacyId, expected2026] of upgradeExpectations) {
-  const result = autoUpgradeLegacyModel(legacyId);
-  if (!result.wasLegacy || result.upgradedId !== expected2026) {
-    allUpgradesCorrect = false;
-    console.error(`Mismatch for ${legacyId}: got ${result.upgradedId}, expected ${expected2026}`);
-  }
-}
-assert(allUpgradesCorrect, "All obsolete models transparently upgrade to 2026 successors");
 
-// ▶ Gate 5: Strict Currency Assertion Gate
-console.log("\n▶ Gate 5: Strict Currency Assertion Gate");
-let assertionPassed = true;
+const allSpeculativeFlagged = speculativeModels.every((id) => isSpeculativeOrInventedModel(id));
+assert(allSpeculativeFlagged, "All speculative / invented model identifiers flagged as invented");
+
+const allSpeculativeRejected = speculativeModels.every((id) => !isModelAuthoritative(id));
+assert(allSpeculativeRejected, "All speculative / invented model identifiers rejected from authoritative catalog");
+
+// ▶ Gate 3: Invariant Preservation — NO Silent Replacement of User Targets
+console.log("\n▶ Gate 3: Invariant Preservation — NO Silent Replacement of User Targets");
+
+// User requests GPT-4o for reproducibility
+const gpt4oDecision = governModelSelection("gpt-4o");
+assert(gpt4oDecision.targetPreserved === true, "User target 'gpt-4o' strictly preserved (not silently substituted)");
+assert(gpt4oDecision.effectiveModelId === "gpt-4o", "Effective model matches requested target verbatim");
+
+// User requests Claude 3 Opus
+const opusDecision = governModelSelection("claude-3-opus-20240229");
+assert(opusDecision.targetPreserved === true, "User target 'claude-3-opus' preserved verbatim");
+assert(opusDecision.effectiveModelId === "claude-3-opus-20240229", "Effective model is Claude 3 Opus");
+
+// ▶ Gate 4: Capability-Based Suitability & Consent-Gated Adaptation
+console.log("\n▶ Gate 4: Capability-Based Suitability & Consent-Gated Adaptation");
+
+// Task requires thinking, but GPT-4o does not have thinking
+const gpt4oThinkingCheck = governModelSelection("gpt-4o", {
+  requiredCapabilities: ["supportsThinking"],
+});
+assert(gpt4oThinkingCheck.capabilityAudit.satisfied === false, "Detected GPT-4o lacks required capability 'supportsThinking'");
+assert(gpt4oThinkingCheck.targetPreserved === true, "Without user consent, target remains GPT-4o with transparent advisory");
+assert(gpt4oThinkingCheck.suggestedAlternative === "o3-mini", "Suggested compatible alternative is o3-mini");
+
+// With explicit user consent, adaptation is authorized
+const gpt4oAuthorizedAdaptation = governModelSelection("gpt-4o", {
+  requiredCapabilities: ["supportsThinking"],
+  explicitUserConsent: true,
+});
+assert(gpt4oAuthorizedAdaptation.targetPreserved === false, "With explicit consent, adaptation applied");
+assert(gpt4oAuthorizedAdaptation.effectiveModelId === "o3-mini", "Adapted to o3-mini per explicit consent");
+assert(gpt4oAuthorizedAdaptation.status === "ADAPTED_WITH_CONSENT", "Status marked ADAPTED_WITH_CONSENT");
+
+// ▶ Gate 5: Rejection of Invented Models in Currency Assertion
+console.log("\n▶ Gate 5: Rejection of Invented Models in Currency Assertion");
+let assertedError = false;
 try {
-  assertModelCurrency("claude-4-5-sonnet");
-  assertModelCurrency("gpt-5");
-  assertModelCurrency("gemini-3-pro");
+  assertModelCurrency("gpt-5", "TestExecution");
+} catch (err) {
+  assertedError = err.message.includes("Speculative or invented model identifier 'gpt-5' rejected");
+}
+assert(assertedError, "assertModelCurrency throws on invented model 'gpt-5'");
+
+let authoritativeAssertPass = false;
+try {
+  assertModelCurrency("claude-3-7-sonnet-20250219", "TestExecution");
+  authoritativeAssertPass = true;
 } catch {
-  assertionPassed = false;
+  authoritativeAssertPass = false;
 }
-assert(assertionPassed, "2026 frontier models satisfy currency assertion");
+assert(authoritativeAssertPass, "assertModelCurrency passes cleanly on documented model 'claude-3-7-sonnet-20250219'");
 
-let assertionRejected = false;
-try {
-  assertModelCurrency("claude-3-7-sonnet");
-} catch (e) {
-  assertionRejected = e.message.includes("CURRENCY_GATE_VIOLATION");
-}
-assert(assertionRejected, "Obsolete model throws CURRENCY_GATE_VIOLATION with upgrade advice");
+// ▶ Gate 6: Documented Older Model Preservation & Consent Gating
+console.log("\n▶ Gate 6: Documented Older Model Preservation & Consent Gating");
+// User deliberately targets older GPT-4 for reproducibility
+const gpt4Preserved = governModelSelection("gpt-4");
+assert(gpt4Preserved.targetPreserved === true, "Older model target 'gpt-4' strictly preserved verbatim");
+assert(gpt4Preserved.effectiveModelId === "gpt-4", "Effective model remains 'gpt-4' without silent substitution");
+assert(gpt4Preserved.status === "AUTHORIZED_PRESERVED_OLDER", "Status is AUTHORIZED_PRESERVED_OLDER");
+assert(gpt4Preserved.suggestedAlternative === "gpt-4o", "Recommends active successor gpt-4o");
+assert(gpt4Preserved.advisory?.includes("Preserved verbatim for reproducibility"), "Transparent advisory explains reproducibility preservation");
 
-// ▶ Gate 6: Model Atlas Service Default Filter (Active Only)
-console.log("\n▶ Gate 6: Model Atlas Service Default Filter (Active Only)");
-const defaultModels = getAllModels();
-const allDefaultAreActive = defaultModels.every((m) => !m.isLegacy && m.generation === "2026-frontier");
-assert(allDefaultAreActive, "getAllModels() returns strictly 2026 frontier models by default");
+// With explicit user consent, older GPT-4 adapts to active successor GPT-4o
+const gpt4Adapted = governModelSelection("gpt-4", { explicitUserConsent: true });
+assert(gpt4Adapted.targetPreserved === false, "Target modified with explicit consent");
+assert(gpt4Adapted.effectiveModelId === "gpt-4o", "Adapted to active successor gpt-4o with consent");
+assert(gpt4Adapted.status === "ADAPTED_WITH_CONSENT", "Status marked ADAPTED_WITH_CONSENT");
 
-const allIncludingLegacy = getAllModels({ includeLegacy: true });
-assert(
-  allIncludingLegacy.length > defaultModels.length,
-  `getAllModels({ includeLegacy: true }) preserves audit history (${allIncludingLegacy.length} total)`
-);
+// Documented Claude 2.0 preservation
+const claude2Preserved = governModelSelection("claude-2");
+assert(claude2Preserved.targetPreserved === true, "Older model target 'claude-2' preserved verbatim");
+assert(claude2Preserved.status === "AUTHORIZED_PRESERVED_OLDER", "Status marked AUTHORIZED_PRESERVED_OLDER");
 
-// ▶ Gate 7: Transparent Model Lookup Auto-Upgrade
-console.log("\n▶ Gate 7: Transparent Model Lookup Auto-Upgrade");
-const retrieved = getModelById("claude-3-7-sonnet");
-assert(retrieved && retrieved.id === "claude-4-5-sonnet", "getModelById('claude-3-7-sonnet') resolves to Claude 4.5 Sonnet");
+// ▶ Gate 7: Strict Canonical Matching (Zero Loose Substring Matches)
+console.log("\n▶ Gate 7: Strict Canonical Matching (Zero Loose Substring Matches)");
+assert(isModelAuthoritative("gpt") === false, "Substring 'gpt' rejected from authoritative catalog");
+assert(isModelAuthoritative("sonnet") === false, "Substring 'sonnet' rejected from authoritative catalog");
+assert(isModelAuthoritative("llama") === false, "Substring 'llama' rejected from authoritative catalog");
 
-const retrievedGpt = getModelById("gpt-4o");
-assert(retrievedGpt && retrievedGpt.id === "gpt-5", "getModelById('gpt-4o') resolves to GPT-5");
-
-// ▶ Gate 8: Model Atlas Stats Reporting
-console.log("\n▶ Gate 8: Model Atlas Stats Reporting");
-const stats = getModelAtlasStats();
-assert(stats.frontierCount >= 18, `Atlas reports ${stats.frontierCount} active frontier models`);
-assert(stats.lastUpdated.startsWith("2026"), `Atlas lastUpdated is in 2026 (${stats.lastUpdated})`);
-
-console.log("\n═══════════════════════════════════════════════════════════════");
-if (failed === 0) {
-  console.log(`🎉 ALL ${passed} FRONTIER MODEL CURRENCY GATES PASSED CLEANLY!`);
-  process.exit(0);
-} else {
-  console.error(`💥 ${failed} GATES FAILED!`);
+console.log("\n------------------------------------------------------------------------");
+console.log(`Results: ${passed} Passed, ${failed} Failed.`);
+if (failed > 0) {
   process.exit(1);
 }
+console.log("🎉 Model Governance & Invariant Preservation Verified!");
+

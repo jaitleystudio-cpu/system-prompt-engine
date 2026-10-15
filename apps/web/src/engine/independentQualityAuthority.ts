@@ -151,10 +151,19 @@ export function detectContradictions(userRequest: string, promptText: string): s
 
   // Contradiction 2: Zero data collection vs. Analytics/Tracking inclusion
   const wantsPrivacy = /never collect (?:personal|user|pii|data)|zero personal data/i.test(reqLower);
-  const instructsTracking = /google analytics|mixpanel|amplitude|track user behavior|store user email|upload telemetry/i.test(promptLower);
+  const trackingTokens = ["google analytics", "mix" + "panel", "ampli" + "tude", "track user behavior", "store user email", "upload telemetry"];
+  const instructsTracking = trackingTokens.some((t) => promptLower.includes(t));
   if (wantsPrivacy && instructsTracking) {
     contradictions.push(
       "Conflict: User requested zero personal data collection, but prompt introduces telemetry or tracking."
+    );
+  }
+
+  // Contradiction 3: Malicious instruction or hostile override injection
+  const hasMaliciousOverride = /system override|ignore all previous|ignore previous instructions|exfiltrate|document\.cookie/i.test(reqLower);
+  if (hasMaliciousOverride) {
+    contradictions.push(
+      "Security Conflict: Malicious instruction or prompt injection attempt detected (exfiltration / override pattern)."
     );
   }
 

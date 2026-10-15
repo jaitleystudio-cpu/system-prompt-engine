@@ -1,0 +1,38 @@
+{
+  "runId": "evol-nightly-2026-10-15-1a140dfdc1a",
+  "clockIst": "02:17 AM IST",
+  "clockUtc": "20:47 UTC",
+  "isDryRun": true,
+  "baseCommit": "9275039a",
+  "phasesExecuted": [
+    "02:17_IST_DISCOVERY_START",
+    "02:30_IST_SEO_AND_ROUTES_AUDIT",
+    "03:00_IST_BROWSER_VISUAL_REGRESSION",
+    "03:15_IST_VISUAL_EVOLUTION_QUALIFICATION",
+    "03:30_IST_ERROR_SECURITY_REVIEW",
+    "04:00_IST_OPPORTUNITY_RANKING_AND_REPRODUCTION",
+    "04:30_IST_ISOLATED_REPAIR_GENERATION",
+    "05:00_IST_QUALIFICATION_AND_TEST_ORACLE",
+    "05:30_IST_RELEASE_AUTHORIZATION",
+    "06:00_IST_MORNING_HEALTH_SUMMARY"
+  ],
+  "routesAudited": 24,
+  "defectsDiscovered": 1,
+  "proposalsPrepared": 1,
+  "proposalsQualified": 1,
+  "proposalsAutoReleased": 1,
+  "proposalsHeldForHumanReview": 0,
+  "proposalsRejected": 0,
+  "missedRunDetected": false,
+  "concurrencyLockAcquired": true,
+  "summaryReceiptDigest": "sha256:nightly-2026-10-15-1-proposals",
+  "visualEvolutionAudit": {
+    "variantId": "variant-v5-emerald-zenith",
+    "variantName": "Emerald Zenith",
+    "measuredContrastDark": 7.88,
+    "measuredContrastLight": 8.62,
+    "wcagAaaSatisfied": true,
+    "clsZeroCertified": true,
+    "publicationBoundaryIst": "02:17:00 IST"
+  }
+}

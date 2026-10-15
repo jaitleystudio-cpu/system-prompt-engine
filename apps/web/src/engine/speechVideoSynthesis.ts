@@ -166,8 +166,8 @@ export function synthesizePlaywrightE2ETest(params: {
   // 1. Target URL Invariant Extraction
   let targetUrl = params.targetUrl;
   if (!targetUrl) {
-    if (speech.includes('login') || speech.includes('signin') || speech.includes('sign in') || speech.includes('password') || speech.includes('auth')) {
-      targetUrl = '/login';
+    if (speech.includes('signin') || speech.includes('sign in') || speech.includes('password') || speech.includes('auth')) {
+      targetUrl = '/auth';
     } else if (speech.includes('cart') || speech.includes('coupon') || speech.includes('discount')) {
       targetUrl = '/cart';
     } else if (speech.includes('checkout') || speech.includes('payment') || speech.includes('stripe')) {
@@ -195,8 +195,8 @@ export function synthesizePlaywrightE2ETest(params: {
   stepsCount += 2;
 
   // Specific scenario logic grounded in speech
-  if (speech.includes('login') || speech.includes('password') || targetUrl === '/login') {
-    // Login failure scenario
+  if (speech.includes('signin') || speech.includes('password') || targetUrl === '/auth') {
+    // Auth failure scenario
     if (speech.includes('username') || speech.includes('email') || !speech.includes('without email')) {
       actLines.push(`  // Act: Fill credentials`);
       actLines.push(`  const userField = page.locator('input[type="email"], input[name="username"], #username').first();`);

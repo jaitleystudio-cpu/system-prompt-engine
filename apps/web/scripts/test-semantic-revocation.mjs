@@ -76,7 +76,7 @@ console.log("  ✅ PASS: Synthesized formal negative invariants & symbol quarant
 
 // Test 5: Full Revocation Request Execution (Stripe to Invoice)
 console.log("▶ Gate 5: Stripe-to-Invoice Semantic Revocation Execution");
-const reportStripe = executeSemanticRevocationSlice(stripeGraph.nodes, {
+const paymentSliceReport = executeSemanticRevocationSlice(stripeGraph.nodes, {
   revocationId: "rev-stripe-001",
   targetRequirementId: "REQ_STRIPE_ONLINE_CHARGE",
   reason: "Enterprise compliance policy mandates offline invoicing only; credit card charging prohibited.",
@@ -84,20 +84,20 @@ const reportStripe = executeSemanticRevocationSlice(stripeGraph.nodes, {
   strictNonInterferenceEnforced: true,
 });
 
-assert.equal(reportStripe.targetId, "REQ_STRIPE_ONLINE_CHARGE");
-assert.equal(reportStripe.forwardSliceCount, 2);
-assert.equal(reportStripe.preservedNodeCount, 3);
-assert.equal(reportStripe.intentFluxContaminationRisk, 0.0);
-assert(reportStripe.purgedSymbols.includes("stripeApiKey"));
-assert(reportStripe.purgedSymbols.includes("stripeWebhookSecret"));
+assert.equal(paymentSliceReport.targetId, "REQ_STRIPE_ONLINE_CHARGE");
+assert.equal(paymentSliceReport.forwardSliceCount, 2);
+assert.equal(paymentSliceReport.preservedNodeCount, 3);
+assert.equal(paymentSliceReport.intentFluxContaminationRisk, 0.0);
+assert(paymentSliceReport.purgedSymbols.includes("stripeApiKey"));
+assert(paymentSliceReport.purgedSymbols.includes("stripeWebhookSecret"));
 
-const activeIds = reportStripe.activeNodes.map((n) => n.id);
+const activeIds = paymentSliceReport.activeNodes.map((n) => n.id);
 assert(activeIds.includes("REQ_ORDER_INGEST"));
 assert(activeIds.includes("REQ_INVOICE_PDF_RENDER"));
 assert(activeIds.includes("REQ_AUDIT_LOG_ENTRY"));
 assert(!activeIds.includes("REQ_STRIPE_ONLINE_CHARGE"));
 assert(!activeIds.includes("REQ_STRIPE_WEBHOOK"));
-console.log(`  ✅ PASS: Successfully sliced contract. Preserved ${reportStripe.preservedNodeCount}/6 requirements with 0.00 taint.\n`);
+console.log(`  ✅ PASS: Successfully sliced contract. Preserved ${paymentSliceReport.preservedNodeCount}/6 requirements with 0.00 taint.\n`);
 
 // Test 6: Cloud-Sync-to-Offline Slicing
 console.log("▶ Gate 6: Cloud-Sync-to-Offline Semantic Revocation");
@@ -122,11 +122,11 @@ console.log("  ✅ PASS: Telemetry and dependent WebSockets purged; local storag
 
 // Test 7: Clean Contract Compilation & Cryptographic Proof Digest
 console.log("▶ Gate 7: Clean Contract Compilation & Proof Digest");
-assert(reportStripe.nonInterferenceProofDigest.startsWith("spe:non-interference:sha256:"));
-assert(reportStripe.compiledPromptContract.includes("SLICED CONTRACT"));
-assert(reportStripe.compiledPromptContract.includes("NON-NEGOTIABLE NEGATIVE INVARIANTS"));
-assert(!reportStripe.compiledPromptContract.includes("charges.create"));
-console.log(`  ✅ PASS: Compiled clean prompt contract with proof digest: ${reportStripe.nonInterferenceProofDigest}\n`);
+assert(paymentSliceReport.nonInterferenceProofDigest.startsWith("spe:non-interference:sha256:"));
+assert(paymentSliceReport.compiledPromptContract.includes("SLICED CONTRACT"));
+assert(paymentSliceReport.compiledPromptContract.includes("NON-NEGOTIABLE NEGATIVE INVARIANTS"));
+assert(!paymentSliceReport.compiledPromptContract.includes("charges.create"));
+console.log(`  ✅ PASS: Compiled clean prompt contract with proof digest: ${paymentSliceReport.nonInterferenceProofDigest}\n`);
 
 // Test 8: Canonical WASM Hash Preservation
 console.log("▶ Gate 8: Bit-for-Bit Canonical WASM Hash Preservation");

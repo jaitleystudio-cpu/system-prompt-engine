@@ -15,6 +15,8 @@
  * 6. Never write or merge directly to main.
  */
 
+import { existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
+import { resolve } from "node:path";
 import { WebsiteInventoryAuditor } from "./websiteInventory.ts";
 import { SearchIntentEngine } from "./searchIntentEngine.ts";
 import { VisualDomA11yVerifier } from "./visualDomA11yVerifier.ts";
@@ -33,6 +35,74 @@ import type {
   SearchConsoleQueryRow,
   DefectCategory,
 } from "./types.ts";
+
+export const EVOLUTION_LOCK_FILE = ".spe_evolution_lock";
+
+export function acquireEvolutionLock(lockPath = resolve(process.cwd(), EVOLUTION_LOCK_FILE)): { acquired: boolean; reason?: string } {
+  try {
+    if (existsSync(lockPath)) {
+      try {
+        const content = readFileSync(lockPath, "utf-8");
+        const parsed = JSON.parse(content);
+        const pid = parsed.pid;
+        const createdAt = new Date(parsed.timestamp).getTime();
+        const now = Date.now();
+        // If file is older than 2 hours (7200000ms), treat as stale
+        const isStale = (now - createdAt) > 7200000;
+        
+        let processAlive = false;
+        if (pid && typeof pid === "number" && !isStale) {
+          try {
+            process.kill(pid, 0);
+            processAlive = true;
+          } catch {
+            processAlive = false;
+          }
+        }
+
+        if (processAlive) {
+          return {
+            acquired: false,
+            reason: `Concurrency Conflict: Active nightly evolution process (PID ${pid}) holds lockfile '${lockPath}'.`,
+          };
+        }
+        // Stale or dead process lock: clean up
+        unlinkSync(lockPath);
+      } catch {
+        // Corrupt lock file: clean up
+        try { unlinkSync(lockPath); } catch {}
+      }
+    }
+
+    writeFileSync(
+      lockPath,
+      JSON.stringify(
+        {
+          pid: typeof process !== "undefined" ? process.pid : 0,
+          timestamp: new Date().toISOString(),
+          host: typeof process !== "undefined" ? process.platform : "browser",
+        },
+        null,
+        2
+      ),
+      { flag: "wx" }
+    );
+    return { acquired: true };
+  } catch (err: unknown) {
+    return {
+      acquired: false,
+      reason: `Concurrency Conflict: Failed to acquire lockfile '${lockPath}': ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
+export function releaseEvolutionLock(lockPath = resolve(process.cwd(), EVOLUTION_LOCK_FILE)): void {
+  try {
+    if (existsSync(lockPath)) {
+      unlinkSync(lockPath);
+    }
+  } catch {}
+}
 
 export interface NightlyRunReceipt {
   runId: string;
@@ -102,9 +172,13 @@ export class NightlyEvolutionScheduler {
     const now = new Date();
     const runId = `evol-nightly-${now.toISOString().slice(0, 10)}-${now.getTime().toString(16)}`;
 
-    // 1. Concurrency Check
+    // 1. Concurrency Check (In-Memory + Cross-Process File Lock)
     if (this.isLocked) {
       throw new Error("Concurrency Conflict: Another nightly evolution job is currently executing.");
+    }
+    const lockResult = acquireEvolutionLock();
+    if (!lockResult.acquired) {
+      throw new Error(lockResult.reason || "Concurrency Conflict: Evolution lock held by competing process.");
     }
     this.isLocked = true;
 
@@ -341,6 +415,7 @@ export class NightlyEvolutionScheduler {
       };
     } finally {
       this.isLocked = false;
+      releaseEvolutionLock();
     }
   }
 

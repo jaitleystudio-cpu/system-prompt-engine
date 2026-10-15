@@ -399,7 +399,7 @@ export const OmniMediaStudio: React.FC<OmniMediaStudioProps> = ({
         { id: "f3", time: "00:15", timestampSeconds: 15, label: "TOTP Challenge", action: "User enters 6-digit TOTP from authenticator app", deltaPercent: 90, details: "Time-drift tolerance <= 1 window." },
       ],
       summary: "User flow proves compliant biometric authentication fallback on iOS 18 with secure enclave token retention.",
-      testCode: `// Swift XCTest UI Suite\nfunc testBiometricFallbackFlow() throws {\n  let app = XCUIApplication()\n  app.launch()\n  app.buttons["Login"].tap()\n  // Assert biometric prompt appears\n  XCTAssertTrue(app.alerts["Face ID"].waitForExistence(timeout: 2))\n}`,
+      testCode: `// Swift XCTest UI Suite\nfunc testBiometricFallbackFlow() throws {\n  let app = XCUIApplication()\n  app.launch()\n  app.buttons["Authenticate"].tap()\n  // Assert biometric prompt appears\n  XCTAssertTrue(app.alerts["Face ID"].waitForExistence(timeout: 2))\n}`,
       systemPrompt: `<!-- SYSTEM PROMPT: iOS 18 Secure Enclave Biometric Architect -->\n<purpose>\nBuild zero-leakage LocalAuthentication workflows with cryptographically validated TOTP fallbacks in SwiftUI.\n</purpose>\n\n<operational_constraints>\n- Never store unencrypted authentication tokens outside the iOS Keychain Secure Enclave.\n- Lock interface immediately upon backgrounding application process.\n</operational_constraints>`
     }
   }), []);

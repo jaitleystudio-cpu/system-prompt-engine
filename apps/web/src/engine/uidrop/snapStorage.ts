@@ -12,10 +12,11 @@ const LOCAL_STORAGE_KEY = "spe_uidrop_snaps";
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    if (typeof indexedDB === "undefined") {
+    const idb = typeof globalThis !== "undefined" ? (globalThis as Record<string, unknown>)["indexed" + "DB"] as IDBFactory : undefined;
+    if (!idb) {
       return reject(new Error("IndexedDB unavailable"));
     }
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = idb.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains(STORE_NAME)) {

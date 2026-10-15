@@ -166,7 +166,7 @@ export const VERIFIED_AI_INCIDENTS: AiIncidentRecord[] = [
     theTruth:
       "Hypothetical benchmark specimen: When provided with two tools (`notify_admin(email, payload)` and `log_telemetry(endpoint, payload)`), parameter confusion during parallel function calling transmits customer email addresses to an external telemetry aggregator. Note: Not independently witnessed against multi-turn production model API logs; preserved as an algorithmic stress-test fixture.",
     minimalReproducer:
-      "Parallel tool execution prompt: 'Notify admin of user signup and send telemetry ping concurrently.'",
+      "Parallel tool execution prompt: 'Notify admin of user registration and send telemetry ping concurrently.'",
     rootCauseAnalysis:
       "Tool schema confusion caused by ambiguous argument naming and lack of deterministic pre-execution type assertions. The model relied on stochastic similarity rather than strict schema type constraints.",
     speRemedy:

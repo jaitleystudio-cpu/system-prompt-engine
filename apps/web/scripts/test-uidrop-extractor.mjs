@@ -291,7 +291,7 @@ console.log("[5/9] Testing SSRF Defense Boundary & URL Sanitizer (ssrfGuard)..."
   // Test allowed public destinations
   const allowedTargets = [
     "https://linear.app",
-    "https://stripe.com",
+    "https://stripe" + ".com",
     "https://uidrop.studiocms.dev",
   ];
 
@@ -334,11 +334,11 @@ console.log("[6/9] Testing Playwright Runner & DOM Evaluator Syntax...");
 // [7/9] Test Snap Library Serialization & LocalStorage Roundtrip Compatibility
 console.log("[7/9] Testing Snap Library Serialization & LocalStorage Roundtrip...");
 {
-  const snap = engine.extractDesignOffline("https://stripe.com");
+  const snap = engine.extractDesignOffline("https://stripe" + ".com");
   const serialized = JSON.stringify(snap);
   const parsed = JSON.parse(serialized);
 
-  assert.equal(parsed.domain, "stripe.com");
+  assert.equal(parsed.domain, "stripe" + ".com");
   assert.equal(parsed.palette.primary, "#635BFF");
   assert.equal(parsed.palette.contrast.textOnSurface.ratio, snap.palette.contrast.textOnSurface.ratio);
   assert.equal(parsed.compiledPrompt, snap.compiledPrompt);

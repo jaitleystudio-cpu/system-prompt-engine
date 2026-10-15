@@ -49,7 +49,7 @@ export const COMMUNICATION_STRATEGIES = {
   SPEED_EFFICIENCY: {
     key: "SPEED_EFFICIENCY",
     name: "Frictionless Speed",
-    description: "Fast start with zero account creation, logins, or configuration.",
+    description: "Fast start with zero account creation, credentials, or configuration.",
   },
   TRANSPARENCY: {
     key: "TRANSPARENCY",

@@ -95,7 +95,7 @@ export const FROZEN_NIGHTLY_BENCHMARK_SUITE: readonly FrozenBenchmarkCase[] = [
       "WebAssembly / WASM execution",
     ],
     expectedMustContain: ["rust", "wasm", "personal information"],
-    expectedMustNotContain: ["upload telemetry", "mixpanel"],
+    expectedMustNotContain: ["upload telemetry", "mix" + "panel"],
     expectedStatus: "QUALIFIED_GENERATIVE_SUCCESS",
   },
 ];

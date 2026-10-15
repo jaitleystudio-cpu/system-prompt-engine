@@ -1,34 +1,34 @@
 /**
- * Frontier Model Currency Governor (FMCG) for System Prompt Engine (SPE Ω)
+ * Frontier Model Governance & Currency Authority for System Prompt Engine (SPE Ω)
  *
- * MANDATE: Zero Stale Models.
- * In late 2026, language models and agent frameworks operate at a 2x forward stage.
- * Using 2024 or early 2025 AI models (such as Claude 3.x, GPT-4.x, Gemini 1.5/2.0)
- * compromises prompt reliability, token efficiency, and reasoning quality.
- *
- * This governor enforces that ALL prompt compilers, evaluation suites, export adapters,
- * and UI selectors exclusively target the active 2026 Frontier Generation.
+ * Grounded in:
+ * 1. Authoritative Provider Documentation (OpenAI, Anthropic, Google DeepMind, DeepSeek, Meta, xAI, Mistral).
+ * 2. Strict Rejection of Invented / Speculative Model Identifiers.
+ * 3. Invariant Preservation: NEVER silently replace the user's requested model target.
+ * 4. Capability-Based Suitability Evaluation: Assesses actual verified capabilities
+ *    (thinking, structured outputs, vision, context window) rather than release year alone.
+ * 5. Explicit User Consent for Adaptations: Requires opt-in authorization before adapting targets.
  */
 
 import type { AiModelEntry, ModelProvider } from "./modelAtlas/modelAtlasSchema";
 
 export const FRONTIER_ACTIVE_YEAR = 2026;
-export const FRONTIER_MIN_RELEASE_DATE = "2026-01-01";
+export const FRONTIER_MIN_RELEASE_DATE = "2024-01-01";
 
 /**
- * 2026 Active Frontier Model Definitions
+ * Authoritative models verified against official provider documentation.
  */
-export const FRONTIER_MODELS_2026: AiModelEntry[] = [
-  // ─── ANTHROPIC (2026 Frontier) ─────────────────────────────────────────────
+export const AUTHORITATIVE_PROVIDER_MODELS: AiModelEntry[] = [
+  // ─── ANTHROPIC (Authoritative Documentation) ───────────────────────────────
   {
-    id: "claude-4-5-sonnet",
-    name: "Claude 4.5 Sonnet (Hybrid Frontier)",
+    id: "claude-3-7-sonnet-20250219",
+    name: "Claude 3.7 Sonnet (Hybrid Reasoning)",
     provider: "Anthropic",
     category: "frontier-reasoning",
-    contextWindow: 262144,
-    maxOutputTokens: 65536,
-    costInputPerM: 2.5,
-    costOutputPerM: 12.0,
+    contextWindow: 200000,
+    maxOutputTokens: 64000,
+    costInputPerM: 3.0,
+    costOutputPerM: 15.0,
     capabilities: {
       supportsThinking: true,
       supportsVision: true,
@@ -38,47 +38,22 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
       supportsStructuredOutputs: true,
     },
     requiredTier: "free",
-    badge: "2026 Flagship",
-    releaseDate: "2026-06-18",
+    badge: "Official Hybrid SOTA",
+    releaseDate: "2025-02-19",
     dialectTemplateKey: "claude",
-    description: "Anthropic's 2026 frontier flagship. Native hybrid reasoning, zero token slop, and sovereign agentic coding precision.",
+    description: "Anthropic's flagship model with hybrid instantaneous response and controllable extended thinking.",
     isLegacy: false,
     generation: "2026-frontier",
   },
   {
-    id: "claude-4-5-opus",
-    name: "Claude 4.5 Opus (Ultra Reasoning)",
+    id: "claude-3-5-sonnet-20241022",
+    name: "Claude 3.5 Sonnet (Upgraded)",
     provider: "Anthropic",
     category: "frontier-reasoning",
-    contextWindow: 524288,
-    maxOutputTokens: 131072,
-    costInputPerM: 10.0,
-    costOutputPerM: 50.0,
-    capabilities: {
-      supportsThinking: true,
-      supportsVision: true,
-      supportsAudio: false,
-      supportsSystemRole: true,
-      supportsToolCalling: true,
-      supportsStructuredOutputs: true,
-    },
-    requiredTier: "pro",
-    badge: "Epistemic Giant",
-    releaseDate: "2026-08-12",
-    dialectTemplateKey: "claude",
-    description: "Anthropic's maximum-depth reasoning engine for formal verification, mathematical proofs, and hyper-complex systems.",
-    isLegacy: false,
-    generation: "2026-frontier",
-  },
-  {
-    id: "claude-4-5-haiku",
-    name: "Claude 4.5 Haiku",
-    provider: "Anthropic",
-    category: "general-intelligence",
-    contextWindow: 262144,
-    maxOutputTokens: 16384,
-    costInputPerM: 0.6,
-    costOutputPerM: 3.0,
+    contextWindow: 200000,
+    maxOutputTokens: 8192,
+    costInputPerM: 3.0,
+    costOutputPerM: 15.0,
     capabilities: {
       supportsThinking: false,
       supportsVision: true,
@@ -88,49 +63,149 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
       supportsStructuredOutputs: true,
     },
     requiredTier: "free",
-    badge: "Sub-Second Edge",
-    releaseDate: "2026-07-02",
+    badge: "Coding SOTA",
+    releaseDate: "2024-10-22",
     dialectTemplateKey: "claude",
-    description: "Ultra-fast, low-latency 2026 intelligence for real-time edge streaming, high-throughput extraction, and routing.",
+    description: "Industry-standard frontier coding, vision, and system architecture model.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "claude-3-5-haiku-20241022",
+    name: "Claude 3.5 Haiku",
+    provider: "Anthropic",
+    category: "general-intelligence",
+    contextWindow: 200000,
+    maxOutputTokens: 8192,
+    costInputPerM: 0.8,
+    costOutputPerM: 4.0,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: false,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "free",
+    badge: "High-Speed Edge",
+    releaseDate: "2024-11-04",
+    dialectTemplateKey: "claude",
+    description: "Sub-second lightweight Claude intelligence for rapid classification and agent steps.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "claude-3-opus-20240229",
+    name: "Claude 3 Opus",
+    provider: "Anthropic",
+    category: "frontier-reasoning",
+    contextWindow: 200000,
+    maxOutputTokens: 4096,
+    costInputPerM: 15.0,
+    costOutputPerM: 75.0,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: true,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "pro",
+    badge: "Deep Analysis",
+    releaseDate: "2024-02-29",
+    dialectTemplateKey: "claude",
+    description: "Deep analytical and synthesis model for complex prose and nuanced reasoning.",
     isLegacy: false,
     generation: "2026-frontier",
   },
 
-  // ─── OPENAI (2026 Frontier) ────────────────────────────────────────────────
+  // ─── OPENAI (Authoritative Documentation) ──────────────────────────────────
   {
-    id: "gpt-5",
-    name: "OpenAI GPT-5 (Omni Flagship 2026)",
+    id: "gpt-4o",
+    name: "OpenAI GPT-4o",
     provider: "OpenAI",
     category: "frontier-reasoning",
-    contextWindow: 262144,
-    maxOutputTokens: 32768,
-    costInputPerM: 2.0,
-    costOutputPerM: 8.0,
+    contextWindow: 128000,
+    maxOutputTokens: 16384,
+    costInputPerM: 2.5,
+    costOutputPerM: 10.0,
     capabilities: {
-      supportsThinking: true,
+      supportsThinking: false,
       supportsVision: true,
       supportsAudio: true,
       supportsSystemRole: true,
       supportsToolCalling: true,
       supportsStructuredOutputs: true,
     },
-    requiredTier: "pro",
-    badge: "GPT-5 Omni",
-    releaseDate: "2026-05-14",
+    requiredTier: "free",
+    badge: "Omni Flagship",
+    releaseDate: "2024-05-13",
     dialectTemplateKey: "chatgpt",
-    description: "OpenAI's foundational 2026 frontier model with integrated real-time deliberation, multi-modal audio, and system contracts.",
+    description: "OpenAI's versatile multimodal flagship model with native structured outputs and vision.",
     isLegacy: false,
     generation: "2026-frontier",
   },
   {
-    id: "gpt-5-codex",
-    name: "OpenAI GPT-5 Codex (Agentic Engineer)",
+    id: "gpt-4o-mini",
+    name: "OpenAI GPT-4o mini",
     provider: "OpenAI",
-    category: "coding-specialist",
-    contextWindow: 262144,
-    maxOutputTokens: 65536,
-    costInputPerM: 2.5,
-    costOutputPerM: 10.0,
+    category: "general-intelligence",
+    contextWindow: 128000,
+    maxOutputTokens: 16384,
+    costInputPerM: 0.15,
+    costOutputPerM: 0.6,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: true,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "free",
+    badge: "Fast & Affordable",
+    releaseDate: "2024-07-18",
+    dialectTemplateKey: "chatgpt",
+    description: "Cost-efficient lightweight model for high-volume tasks and quick iterations.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "o3-mini",
+    name: "OpenAI o3-mini (High-Speed Reasoning)",
+    provider: "OpenAI",
+    category: "frontier-reasoning",
+    contextWindow: 200000,
+    maxOutputTokens: 100000,
+    costInputPerM: 1.1,
+    costOutputPerM: 4.4,
+    capabilities: {
+      supportsThinking: true,
+      supportsVision: false,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "free",
+    badge: "Deliberation SOTA",
+    releaseDate: "2025-01-31",
+    dialectTemplateKey: "chatgpt",
+    description: "High-speed reasoning model specialized in STEM, coding, and mathematical verification.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "o1",
+    name: "OpenAI o1",
+    provider: "OpenAI",
+    category: "frontier-reasoning",
+    contextWindow: 200000,
+    maxOutputTokens: 100000,
+    costInputPerM: 15.0,
+    costOutputPerM: 60.0,
     capabilities: {
       supportsThinking: true,
       supportsVision: true,
@@ -140,22 +215,74 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
       supportsStructuredOutputs: true,
     },
     requiredTier: "pro",
-    badge: "2026 Code Engine",
-    releaseDate: "2026-07-22",
-    dialectTemplateKey: "cursor",
-    description: "Specialized 2026 code generation and repository-scale autonomous refactoring engine powering Cursor & IDEs.",
+    badge: "Full Deliberation",
+    releaseDate: "2024-12-05",
+    dialectTemplateKey: "chatgpt",
+    description: "Deep deliberation reasoning model for solving complex multi-step algorithmic problems.",
     isLegacy: false,
     generation: "2026-frontier",
   },
   {
-    id: "o4-mini",
-    name: "OpenAI o4-mini (High-Speed Reasoning)",
+    id: "gpt-4.5-preview",
+    name: "OpenAI GPT-4.5 Preview",
     provider: "OpenAI",
     category: "frontier-reasoning",
-    contextWindow: 262144,
+    contextWindow: 128000,
+    maxOutputTokens: 16384,
+    costInputPerM: 75.0,
+    costOutputPerM: 150.0,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: true,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "pro",
+    badge: "Maximum Knowledge",
+    releaseDate: "2025-02-27",
+    dialectTemplateKey: "chatgpt",
+    description: "Massive scale model offering rich knowledge breadth and enhanced emotional intelligence.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+
+  // ─── GOOGLE DEEPMIND (Authoritative Documentation) ─────────────────────────
+  {
+    id: "gemini-2.0-flash",
+    name: "Google Gemini 2.0 Flash",
+    provider: "Google",
+    category: "general-intelligence",
+    contextWindow: 1048576,
+    maxOutputTokens: 8192,
+    costInputPerM: 0.1,
+    costOutputPerM: 0.4,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: true,
+      supportsAudio: true,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "free",
+    badge: "1M Realtime Flash",
+    releaseDate: "2025-02-05",
+    dialectTemplateKey: "gemini",
+    description: "Next-gen multimodal workhorse with sub-second execution and native tool calling.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "gemini-2.0-flash-thinking-exp-01-21",
+    name: "Google Gemini 2.0 Flash Thinking",
+    provider: "Google",
+    category: "frontier-reasoning",
+    contextWindow: 1048576,
     maxOutputTokens: 65536,
-    costInputPerM: 0.8,
-    costOutputPerM: 3.2,
+    costInputPerM: 0.2,
+    costOutputPerM: 0.8,
     capabilities: {
       supportsThinking: true,
       supportsVision: true,
@@ -166,48 +293,21 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
     },
     requiredTier: "free",
     badge: "Fast Reasoning",
-    releaseDate: "2026-04-08",
-    dialectTemplateKey: "chatgpt",
-    description: "Next-gen compact reasoning model exceeding previous o1/o3 benchmarks at 4x lower latency.",
+    releaseDate: "2025-01-21",
+    dialectTemplateKey: "gemini",
+    description: "Reasoning-specialized Gemini model exposing internal chain-of-thought tokens.",
     isLegacy: false,
     generation: "2026-frontier",
   },
   {
-    id: "o3-pro",
-    name: "OpenAI o3-pro (Extended Deliberation)",
-    provider: "OpenAI",
-    category: "frontier-reasoning",
-    contextWindow: 262144,
-    maxOutputTokens: 100000,
-    costInputPerM: 12.0,
-    costOutputPerM: 48.0,
-    capabilities: {
-      supportsThinking: true,
-      supportsVision: true,
-      supportsAudio: false,
-      supportsSystemRole: true,
-      supportsToolCalling: true,
-      supportsStructuredOutputs: true,
-    },
-    requiredTier: "pro",
-    badge: "Heavy Reasoning",
-    releaseDate: "2026-06-25",
-    dialectTemplateKey: "chatgpt",
-    description: "Extended deliberation flagship for deep algorithmic synthesis and competitive programming.",
-    isLegacy: false,
-    generation: "2026-frontier",
-  },
-
-  // ─── GOOGLE DEEPMIND (2026 Frontier) ────────────────────────────────────────
-  {
-    id: "gemini-3-pro",
-    name: "Google Gemini 3 Pro (4M Multimodal)",
+    id: "gemini-2.0-pro-exp-02-05",
+    name: "Google Gemini 2.0 Pro Experimental",
     provider: "Google",
     category: "frontier-reasoning",
-    contextWindow: 4194304,
-    maxOutputTokens: 65536,
-    costInputPerM: 1.0,
-    costOutputPerM: 4.0,
+    contextWindow: 2097152,
+    maxOutputTokens: 8192,
+    costInputPerM: 1.5,
+    costOutputPerM: 6.0,
     capabilities: {
       supportsThinking: true,
       supportsVision: true,
@@ -217,151 +317,49 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
       supportsStructuredOutputs: true,
     },
     requiredTier: "free",
-    badge: "4M Ultra Context",
-    releaseDate: "2026-05-20",
+    badge: "2M Deep Reasoning",
+    releaseDate: "2025-02-05",
     dialectTemplateKey: "gemini",
-    description: "Google DeepMind's 2026 4-million-token frontier giant capable of ingesting whole polyglot monorepos and video archives.",
+    description: "Deep reasoning and complex coding model with massive 2-million-token context.",
     isLegacy: false,
     generation: "2026-frontier",
   },
   {
-    id: "gemini-3-flash",
-    name: "Google Gemini 3 Flash (Realtime Agent)",
-    provider: "Google",
-    category: "general-intelligence",
-    contextWindow: 2097152,
-    maxOutputTokens: 32768,
-    costInputPerM: 0.1,
-    costOutputPerM: 0.4,
-    capabilities: {
-      supportsThinking: true,
-      supportsVision: true,
-      supportsAudio: true,
-      supportsSystemRole: true,
-      supportsToolCalling: true,
-      supportsStructuredOutputs: true,
-    },
-    requiredTier: "free",
-    badge: "Realtime 2M",
-    releaseDate: "2026-06-11",
-    dialectTemplateKey: "gemini",
-    description: "High-speed 2026 multimodal agentic workhorse with instant tool dispatch and 2M token memory.",
-    isLegacy: false,
-    generation: "2026-frontier",
-  },
-  {
-    id: "gemini-2-5-ultra",
-    name: "Google Gemini 2.5 Ultra",
+    id: "gemini-1.5-pro",
+    name: "Google Gemini 1.5 Pro",
     provider: "Google",
     category: "frontier-reasoning",
     contextWindow: 2097152,
-    maxOutputTokens: 65536,
-    costInputPerM: 3.0,
-    costOutputPerM: 12.0,
-    capabilities: {
-      supportsThinking: true,
-      supportsVision: true,
-      supportsAudio: true,
-      supportsSystemRole: true,
-      supportsToolCalling: true,
-      supportsStructuredOutputs: true,
-    },
-    requiredTier: "pro",
-    badge: "Deep Scientific",
-    releaseDate: "2026-04-18",
-    dialectTemplateKey: "gemini",
-    description: "Long-horizon scientific and mathematical reasoning flagship with extreme multi-agent fidelity.",
-    isLegacy: false,
-    generation: "2026-frontier",
-  },
-
-  // ─── xAI (2026 Frontier) ───────────────────────────────────────────────────
-  {
-    id: "grok-4",
-    name: "xAI Grok 4 (Frontier Truth & Reasoning)",
-    provider: "xAI",
-    category: "frontier-reasoning",
-    contextWindow: 262144,
-    maxOutputTokens: 32768,
-    costInputPerM: 2.0,
-    costOutputPerM: 8.0,
-    capabilities: {
-      supportsThinking: true,
-      supportsVision: true,
-      supportsAudio: false,
-      supportsSystemRole: true,
-      supportsToolCalling: true,
-      supportsStructuredOutputs: true,
-    },
-    requiredTier: "pro",
-    badge: "Truth Anchor",
-    releaseDate: "2026-07-15",
-    dialectTemplateKey: "chatgpt",
-    description: "xAI's 2026 colossal reasoning architecture with live world telemetry, zero bias anchors, and deep symbolic proofing.",
-    isLegacy: false,
-    generation: "2026-frontier",
-  },
-  {
-    id: "grok-3-5",
-    name: "xAI Grok 3.5 Realtime",
-    provider: "xAI",
-    category: "general-intelligence",
-    contextWindow: 131072,
-    maxOutputTokens: 16384,
-    costInputPerM: 0.5,
-    costOutputPerM: 2.0,
+    maxOutputTokens: 8192,
+    costInputPerM: 1.25,
+    costOutputPerM: 5.0,
     capabilities: {
       supportsThinking: false,
       supportsVision: true,
-      supportsAudio: false,
+      supportsAudio: true,
       supportsSystemRole: true,
       supportsToolCalling: true,
       supportsStructuredOutputs: true,
     },
     requiredTier: "free",
-    badge: "High Velocity",
-    releaseDate: "2026-03-10",
-    dialectTemplateKey: "chatgpt",
-    description: "Fast-path xAI intelligence combining live web grounding with low inference latency.",
+    badge: "2M Context Pioneer",
+    releaseDate: "2024-02-15",
+    dialectTemplateKey: "gemini",
+    description: "Breakthrough 2-million token multimodal model for repo-scale code analysis and video.",
     isLegacy: false,
     generation: "2026-frontier",
   },
 
-  // ─── DEEPSEEK (2026 Frontier) ──────────────────────────────────────────────
+  // ─── DEEPSEEK (Authoritative Documentation) ────────────────────────────────
   {
-    id: "deepseek-r2",
-    name: "DeepSeek-R2 (Open Frontier Reasoning)",
-    provider: "DeepSeek",
-    category: "frontier-reasoning",
-    contextWindow: 131072,
-    maxOutputTokens: 32768,
-    costInputPerM: 0.45,
-    costOutputPerM: 1.8,
-    capabilities: {
-      supportsThinking: true,
-      supportsVision: false,
-      supportsAudio: false,
-      supportsSystemRole: true,
-      supportsToolCalling: true,
-      supportsStructuredOutputs: true,
-    },
-    requiredTier: "free",
-    badge: "Open Reasoning",
-    releaseDate: "2026-05-02",
-    dialectTemplateKey: "chatgpt",
-    description: "DeepSeek's 2026 next-generation open reasoning flagship with verified chain-of-thought traces.",
-    isLegacy: false,
-    generation: "2026-frontier",
-  },
-  {
-    id: "deepseek-v4",
-    name: "DeepSeek-V4 (MoE Coding Engine)",
+    id: "deepseek-chat",
+    name: "DeepSeek-V3",
     provider: "DeepSeek",
     category: "coding-specialist",
-    contextWindow: 131072,
-    maxOutputTokens: 16384,
-    costInputPerM: 0.12,
-    costOutputPerM: 0.24,
+    contextWindow: 65536,
+    maxOutputTokens: 8192,
+    costInputPerM: 0.14,
+    costOutputPerM: 0.28,
     capabilities: {
       supportsThinking: false,
       supportsVision: false,
@@ -371,49 +369,101 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
       supportsStructuredOutputs: true,
     },
     requiredTier: "free",
-    badge: "2026 MoE Value",
-    releaseDate: "2026-06-20",
+    badge: "671B MoE Standard",
+    releaseDate: "2024-12-26",
     dialectTemplateKey: "chatgpt",
-    description: "Extremely cost-effective 2026 Mixture-of-Experts coding model delivering frontier performance at micro-cost.",
+    description: "Highly efficient 671B Mixture-of-Experts model delivering frontier coding and general capabilities.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "deepseek-reasoner",
+    name: "DeepSeek-R1",
+    provider: "DeepSeek",
+    category: "frontier-reasoning",
+    contextWindow: 65536,
+    maxOutputTokens: 8192,
+    costInputPerM: 0.55,
+    costOutputPerM: 2.19,
+    capabilities: {
+      supportsThinking: true,
+      supportsVision: false,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "free",
+    badge: "Open Reasoning SOTA",
+    releaseDate: "2025-01-20",
+    dialectTemplateKey: "chatgpt",
+    description: "Open-weights reasoning model with full transparent reasoning traces matching closed frontier baselines.",
     isLegacy: false,
     generation: "2026-frontier",
   },
 
-  // ─── META (2026 Frontier) ──────────────────────────────────────────────────
+  // ─── META (Authoritative Documentation) ────────────────────────────────────
   {
-    id: "llama-4-405b",
-    name: "Meta Llama 4 405B Maverick",
+    id: "meta-llama/llama-3.3-70b-instruct",
+    name: "Meta Llama 3.3 70B Instruct",
     provider: "Meta",
     category: "open-weights",
-    contextWindow: 262144,
-    maxOutputTokens: 32768,
+    contextWindow: 128000,
+    maxOutputTokens: 8192,
+    costInputPerM: 0.15,
+    costOutputPerM: 0.4,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: false,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "free",
+    badge: "Open Flagship",
+    releaseDate: "2024-12-06",
+    dialectTemplateKey: "chatgpt",
+    description: "Meta's flagship 70B instruction model matching previous 405B capabilities at 5x efficiency.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "meta-llama/llama-3.1-405b-instruct",
+    name: "Meta Llama 3.1 405B Instruct",
+    provider: "Meta",
+    category: "open-weights",
+    contextWindow: 128000,
+    maxOutputTokens: 4096,
     costInputPerM: 0.8,
     costOutputPerM: 2.4,
     capabilities: {
-      supportsThinking: true,
-      supportsVision: true,
+      supportsThinking: false,
+      supportsVision: false,
       supportsAudio: false,
       supportsSystemRole: true,
       supportsToolCalling: true,
       supportsStructuredOutputs: true,
     },
     requiredTier: "pro",
-    badge: "Open SOTA 405B",
-    releaseDate: "2026-06-28",
+    badge: "405B Titan",
+    releaseDate: "2024-07-23",
     dialectTemplateKey: "chatgpt",
-    description: "Meta's flagship 2026 405B open-weights titan matching proprietary frontier closed models.",
+    description: "Meta's massive 405B open model for synthetic data generation and heavy distillation.",
     isLegacy: false,
     generation: "2026-frontier",
   },
+
+  // ─── xAI (Authoritative Documentation) ─────────────────────────────────────
   {
-    id: "llama-4-70b",
-    name: "Meta Llama 4 70B Instruct",
-    provider: "Meta",
-    category: "open-weights",
+    id: "grok-2-1212",
+    name: "xAI Grok 2",
+    provider: "xAI",
+    category: "frontier-reasoning",
     contextWindow: 131072,
-    maxOutputTokens: 16384,
-    costInputPerM: 0.15,
-    costOutputPerM: 0.3,
+    maxOutputTokens: 8192,
+    costInputPerM: 2.0,
+    costOutputPerM: 10.0,
     capabilities: {
       supportsThinking: false,
       supportsVision: true,
@@ -423,18 +473,70 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
       supportsStructuredOutputs: true,
     },
     requiredTier: "free",
-    badge: "Open Leader",
-    releaseDate: "2026-05-18",
+    badge: "Live Grounding",
+    releaseDate: "2024-12-12",
     dialectTemplateKey: "chatgpt",
-    description: "Flagship everyday open weights model for local Ollama, vLLM, and private enterprise clusters.",
+    description: "xAI's frontier model with real-time world grounding and robust coding capability.",
     isLegacy: false,
     generation: "2026-frontier",
   },
 
-  // ─── CREATIVE & MULTIMODAL (2026 Frontier) ─────────────────────────────────
+  // ─── MISTRAL (Authoritative Documentation) ─────────────────────────────────
   {
-    id: "midjourney-v7",
-    name: "Midjourney v7",
+    id: "mistral-large-2411",
+    name: "Mistral Large 2411",
+    provider: "Mistral",
+    category: "frontier-reasoning",
+    contextWindow: 128000,
+    maxOutputTokens: 8192,
+    costInputPerM: 2.0,
+    costOutputPerM: 6.0,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: false,
+      supportsAudio: false,
+      supportsSystemRole: true,
+      supportsToolCalling: true,
+      supportsStructuredOutputs: true,
+    },
+    requiredTier: "pro",
+    badge: "European Frontier",
+    releaseDate: "2024-11-18",
+    dialectTemplateKey: "chatgpt",
+    description: "Flagship European enterprise model with strong multilingual reasoning and code precision.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+
+  // ─── CREATIVE & MULTIMODAL ────────────────────────────────────────────────
+  {
+    id: "flux-1-pro",
+    name: "FLUX.1 [pro]",
+    provider: "Black Forest Labs",
+    category: "creative-multimodal",
+    contextWindow: 4096,
+    maxOutputTokens: 1,
+    costInputPerM: 0.05,
+    costOutputPerM: 0.05,
+    capabilities: {
+      supportsThinking: false,
+      supportsVision: true,
+      supportsAudio: false,
+      supportsSystemRole: false,
+      supportsToolCalling: false,
+      supportsStructuredOutputs: false,
+    },
+    requiredTier: "pro",
+    badge: "Visual SOTA",
+    releaseDate: "2024-08-01",
+    dialectTemplateKey: "flux",
+    description: "State-of-the-art open-architecture visual generation model by Black Forest Labs.",
+    isLegacy: false,
+    generation: "2026-frontier",
+  },
+  {
+    id: "midjourney-v6-1",
+    name: "Midjourney v6.1",
     provider: "Midjourney",
     category: "creative-multimodal",
     contextWindow: 4096,
@@ -450,196 +552,416 @@ export const FRONTIER_MODELS_2026: AiModelEntry[] = [
       supportsStructuredOutputs: false,
     },
     requiredTier: "pro",
-    badge: "v7 Photorealism",
-    releaseDate: "2026-06-05",
+    badge: "Photorealism",
+    releaseDate: "2024-07-30",
     dialectTemplateKey: "midjourney",
-    description: "2026 visual generation standard with flawless typography, complex multi-character anatomy, and coherent spatial light.",
-    isLegacy: false,
-    generation: "2026-frontier",
-  },
-  {
-    id: "flux-2-pro",
-    name: "FLUX.2 [pro]",
-    provider: "Black Forest Labs",
-    category: "creative-multimodal",
-    contextWindow: 4096,
-    maxOutputTokens: 1,
-    costInputPerM: 0.04,
-    costOutputPerM: 0.04,
-    capabilities: {
-      supportsThinking: false,
-      supportsVision: true,
-      supportsAudio: false,
-      supportsSystemRole: false,
-      supportsToolCalling: false,
-      supportsStructuredOutputs: false,
-    },
-    requiredTier: "pro",
-    badge: "Pro Composition",
-    releaseDate: "2026-05-15",
-    dialectTemplateKey: "flux",
-    description: "Premier open-architecture visual synthesis model delivering pixel-perfect brand rendering and multi-view consistency.",
+    description: "High-coherence photorealistic visual generation standard.",
     isLegacy: false,
     generation: "2026-frontier",
   },
 ];
 
 /**
- * Deterministic mapping of obsolete 2024 / early 2025 AI models to their active 2026 frontier successors.
+ * Pinned alias export for backward compatibility with existing callers.
  */
-export const LEGACY_TO_FRONTIER_MAPPING: Record<string, string> = {
-  // Anthropic legacy (Claude 3.x) -> Claude 4.5
-  "claude-3-opus": "claude-4-5-sonnet",
-  "claude-3-sonnet": "claude-4-5-sonnet",
-  "claude-3-haiku": "claude-4-5-haiku",
-  "claude-3-5-sonnet": "claude-4-5-sonnet",
-  "claude-3-5-haiku": "claude-4-5-haiku",
-  "claude-3-7-sonnet": "claude-4-5-sonnet",
-  "anthropic:claude-3-7-sonnet-20250219": "claude-4-5-sonnet",
-
-  // OpenAI legacy (GPT-4.x, o1, o3-mini) -> GPT-5 / o4-mini / o3-pro
-  "gpt-4": "gpt-5",
-  "gpt-4-turbo": "gpt-5",
-  "gpt-4o": "gpt-5",
-  "gpt-4o-mini": "o4-mini",
-  "gpt-4-5": "gpt-5",
-  "gpt-4.5": "gpt-5",
-  "gpt-4-5-preview": "gpt-5",
-  "gpt-4.5-preview": "gpt-5",
-  "o1": "o4-mini",
-  "o1-preview": "o4-mini",
-  "o1-mini": "o4-mini",
-  "o3-mini": "o4-mini",
-
-  // Google legacy (Gemini 1.5, Gemini 2.0) -> Gemini 3
-  "gemini-1-5-flash": "gemini-3-flash",
-  "gemini-1.5-flash": "gemini-3-flash",
-  "gemini-1-5-pro": "gemini-3-pro",
-  "gemini-1.5-pro": "gemini-3-pro",
-  "gemini-2-0-flash": "gemini-3-flash",
-  "gemini-2.0-flash": "gemini-3-flash",
-  "gemini-2-0-flash-thinking": "gemini-3-flash",
-  "gemini-2.0-flash-thinking": "gemini-3-flash",
-  "gemini-2-0-pro-exp": "gemini-3-pro",
-  "gemini-2.0-pro-exp": "gemini-3-pro",
-  "gemini-2-0-pro": "gemini-3-pro",
-  "gemini-2.0-pro": "gemini-3-pro",
-
-  // xAI legacy (Grok 2, Grok 3) -> Grok 4
-  "grok-2": "grok-4",
-  "grok-3": "grok-4",
-  "grok-3-mini": "grok-4",
-
-  // DeepSeek legacy (R1, V3) -> R2, V4
-  "deepseek-r1": "deepseek-r2",
-  "deepseek-v3": "deepseek-v4",
-
-  // Meta legacy (Llama 3.x) -> Llama 4
-  "llama-3-3-70b": "llama-4-70b",
-  "llama-3.3-70b": "llama-4-70b",
-  "llama-3-1-405b": "llama-4-405b",
-  "llama-3.1-405b": "llama-4-405b",
-  "llama-3-1-70b": "llama-4-70b",
-  "llama-3.1-70b": "llama-4-70b",
-  "llama-3-1-8b": "llama-4-70b",
-  "llama-3.1-8b": "llama-4-70b",
-
-  // Creative legacy -> v7 / FLUX.2
-  "midjourney-v6-1": "midjourney-v7",
-  "midjourney-v6.1": "midjourney-v7",
-  "flux-1-pro": "flux-2-pro",
-};
+export const FRONTIER_MODELS_2026: AiModelEntry[] = AUTHORITATIVE_PROVIDER_MODELS;
 
 /**
- * Returns true if a model belongs to the active 2026 Frontier Generation.
+ * Known speculative, fictitious, or unreleased model names to explicitly reject.
  */
-export function isModelCurrent(modelId: string): boolean {
-  const cleanId = modelId.trim().toLowerCase();
-  const normalizedId = cleanId.replace(/\./g, "-");
-  return FRONTIER_MODELS_2026.some((m) => m.id === cleanId || m.id === normalizedId);
+export const KNOWN_SPECULATIVE_IDENTIFIERS: readonly string[] = [
+  "gpt-5",
+  "gpt-5-codex",
+  "claude-4-5-sonnet",
+  "claude-4-5-opus",
+  "claude-4-5-haiku",
+  "claude-4.5-sonnet",
+  "o4-mini",
+  "o3-pro",
+  "gemini-3-pro",
+  "gemini-3-flash",
+  "gemini-2-5-ultra",
+  "grok-4",
+  "grok-3-5",
+  "deepseek-r2",
+  "deepseek-v4",
+  "llama-4-405b",
+  "llama-4-70b",
+  "midjourney-v7",
+  "flux-2-pro",
+];
+
+/**
+ * Authoritative legacy/older documented models from OpenAI, Anthropic, Google.
+ * Used for exact reproducibility without silent target switching.
+ */
+export interface AuthoritativeOlderModel {
+  id: string;
+  name: string;
+  provider: ModelProvider;
+  activeSuccessorId: string;
+  retirementNotice: string;
+}
+
+export const AUTHORITATIVE_OLDER_MODELS: AuthoritativeOlderModel[] = [
+  {
+    id: "gpt-4",
+    name: "OpenAI GPT-4",
+    provider: "OpenAI",
+    activeSuccessorId: "gpt-4o",
+    retirementNotice: "Legacy 2023 milestone model superseded by GPT-4o.",
+  },
+  {
+    id: "gpt-4-turbo",
+    name: "OpenAI GPT-4 Turbo",
+    provider: "OpenAI",
+    activeSuccessorId: "gpt-4o",
+    retirementNotice: "Superseded by GPT-4o with multimodal support and lower latency.",
+  },
+  {
+    id: "gpt-4-0613",
+    name: "OpenAI GPT-4 (June 2023 snapshot)",
+    provider: "OpenAI",
+    activeSuccessorId: "gpt-4o",
+    retirementNotice: "Historical snapshot preserved for exact reproducibility.",
+  },
+  {
+    id: "gpt-3.5-turbo",
+    name: "OpenAI GPT-3.5 Turbo",
+    provider: "OpenAI",
+    activeSuccessorId: "gpt-4o-mini",
+    retirementNotice: "Legacy generation model superseded by GPT-4o mini.",
+  },
+  {
+    id: "claude-3-sonnet-20240229",
+    name: "Claude 3 Sonnet",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-3-5-sonnet-20241022",
+    retirementNotice: "Superseded by Claude 3.5 Sonnet.",
+  },
+  {
+    id: "claude-3-sonnet",
+    name: "Claude 3 Sonnet",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-3-5-sonnet-20241022",
+    retirementNotice: "Superseded by Claude 3.5 Sonnet.",
+  },
+  {
+    id: "claude-3-haiku-20240307",
+    name: "Claude 3 Haiku",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-3-5-haiku-20241022",
+    retirementNotice: "Superseded by Claude 3.5 Haiku.",
+  },
+  {
+    id: "claude-3-haiku",
+    name: "Claude 3 Haiku",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-3-5-haiku-20241022",
+    retirementNotice: "Superseded by Claude 3.5 Haiku.",
+  },
+  {
+    id: "claude-2.1",
+    name: "Claude 2.1",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-3-5-sonnet-20241022",
+    retirementNotice: "Legacy Claude 2.1 architecture preserved for historical reproducibility.",
+  },
+  {
+    id: "claude-2",
+    name: "Claude 2.0",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-3-5-sonnet-20241022",
+    retirementNotice: "Legacy Claude 2.0 architecture preserved for historical reproducibility.",
+  },
+  {
+    id: "gemini-1.5-flash",
+    name: "Google Gemini 1.5 Flash",
+    provider: "Google",
+    activeSuccessorId: "gemini-2.0-flash",
+    retirementNotice: "Superseded by Gemini 2.0 Flash.",
+  },
+  {
+    id: "gemini-1.0-pro",
+    name: "Google Gemini 1.0 Pro",
+    provider: "Google",
+    activeSuccessorId: "gemini-2.0-flash",
+    retirementNotice: "Superseded by Gemini 2.0 Flash.",
+  },
+];
+
+/**
+ * Returns true if an identifier is known to be speculative or invented.
+ */
+export function isSpeculativeOrInventedModel(modelId: string): boolean {
+  const norm = (modelId || "").trim().toLowerCase();
+  const hyphen = norm.replace(/\./g, "-");
+  return KNOWN_SPECULATIVE_IDENTIFIERS.some((spec) => spec === norm || spec === hyphen);
 }
 
 /**
- * Automatically upgrades an obsolete or legacy model ID to its active 2026 frontier successor.
+ * Returns true if a model identifier is verified in authoritative provider documentation.
+ * Exact canonical match against documented active frontier or documented older models.
  */
-export function autoUpgradeLegacyModel(modelId: string): {
-  upgradedId: string;
-  wasLegacy: boolean;
-  originalId: string;
-  model: AiModelEntry;
-  upgradeNotice?: string;
-} {
-  const normalizedId = modelId.trim().toLowerCase();
-  const hyphenId = normalizedId.replace(/\./g, "-");
+export function isModelAuthoritative(modelId: string): boolean {
+  if (isSpeculativeOrInventedModel(modelId)) return false;
+  const cleanId = (modelId || "").trim().toLowerCase();
+  const normalizedId = cleanId.replace(/\./g, "-");
+  return (
+    AUTHORITATIVE_PROVIDER_MODELS.some(
+      (m) => m.id === cleanId || m.id === normalizedId
+    ) ||
+    AUTHORITATIVE_OLDER_MODELS.some(
+      (m) => m.id === cleanId || m.id === normalizedId
+    )
+  );
+}
 
-  // If already active 2026 frontier model, return as-is
-  const activeMatch = FRONTIER_MODELS_2026.find((m) => m.id === normalizedId || m.id === hyphenId);
-  if (activeMatch) {
+/**
+ * Compatibility alias for existing callers.
+ */
+export function isModelCurrent(modelId: string): boolean {
+  if (isSpeculativeOrInventedModel(modelId)) return false;
+  const cleanId = (modelId || "").trim().toLowerCase();
+  const normalizedId = cleanId.replace(/\./g, "-");
+  return AUTHORITATIVE_PROVIDER_MODELS.some(
+    (m) => m.id === cleanId || m.id === normalizedId
+  );
+}
+
+export interface ModelGovernanceDecision {
+  requestedModelId: string;
+  effectiveModelId: string;
+  targetPreserved: boolean;
+  isAuthoritative: boolean;
+  status: "AUTHORIZED_CURRENT" | "AUTHORIZED_PRESERVED_OLDER" | "ADAPTED_WITH_CONSENT" | "UNSUPPORTED_REJECTED";
+  modelEntry?: AiModelEntry;
+  suggestedAlternative?: string;
+  advisory?: string;
+  capabilityAudit: {
+    satisfied: boolean;
+    missingCapabilities: string[];
+  };
+}
+
+/**
+ * Governs model selection with strict invariant preservation:
+ * 1. Validates model against authoritative documentation.
+ * 2. Rejects invented/speculative identifiers.
+ * 3. NEVER silently replaces user-requested models (preserves exact target).
+ * 4. Checks capability compatibility against requested task requirements.
+ * 5. Requires explicit user consent for target adaptation.
+ */
+export function governModelSelection(
+  requestedModelId: string,
+  options: {
+    explicitUserConsent?: boolean;
+    requiredCapabilities?: Array<keyof AiModelEntry["capabilities"]>;
+  } = {}
+): ModelGovernanceDecision {
+  const reqId = (requestedModelId || "").trim();
+  const normId = reqId.toLowerCase();
+  const hyphenId = normId.replace(/\./g, "-");
+
+  // Check 1: Reject invented or unsupported identifiers
+  if (isSpeculativeOrInventedModel(reqId)) {
     return {
-      upgradedId: activeMatch.id,
-      wasLegacy: false,
-      originalId: modelId,
-      model: activeMatch,
+      requestedModelId: reqId,
+      effectiveModelId: reqId,
+      targetPreserved: true,
+      isAuthoritative: false,
+      status: "UNSUPPORTED_REJECTED",
+      advisory: `[MODEL_GOVERNANCE_REJECTED] Model '${reqId}' is an unverified or speculative identifier not found in authoritative provider documentation.`,
+      capabilityAudit: { satisfied: false, missingCapabilities: ["Authoritative provider verification"] },
     };
   }
 
-  // Check legacy mapping
-  const mappedId = LEGACY_TO_FRONTIER_MAPPING[normalizedId] || LEGACY_TO_FRONTIER_MAPPING[hyphenId];
-  if (mappedId) {
-    const upgradedModel = FRONTIER_MODELS_2026.find((m) => m.id === mappedId);
-    if (upgradedModel) {
+  // Exact match against active authoritative frontier models
+  const match = AUTHORITATIVE_PROVIDER_MODELS.find(
+    (m) => m.id === normId || m.id === hyphenId
+  );
+
+  // If not active, check if it is a documented older model
+  const olderMatch = !match
+    ? AUTHORITATIVE_OLDER_MODELS.find((m) => m.id === normId || m.id === hyphenId)
+    : undefined;
+
+  if (olderMatch) {
+    const successor = AUTHORITATIVE_PROVIDER_MODELS.find(
+      (m) => m.id === olderMatch.activeSuccessorId
+    );
+
+    // If explicit consent is provided, adapt to active successor
+    if (options.explicitUserConsent && successor) {
       return {
-        upgradedId: mappedId,
-        wasLegacy: true,
-        originalId: modelId,
-        model: upgradedModel,
-        upgradeNotice: `[FRONTIER MODEL UPGRADE] Upgraded obsolete model '${modelId}' to 2026 active frontier model '${upgradedModel.name}' (${upgradedModel.id}).`,
+        requestedModelId: reqId,
+        effectiveModelId: olderMatch.activeSuccessorId,
+        targetPreserved: false,
+        isAuthoritative: true,
+        status: "ADAPTED_WITH_CONSENT",
+        modelEntry: successor,
+        suggestedAlternative: olderMatch.activeSuccessorId,
+        advisory: `[AUTHORIZED_ADAPTATION] User explicitly authorized adaptation from older model '${reqId}' to active successor '${successor.name}' (${olderMatch.activeSuccessorId}).`,
+        capabilityAudit: { satisfied: true, missingCapabilities: [] },
       };
+    }
+
+    // STRICT INVARIANT: Preserve older model target verbatim by default!
+    return {
+      requestedModelId: reqId,
+      effectiveModelId: reqId,
+      targetPreserved: true,
+      isAuthoritative: true,
+      status: "AUTHORIZED_PRESERVED_OLDER",
+      suggestedAlternative: olderMatch.activeSuccessorId,
+      advisory: `[PRESERVED_OLDER_MODEL] Model '${olderMatch.name}' (${reqId}) is an older verified provider version. Preserved verbatim for reproducibility. Recommended active alternative: '${olderMatch.activeSuccessorId}' (requires explicit consent to adapt).`,
+      capabilityAudit: {
+        satisfied: true,
+        missingCapabilities: [],
+      },
+    };
+  }
+
+  if (!match) {
+    return {
+      requestedModelId: reqId,
+      effectiveModelId: reqId,
+      targetPreserved: true,
+      isAuthoritative: false,
+      status: "UNSUPPORTED_REJECTED",
+      advisory: `[MODEL_GOVERNANCE_UNKNOWN] Model '${reqId}' is not registered in SPE's authoritative catalog.`,
+      capabilityAudit: { satisfied: false, missingCapabilities: ["Authoritative catalog registration"] },
+    };
+  }
+
+  // Check capabilities for active model
+  const missingCaps: string[] = [];
+  if (options.requiredCapabilities) {
+    for (const cap of options.requiredCapabilities) {
+      if (!match.capabilities[cap]) {
+        missingCaps.push(String(cap));
+      }
     }
   }
 
-  // Fallback to default 2026 frontier model
-  const defaultModel = FRONTIER_MODELS_2026[0]; // Claude 4.5 Sonnet
+  // Determine if a compatible alternative exists
+  let suggestedAlt: string | undefined;
+  if (match.id === "gpt-4o" && options.requiredCapabilities?.includes("supportsThinking")) {
+    suggestedAlt = "o3-mini";
+  } else if (match.id.startsWith("claude-3-opus") && options.requiredCapabilities?.includes("supportsThinking")) {
+    suggestedAlt = "claude-3-7-sonnet-20250219";
+  }
+
+  // INVARIANT: Never silently substitute! Only adapt when explicit consent is provided
+  if (options.explicitUserConsent && suggestedAlt) {
+    const altModel = AUTHORITATIVE_PROVIDER_MODELS.find((m) => m.id === suggestedAlt);
+    return {
+      requestedModelId: reqId,
+      effectiveModelId: suggestedAlt,
+      targetPreserved: false,
+      isAuthoritative: true,
+      status: "ADAPTED_WITH_CONSENT",
+      modelEntry: altModel || match,
+      suggestedAlternative: suggestedAlt,
+      advisory: `[AUTHORIZED_ADAPTATION] User explicitly authorized adaptation from '${reqId}' to '${suggestedAlt}'.`,
+      capabilityAudit: { satisfied: true, missingCapabilities: [] },
+    };
+  }
+
+  // Target strictly preserved
   return {
-    upgradedId: defaultModel.id,
+    requestedModelId: reqId,
+    effectiveModelId: match.id,
+    targetPreserved: true,
+    isAuthoritative: true,
+    status: "AUTHORIZED_CURRENT",
+    modelEntry: match,
+    suggestedAlternative: suggestedAlt,
+    advisory: suggestedAlt
+      ? `[ADVISORY] Model '${match.name}' does not natively support [${missingCaps.join(", ")}]. Recommended alternative: '${suggestedAlt}' (requires explicit consent to adapt).`
+      : undefined,
+    capabilityAudit: {
+      satisfied: missingCaps.length === 0,
+      missingCapabilities: missingCaps,
+    },
+  };
+}
+
+/**
+ * Backward-compatible upgrade function. Preserves target by default; only adapts when explicit consent is provided.
+ */
+export function autoUpgradeLegacyModel(
+  modelId: string,
+  options: { allowAuthorizedAdaptation?: boolean } = {}
+): {
+  upgradedId: string;
+  wasLegacy: boolean;
+  originalId: string;
+  targetPreserved: boolean;
+  model: AiModelEntry;
+  upgradeNotice?: string;
+} {
+  const decision = governModelSelection(modelId, {
+    explicitUserConsent: options.allowAuthorizedAdaptation,
+  });
+
+  if (decision.modelEntry) {
+    return {
+      upgradedId: decision.effectiveModelId,
+      wasLegacy: false,
+      originalId: modelId,
+      targetPreserved: decision.targetPreserved,
+      model: decision.modelEntry,
+      upgradeNotice: decision.advisory,
+    };
+  }
+
+  // Default fallback to Claude 3.7 Sonnet
+  const fallbackModel = AUTHORITATIVE_PROVIDER_MODELS[0];
+  return {
+    upgradedId: fallbackModel.id,
     wasLegacy: true,
-    originalId: normalizedId,
-    model: defaultModel,
-    upgradeNotice: `[FRONTIER MODEL UPGRADE] Unrecognized or obsolete model '${normalizedId}' automatically upgraded to 2026 default '${defaultModel.name}'.`,
+    originalId: modelId,
+    targetPreserved: false,
+    model: fallbackModel,
+    upgradeNotice: `Unrecognized model '${modelId}'. Defaulted to authoritative standard '${fallbackModel.name}'.`,
   };
 }
 
 /**
  * Strict currency assertion.
- * Throws an error if an obsolete or legacy model is passed without allowLegacy flag.
+ * Rejects invented or speculative identifiers.
  */
 export function assertModelCurrency(modelId: string, context: string = "model execution"): void {
-  if (isModelCurrent(modelId)) {
-    return;
+  if (isSpeculativeOrInventedModel(modelId)) {
+    throw new Error(
+      `[CURRENCY_GATE_VIOLATION] ${context}: Speculative or invented model identifier '${modelId}' rejected. SPE requires authoritative, documented models.`
+    );
   }
-  const upgrade = autoUpgradeLegacyModel(modelId);
-  throw new Error(
-    `[CURRENCY_GATE_VIOLATION] ${context}: Obsolete model '${modelId}' rejected. SPE requires active 2026 frontier models. Use '${upgrade.upgradedId}' (${upgrade.model.name}) instead.`
-  );
+  if (!isModelAuthoritative(modelId)) {
+    throw new Error(
+      `[CURRENCY_GATE_VIOLATION] ${context}: Unrecognized model '${modelId}' rejected. Not verified in authoritative provider documentation.`
+    );
+  }
 }
 
 /**
- * Default 2026 Frontier Model for general prompt compilation and system execution.
+ * Default Frontier Model for general prompt compilation (Claude 3.7 Sonnet).
  */
 export function getDefaultFrontierModel(): AiModelEntry {
-  return FRONTIER_MODELS_2026[0]; // Claude 4.5 Sonnet
+  return AUTHORITATIVE_PROVIDER_MODELS[0];
 }
 
 /**
- * Returns all active 2026 frontier models.
+ * Returns all verified authoritative models.
  */
 export function getActiveFrontierModels(): AiModelEntry[] {
-  return [...FRONTIER_MODELS_2026];
+  return [...AUTHORITATIVE_PROVIDER_MODELS];
 }
 
 /**
- * Returns active 2026 frontier models filtered by provider.
+ * Returns active models filtered by provider.
  */
 export function getFrontierModelsByProvider(provider: ModelProvider): AiModelEntry[] {
-  return FRONTIER_MODELS_2026.filter((m) => m.provider === provider);
+  return AUTHORITATIVE_PROVIDER_MODELS.filter((m) => m.provider === provider);
 }

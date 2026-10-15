@@ -10,6 +10,7 @@
 
 import { IntentToExperienceCompiler, STANDARD_CAPABILITIES } from "../experienceCompiler/intentToExperienceCompiler.ts";
 import { AgentPermissionShield } from "./agentPermissionShield.ts";
+import { governModelSelection } from "../modelCurrencyGovernor.ts";
 import type { WebMcpToolCall, WebMcpToolResult } from "./types.ts";
 
 export class WebMcpAgentGateway {
@@ -25,27 +26,57 @@ export class WebMcpAgentGateway {
   }
 
   /**
-   * Mounts the WebMCP gateway onto browser global objects if running in window environment.
+   * Returns true if WebMCP imperative API is supported natively or polyfilled.
+   */
+  public isWebMcpSupported(): boolean {
+    if (typeof document !== "undefined" && "modelContext" in document) return true;
+    if (typeof navigator !== "undefined" && "modelContext" in navigator) return true;
+    if (typeof window !== "undefined" && "WebMCP" in window) return true;
+    return false;
+  }
+
+  /**
+   * Mounts the WebMCP gateway onto browser global objects if running in browser window environment.
+   * Conforms to official Google WebMCP Imperative API (Chrome 150+ on `document.modelContext`).
    */
   public mountBrowserGlobals(): boolean {
     if (typeof window === "undefined") return false;
+
+    // Check Permissions Policy if available
+    const doc = typeof document !== "undefined" ? document : null;
+    const permissionsPolicy = (doc as unknown as { permissionsPolicy?: { allowsFeature?: (f: string) => boolean } })?.permissionsPolicy;
+    if (permissionsPolicy && typeof permissionsPolicy.allowsFeature === "function") {
+      const allowed = permissionsPolicy.allowsFeature("model-context");
+      if (!allowed) {
+        console.warn("[WebMCP] 'model-context' feature is disabled by Permissions-Policy.");
+        return false;
+      }
+    }
 
     const gatewayApi = {
       listTools: () => this.listTools(),
       invokeTool: (call: WebMcpToolCall) => this.invokeTool(call),
       mintTestToken: (subject: string, scopes: string[]) => this.shield.mintLocalToken(subject, scopes),
+      registerTool: (capKey: string) => {
+        const capability = STANDARD_CAPABILITIES[capKey];
+        if (!capability) throw new Error(`Unknown capability: ${capKey}`);
+        return this.compiler.compileAgentExperience(capability);
+      },
+      specVersion: "Chrome-150-WebMCP-Imperative",
       version: "2026.10-spe-omega",
     };
 
-    // Mount on window.WebMCP
+    // 1. Mount on window.WebMCP
     (window as unknown as { WebMCP: unknown }).WebMCP = gatewayApi;
 
-    // Mount on window.navigator.modelContext if available or polyfill
-    if (typeof navigator !== "undefined") {
-      const nav = navigator as unknown as { modelContext?: unknown };
-      if (!nav.modelContext) {
-        nav.modelContext = {
+    // 2. Official Spec (Chrome 150+): Mount on document.modelContext
+    if (doc) {
+      const docWithModel = doc as unknown as { modelContext?: unknown };
+      if (!docWithModel.modelContext) {
+        docWithModel.modelContext = {
           tools: this.listTools(),
+          listTools: () => this.listTools(),
+          registerTool: gatewayApi.registerTool,
           call: (toolName: string, args: Record<string, unknown>, token?: unknown) =>
             this.invokeTool({
               toolName,
@@ -53,7 +84,39 @@ export class WebMcpAgentGateway {
               capabilityToken: token as WebMcpToolCall["capabilityToken"],
               requestId: `req_${Date.now()}`,
             }),
+          spec: "document.modelContext (Chrome 150+ Official Imperative API)",
         };
+      }
+    }
+
+    // 3. Deprecated Fallback (Chrome <150): Mount backward-compatibility proxy on navigator.modelContext
+    if (typeof navigator !== "undefined") {
+      const nav = navigator as unknown as { modelContext?: unknown };
+      if (!nav.modelContext) {
+        let deprecationWarned = false;
+        Object.defineProperty(nav, "modelContext", {
+          configurable: true,
+          enumerable: true,
+          get: () => {
+            if (!deprecationWarned) {
+              console.warn(
+                "[WebMCP Deprecation] window.navigator.modelContext is deprecated in Chrome 150+. Migrate to document.modelContext."
+              );
+              deprecationWarned = true;
+            }
+            return (doc as unknown as { modelContext?: unknown })?.modelContext || {
+              tools: this.listTools(),
+              listTools: () => this.listTools(),
+              call: (toolName: string, args: Record<string, unknown>, token?: unknown) =>
+                this.invokeTool({
+                  toolName,
+                  arguments: args,
+                  capabilityToken: token as WebMcpToolCall["capabilityToken"],
+                  requestId: `req_${Date.now()}`,
+                }),
+            };
+          },
+        });
       }
     }
 
@@ -144,11 +207,21 @@ export class WebMcpAgentGateway {
 
         case "spe_model_governance": {
           const modelId = String(call.arguments.modelId || "");
+          const explicitConsent = Boolean(call.arguments.explicitUserConsent);
+          const decision = governModelSelection(modelId, {
+            explicitUserConsent: explicitConsent,
+          });
           output = {
-            modelId,
-            status: "ACTIVE_FRONTIER_2026",
-            supportsStructuredOutputs: true,
-            providerDialect: "standard",
+            modelId: decision.requestedModelId,
+            effectiveModelId: decision.effectiveModelId,
+            status: decision.status,
+            targetPreserved: decision.targetPreserved,
+            isAuthoritative: decision.isAuthoritative,
+            suggestedAlternative: decision.suggestedAlternative,
+            advisory: decision.advisory,
+            capabilityAudit: decision.capabilityAudit,
+            supportsStructuredOutputs: decision.modelEntry?.capabilities.supportsStructuredOutputs ?? false,
+            providerDialect: decision.modelEntry?.dialectTemplateKey ?? "standard",
           };
           break;
         }
