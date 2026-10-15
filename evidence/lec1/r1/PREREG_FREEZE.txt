@@ -1,0 +1,5 @@
+CONTRACT_R1.md sha256=a9b0131b0109fd6d474b72a1801ca99e860e7e9fbca0c9d7765109095a9be644
+frozen_before_code=true
+parent=d15ff410
+branch=grok/lec1-r1-label-free-floor
+cycle=2026-10-15-13:05-IST
