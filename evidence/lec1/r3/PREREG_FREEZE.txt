@@ -1,0 +1,5 @@
+CONTRACT_R3.md sha256=c21fc9883dc0578a7ea910122871bee87bf0979ac4005e3006e4c6b2c788c588
+frozen_before_code=true
+parent=3f3c52fa
+branch=grok/lec1-r3-wsr-ppi-ltt
+cycle=2026-10-15-21:05-IST
