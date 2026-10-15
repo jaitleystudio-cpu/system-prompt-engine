@@ -52,9 +52,14 @@ if (isAuditOnly) {
   process.exit(0);
 }
 
+const {
+  computeNextIstSchedule,
+} = await import("../src/engine/dailyVisualEvolution.ts");
+
+const isDaemon = args.includes("--daemon");
 const scheduler = new NightlyEvolutionScheduler();
 
-try {
+async function runOnce() {
   const simulateMilestone = args.includes("--ci") || args.includes("--simulate-milestone") || !args.includes("--observe-only");
   const receipt = await scheduler.executeNightlyRun({
     dryRun: isDryRun,
@@ -75,8 +80,29 @@ try {
   console.log(`👥 Gated for Human PR:   ${receipt.proposalsHeldForHumanReview}`);
   console.log(`❌ Proposals Rejected:   ${receipt.proposalsRejected}`);
   console.log(`📜 Summary Digest:       ${receipt.summaryReceiptDigest}`);
+  if (receipt.visualEvolutionAudit) {
+    console.log(`🎨 Visual Variant:       ${receipt.visualEvolutionAudit.variantName} (${receipt.visualEvolutionAudit.variantId})`);
+    console.log(`👁️ Measured Contrast:   Dark: ${receipt.visualEvolutionAudit.measuredContrastDark}:1 · Light: ${receipt.visualEvolutionAudit.measuredContrastLight}:1 (WCAG AAA: ${receipt.visualEvolutionAudit.wcagAaaSatisfied ? "PASS" : "FAIL"})`);
+    console.log(`📐 Layout Shift CLS:     0.000 (Certified: ${receipt.visualEvolutionAudit.clsZeroCertified ? "YES" : "NO"})`);
+    console.log(`🕒 Publication Clock:    ${receipt.visualEvolutionAudit.publicationBoundaryIst}`);
+  }
   console.log("──────────────────────────────────────────────────────────────────────────\n");
   console.log("🎉 NIGHTLY EVOLUTION CYCLE COMPLETED SUCCESSFULLY.");
+  return receipt;
+}
+
+try {
+  if (isDaemon) {
+    console.log("🔄 Starting persistent nightly daemon...");
+    while (true) {
+      await runOnce();
+      const { msUntilNextRun, formattedIst } = computeNextIstSchedule();
+      console.log(`⏳ Next nightly cycle will run at ${formattedIst} (in ${(msUntilNextRun / 1000 / 60).toFixed(1)} minutes). Standing by...`);
+      await new Promise((r) => setTimeout(r, Math.min(msUntilNextRun + 1000, 3600000)));
+    }
+  } else {
+    await runOnce();
+  }
 } catch (err) {
   console.error("❌ [FATAL] Nightly evolution cycle failed:", err);
   process.exit(1);

@@ -21,6 +21,13 @@ import { VisualDomA11yVerifier } from "./visualDomA11yVerifier.ts";
 import { WebsiteChangeImpactGraph } from "./changeImpactGraph.ts";
 import { RootCauseRepairEngine } from "./rootCauseRepairEngine.ts";
 import { ProofCarryingEvolutionController } from "./proofCarryingEvolution.ts";
+import { IndependentRepairTournament } from "./independentRepairTournament.ts";
+import { PrivacyBudgetedEvolution } from "./privacyBudgetedEvolution.ts";
+import {
+  getActiveVisualVariant,
+  verifyVariantInvariants,
+  measureVariantContrast,
+} from "../dailyVisualEvolution.ts";
 import type {
   ProofCarryingChangeProposal,
   SearchConsoleQueryRow,
@@ -44,6 +51,15 @@ export interface NightlyRunReceipt {
   missedRunDetected: boolean;
   concurrencyLockAcquired: boolean;
   summaryReceiptDigest: string;
+  visualEvolutionAudit?: {
+    variantId: string;
+    variantName: string;
+    measuredContrastDark: number;
+    measuredContrastLight: number;
+    wcagAaaSatisfied: boolean;
+    clsZeroCertified: boolean;
+    publicationBoundaryIst: string;
+  };
 }
 
 export class NightlyEvolutionScheduler {
@@ -55,6 +71,16 @@ export class NightlyEvolutionScheduler {
   private impactGraph = new WebsiteChangeImpactGraph();
   private repairEngine = new RootCauseRepairEngine();
   private proofController = new ProofCarryingEvolutionController();
+  private tournamentEngine = new IndependentRepairTournament();
+  private privacyEngine = new PrivacyBudgetedEvolution();
+
+  public getTournamentEngine(): IndependentRepairTournament {
+    return this.tournamentEngine;
+  }
+
+  public getPrivacyEngine(): PrivacyBudgetedEvolution {
+    return this.privacyEngine;
+  }
 
   /**
    * Executes full or dry-run nightly website evolution loop.
@@ -161,6 +187,21 @@ export class NightlyEvolutionScheduler {
         },
         simulatedUserTaskPass: true,
       });
+
+      // Phase 3B: 03:15 AM IST — Qualify daily visual evolution variant, measured WCAG contrast & CLS
+      phasesExecuted.push("03:15_IST_VISUAL_EVOLUTION_QUALIFICATION");
+      const activeVisualVariant = getActiveVisualVariant(now);
+      const visualInvariantsValid = verifyVariantInvariants(activeVisualVariant);
+      const visualContrast = measureVariantContrast(activeVisualVariant);
+      const visualEvolutionAudit = {
+        variantId: activeVisualVariant.id,
+        variantName: activeVisualVariant.name,
+        measuredContrastDark: visualContrast.darkModeContrast,
+        measuredContrastLight: visualContrast.lightModeContrast,
+        wcagAaaSatisfied: visualContrast.wcagAaaSatisfied,
+        clsZeroCertified: visualInvariantsValid,
+        publicationBoundaryIst: "02:17:00 IST",
+      };
 
       // Phase 4: 03:30 AM IST — Review errors, security advisories, and dependency changes
       phasesExecuted.push("03:30_IST_ERROR_SECURITY_REVIEW");
@@ -296,6 +337,7 @@ export class NightlyEvolutionScheduler {
         missedRunDetected,
         concurrencyLockAcquired: true,
         summaryReceiptDigest: summaryDigest,
+        visualEvolutionAudit,
       };
     } finally {
       this.isLocked = false;

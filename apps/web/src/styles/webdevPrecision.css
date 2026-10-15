@@ -9,6 +9,7 @@
  * - Shared container max-width (80rem / 1280px) with responsive gutters
  * - Balanced 16px radius cards with multi-layer elevation shadows
  * - Adaptive HDR and Display P3 wide-gamut highlight tokens with HDR Content Harmony
+ * - Clean CSS cascade precedence: Variants set via [data-visual-variant], allowing @media P3/HDR to layer on top
  */
 
 :root {
@@ -81,7 +82,7 @@
   --spe-focus-ring-width: 2px;
   --spe-focus-ring-offset: 3px;
 
-  /* --- Adaptive Dynamic Range & Gamut Highlights (Default SDR Baseline) --- */
+  /* --- Default Base Variant Tokens (v0 Signature Cobalt) --- */
   --spe-hdr-headroom: 1.0;
   --spe-accent-primary: #38bdf8;
   --spe-accent-secondary: #c4a574;
@@ -91,7 +92,78 @@
   --spe-accent-badge-border: rgba(56, 189, 248, 0.3);
 }
 
-/* Light theme overrides */
+/* =========================================================================
+   CERTIFIED DAILY VISUAL VARIANTS (CSS CASCADE WITHOUT INLINE SPECIFICITY OVERRIDE)
+   Dark Mode defaults
+   ========================================================================= */
+
+:root[data-visual-variant="variant-v0-signature-cobalt"] {
+  --spe-accent-primary: #38bdf8;
+  --spe-accent-secondary: #c4a574;
+  --spe-accent-specular: #ffffff;
+  --spe-accent-glow: rgba(56, 189, 248, 0.18);
+  --spe-accent-badge-bg: rgba(56, 189, 248, 0.12);
+}
+
+:root[data-visual-variant="variant-v1-quantum-aurora"] {
+  --spe-accent-primary: #2dd4bf;
+  --spe-accent-secondary: #38bdf8;
+  --spe-accent-specular: #e0f2fe;
+  --spe-accent-glow: rgba(45, 212, 191, 0.18);
+  --spe-accent-badge-bg: rgba(45, 212, 191, 0.12);
+}
+
+:root[data-visual-variant="variant-v2-monolithic-slate"] {
+  --spe-accent-primary: #94a3b8;
+  --spe-accent-secondary: #cbd5e1;
+  --spe-accent-specular: #f8fafc;
+  --spe-accent-glow: rgba(148, 163, 184, 0.14);
+  --spe-accent-badge-bg: rgba(148, 163, 184, 0.12);
+}
+
+:root[data-visual-variant="variant-v3-deep-space-cyan"] {
+  --spe-accent-primary: #0ea5e9;
+  --spe-accent-secondary: #818cf8;
+  --spe-accent-specular: #f0f9ff;
+  --spe-accent-glow: rgba(14, 165, 233, 0.2);
+  --spe-accent-badge-bg: rgba(14, 165, 233, 0.12);
+}
+
+:root[data-visual-variant="variant-v4-amber-parchment"] {
+  --spe-accent-primary: #f59e0b;
+  --spe-accent-secondary: #fbbf24;
+  --spe-accent-specular: #fef3c7;
+  --spe-accent-glow: rgba(245, 158, 11, 0.18);
+  --spe-accent-badge-bg: rgba(245, 158, 11, 0.12);
+}
+
+:root[data-visual-variant="variant-v5-emerald-zenith"] {
+  --spe-accent-primary: #10b981;
+  --spe-accent-secondary: #34d399;
+  --spe-accent-specular: #ecfdf5;
+  --spe-accent-glow: rgba(16, 185, 129, 0.18);
+  --spe-accent-badge-bg: rgba(16, 185, 129, 0.12);
+}
+
+:root[data-visual-variant="variant-v6-cyber-topaz"] {
+  --spe-accent-primary: #eab308;
+  --spe-accent-secondary: #38bdf8;
+  --spe-accent-specular: #fefce8;
+  --spe-accent-glow: rgba(234, 179, 8, 0.18);
+  --spe-accent-badge-bg: rgba(234, 179, 8, 0.12);
+}
+
+:root[data-visual-variant="variant-v7-hyper-obsidian"] {
+  --spe-accent-primary: #e2e8f0;
+  --spe-accent-secondary: #64748b;
+  --spe-accent-specular: #ffffff;
+  --spe-accent-glow: rgba(226, 232, 240, 0.15);
+  --spe-accent-badge-bg: rgba(226, 232, 240, 0.1);
+}
+
+/* =========================================================================
+   LIGHT THEME OVERRIDES (WITH CALIBRATED WCAG AAA CONTRAST)
+   ========================================================================= */
 html[data-theme="light"] {
   --spe-card-surface: rgba(255, 255, 255, 0.88);
   --spe-card-surface-elevated: #ffffff;
@@ -101,26 +173,65 @@ html[data-theme="light"] {
   --spe-elevation-2: 0 4px 14px -2px rgba(0, 0, 0, 0.09), 0 2px 6px -1px rgba(0, 0, 0, 0.06);
   --spe-elevation-3: 0 12px 32px -4px rgba(0, 0, 0, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
   --spe-elevation-glow: 0 0 32px rgba(30, 64, 175, 0.12);
-  --spe-focus-ring-color: #1d4ed8;
-  --spe-accent-primary: #1d4ed8;
-  --spe-accent-secondary: #92400e;
-  --spe-accent-specular: #1d4ed8;
-  --spe-accent-glow: rgba(30, 64, 175, 0.15);
-  --spe-accent-badge-bg: rgba(29, 78, 216, 0.08);
-  --spe-accent-badge-border: rgba(29, 78, 216, 0.25);
+  --spe-focus-ring-color: #1e3a8a;
+  --spe-accent-primary: #1e3a8a;
+  --spe-accent-secondary: #78350f;
+  --spe-accent-specular: #1e3a8a;
+  --spe-accent-glow: rgba(30, 58, 138, 0.15);
+  --spe-accent-badge-bg: rgba(30, 58, 138, 0.08);
+  --spe-accent-badge-border: rgba(30, 58, 138, 0.25);
+}
+
+/* Light Mode Variant Palette Tuning for WCAG AAA (>= 7.0:1 on #f4f1ea canvas) */
+html[data-theme="light"][data-visual-variant="variant-v0-signature-cobalt"] {
+  --spe-accent-primary: #1e3a8a;
+  --spe-accent-secondary: #78350f;
+}
+
+html[data-theme="light"][data-visual-variant="variant-v1-quantum-aurora"] {
+  --spe-accent-primary: #134e4a;
+  --spe-accent-secondary: #1e3a8a;
+}
+
+html[data-theme="light"][data-visual-variant="variant-v2-monolithic-slate"] {
+  --spe-accent-primary: #1e293b;
+  --spe-accent-secondary: #0f172a;
+}
+
+html[data-theme="light"][data-visual-variant="variant-v3-deep-space-cyan"] {
+  --spe-accent-primary: #0c4a6e;
+  --spe-accent-secondary: #312e81;
+}
+
+html[data-theme="light"][data-visual-variant="variant-v4-amber-parchment"] {
+  --spe-accent-primary: #713f12;
+  --spe-accent-secondary: #78350f;
+}
+
+html[data-theme="light"][data-visual-variant="variant-v5-emerald-zenith"] {
+  --spe-accent-primary: #064e3b;
+  --spe-accent-secondary: #022c22;
+}
+
+html[data-theme="light"][data-visual-variant="variant-v6-cyber-topaz"] {
+  --spe-accent-primary: #78350f;
+  --spe-accent-secondary: #1e3a8a;
+}
+
+html[data-theme="light"][data-visual-variant="variant-v7-hyper-obsidian"] {
+  --spe-accent-primary: #0f172a;
+  --spe-accent-secondary: #1e293b;
 }
 
 /* =========================================================================
    WIDE COLOR GAMUT (Display P3) ADAPTATION
-   Expands color saturation on capable Apple / OLED displays without changing luminance
+   Cleanly overrides sRGB accent highlights on P3 hardware
    ========================================================================= */
 @supports (color: color(display-p3 1 1 1)) {
   @media (color-gamut: p3) {
     :root[data-comfort-mode="automatic"],
     :root[data-comfort-mode="enhanced"],
     :root:not([data-comfort-mode="sdr"]) {
-      --spe-accent-primary: color(display-p3 0.22 0.74 0.98);
-      --spe-accent-secondary: color(display-p3 0.77 0.65 0.45);
       --spe-accent-glow: color(display-p3 0.22 0.74 0.98 / 0.28);
       --spe-accent-badge-border: color(display-p3 0.22 0.74 0.98 / 0.4);
     }
@@ -259,4 +370,3 @@ html[data-theme="light"] {
     grid-template-columns: 1fr !important;
   }
 }
-

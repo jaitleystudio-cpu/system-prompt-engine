@@ -104,6 +104,10 @@
     "test:power-prompts": "node --experimental-strip-types scripts/test-power-prompts-vault.mjs",
     "test:spe-extension": "node ../../packages/spe-extension/test/extension.test.mjs",
     "test:outcome-discovery": "node --experimental-strip-types scripts/test-outcome-intent-discovery.mjs",
+    "test:intent-loss-detector": "node scripts/test-intent-loss-detector.mjs",
+    "test:repair-tournament": "node scripts/test-independent-repair-tournament.mjs",
+    "test:privacy-budgeted": "node scripts/test-privacy-budgeted-evolution.mjs",
+    "test:breakthroughs": "node scripts/test-spe-omega-breakthroughs.mjs",
     "benchmark:golden-path": "node --experimental-strip-types scripts/benchmark-golden-path-evidence.mjs",
     "manifest:test": "node ../../scripts/generate-test-manifest.mjs"
   },

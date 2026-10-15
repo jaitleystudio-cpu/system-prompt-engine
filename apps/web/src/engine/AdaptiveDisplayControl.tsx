@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getCurrentDisplayState,
   setStoredComfortMode,
@@ -10,7 +10,8 @@ import {
   getActiveVisualVariant,
   applyVisualVariantToDom,
   emergencyRollbackToCanonical,
-  VisualEvolutionState,
+  registerOpenSessionAutoUpdater,
+  type VisualEvolutionState,
 } from "./dailyVisualEvolution.ts";
 
 export function AdaptiveDisplayControl() {
@@ -19,6 +20,10 @@ export function AdaptiveDisplayControl() {
   const [evolutionState, setEvolutionState] = useState<VisualEvolutionState>(() =>
     applyVisualVariantToDom(getActiveVisualVariant())
   );
+
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     // Subscribe to capability or comfort updates
@@ -30,10 +35,84 @@ export function AdaptiveDisplayControl() {
     const initialVariant = getActiveVisualVariant();
     setEvolutionState(applyVisualVariantToDom(initialVariant));
 
+    // Register open session auto updater across 02:17 IST boundary
+    const cleanupSessionUpdater = registerOpenSessionAutoUpdater((updated) => {
+      setEvolutionState(updated);
+    });
+
     return () => {
       unsubscribe();
+      cleanupSessionUpdater();
     };
   }, []);
+
+  // Keyboard navigation & accessibility handlers
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Focus initial element in dialog
+    const focusTimer = setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 50);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setIsOpen(false);
+        triggerRef.current?.focus();
+        return;
+      }
+
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const focusable = Array.from(focusableElements);
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        dialogRef.current &&
+        !dialogRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      clearTimeout(focusTimer);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  };
 
   const handleComfortChange = (mode: UserComfortMode) => {
     setStoredComfortMode(mode);
@@ -57,6 +136,7 @@ export function AdaptiveDisplayControl() {
   return (
     <div className="spe-adaptive-display-control" style={{ position: "relative", display: "inline-block" }}>
       <button
+        ref={triggerRef}
         type="button"
         className="spe-display-pill"
         onClick={() => setIsOpen(!isOpen)}
@@ -95,9 +175,11 @@ export function AdaptiveDisplayControl() {
 
       {isOpen && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Display & Visual Evolution Settings"
+          aria-labelledby="spe-display-dialog-title"
+          aria-describedby="spe-display-dialog-desc"
           style={{
             position: "absolute",
             top: "calc(100% + 8px)",
@@ -115,12 +197,16 @@ export function AdaptiveDisplayControl() {
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-            <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 600, letterSpacing: "-0.01em" }}>
+            <h3
+              id="spe-display-dialog-title"
+              style={{ margin: 0, fontSize: "0.95rem", fontWeight: 600, letterSpacing: "-0.01em" }}
+            >
               Adaptive Display &amp; Visual Evolution
             </h3>
             <button
+              ref={closeButtonRef}
               type="button"
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               style={{
                 background: "transparent",
                 border: "none",
@@ -129,14 +215,17 @@ export function AdaptiveDisplayControl() {
                 fontSize: "1.1rem",
                 padding: "0.2rem",
               }}
-              aria-label="Close dialog"
+              aria-label="Close settings dialog"
             >
               ✕
             </button>
           </div>
 
-          <div style={{ marginBottom: "1rem", fontSize: "0.78rem", color: "#94a3b8", lineHeight: 1.5 }}>
-            Adaptive HDR Content Harmony restrains body text luminance while giving lasers and accents wide-gamut vibrancy.
+          <div
+            id="spe-display-dialog-desc"
+            style={{ marginBottom: "1rem", fontSize: "0.78rem", color: "#94a3b8", lineHeight: 1.5 }}
+          >
+            Adaptive HDR Content Harmony restrains body text luminance to nominal SDR (1.0) while allowing specular lasers and badges wide-gamut vibrancy.
           </div>
 
           {/* Comfort Mode Controls */}
@@ -189,19 +278,21 @@ export function AdaptiveDisplayControl() {
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem" }}>
               <span style={{ color: "#64748b" }}>Color Gamut:</span>
               <span style={{ color: displayState.isP3Active ? "#38bdf8" : "#94a3b8" }}>
-                {displayState.capabilities.supportsWideColorP3 ? "Display P3" : "sRGB (Standard)"}
+                {displayState.capabilities.supportsWideColorP3 ? "Display P3 (Wide Gamut)" : "sRGB (Standard Gamut)"}
               </span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem" }}>
               <span style={{ color: "#64748b" }}>Dynamic Range:</span>
               <span style={{ color: displayState.capabilities.supportsHdr ? "#10b981" : "#94a3b8" }}>
-                {displayState.capabilities.supportsHdr ? `HDR High (${displayState.hdrHeadroom}×)` : "SDR Standard"}
+                {displayState.capabilities.supportsHdr
+                  ? `HDR Active (${displayState.hdrHeadroom}× Headroom)`
+                  : "SDR (Standard Luminance)"}
               </span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ color: "#64748b" }}>GPU Acceleration:</span>
               <span style={{ color: displayState.capabilities.supportsWebGpu ? "#a855f7" : "#94a3b8" }}>
-                {displayState.capabilities.supportsWebGpu ? "WebGPU Active" : "WASM / WebGL"}
+                {displayState.capabilities.supportsWebGpu ? "WebGPU Active" : "WASM / WebGL Fallback"}
               </span>
             </div>
           </div>
@@ -213,7 +304,7 @@ export function AdaptiveDisplayControl() {
                 TODAY'S VISUAL VARIANT
               </span>
               <span style={{ fontSize: "0.68rem", color: "#10b981", fontFamily: "var(--spe-font-mono, monospace)" }}>
-                ✓ WCAG AAA {evolutionState.activeVariant.contrastRatio}:1
+                ✓ WCAG AAA {evolutionState.activeVariant.measuredContrastDark}:1
               </span>
             </div>
             <div style={{ fontSize: "0.8rem", color: "var(--spe-accent-primary, #38bdf8)", fontWeight: 500, marginBottom: "0.25rem" }}>
@@ -223,7 +314,7 @@ export function AdaptiveDisplayControl() {
               {evolutionState.activeVariant.rationale}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.68rem", color: "#64748b" }}>
-              <span>Next Refresh: {evolutionState.scheduledTimeIst}</span>
+              <span>Publication: {evolutionState.scheduledTimeIst}</span>
               <button
                 type="button"
                 onClick={handleRollback}

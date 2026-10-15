@@ -13,4 +13,6 @@ export * from "./visualDomA11yVerifier.ts";
 export * from "./changeImpactGraph.ts";
 export * from "./rootCauseRepairEngine.ts";
 export * from "./proofCarryingEvolution.ts";
+export * from "./independentRepairTournament.ts";
+export * from "./privacyBudgetedEvolution.ts";
 export * from "./nightlyScheduler.ts";
