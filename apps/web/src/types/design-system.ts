@@ -93,6 +93,17 @@ export interface DesignSystemClassification {
   shapeProfile: ShapeProfileTag;
 }
 
+export type ExtractionSourceMode =
+  | "LIVE_DOM_CAPTURE"
+  | "LOCAL_REFERENCE_ARCHETYPE"
+  | "SYNTHETIC_PREVIEW"
+  | "EXTRACTION_FAILED";
+
+export type ScreenshotSource =
+  | "HEADLESS_CHROMIUM_VIEWPORT"
+  | "SYNTHETIC_FALLBACK_VECTOR_RENDER"
+  | "NONE";
+
 export interface DesignSystemSnap {
   id: string;
   url: string;
@@ -113,6 +124,19 @@ export interface DesignSystemSnap {
   structure: PageStructureTokens;
   compiledPrompt: string;
   systemMd: string;
+  sourceMode?: ExtractionSourceMode;
+  screenshotSource?: ScreenshotSource;
+  requestedUrl?: string;
+  finalResolvedUrl?: string;
+  extractionTimestamp?: string;
+  extractionCompleteness?: number;
+  capturedViewport?: {
+    width: number;
+    height: number;
+  };
+  unavailableTokenCategories?: string[];
+  relevantContentDigest?: string;
+  provenanceNotice?: string;
 }
 
 export type LauncherToolId =

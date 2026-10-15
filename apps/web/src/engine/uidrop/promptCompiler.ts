@@ -18,12 +18,27 @@ function getLineHeightLabel(lhStr: string): string {
 }
 
 /**
+ * Sanitizes input strings against prompt injection, control characters,
+ * template interpolations, and YAML/markdown delimiter breakout.
+ */
+export function sanitizePromptString(input: string | undefined): string {
+  if (!input) return "";
+  return String(input)
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "") // strip ASCII control chars
+    .replace(/```/g, "'''") // prevent code block breakout
+    .replace(/---/g, "—") // prevent YAML frontmatter breakout
+    .replace(/\$\{[^}]*\}/g, "") // prevent JS template literal injection
+    .trim();
+}
+
+/**
  * Normalizes spatial and token strings to prevent duplicate suffix artifacts.
  */
 function cleanSuffix(val: string | undefined, suffix: string): string {
   if (!val) return "";
+  const sanitized = sanitizePromptString(val);
   const regex = new RegExp(`\\s*${suffix}s?$`, "i");
-  return val.replace(regex, "").trim();
+  return sanitized.replace(regex, "").trim();
 }
 
 /**
@@ -105,9 +120,14 @@ export function compileSystemMd(snap: DesignSystemSnap): string {
     structure,
   } = snap;
 
-  const swatchesYaml = (palette.swatches || []).map((s) => `    - "${s}"`).join("\n");
+  const cleanDomain = sanitizePromptString(domain);
+  const cleanUrl = sanitizePromptString(url);
+
+  const swatchesYaml = (palette.swatches || [])
+    .map((s) => `    - "${sanitizePromptString(s)}"`)
+    .join("\n");
   const responsiveChangesYaml = (responsive.responsiveChangesBullets || [])
-    .map((b) => `    - "${b.replace(/^•\s*/, "")}"`)
+    .map((b) => `    - "${sanitizePromptString(b.replace(/^•\s*/, ""))}"`)
     .join("\n");
 
   const gridBase = cleanSuffix(layout.gridBase || "4px", "grid");
@@ -115,10 +135,10 @@ export function compileSystemMd(snap: DesignSystemSnap): string {
   const inputRadius = cleanSuffix(tokens.inputRadius || "18px", "input");
 
   return `---
-name: Design System Specification (${domain})
+name: Design System Specification (${cleanDomain})
 extracted_at: "${timestamp}"
-source_url: "${url}"
-domain: "${domain}"
+source_url: "${cleanUrl}"
+domain: "${cleanDomain}"
 classification:
   theme: "${classification.theme}"
   density: "${classification.density}"

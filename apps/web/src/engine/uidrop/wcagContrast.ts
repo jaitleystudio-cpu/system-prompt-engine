@@ -19,21 +19,30 @@ export interface RgbColor {
 const COMMON_NAMED_COLORS: Record<string, [number, number, number]> = {
   white: [255, 255, 255],
   black: [0, 0, 0],
-  red: [239, 68, 68],
-  green: [34, 197, 94],
-  blue: [59, 130, 246],
-  yellow: [234, 179, 8],
-  gray: [107, 114, 128],
-  grey: [107, 114, 128],
-  lightgray: [229, 231, 235],
-  darkgray: [55, 65, 81],
-  slate: [100, 116, 139],
-  indigo: [99, 102, 241],
-  purple: [168, 85, 247],
-  pink: [236, 72, 153],
-  orange: [249, 115, 22],
-  cyan: [6, 182, 212],
-  teal: [20, 184, 166],
+  red: [255, 0, 0],
+  green: [0, 128, 0],
+  blue: [0, 0, 255],
+  yellow: [255, 255, 0],
+  gray: [128, 128, 128],
+  grey: [128, 128, 128],
+  lightgray: [211, 211, 211],
+  darkgray: [169, 169, 169],
+  slate: [112, 128, 144],
+  slategray: [112, 128, 144],
+  indigo: [75, 0, 130],
+  purple: [128, 0, 128],
+  pink: [255, 192, 203],
+  orange: [255, 165, 0],
+  cyan: [0, 255, 255],
+  teal: [0, 128, 128],
+  lime: [0, 255, 0],
+  aqua: [0, 255, 255],
+  fuchsia: [255, 0, 255],
+  magenta: [255, 0, 255],
+  silver: [192, 192, 192],
+  maroon: [128, 0, 0],
+  navy: [0, 0, 128],
+  olive: [128, 128, 0],
 };
 
 function hslToRgb(h: number, s: number, l: number): [number, number, number] {
@@ -210,16 +219,25 @@ export function calculateRelativeLuminance(color: string): number {
 }
 
 /**
+ * Calculates raw, unrounded WCAG 2.1 contrast ratio between two colors:
+ *   (L1 + 0.05) / (L2 + 0.05)
+ * Returns high-precision floating point number.
+ */
+export function calculateRawContrastRatio(color1: string, color2: string): number {
+  const l1 = calculateRelativeLuminance(color1);
+  const l2 = calculateRelativeLuminance(color2);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
  * Calculates WCAG 2.1 contrast ratio between two colors:
  *   (L1 + 0.05) / (L2 + 0.05)
  * Returns a number between 1.0 and 21.0, rounded to 2 decimal places.
  */
 export function calculateContrastRatio(color1: string, color2: string): number {
-  const l1 = calculateRelativeLuminance(color1);
-  const l2 = calculateRelativeLuminance(color2);
-  const lighter = Math.max(l1, l2);
-  const darker = Math.min(l1, l2);
-  const rawRatio = (lighter + 0.05) / (darker + 0.05);
+  const rawRatio = calculateRawContrastRatio(color1, color2);
   return Math.round(rawRatio * 100) / 100;
 }
 
@@ -228,7 +246,9 @@ export function calculateContrastRatio(color1: string, color2: string): number {
  * - AAA: >= 7.0 (enhanced contrast)
  * - AA:  >= 4.5 (minimum normal text contrast) or >= 3.0 for UI/large text
  * - FAIL: < 4.5 (or < 3.0)
- * Performs physical alpha blending if foreground has opacity.
+ * Evaluates thresholds against UNROUNDED ratio to prevent rounding false passes
+ * (e.g. #FFFFFF on #647A86 has raw ratio 4.49686... which rounds to 4.50:1 but FAILS AA).
+ * Performs physical alpha blending for both foreground and background.
  */
 export function evaluateContrastPair(
   foreground: string,
@@ -239,19 +259,33 @@ export function evaluateContrastPair(
   const fgRgb = parseColorToRgb(foreground);
   const bgRgb = parseColorToRgb(background);
 
-  // If foreground has alpha < 1, composite it over the background color
-  const blendedFgRgb = blendColors(fgRgb, bgRgb);
+  // If background has alpha < 1, composite it over opaque white canvas
+  const solidBgRgb =
+    bgRgb.a !== undefined && bgRgb.a < 1
+      ? blendColors(bgRgb, { r: 255, g: 255, b: 255, a: 1 })
+      : bgRgb;
+
+  // If foreground has alpha < 1, composite it over the resolved background
+  const blendedFgRgb =
+    fgRgb.a !== undefined && fgRgb.a < 1
+      ? blendColors(fgRgb, solidBgRgb)
+      : fgRgb;
+
   const fgHex = normalizeToHex(
     `rgb(${blendedFgRgb.r}, ${blendedFgRgb.g}, ${blendedFgRgb.b})`,
   );
-  const bgHex = normalizeToHex(background);
+  const bgHex = normalizeToHex(
+    `rgb(${solidBgRgb.r}, ${solidBgRgb.g}, ${solidBgRgb.b})`,
+  );
 
-  const ratio = calculateContrastRatio(fgHex, bgHex);
-  const formattedRatio = `${ratio.toFixed(1)}:1`;
+  const rawRatio = calculateRawContrastRatio(fgHex, bgHex);
+  const ratio = Math.round(rawRatio * 100) / 100;
+  const formattedRatio = `${ratio.toFixed(2)}:1`;
 
   const aaThreshold = isLargeOrUI ? 3.0 : 4.5;
-  const passesAA = ratio >= aaThreshold;
-  const passesAAA = ratio >= 7.0;
+  // Evaluate conformance strictly against raw unrounded ratio
+  const passesAA = rawRatio >= aaThreshold;
+  const passesAAA = rawRatio >= 7.0;
 
   let score: ContrastScore = "FAIL";
   if (passesAAA) {

@@ -208,13 +208,38 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
 
       // 1. Attempt Next.js API route first if available
       try {
+        const storedKey = typeof localStorage !== "undefined" ? localStorage.getItem("spe_entitlement_key") : null;
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (storedKey) {
+          headers["x-spe-entitlement-key"] = storedKey;
+        }
+
         const resp = await fetch("/api/extract-design", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: targetUrl.trim() }),
+          headers,
+          body: JSON.stringify({ url: targetUrl.trim(), preferOffline: !isPro }),
         });
+
         if (resp.ok) {
           snap = await resp.json();
+        } else if (resp.status === 401 || resp.status === 403) {
+          // Entitlement required, fall back gracefully to free offline archetype
+          const offlineResp = await fetch("/api/extract-design", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: targetUrl.trim(), preferOffline: true }),
+          });
+          if (offlineResp.ok) {
+            snap = await offlineResp.json();
+            showToast("Live capture requires Pro. Loaded offline reference archetype.");
+          }
+        } else {
+          const errData = await resp.json().catch(() => ({}));
+          if (errData.code === "SSRF_BLOCKED") {
+            showToast(`SSRF Blocked: ${errData.error || "Destination disallowed"}`);
+            setIsSnapping(false);
+            return;
+          }
         }
       } catch {
         // Network error or local air-gap mode, fall back to offline extractor
@@ -377,6 +402,52 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               >
                 {isPro ? "PRO Paid" : "Standard"}
               </span>
+              {currentSnap.sourceMode && (
+                <span
+                  style={{
+                    fontSize: "0.65rem",
+                    padding: "2px 8px",
+                    borderRadius: "999px",
+                    background:
+                      currentSnap.sourceMode === "LIVE_DOM_CAPTURE"
+                        ? "rgba(16, 185, 129, 0.18)"
+                        : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
+                        ? "rgba(99, 102, 241, 0.18)"
+                        : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
+                        ? "rgba(245, 158, 11, 0.18)"
+                        : "rgba(239, 68, 68, 0.18)",
+                    color:
+                      currentSnap.sourceMode === "LIVE_DOM_CAPTURE"
+                        ? "#34D399"
+                        : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
+                        ? "#818CF8"
+                        : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
+                        ? "#FBBF24"
+                        : "#F87171",
+                    border: `1px solid ${
+                      currentSnap.sourceMode === "LIVE_DOM_CAPTURE"
+                        ? "rgba(16, 185, 129, 0.35)"
+                        : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
+                        ? "rgba(99, 102, 241, 0.35)"
+                        : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
+                        ? "rgba(245, 158, 11, 0.35)"
+                        : "rgba(239, 68, 68, 0.35)"
+                    }`,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                  title={currentSnap.provenanceNotice || currentSnap.sourceMode}
+                >
+                  {currentSnap.sourceMode === "LIVE_DOM_CAPTURE"
+                    ? "● Live DOM Capture"
+                    : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
+                    ? "● Reference Archetype"
+                    : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
+                    ? "● Synthetic Preview"
+                    : "● Extraction Failed"}
+                </span>
+              )}
             </div>
             <p style={{ margin: "2px 0 0", fontSize: "0.78rem", color: "#94A3B8" }}>
               Live Playwright DOM evaluation, WCAG contrast audit & dual-mode AI prompt compiler

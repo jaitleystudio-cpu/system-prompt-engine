@@ -9,3 +9,4 @@ export * from "./promptCompiler";
 export * from "./extractorCore";
 export * from "./playwrightExtractor";
 export * from "./snapStorage";
+export * from "./ssrfGuard";

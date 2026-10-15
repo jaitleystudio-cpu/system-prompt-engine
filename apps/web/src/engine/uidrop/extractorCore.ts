@@ -452,6 +452,12 @@ export function extractDesignOffline(rawUrl: string): DesignSystemSnap {
     shapeProfile,
   };
 
+  const isArchetype = Boolean(matched);
+  const sourceMode = isArchetype ? ("LOCAL_REFERENCE_ARCHETYPE" as const) : ("SYNTHETIC_PREVIEW" as const);
+  const provenanceNotice = isArchetype
+    ? "Derived from local reference archetype pattern. Air-gapped offline execution ($0 network egress)."
+    : "Synthesized offline preview derived from domain hash heuristics. Air-gapped offline execution ($0 network egress).";
+
   const screenshotBase64 = generatePlaceholderScreenshotSvg(domain, theme, palette.primary);
 
   const partialSnap: Omit<DesignSystemSnap, "compiledPrompt" | "systemMd"> = {
@@ -472,6 +478,18 @@ export function extractDesignOffline(rawUrl: string): DesignSystemSnap {
     motion,
     responsive,
     structure,
+    sourceMode,
+    screenshotSource: "SYNTHETIC_FALLBACK_VECTOR_RENDER",
+    requestedUrl: rawUrl,
+    finalResolvedUrl: url,
+    extractionTimestamp: new Date().toISOString(),
+    extractionCompleteness: isArchetype ? 85 : 60,
+    capturedViewport: { width: 1440, height: 900 },
+    unavailableTokenCategories: isArchetype
+      ? ["live_viewport_raster", "runtime_computed_keyframes"]
+      : ["live_viewport_raster", "live_computed_styles", "runtime_keyframes"],
+    relevantContentDigest: `offline_digest_${domain}_${theme}_${palette.primary.replace("#", "")}`,
+    provenanceNotice,
   };
 
   const snap: DesignSystemSnap = {

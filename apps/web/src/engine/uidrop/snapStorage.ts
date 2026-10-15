@@ -47,21 +47,29 @@ export async function saveSnap(snap: DesignSystemSnap): Promise<void> {
     // IndexedDB failed or in private browsing, fall back to LocalStorage
   }
 
+const MAX_SAVED_SNAPS = 30;
+
   // Also update LocalStorage (compacted if necessary to avoid QuotaExceededError)
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     const existing: DesignSystemSnap[] = raw ? JSON.parse(raw) : [];
     const filtered = existing.filter((s) => s.id !== snap.id && s.domain !== snap.domain);
-    const updated = [snap, ...filtered].slice(0, 20);
+    const updated = [snap, ...filtered].slice(0, MAX_SAVED_SNAPS);
 
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
     } catch (quotaErr) {
       // If quota exceeded, strip screenshotBase64 from older items
-      const pruned = updated.map((s, idx) =>
-        idx === 0 ? s : { ...s, screenshotBase64: "" },
-      );
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(pruned));
+      try {
+        const pruned = updated.map((s, idx) =>
+          idx === 0 ? s : { ...s, screenshotBase64: "" },
+        );
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(pruned));
+      } catch {
+        // Severe quota: strip all screenshot payloads
+        const minimal = updated.slice(0, 10).map((s) => ({ ...s, screenshotBase64: "" }));
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(minimal));
+      }
     }
   } catch {
     // Ignore storage errors
