@@ -233,3 +233,217 @@ When implementing user interfaces inspired by this design language:
 - **Top-Level Structure:** \`${structure.pageStructure}\`.
 `.trim();
 }
+
+/**
+ * Compiles extracted tokens into modern Tailwind CSS v4 @theme directive.
+ */
+export function compileTailwindTheme(snap: DesignSystemSnap): string {
+  const { domain, palette, typography, tokens, layout } = snap;
+  const cardRadius = cleanSuffix(tokens.cardRadius || "16px", "card");
+  const inputRadius = cleanSuffix(tokens.inputRadius || "18px", "input");
+  const buttonRadius = tokens.buttonRadiusLabel?.toLowerCase().includes("pill") ? "9999px" : cardRadius;
+
+  return `/* Extracted from ${domain} with System Prompt Engine (SPE Ω UIDrop) */
+@theme {
+  --color-primary: ${palette.primary};
+  --color-accent: ${palette.accent};
+  --color-surface: ${palette.surface};
+  --color-elevated: ${palette.elevated};
+  --color-text: ${palette.text};
+  --color-muted: ${palette.muted};
+
+  --font-heading: "${typography.h1.family}", sans-serif;
+  --font-body: "${typography.bodyDetail.family}", sans-serif;
+
+  --radius-card: ${cardRadius};
+  --radius-input: ${inputRadius};
+  --radius-button: ${buttonRadius};
+
+  --container-max-width: ${layout.maxWidth};
+  --container-gutter: ${layout.gutter};
+}`.trim();
+}
+
+/**
+ * Compiles extracted tokens into standard CSS Custom Properties (:root).
+ */
+export function compileCssVariables(snap: DesignSystemSnap): string {
+  const { domain, palette, typography, tokens, layout } = snap;
+  const cardRadius = cleanSuffix(tokens.cardRadius || "16px", "card");
+  const inputRadius = cleanSuffix(tokens.inputRadius || "18px", "input");
+  const buttonRadius = tokens.buttonRadiusLabel?.toLowerCase().includes("pill") ? "9999px" : "8px";
+  const bodyLineHeight = typography.bodyDetail?.lineHeight || "1.6";
+
+  return `/* Design Tokens Extracted from ${domain} by SPE Ω UIDrop */
+:root {
+  /* Color Palette */
+  --color-primary: ${palette.primary};
+  --color-accent: ${palette.accent};
+  --color-surface: ${palette.surface};
+  --color-elevated: ${palette.elevated};
+  --color-text: ${palette.text};
+  --color-muted: ${palette.muted};
+
+  /* Typography */
+  --font-heading: "${typography.h1.family}", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: "${typography.bodyDetail.family}", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-size-h1: ${typography.h1.size};
+  --font-size-h2: ${typography.h2.size};
+  --font-size-h3: ${typography.h3.size};
+  --font-size-h4: ${typography.h4.size};
+  --font-size-body: ${typography.bodyDetail.size};
+  --line-height-body: ${bodyLineHeight};
+
+  /* Radii & Elevation */
+  --radius-card: ${cardRadius};
+  --radius-input: ${inputRadius};
+  --radius-button: ${buttonRadius};
+  --shadow-elevation: ${tokens.shadowSummary};
+
+  /* Layout */
+  --container-max-width: ${layout.maxWidth};
+  --container-gutter: ${layout.gutter};
+}`.trim();
+}
+
+/**
+ * Compiles extracted tokens into W3C DTCG / Figma Token Studio JSON format.
+ */
+export function compileDtcgTokens(snap: DesignSystemSnap): string {
+  const { domain, palette, typography, tokens, layout } = snap;
+  const cardRadius = cleanSuffix(tokens.cardRadius || "16px", "card");
+  const inputRadius = cleanSuffix(tokens.inputRadius || "18px", "input");
+  const buttonRadius = tokens.buttonRadiusLabel?.toLowerCase().includes("pill") ? "9999px" : cardRadius;
+
+  const dtcg = {
+    $schema: "https://design-tokens.github.io/community-group/format/",
+    name: `${domain} Design Tokens`,
+    description: `Deterministic design tokens extracted by System Prompt Engine (SPE Ω UIDrop) from ${domain}`,
+    color: {
+      primary: { $type: "color", $value: palette.primary },
+      accent: { $type: "color", $value: palette.accent },
+      surface: { $type: "color", $value: palette.surface },
+      elevated: { $type: "color", $value: palette.elevated },
+      text: { $type: "color", $value: palette.text },
+      muted: { $type: "color", $value: palette.muted },
+    },
+    typography: {
+      heading: { $type: "fontFamily", $value: typography.h1.family },
+      body: { $type: "fontFamily", $value: typography.bodyDetail.family },
+    },
+    dimension: {
+      radiusCard: { $type: "dimension", $value: cardRadius },
+      radiusInput: { $type: "dimension", $value: inputRadius },
+      radiusButton: { $type: "dimension", $value: buttonRadius },
+      containerMaxWidth: { $type: "dimension", $value: layout.maxWidth },
+      containerGutter: { $type: "dimension", $value: layout.gutter },
+    },
+  };
+
+  return JSON.stringify(dtcg, null, 2);
+}
+
+/**
+ * Compiles a production-ready React + TypeScript component scaffold.
+ */
+export function compileReactScaffold(snap: DesignSystemSnap): string {
+  const { domain, palette, typography, tokens, layout, motion } = snap;
+  const cardRadius = cleanSuffix(tokens.cardRadius || "16px", "card");
+  const buttonRadius = tokens.buttonRadiusLabel?.toLowerCase().includes("pill") ? "9999px" : "8px";
+
+  return `/**
+ * Component Scaffold inspired by ${domain}
+ * Generated by System Prompt Engine (SPE Ω UIDrop)
+ */
+import React from "react";
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "outline";
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  variant = "primary",
+  children,
+  style,
+  ...props
+}) => {
+  const baseStyle: React.CSSProperties = {
+    fontFamily: '"${typography.bodyDetail.family}", sans-serif',
+    borderRadius: "${buttonRadius}",
+    padding: "10px 20px",
+    fontWeight: 600,
+    fontSize: "${typography.bodyDetail.size}",
+    cursor: "pointer",
+    border: "1px solid transparent",
+    transition: "${motion.transitionDuration}",
+    ...style,
+  };
+
+  const variantStyles: Record<string, React.CSSProperties> = {
+    primary: {
+      backgroundColor: "${palette.primary}",
+      color: "#FFFFFF",
+    },
+    secondary: {
+      backgroundColor: "${palette.accent}",
+      color: "${palette.text}",
+    },
+    outline: {
+      backgroundColor: "transparent",
+      borderColor: "${palette.muted}",
+      color: "${palette.text}",
+    },
+  };
+
+  return (
+    <button style={{ ...baseStyle, ...variantStyles[variant] }} {...props}>
+      {children}
+    </button>
+  );
+};
+
+export const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  children,
+  style,
+  ...props
+}) => (
+  <div
+    style={{
+      backgroundColor: "${palette.elevated}",
+      color: "${palette.text}",
+      borderRadius: "${cardRadius}",
+      padding: "24px",
+      boxShadow: "${tokens.shadowSummary}",
+      border: "1px solid rgba(255, 255, 255, 0.08)",
+      fontFamily: '"${typography.bodyDetail.family}", sans-serif',
+      ...style,
+    }}
+    {...props}
+  >
+    {children}
+  </div>
+);
+
+export const Navbar: React.FC<{ title: string; ctaText?: string }> = ({
+  title,
+  ctaText = "Get Started",
+}) => (
+  <header
+    style={{
+      backgroundColor: "${palette.surface}",
+      color: "${palette.text}",
+      borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+      padding: "16px ${layout.gutter}",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      fontFamily: '"${typography.h1.family}", sans-serif',
+    }}
+  >
+    <div style={{ fontSize: "1.25rem", fontWeight: 700 }}>{title}</div>
+    <Button variant="primary">{ctaText}</Button>
+  </header>
+);
+`.trim();
+}
+

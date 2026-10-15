@@ -40,18 +40,23 @@ const filesToCheck = [
   manifest.background.service_worker,
   ...manifest.content_scripts[0].js,
   manifest.options_page,
+  manifest.action.default_popup,
   manifest.icons["16"],
   manifest.icons["48"],
   manifest.icons["128"],
   "styles/overlay.css",
+  "styles/popup.css",
+  "popup.js",
   "options.js",
+  "offscreen.html",
+  "offscreen.js",
 ];
 
 for (const file of filesToCheck) {
   const fullPath = path.join(extRoot, file);
   assert.ok(fs.existsSync(fullPath), `Referenced file does not exist: ${file}`);
 }
-console.log("  ✓ Manifest V3 and all referenced assets verified.");
+console.log("  ✓ Manifest V3, Popup assets, and Offscreen suite verified.");
 
 // [2/6] Background VLM Reverse-Engineering Engine
 console.log("[2/6] Testing 12-clause semicolon prompt inversion engine...");
@@ -135,6 +140,48 @@ assert.ok(overlayCss.includes(".promptcard-infile-btn"), "Must style orange In F
 assert.ok(overlayCss.includes(".promptcard-quick-menu"), "Must style quick menu popup");
 assert.ok(overlayCss.includes(".promptcard-quick-item"), "Must style quick menu item options");
 console.log("  ✓ Glassmorphic CSS and Quick Menu verified.");
+
+// [7/7] Multi-Model 1-Click Export Formatters & Popup UI Suite
+console.log("[7/7] Testing multi-model formatters (Midjourney, FLUX, SD 3.5, Claude/GPT) & popup UI...");
+import {
+  formatForMidjourney,
+  formatForFlux,
+  formatForStableDiffusion,
+  formatForClaudeGpt,
+} from "../popup.js";
+
+const sampleClausePrompt = "tropical coast wooden dock; waterfront marina setting; saturated neon pastel lighting";
+const mjExport = formatForMidjourney(sampleClausePrompt, "16:9");
+assert.ok(mjExport.includes("--ar 16:9"), "Midjourney export must specify aspect ratio");
+assert.ok(mjExport.includes("--v 6.1"), "Midjourney export must specify v6.1");
+
+const fluxExport = formatForFlux(sampleClausePrompt);
+assert.ok(fluxExport.includes("photorealistic style"), "FLUX export must prefix photorealistic style");
+assert.ok(fluxExport.includes("cinematic lighting"), "FLUX export must include cinematic lighting");
+
+const sdExport = formatForStableDiffusion(sampleClausePrompt);
+assert.ok(sdExport.includes("masterpiece"), "SD 3.5 export must prefix masterpiece");
+assert.ok(sdExport.includes("8k resolution"), "SD 3.5 export must specify resolution");
+
+const claudeExport = formatForClaudeGpt(sampleClausePrompt, ["game promo art", "neon aesthetic"]);
+assert.ok(claudeExport.includes("reconstruct or visually reference"), "Claude export must include directive");
+assert.ok(claudeExport.includes("#game promo art"), "Claude export must include hashtags");
+
+// Popup HTML checks
+const popupHtml = fs.readFileSync(path.join(extRoot, "popup.html"), "utf-8");
+assert.ok(popupHtml.includes("PROMPTCARD"), "Popup must contain PROMPTCARD header");
+assert.ok(popupHtml.includes("btn-snip-region"), "Popup must have snip region button");
+assert.ok(popupHtml.includes("btn-open-uidrop"), "Popup must have bridge button to UIDrop");
+assert.ok(popupHtml.includes("btn-export-mj"), "Popup must have Midjourney export button");
+assert.ok(popupHtml.includes("btn-export-flux"), "Popup must have FLUX export button");
+
+// Offscreen checks
+const offscreenHtml = fs.readFileSync(path.join(extRoot, "offscreen.html"), "utf-8");
+assert.ok(offscreenHtml.includes("offscreen.js"), "Offscreen HTML must reference offscreen.js");
+const offscreenJs = fs.readFileSync(path.join(extRoot, "offscreen.js"), "utf-8");
+assert.ok(offscreenJs.includes("resizeImage"), "Offscreen JS must provide resizeImage");
+assert.ok(offscreenJs.includes("extractColorPalette"), "Offscreen JS must provide extractColorPalette");
+console.log("  ✓ Multi-Model Formatters, Popup HTML, and Offscreen Canvas suite verified.");
 
 console.log("==================================================================");
 console.log("🎉 ALL PROMPTCARD EXTENSION VERIFICATION TESTS PASSED (100% SOUND)!");

@@ -24,7 +24,8 @@ export type AppView =
   | "pricing"
   | "prompts"
   | "incidents"
-  | "eval-studio";
+  | "eval-studio"
+  | "uidrop";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -45,6 +46,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   pricing: "/pricing",
   prompts: "/prompts",
   incidents: "/incidents",
+  uidrop: "/uidrop",
   ...EXTRA_VIEW_PATH,
 };
 
@@ -223,6 +225,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "AI Incident Radar & Failure Post-Mortem Wire | SPE Ω",
     description:
       "Independent, mathematically verified post-mortems of breaking AI model failures, prompt leaks, and agent catastrophes. The truth behind AI model bugs — backed by reproducible test receipts.",
+  },
+  uidrop: {
+    path: "/uidrop",
+    title: "UIDrop Web Design System Extractor & AI Prompt Compiler | SPE Ω",
+    description:
+      "Extract design tokens, WCAG 2.1 contrast scores, and anti-cloning prompts from any live URL or uploaded screenshot — 100% offline with zero cloud compute.",
   },
   ...EXTRA_ROUTE_META,
 };

@@ -152,6 +152,9 @@ const EvalStudio = lazy(() =>
 const AiIncidentWire = lazy(() =>
   import("./pages/AiIncidentWire").then((m) => ({ default: m.AiIncidentWire }))
 );
+const UiDropPage = lazy(() =>
+  import("./pages/UiDropPage").then((m) => ({ default: m.UiDropPage }))
+);
 
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
@@ -1431,6 +1434,11 @@ export default function App() {
         {!notFound && view === EVAL_STUDIO_VIEW && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
             <EvalStudio />
+          </Suspense>
+        )}
+        {!notFound && view === "uidrop" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <UiDropPage onNavigate={setView} />
           </Suspense>
         )}
 

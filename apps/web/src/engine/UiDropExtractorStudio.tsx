@@ -17,7 +17,12 @@ import type {
   LauncherTool,
   ContrastPair,
 } from "../types/design-system";
-import { extractDesignOffline } from "./uidrop/extractorCore";
+import {
+  extractDesignOffline,
+  extractDesignFromImage,
+  tuneColorToPassAA,
+} from "./uidrop/extractorCore";
+import { evaluateContrastPair } from "./uidrop/wcagContrast";
 import { saveSnap, loadSnaps, deleteSnap } from "./uidrop/snapStorage";
 
 const LAUNCHER_TOOLS: LauncherTool[] = [
@@ -160,7 +165,11 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
 }) => {
   const [url, setUrl] = useState<string>(defaultUrl);
   const [isSnapping, setIsSnapping] = useState<boolean>(false);
-  const [activeOutputMode, setActiveOutputMode] = useState<"prompt" | "system.md">("prompt");
+  const [activeOutputMode, setActiveOutputMode] = useState<
+    "prompt" | "system.md" | "tailwind" | "css" | "dtcg" | "react"
+  >("prompt");
+  const [isDraggingOver, setIsDraggingOver] = useState<boolean>(false);
+  const [extensionModalOpen, setExtensionModalOpen] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
   const [snapLibraryOpen, setSnapLibraryOpen] = useState<boolean>(false);
@@ -264,9 +273,93 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
   };
 
   const getActiveCompiledText = (): string => {
-    return activeOutputMode === "prompt"
-      ? currentSnap.compiledPrompt
-      : currentSnap.systemMd;
+    switch (activeOutputMode) {
+      case "prompt":
+        return currentSnap.compiledPrompt;
+      case "system.md":
+        return currentSnap.systemMd;
+      case "tailwind":
+        return currentSnap.tailwindTheme || "";
+      case "css":
+        return currentSnap.cssVariables || "";
+      case "dtcg":
+        return currentSnap.dtcgTokensJson || "";
+      case "react":
+        return currentSnap.reactScaffoldTsx || "";
+      default:
+        return currentSnap.compiledPrompt;
+    }
+  };
+
+  const handleDownloadActive = (text: string) => {
+    const filenameMap: Record<string, { name: string; type: string }> = {
+      prompt: { name: `${currentSnap.domain}-prompt.txt`, type: "text/plain" },
+      "system.md": { name: "system.md", type: "text/markdown" },
+      tailwind: { name: "tailwind-theme.css", type: "text/css" },
+      css: { name: "design-tokens.css", type: "text/css" },
+      dtcg: { name: "tokens.json", type: "application/json" },
+      react: { name: "ComponentScaffold.tsx", type: "text/typescript" },
+    };
+    const { name, type } = filenameMap[activeOutputMode] || { name: "export.txt", type: "text/plain" };
+    const blob = new Blob([text], { type });
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(blobUrl);
+    showToast(`Downloaded ${name}!`);
+  };
+
+  const handleImageFile = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      showToast("Please drop an image file (PNG, JPG, SVG, WebP)");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const dataUrl = e.target?.result as string;
+      if (dataUrl) {
+        setIsSnapping(true);
+        try {
+          const snap = extractDesignFromImage(dataUrl, file.name);
+          setCurrentSnap(snap);
+          await persistSnap(snap);
+          showToast(`Extracted design tokens from ${file.name}!`);
+        } catch {
+          showToast("Failed to parse image file.");
+        } finally {
+          setIsSnapping(false);
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAutoTuneContrast = (pairKey: "textOnSurface" | "primaryOnSurface" | "mutedOnSurface") => {
+    const pair = currentSnap.palette.contrast[pairKey];
+    if (!pair) return;
+    const target = pairKey === "primaryOnSurface" ? 3.0 : 4.5;
+    const tuned = tuneColorToPassAA(pair.foreground, pair.background, target);
+
+    const updatedPalette = { ...currentSnap.palette };
+    if (pairKey === "textOnSurface") updatedPalette.text = tuned.tunedHex;
+    else if (pairKey === "primaryOnSurface") updatedPalette.primary = tuned.tunedHex;
+    else if (pairKey === "mutedOnSurface") updatedPalette.muted = tuned.tunedHex;
+
+    updatedPalette.contrast = {
+      textOnSurface: evaluateContrastPair(updatedPalette.text, updatedPalette.surface, "Text on Surface"),
+      primaryOnSurface: evaluateContrastPair(updatedPalette.primary, updatedPalette.surface, "Primary on Surface", true),
+      mutedOnSurface: evaluateContrastPair(updatedPalette.muted, updatedPalette.surface, "Muted on Surface"),
+    };
+
+    const updatedSnap: DesignSystemSnap = {
+      ...currentSnap,
+      palette: updatedPalette,
+    };
+    setCurrentSnap(updatedSnap);
+    void persistSnap(updatedSnap);
+    showToast(`Tuned ${pair.label} to ${tuned.tunedHex} (${tuned.formattedRatio} AA PASS)!`);
   };
 
   const handleCopyText = (text: string, label: string) => {
@@ -413,6 +506,8 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                         ? "rgba(16, 185, 129, 0.18)"
                         : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
                         ? "rgba(99, 102, 241, 0.18)"
+                        : currentSnap.sourceMode === "SCREENSHOT_EXTRACT"
+                        ? "rgba(236, 72, 153, 0.18)"
                         : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
                         ? "rgba(245, 158, 11, 0.18)"
                         : "rgba(239, 68, 68, 0.18)",
@@ -421,6 +516,8 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                         ? "#34D399"
                         : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
                         ? "#818CF8"
+                        : currentSnap.sourceMode === "SCREENSHOT_EXTRACT"
+                        ? "#F472B6"
                         : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
                         ? "#FBBF24"
                         : "#F87171",
@@ -429,6 +526,8 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                         ? "rgba(16, 185, 129, 0.35)"
                         : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
                         ? "rgba(99, 102, 241, 0.35)"
+                        : currentSnap.sourceMode === "SCREENSHOT_EXTRACT"
+                        ? "rgba(236, 72, 153, 0.35)"
                         : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
                         ? "rgba(245, 158, 11, 0.35)"
                         : "rgba(239, 68, 68, 0.35)"
@@ -443,6 +542,8 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                     ? "● Live DOM Capture"
                     : currentSnap.sourceMode === "LOCAL_REFERENCE_ARCHETYPE"
                     ? "● Reference Archetype"
+                    : currentSnap.sourceMode === "SCREENSHOT_EXTRACT"
+                    ? "● Screenshot Extract"
                     : currentSnap.sourceMode === "SYNTHETIC_PREVIEW"
                     ? "● Synthetic Preview"
                     : "● Extraction Failed"}
@@ -450,27 +551,48 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               )}
             </div>
             <p style={{ margin: "2px 0 0", fontSize: "0.78rem", color: "#94A3B8" }}>
-              Live Playwright DOM evaluation, WCAG contrast audit & dual-mode AI prompt compiler
+              Live Playwright DOM evaluation, WCAG contrast audit & multi-format AI prompt compiler
             </p>
           </div>
         </div>
 
-        {onClose && (
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <button
-            onClick={onClose}
+            onClick={() => setExtensionModalOpen(true)}
             style={{
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "rgba(255, 106, 0, 0.12)",
+              border: "1px solid rgba(255, 106, 0, 0.35)",
               borderRadius: "8px",
-              color: "#94A3B8",
+              color: "#FF8C38",
               cursor: "pointer",
               padding: "6px 12px",
               fontSize: "0.8rem",
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.4rem",
             }}
           >
-            ✕ Close
+            <span>🔌</span> PromptCard Extension
           </button>
-        )}
+
+          {onClose && (
+            <button
+              onClick={onClose}
+              style={{
+                background: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "8px",
+                color: "#94A3B8",
+                cursor: "pointer",
+                padding: "6px 12px",
+                fontSize: "0.8rem",
+              }}
+            >
+              ✕ Close
+            </button>
+          )}
+        </div>
       </div>
 
       {/* URL Input Bar & Action CTA */}
@@ -559,6 +681,180 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
           📚 Library ({savedSnaps.length})
         </button>
       </div>
+
+      {/* Dual Input Mode: Live URL or Drag-and-Drop Screenshot */}
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDraggingOver(true);
+        }}
+        onDragLeave={() => setIsDraggingOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDraggingOver(false);
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleImageFile(e.dataTransfer.files[0]);
+          }
+        }}
+        style={{
+          border: isDraggingOver ? "2px dashed #818CF8" : "1px dashed rgba(255, 255, 255, 0.15)",
+          borderRadius: "12px",
+          padding: "10px 16px",
+          background: isDraggingOver ? "rgba(99, 102, 241, 0.12)" : "rgba(255, 255, 255, 0.02)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "0.6rem",
+          transition: "all 0.2s ease",
+          fontSize: "0.82rem",
+          color: "#94A3B8",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          <span style={{ fontSize: "1.1rem" }}>🖼️</span>
+          <span>
+            <strong style={{ color: "#F1F5F9" }}>Drag & Drop any UI Screenshot or Mockup here</strong>
+            <span style={{ display: "block", fontSize: "0.72rem", color: "#64748B" }}>
+              Extracts palette, density, corner profile & WCAG contrast 100% offline ($0 cloud compute)
+            </span>
+          </span>
+        </div>
+        <label
+          style={{
+            background: "rgba(255, 255, 255, 0.06)",
+            border: "1px solid rgba(255, 255, 255, 0.14)",
+            color: "#E2E8F0",
+            padding: "5px 14px",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontWeight: 600,
+            fontSize: "0.75rem",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <span>📁</span> Browse Image
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                handleImageFile(e.target.files[0]);
+              }
+            }}
+          />
+        </label>
+      </div>
+
+      {/* PromptCard Extension Info Modal */}
+      {extensionModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1000,
+            background: "rgba(0, 0, 0, 0.75)",
+            backdropFilter: "blur(12px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+          onClick={() => setExtensionModalOpen(false)}
+        >
+          <div
+            style={{
+              background: "#12141A",
+              border: "1px solid rgba(255, 106, 0, 0.35)",
+              borderRadius: "16px",
+              maxWidth: "540px",
+              width: "100%",
+              padding: "24px",
+              boxShadow: "0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 106, 0, 0.15)",
+              color: "#F8FAFC",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #FF7A18, #FF4500)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 4px 14px rgba(255, 106, 0, 0.4)",
+                  }}
+                >
+                  ⚡
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>PromptCard - Image to Prompt AI</h3>
+                  <span style={{ fontSize: "0.72rem", color: "#FF8C38", fontWeight: 600 }}>Manifest V3 Browser Extension (V1.4.0)</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setExtensionModalOpen(false)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "#94A3B8",
+                  fontSize: "1.2rem",
+                  cursor: "pointer",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <p style={{ fontSize: "0.85rem", color: "#CBD5E1", lineHeight: 1.5, marginBottom: "16px" }}>
+              Reverse-engineer any image on the web directly from your browser! Right-click any image, snip screen regions, and extract strict 12-clause semicolon prompts with 4 aesthetic style pills into Midjourney, FLUX, or UIDrop.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "20px", fontSize: "0.8rem", color: "#94A3B8" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ color: "#34D399" }}>✓</span> Right-click any web image → "Analyze image with PromptCard"
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ color: "#34D399" }}>✓</span> Trilingual output: English, 中文, and 日本語 with structured JSON
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ color: "#34D399" }}>✓</span> 100% offline air-gapped mode ($0.00 cloud inference bill) or BYOK frontier VLM
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+              <button
+                onClick={() => setExtensionModalOpen(false)}
+                style={{
+                  background: "rgba(255, 255, 255, 0.08)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  color: "#FFFFFF",
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  fontSize: "0.82rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                Got It
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Snap Library Drawer (Collapsible) */}
       {snapLibraryOpen && (
@@ -1057,6 +1353,32 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                     >
                       {pair.score}
                     </span>
+                    {pair.score === "FAIL" && (
+                      <button
+                        onClick={() => {
+                          const pairKey =
+                            pair.label === "Text on Surface"
+                              ? "textOnSurface"
+                              : pair.label === "Primary on Surface"
+                              ? "primaryOnSurface"
+                              : "mutedOnSurface";
+                          handleAutoTuneContrast(pairKey);
+                        }}
+                        title={`Auto-tune ${pair.foreground} to achieve AA contrast against ${pair.background}`}
+                        style={{
+                          background: "rgba(99, 102, 241, 0.2)",
+                          border: "1px solid rgba(99, 102, 241, 0.4)",
+                          color: "#A5B4FC",
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                          fontSize: "0.68rem",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                      >
+                        ⚡ Fix AA
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -1082,7 +1404,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
               SEND TO
             </span>
 
-            {/* Segmented Toggle: Prompt | system.md */}
+            {/* Segmented Toggle: Prompt | system.md | Tailwind v4 | CSS Vars | DTCG JSON | React Scaffold */}
             <div
               style={{
                 display: "flex",
@@ -1090,40 +1412,36 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                 borderRadius: "8px",
                 padding: "2px",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
+                flexWrap: "wrap",
+                gap: "2px",
               }}
             >
-              <button
-                onClick={() => setActiveOutputMode("prompt")}
-                style={{
-                  background: activeOutputMode === "prompt" ? "#5E6AD2" : "transparent",
-                  color: activeOutputMode === "prompt" ? "#FFFFFF" : "#94A3B8",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "4px 12px",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                Prompt
-              </button>
-              <button
-                onClick={() => setActiveOutputMode("system.md")}
-                style={{
-                  background: activeOutputMode === "system.md" ? "#5E6AD2" : "transparent",
-                  color: activeOutputMode === "system.md" ? "#FFFFFF" : "#94A3B8",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "4px 12px",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                system.md
-              </button>
+              {[
+                { id: "prompt", label: "Prompt" },
+                { id: "system.md", label: "system.md" },
+                { id: "tailwind", label: "Tailwind v4" },
+                { id: "css", label: "CSS Vars" },
+                { id: "dtcg", label: "DTCG JSON" },
+                { id: "react", label: "React Scaffold" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveOutputMode(tab.id as any)}
+                  style={{
+                    background: activeOutputMode === tab.id ? "#5E6AD2" : "transparent",
+                    color: activeOutputMode === tab.id ? "#FFFFFF" : "#94A3B8",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "4px 8px",
+                    fontSize: "0.72rem",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -1232,21 +1550,46 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                   color: "#94A3B8",
                 }}
               >
-                {activeOutputMode === "prompt" ? "anti-cloning-prompt.txt" : "system.md"}
+                {activeOutputMode === "prompt"
+                  ? "anti-cloning-prompt.txt"
+                  : activeOutputMode === "system.md"
+                  ? "system.md"
+                  : activeOutputMode === "tailwind"
+                  ? "tailwind-theme.css"
+                  : activeOutputMode === "css"
+                  ? "design-tokens.css"
+                  : activeOutputMode === "dtcg"
+                  ? "tokens.json"
+                  : "ComponentScaffold.tsx"}
               </span>
-              <button
-                onClick={() => handleCopyText(getActiveCompiledText(), "Active snippet")}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "#818CF8",
-                  cursor: "pointer",
-                  fontSize: "0.72rem",
-                  fontWeight: 600,
-                }}
-              >
-                Copy
-              </button>
+              <div style={{ display: "flex", gap: "0.6rem" }}>
+                <button
+                  onClick={() => handleCopyText(getActiveCompiledText(), "Active snippet")}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    color: "#818CF8",
+                    cursor: "pointer",
+                    fontSize: "0.72rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  📋 Copy
+                </button>
+                <button
+                  onClick={() => handleDownloadActive(getActiveCompiledText())}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    color: "#34D399",
+                    cursor: "pointer",
+                    fontSize: "0.72rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  📥 Download
+                </button>
+              </div>
             </div>
 
             <pre

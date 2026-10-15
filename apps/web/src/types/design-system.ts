@@ -97,11 +97,13 @@ export type ExtractionSourceMode =
   | "LIVE_DOM_CAPTURE"
   | "LOCAL_REFERENCE_ARCHETYPE"
   | "SYNTHETIC_PREVIEW"
+  | "SCREENSHOT_EXTRACT"
   | "EXTRACTION_FAILED";
 
 export type ScreenshotSource =
   | "HEADLESS_CHROMIUM_VIEWPORT"
   | "SYNTHETIC_FALLBACK_VECTOR_RENDER"
+  | "USER_UPLOADED_SCREENSHOT"
   | "NONE";
 
 export interface DesignSystemSnap {
@@ -124,6 +126,10 @@ export interface DesignSystemSnap {
   structure: PageStructureTokens;
   compiledPrompt: string;
   systemMd: string;
+  tailwindTheme?: string;
+  cssVariables?: string;
+  dtcgTokensJson?: string;
+  reactScaffoldTsx?: string;
   sourceMode?: ExtractionSourceMode;
   screenshotSource?: ScreenshotSource;
   requestedUrl?: string;

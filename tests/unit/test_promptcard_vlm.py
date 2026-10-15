@@ -6,7 +6,9 @@ from spe_runtime.entitlement.manager import EntitlementManager
 from spe_runtime.entitlement.models import PlanTier
 from spe_runtime.promptcard.engine import (
     PromptCardVlmEngine,
+    PROMPTCARD_ANTIGRAVITY_GOAL_SPEC,
     PROMPTCARD_VLM_SYSTEM_PROMPT,
+    THEORETICAL_PHYSICS_ANTIGRAVITY_SIMULATION_PROMPT,
 )
 
 
@@ -17,6 +19,21 @@ def test_vlm_system_prompt_structure():
     assert "Clause 12 [Intended Purpose, Genre & Aesthetic Reference]" in PROMPTCARD_VLM_SYSTEM_PROMPT
     assert "4 Style Tag Pills" in PROMPTCARD_VLM_SYSTEM_PROMPT
     assert "REQUIRED OUTPUT SCHEMA (STRICT JSON)" in PROMPTCARD_VLM_SYSTEM_PROMPT
+
+
+def test_authoritative_prompt_suite():
+    """Verify Antigravity /goal spec and theoretical physics disambiguation prompts."""
+    # Antigravity IDE /goal Spec
+    assert "/goal" in PROMPTCARD_ANTIGRAVITY_GOAL_SPEC
+    assert "packages/promptcard-extension" in PROMPTCARD_ANTIGRAVITY_GOAL_SPEC
+    assert "offscreen" in PROMPTCARD_ANTIGRAVITY_GOAL_SPEC
+    assert "100% Offline Air-Gapped" in PROMPTCARD_ANTIGRAVITY_GOAL_SPEC
+
+    # Theoretical Physics Metric Engineering Prompt
+    assert "Einstein Field Equations" in THEORETICAL_PHYSICS_ANTIGRAVITY_SIMULATION_PROMPT
+    assert "Weak Energy Condition" in THEORETICAL_PHYSICS_ANTIGRAVITY_SIMULATION_PROMPT
+    assert "Lense-Thirring" in THEORETICAL_PHYSICS_ANTIGRAVITY_SIMULATION_PROMPT
+    assert "Casimir cavity" in THEORETICAL_PHYSICS_ANTIGRAVITY_SIMULATION_PROMPT
 
 
 def test_offline_deterministic_analysis_gta_benchmark():

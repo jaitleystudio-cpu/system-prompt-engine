@@ -66,6 +66,11 @@ const NAV_GROUPS: NavGroup[] = [
         label: "Skill Builder",
         desc: "Create & security-scan custom agent skills",
       },
+      {
+        id: "uidrop",
+        label: "UIDrop Extractor",
+        desc: "Extract design tokens, WCAG contrast & prompts from any UI",
+      },
     ],
   },
   {

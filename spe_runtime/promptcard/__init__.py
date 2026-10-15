@@ -5,7 +5,9 @@ from spe_runtime.promptcard.engine import (
     PromptCardPrompts,
     PromptCardStructuredJson,
     PromptCardVlmEngine,
+    PROMPTCARD_ANTIGRAVITY_GOAL_SPEC,
     PROMPTCARD_VLM_SYSTEM_PROMPT,
+    THEORETICAL_PHYSICS_ANTIGRAVITY_SIMULATION_PROMPT,
 )
 
 __all__ = [
@@ -13,5 +15,7 @@ __all__ = [
     "PromptCardAnalysisResult",
     "PromptCardPrompts",
     "PromptCardStructuredJson",
+    "PROMPTCARD_ANTIGRAVITY_GOAL_SPEC",
     "PROMPTCARD_VLM_SYSTEM_PROMPT",
+    "THEORETICAL_PHYSICS_ANTIGRAVITY_SIMULATION_PROMPT",
 ]

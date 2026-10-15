@@ -423,6 +423,8 @@ console.log("[8/9] Testing API Route Handler (/api/extract-design)...");
     "src/app/api/extract-design/route.ts",
     "src/server/api/extract-design/route.ts",
     "src/components/DesignExtractorPanel.tsx",
+    "src/engine/UiDropExtractorStudio.tsx",
+    "src/pages/UiDropPage.tsx",
     "src/engine/uidrop/index.ts",
     "src/engine/uidrop/promptCompiler.ts",
     "src/engine/uidrop/extractorCore.ts",
@@ -441,8 +443,79 @@ console.log("[8/9] Testing API Route Handler (/api/extract-design)...");
   console.log("  ✓ /api/extract-design entitlement gate, SSRF protection, and file tree verified.");
 }
 
-// [9/9] Test Canonical WASM Hash & Zero-Egress Invariants
-console.log("[9/9] Testing Canonical WASM Hash & Egress Invariants...");
+// [9/10] Test Multi-Format Code Compilers, Screenshot Extraction & WCAG Contrast Auto-Tuning
+console.log("[9/10] Testing Multi-Format Compilers, Screenshot Extraction & WCAG Auto-Tuner...");
+{
+  // 1. Test WCAG AA Contrast Auto-Tuner
+  const failingFg = "#777777";
+  const lightBg = "#FFFFFF";
+  const initialRatio = engine.calculateContrastRatio(failingFg, lightBg);
+  assert.ok(initialRatio < 4.5, `Initial ratio ${initialRatio} must be < 4.5`);
+
+  const tunedLight = engine.tuneColorToPassAA(failingFg, lightBg, 4.5);
+  assert.ok(tunedLight.tunedHex, "Must return tunedHex");
+  assert.ok(tunedLight.newRatio >= 4.5, `newRatio ${tunedLight.newRatio} must be >= 4.5`);
+  const tunedRatioLight = engine.calculateContrastRatio(tunedLight.tunedHex, lightBg);
+  assert.ok(
+    tunedRatioLight >= 4.5,
+    `Tuned color ${tunedLight.tunedHex} on ${lightBg} must pass AA (ratio ${tunedRatioLight} >= 4.5)`
+  );
+
+  // Dark background test
+  const failingFgDark = "#888888";
+  const darkBg = "#121216";
+  const tunedDark = engine.tuneColorToPassAA(failingFgDark, darkBg, 4.5);
+  assert.ok(tunedDark.tunedHex, "Must return tunedHex for dark bg");
+  assert.ok(tunedDark.newRatio >= 4.5, `newRatio ${tunedDark.newRatio} must be >= 4.5`);
+  const tunedRatioDark = engine.calculateContrastRatio(tunedDark.tunedHex, darkBg);
+  assert.ok(
+    tunedRatioDark >= 4.5,
+    `Tuned color ${tunedDark.tunedHex} on ${darkBg} must pass AA (ratio ${tunedRatioDark} >= 4.5)`
+  );
+
+  // 2. Test Screenshot Extraction
+  const dummyDataUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+  const imageSnap = engine.extractDesignFromImage(dummyDataUrl, "saas dashboard hero");
+  assert.equal(imageSnap.sourceMode, "SCREENSHOT_EXTRACT");
+  assert.equal(imageSnap.screenshotSource, "USER_UPLOADED_SCREENSHOT");
+  assert.ok(imageSnap.screenshotBase64.startsWith("data:image/png;base64,"));
+  assert.ok(imageSnap.palette.contrast.textOnSurface);
+  assert.ok(imageSnap.palette.contrast.primaryOnSurface);
+  assert.ok(imageSnap.palette.contrast.mutedOnSurface);
+  assert.ok(imageSnap.tailwindTheme && imageSnap.tailwindTheme.includes("@theme"));
+  assert.ok(imageSnap.cssVariables && imageSnap.cssVariables.includes(":root"));
+  assert.ok(imageSnap.dtcgTokensJson && imageSnap.dtcgTokensJson.includes('"color"'));
+  assert.ok(imageSnap.reactScaffoldTsx && imageSnap.reactScaffoldTsx.includes("export const Button"));
+
+  // 3. Test Individual Compilers
+  const sampleSnap = engine.extractDesignOffline("https://linear.app");
+  
+  const twTheme = engine.compileTailwindTheme(sampleSnap);
+  assert.ok(twTheme.includes("@theme {"), "Tailwind theme must declare @theme block");
+  assert.ok(twTheme.includes("--color-primary:"), "Tailwind theme must include primary color token");
+  assert.ok(twTheme.includes("--font-heading:"), "Tailwind theme must include heading font token");
+
+  const cssVars = engine.compileCssVariables(sampleSnap);
+  assert.ok(cssVars.includes(":root {"), "CSS Variables must declare :root block");
+  assert.ok(cssVars.includes("--radius-button:"), "CSS Variables must include radius token");
+
+  const dtcgTokens = engine.compileDtcgTokens(sampleSnap);
+  const parsedDtcg = JSON.parse(dtcgTokens);
+  assert.ok(parsedDtcg.color && parsedDtcg.color.primary, "DTCG tokens must declare color.primary");
+  assert.equal(parsedDtcg.color.primary.$type, "color");
+  assert.ok(parsedDtcg.typography && parsedDtcg.typography.heading, "DTCG tokens must declare typography.heading");
+  assert.equal(parsedDtcg.typography.heading.$type, "fontFamily");
+
+  const reactScaffold = engine.compileReactScaffold(sampleSnap);
+  assert.ok(reactScaffold.includes("export const Button"), "React scaffold must export Button component");
+  assert.ok(reactScaffold.includes("export const Card"), "React scaffold must export Card component");
+  assert.ok(reactScaffold.includes("export const Navbar"), "React scaffold must export Navbar component");
+
+  console.log("  ✓ Multi-format code compilers, screenshot extraction & WCAG auto-tuner verified.");
+}
+
+// [10/10] Test Canonical WASM Hash & Zero-Egress Invariants
+console.log("[10/10] Testing Canonical WASM Hash & Egress Invariants...");
 {
   const wasmPath = join(root, "public/spe_wasm.wasm");
   const wasmBuffer = readFileSync(wasmPath);

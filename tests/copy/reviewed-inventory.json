@@ -769,6 +769,12 @@
       "text": "OCR & Documents"
     },
     {
+      "id": "b662e9cda411ebc1b087",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "uidrop"
+    },
+    {
       "id": "bcb7802722bcf4ea89ae",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -16777,6 +16783,12 @@
       "text": "tools"
     },
     {
+      "id": "20681d549e901b0e7d21",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "uidrop"
+    },
+    {
       "id": "210366aaef3628f335c4",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16951,6 +16963,12 @@
       "text": "skill-builder"
     },
     {
+      "id": "74b0eaac05edd4ca78cd",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "UIDrop Extractor"
+    },
+    {
       "id": "751ccfcd831c0ffc0b4c",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -17057,6 +17075,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Code"
+    },
+    {
+      "id": "c9d9ede38f45dd7a4093",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Extract design tokens, WCAG contrast & prompts from any UI"
     },
     {
       "id": "ccdba8f15ddab1f5f467",
@@ -26077,6 +26101,126 @@
       "text": "PowerShell"
     },
     {
+      "id": "06798ea5fc19b3e52f3e",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "UIDrop runs a deterministic AST parser and mathematical contrast calculator directly in your browser. When offline or extracting from uploaded screenshots, it uses local canvas heuristics and reference archetypes with zero cloud egress."
+    },
+    {
+      "id": "28351473a86c551dd8e3",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "UIDrop Design System Extractor"
+    },
+    {
+      "id": "3c215e23507150fe5e76",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Is the anti-cloning prompt safe from copyright issues?"
+    },
+    {
+      "id": "43c51d755807a0d0f406",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "DOM & Token Extraction"
+    },
+    {
+      "id": "5a9c710eee16400d9f92",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Extract semantic design tokens, WCAG 2.1 contrast scores, spatial rhythms, and anti-cloning prompts from any live URL or uploaded screenshot — ready to export to Claude Code, Cursor, Tailwind v4, and Figma."
+    },
+    {
+      "id": "6007acbfc8c36797b6c1",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "How does offline extraction work without server GPU compute?"
+    },
+    {
+      "id": "93b049d537c21ff8a12f",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Design Intelligence Engine"
+    },
+    {
+      "id": "a0ee7329e358730bba12",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Frequently Asked Questions"
+    },
+    {
+      "id": "ae64881bfd5b853aa4e3",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "$0 Cloud Compute"
+    },
+    {
+      "id": "b619edf5c66cb2569b67",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "How does UIDrop connect with the PromptCard Chrome Extension?"
+    },
+    {
+      "id": "ce199986d71df0360881",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Evaluates relative luminance with unrounded mathematical precision to prevent false passes. Fix failing color combinations with 1-click AA contrast auto-tuning."
+    },
+    {
+      "id": "ce8c3b3620ecb805f6a0",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "UIDrop Web Design System Extractor & AI Prompt Compiler"
+    },
+    {
+      "id": "d91bd4b88aba04d53b13",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
+      "id": "e24a45d63f234f556e42",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "WCAG 2.1 Contrast Engine & Auto-Tuner"
+    },
+    {
+      "id": "e7800aa06e7ab03b7a6b",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Compiles tokens into Natural Language Anti-Cloning Prompts, system.md, Tailwind CSS v4 @theme, CSS Custom Properties, DTCG JSON, and React Component Scaffolds."
+    },
+    {
+      "id": "f222645a41d7545677d7",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "The PromptCard browser extension allows you to right-click any image on the web or snip screen regions to reverse-engineer dense 12-clause visual prompts. From PromptCard, you can click \"Open in UIDrop\" to immediately extract matching design tokens and WCAG contrast palettes."
+    },
+    {
+      "id": "f4b35f6518890d96e180",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Inspects computed styles, font families, letter-spacing, component border-radii, and responsive breakpoints from live DOM trees or synthesized archetypes."
+    },
+    {
+      "id": "f9d7a32c85730871df79",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Breadcrumb"
+    },
+    {
+      "id": "fd9b95d25394ebdbbc35",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Yes. The anti-cloning prompt explicitly instructs AI models to use the extracted geometric rhythm, palette, and typography as an abstract design foundation while strictly prohibiting copying brand trademarks, logos, copy, or copyrighted assets."
+    },
+    {
+      "id": "ffd88cfba7d1b34d1d4b",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "6-Format Multi-Format Exporter"
+    },
+    {
       "id": "01c7dc3ecdb507c7df22",
       "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
       "depth": "PRODUCT",
@@ -27133,6 +27277,12 @@
       "text": "My Work — Saved Prompts on This Device | SPE"
     },
     {
+      "id": "574d9dfb0a9edd2ea908",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "UIDrop Web Design System Extractor & AI Prompt Compiler | SPE Ω"
+    },
+    {
       "id": "5dd9531909ed655b27fc",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27203,6 +27353,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Question"
+    },
+    {
+      "id": "778a9c4c8a1b473789bd",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/uidrop"
     },
     {
       "id": "78e0ddcbbfc8b226a1c7",
@@ -27341,6 +27497,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "workspace"
+    },
+    {
+      "id": "c6c4c2da65f2813fc6b5",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Extract design tokens, WCAG 2.1 contrast scores, and anti-cloning prompts from any live URL or uploaded screenshot — 100% offline with zero cloud compute."
     },
     {
       "id": "c778d221307848e29811",
