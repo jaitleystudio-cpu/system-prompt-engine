@@ -1,0 +1,5 @@
+CONTRACT_R2.md sha256=d8b30fbd9bd3056b87c9e072f54de8debf448f08b8508104ce4fed18ee020076
+frozen_before_code=true
+parent=ea1677bd
+branch=grok/lec1-r2-ppi-ltt
+cycle=2026-10-15-17:05-IST
