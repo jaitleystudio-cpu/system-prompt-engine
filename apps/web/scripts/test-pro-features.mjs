@@ -109,7 +109,7 @@ const cliDoctor = execSync(`"${process.execPath}" tools/spe_cli.mjs doctor "Plea
 assert.ok(cliDoctor.includes("Slop Words: 1"), "CLI doctor must flag slop word 'delve'");
 
 const cliModels = execSync(`"${process.execPath}" tools/spe_cli.mjs models`, { encoding: "utf-8" });
-assert.ok(cliModels.includes("Claude 3.7 Sonnet"), "CLI models must include Claude 3.7 Sonnet");
+assert.ok(cliModels.includes("Claude 4.5 Sonnet"), "CLI models must include Claude 4.5 Sonnet");
 
 console.log(`  ✓ SPE Developer CLI commands (search, doctor, models) executed with 100% success.`);
 

@@ -108,6 +108,7 @@ import {
 } from "./components/AgentExportTabs";
 import { AgentSimulatorPanel } from "./components/AgentSimulatorPanel";
 import { BeforeAfterDiffSlider } from "./landing/BeforeAfterDiffSlider";
+import { NightWatchStatusBar } from "./engine/FrontierModelBadges";
 import { DeveloperRoiCalculator } from "./components/DeveloperRoiCalculator";
 import { SpeUniverseHero } from "./landing/SpeUniverseHero";
 import { SpeCapabilityDeck } from "./landing/SpeCapabilityDeck";
@@ -1627,6 +1628,7 @@ export default function App() {
           </button>
         </div>
       )}
+      <NightWatchStatusBar />
       <footer className="spe-footer">
         <div style={{ marginBottom: "1.5rem" }}>
           <strong>SPE</strong> System Prompt Engine · Your intent, carried

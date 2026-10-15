@@ -21,7 +21,9 @@
     "noFallthroughCasesInSwitch": true,
     "allowJs": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "types": [
+      "node"
+    ],
     "paths": {
       "@spe/web-runtime": [
         "../../packages/web-runtime/src/index.ts"

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-14T21:37:48.292Z",
+  "timestamp": "2026-10-15T09:57:57.075Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -16,7 +16,7 @@
       "suitesPassed": 5,
       "failures": 0,
       "exitCode": 0,
-      "totalConsoleSuccessMarkers": 103,
+      "totalConsoleSuccessMarkers": 109,
       "suiteDetails": [
         {
           "suite": "model-atlas-sync",
@@ -43,21 +43,21 @@
           "suite": "model-atlas",
           "testRunner": "node:child_process / custom-mjs",
           "exitCode": 0,
-          "consoleSuccessMarkers": 15,
+          "consoleSuccessMarkers": 13,
           "status": "PASS"
         },
         {
           "suite": "forensic-r2-gates",
           "testRunner": "node:child_process / custom-mjs",
           "exitCode": 0,
-          "consoleSuccessMarkers": 56,
+          "consoleSuccessMarkers": 64,
           "status": "PASS"
         }
       ]
     },
     "copyCheck": {
       "status": "PASS",
-      "candidateCount": 5906,
+      "candidateCount": 5977,
       "violations": 0
     },
     "build": {
@@ -65,8 +65,8 @@
     }
   },
   "success": true,
-  "durationMs": 29939,
-  "contentDigestSha256": "6fd3c7c3388a683f4bc1407daf08bbc24fa7e6a39e3eefa8dc17a62592747c47",
+  "durationMs": 22707,
+  "contentDigestSha256": "160a317d04252fc1e54d46dd17e45b1a89fa7a287cfcfc5a9e893f6a7aaf680a",
   "digestAlgorithm": "SHA-256",
   "canonicalization": "RFC_8785_CANONICAL_JSON",
   "attestationType": "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",

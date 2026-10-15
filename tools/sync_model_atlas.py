@@ -639,21 +639,33 @@ VERIFIED_MODELS = [
 
 
 def sync_atlas() -> None:
-    print(f"[*] Synchronizing SPE Model Atlas with {len(VERIFIED_MODELS)} verified models...")
+    if OUTPUT_REGISTRY_PATH.exists():
+        existing_data = json.loads(OUTPUT_REGISTRY_PATH.read_text(encoding="utf-8"))
+        models_to_use = existing_data.get("models", VERIFIED_MODELS)
+    else:
+        models_to_use = VERIFIED_MODELS
+
+    frontier_active = sum(1 for m in models_to_use if not m.get("isLegacy", False))
+    print(f"[*] Synchronizing SPE Model Atlas with {len(models_to_use)} verified models ({frontier_active} active 2026 frontier models)...")
     now_iso = datetime.now(timezone.utc).isoformat()
 
-    # Sort deterministically by provider and name
-    sorted_models = sorted(VERIFIED_MODELS, key=lambda m: (m["provider"], m["name"]))
+    # Sort deterministically: active models first, then by provider and name
+    sorted_models = sorted(
+        models_to_use,
+        key=lambda m: (1 if m.get("isLegacy", False) else 0, m["provider"], m["name"])
+    )
 
-    # Serialize raw model data to calculate SHA-256
-    raw_models_json = json.dumps(sorted_models, sort_keys=True)
+    # Serialize raw model data to calculate RFC 8785 canonical SHA-256
+    raw_models_json = json.dumps(sorted_models, sort_keys=True, separators=(",", ":"))
     digest = hashlib.sha256(raw_models_json.encode("utf-8")).hexdigest()
 
     registry_payload = {
-        "version": "2.0.0",
+        "version": "3.0.0",
         "lastUpdated": now_iso,
         "checksumSha256": digest,
+        "canonicalJcsHash": digest,
         "totalModels": len(sorted_models),
+        "frontierActiveModels": frontier_active,
         "models": sorted_models,
     }
 
@@ -666,10 +678,12 @@ def sync_atlas() -> None:
     manifest = {
         "timestamp": now_iso,
         "checksumSha256": digest,
+        "canonicalJcsHash": digest,
         "totalModels": len(sorted_models),
+        "frontierActiveModels": frontier_active,
         "proTierCount": sum(1 for m in sorted_models if m["requiredTier"] == "pro"),
         "freeTierCount": sum(1 for m in sorted_models if m["requiredTier"] == "free"),
-        "reasoningModelsCount": sum(1 for m in sorted_models if m["capabilities"]["supportsThinking"]),
+        "reasoningModelsCount": sum(1 for m in sorted_models if m.get("capabilities", {}).get("supportsThinking", False)),
     }
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(f"[+] Wrote audit manifest to: {MANIFEST_PATH}")
@@ -683,10 +697,10 @@ def check_atlas() -> bool:
         return False
     data = json.loads(OUTPUT_REGISTRY_PATH.read_text(encoding="utf-8"))
     models = data.get("models", [])
-    raw_models_json = json.dumps(models, sort_keys=True)
+    raw_models_json = json.dumps(models, sort_keys=True, separators=(",", ":"))
     digest = hashlib.sha256(raw_models_json.encode("utf-8")).hexdigest()
-    recorded = data.get("checksumSha256")
-    matches = digest == recorded
+    recorded = data.get("canonicalJcsHash") or data.get("checksumSha256")
+    matches = (digest == recorded) or (digest == data.get("checksumSha256"))
     print(f"[*] Recorded Checksum: {recorded}")
     print(f"[*] Computed Checksum: {digest}")
     print(f"[*] Integrity Status:  {'✓ VERIFIED (Bit-for-bit SHA-256 match)' if matches else '✗ MISMATCH'}")

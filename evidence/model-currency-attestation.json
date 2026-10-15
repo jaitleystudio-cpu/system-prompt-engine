@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "spe.model-currency.attestation.v1",
+  "timestamp": "2026-10-15T10:11:08.025Z",
+  "activeYear": 2026,
+  "frontierModelsCount": 18,
+  "totalAuditModelsCount": 44,
+  "checksumSha256": "7404e140652acd32e3eca5b272e36c8f68cc90b113336f4566b6f825278ba6c5",
+  "canonicalJcsHash": "7404e140652acd32e3eca5b272e36c8f68cc90b113336f4566b6f825278ba6c5",
+  "providers": [
+    "Anthropic",
+    "OpenAI",
+    "Google",
+    "xAI",
+    "DeepSeek",
+    "Meta",
+    "Midjourney",
+    "Black Forest Labs"
+  ],
+  "staleModelsDetected": 0,
+  "governorVerdict": "FRONTIER_CURRENCY_QUALIFIED",
+  "attestationSignature": "sig_spe_fmcg_7404e140652acd32e3eca5b272e36c8f_1a13f0b4e7f",
+  "nightWatchEngine": {
+    "version": "3.0.0",
+    "cadence": "NIGHTLY_AT_0200_UTC",
+    "status": "ACTIVE_SYNCHRONIZED"
+  },
+  "pythonRuntimeVerified": true,
+  "pythonTimestamp": "2026-10-15T10:11:14.511479+00:00"
+}
