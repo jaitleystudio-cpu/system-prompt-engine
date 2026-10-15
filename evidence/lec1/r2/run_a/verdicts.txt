@@ -1,0 +1,7 @@
+{
+  "H1_validity": "NOT_PROVEN",
+  "H2_utility_085_oracle": "NOT_PROVEN",
+  "H3_beats_lf_ltt_500": "SUPPORTED",
+  "H4_noninferior_rand_1000": "SUPPORTED",
+  "overall": "NOT_PROVEN"
+}
