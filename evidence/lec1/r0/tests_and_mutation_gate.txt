@@ -1,0 +1,11 @@
+PASS test_constants
+PASS test_pval_and_ltt_match_core
+PASS test_pilot_threshold
+PASS test_floor_rule
+PASS test_focused_sampler
+PASS test_mask_and_certify
+PASS test_run_pf_accounting
+PASS test_masking_rejects_biased_low_thresholds
+8/8 passed
+{'M1_no_mask_below_floor': 'KILLED', 'M2_pilot_reused_in_test': 'KILLED', 'M3_sampler_accepts_below_floor': 'KILLED', 'M4_safety_dropped': 'KILLED', 'M5_upper_tail_pvalue': 'KILLED', 'M6_wrong_alpha': 'KILLED', 'M7_floor_smallest_index': 'KILLED', 'M8_pilot_frac': 'KILLED', 'M9_no_stop_at_failure': 'KILLED', 'M10_pilot_nmin_ignored': 'KILLED'}
+MUTATION GATE PASS 10/10 killed

@@ -1,0 +1,4 @@
+contract_commit=9f522f6c
+contract_sha256=3edece74d5da74bfd781ae0755eb2d5139a67c3b24d99366c438acc3e06b7da1
+frozen_at=2026-10-15T09:09:38+05:30
+note=no LEC-1 outcome computed before contract push; code committed before any run
