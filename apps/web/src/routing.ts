@@ -28,7 +28,8 @@ export type AppView =
   | "uidrop"
   | "possibility"
   | "reality-frontier"
-  | "challenge";
+  | "challenge"
+  | "revocation";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -53,6 +54,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   possibility: "/possibility-engine",
   "reality-frontier": "/reality-frontier",
   challenge: "/challenge",
+  revocation: "/revocation",
   ...EXTRA_VIEW_PATH,
 };
 
@@ -255,6 +257,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Challenge This Result · Anti-Lucky-Pass Active Verification Engine | SPE Ω",
     description:
       "Active counterfactual specification closure. Detect lucky passes, synthesize minimal perturbations, and verify resilience under real-world stress.",
+  },
+  revocation: {
+    path: "/revocation",
+    title: "Semantic Revocation & Epistemic Non-Interference | SPE Ω",
+    description:
+      "Weiser semantic slicing and Goguen-Meseguer non-interference. Purge contaminated downstream dependencies and prevent latent model attention leaks.",
   },
   ...EXTRA_ROUTE_META,
 };

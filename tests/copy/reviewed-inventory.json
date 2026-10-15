@@ -673,6 +673,12 @@
       "text": "What you receive."
     },
     {
+      "id": "a1d8f04b1a8f119a9783",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "revocation"
+    },
+    {
       "id": "a29844962efa06681eeb",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -16819,6 +16825,12 @@
       "text": "website"
     },
     {
+      "id": "21a29f6bdf3937e747a1",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "revocation"
+    },
+    {
       "id": "2a3e329c6e902dd22204",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16849,6 +16861,12 @@
       "text": "lab"
     },
     {
+      "id": "39bcb2e93407d4399c3d",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Weiser slicing & non-interference: purge contaminated dependencies"
+    },
+    {
       "id": "3ddb201df1c94a8bb207",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -16877,6 +16895,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "My Work"
+    },
+    {
+      "id": "44da6be1e3f143482983",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "NON-INTERFERENCE"
     },
     {
       "id": "472ac9784b2866e42c15",
@@ -17081,6 +17105,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "home"
+    },
+    {
+      "id": "94a49bb4ccb010fdf77a",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Semantic Revocation"
     },
     {
       "id": "9787deb15b8e52f36a46",
@@ -25891,6 +25921,24 @@
       "text": "Home"
     },
     {
+      "id": "84c4a97d4428d9c584f2",
+      "file": "apps/web/src/pages/SemanticRevocationPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Breadcrumb"
+    },
+    {
+      "id": "8838503c1193592831ee",
+      "file": "apps/web/src/pages/SemanticRevocationPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Semantic Revocation"
+    },
+    {
+      "id": "e8513ca5eeb4a04bee34",
+      "file": "apps/web/src/pages/SemanticRevocationPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
       "id": "0a4be7243d753e8350e2",
       "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
       "depth": "PRODUCT",
@@ -27451,6 +27499,12 @@
       "text": "UIDrop Web Design System Extractor & AI Prompt Compiler | SPE Ω"
     },
     {
+      "id": "5865812bab0a2850aab2",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/revocation"
+    },
+    {
       "id": "5dd9531909ed655b27fc",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27527,6 +27581,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Question"
+    },
+    {
+      "id": "769a9ccc7eeeb7be4d0f",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Weiser semantic slicing and Goguen-Meseguer non-interference. Purge contaminated downstream dependencies and prevent latent model attention leaks."
     },
     {
       "id": "778a9c4c8a1b473789bd",
@@ -27773,6 +27833,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "WebPage"
+    },
+    {
+      "id": "eedd3565b23ca26c5b7f",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Semantic Revocation & Epistemic Non-Interference | SPE Ω"
     },
     {
       "id": "f021fa54333eda616d19",

@@ -164,6 +164,9 @@ const RealityFrontierPage = lazy(() =>
 const ChallengeResultPage = lazy(() =>
   import("./pages/ChallengeResultPage").then((m) => ({ default: m.ChallengeResultPage }))
 );
+const SemanticRevocationPage = lazy(() =>
+  import("./pages/SemanticRevocationPage").then((m) => ({ default: m.SemanticRevocationPage }))
+);
 
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
@@ -1463,6 +1466,11 @@ export default function App() {
         {!notFound && view === "challenge" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
             <ChallengeResultPage onNavigate={setView} />
+          </Suspense>
+        )}
+        {!notFound && view === "revocation" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <SemanticRevocationPage onNavigate={setView} />
           </Suspense>
         )}
 

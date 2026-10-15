@@ -96,6 +96,12 @@ const NAV_GROUPS: NavGroup[] = [
         badge: "LUCKY-PASS SHIELD",
       },
       {
+        id: "revocation",
+        label: "Semantic Revocation",
+        desc: "Weiser slicing & non-interference: purge contaminated dependencies",
+        badge: "NON-INTERFERENCE",
+      },
+      {
         id: "compare",
         label: "Benchmark Arena",
         desc: "Head-to-head prompt tests with real accuracy proof",
