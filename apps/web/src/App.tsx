@@ -113,6 +113,8 @@ import { DeveloperRoiCalculator } from "./components/DeveloperRoiCalculator";
 import { SpeUniverseHero } from "./landing/SpeUniverseHero";
 import { SpeCapabilityDeck } from "./landing/SpeCapabilityDeck";
 import { SubmitWorkflowModal } from "./components/SubmitWorkflowModal";
+import { initAdaptiveDisplayListeners } from "./engine/adaptiveDisplayEngine";
+import { getActiveVisualVariant, applyVisualVariantToDom } from "./engine/dailyVisualEvolution";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
@@ -356,6 +358,9 @@ export default function App() {
 
   useEffect(() => {
     registerServiceWorker();
+    const cleanupAdaptiveDisplay = initAdaptiveDisplayListeners();
+    const initialVariant = getActiveVisualVariant();
+    applyVisualVariantToDom(initialVariant);
     const sw = getServiceWorkerSafe();
     let hadController = Boolean(sw?.controller);
     const onControllerChange = () => {
@@ -382,6 +387,7 @@ export default function App() {
     window.addEventListener("offline", off);
     onScroll();
     return () => {
+      cleanupAdaptiveDisplay();
       sw?.removeEventListener(
         "controllerchange",
         onControllerChange,

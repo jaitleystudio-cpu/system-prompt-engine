@@ -1,0 +1,262 @@
+/**
+ * SPE Ω — web.dev-Inspired Precision Design Tokens & Layout Architecture
+ * Built to the typographic discipline, spacing rhythm, and fluid layout standards of web.dev.
+ *
+ * Characteristics:
+ * - Fluid clamp() typography scales with unitless line heights (1.12 - 1.18 for headings, 1.55 - 1.6 for prose)
+ * - 60-70ch (nominal 66ch) reading widths for optimal scanability and cognitive ergonomics
+ * - Strict 4px base spacing scale (--spe-space-1 through --spe-space-24)
+ * - Shared container max-width (80rem / 1280px) with responsive gutters
+ * - Balanced 16px radius cards with multi-layer elevation shadows
+ * - Adaptive HDR and Display P3 wide-gamut highlight tokens with HDR Content Harmony
+ */
+
+:root {
+  /* --- Layout & Container Geometry (web.dev 80rem standard) --- */
+  --spe-layout-max: 80rem; /* 1280px */
+  --spe-layout-gutter: clamp(1rem, 3.5vw, 2.5rem);
+  --spe-container-width: min(calc(100% - 2 * var(--spe-layout-gutter)), var(--spe-layout-max));
+  --spe-reading-width: min(100%, 66ch);
+  --spe-card-radius: 1rem; /* 16px */
+  --spe-card-radius-lg: 1.25rem; /* 20px */
+  --spe-card-radius-sm: 0.5rem; /* 8px */
+
+  /* --- Strict 4px Spacing Scale --- */
+  --spe-space-1: 0.25rem;  /* 4px */
+  --spe-space-2: 0.5rem;   /* 8px */
+  --spe-space-3: 0.75rem;  /* 12px */
+  --spe-space-4: 1rem;     /* 16px */
+  --spe-space-5: 1.25rem;  /* 20px */
+  --spe-space-6: 1.5rem;   /* 24px */
+  --spe-space-8: 2rem;     /* 32px */
+  --spe-space-10: 2.5rem;  /* 40px */
+  --spe-space-12: 3rem;    /* 48px */
+  --spe-space-16: 4rem;    /* 64px */
+  --spe-space-20: 5rem;    /* 80px */
+  --spe-space-24: 6rem;    /* 96px */
+
+  /* --- Fluid Typography with Unitless Line Heights --- */
+  --spe-type-display: clamp(2.5rem, 1.8rem + 3.2vw, 4.25rem);
+  --spe-lh-display: 1.12;
+  --spe-ls-display: -0.035em;
+
+  --spe-type-h1: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);
+  --spe-lh-h1: 1.16;
+  --spe-ls-h1: -0.025em;
+
+  --spe-type-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
+  --spe-lh-h2: 1.22;
+  --spe-ls-h2: -0.02em;
+
+  --spe-type-h3: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+  --spe-lh-h3: 1.32;
+  --spe-ls-h3: -0.01em;
+
+  --spe-type-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3rem);
+  --spe-lh-lead: 1.55;
+
+  --spe-type-body: clamp(0.95rem, 0.9rem + 0.2vw, 1.0625rem);
+  --spe-lh-body: 1.6;
+
+  --spe-type-sm: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --spe-lh-sm: 1.45;
+
+  --spe-type-mono: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --spe-lh-mono: 1.5;
+
+  /* --- Elevation & Depth Tokens --- */
+  --spe-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.18), 0 1px 2px rgba(0, 0, 0, 0.12);
+  --spe-elevation-2: 0 4px 14px -2px rgba(0, 0, 0, 0.28), 0 2px 6px -1px rgba(0, 0, 0, 0.18);
+  --spe-elevation-3: 0 12px 32px -4px rgba(0, 0, 0, 0.38), 0 4px 12px -2px rgba(0, 0, 0, 0.22);
+  --spe-elevation-glow: 0 0 40px rgba(56, 189, 248, 0.16);
+
+  /* --- Precision Card Surfaces --- */
+  --spe-card-surface: rgba(14, 21, 38, 0.72);
+  --spe-card-surface-elevated: rgba(20, 28, 50, 0.88);
+  --spe-card-border-subtle: rgba(255, 255, 255, 0.08);
+  --spe-card-border-active: rgba(56, 189, 248, 0.32);
+
+  /* --- Accessible Focus Ring (3px offset, high contrast) --- */
+  --spe-focus-ring-color: #38bdf8;
+  --spe-focus-ring-width: 2px;
+  --spe-focus-ring-offset: 3px;
+
+  /* --- Adaptive Dynamic Range & Gamut Highlights (Default SDR Baseline) --- */
+  --spe-hdr-headroom: 1.0;
+  --spe-accent-primary: #38bdf8;
+  --spe-accent-secondary: #c4a574;
+  --spe-accent-specular: #ffffff;
+  --spe-accent-glow: rgba(56, 189, 248, 0.22);
+  --spe-accent-badge-bg: rgba(56, 189, 248, 0.12);
+  --spe-accent-badge-border: rgba(56, 189, 248, 0.3);
+}
+
+/* Light theme overrides */
+html[data-theme="light"] {
+  --spe-card-surface: rgba(255, 255, 255, 0.88);
+  --spe-card-surface-elevated: #ffffff;
+  --spe-card-border-subtle: rgba(20, 24, 32, 0.09);
+  --spe-card-border-active: rgba(30, 64, 175, 0.45);
+  --spe-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --spe-elevation-2: 0 4px 14px -2px rgba(0, 0, 0, 0.09), 0 2px 6px -1px rgba(0, 0, 0, 0.06);
+  --spe-elevation-3: 0 12px 32px -4px rgba(0, 0, 0, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  --spe-elevation-glow: 0 0 32px rgba(30, 64, 175, 0.12);
+  --spe-focus-ring-color: #1d4ed8;
+  --spe-accent-primary: #1d4ed8;
+  --spe-accent-secondary: #92400e;
+  --spe-accent-specular: #1d4ed8;
+  --spe-accent-glow: rgba(30, 64, 175, 0.15);
+  --spe-accent-badge-bg: rgba(29, 78, 216, 0.08);
+  --spe-accent-badge-border: rgba(29, 78, 216, 0.25);
+}
+
+/* =========================================================================
+   WIDE COLOR GAMUT (Display P3) ADAPTATION
+   Expands color saturation on capable Apple / OLED displays without changing luminance
+   ========================================================================= */
+@supports (color: color(display-p3 1 1 1)) {
+  @media (color-gamut: p3) {
+    :root[data-comfort-mode="automatic"],
+    :root[data-comfort-mode="enhanced"],
+    :root:not([data-comfort-mode="sdr"]) {
+      --spe-accent-primary: color(display-p3 0.22 0.74 0.98);
+      --spe-accent-secondary: color(display-p3 0.77 0.65 0.45);
+      --spe-accent-glow: color(display-p3 0.22 0.74 0.98 / 0.28);
+      --spe-accent-badge-border: color(display-p3 0.22 0.74 0.98 / 0.4);
+    }
+  }
+}
+
+/* =========================================================================
+   HIGH DYNAMIC RANGE (HDR) ADAPTATION
+   HDR Content Harmony: Standard prose is locked to SDR (1.0 headroom)
+   to ensure zero eye fatigue; specular highlights and lasers utilize HDR headroom.
+   ========================================================================= */
+@media (dynamic-range: high) {
+  :root[data-comfort-mode="automatic"],
+  :root[data-comfort-mode="enhanced"] {
+    --spe-hdr-headroom: 1.45;
+    --spe-accent-specular: color(display-p3 0.98 0.99 1.0);
+    --spe-card-border-active: color(display-p3 0.35 0.82 1.0 / 0.6);
+    --spe-elevation-glow: 0 0 50px color(display-p3 0.22 0.74 0.98 / 0.35);
+  }
+}
+
+/* Reduced motion preference override */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --spe-dur-fast: 0ms !important;
+    --spe-dur-med: 0ms !important;
+    --spe-dur-slow: 0ms !important;
+  }
+}
+
+/* =========================================================================
+   PRECISION LAYOUT UTILITY CLASSES (web.dev discipline)
+   ========================================================================= */
+
+/* Top-level Page Container with 80rem constraint */
+.spe-precision-container {
+  width: var(--spe-container-width);
+  max-width: var(--spe-layout-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+}
+
+/* Controlled reading column (60-70ch) */
+.spe-reading-column {
+  max-width: var(--spe-reading-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* web.dev Precision Card */
+.spe-precision-card {
+  background: var(--spe-card-surface);
+  border: 1px solid var(--spe-card-border-subtle);
+  border-radius: var(--spe-card-radius);
+  padding: var(--spe-space-6);
+  box-shadow: var(--spe-elevation-1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.spe-precision-card:hover {
+  border-color: var(--spe-card-border-active);
+  box-shadow: var(--spe-elevation-2);
+}
+
+/* Structured responsive grid (auto-fit with strict min-width) */
+.spe-precision-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--spe-space-6);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 4-column feature / topic grid */
+.spe-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--spe-space-5);
+  width: 100%;
+}
+
+/* Focus visible standard */
+.spe-focusable:focus-visible {
+  outline: var(--spe-focus-ring-width) solid var(--spe-focus-ring-color);
+  outline-offset: var(--spe-focus-ring-offset);
+}
+
+/* =========================================================================
+   SPE CORE HERO & PROMPT STUDIO HARMONIZATION
+   Aligns SPE's central prompt engine with web.dev container & typographic rhythm
+   ========================================================================= */
+
+/* Hero Heading & Description Ergonomics */
+.spe-hero .hero-copy h1 {
+  max-width: min(100%, 24ch) !important;
+  line-height: var(--spe-lh-h1, 1.15) !important;
+  letter-spacing: var(--spe-ls-h1, -0.025em) !important;
+}
+
+.spe-hero .hero-description {
+  max-width: var(--spe-reading-width) !important;
+  line-height: var(--spe-lh-lead, 1.55) !important;
+  font-size: var(--spe-type-lead) !important;
+}
+
+/* Prompt Studio web.dev Layout Alignment */
+.prompt-studio {
+  padding-left: var(--spe-layout-gutter) !important;
+  padding-right: var(--spe-layout-gutter) !important;
+}
+
+.prompt-studio .studio-heading {
+  width: 100% !important;
+  max-width: var(--spe-layout-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: var(--spe-space-8) !important;
+}
+
+.prompt-studio .studio-shell {
+  width: 100% !important;
+  max-width: var(--spe-layout-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-radius: var(--spe-card-radius-lg) !important;
+}
+
+/* Natural responsive reflow for Prompt Studio */
+@media (max-width: 980px) {
+  .prompt-studio .studio-shell {
+    grid-template-columns: 1fr !important;
+  }
+}
+

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { pathForView, type AppView } from "../routing";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { Logo } from "../brand/Logo";
+import { AdaptiveDisplayControl } from "../engine/AdaptiveDisplayControl";
 
 type Props = {
   scrolled: boolean;
@@ -211,6 +212,7 @@ export function Nav(p: Props) {
       </span>
 
       <ThemeToggle />
+      <AdaptiveDisplayControl />
 
       <button
         className="spe-nav-burger"

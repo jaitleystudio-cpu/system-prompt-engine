@@ -1,5 +1,6 @@
 @import "@spe/design-system";
 @import "./workspace.css";
+@import "./styles/webdevPrecision.css";
 :root,
 html[data-theme="dark"] {
   --spe-font-display: "Instrument Serif", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
