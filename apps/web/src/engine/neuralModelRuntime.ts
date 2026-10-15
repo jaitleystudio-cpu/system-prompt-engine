@@ -1,7 +1,12 @@
 /**
- * SPE Ω — Neural Model Runtime (Core A Local Generative Engine)
+ * SPE Ω — Neural Model Runtime (Core A Research Fixture)
  *
- * Genuine local neural inference vertical slice for Core A:
+ * EXPERIMENTAL RESEARCH FIXTURE DISCLOSURE:
+ * This 593 KB ONNX model is an experimental research fixture demonstrating local WASM tensor inference.
+ * Its weights are synthetically configured token transitions and it is NOT a production-qualified
+ * general language model. It is retained strictly as a local execution research fixture while
+ * real pretrained SLM candidate configurations (SmolLM, Gemma-2B, Gemini Nano) are benchmarked.
+ *
  * 1. Loads ONNX weights from apps/web/public/models/spe-core-a-neural-generator-v1.onnx
  * 2. Executes tensor operations locally via onnxruntime-web WASM backend ($0 spend, 0 cloud egress).
  * 3. Tokenizer: 320-token byte-level and architectural token vocabulary.
@@ -10,6 +15,9 @@
  */
 
 import { computeSha256 } from "./hashUtils.ts";
+
+export const MODEL_ROLE = "EXPERIMENTAL_RESEARCH_FIXTURE" as const;
+export const QUALIFICATION_STATUS = "NOT_QUALIFIED_AS_PRODUCTION_GENERATOR" as const;
 
 export const CANONICAL_MODEL_SHA256 = "7ad350986a0d4437085abd12fd34070698a54609de13906fae62a53396d32864";
 export const CANONICAL_MODEL_SIZE_BYTES = 593399;
@@ -197,6 +205,9 @@ export interface NeuralInferenceResult {
   modelAssetChecksum: string;
   loadedModelSizeBytes: number;
   actualMemoryUsageBytes: number;
+  processHeapBytes?: number;
+  modelRole: typeof MODEL_ROLE;
+  qualificationStatus: typeof QUALIFICATION_STATUS;
   executionDevice: string;
 }
 
@@ -518,17 +529,22 @@ export class NeuralModelRuntime {
     const endTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
     const latencyMs = Math.max(0.001, Number((endTime - startTime).toFixed(3)));
 
-    const memoryUsage = typeof process !== "undefined" && typeof process.memoryUsage === "function"
+    const processHeapBytes = typeof process !== "undefined" && typeof process.memoryUsage === "function"
       ? process.memoryUsage().heapUsed
-      : 45000000;
+      : 0;
+
+    const modelSizeBytes = this.modelBuffer ? this.modelBuffer.byteLength : CANONICAL_MODEL_SIZE_BYTES;
 
     return {
       generatedText,
       rawInferenceTokens: promptTokensCount + generatedTokens.length,
       latencyMs,
       modelAssetChecksum: this.modelChecksum || CANONICAL_MODEL_SHA256,
-      loadedModelSizeBytes: this.modelBuffer ? this.modelBuffer.byteLength : CANONICAL_MODEL_SIZE_BYTES,
-      actualMemoryUsageBytes: memoryUsage,
+      loadedModelSizeBytes: modelSizeBytes,
+      actualMemoryUsageBytes: modelSizeBytes,
+      processHeapBytes,
+      modelRole: MODEL_ROLE,
+      qualificationStatus: QUALIFICATION_STATUS,
       executionDevice: typeof navigator !== "undefined" ? navigator.userAgent : "Local WebAssembly CPU Runtime",
     };
   }

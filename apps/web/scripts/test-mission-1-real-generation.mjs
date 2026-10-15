@@ -17,7 +17,9 @@ import {
   CORE_A_PROMPT_LABEL,
   CORE_B_PROMPT_LABEL,
 } from "../src/engine/dualCoreRouter.ts";
+import { generateCoreAPrompt } from "../src/engine/core-a.ts";
 import { NeuralModelRuntime } from "../src/engine/neuralModelRuntime.ts";
+import { NetworkEgressObserver } from "../src/engine/networkObserver.ts";
 
 console.log("========================================================================");
 console.log("⚡ SPE Ω — MISSION 1: REAL GENERATION & DECISIVE RUNTIME EXPERIMENT");
@@ -159,10 +161,13 @@ async function runMission1Battery() {
     assert(res.qualityReport.missingRequirements.length === 0, `0 missing requirements`);
     assert(res.qualityReport.detectedContradictions.length === 0, `0 contradictions`);
 
-    // 3. Verify Model Runtime Metadata
+    // 3. Verify Model Runtime Metadata & Honest Provenance
     assert(res.modelMetadata !== undefined, `Model runtime metadata populated`);
-    assert(res.modelMetadata.loadedModelSizeBytes > 0, `Loaded model size: ${res.modelMetadata.loadedModelSizeBytes.toLocaleString()} bytes`);
+    assert(res.modelMetadata.loadedModelSizeBytes === 593399, `Loaded model size: 593,399 bytes`);
     assert(res.modelMetadata.modelAssetChecksum.length === 64, `Model asset checksum recorded (SHA-256)`);
+    assert(res.modelMetadata.modelRole === "EXPERIMENTAL_RESEARCH_FIXTURE", `Model role honestly identified as EXPERIMENTAL_RESEARCH_FIXTURE`);
+    assert(res.modelMetadata.qualificationStatus === "IMPLEMENTED_NOT_QUALIFIED", `Engine status honestly reflects IMPLEMENTED_NOT_QUALIFIED`);
+    assert(res.modelMetadata.observedNetworkEgressPackets === 0, `Active network egress observation confirms 0 packets`);
     assert(res.zeroEgressGuaranteed === true, `100% offline air-gap guaranteed ($0 compute)`);
 
     records.push({
@@ -208,6 +213,52 @@ async function runMission1Battery() {
   } finally {
     neuralRuntime.enableForTesting();
   }
+
+  // Phase 3: Active Network Egress Observation & Provenance Disambiguation (P1-D)
+  console.log("\nPhase 3: Active Network Egress Observation & Provenance Disambiguation (P1-D)...\n");
+
+  // 3A: When browser_ai is requested but not present, honestly labels ONNX research fixture
+  const onnxRun = await generateCoreAPrompt({
+    userRequest: "Test prompt provenance attribution on standard runtime",
+    runtimePreference: "browser_ai", // Requested browser_ai, but globalThis.ai is not present
+  });
+  assert(onnxRun.runtimeUsed === "IN_PROCESS_ONNX_NEURAL", "Does NOT falsely claim BROWSER_PROMPT_API when ONNX executed");
+  assert(onnxRun.modelMetadata.modelRole === "EXPERIMENTAL_RESEARCH_FIXTURE", "Honestly records EXPERIMENTAL_RESEARCH_FIXTURE for ONNX execution");
+  assert(onnxRun.modelMetadata.observedNetworkEgressPackets === 0, "Network observer verified 0 egress packets during offline inference");
+
+  // 3B: When browser_ai is present and executed, honestly labels BROWSER_PROMPT_API
+  const originalAi = globalThis.ai;
+  try {
+    globalThis.ai = {
+      languageModel: {
+        create: async () => ({
+          prompt: async (req) => `# System Role & Persona\nYou are an on-device Chrome AI architect.\n\n# Objective & Boundary Scope\n${req}\n\n# Explicit User Constraints & Boundaries\n- Enforced: 100% offline air-gap\n\n# Approach & Methodological Plan\n1. Analyze request.\n2. Design solution.\n3. Validate thoroughly.\n\n# Acceptance Checks & Verification Battery\n- 100% constraint satisfaction verified.`,
+        }),
+      },
+    };
+
+    const browserAiRun = await generateCoreAPrompt({
+      userRequest: "Test prompt provenance with active Chrome Prompt API",
+      runtimePreference: "browser_ai",
+    });
+    assert(browserAiRun.runtimeUsed === "BROWSER_PROMPT_API", "Accurately attributes BROWSER_PROMPT_API when browser AI physically executed");
+    assert(browserAiRun.modelMetadata.modelRole === "ON_DEVICE_SYSTEM_FOUNDATION_MODEL", "Labels ON_DEVICE_SYSTEM_FOUNDATION_MODEL for authentic browser AI");
+    assert(browserAiRun.modelMetadata.modelName.includes("Gemini Nano"), "Model name reflects Gemini Nano only when browser AI executed");
+  } finally {
+    globalThis.ai = originalAi;
+  }
+
+  // 3C: Active Socket/Egress Monitoring Negative Test
+  const netObserverTest = await NetworkEgressObserver.observeDuring(async () => {
+    const net = await import("node:net");
+    const socket = new net.Socket();
+    try {
+      socket.connect(49152, "127.0.0.1");
+    } catch {}
+    socket.destroy();
+  });
+  assert(netObserverTest.report.observedPackets > 0, "Active network observer accurately detects socket connect attempts");
+  assert(netObserverTest.report.airGapViolated === true, "Observer correctly flags air-gap violation when egress is attempted");
 
   console.log("\n========================================================================");
   console.log(`MISSION 1 RESULTS: ${passed} PASS, ${failed} FAIL`);

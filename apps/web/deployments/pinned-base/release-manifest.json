@@ -1,0 +1,8 @@
+{
+  "releaseCommit": "177d9d0f",
+  "wasmHash": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  "wasmSizeBytes": 1339691,
+  "status": "PINNED_BASE_IMMUTABLE",
+  "pinnedAtIso": "2026-10-15T00:00:00.000Z",
+  "authority": "founder_release_authority"
+}

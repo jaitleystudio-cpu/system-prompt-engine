@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-SPE Ω — Core A Neural Language Model Generator
-Builds a genuine, verified causal autoregressive language model in ONNX format:
-- Vocabulary Size: 320 tokens (Byte-level UTF-8 + Structured Architectural Tokens)
-- Hidden Dimension: 128
-- Intermediate MLP Dimension: 256
-- Layers: Embedding -> Global Context Pooling (ReduceMean) -> Token Rep -> Dense1 (256) -> ReLU -> Dense2 (128) -> Residual Add -> LM Head (320)
-- Input:  input_ids: [1, seq_len] (int64)
-- Output: logits: [1, seq_len, 320] (float32)
-- Target: apps/web/public/models/spe-core-a-neural-generator-v1.onnx
+SPE Ω — Core A Neural Research Fixture Builder
+
+EXPERIMENTAL RESEARCH FIXTURE DISCLOSURE:
+This script builds an experimental 593 KB ONNX prototype for validating local in-browser
+WASM tensor execution and autoregressive token generation.
+The weights are initialized with random numbers and configured token transitions.
+It is an experimental computational fixture, NOT a general language model trained
+on a text corpus with learned language competence.
+Target: apps/web/public/models/spe-core-a-neural-generator-v1.onnx
 """
 
 import os

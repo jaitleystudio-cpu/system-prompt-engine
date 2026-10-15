@@ -3,20 +3,26 @@
  *
  * Attacks and verifies all 6 autonomous release safety blockers:
  * 1. Global emergency STOP: fail-closed release halt.
- * 2. Independent release acceptance: author cannot self-certify or approve own change.
+ * 2. Independent release acceptance: asymmetric Ed25519 verification, anti-self-certification,
+ *    peer collusion guard, replay defense, credential revocation, and candidate binding.
  * 3. Single change-arbitration authority: resolves SEO vs Hero component conflicts.
  * 4. Production artifact verification: proves bit-for-bit canonical WASM integrity.
- * 5. Automatic rollback: fault injection detects regression and triggers rollback to pinned commit.
+ * 5. Automatic rollback: fault injection detects regression, physically restores active release,
+ *    and verifies the live HTTP endpoint serves the canonical WASM artifact.
  * 6. Hard operating-cost limits: enforces $0 spend and zero network egress.
  */
 
 import { readFileSync, writeFileSync, unlinkSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { createServer } from "node:http";
+import crypto from "node:crypto";
 import {
   ReleaseSafetyGovernor,
   CANONICAL_WASM_SHA256,
   CANONICAL_WASM_SIZE_BYTES,
   TRUSTED_PINNED_BASE_COMMIT,
+  REVOKED_COMPROMISED_KEY_HASHES,
+  generateReleaseAuthorityProof,
 } from "../src/engine/evolution/releaseSafetyGovernor.ts";
 
 console.log("========================================================================");
@@ -36,8 +42,19 @@ function assert(condition, message) {
   }
 }
 
+// Generate ephemeral Ed25519 test credentials in memory (never written to disk or repo)
+const testFounderKeys = crypto.generateKeyPairSync("ed25519");
+const TEST_FOUNDER_PUB_HEX = testFounderKeys.publicKey.export({ type: "spki", format: "der" }).toString("hex");
+const TEST_FOUNDER_PRIV_KEY = testFounderKeys.privateKey.export({ type: "pkcs8", format: "pem" });
+
+const testOracleKeys = crypto.generateKeyPairSync("ed25519");
+const TEST_ORACLE_PUB_HEX = testOracleKeys.publicKey.export({ type: "spki", format: "der" }).toString("hex");
+const TEST_ORACLE_PRIV_KEY = testOracleKeys.privateKey.export({ type: "pkcs8", format: "pem" });
+
 async function runReleaseSafetyBattery() {
   const governor = new ReleaseSafetyGovernor();
+  governor.setTrustedAuthorityKeyForTesting("founder_release_authority", TEST_FOUNDER_PUB_HEX);
+  governor.setTrustedAuthorityKeyForTesting("independent_quality_oracle", TEST_ORACLE_PUB_HEX);
 
   // ─── GATE 1: Global Emergency STOP (Fail-Closed) ───────────────────────────
   console.log("\n▶ Gate 1: Global Emergency STOP Verification");
@@ -66,7 +83,7 @@ async function runReleaseSafetyBattery() {
   delete process.env.SPE_EMERGENCY_STOP;
   assert(governor.isEmergencyStopActive() === false, "Emergency STOP deactivates cleanly when flag removed");
 
-  // ─── GATE 2: Independent Release Acceptance & Anti-Self-Certification ─────
+  // ─── GATE 2: Independent Release Acceptance & Cryptographic Signatures ─────
   console.log("\n▶ Gate 2: Independent Release Acceptance & Cryptographic Signatures");
 
   // Attack 2A: Author attempts to approve its own change
@@ -83,16 +100,137 @@ async function runReleaseSafetyBattery() {
   assert(plainStringApproval.allowed === false, "Plain unauthenticated identity string rejected without cryptographic signature");
   assert(plainStringApproval.reason.includes("UNAUTHENTICATED_RELEASE_AUTHORITY"), "Correct rejection code UNAUTHENTICATED_RELEASE_AUTHORITY");
 
-  // Legitimate Independent Release Authority with Cryptographic Signature
-  const { generateReleaseAuthorityProof } = await import("../src/engine/evolution/releaseSafetyGovernor.ts");
-  const validProof = generateReleaseAuthorityProof("PROP-VERIFY-01", "founder_release_authority");
-  const authenticatedApproval = governor.verifyReleaseAuthority("agent:antigravity", validProof, "PROP-VERIFY-01");
-  assert(authenticatedApproval.allowed === true, "Cryptographically signed independent founder approval verified and accepted");
+  // Attack 2D: Coding agent attempts to self-certify using generateReleaseAuthorityProof without external key
+  let agentSelfManufactureBlocked = false;
+  try {
+    generateReleaseAuthorityProof("PROP-FORGE-01", "founder_release_authority", null);
+  } catch (err) {
+    agentSelfManufactureBlocked = err.message.includes("CREDENTIAL_CUSTODY_ERROR");
+  }
+  assert(agentSelfManufactureBlocked === true, "Agent cannot manufacture release proof: credentials require external custody");
 
-  // Attack 2D: Tampered signature rejection
-  const tamperedProof = { ...validProof, signatureHex: "0000000000000000000000000000000000000000000000000000000000000000" };
-  const tamperedApproval = governor.verifyReleaseAuthority("agent:antigravity", tamperedProof, "PROP-VERIFY-01");
+  // Attack 2E: Attempt to use exposed / revoked credentials from Git history
+  let revokedKeyBlocked = false;
+  try {
+    generateReleaseAuthorityProof("PROP-REVOKED-01", "founder_release_authority", {
+      hmacSecret: "sec_spe_founder_auth_7f9b8c2d1e0a4f5b",
+    });
+  } catch (err) {
+    revokedKeyBlocked = err.message.includes("CREDENTIAL_REVOKED_COMPROMISED");
+  }
+  assert(revokedKeyBlocked === true, "Exposed credential from Git history rejected as permanently revoked");
+
+  // Attack 2F: Valid proof presented with proposal ID mismatch
+  const testDigest = "a".repeat(64);
+  const validFounderProof = generateReleaseAuthorityProof(
+    "PROP-VERIFY-01",
+    "founder_release_authority",
+    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    testDigest
+  );
+
+  const proposalIdMismatch = governor.verifyReleaseAuthority(
+    "agent:antigravity",
+    validFounderProof,
+    "PROP-DIFFERENT-ID",
+    testDigest
+  );
+  assert(proposalIdMismatch.allowed === false, "Proof signed for PROP-VERIFY-01 rejected when presented for PROP-DIFFERENT-ID");
+  assert(proposalIdMismatch.reason.includes("PROPOSAL_ID_MISMATCH"), "Reason correctly cites PROPOSAL_ID_MISMATCH");
+
+  // Attack 2G: Candidate digest tampering
+  const digestMismatch = governor.verifyReleaseAuthority(
+    "agent:antigravity",
+    validFounderProof,
+    "PROP-VERIFY-01",
+    "b".repeat(64) // Tampered candidate digest
+  );
+  assert(digestMismatch.allowed === false, "Tampered candidate content digest rejected with PROPOSAL_DIGEST_MISMATCH");
+
+  // Attack 2H: Tampered signature rejection
+  const tamperedProof = {
+    ...validFounderProof,
+    signatureHex: "0".repeat(128),
+  };
+  const tamperedApproval = governor.verifyReleaseAuthority("agent:antigravity", tamperedProof, "PROP-VERIFY-01", testDigest);
   assert(tamperedApproval.allowed === false, "Tampered approval signature rejected with INVALID_AUTHORITY_SIGNATURE");
+
+  // Attack 2I: Production authority key isolation (agent cannot sign for unconfigured production keys)
+  const prodGovernor = new ReleaseSafetyGovernor();
+  const prodForgeAudit = prodGovernor.verifyReleaseAuthority("agent:antigravity", validFounderProof, "PROP-VERIFY-01", testDigest);
+  assert(prodForgeAudit.allowed === false, "Agent-generated test keys strictly fail closed against production governor keys");
+  assert(prodForgeAudit.reason.includes("INVALID_AUTHORITY_SIGNATURE"), "Reason confirms cryptographic signature verification failed");
+
+  // Attack 2J: Target environment mismatch rejection
+  const stagingProof = generateReleaseAuthorityProof(
+    "PROP-ENV-01",
+    "founder_release_authority",
+    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    testDigest,
+    "staging"
+  );
+  const envMismatchAudit = governor.verifyReleaseAuthority(
+    "agent:antigravity",
+    stagingProof,
+    "PROP-ENV-01",
+    testDigest,
+    "production"
+  );
+  assert(envMismatchAudit.allowed === false, "Proof signed for 'staging' rejected when evaluating 'production'");
+  assert(envMismatchAudit.reason.includes("ENVIRONMENT_MISMATCH"), "Reason explicitly cites ENVIRONMENT_MISMATCH");
+
+  // Attack 2K: Authorized action mismatch rejection
+  const rollbackActionProof = generateReleaseAuthorityProof(
+    "PROP-ACTION-01",
+    "founder_release_authority",
+    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    testDigest,
+    "production",
+    "AUTOMATED_ROLLBACK"
+  );
+  const actionMismatchAudit = governor.verifyReleaseAuthority(
+    "agent:antigravity",
+    rollbackActionProof,
+    "PROP-ACTION-01",
+    testDigest,
+    "production",
+    "RELEASE_PROMOTION"
+  );
+  assert(actionMismatchAudit.allowed === false, "Proof signed for 'AUTOMATED_ROLLBACK' rejected when promoting release");
+  assert(actionMismatchAudit.reason.includes("ACTION_MISMATCH"), "Reason explicitly cites ACTION_MISMATCH");
+
+  // Attack 2L: Replay attack prevention (reusing the same single-use nonce)
+  const freshProof = generateReleaseAuthorityProof(
+    "PROP-REPLAY-01",
+    "founder_release_authority",
+    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    testDigest
+  );
+  const firstUse = governor.verifyReleaseAuthority("agent:antigravity", freshProof, "PROP-REPLAY-01", testDigest);
+  assert(firstUse.allowed === true, "First use of cryptographically signed approval succeeds");
+
+  const replayAttempt = governor.verifyReleaseAuthority("agent:antigravity", freshProof, "PROP-REPLAY-01", testDigest);
+  assert(replayAttempt.allowed === false, "Replay attack detected and blocked: nonce cannot be reused");
+  assert(replayAttempt.reason.includes("REPLAY_ATTACK_DETECTED"), "Reason explicitly cites REPLAY_ATTACK_DETECTED");
+
+  // Attack 2M: Persistent replay defense across separate governor instances (disk persistence)
+  const secondGovernor = new ReleaseSafetyGovernor();
+  secondGovernor.setTrustedAuthorityKeyForTesting("founder_release_authority", TEST_FOUNDER_PUB_HEX);
+  const crossInstanceReplay = secondGovernor.verifyReleaseAuthority("agent:antigravity", freshProof, "PROP-REPLAY-01", testDigest);
+  assert(crossInstanceReplay.allowed === false, "Replay attack detected and blocked across separate governor instances (persisted nonces)");
+  assert(crossInstanceReplay.reason.includes("REPLAY_ATTACK_DETECTED"), "Reason explicitly cites REPLAY_ATTACK_DETECTED across process restarts");
+
+  // Attack 2N: Expired signature rejection
+  const expiredProof = generateReleaseAuthorityProof(
+    "PROP-EXPIRED-01",
+    "founder_release_authority",
+    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    testDigest
+  );
+  // Backdate timestamp by 20 minutes
+  expiredProof.authorizedTimestamp = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+  const expiredApproval = governor.verifyReleaseAuthority("agent:antigravity", expiredProof, "PROP-EXPIRED-01", testDigest);
+  assert(expiredApproval.allowed === false, "Signatures older than 15 minutes rejected with EXPIRED_APPROVAL_PROOF");
 
   // ─── GATE 3: Change-Arbitration Authority & PID Liveness Check ─────────────
   console.log("\n▶ Gate 3: Change-Arbitration Authority (SEO vs Hero Mutex & PID Liveness)");
@@ -123,36 +261,100 @@ async function runReleaseSafetyBattery() {
   assert(wasmAudit.observedHash === CANONICAL_WASM_SHA256, `WASM hash matches pinned canonical: ${CANONICAL_WASM_SHA256.slice(0, 16)}...`);
   assert(wasmBuffer.byteLength === CANONICAL_WASM_SIZE_BYTES, `WASM byte count exactly ${CANONICAL_WASM_SIZE_BYTES} bytes`);
 
-  // ─── GATE 5: Rollback Fault Injection & Real Pointer Restoration ────────────
+  // ─── GATE 5: Rollback Fault Injection & Real Deployment Rollback ────────────
   console.log("\n▶ Gate 5: Rollback Fault Injection & Real Deployment Rollback");
 
-  // Inject a candidate that causes 2 test regressions
-  const badCandidate = {
-    proposalId: "PROP-BAD-CANDIDATE-01",
-    authorIdentity: "agent:autonomous_coder",
-    category: "ENGINE",
-    targetFiles: ["apps/web/src/engine/core-a.ts"],
-    testResults: {
-      passed: false,
-      passCount: 26,
-      failCount: 2,
-      regressionsDetected: 2,
-    },
-    requestedAutonomyLevel: "L4_AUTO_PROMOTION",
-  };
+  // Setup local HTTP static server on port 4188 simulating deployment endpoint
+  const testPort = 4188;
+  const distDir = resolve(process.cwd(), "apps/web/dist");
+  const distWasmPath = resolve(distDir, "spe_wasm.wasm");
 
-  const oracleProof = generateReleaseAuthorityProof("PROP-BAD-CANDIDATE-01", "independent_quality_oracle");
-  const rollbackDecision = governor.evaluateReleaseCandidate(badCandidate, oracleProof);
-  assert(rollbackDecision.status === "ROLLED_BACK", "Corrupted release candidate rejected and marked ROLLED_BACK");
-  assert(rollbackDecision.rollbackReceipt !== undefined, "Real rollback execution receipt attached");
-  assert(rollbackDecision.rollbackReceipt.triggered === true, "Automated rollback triggered");
-  assert(rollbackDecision.rollbackReceipt.restoredTarget === TRUSTED_PINNED_BASE_COMMIT, `Restores to pinned trusted commit ${TRUSTED_PINNED_BASE_COMMIT}`);
-  assert(existsSync(rollbackDecision.rollbackReceipt.releasePointerPath), "Deployment pointer file written to disk");
-  
-  const restoredPointer = JSON.parse(readFileSync(rollbackDecision.rollbackReceipt.releasePointerPath, "utf-8"));
-  assert(restoredPointer.activeReleaseCommit === TRUSTED_PINNED_BASE_COMMIT, "Pointer file restored to pinned trusted commit");
-  assert(restoredPointer.status === "RESTORED_TO_PINNED_BASE_COMMIT", "Pointer status records real restoration");
-  assert(rollbackDecision.rollbackReceipt.verifiedSafe === true, "Independent verification of restored canonical artifact passed");
+  // Start ephemeral static server
+  const server = createServer((req, res) => {
+    const url = req.url || "/";
+    if (url === "/spe_wasm.wasm" && existsSync(distWasmPath)) {
+      const data = readFileSync(distWasmPath);
+      res.writeHead(200, { "Content-Type": "application/wasm" });
+      res.end(data);
+      return;
+    }
+    if (url === "/release-manifest.json" && existsSync(resolve(distDir, "release-manifest.json"))) {
+      const data = readFileSync(resolve(distDir, "release-manifest.json"));
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(data);
+      return;
+    }
+    res.writeHead(404);
+    res.end();
+  });
+
+  await new Promise((res) => server.listen(testPort, "127.0.0.1", res));
+
+  try {
+    // Inject regression: Corrupt dist WASM
+    const originalDistWasm = existsSync(distWasmPath) ? readFileSync(distWasmPath) : null;
+    writeFileSync(distWasmPath, Buffer.from("CORRUPTED_INJECTED_REGRESSION_PAYLOAD"));
+
+    // Verify HTTP endpoint currently serves corrupted bytes
+    const preRollbackRes = await fetch(`http://127.0.0.1:${testPort}/spe_wasm.wasm`);
+    const preRollbackBytes = await preRollbackRes.text();
+    assert(preRollbackBytes.includes("CORRUPTED"), "Fault injection confirmed: served HTTP endpoint is serving corrupted artifact");
+
+    // Inject bad candidate causing test regressions
+    const badCandidate = {
+      proposalId: "PROP-BAD-CANDIDATE-01",
+      authorIdentity: "agent:autonomous_coder",
+      category: "ENGINE",
+      targetFiles: ["apps/web/src/engine/core-a.ts"],
+      testResults: {
+        passed: false,
+        passCount: 26,
+        failCount: 2,
+        regressionsDetected: 2,
+      },
+      requestedAutonomyLevel: "L4_AUTO_PROMOTION",
+    };
+
+    const { computeSha256 } = await import("../src/engine/hashUtils.ts");
+    const badCandidateDigest = computeSha256(JSON.stringify(badCandidate.targetFiles));
+    const oracleProof = generateReleaseAuthorityProof(
+      "PROP-BAD-CANDIDATE-01",
+      "independent_quality_oracle",
+      { privateKeyPem: TEST_ORACLE_PRIV_KEY },
+      badCandidateDigest
+    );
+
+    // Execute real rollback with live HTTP verification
+    const rollbackDecision = await governor.evaluateReleaseCandidateAsync(badCandidate, oracleProof, {
+      stagingPort: testPort,
+      verifyHttp: true,
+    });
+
+    assert(rollbackDecision.status === "ROLLED_BACK", "Corrupted release candidate rejected and marked ROLLED_BACK");
+    assert(rollbackDecision.rollbackReceipt !== undefined, "Real rollback execution receipt attached");
+    assert(rollbackDecision.rollbackReceipt.triggered === true, "Automated rollback triggered");
+    assert(rollbackDecision.rollbackReceipt.restoredTarget === TRUSTED_PINNED_BASE_COMMIT, `Restores to pinned trusted commit ${TRUSTED_PINNED_BASE_COMMIT}`);
+    assert(rollbackDecision.rollbackReceipt.verifiedSafe === true, "Independent verification confirms restored canonical artifact");
+    assert(rollbackDecision.rollbackReceipt.httpVerification !== undefined, "Live HTTP verification record attached");
+    assert(rollbackDecision.rollbackReceipt.httpVerification.verifiedMatch === true, "Live HTTP endpoint verified serving canonical WASM hash");
+    assert(rollbackDecision.rollbackReceipt.httpVerification.servedWasmSha256 === CANONICAL_WASM_SHA256, "Served WASM hash matches canonical SHA-256 bit-for-bit");
+    assert(rollbackDecision.rollbackReceipt.httpVerification.servedReleaseCommit === TRUSTED_PINNED_BASE_COMMIT, `Served release commit matches pinned base ${TRUSTED_PINNED_BASE_COMMIT}`);
+    assert(rollbackDecision.rollbackReceipt.httpVerification.manifestEndpoint !== undefined, "Served release manifest endpoint confirmed verified");
+
+    // Negative Rollback Test: Simulated restoration failure triggers incident alert
+    const failedRollback = await governor.executeDeploymentRollback(badCandidate, {
+      simulateFailure: true,
+    });
+    assert(failedRollback.verifiedSafe === false, "Failed rollback remains marked verifiedSafe: false");
+    assert(failedRollback.incidentAlertTriggered === true, "Failed rollback triggers immediate incident alert");
+
+    // Restore original dist file if it existed
+    if (originalDistWasm) {
+      writeFileSync(distWasmPath, originalDistWasm);
+    }
+  } finally {
+    server.close();
+  }
 
   // ─── GATE 6: Operating-Cost Budgets ($0 Cloud Spend & Zero Egress) ──────────
   console.log("\n▶ Gate 6: Operating-Cost Budgets ($0 Spend & Zero Network Egress)");
@@ -182,12 +384,13 @@ async function runReleaseSafetyBattery() {
     cloudEgressPackets: 0,
     cloudSpendUsd: 0,
   });
+  assert(localExecution.allowed === true, "Zero cloud spend and zero egress passes cost budget");
+
   // ─── GATE 7: Evolution Cross-Process Mutex Lock (.spe_evolution_lock) ───────
   console.log("\n▶ Gate 7: Cross-Process Evolution Lock (.spe_evolution_lock)");
   const {
     acquireEvolutionLock,
     releaseEvolutionLock,
-    EVOLUTION_LOCK_FILE,
   } = await import("../src/engine/evolution/nightlyScheduler.ts");
 
   const testLockPath = resolve(process.cwd(), ".spe_test_evolution_lock");

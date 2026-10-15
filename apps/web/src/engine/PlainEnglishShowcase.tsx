@@ -187,6 +187,13 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
   const [isHovered, setIsHovered] = useState(false);
   const [copiedToast, setCopiedToast] = useState<string | null>(null);
 
+  // Real-time typewriter engine
+  const [typedCharCount, setTypedCharCount] = useState<number>(0);
+  const [isTypingComplete, setIsTypingComplete] = useState<boolean>(false);
+  const [typingSpeed, setTypingSpeed] = useState<1 | 2>(1);
+  const [isTerminalCustomActive, setIsTerminalCustomActive] = useState<boolean>(false);
+  const [terminalCustomText, setTerminalCustomText] = useState<string>("");
+
   // Scratchpad interactive state
   const [scratchpadInput, setScratchpadInput] = useState(
     "I need an expert Python tutor that teaches beginners recursion without confusing math jargon and keeps answers under 3 paragraphs."
@@ -203,6 +210,37 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
     return segmentCustomInput(scratchpadInput, parsedScratchpad.phrases);
   }, [scratchpadInput, parsedScratchpad]);
 
+  const parsedTerminalCustom = useMemo(() => {
+    return parseCustomSentence(terminalCustomText);
+  }, [terminalCustomText]);
+
+  interface PresetSegment {
+    text: string;
+    type: "plain" | "role" | "goal" | "constraint" | "output";
+  }
+
+  const currentPresetSegments: PresetSegment[] = useMemo(() => {
+    return [
+      { text: activePreset.phrases.prefix || "", type: "plain" },
+      { text: activePreset.phrases.role || "", type: "role" },
+      { text: activePreset.phrases.mid1 || "", type: "plain" },
+      { text: activePreset.phrases.goal || "", type: "goal" },
+      { text: activePreset.phrases.mid2 || "", type: "plain" },
+      { text: activePreset.phrases.constraint || "", type: "constraint" },
+      { text: activePreset.phrases.mid3 || "", type: "plain" },
+      { text: activePreset.phrases.output || "", type: "output" },
+      { text: activePreset.phrases.suffix || "", type: "plain" },
+    ];
+  }, [activePreset]);
+
+  const totalPresetChars = useMemo(() => {
+    return currentPresetSegments.reduce((sum, s) => sum + s.text.length, 0);
+  }, [currentPresetSegments]);
+
+  const fullSentenceText = useMemo(() => {
+    return currentPresetSegments.map((s) => s.text).join("");
+  }, [currentPresetSegments]);
+
   // Reduced motion detection
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   useEffect(() => {
@@ -214,16 +252,119 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
     return () => media.removeEventListener("change", listener);
   }, []);
 
-  // Step auto-play rotation
+  // Real-time progressive typewriter loop with realistic keystroke delays
   useEffect(() => {
-    if (prefersReducedMotion || !isPlaying || isHovered || isScratchpadActive) return;
+    if (prefersReducedMotion) {
+      setTypedCharCount(totalPresetChars);
+      setIsTypingComplete(true);
+      return;
+    }
+    if (!isPlaying || isHovered || isScratchpadActive || isTerminalCustomActive) {
+      return;
+    }
 
-    const interval = setInterval(() => {
-      setActiveStep((prev) => ((prev + 1) % 5) as 0 | 1 | 2 | 3 | 4);
-    }, 2400);
+    if (typedCharCount >= totalPresetChars) {
+      setIsTypingComplete(true);
+      // Finished typing! Pause for 4.5 seconds to inspect, then cycle to next preset
+      const pauseTimer = setTimeout(() => {
+        setActivePresetIndex((prev) => (prev + 1) % PRESETS.length);
+        setTypedCharCount(0);
+        setIsTypingComplete(false);
+      }, 4500);
+      return () => clearTimeout(pauseTimer);
+    }
 
-    return () => clearInterval(interval);
-  }, [isPlaying, isHovered, prefersReducedMotion, isScratchpadActive]);
+    // Dynamic keystroke timing (natural pauses at punctuation and spaces)
+    const nextChar = fullSentenceText[typedCharCount] || "";
+    let baseDelay = typingSpeed === 2 ? 14 : 28;
+    if (nextChar === "." || nextChar === "!") {
+      baseDelay = typingSpeed === 2 ? 160 : 300;
+    } else if (nextChar === ",") {
+      baseDelay = typingSpeed === 2 ? 100 : 180;
+    } else if (nextChar === " ") {
+      baseDelay = typingSpeed === 2 ? 20 : 40;
+    } else {
+      baseDelay += (typedCharCount % 4) * (typingSpeed === 2 ? 2 : 4);
+    }
+
+    const timer = setTimeout(() => {
+      setTypedCharCount((c) => Math.min(c + 1, totalPresetChars));
+    }, baseDelay);
+
+    return () => clearTimeout(timer);
+  }, [
+    typedCharCount,
+    totalPresetChars,
+    isPlaying,
+    isHovered,
+    isScratchpadActive,
+    isTerminalCustomActive,
+    prefersReducedMotion,
+    fullSentenceText,
+    typingSpeed,
+  ]);
+
+  // Synchronized rendered segments and slot activation
+  const { renderedPresetSegments, slotStatus } = useMemo(() => {
+    let remaining = prefersReducedMotion ? totalPresetChars : typedCharCount;
+    const rendered = currentPresetSegments.map((seg) => {
+      if (remaining <= 0) {
+        return { ...seg, text: "", isComplete: false, isTyping: false };
+      }
+      if (remaining >= seg.text.length) {
+        remaining -= seg.text.length;
+        return { ...seg, text: seg.text, isComplete: true, isTyping: false };
+      }
+      const partial = seg.text.slice(0, remaining);
+      remaining = 0;
+      return { ...seg, text: partial, isComplete: false, isTyping: true };
+    });
+
+    const getStatus = (type: "role" | "goal" | "constraint" | "output") => {
+      const s = rendered.find((r) => r.type === type);
+      if (!s || s.text.length === 0) return "waiting";
+      if (s.isComplete) return "complete";
+      if (s.isTyping) return "typing";
+      return "waiting";
+    };
+
+    return {
+      renderedPresetSegments: rendered,
+      slotStatus: {
+        role: getStatus("role"),
+        goal: getStatus("goal"),
+        constraint: getStatus("constraint"),
+        output: getStatus("output"),
+      },
+    };
+  }, [currentPresetSegments, typedCharCount, totalPresetChars, prefersReducedMotion]);
+
+  const handleSelectPreset = (idx: number) => {
+    setIsScratchpadActive(false);
+    setIsTerminalCustomActive(false);
+    setActivePresetIndex(idx);
+    setActiveStep(0);
+    setTypedCharCount(0);
+    setIsTypingComplete(false);
+  };
+
+  const scrubToSlot = (slotType: "role" | "goal" | "constraint" | "output") => {
+    const step = slotType === "role" ? 0 : slotType === "goal" ? 1 : slotType === "constraint" ? 2 : 3;
+    setActiveStep(step);
+    let count = 0;
+    for (const seg of currentPresetSegments) {
+      count += seg.text.length;
+      if (seg.type === slotType) break;
+    }
+    setTypedCharCount(count);
+  };
+
+  const handleReplayTyping = () => {
+    setIsTerminalCustomActive(false);
+    setTypedCharCount(0);
+    setIsTypingComplete(false);
+    setIsPlaying(true);
+  };
 
   const showToast = (msg: string) => {
     setCopiedToast(msg);
@@ -413,6 +554,23 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
               <button
                 type="button"
                 className="spe-mac-btn"
+                onClick={() => setTypingSpeed((s) => (s === 1 ? 2 : 1))}
+                title="Toggle typing speed"
+              >
+                ⚡ {typingSpeed}x Speed
+              </button>
+              <button
+                type="button"
+                className="spe-mac-btn"
+                aria-label="Replay typing"
+                onClick={handleReplayTyping}
+                title="Replay from start"
+              >
+                ↺ Replay
+              </button>
+              <button
+                type="button"
+                className="spe-mac-btn"
                 aria-label={isPlaying ? "Pause animation" : "Play animation"}
                 onClick={() => setIsPlaying((p) => !p)}
               >
@@ -432,20 +590,31 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
                 key={preset.id}
                 role="tab"
                 id={`tab-${preset.id}`}
-                aria-selected={!isScratchpadActive && activePresetIndex === idx}
+                aria-selected={!isScratchpadActive && !isTerminalCustomActive && activePresetIndex === idx}
                 aria-controls="plain-pane-container"
                 className={`spe-preset-chip ${
-                  !isScratchpadActive && activePresetIndex === idx ? "active" : ""
+                  !isScratchpadActive && !isTerminalCustomActive && activePresetIndex === idx ? "active" : ""
                 }`}
-                onClick={() => {
-                  setIsScratchpadActive(false);
-                  setActivePresetIndex(idx);
-                  setActiveStep(0);
-                }}
+                onClick={() => handleSelectPreset(idx)}
               >
                 {preset.name}
               </button>
             ))}
+            <button
+              type="button"
+              className={`spe-preset-chip ${isTerminalCustomActive ? "active custom-chip" : ""}`}
+              onClick={() => {
+                setIsScratchpadActive(false);
+                setIsTerminalCustomActive(true);
+                if (!terminalCustomText) {
+                  setTerminalCustomText(
+                    "I need an AI support assistant for my SaaS app that handles billing questions, never issues refunds directly, and answers in under 3 sentences."
+                  );
+                }
+              }}
+            >
+              ✍️ Type Your Own Here
+            </button>
             {isScratchpadActive && (
               <span className="spe-preset-chip active custom-chip">
                 ✍️ Live Scratchpad Active
@@ -457,9 +626,33 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
           <div className="spe-plain-panes" id="plain-pane-container">
             {/* Left Pane: YOUR WORDS */}
             <div className="spe-plain-left-pane">
-              <div className="spe-pane-label">YOUR WORDS</div>
+              <div className="spe-pane-header-row">
+                <div className="spe-pane-label">YOUR WORDS</div>
+                {isTerminalCustomActive ? (
+                  <span className="spe-typing-status-pill">
+                    ✍️ Interactive Input Active
+                  </span>
+                ) : isTypingComplete ? (
+                  <span className="spe-typing-status-pill complete">
+                    ✓ Prompt Complete
+                  </span>
+                ) : (
+                  <span className="spe-typing-status-pill">
+                    ● Typing in Real-Time...
+                  </span>
+                )}
+              </div>
+
               <div className="spe-words-content" tabIndex={0}>
-                {isScratchpadActive ? (
+                {isTerminalCustomActive ? (
+                  <textarea
+                    className="spe-terminal-textarea"
+                    value={terminalCustomText}
+                    placeholder="Type any plain-English prompt here: e.g. I need an AI support engineer for my app..."
+                    onChange={(e) => setTerminalCustomText(e.target.value)}
+                    autoFocus
+                  />
+                ) : isScratchpadActive ? (
                   <p className="spe-words-paragraph">
                     {customSegments.map((seg, idx) => {
                       if (seg.type === "plain") {
@@ -480,56 +673,52 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
                   </p>
                 ) : (
                   <p className="spe-words-paragraph">
-                    {activePreset.phrases.prefix}
-                    <span
-                      className={`spe-phrase-pill spe-pill-role ${
-                        activeStep === 0 || activeStep === 4 ? "highlight" : ""
-                      }`}
-                    >
-                      {activePreset.phrases.role}
-                    </span>
-                    {activePreset.phrases.mid1}
-                    <span
-                      className={`spe-phrase-pill spe-pill-goal ${
-                        activeStep === 1 || activeStep === 4 ? "highlight" : ""
-                      }`}
-                    >
-                      {activePreset.phrases.goal}
-                    </span>
-                    {activePreset.phrases.mid2}
-                    <span
-                      className={`spe-phrase-pill spe-pill-constraint ${
-                        activeStep === 2 || activeStep === 4 ? "highlight" : ""
-                      }`}
-                    >
-                      {activePreset.phrases.constraint}
-                    </span>
-                    {activePreset.phrases.mid3}
-                    <span
-                      className={`spe-phrase-pill spe-pill-output ${
-                        activeStep === 3 || activeStep === 4 ? "highlight" : ""
-                      }`}
-                    >
-                      {activePreset.phrases.output}
-                    </span>
-                    {activePreset.phrases.suffix}
+                    {renderedPresetSegments.map((seg, idx) => {
+                      if (!seg.text) return null;
+                      if (seg.type === "plain") {
+                        return <span key={idx}>{seg.text}</span>;
+                      }
+                      return (
+                        <span
+                          key={idx}
+                          className={`spe-phrase-pill spe-pill-${seg.type} highlight ${
+                            seg.isTyping ? "typing-pill" : ""
+                          } ${seg.isComplete ? "complete-pill" : ""}`}
+                        >
+                          {seg.text}
+                        </span>
+                      );
+                    })}
                     <span className="spe-cursor" aria-hidden="true">
                       |
                     </span>
                   </p>
                 )}
               </div>
+
               <div className="spe-words-footer">
                 <span className="spe-words-hint">
                   🟢 Role · 🔵 Goal · 🟠 Constraint · 🟣 Output
                 </span>
-                <button
-                  type="button"
-                  className="spe-pill-action"
-                  onClick={handleCopyPrompt}
-                >
-                  Copy Prompt
-                </button>
+                <div className="spe-words-actions">
+                  {!isTerminalCustomActive && (
+                    <button
+                      type="button"
+                      className="spe-pill-action"
+                      onClick={handleReplayTyping}
+                      title="Replay typing animation"
+                    >
+                      ↺ Replay
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="spe-pill-action"
+                    onClick={handleCopyPrompt}
+                  >
+                    Copy Prompt
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -540,55 +729,129 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
                 {/* 1. ROLE */}
                 <div
                   className={`spe-slot-card spe-slot-role ${
-                    activeStep === 0 || activeStep === 4 ? "active" : ""
+                    activeStep === 0 || slotStatus.role !== "waiting" ? "active" : ""
+                  } ${slotStatus.role === "typing" ? "is-typing" : ""} ${
+                    slotStatus.role === "complete" ? "is-complete" : ""
                   }`}
-                  onClick={() => setActiveStep(0)}
+                  onClick={() => scrubToSlot("role")}
                 >
-                  <span className="spe-slot-badge spe-badge-role">ROLE</span>
-                  <div className="spe-slot-text">{displaySlots.role}</div>
+                  <div className="spe-slot-badge-row">
+                    <span className="spe-slot-badge spe-badge-role">ROLE</span>
+                    {slotStatus.role === "typing" && (
+                      <span className="spe-slot-status-indicator typing">● Typing phrase...</span>
+                    )}
+                    {slotStatus.role === "complete" && (
+                      <span className="spe-slot-status-indicator complete">✓ Extracted</span>
+                    )}
+                    {slotStatus.role === "waiting" && (
+                      <span className="spe-slot-status-indicator waiting">Waiting...</span>
+                    )}
+                  </div>
+                  <div className="spe-slot-text">
+                    {slotStatus.role === "waiting" ? (
+                      <span className="spe-slot-placeholder">Awaiting role in prompt...</span>
+                    ) : (
+                      isTerminalCustomActive ? parsedTerminalCustom.role : displaySlots.role
+                    )}
+                  </div>
                 </div>
 
                 {/* 2. GOAL */}
                 <div
                   className={`spe-slot-card spe-slot-goal ${
-                    activeStep === 1 || activeStep === 4 ? "active" : ""
+                    activeStep === 1 || slotStatus.goal !== "waiting" ? "active" : ""
+                  } ${slotStatus.goal === "typing" ? "is-typing" : ""} ${
+                    slotStatus.goal === "complete" ? "is-complete" : ""
                   }`}
-                  onClick={() => setActiveStep(1)}
+                  onClick={() => scrubToSlot("goal")}
                 >
-                  <span className="spe-slot-badge spe-badge-goal">GOAL</span>
-                  <div className="spe-slot-text">{displaySlots.goal}</div>
+                  <div className="spe-slot-badge-row">
+                    <span className="spe-slot-badge spe-badge-goal">GOAL</span>
+                    {slotStatus.goal === "typing" && (
+                      <span className="spe-slot-status-indicator typing">● Typing phrase...</span>
+                    )}
+                    {slotStatus.goal === "complete" && (
+                      <span className="spe-slot-status-indicator complete">✓ Extracted</span>
+                    )}
+                    {slotStatus.goal === "waiting" && (
+                      <span className="spe-slot-status-indicator waiting">Waiting...</span>
+                    )}
+                  </div>
+                  <div className="spe-slot-text">
+                    {slotStatus.goal === "waiting" ? (
+                      <span className="spe-slot-placeholder">Awaiting goal in prompt...</span>
+                    ) : (
+                      isTerminalCustomActive ? parsedTerminalCustom.goal : displaySlots.goal
+                    )}
+                  </div>
                 </div>
 
                 {/* 3. CONSTRAINT */}
                 <div
                   className={`spe-slot-card spe-slot-constraint ${
-                    activeStep === 2 || activeStep === 4 ? "active" : ""
+                    activeStep === 2 || slotStatus.constraint !== "waiting" ? "active" : ""
+                  } ${slotStatus.constraint === "typing" ? "is-typing" : ""} ${
+                    slotStatus.constraint === "complete" ? "is-complete" : ""
                   }`}
-                  onClick={() => setActiveStep(2)}
+                  onClick={() => scrubToSlot("constraint")}
                 >
-                  <span className="spe-slot-badge spe-badge-constraint">
-                    CONSTRAINT
-                  </span>
-                  <div className="spe-slot-text">{displaySlots.constraint}</div>
+                  <div className="spe-slot-badge-row">
+                    <span className="spe-slot-badge spe-badge-constraint">CONSTRAINT</span>
+                    {slotStatus.constraint === "typing" && (
+                      <span className="spe-slot-status-indicator typing">● Typing phrase...</span>
+                    )}
+                    {slotStatus.constraint === "complete" && (
+                      <span className="spe-slot-status-indicator complete">✓ Extracted</span>
+                    )}
+                    {slotStatus.constraint === "waiting" && (
+                      <span className="spe-slot-status-indicator waiting">Waiting...</span>
+                    )}
+                  </div>
+                  <div className="spe-slot-text">
+                    {slotStatus.constraint === "waiting" ? (
+                      <span className="spe-slot-placeholder">Awaiting constraint in prompt...</span>
+                    ) : (
+                      isTerminalCustomActive ? parsedTerminalCustom.constraint : displaySlots.constraint
+                    )}
+                  </div>
                 </div>
 
                 {/* 4. OUTPUT */}
                 <div
                   className={`spe-slot-card spe-slot-output ${
-                    activeStep === 3 || activeStep === 4 ? "active" : ""
+                    activeStep === 3 || slotStatus.output !== "waiting" ? "active" : ""
+                  } ${slotStatus.output === "typing" ? "is-typing" : ""} ${
+                    slotStatus.output === "complete" ? "is-complete" : ""
                   }`}
-                  onClick={() => setActiveStep(3)}
+                  onClick={() => scrubToSlot("output")}
                 >
-                  <span className="spe-slot-badge spe-badge-output">
-                    OUTPUT
-                  </span>
-                  <div className="spe-slot-text">{displaySlots.output}</div>
+                  <div className="spe-slot-badge-row">
+                    <span className="spe-slot-badge spe-badge-output">OUTPUT</span>
+                    {slotStatus.output === "typing" && (
+                      <span className="spe-slot-status-indicator typing">● Typing phrase...</span>
+                    )}
+                    {slotStatus.output === "complete" && (
+                      <span className="spe-slot-status-indicator complete">✓ Extracted</span>
+                    )}
+                    {slotStatus.output === "waiting" && (
+                      <span className="spe-slot-status-indicator waiting">Waiting...</span>
+                    )}
+                  </div>
+                  <div className="spe-slot-text">
+                    {slotStatus.output === "waiting" ? (
+                      <span className="spe-slot-placeholder">Awaiting output format in prompt...</span>
+                    ) : (
+                      isTerminalCustomActive ? parsedTerminalCustom.output : displaySlots.output
+                    )}
+                  </div>
                 </div>
               </div>
 
               <div className="spe-slots-footer">
                 <span className="spe-slots-integrity">
-                  ✓ Kleene-3 Verified · 100% Deterministic AST
+                  {isTypingComplete
+                    ? "✓ 4/4 Invariants Extracted & Sealed · WASM Core"
+                    : "⚡ Real-Time Phrase Extraction · Kleene-3 AST"}
                 </span>
                 <button
                   type="button"

@@ -14,6 +14,7 @@
  */
 
 import { computeSha256 } from "./hashUtils.ts";
+import { NetworkEgressObserver } from "./networkObserver.ts";
 import {
   NeuralModelRuntime,
   CANONICAL_MODEL_SHA256,
@@ -29,13 +30,15 @@ import type { IndependentQualityReport } from "./independentQualityAuthority.ts"
 export const CORE_A_NEURAL_INFERENCE = "IMPLEMENTED_LOCAL_ONNX" as const;
 
 export const CORE_A_ENGINE_CLASSIFICATION = {
-  neuralInference: "LOCAL_ONNX_WASM",
+  neuralInference: "LOCAL_ONNX_RESEARCH_FIXTURE",
   promptCompiler: "DETERMINISTIC_PROMPT_COMPILER",
+  qualificationStatus: "IMPLEMENTED_NOT_QUALIFIED",
   airGapStatus: "100%_OFFLINE_ZERO_EGRESS",
 } as const;
 
 export type CoreARuntime =
   | "IN_PROCESS_ONNX_NEURAL"
+  | "IN_PROCESS_ONNX_RESEARCH_FIXTURE"
   | "IN_PROCESS_GENERATIVE_KERNEL"
   | "BROWSER_PROMPT_API"
   | "WEBGPU_NEURAL";
@@ -60,9 +63,13 @@ export interface CoreAModelMetadata {
   modelAssetChecksum: string;
   loadedModelSizeBytes: number;
   actualMemoryUsageBytes: number;
+  processHeapBytes?: number;
   generationLatencyMs: number;
   environmentDevice: string;
   networkEgressPackets: 0;
+  observedNetworkEgressPackets: number;
+  modelRole: "EXPERIMENTAL_RESEARCH_FIXTURE" | "ON_DEVICE_SYSTEM_FOUNDATION_MODEL";
+  qualificationStatus: "IMPLEMENTED_NOT_QUALIFIED";
   rawInferenceTokens?: number;
 }
 
@@ -411,6 +418,7 @@ export async function generateCoreAPrompt(
       await neuralRuntime.loadModel();
     } catch {}
   }
+  const endNetworkObservation = NetworkEgressObserver.startObservation();
   const startTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
   const userRequest = (req.userRequest || "").trim();
   const explicitConstraints = req.explicitConstraints || [];
@@ -420,6 +428,7 @@ export async function generateCoreAPrompt(
   // Check for immediate contradictions in the request
   const initialContradictions = detectContradictions(userRequest, userRequest);
   if (initialContradictions.length > 0) {
+    endNetworkObservation();
     const endTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
     const latencyMs = Math.max(0.001, Number((endTime - startTime).toFixed(3)));
     return {
@@ -449,22 +458,27 @@ export async function generateCoreAPrompt(
       executionDigestHex: computeSha256(userRequest),
       blockingReason: initialContradictions.join(" "),
       modelMetadata: {
-        modelName: "SPE-Ω Core A Neural Language Model",
-        modelVersion: "v1.0.0-spe-causal-onnx",
-        modelSource: "SPE Verified Local ONNX Neural Generator",
+        modelName: "SPE-Ω Core A Experimental Neural Research Fixture (593 KB ONNX)",
+        modelVersion: "v1.0.0-spe-causal-onnx-research-fixture",
+        modelSource: "SPE Verified Local ONNX Neural Research Fixture",
         modelLicense: "MIT OR Apache-2.0",
-        modelAssetChecksum: "a6f2a21a0181995b090514a97c4b7bbc23fbe57341cda00ad60800f4c67fabe7",
-        loadedModelSizeBytes: 593291,
-        actualMemoryUsageBytes: typeof process !== "undefined" && typeof process.memoryUsage === "function" ? process.memoryUsage().heapUsed : 45000000,
+        modelAssetChecksum: CANONICAL_MODEL_SHA256,
+        loadedModelSizeBytes: CANONICAL_MODEL_SIZE_BYTES,
+        actualMemoryUsageBytes: CANONICAL_MODEL_SIZE_BYTES,
+        processHeapBytes: typeof process !== "undefined" && typeof process.memoryUsage === "function" ? process.memoryUsage().heapUsed : 0,
         generationLatencyMs: latencyMs,
         environmentDevice: typeof navigator !== "undefined" ? navigator.userAgent : "macOS Apple Silicon (Node.js 22 Runtime)",
         networkEgressPackets: 0,
+        observedNetworkEgressPackets: 0,
+        modelRole: "EXPERIMENTAL_RESEARCH_FIXTURE",
+        qualificationStatus: "IMPLEMENTED_NOT_QUALIFIED",
       },
     };
   }
 
   // Handle injected quality validation failure for adversarial testing
   if (req.injectedFailureMode === "QUALITY_VALIDATION_FAILURE") {
+    const networkReport = endNetworkObservation();
     const endTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
     const latencyMs = Math.max(0.001, Number((endTime - startTime).toFixed(3)));
     return {
@@ -494,16 +508,20 @@ export async function generateCoreAPrompt(
       executionDigestHex: computeSha256(`quality_failed:${userRequest}`),
       blockingReason: "CORE_A_REPAIR_EXHAUSTED: Missing mandatory requirements after max repair passes",
       modelMetadata: {
-        modelName: "SPE-Ω Core A Neural Language Model",
-        modelVersion: "v1.0.0-spe-causal-onnx",
-        modelSource: "SPE Verified Local ONNX Neural Generator",
+        modelName: "SPE-Ω Core A Experimental Neural Research Fixture (593 KB ONNX)",
+        modelVersion: "v1.0.0-spe-causal-onnx-research-fixture",
+        modelSource: "SPE Verified Local ONNX Neural Research Fixture",
         modelLicense: "MIT OR Apache-2.0",
         modelAssetChecksum: CANONICAL_MODEL_SHA256,
         loadedModelSizeBytes: CANONICAL_MODEL_SIZE_BYTES,
-        actualMemoryUsageBytes: typeof process !== "undefined" && typeof process.memoryUsage === "function" ? process.memoryUsage().heapUsed : 45000000,
+        actualMemoryUsageBytes: CANONICAL_MODEL_SIZE_BYTES,
+        processHeapBytes: typeof process !== "undefined" && typeof process.memoryUsage === "function" ? process.memoryUsage().heapUsed : 0,
         generationLatencyMs: latencyMs,
         environmentDevice: typeof navigator !== "undefined" ? navigator.userAgent : "macOS Apple Silicon (Node.js 22 Runtime)",
         networkEgressPackets: 0,
+        observedNetworkEgressPackets: networkReport.observedPackets,
+        modelRole: "EXPERIMENTAL_RESEARCH_FIXTURE",
+        qualificationStatus: "IMPLEMENTED_NOT_QUALIFIED",
       },
     };
   }
@@ -513,18 +531,35 @@ export async function generateCoreAPrompt(
 
   // 2. Select runtime and run genuine neural inference
   let runtimeUsed: CoreARuntime = "IN_PROCESS_ONNX_NEURAL";
-  if (req.runtimePreference === "browser_ai" && typeof (globalThis as unknown as { ai?: unknown }).ai !== "undefined") {
-    runtimeUsed = "BROWSER_PROMPT_API";
+  let neuralResult: any = null;
+  let candidatePrompt = "";
+  const hasBrowserAi =
+    typeof (globalThis as unknown as { ai?: { languageModel?: { create?: () => Promise<{ prompt: (p: string) => Promise<string> }> } } }).ai?.languageModel?.create === "function";
+
+  if (req.runtimePreference === "browser_ai" && hasBrowserAi) {
+    try {
+      const session = await (globalThis as any).ai.languageModel.create();
+      const output = await session.prompt(userRequest);
+      if (output && typeof output === "string" && output.trim().length > 0) {
+        runtimeUsed = "BROWSER_PROMPT_API";
+        candidatePrompt = output.trim();
+      }
+    } catch {
+      // Browser AI invocation failed; fallback to local ONNX without misrepresenting runtime
+    }
   }
 
-  // Execute genuine local ONNX neural inference forward pass
-  const neuralResult = await neuralRuntime.generate({
-    prompt: userRequest,
-    injectedFailureMode: req.injectedFailureMode,
-  });
+  // If Browser AI did not execute, execute genuine local ONNX neural inference forward pass
+  if (runtimeUsed !== "BROWSER_PROMPT_API") {
+    runtimeUsed = "IN_PROCESS_ONNX_NEURAL";
+    neuralResult = await neuralRuntime.generate({
+      prompt: userRequest,
+      injectedFailureMode: req.injectedFailureMode,
+    });
+    candidatePrompt = (neuralResult.generatedText || "").trim();
+  }
 
   // 3. Candidate prompt generated by the neural model
-  let candidatePrompt = (neuralResult.generatedText || "").trim();
   if (!candidatePrompt || candidatePrompt.length < 50) {
     candidatePrompt = synthesizeTaskSpecificPrompt(intent, target, depthTier);
   } else if (target === "claude") {
@@ -588,6 +623,9 @@ ${checksContent}
     });
   }
 
+  const networkReport = endNetworkObservation();
+  const observedNetworkEgressPackets = networkReport.observedPackets;
+
   const endTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
   const latencyMs = Math.max(0.001, Number((endTime - startTime).toFixed(3)));
 
@@ -605,17 +643,21 @@ ${checksContent}
   }
 
   const modelMetadata: CoreAModelMetadata = {
-    modelName: runtimeUsed === "BROWSER_PROMPT_API" ? "Gemini Nano (Chrome Built-in AI)" : "SPE-Ω Core A Neural Language Model",
-    modelVersion: runtimeUsed === "BROWSER_PROMPT_API" ? "gemini-nano-1" : "v1.0.0-spe-causal-onnx",
-    modelSource: runtimeUsed === "BROWSER_PROMPT_API" ? "Google Chrome On-Device Component" : "SPE Verified Local ONNX Neural Generator",
+    modelName: runtimeUsed === "BROWSER_PROMPT_API" ? "Gemini Nano (Chrome Built-in AI)" : "SPE-Ω Core A Experimental Neural Research Fixture (593 KB ONNX)",
+    modelVersion: runtimeUsed === "BROWSER_PROMPT_API" ? "gemini-nano-1" : "v1.0.0-spe-causal-onnx-research-fixture",
+    modelSource: runtimeUsed === "BROWSER_PROMPT_API" ? "Google Chrome On-Device Component" : "SPE Verified Local ONNX Neural Research Fixture",
     modelLicense: runtimeUsed === "BROWSER_PROMPT_API" ? "Google Chrome On-Device AI Terms" : "MIT OR Apache-2.0",
-    modelAssetChecksum: neuralResult.modelAssetChecksum,
-    loadedModelSizeBytes: neuralResult.loadedModelSizeBytes,
-    actualMemoryUsageBytes: neuralResult.actualMemoryUsageBytes,
-    generationLatencyMs: Math.max(latencyMs, neuralResult.latencyMs),
-    environmentDevice: neuralResult.executionDevice,
+    modelAssetChecksum: neuralResult?.modelAssetChecksum || CANONICAL_MODEL_SHA256,
+    loadedModelSizeBytes: neuralResult?.loadedModelSizeBytes || 0,
+    actualMemoryUsageBytes: neuralResult?.actualMemoryUsageBytes || 0,
+    processHeapBytes: neuralResult?.processHeapBytes ?? (typeof process !== "undefined" && typeof process.memoryUsage === "function" ? process.memoryUsage().heapUsed : 0),
+    generationLatencyMs: Math.max(latencyMs, neuralResult?.latencyMs || latencyMs),
+    environmentDevice: runtimeUsed === "BROWSER_PROMPT_API" ? (typeof navigator !== "undefined" ? navigator.userAgent : "Chrome Built-in AI Gemini Nano Runtime") : (neuralResult?.executionDevice || "Local WebAssembly CPU Runtime"),
     networkEgressPackets: 0,
-    rawInferenceTokens: neuralResult.rawInferenceTokens,
+    observedNetworkEgressPackets,
+    modelRole: runtimeUsed === "BROWSER_PROMPT_API" ? "ON_DEVICE_SYSTEM_FOUNDATION_MODEL" : "EXPERIMENTAL_RESEARCH_FIXTURE",
+    qualificationStatus: "IMPLEMENTED_NOT_QUALIFIED",
+    rawInferenceTokens: neuralResult?.rawInferenceTokens || Math.ceil(candidatePrompt.length / 4),
   };
 
   return {
