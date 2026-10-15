@@ -118,8 +118,12 @@ export function HeroTheater({ onNavigate }: { onNavigate?: (view: AppView) => vo
             <em>{hero.accent}</em>
           </h1>
           <p className="hero-description">
-            Turn your ideas into clear prompts for any AI.
-            Start with a few words. Add what matters.
+            {hero.support || (
+              <>
+                Turn your ideas into clear prompts for any AI.
+                Start with a few words. Add what matters.
+              </>
+            )}
           </p>
           <a
             className="hero-start"
@@ -135,7 +139,7 @@ export function HeroTheater({ onNavigate }: { onNavigate?: (view: AppView) => vo
               }
             }}
           >
-            Make my prompt <span aria-hidden="true">↗</span>
+            {hero.cta || "Make my prompt"} <span aria-hidden="true">↗</span>
           </a>
         </div>
         <div className="hero-stage">
