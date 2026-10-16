@@ -24,13 +24,46 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
     return () => clearTimeout(timer);
   }, [value]);
 
+  const [copyFailedSlot, setCopyFailedSlot] = useState<string | null>(null);
   const hasContent = value.trim().length > 0;
 
-  const copySlotText = (label: string, text: string) => {
+  const copySlotText = async (label: string, text: string) => {
     if (!text) return;
-    navigator.clipboard?.writeText(text);
-    setCopiedSlot(label);
-    setTimeout(() => setCopiedSlot(null), 1600);
+    try {
+      if (
+        typeof navigator !== "undefined" &&
+        navigator.clipboard &&
+        typeof navigator.clipboard.writeText === "function"
+      ) {
+        await navigator.clipboard.writeText(text);
+        setCopiedSlot(label);
+        setCopyFailedSlot(null);
+        setTimeout(() => setCopiedSlot(null), 1600);
+      } else if (typeof document !== "undefined") {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        const success = document.execCommand("copy");
+        document.body.removeChild(textarea);
+        if (success) {
+          setCopiedSlot(label);
+          setCopyFailedSlot(null);
+          setTimeout(() => setCopiedSlot(null), 1600);
+        } else {
+          setCopyFailedSlot(label);
+          setTimeout(() => setCopyFailedSlot(null), 2000);
+        }
+      } else {
+        setCopyFailedSlot(label);
+        setTimeout(() => setCopyFailedSlot(null), 2000);
+      }
+    } catch {
+      setCopyFailedSlot(label);
+      setTimeout(() => setCopyFailedSlot(null), 2000);
+    }
   };
 
   if (!hasContent) {
@@ -168,7 +201,7 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
           Say it plainly. See it take shape.
         </h3>
         <p className="spe-friendly-subtitle">
-          Structured in real time into four simple parts any AI follows without drift.
+          Structured in real time into four explicit role, goal, rule, and output components.
         </p>
       </div>
 
@@ -193,7 +226,7 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
               title="Copy Role"
               onClick={() => copySlotText("Role", parsed.role)}
             >
-              {copiedSlot === "Role" ? "✓ Copied" : "Copy"}
+              {copiedSlot === "Role" ? "✓ Copied" : copyFailedSlot === "Role" ? "Failed" : "Copy"}
             </button>
           </div>
           <p className="spe-friendly-body">{parsed.role}</p>
@@ -219,7 +252,7 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
               title="Copy Goal"
               onClick={() => copySlotText("Goal", parsed.goal)}
             >
-              {copiedSlot === "Goal" ? "✓ Copied" : "Copy"}
+              {copiedSlot === "Goal" ? "✓ Copied" : copyFailedSlot === "Goal" ? "Failed" : "Copy"}
             </button>
           </div>
           <p className="spe-friendly-body">
@@ -245,7 +278,7 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
               title="Copy Rules"
               onClick={() => copySlotText("Rules", parsed.constraint)}
             >
-              {copiedSlot === "Rules" ? "✓ Copied" : "Copy"}
+              {copiedSlot === "Rules" ? "✓ Copied" : copyFailedSlot === "Rules" ? "Failed" : "Copy"}
             </button>
           </div>
           <p className="spe-friendly-body">
@@ -272,7 +305,7 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
               title="Copy Output"
               onClick={() => copySlotText("Output", parsed.output)}
             >
-              {copiedSlot === "Output" ? "✓ Copied" : "Copy"}
+              {copiedSlot === "Output" ? "✓ Copied" : copyFailedSlot === "Output" ? "Failed" : "Copy"}
             </button>
           </div>
           <p className="spe-friendly-body">

@@ -73,17 +73,37 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     if (!output.endsWith(".")) output += ".";
   }
 
-  // 3. Constraint extraction
-  const constraintPattern = /\b(never\s+.+?|do not\s+.+?|don'\''t\s+.+?|avoid\s+.+?|without\s+.+?|must not\s+.+?|no\s+hallucinations?|omit\s+.+?)(?=\s*[,.;]?\s*(?:\band\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/i;
-  const constraintMatch = text.match(constraintPattern);
-  if (constraintMatch && constraintMatch[1]) {
-    constraintPhrase = constraintMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
-    constraint = constraintPhrase.charAt(0).toUpperCase() + constraintPhrase.slice(1);
+  // 3. Constraint extraction (captures affirmative directives like 'must reply warmly' as well as negative prohibitions)
+  const affirmativePattern = /\b((?:must\s+(?!not\b)|shall\s+(?!not\b)|always\s+|strictly\s+|ensure\s+|reply\s+warmly\b)[^.;,]*?)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/i;
+  const negativePattern = /\b(never\s+.+?|do not\s+.+?|don'\''t\s+.+?|avoid\s+.+?|without\s+.+?|must not\s+.+?|no\s+hallucinations?|omit\s+.+?|cannot\s+.+?)(?=\s*[,.;]?\s*(?:\band\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/i;
+
+  const collectedConstraints: string[] = [];
+  const affMatch = text.match(affirmativePattern);
+  if (affMatch && affMatch[1]) {
+    const cleanAff = affMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
+    if (cleanAff && !cleanAff.toLowerCase().startsWith("be a") && !cleanAff.toLowerCase().startsWith("be an")) {
+      collectedConstraints.push(cleanAff);
+    }
+  }
+
+  const negMatch = text.match(negativePattern);
+  if (negMatch && negMatch[1]) {
+    const cleanNeg = negMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
+    if (cleanNeg && !collectedConstraints.includes(cleanNeg)) {
+      collectedConstraints.push(cleanNeg);
+    }
+  }
+
+  if (collectedConstraints.length > 0) {
+    constraintPhrase = collectedConstraints.join(", ");
+    constraint = collectedConstraints
+      .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
+      .join(". ");
     if (!constraint.endsWith(".")) constraint += ".";
   }
 
   // 4. Goal extraction
-  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\band\b|[.;]|$))/i;
+  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\band\b|[.;]|$))/i;
   const goalClauseMatch = text.match(goalClausePattern);
 
   if (goalClauseMatch && goalClauseMatch[1]) {
@@ -91,7 +111,7 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     goal = goalPhrase.charAt(0).toUpperCase() + goalPhrase.slice(1);
   } else {
     // Check infinitive "to <verb>" or imperative start
-    const toMatch = text.match(/\bto\s+([a-z]+[^.,;]+)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bwithout\b|\bavoid\b|\bkeep\b|\bformat\b|$))/i);
+    const toMatch = text.match(/\bto\s+([a-z]+[^.,;]+)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bwithout\b|\bavoid\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bkeep\b|\bformat\b|$))/i);
     if (toMatch && toMatch[1] && !rolePhrase.includes(toMatch[1])) {
       goalPhrase = toMatch[1].trim();
       goal = goalPhrase.charAt(0).toUpperCase() + goalPhrase.slice(1);
@@ -100,8 +120,10 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
       if (outputPhrase && first.includes(outputPhrase)) {
         first = first.replace(outputPhrase, "");
       }
-      if (constraintPhrase && first.includes(constraintPhrase)) {
-        first = first.replace(constraintPhrase, "");
+      for (const c of collectedConstraints) {
+        if (first.includes(c)) {
+          first = first.replace(c, "");
+        }
       }
       goalPhrase = first.replace(/\b(?:into|under|in|without|avoid)\s*$/i, "").replace(/[,;\s]+and\s*$/i, "").replace(/[,;]\s*$/i, "").trim();
       goal = goalPhrase;

@@ -1624,7 +1624,18 @@ export function isVerifiedPaidEntitlementResult(
   // Active Trial Pass handling:
   if (entitlement.isTrial === true || entitlement.payload?.isTrial === true) {
     const p = entitlement.payload;
-    if (p && typeof p.expiresAtMs === "number" && p.expiresAtMs > effectiveEpochMs) {
+    const MAX_TRIAL_DURATION_MS = 7 * 24 * 60 * 60 * 1000 + 3600_000; // 7 days + 1h clock skew
+    if (
+      p &&
+      typeof p.expiresAtMs === "number" &&
+      p.expiresAtMs > effectiveEpochMs &&
+      p.expiresAtMs <= effectiveEpochMs + MAX_TRIAL_DURATION_MS &&
+      (typeof p.activatedAtMs !== "number" || (
+        p.expiresAtMs >= p.activatedAtMs &&
+        p.expiresAtMs - p.activatedAtMs <= MAX_TRIAL_DURATION_MS &&
+        effectiveEpochMs >= p.activatedAtMs - 60_000
+      ))
+    ) {
       return true;
     }
     return false;

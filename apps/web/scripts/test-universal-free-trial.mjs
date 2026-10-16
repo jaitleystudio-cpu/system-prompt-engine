@@ -92,6 +92,44 @@ clearBrowserTrialEntitlement();
 assert.equal(resolveBrowserTrialEntitlement(now), null, "Trial record purged from localStorage");
 console.log("  ✓ Trial storage purged cleanly on deactivation");
 
+// [6/6] Testing Anti-Spoofing: Tampered Far-Future Expiry Rejected
+console.log("[6/6] Testing Anti-Spoofing: Far-Future and Tampered Expiry Rejection...");
+// Attempt 1: Far-future year 2100 unsigned trial in localStorage
+localStorage.setItem("spe-trial-entitlement", JSON.stringify({
+  status: "ACTIVE_TRIAL",
+  tier: "team",
+  planName: "Hacked Team Pass",
+  email: "hacker@test.local",
+  trialId: "SPE-TRIAL-TEAM-HACK",
+  activatedAtMs: now,
+  expiresAtMs: 4_100_000_000_000, // Year 2100
+  isTrial: true,
+}));
+assert.equal(
+  resolveBrowserTrialEntitlement(now),
+  null,
+  "Trial with duration exceeding 7-day maximum MUST be rejected by resolveBrowserTrialEntitlement",
+);
+
+// Attempt 2: Far-future unsigned trial passed directly to isVerifiedPaidEntitlementResult
+const spoofedFarFutureEntitlement = {
+  verified: true,
+  tier: "team",
+  isTrial: true,
+  payload: {
+    isTrial: true,
+    activatedAtMs: now,
+    expiresAtMs: 4_100_000_000_000,
+  },
+};
+assert.equal(
+  isVerifiedPaidEntitlementResult(spoofedFarFutureEntitlement, now),
+  false,
+  "Far-future trial entitlement MUST be rejected by synthesizer gate",
+);
+clearBrowserTrialEntitlement();
+console.log("  ✓ Anti-spoofing verified: Far-future and tampered trial durations strictly rejected.");
+
 console.log("==================================================================");
 console.log("🎉 ALL 7-DAY UNIVERSAL FREE TRIAL TESTS PASSED (100%)!");
 console.log("==================================================================");

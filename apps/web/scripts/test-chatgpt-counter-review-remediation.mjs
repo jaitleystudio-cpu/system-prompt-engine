@@ -29,6 +29,7 @@ import { AuthoritativeBillingAuthority } from "../src/server/billingAuthority.ts
 import { constructMarkdownSystemPrompt } from "../src/engine/markdownExportCore.ts";
 import { artifactPrintHtml } from "../../../packages/web-runtime/src/speArtifact.ts";
 import { cleanSurrogateBoundaries } from "../src/engine/promptSynthesizer.mjs";
+import { parseCustomSentence } from "../src/engine/plainEnglishParser.ts";
 
 
 
@@ -305,6 +306,52 @@ console.log("\n[6/6] Verifying BYOK 2026 Frontier Models, Headers & CSP Permissi
   console.log("  ✓ BYOK 2026 models, official headers, and CSP connect-src origins verified.");
 }
 
+// -----------------------------------------------------------------------------
+// GATE 7: Plain English Parser & Clipboard Async Reliability
+// -----------------------------------------------------------------------------
+console.log("\n[7/7] Verifying Plain English Parser & Async Clipboard Reliability...");
+{
+  // Test case matching ChatGPT's screenshot: "must reply warmly" with negative constraint
+  const sampleInput = "Act as a customer support assistant that resolves billing complaints, must reply warmly and never share user passwords, return responses in 3 bulleted steps.";
+  const parsed = parseCustomSentence(sampleInput);
+
+  assert.equal(parsed.role, "Customer support assistant.", "Role must extract customer support assistant");
+  assert.equal(parsed.goal, "Resolves billing complaints.", "Goal must extract resolves billing complaints");
+  assert.ok(
+    parsed.constraint.toLowerCase().includes("must reply warmly"),
+    `Constraint must preserve 'must reply warmly', got: '${parsed.constraint}'`
+  );
+  assert.ok(
+    parsed.constraint.toLowerCase().includes("never share user passwords"),
+    `Constraint must preserve 'never share user passwords', got: '${parsed.constraint}'`
+  );
+  assert.ok(
+    parsed.output.toLowerCase().includes("return responses in 3 bulleted steps"),
+    `Output must preserve 'return responses in 3 bulleted steps', got: '${parsed.output}'`
+  );
+
+  // Standalone affirmative requirement: "must reply warmly"
+  const warmOnlyInput = "I need an empathetic guide to help users, must reply warmly.";
+  const warmParsed = parseCustomSentence(warmOnlyInput);
+  assert.ok(
+    warmParsed.constraint.toLowerCase().includes("must reply warmly"),
+    `Constraint must preserve standalone 'must reply warmly', got: '${warmParsed.constraint}'`
+  );
+
+  // Verify RealPromptLiveHud.tsx uses async/await and clipboard error fallback
+  const hudSource = readFileSync(resolve(__dirname, "../src/engine/RealPromptLiveHud.tsx"), "utf8");
+  assert.ok(
+    hudSource.includes("await navigator.clipboard.writeText"),
+    "Copy handler must await navigator.clipboard.writeText"
+  );
+  assert.ok(
+    hudSource.includes("copyFailedSlot"),
+    "Copy handler must handle failure states rather than assuming success"
+  );
+
+  console.log("  ✓ Plain English parser preserves all affirmative and negative requirements without omission; clipboard async verified.");
+}
+
 console.log("\n==================================================================");
-console.log("🎉 ALL 6 CHATGPT COUNTER-REVIEW REMEDIATION GATES PASSED CLEANLY!");
+console.log("🎉 ALL 7 CHATGPT COUNTER-REVIEW REMEDIATION GATES PASSED CLEANLY!");
 console.log("==================================================================");

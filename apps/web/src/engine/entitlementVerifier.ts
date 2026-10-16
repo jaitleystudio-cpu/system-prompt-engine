@@ -134,6 +134,7 @@ export interface EntitlementVerificationResult {
   signatureHex?: string | null;
   rejectionReason: string | null;
   isTrial?: boolean;
+  isAuthoritative?: boolean;
   trialDaysRemaining?: number;
 }
 
@@ -614,6 +615,7 @@ export function verifySignedEntitlementToken(
     signatureHex,
     rejectionReason: null,
     isTrial,
+    isAuthoritative: !isTrial,
     trialDaysRemaining,
   };
 }
@@ -710,6 +712,7 @@ export function resolveBrowserVerifiedEntitlement(
           verified: true,
           tier: trial.tier,
           isTrial: true,
+          isAuthoritative: false,
           trialDaysRemaining: daysRemaining,
           payload: {
             schema: "spe.entitlement.v1",
@@ -777,6 +780,8 @@ export function startBrowserFreeTrial(
   return record;
 }
 
+export const MAX_TRIAL_DURATION_MS = 7 * 24 * 60 * 60 * 1000 + 3600_000; // 7 days + 1h clock skew
+
 export function resolveBrowserTrialEntitlement(
   currentEpochMs: number = Date.now(),
 ): TrialEntitlementRecord | null {
@@ -787,7 +792,13 @@ export function resolveBrowserTrialEntitlement(
     const parsed = JSON.parse(raw) as TrialEntitlementRecord;
     if (!parsed || parsed.isTrial !== true) return null;
     if (parsed.tier !== "pro" && parsed.tier !== "team") return null;
-    if (typeof parsed.expiresAtMs !== "number") return null;
+    if (typeof parsed.activatedAtMs !== "number" || typeof parsed.expiresAtMs !== "number") return null;
+    // Reject tampered trial durations exceeding 7-day maximum window
+    if (parsed.expiresAtMs < parsed.activatedAtMs) return null;
+    if (parsed.expiresAtMs - parsed.activatedAtMs > MAX_TRIAL_DURATION_MS) return null;
+    if (currentEpochMs - parsed.activatedAtMs > MAX_TRIAL_DURATION_MS) {
+      return { ...parsed, status: "EXPIRED_TRIAL" };
+    }
     if (parsed.expiresAtMs <= currentEpochMs) {
       return { ...parsed, status: "EXPIRED_TRIAL" };
     }

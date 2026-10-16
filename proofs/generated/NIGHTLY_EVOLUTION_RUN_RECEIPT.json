@@ -1,5 +1,5 @@
 {
-  "runId": "evol-nightly-2026-10-15-1a140dfdc1a",
+  "runId": "evol-nightly-2026-10-16-1a146d5638a",
   "clockIst": "02:17 AM IST",
   "clockUtc": "20:47 UTC",
   "isDryRun": true,
@@ -25,12 +25,12 @@
   "proposalsRejected": 0,
   "missedRunDetected": false,
   "concurrencyLockAcquired": true,
-  "summaryReceiptDigest": "sha256:nightly-2026-10-15-1-proposals",
+  "summaryReceiptDigest": "sha256:nightly-2026-10-16-1-proposals",
   "visualEvolutionAudit": {
-    "variantId": "variant-v5-emerald-zenith",
-    "variantName": "Emerald Zenith",
-    "measuredContrastDark": 7.88,
-    "measuredContrastLight": 8.62,
+    "variantId": "variant-v7-hyper-obsidian",
+    "variantName": "Hyper Obsidian",
+    "measuredContrastDark": 16.22,
+    "measuredContrastLight": 15.83,
     "wcagAaaSatisfied": true,
     "clsZeroCertified": true,
     "publicationBoundaryIst": "02:17:00 IST"
