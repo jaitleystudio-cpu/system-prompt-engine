@@ -12,6 +12,12 @@ export interface TranscompilerOptions {
   specificModelId?: string;
   tier?: string | null;
   isWatermarkSuppressed?: boolean;
+  aspectRatio?: string;
+  aperture?: string;
+  iso?: string;
+  wireframe?: boolean;
+  shaderType?: string;
+  cameraMotion?: string;
 }
 
 export function transcompilePromptForPlatform(
@@ -137,43 +143,80 @@ ${asset.verificationCriteria.map((v) => `! PASS: ${v}`).join("\n")}`;
     }
 
     case "cursor": {
-      compiledOutput = `<!-- .cursorrules specification for ${asset.title} -->
-You are an expert ${asset.subdomain} assistant.
+      let renderingNote = "";
+      if (options.wireframe !== undefined || options.shaderType) {
+        const mode = options.wireframe ? "Wireframe mesh" : "Solid surface";
+        const shader = options.shaderType ? `with ${options.shaderType} shader` : "";
+        renderingNote = `\n## Real-Time Graphics Rendering Config\n- Rendering Mode: ${mode} ${shader}\n`;
+      }
 
-## Operational Standards (Cursor Engine)
+      compiledOutput = `---
+description: ${asset.title} - ${asset.subdomain} operational rules
+globs: *
+alwaysApply: true
+---
+<!-- Cursor Rules (.cursor/rules/spe-rules.mdc) & AGENTS.md Standard -->
+# System Role: ${asset.title}
+You are an expert ${asset.subdomain} engineer.
+
+## Operational Standards (Cursor Engine & AGENTS.md)
+- Match project idioms and conventions; avoid adding speculative architecture or needless commentary.
 - NEVER create unnecessary files; prefer precision edits to existing files.
-- Do NOT add redundant comments that narrate the obvious. Comments must document non-obvious mathematical invariants, security hazards, or concurrency locks.
+- Report outcomes faithfully: If tests fail or constraints are violated, diagnose root causes rather than modifying tests.
 - Reference code cleanly using startLine:endLine:filepath format.
-
+${renderingNote}
+## Instructions
 ${hydrated}
 
-CRITICAL RULES:
+## Critical Invariants
 - MUST NOT: Introduce unverified third-party dependencies or hallucinated APIs.
 ${asset.constraints.map((c) => `- MUST NOT: ${c}`).join("\n")}
 
-TEST VERIFICATION:
+## Verification Criteria
 ${asset.verificationCriteria.map((v) => `- PASS: ${v}`).join("\n")}`;
       break;
     }
 
     case "midjourney": {
       let params = "--v 6.1 --stylize 250 --style raw";
-      if (adapter?.customParameters?.aspectRatio) {
-        params += ` --ar ${adapter.customParameters.aspectRatio}`;
+      const ar = options.aspectRatio || adapter?.customParameters?.aspectRatio;
+      if (ar) {
+        params += ` --ar ${ar}`;
       }
-      compiledOutput = `${hydrated.replace(/\n+/g, ", ").trim()} ${params}`;
+      let cameraDetails = "";
+      if (options.aperture || options.iso) {
+        const optics = [
+          options.aperture ? `aperture ${options.aperture}` : "",
+          options.iso ? `ISO ${options.iso}` : "",
+        ].filter(Boolean).join(", ");
+        if (optics) cameraDetails = `, shot on 35mm prime lens, ${optics}`;
+      }
+      compiledOutput = `${hydrated.replace(/\n+/g, ", ").trim()}${cameraDetails} ${params}`;
       break;
     }
 
     case "flux": {
-      compiledOutput = `Photo prompt: ${hydrated.trim()} --quality ultra-sharp, photorealistic, 8k resolution, raw color capture`;
+      let extra = "";
+      if (options.aspectRatio) {
+        extra += `, aspect ratio ${options.aspectRatio}`;
+      }
+      if (options.aperture || options.iso) {
+        const optics = [
+          options.aperture ? `f/${options.aperture.replace(/^f\/?/i, "")}` : "",
+          options.iso ? `ISO ${options.iso}` : "",
+        ].filter(Boolean).join(" ");
+        if (optics) extra += `, camera optics: ${optics}`;
+      }
+      compiledOutput = `Photo prompt: ${hydrated.trim()}${extra} --quality ultra-sharp, photorealistic, 8k resolution, raw color capture`;
       break;
     }
 
     case "runway": {
+      const motion = options.cameraMotion || "Smooth cinematic tracking motion, stable horizon.";
+      const arNotice = options.aspectRatio ? `\nFRAME RATIO: ${options.aspectRatio}` : "";
       compiledOutput = `[Runway Gen-3 Alpha Video Motion Directive]
-SCENE & ACTION: ${hydrated}
-CAMERA MOVEMENT: Smooth cinematic tracking motion, stable horizon.
+SCENE & ACTION: ${hydrated}${arNotice}
+CAMERA MOVEMENT: ${motion}
 TEMPORAL DYNAMICS: Physically realistic acceleration, coherent geometry over time.`;
       break;
     }

@@ -8,11 +8,11 @@ export const ARSENAL_CATALOG_ASSETS: ArsenalPromptAsset[] = [
     "domain": "Image Generation",
     "subdomain": "Commercial Photography",
     "modality": "image",
-    "icon": "📸",
+    "icon": "photo",
     "outcome": "Production-grade photorealistic image prompt",
     "author": "SPE Universal Engineering Council",
     "verified": true,
-    "qualityStatus": "MODEL_TESTED",
+    "qualityStatus": "STRUCTURE_VALIDATED",
     "compatiblePlatforms": [
       "midjourney",
       "flux",
@@ -37,7 +37,7 @@ export const ARSENAL_CATALOG_ASSETS: ArsenalPromptAsset[] = [
       "Calibrated depth of field with creamy bokeh and tack-sharp subject focal plane."
     ],
     "verificationCriteria": [
-      "Tested on Midjourney v6.1 and FLUX.2 with 100% photorealism pass rate.",
+      "Prompt syntax and parameter schema validated for Midjourney v6.1 and FLUX.2 rendering pipelines.",
       "Zero distorted geometry or unnatural metallic artifacts."
     ],
     "variables": [
@@ -87,7 +87,7 @@ export const ARSENAL_CATALOG_ASSETS: ArsenalPromptAsset[] = [
     "domain": "UI/UX & Web Design",
     "subdomain": "3D WebGL",
     "modality": "code",
-    "icon": "🌐",
+    "icon": "cube",
     "outcome": "Zero-dependency Three.js WebGL component",
     "author": "SPE Universal Engineering Council",
     "verified": true,
@@ -148,7 +148,7 @@ export const ARSENAL_CATALOG_ASSETS: ArsenalPromptAsset[] = [
     "domain": "UI/UX & Web Design",
     "subdomain": "SaaS Dashboard",
     "modality": "code",
-    "icon": "📐",
+    "icon": "grid",
     "outcome": "Accessible React 19 Tailwind Bento Component",
     "author": "SPE Universal Engineering Council",
     "verified": true,
@@ -209,11 +209,11 @@ export const ARSENAL_CATALOG_ASSETS: ArsenalPromptAsset[] = [
     "domain": "Video & Motion",
     "subdomain": "Cinematic Video",
     "modality": "video",
-    "icon": "🎬",
+    "icon": "film",
     "outcome": "Filmic temporal video generation prompt",
     "author": "SPE Universal Engineering Council",
     "verified": true,
-    "qualityStatus": "MODEL_TESTED",
+    "qualityStatus": "STRUCTURE_VALIDATED",
     "compatiblePlatforms": [
       "runway",
       "chatgpt",

@@ -60,11 +60,16 @@ const customThreeVars = {
   particle_count: "50000",
   color_scheme: "spectral iridescent neon violet to solar amber",
 };
-const compiledThree = transcompilePromptForPlatform(threeAsset, "cursor", customThreeVars);
+const compiledThree = transcompilePromptForPlatform(threeAsset, "cursor", customThreeVars, {
+  wireframe: true,
+  shaderType: "Physical PBR",
+});
 assert.ok(compiledThree.includes("Procedural mobius strip"), "Substituted 3D geometry must appear in Cursor rules");
 assert.ok(compiledThree.includes("50000"), "Substituted particle count must appear in Cursor rules");
-assert.ok(compiledThree.includes("<!-- .cursorrules specification"), "Must format as Cursor rules");
-console.log("  ✓ 3D WebGL asset variable substitution verified for Cursor.");
+assert.ok(compiledThree.includes("globs: *"), "Must format as modern Cursor .mdc rule with YAML frontmatter");
+assert.ok(compiledThree.includes("AGENTS.md Standard"), "Must reference AGENTS.md Standard");
+assert.ok(compiledThree.includes("Wireframe mesh with Physical PBR shader"), "3D shader and wireframe controls must appear in compiled output");
+console.log("  ✓ 3D WebGL asset variable substitution & live shader controls verified for Cursor.");
 
 // [3/4] Testing Multi-Dialect Transcompilation Matrix
 console.log("\n[3/4] Testing multi-dialect transcompilation across platforms...");
@@ -79,39 +84,65 @@ assert.ok(gptTrans.includes("# System Role:"), "ChatGPT dialect must include # S
 assert.ok(gptTrans.includes("## Negative Constraints"), "ChatGPT dialect must include Negative Constraints");
 console.log("  ✓ ChatGPT markdown dialect verified.");
 
-const fluxTrans = transcompilePromptForPlatform(photoAsset, "flux", customVars);
+const fluxTrans = transcompilePromptForPlatform(photoAsset, "flux", customVars, {
+  aspectRatio: "16:9",
+  aperture: "f/1.4",
+  iso: "ISO 800",
+});
 assert.ok(fluxTrans.includes("Photo prompt:"), "FLUX dialect must format as photo prompt");
 assert.ok(fluxTrans.includes("ultra-sharp, photorealistic"), "FLUX dialect must include sharpness tags");
-console.log("  ✓ FLUX.2 pro dialect verified.");
+assert.ok(fluxTrans.includes("aspect ratio 16:9"), "FLUX dialect must reflect live aspect ratio control");
+assert.ok(fluxTrans.includes("f/1.4"), "FLUX dialect must reflect live aperture control");
+assert.ok(fluxTrans.includes("ISO 800"), "FLUX dialect must reflect live ISO control");
+console.log("  ✓ FLUX.2 pro dialect verified with live camera controls.");
 
-const runwayTrans = transcompilePromptForPlatform(videoAsset, "runway", {});
+const runwayTrans = transcompilePromptForPlatform(videoAsset, "runway", {}, {
+  aspectRatio: "9:16",
+  cameraMotion: "Dynamic orbiting crane motion with rising vertical push",
+});
 assert.ok(runwayTrans.includes("[Runway Gen-3 Alpha Video Motion Directive]"), "Runway dialect must include video header");
 assert.ok(runwayTrans.includes("TEMPORAL DYNAMICS:"), "Runway dialect must include temporal dynamics");
-console.log("  ✓ Runway video motion directive verified.");
+assert.ok(runwayTrans.includes("FRAME RATIO: 9:16"), "Runway dialect must include live frame ratio");
+assert.ok(runwayTrans.includes("Dynamic orbiting crane motion"), "Runway dialect must include live camera motion");
+console.log("  ✓ Runway video motion directive verified with live aspect and trajectory controls.");
 
-// [4/4] Validating Deterministic Social Proof Telemetry & Zero Egress
-console.log("\n[4/4] Validating social proof telemetry and deterministic reliability...");
-function getAssetSocialMetrics(id) {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash << 5) - hash + id.charCodeAt(i);
-    hash |= 0;
-  }
-  const copies = 1200 + (Math.abs(hash) % 4800);
-  return {
-    copies,
-    passRate: "100%",
-    drift: "0ms",
-  };
-}
+// [4/4] Validating Entitlement Gating, Quality Status Invariants & Zero Synthetic Telemetry
+console.log("\n[4/4] Validating entitlement gating, quality status invariants & honest telemetry...");
 
+// Test Entitlement Gating in Compiler
+const freeTrans = transcompilePromptForPlatform(photoAsset, "claude", {}, {
+  tier: "free",
+  isWatermarkSuppressed: false,
+});
+assert.ok(freeTrans.includes("License: Community Free"), "Free tier compilation must include community license notice");
+assert.ok(freeTrans.includes("Upgrade to SPE Pro"), "Free tier compilation must include viral upgrade link");
+
+const proTrans = transcompilePromptForPlatform(photoAsset, "claude", {}, {
+  tier: "pro",
+  isWatermarkSuppressed: true,
+});
+assert.ok(!proTrans.includes("License: Community Free"), "Pro tier compilation must NOT include watermark footer");
+assert.ok(!proTrans.includes("Upgrade to SPE Pro"), "Pro tier compilation must NOT include upgrade CTA");
+console.log("  ✓ Entitlement gating verified: Free tier receives community watermark, Pro tier output is clean.");
+
+// Verify Honest Quality Statuses Across Entire Arsenal
 for (const asset of ARSENAL_CATALOG_ASSETS) {
-  const metrics = getAssetSocialMetrics(asset.id);
-  assert.ok(metrics.copies >= 1200 && metrics.copies <= 6000, `Copies count for ${asset.id} must be in realistic range`);
-  assert.equal(metrics.passRate, "100%");
-  assert.equal(metrics.drift, "0ms");
+  assert.equal(asset.qualityStatus, "STRUCTURE_VALIDATED", `Asset ${asset.id} must be honestly labeled as STRUCTURE_VALIDATED`);
+  assert.ok(!asset.verificationCriteria.some((v) => v.includes("100% photorealism")), `Asset ${asset.id} must not claim unexecuted 100% photorealism`);
 }
-console.log(`  ✓ All ${ARSENAL_CATALOG_ASSETS.length} assets have deterministic social proof and 0ms drift metrics.`);
+console.log(`  ✓ All ${ARSENAL_CATALOG_ASSETS.length} assets verified with honest STRUCTURE_VALIDATED engineering classification.`);
+
+// Verify Live Optics Controls on Midjourney v6.1
+const mjControlled = transcompilePromptForPlatform(photoAsset, "midjourney", customVars, {
+  aspectRatio: "1:1",
+  aperture: "f/1.8",
+  iso: "ISO 400",
+});
+assert.ok(mjControlled.includes("--ar 1:1"), "Midjourney must reflect live aspect ratio 1:1");
+assert.ok(mjControlled.includes("aperture f/1.8"), "Midjourney must reflect live aperture f/1.8");
+assert.ok(mjControlled.includes("ISO 400"), "Midjourney must reflect live ISO 400");
+assert.ok(mjControlled.includes("--v 6.1"), "Midjourney must consistently emit --v 6.1 matching studio platform");
+console.log("  ✓ Midjourney v6.1 verified with live aperture, ISO, and aspect ratio controls.");
 
 console.log("\n==================================================================");
 console.log("🎉 ALL PROMPT PERFORMANCE STUDIO & MULTIMODAL TESTS PASSED!");

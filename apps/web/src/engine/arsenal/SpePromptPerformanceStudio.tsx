@@ -10,6 +10,8 @@ import { useState, useMemo, useEffect } from "react";
 import type { ArsenalPromptAsset, ArsenalTargetPlatform } from "./arsenalSchema";
 import { transcompilePromptForPlatform } from "./modelTranscompiler";
 import type { CategoryId } from "@spe/web-runtime";
+import { type EntitlementVerificationResult } from "../entitlementVerifier";
+import { isVerifiedPaidEntitlementResult } from "../promptSynthesizer.mjs";
 import "./prompt-performance-studio.css";
 
 interface Props {
@@ -19,14 +21,15 @@ interface Props {
   onSelectPrompt: (compiledPrompt: string, category: CategoryId) => void;
   initialPlatform?: ArsenalTargetPlatform;
   initialVariables?: Record<string, string>;
+  entitlement?: EntitlementVerificationResult | null;
 }
 
 const SUPPORTED_STUDIO_PLATFORMS: { id: ArsenalTargetPlatform; label: string; file: string; badge: string }[] = [
   { id: "claude", label: "Claude 4.5 Sonnet", file: "CLAUDE.md", badge: "XML & Reasoning" },
   { id: "chatgpt", label: "GPT-5 / o4-mini", file: "SYSTEM_POLICY.md", badge: "o-Series Markdown" },
   { id: "gemini", label: "Gemini 3 Pro", file: "gemini_directive.ts", badge: "Grounding Contracts" },
-  { id: "cursor", label: "Cursor IDE", file: ".cursorrules", badge: "Zero Slop Agent" },
-  { id: "midjourney", label: "Midjourney v7", file: "midjourney_prompt.txt", badge: "Photoreal Optics" },
+  { id: "cursor", label: "Cursor IDE (.mdc)", file: ".cursor/rules/spe-rules.mdc", badge: "MDC & AGENTS.md" },
+  { id: "midjourney", label: "Midjourney v6.1", file: "midjourney_prompt.txt", badge: "Photoreal Optics" },
   { id: "flux", label: "FLUX.2 [pro]", file: "flux_prompt.txt", badge: "Raw 8K Shutter" },
   { id: "local", label: "Ollama / DeepSeek", file: "Modelfile", badge: "Local Offline" },
 ];
@@ -50,6 +53,7 @@ export function SpePromptPerformanceStudio({
   onSelectPrompt,
   initialPlatform = "claude",
   initialVariables = {},
+  entitlement = null,
 }: Props) {
   const [selectedPlatform, setSelectedPlatform] = useState<ArsenalTargetPlatform>(initialPlatform);
   const [variables, setVariables] = useState<Record<string, string>>({});
@@ -86,14 +90,33 @@ export function SpePromptPerformanceStudio({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Compiled output
+  // Entitlement & Tier calculation
+  const isPaid = isVerifiedPaidEntitlementResult(entitlement);
+
+  // Compiled output with live simulation parameters and entitlement enforcement
   const compiledOutput = useMemo(() => {
     if (!asset) return "";
     return transcompilePromptForPlatform(asset, selectedPlatform, variables, {
-      tier: "pro",
-      isWatermarkSuppressed: true,
+      tier: isPaid ? (entitlement?.tier ?? "pro") : "free",
+      isWatermarkSuppressed: isPaid,
+      aspectRatio: simAspectRatio,
+      aperture: simAperture,
+      iso: simIso,
+      wireframe: simWireframe,
+      shaderType: simShader,
     });
-  }, [asset, selectedPlatform, variables]);
+  }, [
+    asset,
+    selectedPlatform,
+    variables,
+    isPaid,
+    entitlement,
+    simAspectRatio,
+    simAperture,
+    simIso,
+    simWireframe,
+    simShader,
+  ]);
 
   if (!isOpen || !asset) return null;
 
@@ -161,14 +184,14 @@ export function SpePromptPerformanceStudio({
           </div>
 
           <div className="spe-studio-header-right">
-            <span className="spe-studio-pill-stat" title="Deterministic Air-Gap Verification">
+            <span className="spe-studio-pill-stat" title="Air-gap verified prompt schema">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
-              100% Invariants Verified
+              Structure Validated
             </span>
             <span className="spe-studio-pill-stat" style={{ color: "#38bdf8", borderColor: "rgba(56, 189, 248, 0.25)", background: "rgba(56, 189, 248, 0.1)" }}>
-              0ms Drift
+              Deterministic Engine
             </span>
             <button
               type="button"
@@ -219,9 +242,9 @@ export function SpePromptPerformanceStudio({
                 ) : asset.modality === "code" || asset.subdomain.includes("3D") ? (
                   <div className="spe-mesh-preview">
                     <div className="spe-mesh-hud">
-                      <span>{simShader}</span>
-                      <span>VERTEX COUNT: 14,280</span>
-                      <span>60 FPS</span>
+                      <span>PROJECTION: ISOMETRIC SVG WIREFRAME</span>
+                      <span>SHADER: {simShader.toUpperCase()}</span>
+                      <span>MODE: {simWireframe ? "WIREFRAME" : "SOLID MESH"}</span>
                     </div>
 
                     <div className="spe-mesh-wireframe">
@@ -353,11 +376,11 @@ export function SpePromptPerformanceStudio({
             <div className="spe-studio-scorecard">
               <div className="spe-score-item">
                 <span className="spe-score-title">Invariant Verification</span>
-                <span className="spe-score-val success">100% Passed</span>
+                <span className="spe-score-val success">Structure Validated</span>
               </div>
               <div className="spe-score-item">
                 <span className="spe-score-title">Semantic Drift</span>
-                <span className="spe-score-val success">0.00 ms</span>
+                <span className="spe-score-val success">Unexecuted Baseline</span>
               </div>
               <div className="spe-score-item">
                 <span className="spe-score-title">Token Footprint</span>

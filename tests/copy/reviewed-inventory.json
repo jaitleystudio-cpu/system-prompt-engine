@@ -13039,12 +13039,6 @@
       "text": "✍️ Step 3: Define System Intent & Capabilities"
     },
     {
-      "id": "1f280ba344e4794d5a0b",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "100% ad-free experience across the entire web interface"
-    },
-    {
       "id": "20a9b732286593b39a2b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -13075,6 +13069,12 @@
       "text": "Execute Claude 4.5, GPT-5, and DeepSeek-R2 at sub-200ms latency with zero setup."
     },
     {
+      "id": "264820996ed77dd8c3c6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "[PRO]"
+    },
+    {
       "id": "264e88028d10fd80e4b9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13087,6 +13087,12 @@
       "text": "Claim Free Inference &rarr;"
     },
     {
+      "id": "2f9a1fcae34b902468b4",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Structure Validated"
+    },
+    {
       "id": "2ffc27a6ca8f9d566165",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13097,6 +13103,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Design a reactive, WebGL 3D design canvas with accessible controls"
+    },
+    {
+      "id": "316539bfcbeb62fb786b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Template Ready"
     },
     {
       "id": "373d33afae9d5bae2c32",
@@ -13145,12 +13157,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Legal & Compliance"
-    },
-    {
-      "id": "3b9bd2e5b5610c231ea7",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Drift"
     },
     {
       "id": "3c0838c74d2be7c14845",
@@ -13207,6 +13213,12 @@
       "text": "Run Llama 3.3 and DeepSeek at instant speed. Get $5 free developer credits with zero credit card required."
     },
     {
+      "id": "435e6607a9471994379e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "spe_local_copy_"
+    },
+    {
       "id": "43c2ce8048f43ba9fac1",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13235,6 +13247,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "All"
+    },
+    {
+      "id": "462268a6f7173ffba353",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "audio"
     },
     {
       "id": "46bbc5e6c0f26463d6c5",
@@ -13351,6 +13369,12 @@
       "text": "Web access is 100% free and ad-supported for all 10,000+ prompts across all models."
     },
     {
+      "id": "534731221e181bfef89b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Air-Gap Offline"
+    },
+    {
       "id": "5387f0f980ab26ca61a8",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -13405,6 +13429,12 @@
       "text": "Target AI Model:"
     },
     {
+      "id": "56dd016fadb9c2c0baa7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Download Offline Catalog (Pro)"
+    },
+    {
       "id": "56f1fc30f774ab3453e5",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13451,6 +13481,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Sales & CRM"
+    },
+    {
+      "id": "5b89247b44ad5792cb5b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "[JSON]"
     },
     {
       "id": "5e36613e60d7dfdf3bac",
@@ -13517,6 +13553,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Redundant Pruned"
+    },
+    {
+      "id": "65160100a06cf2362fd2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Ad-free experience across the entire web interface"
     },
     {
       "id": "65ff9741dcca5aa368d9",
@@ -13759,10 +13801,10 @@
       "text": "e.g. file_read, file_write, bash, terminal, web_search, stripe"
     },
     {
-      "id": "845655ffaa49f5c91dda",
+      "id": "8623c890e6dfb9071ef7",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "Copies"
+      "text": "[LOCAL]"
     },
     {
       "id": "86d2b6fd5cebc14cc5cc",
@@ -13777,10 +13819,10 @@
       "text": "Open in Prompt Performance Studio"
     },
     {
-      "id": "87abc87ed1c5dd855d90",
+      "id": "881278a9b0021ecb98c3",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "📥 Download Offline Catalog (Pro)"
+      "text": "[AD-FREE]"
     },
     {
       "id": "8885b1134f6ad3bc474b",
@@ -13871,6 +13913,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "ChatGPT"
+    },
+    {
+      "id": "956a908d5773024a2c5e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "x locally"
     },
     {
       "id": "96d2059c1165ebeadc0e",
@@ -14035,6 +14083,12 @@
       "text": "ad-neon"
     },
     {
+      "id": "ac3658af62be9559cd80",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Used"
+    },
+    {
       "id": "ac6959e80135e2bb16cd",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -14065,12 +14119,6 @@
       "text": "ad-groq"
     },
     {
-      "id": "af4381ce81758376acfb",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "100% clean, unwatermarked exports on web and local desktop"
-    },
-    {
       "id": "afb4d09ccdcd2b84bc1b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -14095,10 +14143,10 @@
       "text": "Claude &nearr;"
     },
     {
-      "id": "b9d9c9b9e386570f8d27",
+      "id": "b8dbb666dbddb4c9618f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "0ms"
+      "depth": "PROOF",
+      "text": "video"
     },
     {
       "id": "bab983bc3f281eec87e2",
@@ -14135,12 +14183,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Variables"
-    },
-    {
-      "id": "bf812747606023895e82",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "⚡ Run Prompts with $5 Free Cloud API Credits on OpenRouter &amp; Together AI"
     },
     {
       "id": "c12a76adaf5aa69b1d65",
@@ -14245,6 +14287,12 @@
       "text": "📑 Step 5: Multi-Volume Specification Preview"
     },
     {
+      "id": "d095e83d3930e8f2f498",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Clean, unwatermarked exports on web and local desktop"
+    },
+    {
       "id": "d193cae9a83769178ae2",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -14291,6 +14339,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "DeepSeek-R2 & Llama 4 token-level ChatML header framing & proof kernel"
+    },
+    {
+      "id": "d64428dab04b991d0c31",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Run Prompts with $5 Free Cloud API Credits on OpenRouter &amp; Together AI"
     },
     {
       "id": "d7185f48a203e9f1f953",
@@ -14525,12 +14579,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "MASTER_50K"
-    },
-    {
-      "id": "facbe600f36860015286",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Invariants"
     },
     {
       "id": "fb4c91dee9132c17bc38",

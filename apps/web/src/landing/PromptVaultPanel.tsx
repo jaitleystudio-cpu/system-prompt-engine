@@ -164,20 +164,20 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
   const [pageSize, setPageSize] = useState<number>(24);
 
   const categories = [
-    { label: "All", count: "10,000+", icon: "⚡" },
-    { label: "Software & DevOps", count: "1,600", icon: "💻" },
-    { label: "Digital Marketing & SEO", count: "1,200", icon: "📈" },
-    { label: "Business & Operations", count: "1,000", icon: "🏢" },
-    { label: "UI/UX & Web Design", count: "850", icon: "🎨" },
-    { label: "Research & Education", count: "850", icon: "🔬" },
-    { label: "Image Generation", count: "900", icon: "🖼️" },
-    { label: "Video & Motion", count: "700", icon: "🎬" },
-    { label: "Audio, Speech & Music", count: "600", icon: "🎵" },
-    { label: "Sales & CRM", count: "650", icon: "💼" },
-    { label: "Finance & Analytics", count: "450", icon: "📊" },
-    { label: "Customer Support & HR", count: "600", icon: "🤝" },
-    { label: "Legal & Compliance", count: "250", icon: "⚖️" },
-    { label: "Writing & Productivity", count: "350", icon: "✍️" },
+    { label: "All", count: "10,000+" },
+    { label: "Software & DevOps", count: "1,600" },
+    { label: "Digital Marketing & SEO", count: "1,200" },
+    { label: "Business & Operations", count: "1,000" },
+    { label: "UI/UX & Web Design", count: "850" },
+    { label: "Research & Education", count: "850" },
+    { label: "Image Generation", count: "900" },
+    { label: "Video & Motion", count: "700" },
+    { label: "Audio, Speech & Music", count: "600" },
+    { label: "Sales & CRM", count: "650" },
+    { label: "Finance & Analytics", count: "450" },
+    { label: "Customer Support & HR", count: "600" },
+    { label: "Legal & Compliance", count: "250" },
+    { label: "Writing & Productivity", count: "350" },
   ];
 
   const allCatalogRecords = useMemo(() => getArsenalCatalogList(), []);
@@ -271,9 +271,19 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
     }
   };
 
+  const incrementLocalCopyCount = (id: string) => {
+    try {
+      const current = parseInt(localStorage.getItem(`spe_local_copy_${id}`) || "0", 10);
+      localStorage.setItem(`spe_local_copy_${id}`, String(current + 1));
+    } catch {
+      // Local storage disabled or restricted
+    }
+  };
+
   const handleCopy = (p: ArsenalPromptAsset) => {
     const text = getCompiledText(p);
     navigator.clipboard.writeText(text).then(() => {
+      incrementLocalCopyCount(p.id);
       setCopiedId(p.id);
       setTimeout(() => setCopiedId(null), 2000);
     });
@@ -282,6 +292,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
   const handleSendToExternal = (p: ArsenalPromptAsset, url: string) => {
     const text = getCompiledText(p);
     navigator.clipboard.writeText(text).then(() => {
+      incrementLocalCopyCount(p.id);
       window.open(url, "_blank", "noopener,noreferrer");
     });
   };
@@ -298,23 +309,27 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
       isWatermarkSuppressed: userTier === "pro",
     });
     navigator.clipboard.writeText(compiled).then(() => {
+      incrementLocalCopyCount(p.id);
       setCopiedDialect({ cardId: p.id, platform: targetPlatform });
       setTimeout(() => setCopiedDialect(null), 2000);
     });
   };
 
-  const getAssetSocialMetrics = (id: string) => {
-    let hash = 0;
-    for (let i = 0; i < id.length; i++) {
-      hash = (hash << 5) - hash + id.charCodeAt(i);
-      hash |= 0;
+  const getAssetUsageLabel = (id: string) => {
+    try {
+      const localCount = parseInt(localStorage.getItem(`spe_local_copy_${id}`) || "0", 10);
+      return {
+        localCount,
+        statusLabel: "Structure Validated",
+        readinessLabel: localCount > 0 ? `Used ${localCount}x locally` : "Template Ready",
+      };
+    } catch {
+      return {
+        localCount: 0,
+        statusLabel: "Structure Validated",
+        readinessLabel: "Template Ready",
+      };
     }
-    const copies = 1200 + (Math.abs(hash) % 4800);
-    return {
-      copies: copies.toLocaleString(),
-      passRate: "100%",
-      drift: "0ms",
-    };
   };
 
   // Discovery outcome classification
@@ -515,7 +530,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
           <div className="spe-vault-sponsored-banner">
             <div className="spe-sponsor-badge">SPONSORED PARTNER COMPUTE</div>
             <div className="spe-sponsor-info">
-              <div className="spe-sponsor-title">⚡ Run Prompts with $5 Free Cloud API Credits on OpenRouter &amp; Together AI</div>
+              <div className="spe-sponsor-title">Run Prompts with $5 Free Cloud API Credits on OpenRouter &amp; Together AI</div>
               <div className="spe-sponsor-desc">Execute Claude 4.5, GPT-5, and DeepSeek-R2 at sub-200ms latency with zero setup.</div>
             </div>
             <a
@@ -546,16 +561,21 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
                   className={`spe-vault-cat-btn ${selectedCat === cat.label ? "active" : ""}`}
                   onClick={() => handleCategorySelect(cat.label)}
                 >
-                  <span>{cat.icon ? `${cat.icon} ` : ""}{cat.label} ({cat.count})</span>
+                  <span>{cat.label} ({cat.count})</span>
                 </button>
               ))}
               <button
                 type="button"
                 className="spe-vault-cat-btn"
-                style={{ borderColor: "rgba(245, 158, 11, 0.45)", color: "#fbbf24", background: "rgba(245, 158, 11, 0.1)" }}
+                style={{ borderColor: "rgba(245, 158, 11, 0.45)", color: "#fbbf24", background: "rgba(245, 158, 11, 0.1)", display: "inline-flex", alignItems: "center", gap: "0.35rem" }}
                 onClick={handleOpenOfflineModal}
               >
-                📥 Download Offline Catalog (Pro)
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download Offline Catalog (Pro)
               </button>
             </div>
 
@@ -627,13 +647,23 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
               const isExpanded = expandedCardId === p.id;
               const currentVars = varValues[p.id] || {};
               const isCopied = copiedId === p.id;
-              const social = getAssetSocialMetrics(p.id);
+              const usage = getAssetUsageLabel(p.id);
 
               const elements = [
                 <div className="spe-vault-card" key={p.id}>
                   <div className="spe-card-header">
                     <div className="spe-card-header-left">
-                      <span className="spe-card-icon" aria-hidden="true">{p.icon}</span>
+                      <span className="spe-card-icon" aria-hidden="true">
+                        {p.modality === "image" ? (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        ) : p.modality === "video" ? (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                        ) : p.modality === "audio" ? (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                        ) : (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        )}
+                      </span>
                       <div className="spe-card-title-wrap">
                         <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
                           <span className="spe-card-cat-badge">{p.domain}</span>
@@ -652,23 +682,23 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
                     </button>
                   </div>
 
-                  {/* Social Proof & Reliability Metric Row */}
+                  {/* Structure Verification & Local Usage Metric Row */}
                   <div className="spe-card-social-row">
                     <span className="spe-card-social-metric highlight">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                       </svg>
-                      {social.copies} Copies
+                      {usage.readinessLabel}
                     </span>
                     <span className="spe-card-social-metric verified">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                       </svg>
-                      {social.passRate} Invariants
+                      {usage.statusLabel}
                     </span>
                     <span className="spe-card-social-metric">
-                      {social.drift} Drift
+                      Air-Gap Offline
                     </span>
                   </div>
 
@@ -1288,7 +1318,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
 
             <div className="spe-platform-guarantee-banner">
               <div className="spe-platform-guarantee-text">
-                <span aria-hidden="true">🔒</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span>Cryptographic Local Verification • Commercial IP Protection • Zero Unauthorized Data Egress</span>
               </div>
               <span className="spe-platform-guarantee-badge">SPE Ω CERTIFIED</span>
@@ -1302,7 +1332,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
           <div className="spe-pro-modal-box" onClick={(e) => e.stopPropagation()}>
             <div className="spe-pro-modal-header">
               <h3 className="spe-pro-modal-title">
-                <span aria-hidden="true">🔒</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ verticalAlign: "middle", marginRight: "0.4rem" }}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 Offline Air-Gapped Catalog — SPE Pro
               </h3>
               <button
@@ -1321,10 +1351,10 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
               </p>
 
               <ul className="spe-pro-perks-list">
-                <li><span>📥</span> Full 10,000+ Prompt Catalog JSON bundle for private local execution</li>
-                <li><span>🛡️</span> Zero network telemetry, local private CLI compiling &amp; validation</li>
-                <li><span>💎</span> 100% clean, unwatermarked exports on web and local desktop</li>
-                <li><span>🚫</span> 100% ad-free experience across the entire web interface</li>
+                <li><span>[JSON]</span> Full 10,000+ Prompt Catalog JSON bundle for private local execution</li>
+                <li><span>[LOCAL]</span> Zero network telemetry, local private CLI compiling &amp; validation</li>
+                <li><span>[PRO]</span> Clean, unwatermarked exports on web and local desktop</li>
+                <li><span>[AD-FREE]</span> Ad-free experience across the entire web interface</li>
               </ul>
 
               <div className="spe-pro-modal-actions">
@@ -1384,6 +1414,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
         onSelectPrompt={onSelectPrompt}
         initialPlatform={activeArsenalPlatform}
         initialVariables={studioAsset ? varValues[studioAsset.id] : undefined}
+        entitlement={verifiedEntitlement}
       />
     </section>
   );
