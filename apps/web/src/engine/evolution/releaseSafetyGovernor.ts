@@ -40,6 +40,7 @@ export const CANONICAL_WASM_SHA256 = "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4
 export const CANONICAL_WASM_SIZE_BYTES = 1339691;
 export const TRUSTED_PINNED_BASE_COMMIT = "177d9d0f";
 export const AUTHENTIC_PINNED_BASE_MANIFEST_DIGEST = "a4fe3dd8777c78fb5ff04fc0765ac931300a2cd1283c1afd9f682359ffb8df2f";
+export const FOUNDER_RELEASE_AUTHORITY_FINGERPRINT = "07c6a4a2783b29f23fc261b49f90f5fb81d33c0402ed14c179428d02e4bf6277";
 
 /**
  * Revocation Registry: SHA-256 digests of all compromised / exposed approval credentials from Git history.
@@ -276,6 +277,18 @@ export class ReleaseSafetyGovernor {
         "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Custom authority keys are prohibited in production/staging environments."
       );
     }
+    if (options.customAuthorityKeys) {
+      for (const [id, keyHex] of Object.entries(options.customAuthorityKeys)) {
+        if (id.toLowerCase() === "founder_release_authority") {
+          const fp = computeSha256(keyHex);
+          if (fp !== FOUNDER_RELEASE_AUTHORITY_FINGERPRINT) {
+            throw new Error(
+              "UNAPPROVED_FOUNDER_KEY_SUBSTITUTION: Cannot replace founder_release_authority with unapproved key."
+            );
+          }
+        }
+      }
+    }
     this.trustedAuthorityPublicKeys = {
       ...TRUSTED_AUTHORITY_PUBLIC_KEYS,
       ...(options.customAuthorityKeys || {}),
@@ -288,6 +301,14 @@ export class ReleaseSafetyGovernor {
       throw new Error(
         "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Cannot override trusted authority keys in production/staging environments."
       );
+    }
+    if (authorityId.toLowerCase() === "founder_release_authority") {
+      const fp = computeSha256(publicKeyDerHex);
+      if (fp !== FOUNDER_RELEASE_AUTHORITY_FINGERPRINT) {
+        throw new Error(
+          "SECURITY_ERROR_IMMUTABLE_FOUNDER_KEY: Cannot replace founder_release_authority root key with unapproved key (IMMUTABLE_FOUNDER_ROOT)."
+        );
+      }
     }
     this.trustedAuthorityPublicKeys[authorityId.toLowerCase()] = publicKeyDerHex;
   }
@@ -820,7 +841,26 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    // 1. Physically restore destination from immutable pinned storage
+    // 1. Write IN-PROGRESS pointer state (never claim success before verification succeeds)
+    const inProgressPointerData = {
+      activeReleaseCommit: this.pinnedCommit,
+      rejectedCandidateProposalId: candidate.proposalId,
+      canonicalWasmHash: this.pinnedWasmHash,
+      canonicalWasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
+      restoredAtIso: timestamp,
+      status: "ROLLBACK_IN_PROGRESS",
+      controlPlane: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+      scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+      zeroCloudCostVerified: true,
+    };
+
+    try {
+      writeFileSync(pointerPath, JSON.stringify(inProgressPointerData, null, 2), "utf-8");
+    } catch (e) {
+      console.warn("Notice writing deployment pointer:", e);
+    }
+
+    // 2. Physically restore destination from immutable pinned storage
     const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
     const pinnedWasm = resolve(pinnedBaseDir, "spe_wasm.wasm");
     const distDir = resolve(process.cwd(), "apps/web/dist");
@@ -838,6 +878,15 @@ export class ReleaseSafetyGovernor {
       const baselineAudit = this.verifyPinnedBaselineManifest(pinnedManifest);
       if (!baselineAudit.verified) {
         console.error(`ROLLBACK_ABORTED_TAMPERED_BASELINE: ${baselineAudit.reason}`);
+        try {
+          const failPointer = {
+            ...inProgressPointerData,
+            status: "ROLLBACK_FAILED",
+            failureReason: `PINNED_BASELINE_MANIFEST_UNAUTHENTICATED: ${baselineAudit.reason}`,
+          };
+          writeFileSync(pointerPath, JSON.stringify(failPointer, null, 2), "utf-8");
+        } catch {}
+
         return {
           triggered: true,
           restoredTarget: this.pinnedCommit,
@@ -855,33 +904,65 @@ export class ReleaseSafetyGovernor {
         const pManifest = baselineAudit.manifest;
         const artifacts = pManifest.artifacts || {};
 
-        // 1. Physically restore every tracked artifact (HTML, JS, CSS, WASM, models, config) from pinned-base to dist
+        // Direct Safe Restoration & Symlink Overwrite Prevention (Finding R2.3-P0-B / Gate G2):
+        // Before writing any artifact, verify path traversal bounds and unlink any pre-existing
+        // symlink or non-regular file at destPath so copyFileSync can NEVER write through a symlink!
         for (const relPath of Object.keys(artifacts)) {
+          const normRel = relative(distDir, resolve(distDir, relPath));
+          if (normRel.startsWith("..") || /^[a-zA-Z]:[\\/]/.test(relPath)) {
+            throw new Error(`SECURITY_PATH_TRAVERSAL_REJECTED: ${relPath}`);
+          }
           const srcPath = resolve(pinnedBaseDir, relPath);
           const destPath = resolve(distDir, relPath);
           if (existsSync(srcPath)) {
             mkdirSync(dirname(destPath), { recursive: true });
+            try {
+              const destStat = lstatSync(destPath);
+              if (destStat.isSymbolicLink() || !destStat.isFile()) {
+                unlinkSync(destPath);
+              }
+            } catch {}
             copyFileSync(srcPath, destPath);
+            // Verify written destination is a regular file and not an attacker symlink
+            const postStat = lstatSync(destPath);
+            if (postStat.isSymbolicLink() || !postStat.isFile()) {
+              unlinkSync(destPath);
+              throw new Error(`SECURITY_SYMLINK_DETECTED_AT_DESTINATION: ${relPath}`);
+            }
           }
         }
 
-        // 2. Restore the authentic pinned reference manifest directly into dist
+        // Step 3: Restore the authentic pinned reference manifest directly into dist (unlinking symlinks)
+        try {
+          const dmStat = lstatSync(distManifest);
+          if (dmStat.isSymbolicLink() || !dmStat.isFile()) {
+            unlinkSync(distManifest);
+          }
+        } catch {}
         copyFileSync(pinnedManifest, distManifest);
 
-        // 3. Restore canonical WASM to public if directory present in workspace
+        // Step 4: Restore canonical WASM to public if directory present in workspace
         if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
+          try {
+            const pwStat = lstatSync(publicWasm);
+            if (pwStat.isSymbolicLink() || !pwStat.isFile()) {
+              unlinkSync(publicWasm);
+            }
+          } catch {}
           copyFileSync(pinnedWasm, publicWasm);
         }
 
-        // 4. Purge any unexpected / uncataloged files (including symlinks) that were added to distDir
+        // Step 5: Purge any unexpected / uncataloged files (including symlinks) that were added to distDir
         const diskFiles = ReleaseSafetyGovernor.scanDiskFiles(distDir);
         for (const diskRel of diskFiles) {
-          if (diskRel !== "release-manifest.json" && !artifacts[diskRel]) {
+          if (diskRel !== "release-manifest.json" && diskRel !== "release-manifest.json.sig" && !artifacts[diskRel]) {
             try {
               const fullTarget = resolve(distDir, diskRel);
               const stat = lstatSync(fullTarget);
               if (stat.isSymbolicLink() || stat.isFile()) {
                 unlinkSync(fullTarget);
+              } else if (stat.isDirectory()) {
+                rmSync(fullTarget, { recursive: true, force: true });
               }
             } catch {}
           }
@@ -891,32 +972,25 @@ export class ReleaseSafetyGovernor {
       }
     } else if (existsSync(pinnedWasm)) {
       try {
+        try {
+          const dwStat = lstatSync(distWasm);
+          if (dwStat.isSymbolicLink() || !dwStat.isFile()) {
+            unlinkSync(distWasm);
+          }
+        } catch {}
         copyFileSync(pinnedWasm, distWasm);
         if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
+          try {
+            const pwStat = lstatSync(publicWasm);
+            if (pwStat.isSymbolicLink() || !pwStat.isFile()) {
+              unlinkSync(publicWasm);
+            }
+          } catch {}
           copyFileSync(pinnedWasm, publicWasm);
         }
       } catch (err) {
         console.warn("Rollback physical WASM restoration notice:", err);
       }
-    }
-
-    // 2. Write local pointer file as evidence (explicitly scoped to local staging within tested scope)
-    const pointerData = {
-      activeReleaseCommit: this.pinnedCommit,
-      rejectedCandidateProposalId: candidate.proposalId,
-      canonicalWasmHash: this.pinnedWasmHash,
-      canonicalWasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
-      restoredAtIso: timestamp,
-      status: "RESTORED_TO_PINNED_BASE_COMMIT",
-      controlPlane: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
-      scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
-      zeroCloudCostVerified: true,
-    };
-
-    try {
-      writeFileSync(pointerPath, JSON.stringify(pointerData, null, 2), "utf-8");
-    } catch (e) {
-      console.warn("Notice writing deployment pointer:", e);
     }
 
     // 3. Strictly verify DESTINATION artifact on disk (never treat pinned source as destination proof)
@@ -1015,6 +1089,24 @@ export class ReleaseSafetyGovernor {
 
     const incidentAlertTriggered = !verifiedSafe;
 
+    // Update deployment pointer to authoritative outcome: RESTORED_TO_PINNED_BASE_COMMIT iff verifiedSafe, else ROLLBACK_FAILED
+    try {
+      const finalPointerData = {
+        activeReleaseCommit: this.pinnedCommit,
+        rejectedCandidateProposalId: candidate.proposalId,
+        canonicalWasmHash: this.pinnedWasmHash,
+        canonicalWasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
+        restoredAtIso: timestamp,
+        status: verifiedSafe ? "RESTORED_TO_PINNED_BASE_COMMIT" : "ROLLBACK_FAILED",
+        controlPlane: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+        scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+        zeroCloudCostVerified: true,
+        verifiedSafe,
+        failureReason: verifiedSafe ? undefined : "DESTINATION_VERIFICATION_FAILED",
+      };
+      writeFileSync(pointerPath, JSON.stringify(finalPointerData, null, 2), "utf-8");
+    } catch {}
+
     return {
       triggered: true,
       restoredTarget: this.pinnedCommit,
@@ -1047,11 +1139,10 @@ export class ReleaseSafetyGovernor {
           walkDir(fullPath, baseDir);
         } else if (entry.isFile()) {
           const relPath = relative(baseDir, fullPath).replace(/\\/g, "/");
-          // Exclude dynamic manifests and temporary rollback pointers
+          // Exclude the manifest itself and its detached signature file
           if (
             relPath === "release-manifest.json" ||
-            relPath.endsWith(".tmp") ||
-            relPath.includes(".tmp.")
+            relPath === "release-manifest.json.sig"
           ) {
             continue;
           }
@@ -1146,11 +1237,19 @@ export class ReleaseSafetyGovernor {
       return { verified: false, reason: "MANIFEST_MISSING_AUTHORITY: Manifest must declare an authority." };
     }
     const normAuthority = authorityId.trim().toLowerCase();
-    const trustedKeyHex =
-      (normAuthority === "founder_release_authority" ? TRUSTED_AUTHORITY_PUBLIC_KEYS.founder_release_authority : null) ||
-      (this.trustedAuthorityPublicKeys && (this.trustedAuthorityPublicKeys[normAuthority] || this.trustedAuthorityPublicKeys[authorityId])) ||
-      TRUSTED_AUTHORITY_PUBLIC_KEYS[normAuthority] ||
-      TRUSTED_AUTHORITY_PUBLIC_KEYS[authorityId];
+    let trustedKeyHex: string | undefined;
+    if (normAuthority === "founder_release_authority") {
+      trustedKeyHex = TRUSTED_AUTHORITY_PUBLIC_KEYS.founder_release_authority;
+      const fp = computeSha256(trustedKeyHex);
+      if (fp !== FOUNDER_RELEASE_AUTHORITY_FINGERPRINT) {
+        return { verified: false, reason: "MANIFEST_FOUNDER_KEY_CORRUPTED: Founder release authority key does not match immutable root fingerprint." };
+      }
+    } else {
+      trustedKeyHex =
+        (this.trustedAuthorityPublicKeys && (this.trustedAuthorityPublicKeys[normAuthority] || this.trustedAuthorityPublicKeys[authorityId])) ||
+        TRUSTED_AUTHORITY_PUBLIC_KEYS[normAuthority] ||
+        TRUSTED_AUTHORITY_PUBLIC_KEYS[authorityId];
+    }
     if (!trustedKeyHex) {
       return { verified: false, reason: `MANIFEST_UNTRUSTED_AUTHORITY: Authority '${authorityId}' is not in trusted public keys registry.` };
     }
@@ -1159,6 +1258,26 @@ export class ReleaseSafetyGovernor {
     const keyHash = computeSha256(trustedKeyHex);
     if (REVOKED_COMPROMISED_KEY_HASHES.has(keyHash)) {
       return { verified: false, reason: `MANIFEST_REVOKED_AUTHORITY_KEY: Authority '${authorityId}' uses a revoked key.` };
+    }
+
+    // 2.1 Detached Signature Equivalence Check (if verifying from file path)
+    if (typeof manifestObjOrPath === "string") {
+      const sigPath = manifestObjOrPath.endsWith(".json")
+        ? `${manifestObjOrPath}.sig`
+        : resolve(dirname(manifestObjOrPath), "release-manifest.json.sig");
+      if (existsSync(sigPath)) {
+        try {
+          const detachedSig = readFileSync(sigPath, "utf-8").trim();
+          if (detachedSig !== manifest.signatureHex) {
+            return {
+              verified: false,
+              reason: "DETACHED_SIGNATURE_MISMATCH: Detached signature (.sig) does not match embedded signature in baseline manifest.",
+            };
+          }
+        } catch (err: any) {
+          return { verified: false, reason: `DETACHED_SIGNATURE_READ_ERROR: ${err.message}` };
+        }
+      }
     }
 
     // 3. Cryptographic Ed25519 Signature Verification
@@ -1397,8 +1516,7 @@ export class ReleaseSafetyGovernor {
     for (const diskRel of diskFiles) {
       if (
         diskRel === "release-manifest.json" ||
-        diskRel.endsWith(".tmp") ||
-        diskRel.includes(".tmp.")
+        diskRel === "release-manifest.json.sig"
       ) {
         continue;
       }
@@ -1474,20 +1592,22 @@ export class ReleaseSafetyGovernor {
     } catch {}
 
     const pointerPath = resolve(pointerDir, "ACTIVE_DEPLOYMENT_POINTER.json");
-    const pointerData = {
+
+    // 1. Write IN-PROGRESS pointer state (never claim success before verification succeeds)
+    const inProgressPointerData = {
       activeReleaseCommit: this.pinnedCommit,
       rejectedCandidateProposalId: candidate.proposalId,
       canonicalWasmHash: this.pinnedWasmHash,
       canonicalWasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
       restoredAtIso: timestamp,
-      status: "RESTORED_TO_PINNED_BASE_COMMIT",
+      status: "ROLLBACK_IN_PROGRESS",
       controlPlane: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
       scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
       zeroCloudCostVerified: true,
     };
 
     try {
-      writeFileSync(pointerPath, JSON.stringify(pointerData, null, 2), "utf-8");
+      writeFileSync(pointerPath, JSON.stringify(inProgressPointerData, null, 2), "utf-8");
     } catch {}
 
     const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
@@ -1507,6 +1627,15 @@ export class ReleaseSafetyGovernor {
     const baselineAudit = this.verifyPinnedBaselineManifest(pinnedManifest);
     if (!baselineAudit.verified) {
       console.warn("Sync rollback aborted: Pinned baseline manifest failed cryptographic verification:", baselineAudit.reason);
+      try {
+        const failPointer = {
+          ...inProgressPointerData,
+          status: "ROLLBACK_FAILED",
+          failureReason: `PINNED_BASELINE_MANIFEST_UNAUTHENTICATED: ${baselineAudit.reason}`,
+        };
+        writeFileSync(pointerPath, JSON.stringify(failPointer, null, 2), "utf-8");
+      } catch {}
+
       return {
         triggered: true,
         restoredTarget: this.pinnedCommit,
@@ -1523,28 +1652,58 @@ export class ReleaseSafetyGovernor {
       const pManifest = baselineAudit.manifest;
       const artifacts = pManifest.artifacts || {};
 
-      // 1. Physically restore every tracked artifact (HTML, JS, CSS, WASM, models, config) from pinned-base to dist
+      // Direct Safe Restoration & Symlink Overwrite Prevention (Finding R2.3-P0-B / Gate G2):
+      // Before writing any artifact, verify path traversal bounds and unlink any pre-existing
+      // symlink or non-regular file at destPath so copyFileSync can NEVER write through a symlink!
       for (const relPath of Object.keys(artifacts)) {
+        const normRel = relative(distDir, resolve(distDir, relPath));
+        if (normRel.startsWith("..") || /^[a-zA-Z]:[\\/]/.test(relPath)) {
+          throw new Error(`SECURITY_PATH_TRAVERSAL_REJECTED: ${relPath}`);
+        }
         const srcPath = resolve(pinnedBaseDir, relPath);
         const destPath = resolve(distDir, relPath);
         if (existsSync(srcPath)) {
           mkdirSync(dirname(destPath), { recursive: true });
+          try {
+            const destStat = lstatSync(destPath);
+            if (destStat.isSymbolicLink() || !destStat.isFile()) {
+              unlinkSync(destPath);
+            }
+          } catch {}
           copyFileSync(srcPath, destPath);
+          // Verify written destination is a regular file and not an attacker symlink
+          const postStat = lstatSync(destPath);
+          if (postStat.isSymbolicLink() || !postStat.isFile()) {
+            unlinkSync(destPath);
+            throw new Error(`SECURITY_SYMLINK_DETECTED_AT_DESTINATION: ${relPath}`);
+          }
         }
       }
 
-      // 2. Restore the authentic pinned reference manifest directly into dist
+      // Step 3: Restore the authentic pinned reference manifest directly into dist (unlinking symlinks)
+      try {
+        const dmStat = lstatSync(distManifest);
+        if (dmStat.isSymbolicLink() || !dmStat.isFile()) {
+          unlinkSync(distManifest);
+        }
+      } catch {}
       copyFileSync(pinnedManifest, distManifest);
 
-      // 3. Restore canonical WASM to public if directory present in workspace
+      // Step 4: Restore canonical WASM to public if directory present in workspace
       if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
+        try {
+          const pwStat = lstatSync(publicWasm);
+          if (pwStat.isSymbolicLink() || !pwStat.isFile()) {
+            unlinkSync(publicWasm);
+          }
+        } catch {}
         copyFileSync(pinnedWasm, publicWasm);
       }
 
-      // 4. Purge any unexpected / uncataloged files (including symlinks and special files) that were added to distDir
+      // Step 5: Purge any unexpected / uncataloged files (including symlinks and special files) that were added to distDir
       const diskFiles = ReleaseSafetyGovernor.scanDiskFiles(distDir);
       for (const diskRel of diskFiles) {
-        if (diskRel !== "release-manifest.json" && !artifacts[diskRel]) {
+        if (diskRel !== "release-manifest.json" && diskRel !== "release-manifest.json.sig" && !artifacts[diskRel]) {
           try {
             const fullPath = resolve(distDir, diskRel);
             const stat = lstatSync(fullPath);
@@ -1577,6 +1736,24 @@ export class ReleaseSafetyGovernor {
         verifiedSafe = false;
       }
     }
+
+    // Update pointer to authoritative state: RESTORED_TO_PINNED_BASE_COMMIT iff verifiedSafe, else ROLLBACK_FAILED
+    try {
+      const finalPointerData = {
+        activeReleaseCommit: this.pinnedCommit,
+        rejectedCandidateProposalId: candidate.proposalId,
+        canonicalWasmHash: this.pinnedWasmHash,
+        canonicalWasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
+        restoredAtIso: timestamp,
+        status: verifiedSafe ? "RESTORED_TO_PINNED_BASE_COMMIT" : "ROLLBACK_FAILED",
+        controlPlane: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+        scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+        zeroCloudCostVerified: true,
+        verifiedSafe,
+        failureReason: verifiedSafe ? undefined : "DESTINATION_VERIFICATION_FAILED",
+      };
+      writeFileSync(pointerPath, JSON.stringify(finalPointerData, null, 2), "utf-8");
+    } catch {}
 
     return {
       triggered: true,

@@ -54,9 +54,18 @@ export class NetworkEgressObserver {
   private static origWebSocket: unknown = null;
   private static origEventSource: unknown = null;
   private static origSendBeacon: unknown = null;
+  private static globalAirGapEnforce = false;
+
+  public static setGlobalAirGapEnforce(enforce: boolean): void {
+    this.globalAirGapEnforce = enforce;
+  }
+
+  public static isAirGapEnforced(): boolean {
+    return this.globalAirGapEnforce || process.env.SPE_AIR_GAP_ENFORCE === "1";
+  }
 
   public static isDenyByDefaultActive(): boolean {
-    if (process.env.SPE_AIR_GAP_ENFORCE === "1") return true;
+    if (this.isAirGapEnforced()) return true;
     for (const s of this.sessions.values()) {
       if (s.denyByDefault) return true;
     }
@@ -71,25 +80,52 @@ export class NetworkEgressObserver {
     if (!dest) return false;
     if (this.isLocalResource(dest)) return true;
 
-    const denySessions = Array.from(this.sessions.values()).filter((s) => s.denyByDefault);
-    if (denySessions.length === 0) {
+    // Strict deny-by-default air gap enforcement (Finding R2.3-P0-D / Gate G4):
+    if (this.isDenyByDefaultActive()) {
+      const denySessions = Array.from(this.sessions.values()).filter((s) => s.denyByDefault);
+      if (denySessions.length === 0) {
+        // Air-gap mode is active globally without explicit sessions.
+        // Permit strictly declared local SPE preview origins (127.0.0.1:4173 / localhost:4173); reject all other outbound traffic!
+        const AIR_GAP_DEFAULT_ALLOWLIST = [
+          "http://127.0.0.1:4173",
+          "http://localhost:4173",
+        ];
+        return AIR_GAP_DEFAULT_ALLOWLIST.some((allowed) => {
+          if (dest === allowed || dest === `${allowed}/`) return true;
+          try {
+            const u = new URL(dest.startsWith("http") ? dest : `http://${dest}`);
+            const a = new URL(allowed);
+            return u.hostname === a.hostname && (u.port || "80") === (a.port || "80");
+          } catch {
+            return false;
+          }
+        });
+      }
+
+      // Egress is permitted IF AND ONLY IF EVERY active deny-by-default session independently permits it!
+      for (const session of denySessions) {
+        if (!this.checkSessionPermits(session, dest)) {
+          return false;
+        }
+      }
       return true;
     }
 
-    // Strict Multi-Session Isolation (Finding R2.2-P0-03 Closure):
-    // Egress is permitted IF AND ONLY IF EVERY active deny-by-default session independently permits it!
-    // A secondary session specifying wildcard '*' or loose permissions CANNOT override or loosen
-    // an active restrictive session in the same process.
-    for (const session of denySessions) {
-      if (!this.checkSessionPermits(session, dest)) {
-        return false;
-      }
-    }
     return true;
   }
 
   private static checkSessionPermits(session: ActiveObservationSession, dest: string): boolean {
-    if (session.hasWildcard) return true;
+    if (this.globalAirGapEnforce && (dest.startsWith("http://") || dest.startsWith("https://") || dest.startsWith("ws://") || dest.startsWith("wss://"))) {
+      try {
+        const u = new URL(dest);
+        const isLoopback = u.hostname === "127.0.0.1" || u.hostname === "localhost";
+        if (!isLoopback) {
+          // Global air-gap enforcement strictly forbids external cloud domains regardless of session wildcard
+          return false;
+        }
+      } catch {}
+    }
+    if (session.hasWildcard) return !this.globalAirGapEnforce;
     return session.permittedDestinations.some((allowed) => {
       if (allowed === "*" || allowed === dest) return true;
       try {
@@ -499,6 +535,7 @@ export class NetworkEgressObserver {
     this.sessions.clear();
     this.activeSessions = 0;
     this.activeDenySessions = 0;
+    this.globalAirGapEnforce = false;
   }
 }
 

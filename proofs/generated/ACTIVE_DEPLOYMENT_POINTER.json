@@ -1,11 +1,12 @@
 {
   "activeReleaseCommit": "177d9d0f",
-  "rejectedCandidateProposalId": "PROP-GATE-C-JS-RECOVER",
+  "rejectedCandidateProposalId": "PROP-PURGE-SYMLINK",
   "canonicalWasmHash": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
   "canonicalWasmSizeBytes": 1339691,
-  "restoredAtIso": "2026-10-16T13:14:17.182Z",
+  "restoredAtIso": "2026-10-16T16:43:43.584Z",
   "status": "RESTORED_TO_PINNED_BASE_COMMIT",
   "controlPlane": "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
   "scope": "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
-  "zeroCloudCostVerified": true
+  "zeroCloudCostVerified": true,
+  "verifiedSafe": true
 }

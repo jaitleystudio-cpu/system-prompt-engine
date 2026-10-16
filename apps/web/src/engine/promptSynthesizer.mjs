@@ -835,164 +835,67 @@ const UNIQUE_PRODUCTION_INVARIANTS = [
   "- Invariant-160 (End-to-End Delivery Verification): Final output packages verify that all architectural sections, deliverables, and verification gates are intact.",
 ];
 
-function generateInvariantBody(innerNeeded) {
-  if (innerNeeded <= 0) return "";
-  let body = "";
-  let i = 0;
-  while (i < UNIQUE_PRODUCTION_INVARIANTS.length && (body + UNIQUE_PRODUCTION_INVARIANTS[i] + "\n").length <= innerNeeded) {
-    body += UNIQUE_PRODUCTION_INVARIANTS[i] + "\n";
-    i++;
-  }
-  let seq = 161;
-  while (true) {
-    const nextLine = `- Invariant-Calibration-${seq} (Formal Metric Envelope): Deterministic state boundary verification pass ${seq} confirmed intact with zero defect drift.\n`;
-    if ((body + nextLine).length > innerNeeded) break;
-    body += nextLine;
-    seq++;
-  }
-  const remaining = innerNeeded - body.length;
-  if (remaining > 0) {
-    const tailPrefix = "- Verification Attestation SHA256: ";
-    if (remaining > tailPrefix.length + 1) {
-      const hashLen = remaining - tailPrefix.length - 1;
-      const hex = "0123456789abcdef";
-      let hash = "";
-      for (let j = 0; j < hashLen; j++) hash += hex[j % hex.length];
-      body += tailPrefix + hash + "\n";
-    } else if (remaining === 1) {
-      body += "\n";
-    } else {
-      body += "-".repeat(remaining - 1) + "\n";
-    }
-  }
-  return body;
-}
-
-function padToTarget(text, targetLen, isXml = false, isLocal = false) {
-  if (text.length === targetLen) return text;
+/**
+ * Enforces the tier capacity ceiling cleanly without artificial padding, fake SHA-256 strings,
+ * or synthetic invariant filler (Finding R2.3-P0-F / Gates G6, G7).
+ * If text is within maxChars, it is returned intact.
+ * If text exceeds maxChars, it is cleanly truncated at structural boundaries (closing tags,
+ * sections, or clean boundaries) ensuring valid markup / syntax.
+ */
+export function enforceCapacityCeiling(text, maxChars, isXml = false, isLocal = false) {
+  if (typeof text !== "string") return "";
+  if (text.length <= maxChars) return text;
 
   const xmlClosing = "\n</system_prompt>";
   const localClosing = "\n<</SYS>>\n\nExecute the objective according to the above instructions. [/INST]";
   const geminiGate = "\n## Final Verification Gate";
   const mdGate = "\n# Final Verification Gate";
 
-  if (text.length > targetLen) {
-    if (isXml && text.includes("</system_prompt>")) {
-      const closing = xmlClosing;
-      const base = text.slice(0, text.lastIndexOf(closing));
-      const budget = targetLen - closing.length;
-      const cleanBase = truncateCleanly(base, budget);
-      const diff = targetLen - (cleanBase.length + closing.length);
-      return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
-    }
-    if (isLocal && text.includes("[/INST]")) {
-      const closing = localClosing;
-      const base = text.slice(0, text.lastIndexOf(closing));
-      const budget = targetLen - closing.length;
-      const cleanBase = truncateCleanly(base, budget);
-      const diff = targetLen - (cleanBase.length + closing.length);
-      return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
-    }
-    if (text.includes(geminiGate)) {
-      const closing = text.slice(text.lastIndexOf(geminiGate));
-      if (targetLen > closing.length + 50) {
-        const base = text.slice(0, text.lastIndexOf(geminiGate));
-        const budget = targetLen - closing.length;
-        const cleanBase = truncateCleanly(base, budget);
-        const diff = targetLen - (cleanBase.length + closing.length);
-        return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
-      }
-    }
-    if (text.includes(mdGate)) {
-      const closing = text.slice(text.lastIndexOf(mdGate));
-      if (targetLen > closing.length + 50) {
-        const base = text.slice(0, text.lastIndexOf(mdGate));
-        const budget = targetLen - closing.length;
-        const cleanBase = truncateCleanly(base, budget);
-        const diff = targetLen - (cleanBase.length + closing.length);
-        return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
-      }
-    }
-    const clean = truncateCleanly(text, targetLen);
-    const diff = targetLen - clean.length;
-    return clean + (diff > 0 ? " ".repeat(diff) : "");
+  if (isXml && text.includes("</system_prompt>")) {
+    const closing = xmlClosing;
+    const base = text.slice(0, text.lastIndexOf(closing));
+    const budget = maxChars - closing.length;
+    const cleanBase = truncateCleanly(base, budget);
+    return cleanBase + closing;
   }
-
-  const diff = targetLen - text.length;
-
-  // 1. XML Padding (Claude)
-  if (isXml) {
-    if (text.endsWith(xmlClosing)) {
-      const base = text.slice(0, -xmlClosing.length);
-      const header = `\n\n<production_invariant_calibration>\n`;
-      const footer = `\n</production_invariant_calibration>`;
-      const innerNeeded = targetLen - (base.length + xmlClosing.length + header.length + footer.length);
-      if (innerNeeded > 0) {
-        const body = generateInvariantBody(innerNeeded);
-        return base + header + body + footer + xmlClosing;
-      }
-    }
+  if (isLocal && text.includes("[/INST]")) {
+    const closing = localClosing;
+    const base = text.slice(0, text.lastIndexOf(closing));
+    const budget = maxChars - closing.length;
+    const cleanBase = truncateCleanly(base, budget);
+    return cleanBase + closing;
   }
-
-  // 2. Local Model Padding
-  if (isLocal) {
-    if (text.endsWith(localClosing)) {
-      const base = text.slice(0, -localClosing.length);
-      const header = `\n\n# Operational Invariant Calibration\n`;
-      const innerNeeded = targetLen - (base.length + localClosing.length + header.length);
-      if (innerNeeded > 0) {
-        const body = generateInvariantBody(innerNeeded);
-        return base + header + body + localClosing;
-      }
-    }
-  }
-
-  // 3. Gemini Padding (before ## Final Verification Gate)
   if (text.includes(geminiGate)) {
     const idx = text.lastIndexOf(geminiGate);
-    const base = text.slice(0, idx);
     const closing = text.slice(idx);
-    const header = `\n\n## Production Specification & Quality Invariant Calibration\n`;
-    const innerNeeded = targetLen - (base.length + closing.length + header.length);
-    if (innerNeeded > 0) {
-      const body = generateInvariantBody(innerNeeded);
-      return base + header + body + closing;
-    }
-    const gateDiff = targetLen - (base.length + closing.length);
-    if (gateDiff > 0) {
-      return base + "\n".repeat(gateDiff) + closing;
+    if (maxChars > closing.length + 50) {
+      const base = text.slice(0, idx);
+      const budget = maxChars - closing.length;
+      const cleanBase = truncateCleanly(base, budget);
+      return cleanBase + closing;
     }
   }
-
-  // 4. Standard Markdown / Any AI Padding (before # Final Verification Gate)
   if (text.includes(mdGate)) {
     const idx = text.lastIndexOf(mdGate);
-    const base = text.slice(0, idx);
     const closing = text.slice(idx);
-    const header = `\n\n# Production Specification & Quality Invariant Calibration\n`;
-    const innerNeeded = targetLen - (base.length + closing.length + header.length);
-    if (innerNeeded > 0) {
-      const body = generateInvariantBody(innerNeeded);
-      return base + header + body + closing;
-    }
-    const gateDiff = targetLen - (base.length + closing.length);
-    if (gateDiff > 0) {
-      return base + "\n".repeat(gateDiff) + closing;
+    if (maxChars > closing.length + 50) {
+      const base = text.slice(0, idx);
+      const budget = maxChars - closing.length;
+      const cleanBase = truncateCleanly(base, budget);
+      return cleanBase + closing;
     }
   }
 
-  // 5. Fallback Padding if no closing block detected
-  const header = `\n\n# Production Specification & Quality Invariant Calibration\n`;
-  const innerNeeded = diff - header.length;
-  if (innerNeeded > 0) {
-    const body = generateInvariantBody(innerNeeded);
-    return text + header + body;
-  }
-
-  return text + " ".repeat(diff);
+  return truncateCleanly(text, maxChars);
 }
 
-export function synthesizeSystemPrompt(raw, opts) {
+export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
+  let raw = rawOrOpts;
+  let opts = maybeOpts;
+  if (rawOrOpts && typeof rawOrOpts === "object" && !Array.isArray(rawOrOpts)) {
+    raw = rawOrOpts.raw || rawOrOpts.brief || rawOrOpts.prompt || "";
+    opts = maybeOpts || rawOrOpts;
+  }
   if (!raw || typeof raw !== "string") return "";
 
   // If input doesn't contain AST headers, wrap it as Objective
@@ -1002,14 +905,7 @@ export function synthesizeSystemPrompt(raw, opts) {
   }
 
   const target = typeof opts === "string" ? opts : (opts && opts.target ? opts.target : "any");
-  const depthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
-  const hasTierOption = Boolean(
-    opts &&
-      typeof opts === "object" &&
-      (opts.subscriptionTier !== undefined ||
-        opts.entitlement !== undefined ||
-        opts.enforceFreeTierLimit),
-  );
+  const requestedDepthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
   const currentEpochMs =
     opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
       ? opts.currentEpochMs
@@ -1019,22 +915,27 @@ export function synthesizeSystemPrompt(raw, opts) {
     currentEpochMs,
     opts,
   );
-  const subscriptionTier = hasTierOption
-    ? opts && typeof opts === "object" && opts.subscriptionTier === "free"
-      ? "free"
-      : verifiedPaidTier ?? "free"
-    : null;
+
+  // Paid depth tiers (ultra, massive, titan) strictly require a cryptographically verified Pro entitlement.
+  // If invoked directly without a verified entitlement, clamp depthTier to 'normal' (Finding R2.3-P1-G / Gate G8).
+  const isPaidDepthTier =
+    requestedDepthTier === "ultra" ||
+    requestedDepthTier === "massive" ||
+    requestedDepthTier === "titan";
+  const depthTier = isPaidDepthTier && verifiedPaidTier !== "pro" ? "normal" : requestedDepthTier;
+
   const isFreeTier =
-    subscriptionTier === "free" ||
+    verifiedPaidTier !== "pro" ||
     depthTier === "free" ||
     Boolean(opts && typeof opts === "object" && opts.enforceFreeTierLimit);
+
   const explicitMaxOutputChars =
     opts && typeof opts === "object" && typeof opts.maxOutputChars === "number" && opts.maxOutputChars > 0
       ? Math.floor(opts.maxOutputChars)
       : null;
   const baseTargetChars =
     depthTier === "titan"
-      ? 100000
+      ? PRO_TIER_MAX_OUTPUT_CHARS
       : depthTier === "massive"
         ? 75000
         : depthTier === "ultra"
@@ -1058,6 +959,10 @@ export function synthesizeSystemPrompt(raw, opts) {
     effectiveMaxOutputChars !== null
       ? Math.min(baseTargetChars, effectiveMaxOutputChars)
       : baseTargetChars;
+
+  const finalizePrompt = (text, isXml = false, isLocal = false) => {
+    return enforceCapacityCeiling(text, targetChars, isXml, isLocal);
+  };
 
   const sections = {};
   const effectList = [];
@@ -1137,23 +1042,10 @@ export function synthesizeSystemPrompt(raw, opts) {
     .map((c) => c.replace(/^-\s*/, "").trim())
     .filter((c) => c && !c.includes("Preserve the user's stated goal"));
 
-  // Budget user constraints and preferences so they do not crowd out the entire prompt
-  const maxUserGuidelineChars = Math.max(300, Math.floor(targetChars * 0.25));
-  let userGuidelineChars = 0;
-
+  // Mandatory Hard Constraints Preservation (Finding R2.3-P0-F / Gate G6):
+  // Never drop user constraints from beginning, middle, or end of brief.
   for (const c of userConstraints) {
-    const line = `- **Constraint**: ${c}`;
-    if (userGuidelineChars + line.length + 1 <= maxUserGuidelineChars) {
-      guidelines.push(line);
-      userGuidelineChars += line.length + 1;
-    } else {
-      const remainingBudget = maxUserGuidelineChars - userGuidelineChars;
-      if (remainingBudget > 40) {
-        guidelines.push(truncateCleanly(line, remainingBudget));
-        userGuidelineChars += remainingBudget;
-      }
-      break;
-    }
+    guidelines.push(`- **Constraint**: ${c}`);
   }
 
   const userPrefs = preferences
@@ -1163,18 +1055,7 @@ export function synthesizeSystemPrompt(raw, opts) {
 
   for (const p of userPrefs) {
     if (!guidelines.some((g) => g.includes(p))) {
-      const line = `- **Preference**: ${p}`;
-      if (userGuidelineChars + line.length + 1 <= maxUserGuidelineChars) {
-        guidelines.push(line);
-        userGuidelineChars += line.length + 1;
-      } else {
-        const remainingBudget = maxUserGuidelineChars - userGuidelineChars;
-        if (remainingBudget > 40) {
-          guidelines.push(truncateCleanly(line, remainingBudget));
-          userGuidelineChars += remainingBudget;
-        }
-        break;
-      }
+      guidelines.push(`- **Preference**: ${p}`);
     }
   }
 
@@ -1416,7 +1297,7 @@ Verify the solution against acceptance criteria before finalizing output.
 </final_check>
 </system_prompt>`;
 
-    return padToTarget(xml.trim(), targetChars, true, false);
+    return finalizePrompt(xml.trim(), true, false);
   }
 
   // 2. Local Models (Llama-3 / Mistral / Qwen)
@@ -1452,7 +1333,7 @@ ${guidelines.join("\n")}
 
 Execute the objective according to the above instructions. [/INST]`.trim();
 
-    return padToTarget(loc, targetChars, false, true);
+    return finalizePrompt(loc, false, true);
   }
 
   // 3. Gemini Target
@@ -1495,7 +1376,7 @@ ${guidelines.join("\n")}
 ## Final Verification Gate
 Validate all outputs against explicit constraints prior to final response generation.
 `;
-    return padToTarget(g.trim(), targetChars, false, false);
+    return finalizePrompt(g.trim(), false, false);
   }
 
   // 4. Standard Markdown (ChatGPT / Any)
@@ -1543,7 +1424,38 @@ ${guidelines.join("\n")}
 Follow the explicit brief wherever it differs from these default working suggestions. Preserve every stated restriction. Do not invent facts, completed actions or unavailable evidence. Ask a focused question only when missing information blocks a correct response; otherwise proceed and label necessary assumptions.
 `;
 
-  return padToTarget(md.trim(), targetChars, false, false);
+  return finalizePrompt(md.trim(), false, false);
+}
+
+export function synthesizeSystemPromptWithDetails(rawOrOpts, maybeOpts) {
+  let raw = rawOrOpts;
+  let opts = maybeOpts;
+  if (rawOrOpts && typeof rawOrOpts === "object" && !Array.isArray(rawOrOpts)) {
+    raw = rawOrOpts.raw || rawOrOpts.brief || rawOrOpts.prompt || "";
+    opts = maybeOpts || rawOrOpts;
+  }
+  const prompt = synthesizeSystemPrompt(raw, opts);
+  const requestedDepthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
+  const currentEpochMs =
+    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
+      ? opts.currentEpochMs
+      : Date.now();
+  const verifiedPaidTier = resolveVerifiedEntitlementTier(
+    opts && typeof opts === "object" ? opts.entitlement : null,
+    currentEpochMs,
+    opts,
+  );
+  const isPaidDepthTier =
+    requestedDepthTier === "ultra" ||
+    requestedDepthTier === "massive" ||
+    requestedDepthTier === "titan";
+  const depthTier = isPaidDepthTier && verifiedPaidTier !== "pro" ? "normal" : requestedDepthTier;
+  return {
+    prompt,
+    depthTier,
+    characterCount: prompt.length,
+    verifiedPaidTier,
+  };
 }
 
 /**
