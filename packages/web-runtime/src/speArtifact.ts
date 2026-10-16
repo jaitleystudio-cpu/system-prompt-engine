@@ -344,7 +344,27 @@ function escapeHtml(value: string): string {
   );
 }
 
-export function artifactPrintHtml(artifact: SpeArtifactV1): string {
+export interface AgencyBranding {
+  agencyName?: string;
+  clientName?: string;
+  reportSubtitle?: string;
+  customLogoUrl?: string;
+  watermarkNotice?: string;
+}
+
+export function artifactPrintHtml(
+  artifact: SpeArtifactV1,
+  branding?: AgencyBranding,
+): string {
+  const isWhiteLabeled = Boolean(branding?.agencyName?.trim());
+  const headerTitle = isWhiteLabeled
+    ? `${branding!.agencyName!.trim()} AI Specification`
+    : "SPE portable prompt pack";
+  const clientText = branding?.clientName?.trim()
+    ? `Prepared for: ${escapeHtml(branding.clientName.trim())}`
+    : null;
+  const subtitle = branding?.reportSubtitle?.trim();
+
   const desiredOutput = artifact.intent.confirmed.find(
     (atom) => atom.id === "desired-output" && atom.text.trim(),
   )?.text;
@@ -361,7 +381,7 @@ export function artifactPrintHtml(artifact: SpeArtifactV1): string {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>SPE portable prompt pack</title>
+  <title>${escapeHtml(headerTitle)}</title>
   <style>
     :root { color: #161a22; background: #f5f1e8; font-family: Arial, sans-serif; }
     body { max-width: 780px; margin: 0 auto; padding: 42px; }
@@ -378,9 +398,11 @@ export function artifactPrintHtml(artifact: SpeArtifactV1): string {
 </head>
 <body>
   <header>
-    <h1>SPE portable prompt pack</h1>
-    <p class="meta">${escapeHtml(artifact.category)} · ${escapeHtml(artifact.target)} · ${escapeHtml(artifact.created_at_utc)}</p>
-    <p class="notice"><strong>Local print view.</strong> Not a verification receipt. Integrity checks file consistency, not authorship, truth, or output quality.</p>
+    <h1>${escapeHtml(headerTitle)}</h1>
+    ${clientText ? `<p class="client" style="font-size: 15px; font-weight: 600; color: #1e3a8a; margin: 4px 0 8px;">${clientText}</p>` : ""}
+    ${subtitle ? `<p class="subtitle" style="font-size: 13px; color: #475569; margin: 0 0 12px;">${escapeHtml(subtitle)}</p>` : ""}
+    <p class="meta">${escapeHtml(artifact.category)} · ${escapeHtml(artifact.target)} · ${escapeHtml(artifact.created_at_utc)}${isWhiteLabeled ? " · Certified via SPE Whole-Harness Engine" : ""}</p>
+    <p class="notice"><strong>${isWhiteLabeled ? "Agency Client Deliverable." : "Local print view."}</strong> ${isWhiteLabeled ? "Certified system prompt specification engineered for deterministic agent execution." : "Not a verification receipt. Integrity checks file consistency, not authorship, truth, or output quality."}</p>
   </header>
   ${section("Original request", artifact.user_request)}
   ${desiredOutput ? section("Desired Output", desiredOutput) : ""}
@@ -420,18 +442,21 @@ export function artifactPrintHtml(artifact: SpeArtifactV1): string {
   <footer>
     Format: ${escapeHtml(artifact.spe_format)}<br>
     SHA-256: ${escapeHtml(artifact.integrity.content_sha256)}<br>
-    Network mode recorded by artifact: ${escapeHtml(artifact.wasm.network_mode)}
+    Network mode recorded by artifact: ${escapeHtml(artifact.wasm.network_mode)}${isWhiteLabeled ? `<br>Prepared by: ${escapeHtml(branding!.agencyName!)}` : ""}
   </footer>
 </body>
 </html>`;
 }
 
-export function openArtifactPrintView(artifact: SpeArtifactV1): boolean {
+export function openArtifactPrintView(
+  artifact: SpeArtifactV1,
+  branding?: AgencyBranding,
+): boolean {
   const printView = window.open("", "_blank");
   if (!printView) return false;
   printView.opener = null;
   printView.document.open();
-  printView.document.write(artifactPrintHtml(artifact));
+  printView.document.write(artifactPrintHtml(artifact, branding));
   printView.document.close();
   window.setTimeout(() => {
     printView.focus();

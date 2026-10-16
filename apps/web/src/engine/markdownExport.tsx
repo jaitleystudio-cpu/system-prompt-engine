@@ -9,6 +9,8 @@ import {
   type EntitlementVerificationResult,
 } from "./entitlementVerifier";
 
+import type { AgencyBranding } from "@spe/web-runtime";
+
 export interface MarkdownConstructOptions {
   title?: string;
   category?: string;
@@ -17,6 +19,7 @@ export interface MarkdownConstructOptions {
   sha256?: string | null;
   subscriptionTier?: "free" | "pro" | "team";
   entitlement?: EntitlementVerificationResult | null;
+  agencyBranding?: AgencyBranding | null;
   /**
    * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
    * enforced at production boundaries and cannot be bypassed via options.
@@ -42,6 +45,7 @@ export function constructMarkdownSystemPrompt(
     sha256 = null,
     subscriptionTier,
     entitlement,
+    agencyBranding,
     currentEpochMs,
   } = options;
 
@@ -70,10 +74,22 @@ export function constructMarkdownSystemPrompt(
     });
   }
 
+  const isWhiteLabeled = Boolean(agencyBranding?.agencyName?.trim());
   const frontmatter = [
     "---",
     `title: ${JSON.stringify(title)}`,
-    'generator: "System Prompt Engine (SPE v1.2)"',
+    isWhiteLabeled
+      ? `prepared_by: ${JSON.stringify(agencyBranding!.agencyName!.trim())}`
+      : 'generator: "System Prompt Engine (SPE v1.2)"',
+    isWhiteLabeled && agencyBranding?.clientName?.trim()
+      ? `prepared_for: ${JSON.stringify(agencyBranding.clientName.trim())}`
+      : null,
+    isWhiteLabeled && agencyBranding?.reportSubtitle?.trim()
+      ? `report_subtitle: ${JSON.stringify(agencyBranding.reportSubtitle.trim())}`
+      : null,
+    isWhiteLabeled
+      ? 'certified_by: "System Prompt Engine (Whole-Harness Supercompiler)"'
+      : null,
     'format: "Markdown (CommonMark / GitHub Flavored Markdown)"',
     `depth_tier: ${JSON.stringify(depthTier)}`,
     `character_count: ${mdBody.length}`,
@@ -120,6 +136,7 @@ export interface MarkdownExportButtonProps {
   className?: string;
   disabled?: boolean;
   includeFrontmatter?: boolean;
+  agencyBranding?: AgencyBranding | null;
   onExported?: () => void;
 }
 
@@ -132,6 +149,7 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
   className = "spe-ghost",
   disabled = false,
   includeFrontmatter = false,
+  agencyBranding,
   onExported,
 }) => {
   const [downloading, setDownloading] = useState(false);
@@ -146,6 +164,7 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
         depthTier,
         includeFrontmatter,
         sha256,
+        agencyBranding,
         entitlement: resolveBrowserVerifiedEntitlement(),
       });
       const timestamp = new Date().toISOString().slice(0, 10);

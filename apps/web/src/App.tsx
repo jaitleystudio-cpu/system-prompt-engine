@@ -58,6 +58,7 @@ import {
   saveHistoryItem,
   setHistoryOptIn,
   CATEGORIES,
+  type AgencyBranding,
   type CategoryId,
   type HistoryItem,
   type IntentAtom,
@@ -125,6 +126,7 @@ import { DeveloperRoiCalculator } from "./components/DeveloperRoiCalculator";
 import { SpeUniverseHero } from "./landing/SpeUniverseHero";
 import { SpeCapabilityDeck } from "./landing/SpeCapabilityDeck";
 import { SubmitWorkflowModal } from "./components/SubmitWorkflowModal";
+import { AgencyBrandingModal } from "./components/AgencyBrandingModal";
 import { initAdaptiveDisplayListeners } from "./engine/adaptiveDisplayEngine";
 import { getActiveVisualVariant, applyVisualVariantToDom } from "./engine/dailyVisualEvolution";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
@@ -335,6 +337,22 @@ export default function App() {
   );
   const [agentFormat, setAgentFormat] = useState<AgentFormatId>("standard");
   const [submitWorkflowOpen, setSubmitWorkflowOpen] = useState(false);
+  const [agencyModalOpen, setAgencyModalOpen] = useState(false);
+  const [agencyBranding, setAgencyBranding] = useState<AgencyBranding>(() => {
+    try {
+      const raw = localStorage.getItem("spe-agency-branding");
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const handleSaveAgencyBranding = useCallback((nextBranding: AgencyBranding) => {
+    setAgencyBranding(nextBranding);
+    try {
+      localStorage.setItem("spe-agency-branding", JSON.stringify(nextBranding));
+    } catch {}
+  }, []);
 
   const activePromptView = useMemo(() => {
     if (!rendered?.finalPrompt) return "";
@@ -827,7 +845,7 @@ export default function App() {
 
   const onExportPdf = () => {
     if (!artifact) return;
-    const opened = openArtifactPrintView(artifact);
+    const opened = openArtifactPrintView(artifact, agencyBranding);
     setNotice(
       opened
         ? "Print view opened. Choose Save as PDF in your browser."
@@ -1390,7 +1408,16 @@ export default function App() {
                         depthTier={depthTier}
                         sha256={sha256}
                         disabled={!rendered?.finalPrompt}
+                        agencyBranding={agencyBranding}
                       />
+                      <button
+                        type="button"
+                        className="spe-ghost"
+                        onClick={() => setAgencyModalOpen(true)}
+                        title="Configure white-label agency and client deliverable branding"
+                      >
+                        Agency Branding
+                      </button>
                       <button
                         type="button"
                         className="spe-ghost"
@@ -1771,6 +1798,13 @@ export default function App() {
         isOpen={submitWorkflowOpen}
         onClose={() => setSubmitWorkflowOpen(false)}
         onNavigate={setView}
+      />
+
+      <AgencyBrandingModal
+        isOpen={agencyModalOpen}
+        onClose={() => setAgencyModalOpen(false)}
+        branding={agencyBranding}
+        onSave={handleSaveAgencyBranding}
       />
     </>
   );

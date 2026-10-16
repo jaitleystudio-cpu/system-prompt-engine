@@ -36983,6 +36983,540 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Architect View (Deep Spec & Verification)"
+    },
+    {
+      "id": "2259d47a95813e2ba0a7",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Agency Branding"
+    },
+    {
+      "id": "6f877c7459e785cccf0d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-agency-branding"
+    },
+    {
+      "id": "a498e3488cbac3944fdb",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Configure white-label agency and client deliverable branding"
+    },
+    {
+      "id": "44e216f0b97998f59753",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Agency / Organization Name"
+    },
+    {
+      "id": "48a0494f5a3f5a2e27a6",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Save Branding"
+    },
+    {
+      "id": "4e30ac0a421fabf8e16b",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. Acme Corporation"
+    },
+    {
+      "id": "68fbc604646ee6f117bc",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. Autonomous Coding Agent Specification v1.0"
+    },
+    {
+      "id": "7d02ab7443c353323b27",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Agency White-Label Branding"
+    },
+    {
+      "id": "841fc3178f18dbf88b26",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "keydown"
+    },
+    {
+      "id": "84af7ce2e6bfe21fb727",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Close dialog"
+    },
+    {
+      "id": "a03eee8d559f7abb8f5f",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Report Subtitle / Deliverable Scope"
+    },
+    {
+      "id": "ad6676a0aba898484dc4",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Customize your client deliverables. Exported PDFs and Markdown specifications will feature your agency name, client name, and deliverable scope."
+    },
+    {
+      "id": "bc76ce7c141692644231",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Reset to Default"
+    },
+    {
+      "id": "ca0c82b1bf84c67c2b3a",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Client Deliverables"
+    },
+    {
+      "id": "cc71ac2750ea277bb973",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Client Name"
+    },
+    {
+      "id": "daaf3ac11e7e895959d9",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Cancel"
+    },
+    {
+      "id": "e8b423a245ea7173a8c7",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. Apex AI Studio"
+    },
+    {
+      "id": "fa655fdbb2503f7c8f11",
+      "file": "apps/web/src/components/AgencyBrandingModal.tsx",
+      "depth": "PRODUCT",
+      "text": "Escape"
+    },
+    {
+      "id": "04bdd2165b4a2414f159",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "llama3"
+    },
+    {
+      "id": "070ec8276a16127a16e8",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "sk-..."
+    },
+    {
+      "id": "0d5352000979173bceda",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "byok"
+    },
+    {
+      "id": "0ddbd7e6dc328e7fe3bf",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "http://localhost:11434/api/generate"
+    },
+    {
+      "id": "0eb488a6528791f114a7",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "system"
+    },
+    {
+      "id": "0ec9d60a981e6d87a258",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ms)"
+    },
+    {
+      "id": "1003156273686865400b",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ Live Model Test Flight (BYOK)"
+    },
+    {
+      "id": "10a5e2b04a993720f2ab",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ollama"
+    },
+    {
+      "id": "179d8b8bfafb3d67b7e0",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "POST"
+    },
+    {
+      "id": "187edab8c8e97979ca0d",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "user"
+    },
+    {
+      "id": "1a2678e46c84ce694cf0",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI (GPT-4o)"
+    },
+    {
+      "id": "1b4ea6eedcb24197bc8c",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "true"
+    },
+    {
+      "id": "1f42f8fc1d479b1d5b9a",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "openai"
+    },
+    {
+      "id": "22e72a78b810962c40d8",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "anthropic"
+    },
+    {
+      "id": "2301cf16f7639bb77ec3",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key="
+    },
+    {
+      "id": "4ceb194afcc0a3b80273",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider:"
+    },
+    {
+      "id": "52904cbe5945061fb560",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local Ollama (Llama 3)"
+    },
+    {
+      "id": "541a47c4181838e0865c",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "API Key (in-memory only):"
+    },
+    {
+      "id": "59e9d756116b1ed0d22a",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://api.anthropic.com/v1/messages"
+    },
+    {
+      "id": "5e9b5fcf39fd7b6e4020",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Executing Test Flight…"
+    },
+    {
+      "id": "5f14ed10c4a64162dcad",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Execute Live Model Test Flight ⚡"
+    },
+    {
+      "id": "66ec474600c5c9735fef",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🛡️ Local Sandbox ($0 Air-Gap)"
+    },
+    {
+      "id": "7e76ebcaae2f2a51a55b",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Gemini API error HTTP"
+    },
+    {
+      "id": "88e35e866dc44c834eba",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic (Claude 3.5 Sonnet)"
+    },
+    {
+      "id": "8ed63736315c00164d3c",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://api.openai.com/v1/chat/completions"
+    },
+    {
+      "id": "9005f4c0e83edb245919",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "(Empty response)"
+    },
+    {
+      "id": "94763a2e4d6c45c711d1",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "local"
+    },
+    {
+      "id": "9a530bb5d74223e10ee7",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "application/json"
+    },
+    {
+      "id": "9d7238905b2c688624b3",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "gemini"
+    },
+    {
+      "id": "a187fcfff7647ce982fe",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "[TEST FLIGHT ERROR]"
+    },
+    {
+      "id": "a4c7bb0ff73c64f3be8c",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic API error HTTP"
+    },
+    {
+      "id": "aec804d16c9fa1542823",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "[LIVE MODEL TEST FLIGHT ·"
+    },
+    {
+      "id": "c06616110c49a9166384",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI API error HTTP"
+    },
+    {
+      "id": "c258554edc8c325db2bb",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Ollama error HTTP"
+    },
+    {
+      "id": "c5badeb40f2d3ec1880f",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "gpt-4o"
+    },
+    {
+      "id": "cd42cbabc341da9cd556",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Bearer"
+    },
+    {
+      "id": "d1d74ffe0fd187e07ec1",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google (Gemini 1.5 Pro)"
+    },
+    {
+      "id": "d2a94dd1774c85092451",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Direct client-side fetch to provider · No server proxy"
+    },
+    {
+      "id": "d45629b35a321d67e548",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "id": "e33d48c0ac69d0c83d8e",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "AIzaSy..."
+    },
+    {
+      "id": "ea56343831e75e512206",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Test how Claude Code, Cursor, or ChatGPT will behave with this prompt"
+    },
+    {
+      "id": "f21b72a8decb6109afa7",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "sk-ant-..."
+    },
+    {
+      "id": "f8fed3c4fe60f8ee8496",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🔒 Client-Held Key: Directly dispatched from your browser to provider API. Zero server retention."
+    },
+    {
+      "id": "33a5a3b6b2427035aef1",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Proceed to Secure Stripe Checkout →"
+    },
+    {
+      "id": "34a2644ee6ac8a549dd9",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "Lifetime"
+    },
+    {
+      "id": "375dd558ac09bd6d2515",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "without ongoing monthly bills"
+    },
+    {
+      "id": "3e2be3318c2f27dca2c6",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "⭐ Lifetime local license: zero recurring fees, perpetual offline validity."
+    },
+    {
+      "id": "53fc53b965b1f24979af",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "Company"
+    },
+    {
+      "id": "68521e4b356dfdf3fe19",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Instant Checkout via Stripe:"
+    },
+    {
+      "id": "69a189339d01255ab2a8",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Direct access to new experimental model transcompilers"
+    },
+    {
+      "id": "6bc25f90093d31c0ecc7",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Founder Special · One-Time"
+    },
+    {
+      "id": "6caa063d4a455a763a33",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "/ one-time payment"
+    },
+    {
+      "id": "801becbfb212e15ce89d",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "https://buy.stripe.com/test_spe_pro_intro_1"
+    },
+    {
+      "id": "8c2cd0f511045100e48c",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "Agency"
+    },
+    {
+      "id": "8f1eb946ab1dbf1e067f",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "https://buy.stripe.com/test_spe_company_intro_9"
+    },
+    {
+      "id": "98aaba4420f681f0aa26",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Pay once, keep Developer Pro capabilities forever. No recurring subscriptions, perpetual local offline license."
+    },
+    {
+      "id": "9aa5c2cdc8fb3c9bd96f",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "100% Ad-Free Studio"
+    },
+    {
+      "id": "a5bd59492fbab77f70a0",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Lifetime Pass"
+    },
+    {
+      "id": "bfaebcf6b739165c5d5f",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "CI/CD"
+    },
+    {
+      "id": "bff25cb67824102abfab",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "permanently unlocked"
+    },
+    {
+      "id": "d2a90200d1c0f0a02482",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Lifetime Pass Features"
+    },
+    {
+      "id": "d38653b2df6f3202a219",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Lifetime Offline Entitlement Key"
+    },
+    {
+      "id": "daf574913853e08d8fb4",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Already paid? Paste your signed entitlement token, or enter your email to reserve the introductory rate:"
+    },
+    {
+      "id": "db7b819db3c1c21da9e5",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "signed with Ed25519"
+    },
+    {
+      "id": "dd76a825cb87582979d7",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Get Lifetime Pass ($69) →"
+    },
+    {
+      "id": "df805e1e74bcbcef1435",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "All Developer Pro Features Forever"
+    },
+    {
+      "id": "e18e08fdd54110d12ada",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "https://buy.stripe.com/test_spe_lifetime_69"
+    },
+    {
+      "id": "e4624f4299651cbb271b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "including future 2026/2027 packs"
+    },
+    {
+      "id": "e9dc720d4f4af435db98",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "Team"
+    },
+    {
+      "id": "eaf046f9877369064aef",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Secured by Stripe · Automatic Ed25519 cryptographic token issued after purchase"
+    },
+    {
+      "id": "fd64616a6846840b501e",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Full Skill &amp; Template Library"
     }
   ]
 }

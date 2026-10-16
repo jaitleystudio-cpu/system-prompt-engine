@@ -14,6 +14,18 @@ import {
 } from "../engine/entitlementVerifier";
 import "./pricing.css";
 
+export interface StripeCheckoutLinks {
+  proIntroUrl: string;
+  lifetimeUrl: string;
+  companyIntroUrl: string;
+}
+
+export const DEFAULT_STRIPE_LINKS: StripeCheckoutLinks = {
+  proIntroUrl: "https://buy.stripe.com/test_spe_pro_intro_1",
+  lifetimeUrl: "https://buy.stripe.com/test_spe_lifetime_69",
+  companyIntroUrl: "https://buy.stripe.com/test_spe_company_intro_9",
+};
+
 interface PricingProps {
   onNavigate?: (view: AppView) => void;
   issuerPublicKeyHex?: string;
@@ -22,6 +34,7 @@ interface PricingProps {
     payload: EntitlementTokenPayload,
   ) => AuthoritativeReceiptRecord | null;
   signedReceiptAttestation?: SignedReceiptStatusAttestation | string;
+  checkoutLinks?: StripeCheckoutLinks;
 }
 
 export function Pricing({
@@ -29,7 +42,18 @@ export function Pricing({
   issuerPublicKeyHex,
   authoritativeReceiptVerifier,
   signedReceiptAttestation,
+  checkoutLinks,
 }: PricingProps) {
+  const links = checkoutLinks ?? DEFAULT_STRIPE_LINKS;
+
+  const getCheckoutUrlForPlan = (plan: string): string => {
+    if (plan.includes("Lifetime")) return links.lifetimeUrl;
+    if (plan.includes("Company") || plan.includes("CI/CD") || plan.includes("Team") || plan.includes("Agency")) {
+      return links.companyIntroUrl;
+    }
+    return links.proIntroUrl;
+  };
+
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("Developer Pro");
   const [email, setEmail] = useState("");
@@ -336,7 +360,58 @@ export function Pricing({
           </button>
         </article>
 
-        {/* Tier 3: Company / Team & CI/CD Gate ($9 first month intro, renews at $99/mo) */}
+        {/* Tier 3: Lifetime Founder Pass ($69 One-Time) */}
+        <article className="spe-pricing-card">
+          <span className="spe-pricing-badge" style={{ background: "rgba(245, 158, 11, 0.2)", color: "#f59e0b" }}>
+            Founder Special · One-Time
+          </span>
+          <h2 className="spe-pricing-card-title">Lifetime Pass</h2>
+          <p className="spe-pricing-desc">
+            Pay once, keep Developer Pro capabilities forever. No recurring subscriptions, perpetual local offline license.
+          </p>
+
+          <div className="spe-pricing-price-box">
+            <span className="spe-pricing-amount">$69</span>
+            <span className="spe-pricing-period">/ one-time payment</span>
+          </div>
+
+          <div className="spe-pricing-roi-banner">
+            ⭐ Lifetime local license: zero recurring fees, perpetual offline validity.
+          </div>
+
+          <ul className="spe-pricing-features" aria-label="Lifetime Pass Features">
+            <li className="spe-pricing-feature-item">
+              <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
+              <span><strong>All Developer Pro Features Forever</strong> without ongoing monthly bills</span>
+            </li>
+            <li className="spe-pricing-feature-item">
+              <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
+              <span><strong>100% Ad-Free Studio</strong> permanently unlocked</span>
+            </li>
+            <li className="spe-pricing-feature-item">
+              <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
+              <span><strong>Lifetime Offline Entitlement Key</strong> signed with Ed25519</span>
+            </li>
+            <li className="spe-pricing-feature-item">
+              <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
+              <span><strong>Full Skill &amp; Template Library</strong> including future 2026/2027 packs</span>
+            </li>
+            <li className="spe-pricing-feature-item">
+              <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
+              <span>Direct access to new experimental model transcompilers</span>
+            </li>
+          </ul>
+
+          <button
+            type="button"
+            className="spe-pricing-cta spe-pricing-cta-secondary"
+            onClick={() => handleOpenPlan("Lifetime Founder Pass ($69 One-Time)")}
+          >
+            {currentTier === "pro" ? "Plan Active ✓" : "Get Lifetime Pass ($69) →"}
+          </button>
+        </article>
+
+        {/* Tier 4: Company / Team & CI/CD Gate ($9 first month intro, renews at $99/mo) */}
         <article className="spe-pricing-card">
           <span className="spe-pricing-badge">Team Intro · $9 First Month</span>
           <h2 className="spe-pricing-card-title">Company &amp; CI/CD Gate</h2>
@@ -540,48 +615,75 @@ export function Pricing({
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubscribe}>
-                <p style={{ fontSize: "0.875rem", color: "#94a3b8", marginBottom: "0.75rem" }}>
-                  Enter your email to reserve your Public Beta introductory rate, or paste a server-issued signed entitlement token (<code>spe_entitlement.v1...</code>) to verify and activate a paid tier:
-                </p>
-                <input
-                  type="email"
-                  required
-                  placeholder="developer@company.com"
-                  className="spe-pricing-input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoFocus
-                />
-                <input
-                  type="text"
-                  placeholder="Optional: spe_entitlement.v1.<payload>.<signature>"
-                  className="spe-pricing-input"
-                  style={{ marginTop: "0.65rem", fontFamily: "monospace", fontSize: "0.8rem" }}
-                  value={signedTokenInput}
-                  onChange={(e) => setSignedTokenInput(e.target.value)}
-                />
-                {verificationError && (
-                  <p style={{ color: "#f87171", fontSize: "0.78rem", marginTop: "0.5rem", marginBottom: 0 }}>
-                    {verificationError}
+              <div>
+                <div style={{ marginBottom: "1.25rem", padding: "1rem", background: "rgba(15, 23, 42, 0.65)", borderRadius: "8px", border: "1px solid rgba(56, 189, 248, 0.25)" }}>
+                  <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.84rem", color: "#f8fafc", fontWeight: 600 }}>
+                    Instant Checkout via Stripe:
                   </p>
-                )}
-                <div className="spe-pricing-modal-actions" style={{ marginTop: "1.25rem" }}>
-                  <button
-                    type="submit"
+                  <a
+                    href={getCheckoutUrlForPlan(selectedPlan)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="spe-pricing-cta spe-pricing-cta-primary"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textDecoration: "none",
+                      width: "100%",
+                      boxSizing: "border-box",
+                      minHeight: "44px",
+                    }}
                   >
-                    {signedTokenInput.trim() ? "Verify Signed Token →" : "Reserve Public Beta Rate →"}
-                  </button>
-                  <button
-                    type="button"
-                    className="spe-pricing-cta spe-pricing-cta-secondary"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    Cancel
-                  </button>
+                    Proceed to Secure Stripe Checkout →
+                  </a>
+                  <p style={{ margin: "0.5rem 0 0 0", fontSize: "0.72rem", color: "#64748b", textAlign: "center" }}>
+                    Secured by Stripe · Automatic Ed25519 cryptographic token issued after purchase
+                  </p>
                 </div>
-              </form>
+
+                <form onSubmit={handleSubscribe}>
+                  <p style={{ fontSize: "0.82rem", color: "#94a3b8", marginBottom: "0.6rem" }}>
+                    Already paid? Paste your signed entitlement token, or enter your email to reserve the introductory rate:
+                  </p>
+                  <input
+                    type="email"
+                    required
+                    placeholder="developer@company.com"
+                    className="spe-pricing-input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Optional: spe_entitlement.v1.<payload>.<signature>"
+                    className="spe-pricing-input"
+                    style={{ marginTop: "0.65rem", fontFamily: "monospace", fontSize: "0.8rem" }}
+                    value={signedTokenInput}
+                    onChange={(e) => setSignedTokenInput(e.target.value)}
+                  />
+                  {verificationError && (
+                    <p style={{ color: "#f87171", fontSize: "0.78rem", marginTop: "0.5rem", marginBottom: 0 }}>
+                      {verificationError}
+                    </p>
+                  )}
+                  <div className="spe-pricing-modal-actions" style={{ marginTop: "1rem" }}>
+                    <button
+                      type="submit"
+                      className="spe-pricing-cta spe-pricing-cta-primary"
+                    >
+                      {signedTokenInput.trim() ? "Verify Signed Token →" : "Reserve Public Beta Rate →"}
+                    </button>
+                    <button
+                      type="button"
+                      className="spe-pricing-cta spe-pricing-cta-secondary"
+                      onClick={() => setModalOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
             )}
           </div>
         </div>
