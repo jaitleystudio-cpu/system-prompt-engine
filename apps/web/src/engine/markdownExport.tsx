@@ -66,7 +66,10 @@ export function constructMarkdownSystemPrompt(
     currentEpochMs,
   });
 
-  if (!includeFrontmatter) {
+  const isWhiteLabeled = Boolean(agencyBranding?.agencyName?.trim());
+  const shouldIncludeFrontmatter = options.includeFrontmatter ?? isWhiteLabeled;
+
+  if (!shouldIncludeFrontmatter) {
     return enforceTierOutputLimit(mdBody, {
       subscriptionTier,
       entitlement: resolvedEntitlement,
@@ -74,7 +77,6 @@ export function constructMarkdownSystemPrompt(
     });
   }
 
-  const isWhiteLabeled = Boolean(agencyBranding?.agencyName?.trim());
   const frontmatter = [
     "---",
     `title: ${JSON.stringify(title)}`,
@@ -88,7 +90,7 @@ export function constructMarkdownSystemPrompt(
       ? `report_subtitle: ${JSON.stringify(agencyBranding.reportSubtitle.trim())}`
       : null,
     isWhiteLabeled
-      ? 'certified_by: "System Prompt Engine (Whole-Harness Supercompiler)"'
+      ? 'specification_standard: "System Prompt Engine (SPE v1.2 AST)"'
       : null,
     'format: "Markdown (CommonMark / GitHub Flavored Markdown)"',
     `depth_tier: ${JSON.stringify(depthTier)}`,

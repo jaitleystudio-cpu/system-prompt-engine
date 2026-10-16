@@ -52,20 +52,14 @@ export const PRO_TIER_MAX_OUTPUT_CHARS = 100000;
  */
 export function cleanSurrogateBoundaries(str) {
   if (typeof str !== "string" || str.length === 0) return "";
-  let s = str;
-  if (s.length > 0) {
-    const firstCode = s.charCodeAt(0);
-    if (firstCode >= 0xdc00 && firstCode <= 0xdfff) {
-      s = s.slice(1);
-    }
+  if (typeof str.toWellFormed === "function") {
+    return str.toWellFormed();
   }
-  if (s.length > 0) {
-    const lastCode = s.charCodeAt(s.length - 1);
-    if (lastCode >= 0xd800 && lastCode <= 0xdbff) {
-      s = s.slice(0, -1);
-    }
-  }
-  return s;
+  // Comprehensive fallback: replace all lone high and low surrogates with U+FFFD
+  return str.replace(
+    /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g,
+    "\uFFFD"
+  );
 }
 
 /**
@@ -992,12 +986,29 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
     const rawLines = raw.split("\n");
     const extractedConstraints = [];
     const objectiveLines = [];
+    const mandatoryDirectiveRegex = /\b(?:MUST NOT|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|PROHIBITED|STRICTLY|MANDATORY)\b/i;
     for (const l of rawLines) {
       const trimmed = l.trim();
-      if (/^(?:CONSTRAINT[\w\d]*\s*[:—\-]|\bMust strictly\b|\bStrictly\b|\bHard constraint:)/i.test(trimmed)) {
+      if (
+        /^(?:CONSTRAINT[\w\d]*\s*[:—\-]|\bMust strictly\b|\bStrictly\b|\bHard constraint:)/i.test(trimmed) ||
+        mandatoryDirectiveRegex.test(trimmed)
+      ) {
         extractedConstraints.push(trimmed.replace(/^[-*]\s*/, ""));
       } else {
         objectiveLines.push(l);
+      }
+    }
+    // Also scan multi-sentence objective lines for embedded mandatory obligations
+    const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|PROHIBITED|STRICTLY|MANDATORY)\b[^.!?\n]*[.!?]?)/gi;
+    for (const objLine of objectiveLines) {
+      const matches = objLine.match(sentenceDirectiveRegex);
+      if (matches) {
+        for (const m of matches) {
+          const cleanM = m.trim().replace(/^[-*]\s*/, "");
+          if (cleanM.length > 5 && !extractedConstraints.includes(cleanM)) {
+            extractedConstraints.push(cleanM);
+          }
+        }
       }
     }
     if (extractedConstraints.length > 0) {

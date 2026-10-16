@@ -56,10 +56,10 @@ export interface InspectPromptResult {
  * Tool 1: compile_system_prompt
  */
 export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptResult {
-  const goal = (req.goal || "").trim();
-  const category = req.category || "Assistant";
-  const targetModel = req.target_model || "chatgpt";
-  const constraints = req.constraints || [];
+  const goal = cleanSurrogateBoundaries((req.goal || "").trim());
+  const category = cleanSurrogateBoundaries(req.category || "Assistant");
+  const targetModel = cleanSurrogateBoundaries(req.target_model || "chatgpt");
+  const constraints = (req.constraints || []).map((c) => cleanSurrogateBoundaries(c));
   const warnings: string[] = [];
 
   if (!goal) {
@@ -67,7 +67,22 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
   }
 
   const detected = detectLanguage(goal);
-  const role = req.role?.trim() || `You are an expert ${category} specialist operating with deterministic boundary discipline and zero hallucinations.`;
+  const role = cleanSurrogateBoundaries(
+    req.role?.trim() || `You are an expert ${category} specialist operating with deterministic boundary discipline and zero hallucinations.`
+  );
+
+  // Extract any inline or sentence-level mandatory instructions from goal (Finding F05)
+  const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|PROHIBITED|STRICTLY|MANDATORY)\b[^.!?\n]*[.!?]?)/gi;
+  const goalDirectives: string[] = [];
+  const goalMatches = goal.match(sentenceDirectiveRegex);
+  if (goalMatches) {
+    for (const m of goalMatches) {
+      const cleanM = m.trim().replace(/^[-*]\s*/, "");
+      if (cleanM.length > 5 && !goalDirectives.includes(cleanM)) {
+        goalDirectives.push(cleanM);
+      }
+    }
+  }
 
   // Protected Section 1: Role & Persona
   const secRole = `# System Role & Persona\n${role}`;
@@ -83,6 +98,13 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
       invariantLines.push(`- User Invariant: ${c}`);
     }
   }
+  // Promote all mandatory directives from goal into invariantLines so they are NEVER trimmed
+  for (const dir of goalDirectives) {
+    const formatted = `- User Invariant: ${dir}`;
+    if (!invariantLines.includes(formatted)) {
+      invariantLines.push(formatted);
+    }
+  }
   const secInvariants = `# Operational & Security Invariants\n${invariantLines.join("\n")}`;
 
   // Protected Section 3: Acceptance Verification Battery
@@ -90,7 +112,7 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
 
   // Protected Section 4: Desired Output Contract (if specified)
   const secOutputContract = req.output_format?.trim()
-    ? `# Desired Output Contract\n${req.output_format.trim()}`
+    ? `# Desired Output Contract\n${cleanSurrogateBoundaries(req.output_format.trim())}`
     : null;
 
   // Fail-closed verification: Protected constraints alone must NOT exceed Free tier capacity ceiling
@@ -185,6 +207,14 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
     if (!finalPrompt.includes(c)) {
       throw new Error(
         `CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING: User hard constraint '${c}' was truncated at capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters. Constraints must never be silently dropped.`
+      );
+    }
+  }
+
+  for (const dir of goalDirectives) {
+    if (!finalPrompt.includes(dir)) {
+      throw new Error(
+        `CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING: User mandatory instruction '${dir}' from goal was truncated at capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters. Mandatory obligations cannot be silently dropped.`
       );
     }
   }

@@ -243,11 +243,19 @@ export function verifySignedReceiptStatusAttestation(
     return null;
   }
 
-  // Enforce attestation freshness window (default: 24h) and prevent clock-skew future timestamps
+  // Enforce attestation freshness window (default: 24h) for recurring subs, while preserving perpetual offline validity for lifetime keys
   const nowMs = options.currentEpochMs ?? Date.now();
-  const maxAgeMs = options.maxAttestationAgeMs ?? DEFAULT_MAX_ATTESTATION_AGE_MS;
-  if (parsed.attestedAtMs + maxAgeMs < nowMs) {
-    return null; // Expired / stale offline attestation window
+  const isLifetime =
+    parsed.lifetime === true ||
+    parsed.subscriptionStatus === "LIFETIME" ||
+    (typeof parsed.planName === "string" && parsed.planName.toLowerCase().includes("lifetime")) ||
+    parsed.expiresAtMs >= 2_000_000_000_000;
+
+  if (!isLifetime) {
+    const maxAgeMs = options.maxAttestationAgeMs ?? DEFAULT_MAX_ATTESTATION_AGE_MS;
+    if (parsed.attestedAtMs + maxAgeMs < nowMs) {
+      return null; // Expired / stale offline attestation window
+    }
   }
   if (parsed.attestedAtMs > nowMs + 60_000) {
     return null; // Future timestamp clock skew rejected
@@ -737,7 +745,7 @@ export function resolveBrowserVerifiedEntitlement(
 export function startBrowserFreeTrial(
   tier: "pro" | "team" = "pro",
   email: string = "developer@workspace.local",
-  days: number = 14,
+  days: number = 7,
   currentEpochMs: number = Date.now(),
 ): TrialEntitlementRecord {
   const safeEmail = email.trim() || "developer@workspace.local";
@@ -747,8 +755,8 @@ export function startBrowserFreeTrial(
   const trialId = `SPE-TRIAL-${tier.toUpperCase()}-${digest}`;
   const planName =
     tier === "team"
-      ? "Company & CI/CD Gate (14-Day Free Trial)"
-      : "Developer Pro (14-Day Free Trial)";
+      ? "Company & CI/CD Gate (7-Day Free Trial)"
+      : "Developer Pro (7-Day Free Trial)";
   const durationMs = days * 24 * 60 * 60 * 1000;
   const record: TrialEntitlementRecord = {
     status: "ACTIVE_TRIAL",

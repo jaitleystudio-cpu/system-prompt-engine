@@ -475,15 +475,15 @@ export class AuthoritativeBillingAuthority {
   issueSignedTrialEntitlementToken(
     tier: "pro" | "team" = "pro",
     email: string = "trial@developer.spe",
-    trialDays: number = 14,
+    trialDays: number = 7,
     currentEpochMs: number = Date.now(),
   ): string {
     const trialId = `SPE-TRIAL-${tier.toUpperCase()}-${randomBytes(6).toString("hex").toUpperCase()}`;
     const expiresAtMs = currentEpochMs + trialDays * 24 * 60 * 60 * 1000;
     const planName =
       tier === "team"
-        ? "Company & CI/CD Gate (14-Day Free Trial)"
-        : "Developer Pro (14-Day Free Trial)";
+        ? "Company & CI/CD Gate (7-Day Free Trial)"
+        : "Developer Pro (7-Day Free Trial)";
 
     const record: AuthoritativeLedgerRecord = {
       paymentReceiptId: trialId,

@@ -62,6 +62,9 @@ export function getModelById(id: string, autoUpgrade: boolean = true): AiModelEn
   }
 
   if (model.isLegacy && autoUpgrade) {
+    if (model.deprecatedInFavorOf && modelsById.has(model.deprecatedInFavorOf)) {
+      return modelsById.get(model.deprecatedInFavorOf);
+    }
     const upgrade = autoUpgradeLegacyModel(id);
     return upgrade.model;
   }

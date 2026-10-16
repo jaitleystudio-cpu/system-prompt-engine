@@ -113,7 +113,7 @@ export function Pricing({
 
   const handleStartTrial = (tier: "pro" | "team" = "pro") => {
     const trialEmail = email.trim() || "developer@workspace.local";
-    const trialRecord = startBrowserFreeTrial(tier, trialEmail, 14);
+    const trialRecord = startBrowserFreeTrial(tier, trialEmail, 7);
     setActiveTrial(trialRecord);
     setCurrentTier(tier);
     setCurrentLicense(trialRecord.trialId);
@@ -263,7 +263,7 @@ export function Pricing({
                 letterSpacing: "0.05em",
               }}
             >
-              {activeTrial ? "14-Day Free Trial Active" : "Active Signed Entitlement"}
+              {activeTrial ? "7-Day Free Trial Active" : "Active Signed Entitlement"}
             </span>
             <h2 style={{ margin: "0.25rem 0", color: "#f8fafc", fontSize: "1.2rem", fontWeight: 700 }}>
               {activeTrial
@@ -313,7 +313,7 @@ export function Pricing({
         </section>
       )}
 
-      {/* 14-Day Free Trial Callout Banner for All Users */}
+      {/* 7-Day Free Trial Callout Banner for All Users */}
       {!currentTier && !activeTrial && (
         <section
           className="spe-trial-callout-banner"
@@ -331,7 +331,7 @@ export function Pricing({
             gap: "1.25rem",
             boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
           }}
-          aria-label="Universal 14-Day Free Trial"
+          aria-label="Universal 7-Day Free Trial"
         >
           <div style={{ flex: "1 1 340px" }}>
             <span
@@ -348,13 +348,13 @@ export function Pricing({
                 marginBottom: "0.4rem",
               }}
             >
-              14-Day Full Access Free Trial · Available for Everyone
+              7-Day Full Access Free Trial · Available for Everyone
             </span>
             <h2 style={{ margin: "0.2rem 0 0.4rem 0", color: "#f8fafc", fontSize: "1.25rem", fontWeight: 700 }}>
-              Test-Drive Developer Pro or Team Free for 14 Days
+              Test-Drive Developer Pro or Team Free for 7 Days
             </h2>
             <p style={{ margin: 0, fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5 }}>
-              Zero payment upfront. Zero credit card required. Experience 30,000+ character prompt output, 11+ dialect transcompilers, and 101 skill packs instantly with 1-click browser activation.
+              Zero payment upfront. Zero credit card required. Experience 30,000+ character prompt output, 11+ dialect transcompilers, and 101 skill packs instantly with 1-click browser activation for 7 days.
             </p>
           </div>
           <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
@@ -364,7 +364,7 @@ export function Pricing({
               style={{ background: "#10b981", borderColor: "#10b981", color: "#ffffff", padding: "10px 18px" }}
               onClick={() => handleStartTrial("pro")}
             >
-              Start 14-Day Free Trial (Zero Card Required) →
+              Start 7-Day Free Trial (Zero Card Required) →
             </button>
           </div>
         </section>
@@ -480,7 +480,7 @@ export function Pricing({
                 style={{ borderColor: "rgba(16, 185, 129, 0.5)", color: "#34d399", fontSize: "0.82rem" }}
                 onClick={() => handleStartTrial("pro")}
               >
-                Or Start 14-Day Free Trial (No Card) →
+                Or Start 7-Day Free Trial (No Card) →
               </button>
             )}
           </div>
@@ -593,7 +593,7 @@ export function Pricing({
                 style={{ borderColor: "rgba(16, 185, 129, 0.5)", color: "#34d399", fontSize: "0.82rem" }}
                 onClick={() => handleStartTrial("team")}
               >
-                Or Start 14-Day Team Trial (No Card) →
+                Or Start 7-Day Team Trial (No Card) →
               </button>
             )}
           </div>
@@ -698,7 +698,7 @@ export function Pricing({
               <div style={{ textAlign: "left" }}>
                 <p style={{ color: "#34d399", fontWeight: 700, marginBottom: "0.75rem" }}>
                   {activeTrial
-                    ? "✓ 14-Day Free Trial Activated Successfully!"
+                    ? "✓ 7-Day Free Trial Activated Successfully!"
                     : waitlistReservation
                     ? "✓ Public Beta Checkout Reservation Recorded"
                     : "✓ Signed Server Entitlement Token Verified & Activated!"}
@@ -706,7 +706,7 @@ export function Pricing({
                 <div style={{ backgroundColor: "#020617", border: "1px solid #1e293b", borderRadius: "6px", padding: "0.75rem", marginBottom: "1rem" }}>
                   <label style={{ display: "block", fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700, marginBottom: "0.25rem" }}>
                     {activeTrial
-                      ? "Active 14-Day Trial Token:"
+                      ? "Active 7-Day Trial Token:"
                       : waitlistReservation
                       ? "Waitlist Reference ID:"
                       : "Verified Entitlement Token:"}
@@ -742,7 +742,7 @@ export function Pricing({
                 <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.5, marginBottom: "1.25rem" }}>
                   {activeTrial ? (
                     <>
-                      Your 14-day free trial for <strong>{activeTrial.planName}</strong> is now active in this browser. All Developer Pro capabilities, 30,000+ character output capacity, and 101 skill packs are unlocked with zero payment or credit card required.
+                      Your 7-day free trial for <strong>{activeTrial.planName}</strong> is now active in this browser. All Developer Pro capabilities, 30,000+ character output capacity, and 101 skill packs are unlocked with zero payment or credit card required.
                     </>
                   ) : waitlistReservation ? (
                     <>
@@ -766,10 +766,10 @@ export function Pricing({
               <div>
                 <div style={{ marginBottom: "1rem", padding: "0.85rem", background: "rgba(16, 185, 129, 0.1)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.35)" }}>
                   <p style={{ margin: "0 0 0.35rem 0", fontSize: "0.84rem", color: "#34d399", fontWeight: 700 }}>
-                    14-Day Instant Free Trial (Zero Card Required)
+                    7-Day Instant Free Trial (Zero Card Required)
                   </p>
                   <p style={{ margin: "0 0 0.6rem 0", fontSize: "0.76rem", color: "#cbd5e1", lineHeight: 1.4 }}>
-                    Start test-driving full 30,000+ character capacity and all Pro capabilities in your browser right now for 14 days.
+                    Start test-driving full 30,000+ character capacity and all Pro capabilities in your browser right now for 7 days.
                   </p>
                   <button
                     type="button"
@@ -783,7 +783,7 @@ export function Pricing({
                     }}
                     onClick={() => handleStartTrial(selectedPlan.includes("Company") ? "team" : "pro")}
                   >
-                    Activate 14-Day Free Trial Instantly →
+                    Activate 7-Day Free Trial Instantly →
                   </button>
                 </div>
 

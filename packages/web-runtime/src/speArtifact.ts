@@ -401,8 +401,8 @@ export function artifactPrintHtml(
     <h1>${escapeHtml(headerTitle)}</h1>
     ${clientText ? `<p class="client" style="font-size: 15px; font-weight: 600; color: #1e3a8a; margin: 4px 0 8px;">${clientText}</p>` : ""}
     ${subtitle ? `<p class="subtitle" style="font-size: 13px; color: #475569; margin: 0 0 12px;">${escapeHtml(subtitle)}</p>` : ""}
-    <p class="meta">${escapeHtml(artifact.category)} · ${escapeHtml(artifact.target)} · ${escapeHtml(artifact.created_at_utc)}${isWhiteLabeled ? " · Certified via SPE Whole-Harness Engine" : ""}</p>
-    <p class="notice"><strong>${isWhiteLabeled ? "Agency Client Deliverable." : "Local print view."}</strong> ${isWhiteLabeled ? "Certified system prompt specification engineered for deterministic agent execution." : "Not a verification receipt. Integrity checks file consistency, not authorship, truth, or output quality."}</p>
+    <p class="meta">${escapeHtml(artifact.category)} · ${escapeHtml(artifact.target)} · ${escapeHtml(artifact.created_at_utc)}${isWhiteLabeled ? " · Structured Specification" : ""}</p>
+    <p class="notice"><strong>${isWhiteLabeled ? "Agency Client Deliverable." : "Local print view."}</strong> ${isWhiteLabeled ? "Structured system prompt specification. Integrity verification covers file and format consistency, not runtime model execution or external truth." : "Not a verification receipt. Integrity checks file consistency, not authorship, truth, or output quality."}</p>
   </header>
   ${section("Original request", artifact.user_request)}
   ${desiredOutput ? section("Desired Output", desiredOutput) : ""}
