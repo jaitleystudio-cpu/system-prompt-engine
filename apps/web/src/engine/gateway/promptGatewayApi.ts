@@ -133,7 +133,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-fullstack-cloud-architect.spe",
-    verificationChecksum: "57b32d56a2977f6b2110c732c45e8ef26be4ee92019c0847798c1998ee66d6d8",
+    verificationChecksum: "d971b7e588eba65632b4b1a9535a06d9b93bc443223453ca1a4852ce916576ef",
     invariantsCount: 2,
     authorityCeiling: "Read-only terraform plan; zero live destructive apply mutations."
   },
@@ -180,7 +180,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-3d-webgl-storyteller.spe",
-    verificationChecksum: "a189f78cc9d357064ec0b81df2f627d42cf389a9e7fec39e78a6ff602f37c35a",
+    verificationChecksum: "2b917c0509c3cbf8e79b28b180de3f61a9cb14103983206ddc774287d1407a30",
     invariantsCount: 2,
     authorityCeiling: "Client DOM canvas rendering only; no external network fetches."
   },
@@ -220,7 +220,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-autonomous-code-reviewer.spe",
-    verificationChecksum: "f623e8469ad0e227092c7d9bc840134f0d7e4860d5bdfb7762a1c6a08c352a9f",
+    verificationChecksum: "f95d661bcad3b5990c67ce5e4477a2fb78b3a406dac4318fa5a765eb789a3bb1",
     invariantsCount: 2,
     authorityCeiling: "Read-only static analysis; no push or write permissions."
   },
@@ -260,7 +260,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-security-auditor-owasp.spe",
-    verificationChecksum: "87063b71e16f39870be83ceef9bb1c828ca1e80936fc399e525a745771eb0cc4",
+    verificationChecksum: "638fc76929dbd452b039b4407cf128505c5cd5285422d952c2adb710a32a3ed6",
     invariantsCount: 2,
     authorityCeiling: "Sandboxed static security linting only."
   },
@@ -300,7 +300,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-zero-hallucination-reasoner.spe",
-    verificationChecksum: "136b6d5f7fa9f3456bb78875ee9a0a09e0fa95a7207455d36e2f11e93caea4cf",
+    verificationChecksum: "73511d18f80b6204c55116d5e809495bba2cb80bd3a4e3792ac2f9a42987079c",
     invariantsCount: 2,
     authorityCeiling: "Pure deductive deduction; zero speculative hallucination."
   },
@@ -340,7 +340,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-agent-swarm-orchestrator.spe",
-    verificationChecksum: "05d26ff468140dbb5a932599faecadff13bb895e6f66347fa6574f28f090d810",
+    verificationChecksum: "49ab845fffc8ae0d668befe1d77bd61456adf09db85cf12d6ac7b71354606094",
     invariantsCount: 2,
     authorityCeiling: "Token-budgeted subagent delegation."
   },
@@ -380,7 +380,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-vlm-ui-reverse-engineer.spe",
-    verificationChecksum: "96b6e41b9d0b674a631bf3bb79a786016e789fcf27c44e99fca3aa9ad6cf7d85",
+    verificationChecksum: "a925ce62614b7cee9ab9ce0472410f0e5bdbc246cd8b40f3974cb95feebee577",
     invariantsCount: 2,
     authorityCeiling: "Component code generation only."
   },
@@ -420,7 +420,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-antigravity-skill-builder.spe",
-    verificationChecksum: "ca476b7dbb1f3bb9e3d93026857fa23cfcefa06b01a1c97a5509787ff8c5f5bd",
+    verificationChecksum: "3b29de014791203dcdc5adafa040a9854167d5de8e9dd133992922981514017d",
     invariantsCount: 2,
     authorityCeiling: "Scoped skill package generation."
   },
@@ -460,7 +460,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-hybrid-rag-synthesizer.spe",
-    verificationChecksum: "b968393e8e2cbf841762cba342e432cff55e9ba7fe9e0c51f49673d3ea747206",
+    verificationChecksum: "e41b2ae2aae8c69acec1ca0abad35323037272fa23b9400a3746e5b19e6c7961",
     invariantsCount: 2,
     authorityCeiling: "Passive factual synthesis; strict context injection fencing."
   },
@@ -500,7 +500,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-microservice-resilience-lead.spe",
-    verificationChecksum: "2ce46d5c58ee1178696ab3f4a4dfd1c9da9f6236b539cf2010972c2bb12fa9b4",
+    verificationChecksum: "c4bd224dacef0d2c006add157a040239f57c39e3b75a8f8839f53dd730a50b70",
     invariantsCount: 2,
     authorityCeiling: "Policy and chaos design; zero unconfirmed network execution."
   }
@@ -676,7 +676,7 @@ export const CORE_PROMPT_PACKS: PromptPackEntry[] = [
     ],
     totalInvariants: 6,
     speBundleUri: "/packages/spe-pack-cloud-enterprise.spe",
-    verificationChecksum: "4e7194f1c71285038c92a6c3f5ea973b1e779b6d859fa47cfb8812c77d643801",
+    verificationChecksum: "e021d7269cdc363ff29d1363ba987e3b53349ddff779ab724e047d6869aad06e",
     license: "MIT OR Apache-2.0"
   },
   {
@@ -691,7 +691,7 @@ export const CORE_PROMPT_PACKS: PromptPackEntry[] = [
     ],
     totalInvariants: 6,
     speBundleUri: "/packages/spe-pack-agentic-engineer.spe",
-    verificationChecksum: "8a329ecb78b54e3d092cf08126bca5019dd14f1797e59048a60bb72ce51a70cc",
+    verificationChecksum: "fe2a051e92ccf96fc01203e987c2ffc3d68bd5390a76fffa6949e5a4f0dc250c",
     license: "MIT OR Apache-2.0"
   },
   {
@@ -705,7 +705,7 @@ export const CORE_PROMPT_PACKS: PromptPackEntry[] = [
     ],
     totalInvariants: 4,
     speBundleUri: "/packages/spe-pack-frontier-creative.spe",
-    verificationChecksum: "c62047bc18a513c9e6bb02e0719e7a83501a52f464010b985f543163351ec8a2",
+    verificationChecksum: "5f2596957a228739d2d0210b7e42d11c049a426e45a3a7804b95ade3e139316f",
     license: "MIT OR Apache-2.0"
   },
   {
@@ -719,7 +719,7 @@ export const CORE_PROMPT_PACKS: PromptPackEntry[] = [
     ],
     totalInvariants: 4,
     speBundleUri: "/packages/spe-pack-reasoning-rigor.spe",
-    verificationChecksum: "1df887e411b9ec8b71d49e6f28b49706317beff9b28a49fa7e1f40d6c561b365",
+    verificationChecksum: "360a7414b436291822fd5b02484608f869a62cf51c087caf869e0442476aef9e",
     license: "MIT OR Apache-2.0"
   }
 ];
@@ -786,7 +786,8 @@ export class PromptGatewayApi {
     let hydratedPrompt = asset.canonicalPrompt;
     if (options?.variables) {
       for (const [k, v] of Object.entries(options.variables)) {
-        hydratedPrompt = hydratedPrompt.replace(new RegExp(`\\{${k}\\}`, "g"), v);
+        const escapedKey = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        hydratedPrompt = hydratedPrompt.replace(new RegExp(`\\{${escapedKey}\\}`, "g"), v);
       }
     }
 
@@ -794,11 +795,15 @@ export class PromptGatewayApi {
       const compiled = transcompilePrompt(hydratedPrompt, options.dialect);
       return {
         ...asset,
+        canonicalPrompt: hydratedPrompt,
         compiledOutput: compiled,
       };
     }
 
-    return asset;
+    return {
+      ...asset,
+      canonicalPrompt: hydratedPrompt,
+    };
   }
 
   /**
@@ -826,7 +831,8 @@ export class PromptGatewayApi {
     let hydrated = promptText;
     if (variables) {
       for (const [k, v] of Object.entries(variables)) {
-        hydrated = hydrated.replace(new RegExp(`\\{${k}\\}`, "g"), v);
+        const escapedKey = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        hydrated = hydrated.replace(new RegExp(`\\{${escapedKey}\\}`, "g"), v);
       }
     }
     return transcompilePrompt(hydrated, targetDialect);
@@ -843,11 +849,11 @@ export class PromptGatewayApi {
     const ir = parseToCanonicalIR(promptText);
     const issues: string[] = [];
 
-    if (ir.hardInvariants.length === 0) {
+    if (!ir.hasExplicitInvariants || ir.explicitInvariantsCount === 0) {
       issues.push("No hard invariants detected. Add MUST / NEVER clauses to prevent drift.");
     }
 
-    if (ir.authorityBoundaries.length === 0) {
+    if (!ir.hasExplicitAuthorityBoundaries || ir.explicitAuthorityBoundariesCount === 0) {
       issues.push("No authority boundaries declared. Define tool permissions and shell ceiling.");
     }
 
@@ -878,8 +884,8 @@ export class PromptGatewayApi {
 
     return {
       valid: issues.length === 0,
-      invariantsCaptured: ir.hardInvariants.length,
-      authorityBoundariesCaptured: ir.authorityBoundaries.length,
+      invariantsCaptured: ir.explicitInvariantsCount ?? 0,
+      authorityBoundariesCaptured: ir.explicitAuthorityBoundariesCount ?? 0,
       contextSanitized: hasContextSanitization,
       tokenBudgetEstimate,
       issues,

@@ -16,7 +16,7 @@
       ],
       "totalInvariants": 6,
       "speBundleUri": "/packages/spe-pack-cloud-enterprise.spe",
-      "verificationChecksum": "4e7194f1c71285038c92a6c3f5ea973b1e779b6d859fa47cfb8812c77d643801",
+      "verificationChecksum": "e021d7269cdc363ff29d1363ba987e3b53349ddff779ab724e047d6869aad06e",
       "license": "MIT OR Apache-2.0"
     },
     {
@@ -31,7 +31,7 @@
       ],
       "totalInvariants": 6,
       "speBundleUri": "/packages/spe-pack-agentic-engineer.spe",
-      "verificationChecksum": "8a329ecb78b54e3d092cf08126bca5019dd14f1797e59048a60bb72ce51a70cc",
+      "verificationChecksum": "fe2a051e92ccf96fc01203e987c2ffc3d68bd5390a76fffa6949e5a4f0dc250c",
       "license": "MIT OR Apache-2.0"
     },
     {
@@ -45,7 +45,7 @@
       ],
       "totalInvariants": 4,
       "speBundleUri": "/packages/spe-pack-frontier-creative.spe",
-      "verificationChecksum": "c62047bc18a513c9e6bb02e0719e7a83501a52f464010b985f543163351ec8a2",
+      "verificationChecksum": "5f2596957a228739d2d0210b7e42d11c049a426e45a3a7804b95ade3e139316f",
       "license": "MIT OR Apache-2.0"
     },
     {
@@ -59,7 +59,7 @@
       ],
       "totalInvariants": 4,
       "speBundleUri": "/packages/spe-pack-reasoning-rigor.spe",
-      "verificationChecksum": "1df887e411b9ec8b71d49e6f28b49706317beff9b28a49fa7e1f40d6c561b365",
+      "verificationChecksum": "360a7414b436291822fd5b02484608f869a62cf51c087caf869e0442476aef9e",
       "license": "MIT OR Apache-2.0"
     }
   ]

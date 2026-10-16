@@ -217,6 +217,60 @@ export class SpeMcpServer {
         };
       }
 
+      case "server/discover": {
+        if (isNotification) return null;
+        const catalog = this.gateway.listPrompts();
+        return {
+          jsonrpc: "2.0",
+          id,
+          result: {
+            protocolVersion: "2026-07-28",
+            serverInfo: {
+              name: "spe-global-ai-gateway",
+              version: "2026.10",
+              title: "SPE — System Prompt Engine Global AI Gateway",
+              stateless: true,
+              offlineWasm: true,
+            },
+            capabilities: {
+              tools: { listChanged: false },
+              prompts: { listChanged: false },
+              resources: { listChanged: false, subscribe: false },
+            },
+            tools: this.getToolDefinitions(),
+            prompts: catalog.map((p) => ({
+              name: p.id,
+              description: p.description,
+              arguments: p.variables.map((v) => ({
+                name: v.name,
+                description: v.description,
+                required: false,
+              })),
+            })),
+            resources: [
+              {
+                uri: "spe://api/v1/prompts/index.json",
+                name: "SPE Prompts Catalog",
+                mimeType: "application/json",
+                description: "Verified production prompt assets catalog with AST schemas",
+              },
+              {
+                uri: "spe://api/v1/model-formats/index.json",
+                name: "SPE Model Formats Matrix",
+                mimeType: "application/json",
+                description: "Compatibility matrix for 11 frontier AI model dialects",
+              },
+              {
+                uri: "spe://api/v1/prompt-packs/index.json",
+                name: "SPE Prompt Packs",
+                mimeType: "application/json",
+                description: "Curated enterprise prompt pack bundles",
+              },
+            ],
+          },
+        };
+      }
+
       case "ping": {
         if (isNotification) return null;
         return {
@@ -362,6 +416,60 @@ export class SpeMcpServer {
                 name: "SPE Prompt Packs",
                 mimeType: "application/json",
                 description: "Curated enterprise prompt pack bundles",
+              },
+            ],
+          },
+        };
+      }
+
+      case "resources/read": {
+        if (isNotification) return null;
+        const uri = request.params?.uri;
+        if (!uri) {
+          return {
+            jsonrpc: "2.0",
+            id,
+            error: { code: -32602, message: "Missing required param: 'uri'" },
+          };
+        }
+
+        let contentText = "";
+        const mimeType = "application/json";
+
+        if (uri === "spe://api/v1/prompts/index.json" || uri === "spe://prompts") {
+          contentText = JSON.stringify(this.gateway.listPrompts(), null, 2);
+        } else if (uri === "spe://api/v1/model-formats/index.json" || uri === "spe://model-formats") {
+          contentText = JSON.stringify(this.gateway.getModelFormats(), null, 2);
+        } else if (uri === "spe://api/v1/prompt-packs/index.json" || uri === "spe://prompt-packs") {
+          contentText = JSON.stringify(this.gateway.getPromptPacks(), null, 2);
+        } else if (uri.startsWith("spe://prompts/")) {
+          const promptId = uri.replace("spe://prompts/", "");
+          const asset = this.gateway.getPromptAsset(promptId);
+          if (!asset) {
+            return {
+              jsonrpc: "2.0",
+              id,
+              error: { code: -32602, message: `Resource not found: ${uri}` },
+            };
+          }
+          contentText = JSON.stringify(asset, null, 2);
+        } else {
+          return {
+            jsonrpc: "2.0",
+            id,
+            error: { code: -32602, message: `Resource URI not supported: ${uri}` },
+          };
+        }
+
+        return {
+          jsonrpc: "2.0",
+          id,
+          result: {
+            contents: [
+              {
+                uri,
+                mimeType,
+                text: contentText,
               },
             ],
           },

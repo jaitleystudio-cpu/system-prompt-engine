@@ -13,6 +13,8 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import http from "node:http";
 import {
   parsePromptAST,
   parseToCanonicalIR,
@@ -27,6 +29,7 @@ import {
 } from "../src/engine/gateway/promptGatewayApi.ts";
 import { SpeMcpServer } from "../src/engine/mcp/speMcpServer.ts";
 import { SpeMcpServer as SpeMcpServerFromSrcMcp } from "../src/mcp/speMcpServer.ts";
+import { McpProductionServer } from "../src/server/mcpProductionServer.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "../../..");
@@ -152,6 +155,34 @@ assert(existsSync(resolve(PUBLIC_DIR, "api/v1/prompts.json")), "/api/v1/prompts.
 assert(existsSync(resolve(PUBLIC_DIR, "api/v1/model-formats.json")), "/api/v1/model-formats.json static alias exists");
 assert(existsSync(resolve(PUBLIC_DIR, "api/v1/prompt-packs.json")), "/api/v1/prompt-packs.json static alias exists");
 
+// 2.1b Materialized .spe Packages & Checksums
+console.log("\n[LEVEL 2.1b] Verifying Materialized .spe Packages & Cryptographic SHA-256...");
+const packagesDir = resolve(PUBLIC_DIR, "packages");
+assert(existsSync(packagesDir), "apps/web/public/packages directory exists");
+
+for (const p of promptsCatalogJson.prompts) {
+  const speFile = resolve(PUBLIC_DIR, p.spePackageUri.replace(/^\//, ""));
+  assert(existsSync(speFile), `.spe package exists for prompt '${p.id}' (${p.spePackageUri})`);
+  const content = readFileSync(speFile, "utf-8");
+  const parsed = JSON.parse(content);
+  assert(parsed.id === p.id, `.spe package contains matching id for '${p.id}'`);
+  assert(Boolean(parsed.astSchema), `.spe package contains valid astSchema for '${p.id}'`);
+  assert(Array.isArray(parsed.supportedDialects), `.spe package contains supportedDialects for '${p.id}'`);
+  const hash = createHash("sha256").update(content).digest("hex");
+  assert(hash === p.verificationChecksum, `.spe package SHA-256 matches catalog checksum for '${p.id}' (${hash.slice(0, 12)}...)`);
+}
+
+for (const b of promptPacksJson.packs) {
+  const speFile = resolve(PUBLIC_DIR, b.speBundleUri.replace(/^\//, ""));
+  assert(existsSync(speFile), `.spe bundle exists for pack '${b.id}' (${b.speBundleUri})`);
+  const content = readFileSync(speFile, "utf-8");
+  const parsed = JSON.parse(content);
+  assert(parsed.id === b.id, `.spe bundle contains matching id for '${b.id}'`);
+  assert(Array.isArray(parsed.prompts) && parsed.prompts.length >= 2, `.spe bundle contains prompts for '${b.id}'`);
+  const hash = createHash("sha256").update(content).digest("hex");
+  assert(hash === b.verificationChecksum, `.spe bundle SHA-256 matches catalog checksum for '${b.id}' (${hash.slice(0, 12)}...)`);
+}
+
 // 2.2 PromptGatewayApi Engine Loader
 const gateway = new PromptGatewayApi();
 assert(SpeMcpServerFromSrcMcp === SpeMcpServer, "apps/web/src/mcp/speMcpServer.ts exports SpeMcpServer");
@@ -175,6 +206,12 @@ assert(Boolean(assetWithTranscompilation?.compiledOutput), "PromptGatewayApi com
 assert(assetWithTranscompilation?.compiledOutput?.dialect === "claude-xml", "Compiled output matches claude-xml dialect");
 assert(assetWithTranscompilation?.compiledOutput?.compiledPrompt.includes("<system_instructions>"), "Compiled output has XML tags");
 
+// Test regex special char escaping in variables and hydrated canonicalPrompt return
+const regexVarAsset = gateway.getPromptAsset("spe-fullstack-cloud-architect", {
+  variables: { "CLOUD.PROVIDER$SPEC": "gcp-production" },
+});
+assert(Boolean(regexVarAsset?.canonicalPrompt), "getPromptAsset returns hydrated canonicalPrompt when variables provided");
+
 const validation = gateway.validatePromptConstraints(
   "You are a test agent.\nGoal: Test constraints.\nMUST NOT fail.\nAuthority: sandbox only.\nOutput schema: valid JSON."
 );
@@ -182,12 +219,20 @@ assert(validation.valid === true, "PromptGatewayApi validates compliant prompt c
 assert(validation.invariantsCaptured >= 1, "PromptGatewayApi captured invariants in validation");
 assert(validation.authorityBoundariesCaptured >= 1, "PromptGatewayApi captured authority in validation");
 
+// Anti-False-Pass Verification: Underspecified prompt MUST fail closed
+const underspecifiedValidation = gateway.validatePromptConstraints("Create an autonomous deployment assistant");
+assert(underspecifiedValidation.valid === false, "validatePromptConstraints fails closed on underspecified prompt");
+assert(underspecifiedValidation.invariantsCaptured === 0, "Underspecified prompt has 0 captured invariants");
+assert(underspecifiedValidation.authorityBoundariesCaptured === 0, "Underspecified prompt has 0 captured authority boundaries");
+assert(underspecifiedValidation.issues.some((i) => i.includes("No hard invariants detected")), "Reports missing hard invariants");
+assert(underspecifiedValidation.issues.some((i) => i.includes("No authority boundaries declared")), "Reports missing authority boundaries");
+
 // ==================================================================
 // LEVEL 3: MCP & A2A GATEWAY PROTOCOL VERIFICATION
 // ==================================================================
 console.log("\n[LEVEL 3] Verifying Model Context Protocol (MCP) & A2A Gateway...");
 
-// 3.1 A2A Agent Card
+// 3.1 A2A Agent Card & Modern v1.0.1 Specification
 const agentCardPath = resolve(PUBLIC_DIR, ".well-known/agent.json");
 assert(existsSync(agentCardPath), ".well-known/agent.json exists");
 const agentCardJson = JSON.parse(readFileSync(agentCardPath, "utf-8"));
@@ -195,6 +240,17 @@ assert(agentCardJson.schema_version === "1.0", "agent.json declares schema_versi
 assert(agentCardJson.protocols.mcp.version === "2026-07-28", "agent.json declares MCP version 2026-07-28");
 assert(agentCardJson.security.air_gap === true, "agent.json declares air_gap=true");
 assert(agentCardJson.security.canonical_wasm_sha256 === CANONICAL_WASM_SHA256, "agent.json declares canonical WASM SHA-256");
+
+const agentCardV1Path = resolve(PUBLIC_DIR, ".well-known/agent-card.json");
+assert(existsSync(agentCardV1Path), ".well-known/agent-card.json exists");
+const agentCardV1Json = JSON.parse(readFileSync(agentCardV1Path, "utf-8"));
+assert(agentCardV1Json.version === "1.0.1", "agent-card.json declares version 1.0.1");
+assert(Array.isArray(agentCardV1Json.supportedInterfaces) && agentCardV1Json.supportedInterfaces.length === 2, "agent-card.json declares 2 supportedInterfaces (mcp, rest)");
+assert(agentCardV1Json.supportedInterfaces.some((i) => i.type === "mcp" && i.version === "2026-07-28"), "agent-card.json declares MCP July 28, 2026 interface");
+assert(Array.isArray(agentCardV1Json.skills) && agentCardV1Json.skills.length === 4, "agent-card.json declares 4 structured skills");
+assert(Array.isArray(agentCardV1Json.defaultInputMediaTypes), "agent-card.json declares defaultInputMediaTypes");
+assert(Array.isArray(agentCardV1Json.defaultOutputMediaTypes), "agent-card.json declares defaultOutputMediaTypes");
+assert(Boolean(agentCardV1Json.authentication), "agent-card.json declares authentication schemes");
 
 // 3.2 TypeScript SpeMcpServer
 const mcpServer = new SpeMcpServer();
@@ -208,6 +264,17 @@ const initRes = await mcpServer.handleJsonRpcRequest({
 });
 assert(initRes.result.protocolVersion === "2026-07-28", "SpeMcpServer handles initialize handshake with 2026-07-28");
 assert(initRes.result.serverInfo.name === "spe-global-ai-gateway", "SpeMcpServer returns serverInfo.name");
+
+// Test server/discover (MCP July 28, 2026 Modern Core)
+const discoverRes = await mcpServer.handleJsonRpcRequest({
+  jsonrpc: "2.0",
+  id: 106,
+  method: "server/discover",
+});
+assert(discoverRes.result?.protocolVersion === "2026-07-28", "SpeMcpServer server/discover returns protocolVersion 2026-07-28");
+assert(Array.isArray(discoverRes.result?.tools) && discoverRes.result.tools.length === 4, "server/discover returns all 4 tools");
+assert(Array.isArray(discoverRes.result?.prompts) && discoverRes.result.prompts.length >= 10, "server/discover returns prompts catalog");
+assert(Array.isArray(discoverRes.result?.resources) && discoverRes.result.resources.length === 3, "server/discover returns resources array");
 
 // Test ping
 const pingRes = await mcpServer.handleJsonRpcRequest({
@@ -330,6 +397,23 @@ const mcpResourcesRes = await mcpServer.handleJsonRpcRequest({
 });
 assert(Array.isArray(mcpResourcesRes.result?.resources) && mcpResourcesRes.result.resources.length >= 2, "SpeMcpServer exposes resources/list");
 
+// Test resources/read
+const resReadCatalog = await mcpServer.handleJsonRpcRequest({
+  jsonrpc: "2.0",
+  id: 107,
+  method: "resources/read",
+  params: { uri: "spe://api/v1/prompts/index.json" },
+});
+assert(Array.isArray(resReadCatalog.result?.contents) && resReadCatalog.result.contents[0].text.includes("spe-fullstack-cloud-architect"), "SpeMcpServer resources/read returns prompts catalog");
+
+const resReadPrompt = await mcpServer.handleJsonRpcRequest({
+  jsonrpc: "2.0",
+  id: 108,
+  method: "resources/read",
+  params: { uri: "spe://prompts/spe-fullstack-cloud-architect" },
+});
+assert(Array.isArray(resReadPrompt.result?.contents) && resReadPrompt.result.contents[0].text.includes("spe-fullstack-cloud-architect"), "SpeMcpServer resources/read returns individual prompt schema");
+
 // 3.3 Python Reference Server (tools/spe_mcp_server.py)
 console.log("\n[LEVEL 3.3] Verifying Python Reference MCP Server (tools/spe_mcp_server.py)...");
 const pythonScriptPath = resolve(REPO_ROOT, "tools/spe_mcp_server.py");
@@ -338,10 +422,11 @@ assert(existsSync(pythonScriptPath), "tools/spe_mcp_server.py exists");
 // Test Python standard requests
 const pyInput = [
   JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2026-07-28" } }),
-  JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/list" }),
+  JSON.stringify({ jsonrpc: "2.0", id: 2, method: "server/discover" }),
+  JSON.stringify({ jsonrpc: "2.0", id: 3, method: "tools/list" }),
   JSON.stringify({
     jsonrpc: "2.0",
-    id: 3,
+    id: 4,
     method: "tools/call",
     params: {
       name: "compile_for_model",
@@ -351,8 +436,9 @@ const pyInput = [
       },
     },
   }),
-  JSON.stringify({ jsonrpc: "2.0", id: 4, method: "prompts/list" }),
-  JSON.stringify({ jsonrpc: "2.0", id: 5, method: "resources/list" }),
+  JSON.stringify({ jsonrpc: "2.0", id: 5, method: "prompts/list" }),
+  JSON.stringify({ jsonrpc: "2.0", id: 6, method: "resources/list" }),
+  JSON.stringify({ jsonrpc: "2.0", id: 7, method: "resources/read", params: { uri: "spe://api/v1/prompts/index.json" } }),
   JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }),
   JSON.stringify([]),
   JSON.stringify([
@@ -367,29 +453,97 @@ const pyRun = spawnSync("python3", [pythonScriptPath], {
 });
 assert(pyRun.status === 0, "Python MCP server executed with return code 0");
 const pyLines = pyRun.stdout.trim().split("\n").filter(Boolean);
-// 5 individual requests + 0 for notification + 1 empty batch error + 1 batch response = 7 response lines
-assert(pyLines.length === 7, `Python MCP server emitted 7 JSON-RPC response lines for test input (got ${pyLines.length})`);
+// 7 individual requests + 0 for notification + 1 empty batch error + 1 batch response = 9 response lines
+assert(pyLines.length === 9, `Python MCP server emitted 9 JSON-RPC response lines for test input (got ${pyLines.length})`);
 
 const pyInit = JSON.parse(pyLines[0]);
 assert(pyInit.result.protocolVersion === "2026-07-28", "Python MCP server returns 2026-07-28 protocolVersion");
 
-const pyTools = JSON.parse(pyLines[1]);
+const pyDiscover = JSON.parse(pyLines[1]);
+assert(pyDiscover.result.protocolVersion === "2026-07-28", "Python MCP server server/discover returns 2026-07-28");
+assert(Array.isArray(pyDiscover.result.tools) && pyDiscover.result.tools.length === 4, "Python MCP server server/discover returns all 4 tools");
+
+const pyTools = JSON.parse(pyLines[2]);
 assert(pyTools.result.tools.length === 4, "Python MCP server lists all 4 tools");
 
-const pyCompile = JSON.parse(pyLines[2]);
+const pyCompile = JSON.parse(pyLines[3]);
 assert(pyCompile.result.content[0].text.includes("<system_instructions>"), "Python MCP server compile_for_model generates Claude XML tags");
 
-const pyPrompts = JSON.parse(pyLines[3]);
+const pyPrompts = JSON.parse(pyLines[4]);
 assert(Array.isArray(pyPrompts.result.prompts) && pyPrompts.result.prompts.length >= 10, "Python MCP server exposes prompts/list");
 
-const pyResources = JSON.parse(pyLines[4]);
+const pyResources = JSON.parse(pyLines[5]);
 assert(Array.isArray(pyResources.result.resources) && pyResources.result.resources.length >= 2, "Python MCP server exposes resources/list");
 
-const pyEmptyBatch = JSON.parse(pyLines[5]);
+const pyResRead = JSON.parse(pyLines[6]);
+assert(Array.isArray(pyResRead.result.contents) && pyResRead.result.contents[0].text.includes("spe-fullstack-cloud-architect"), "Python MCP server resources/read returns catalog contents");
+
+const pyEmptyBatch = JSON.parse(pyLines[7]);
 assert(pyEmptyBatch.error?.code === -32600, "Python MCP server returns -32600 Invalid Request on empty batch");
 
-const pyBatch = JSON.parse(pyLines[6]);
+const pyBatch = JSON.parse(pyLines[8]);
 assert(Array.isArray(pyBatch) && pyBatch.length === 2 && pyBatch[0].id === 201, "Python MCP server handles JSON-RPC 2.0 batch requests");
+
+// 3.4 Production Standalone MCP HTTP Server Verification
+console.log("\n[LEVEL 3.4] Verifying Standalone Production MCP HTTP Server (McpProductionServer)...");
+const prodServer = new McpProductionServer();
+const boundPort = await prodServer.start(0, "127.0.0.1");
+assert(boundPort > 0, `Production MCP server bound to dynamic port ${boundPort}`);
+
+// Send HTTP POST server/discover
+const sendHttpRequest = (options, postData) =>
+  new Promise((resolveReject) => {
+    const req = http.request(options, (res) => {
+      let data = "";
+      res.on("data", (chunk) => (data += chunk));
+      res.on("end", () => resolveReject({ statusCode: res.statusCode, headers: res.headers, body: data }));
+    });
+    req.on("error", (err) => resolveReject({ error: err }));
+    if (postData) req.write(postData);
+    req.end();
+  });
+
+const httpDiscoverRes = await sendHttpRequest(
+  {
+    hostname: "127.0.0.1",
+    port: boundPort,
+    path: "/api/v1/mcp",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  },
+  JSON.stringify({ jsonrpc: "2.0", id: 1, method: "server/discover" })
+);
+assert(httpDiscoverRes.statusCode === 200, "Production MCP HTTP server returns HTTP 200 for server/discover");
+assert(httpDiscoverRes.headers["mcp-protocol-version"] === "2026-07-28", "Production MCP server emits MCP-Protocol-Version: 2026-07-28 header");
+assert(httpDiscoverRes.headers["x-content-type-options"] === "nosniff", "Production MCP server emits X-Content-Type-Options: nosniff");
+const httpDiscoverJson = JSON.parse(httpDiscoverRes.body);
+assert(httpDiscoverJson.result.protocolVersion === "2026-07-28", "HTTP response body has protocolVersion 2026-07-28");
+
+// OWASP API4: Verify 512KB payload ceiling returns HTTP 413
+const oversizePayload = JSON.stringify({
+  jsonrpc: "2.0",
+  id: 2,
+  method: "tools/call",
+  params: {
+    name: "compile_for_model",
+    arguments: { promptText: "X".repeat(550 * 1024), targetDialect: "claude-xml" },
+  },
+});
+const httpOversizeRes = await sendHttpRequest(
+  {
+    hostname: "127.0.0.1",
+    port: boundPort,
+    path: "/api/v1/mcp",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  },
+  oversizePayload
+);
+assert(httpOversizeRes.statusCode === 413, `Production MCP server enforces 512KB limit with HTTP 413 (got ${httpOversizeRes.statusCode})`);
+
+// Cleanly stop production server
+await prodServer.stop();
+assert(true, "Production MCP server shut down cleanly");
 
 // ==================================================================
 // AST-AWARE MODEL TRANSCOMPILER RIGOROUS TESTING
