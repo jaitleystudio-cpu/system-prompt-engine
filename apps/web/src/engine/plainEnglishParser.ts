@@ -45,10 +45,21 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     rolePhrase = roleMatch[1].trim();
     role = rolePhrase.charAt(0).toUpperCase() + rolePhrase.slice(1);
     if (!role.endsWith(".")) role += ".";
+  } else {
+    const low = text.toLowerCase();
+    if (low.includes("code") || low.includes("bug") || low.includes("refactor") || low.includes("security") || low.includes("test")) {
+      role = "Senior Software & Security Architect.";
+    } else if (low.includes("customer") || low.includes("support") || low.includes("ticket") || low.includes("triage")) {
+      role = "Customer Experience & Support Lead.";
+    } else if (low.includes("executive") || low.includes("metric") || low.includes("blocker") || low.includes("milestone") || low.includes("summary")) {
+      role = "Executive Operations & Strategy Lead.";
+    } else if (low.includes("design") || low.includes("ui") || low.includes("ux") || low.includes("layout")) {
+      role = "Product Design & Frontend Systems Lead.";
+    }
   }
 
   // 2. Output extraction
-  const outputPattern = /(?:\band\s+)?\b(keep answers?[^.;]*|format\s+[^.;]*|return\s+(?:only)?[^.;]*|output\s+[^.;]*|produce\s+[^.;]*scripts?[^.;]*|list\s+fixes[^.;]*|provide\s+\d+\s+variations[^.;]*|in\s+\d+\s+(?:sentences|paragraphs|bullets?|words?)[^.;]*|under\s+\d+\s+(?:sentences|paragraphs|bullets?|words?)[^.;]*|into\s+\d+\s+(?:sentences|paragraphs|bullets?|words?)[^.;]*)/i;
+  const outputPattern = /(?:\band\s+)?\b(rank\s+findings[^.;]*|include\s+[^.;]*|draft\s+[^.;]*drafts?[^.;]*|formatted\s+for[^.;]*|keep answers?[^.;]*|format\s+[^.;]*|return\s+(?:only)?[^.;]*|output\s+[^.;]*|produce\s+[^.;]*scripts?[^.;]*|list\s+fixes[^.;]*|provide\s+\d+\s+variations[^.;]*|in\s+\d+\s+(?:sentences|paragraphs|bullets?|words?)[^.;]*|under\s+\d+\s+(?:sentences|paragraphs|bullets?|words?)[^.;]*|into\s+\d+\s+(?:sentences|paragraphs|bullets?|words?)[^.;]*)/i;
   const outputMatch = text.match(outputPattern);
   if (outputMatch && outputMatch[1]) {
     outputPhrase = outputMatch[1].replace(/^(?:and\s+)/i, "").trim();
@@ -57,7 +68,7 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
   }
 
   // 3. Constraint extraction
-  const constraintPattern = /\b(never\s+.+?|do not\s+.+?|don'\''t\s+.+?|avoid\s+.+?|without\s+.+?|must not\s+.+?)(?=\s*[,.;]?\s*(?:\band\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/i;
+  const constraintPattern = /\b(never\s+.+?|do not\s+.+?|don'\''t\s+.+?|avoid\s+.+?|without\s+.+?|must not\s+.+?|no\s+hallucinations?|omit\s+.+?)(?=\s*[,.;]?\s*(?:\band\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/i;
   const constraintMatch = text.match(constraintPattern);
   if (constraintMatch && constraintMatch[1]) {
     constraintPhrase = constraintMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
@@ -86,7 +97,7 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
       if (constraintPhrase && first.includes(constraintPhrase)) {
         first = first.replace(constraintPhrase, "");
       }
-      goalPhrase = first.replace(/\b(?:into|under|in|without|avoid)\s*$/i, "").trim();
+      goalPhrase = first.replace(/\b(?:into|under|in|without|avoid)\s*$/i, "").replace(/[,;\s]+and\s*$/i, "").replace(/[,;]\s*$/i, "").trim();
       goal = goalPhrase;
     }
   }

@@ -40,6 +40,7 @@ import {
   nearLimit,
 } from "../input/boundedText";
 import { UserConfirmedRequirements } from "../engine/UserConfirmedRequirements";
+import { RealPromptLiveHud, RealPromptExtractionRibbon } from "../engine/RealPromptLiveHud";
 type Intent = {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
@@ -309,6 +310,7 @@ export function Hero(p: Props) {
                 {boundNotice}
               </p>
             )}
+            <RealPromptExtractionRibbon value={p.value} />
             <div className="examples">
               {EXAMPLES.map((e) => (
                 <button
@@ -601,6 +603,13 @@ export function Hero(p: Props) {
                 </div>
                 <p className="output-footnote">{ui.claim}</p>
               </>
+            ) : p.value.trim() ? (
+              <RealPromptLiveHud
+                value={p.value}
+                busy={p.busy}
+                onBuild={p.onBuild}
+                category={p.category}
+              />
             ) : (
               <div className="output-empty">
                 <span className="document-mark">

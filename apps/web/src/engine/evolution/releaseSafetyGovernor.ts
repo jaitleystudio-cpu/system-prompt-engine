@@ -233,14 +233,28 @@ export class ReleaseSafetyGovernor {
     );
   }
 
+  public static isProductionOrStagingEnvironment(): boolean {
+    const env = (process.env.NODE_ENV || "").toLowerCase();
+    const speEnv = (process.env.SPE_ENVIRONMENT || "").toLowerCase();
+    const speStage = (process.env.SPE_STAGE || "").toLowerCase();
+    return (
+      env === "production" ||
+      env === "staging" ||
+      speEnv === "production" ||
+      speEnv === "staging" ||
+      speStage === "production" ||
+      speStage === "staging"
+    );
+  }
+
   constructor(options: { customAuthorityKeys?: Record<string, string> } = {}) {
     if (
-      ReleaseSafetyGovernor.isProductionEnvironment() &&
+      ReleaseSafetyGovernor.isProductionOrStagingEnvironment() &&
       options.customAuthorityKeys &&
       Object.keys(options.customAuthorityKeys).length > 0
     ) {
       throw new Error(
-        "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Custom authority keys are prohibited in production environment."
+        "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Custom authority keys are prohibited in production/staging environments."
       );
     }
     this.trustedAuthorityPublicKeys = {
@@ -251,9 +265,9 @@ export class ReleaseSafetyGovernor {
   }
 
   public setTrustedAuthorityKeyForTesting(authorityId: string, publicKeyDerHex: string): void {
-    if (ReleaseSafetyGovernor.isProductionEnvironment()) {
+    if (ReleaseSafetyGovernor.isProductionOrStagingEnvironment()) {
       throw new Error(
-        "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Cannot override trusted authority keys in production environment."
+        "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Cannot override trusted authority keys in production/staging environments."
       );
     }
     this.trustedAuthorityPublicKeys[authorityId.toLowerCase()] = publicKeyDerHex;
@@ -288,13 +302,14 @@ export class ReleaseSafetyGovernor {
         break;
       } catch (err: any) {
         if (err?.code === "EEXIST") {
-          // Lockfile exists. Check for stale lock held by terminated process or age > 5000ms
+          // Lockfile exists. Check for stale lock held by terminated process (dead PID)
           try {
             if (existsSync(lockPath)) {
               const raw = JSON.parse(readFileSync(lockPath, "utf-8"));
               const alive = raw.pid ? isPidAlive(raw.pid) : false;
               const age = Date.now() - (raw.acquiredAt || 0);
-              if (!alive || age > 5000) {
+              // Stale lock reclamation: ONLY if process is dead or PID is absent and lock is aged
+              if (!alive || (!raw.pid && age > 10000)) {
                 try {
                   unlinkSync(lockPath);
                 } catch {}
@@ -421,21 +436,22 @@ export class ReleaseSafetyGovernor {
       const fileHashes: string[] = [];
       for (const filePath of [...candidate.targetFiles].sort()) {
         const fullPath = resolve(process.cwd(), filePath);
-        if (existsSync(fullPath)) {
-          try {
-            const contentBuf = readFileSync(fullPath);
-            fileHashes.push(`${filePath}:${computeSha256(contentBuf)}`);
-          } catch {
-            fileHashes.push(`${filePath}:unreadable`);
-          }
-        } else {
-          fileHashes.push(`${filePath}:missing`);
+        if (!existsSync(fullPath)) {
+          throw new Error(`PROPOSAL_TARGET_FILE_UNREADABLE: Target file '${filePath}' does not exist on disk.`);
+        }
+        try {
+          const contentBuf = readFileSync(fullPath);
+          fileHashes.push(`${filePath}:${computeSha256(contentBuf)}`);
+        } catch (err: any) {
+          throw new Error(`PROPOSAL_TARGET_FILE_UNREADABLE: Target file '${filePath}' is unreadable: ${err.message}`);
         }
       }
       return computeSha256(fileHashes.join(";"));
     }
 
-    return computeSha256(`proposal:${candidate.proposalId}:${candidate.authorIdentity}:${candidate.category}`);
+    throw new Error(
+      "PROPOSAL_ARTIFACT_DIGEST_UNSPECIFIED: Proposal must provide a 64-character artifactChecksum or non-empty targetFiles list."
+    );
   }
 
   /**
@@ -806,12 +822,53 @@ export class ReleaseSafetyGovernor {
         if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
           copyFileSync(pinnedWasm, publicWasm);
         }
+        const artifactsInventory: Record<string, { sha256: string; sizeBytes: number; category: string }> = {
+          "spe_wasm.wasm": {
+            sha256: this.pinnedWasmHash,
+            sizeBytes: CANONICAL_WASM_SIZE_BYTES,
+            category: "WASM_CORE",
+          },
+        };
+
+        const modelOnnx = resolve(process.cwd(), "apps/web/public/models/spe-core-a-neural-generator-v1.onnx");
+        if (existsSync(modelOnnx)) {
+          const mBuf = readFileSync(modelOnnx);
+          artifactsInventory["models/spe-core-a-neural-generator-v1.onnx"] = {
+            sha256: computeSha256(mBuf),
+            sizeBytes: mBuf.byteLength,
+            category: "NEURAL_RESEARCH_FIXTURE",
+          };
+        }
+        const modelJson = resolve(process.cwd(), "apps/web/public/models/spe-core-a-neural-generator-v1.json");
+        if (existsSync(modelJson)) {
+          const jBuf = readFileSync(modelJson);
+          artifactsInventory["models/spe-core-a-neural-generator-v1.json"] = {
+            sha256: computeSha256(jBuf),
+            sizeBytes: jBuf.byteLength,
+            category: "MODEL_METADATA",
+          };
+        }
+        const shaJson = resolve(process.cwd(), "apps/web/public/spe_wasm.sha256.json");
+        if (existsSync(shaJson)) {
+          const sBuf = readFileSync(shaJson);
+          artifactsInventory["spe_wasm.sha256.json"] = {
+            sha256: computeSha256(sBuf),
+            sizeBytes: sBuf.byteLength,
+            category: "CONFIG",
+          };
+        }
+
         const manifestData = {
           releaseCommit: this.pinnedCommit,
           wasmHash: this.pinnedWasmHash,
           wasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
           status: "RESTORED_TO_PINNED_BASE_COMMIT",
           restoredAtIso: timestamp,
+          scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+          deploymentProvider: "LOCAL_STAGING_EMULATOR",
+          wholeSiteCoverage: ["HTML", "JAVASCRIPT", "CSS", "WASM", "MODEL_ASSETS", "CONFIG"],
+          artifacts: artifactsInventory,
+          manifestDigest: computeSha256(JSON.stringify(artifactsInventory)),
         };
         writeFileSync(distManifest, JSON.stringify(manifestData, null, 2), "utf-8");
       } catch (err) {
@@ -875,7 +932,13 @@ export class ReleaseSafetyGovernor {
     if (verifiedSafe && existsSync(distManifest)) {
       try {
         const mObj = JSON.parse(readFileSync(distManifest, "utf-8"));
-        if (mObj.releaseCommit !== this.pinnedCommit || mObj.wasmHash !== this.pinnedWasmHash) {
+        if (
+          mObj.releaseCommit !== this.pinnedCommit ||
+          mObj.wasmHash !== this.pinnedWasmHash ||
+          !mObj.artifacts ||
+          !mObj.artifacts["spe_wasm.wasm"] ||
+          mObj.artifacts["spe_wasm.wasm"].sha256 !== this.pinnedWasmHash
+        ) {
           verifiedSafe = false;
         }
       } catch {
@@ -1040,15 +1103,7 @@ export class ReleaseSafetyGovernor {
     }
 
     // 3. Independent Release Authority Gate (Cryptographic Verification & Digest Binding)
-    let candidateDigest = candidate.artifactChecksum;
-    if (!candidateDigest) {
-      const legacyDigest = computeSha256(JSON.stringify(candidate.targetFiles));
-      if (typeof approverAuthority === "object" && approverAuthority.candidateDigest === legacyDigest) {
-        candidateDigest = legacyDigest;
-      } else {
-        candidateDigest = this.computeProposalContentDigest(candidate);
-      }
-    }
+    const candidateDigest = candidate.artifactChecksum || this.computeProposalContentDigest(candidate);
 
     const targetEnv = candidate.targetEnvironment || "production";
     const authAudit = this.verifyReleaseAuthority(
@@ -1071,6 +1126,15 @@ export class ReleaseSafetyGovernor {
     // 4. Regression & Oracle Gate -> Triggers Real Rollback Execution
     if (!candidate.testResults.passed || candidate.testResults.regressionsDetected > 0) {
       const rollbackReceipt = await this.executeDeploymentRollback(candidate, options);
+      if (!rollbackReceipt.verifiedSafe) {
+        return {
+          status: "REJECTED_BLOCKED",
+          reason: `ROLLBACK_VERIFICATION_FAILED: Candidate regression triggered rollback, but destination verification failed (alert triggered).`,
+          authorizedBy: approverIdentity,
+          auditDigest: computeSha256(`rollback_failed:${candidate.proposalId}:${timestamp}`),
+          rollbackReceipt,
+        };
+      }
       return {
         status: "ROLLED_BACK",
         reason: `REGRESSION_DETECTED: Candidate failed ${candidate.testResults.failCount} tests with ${candidate.testResults.regressionsDetected} regressions. Automatic self-healing rollback executed.`,
@@ -1129,15 +1193,8 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    let candidateDigest = candidate.artifactChecksum;
-    if (!candidateDigest) {
-      const legacyDigest = computeSha256(JSON.stringify(candidate.targetFiles));
-      if (typeof approverAuthority === "object" && approverAuthority.candidateDigest === legacyDigest) {
-        candidateDigest = legacyDigest;
-      } else {
-        candidateDigest = this.computeProposalContentDigest(candidate);
-      }
-    }
+    // 3. Independent Release Authority Gate (Cryptographic Verification & Digest Binding)
+    const candidateDigest = candidate.artifactChecksum || this.computeProposalContentDigest(candidate);
 
     const targetEnv = candidate.targetEnvironment || "production";
     const authAudit = this.verifyReleaseAuthority(
@@ -1159,6 +1216,15 @@ export class ReleaseSafetyGovernor {
 
     if (!candidate.testResults.passed || candidate.testResults.regressionsDetected > 0) {
       const rollbackReceipt = this.executeDeploymentRollbackSync(candidate);
+      if (!rollbackReceipt.verifiedSafe) {
+        return {
+          status: "REJECTED_BLOCKED",
+          reason: `ROLLBACK_VERIFICATION_FAILED: Candidate regression triggered rollback, but destination verification failed (alert triggered).`,
+          authorizedBy: approverIdentity,
+          auditDigest: computeSha256(`rollback_failed:${candidate.proposalId}:${timestamp}`),
+          rollbackReceipt,
+        };
+      }
       return {
         status: "ROLLED_BACK",
         reason: `REGRESSION_DETECTED: Candidate failed ${candidate.testResults.failCount} tests with ${candidate.testResults.regressionsDetected} regressions. Automatic self-healing rollback executed.`,

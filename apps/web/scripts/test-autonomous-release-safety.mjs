@@ -315,8 +315,7 @@ async function runReleaseSafetyBattery() {
       requestedAutonomyLevel: "L4_AUTO_PROMOTION",
     };
 
-    const { computeSha256 } = await import("../src/engine/hashUtils.ts");
-    const badCandidateDigest = computeSha256(JSON.stringify(badCandidate.targetFiles));
+    const badCandidateDigest = governor.computeProposalContentDigest(badCandidate);
     const oracleProof = generateReleaseAuthorityProof(
       "PROP-BAD-CANDIDATE-01",
       "independent_quality_oracle",

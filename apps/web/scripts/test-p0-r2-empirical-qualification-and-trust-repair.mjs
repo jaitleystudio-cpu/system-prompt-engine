@@ -3,10 +3,10 @@
  * SPE Ω — P0-R2 Empirical Qualification & Trust-Boundary Verification Battery
  *
  * Adversarially verifies the 5 core missions of Directive P0-R2:
- * 1. Mission A: Elimination of fabricated benchmark qualifications and truthfulness of Chrome Prompt API limits.
- * 2. Mission B: Concurrency-safe, fail-closed atomic nonce replay ledger & production authority key isolation.
- * 3. Mission C: Destination-only rollback verification & LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE.
- * 4. Mission D: Verifiable network isolation with active deny-by-default egress blocking (fetch, TCP sockets, XHR, WebSocket).
+ * 1. Mission A: Elimination of fabricated benchmark qualifications, 7-dimension scorecard, SmolLM baselines, and truthfulness of Chrome Prompt API limits.
+ * 2. Mission B: Concurrency-safe, fail-closed atomic nonce replay ledger & production/staging authority key isolation.
+ * 3. Mission C: Destination-only rollback verification, whole-site release manifest, and LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE.
+ * 4. Mission D: Verifiable network isolation with active deny-by-default egress blocking (fetch, TCP sockets, XHR, WebSocket, EventSource, sendBeacon) and permitted connection tracking.
  * 5. Mission E: Truthful provenance, $0 cloud spend, and honest IMPLEMENTED_NOT_QUALIFIED final verdict.
  */
 
@@ -153,30 +153,55 @@ async function runP0R2VerificationBattery() {
     "Simultaneous proof submission: Remaining 3 competing processes rejected with REPLAY_ATTACK_DETECTED"
   );
 
-  // 1E. Hard separation of test-only authority key overrides from production
+  // 1E. Hard separation of test-only authority key overrides from production AND staging
   const origNodeEnv = process.env.NODE_ENV;
+  const origSpeStage = process.env.SPE_STAGE;
   try {
+    // Test production environment
     process.env.NODE_ENV = "production";
-    let testKeyOverrideBlocked = false;
+    let prodKeyOverrideBlocked = false;
     try {
       governor.setTrustedAuthorityKeyForTesting("founder_release_authority", TEST_PUB_HEX);
     } catch (err) {
-      testKeyOverrideBlocked = err.message.includes("TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION");
+      prodKeyOverrideBlocked = err.message.includes("TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION");
     }
-    assert(testKeyOverrideBlocked === true, "setTrustedAuthorityKeyForTesting strictly throws in production environment");
+    assert(prodKeyOverrideBlocked === true, "setTrustedAuthorityKeyForTesting strictly throws in production environment");
 
-    let constructorOverrideBlocked = false;
+    let prodConstructorBlocked = false;
     try {
       new ReleaseSafetyGovernor({ customAuthorityKeys: { attacker_oracle: "0123" } });
     } catch (err) {
-      constructorOverrideBlocked = err.message.includes("TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION");
+      prodConstructorBlocked = err.message.includes("TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION");
     }
-    assert(constructorOverrideBlocked === true, "Constructor custom authority keys strictly throw in production environment");
+    assert(prodConstructorBlocked === true, "Constructor custom authority keys strictly throw in production environment");
+
+    // Test staging environment
+    process.env.NODE_ENV = "staging";
+    delete process.env.SPE_STAGE;
+    let stagingKeyOverrideBlocked = false;
+    try {
+      governor.setTrustedAuthorityKeyForTesting("founder_release_authority", TEST_PUB_HEX);
+    } catch (err) {
+      stagingKeyOverrideBlocked = err.message.includes("TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION");
+    }
+    assert(stagingKeyOverrideBlocked === true, "setTrustedAuthorityKeyForTesting strictly throws in staging environment");
+
+    process.env.NODE_ENV = "development";
+    process.env.SPE_STAGE = "staging";
+    let speStageOverrideBlocked = false;
+    try {
+      new ReleaseSafetyGovernor({ customAuthorityKeys: { attacker_oracle: "0123" } });
+    } catch (err) {
+      speStageOverrideBlocked = err.message.includes("TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION");
+    }
+    assert(speStageOverrideBlocked === true, "Constructor custom authority keys strictly throw when SPE_STAGE=staging");
   } finally {
     process.env.NODE_ENV = origNodeEnv;
+    if (origSpeStage) process.env.SPE_STAGE = origSpeStage;
+    else delete process.env.SPE_STAGE;
   }
 
-  // 1E. Production public keys immutable root of trust
+  // 1F. Production public keys immutable root of trust
   let trustRootMutationBlocked = false;
   try {
     TRUSTED_AUTHORITY_PUBLIC_KEYS.founder_release_authority = "tampered_public_key";
@@ -185,7 +210,23 @@ async function runP0R2VerificationBattery() {
   }
   assert(trustRootMutationBlocked === true, "TRUSTED_AUTHORITY_PUBLIC_KEYS object is frozen and tamper-proof");
 
-  // 1F. Candidate digest bound to actual whole-release artifact contents
+  // 1G. Fail-closed behavior on missing or unreadable target files in content digest
+  let missingFileCaught = false;
+  try {
+    governor.computeProposalContentDigest({
+      proposalId: "PROP-MISSING-FILE",
+      authorIdentity: "agent:antigravity",
+      category: "ENGINE",
+      targetFiles: ["non_existent_file_xyz_12345.ts"],
+      testResults: { passed: true, passCount: 1, failCount: 0, regressionsDetected: 0 },
+      requestedAutonomyLevel: "L4_AUTO_PROMOTION",
+    });
+  } catch (err) {
+    missingFileCaught = err.message.includes("PROPOSAL_TARGET_FILE_UNREADABLE");
+  }
+  assert(missingFileCaught === true, "computeProposalContentDigest fails closed when a target file does not exist");
+
+  // 1H. Candidate digest bound to actual whole-release artifact contents
   const sampleCandidate = {
     proposalId: "PROP-CONTENT-BIND-01",
     authorIdentity: "agent:antigravity",
@@ -222,6 +263,24 @@ async function runP0R2VerificationBattery() {
   );
   assert(contentAuthTamper.allowed === false, "Tampered artifact digest rejected with PROPOSAL_DIGEST_MISMATCH");
 
+  // 1I. Insecure legacyDigest bypass is completely removed from evaluateReleaseCandidate
+  const legacyFilenamesDigest = computeSha256(JSON.stringify(sampleCandidate.targetFiles));
+  const legacyProof = generateReleaseAuthorityProof(
+    sampleCandidate.proposalId,
+    "founder_release_authority",
+    { privateKeyPem: TEST_PRIV_PEM },
+    legacyFilenamesDigest
+  );
+  const bypassAttemptDecision = governor.evaluateReleaseCandidate(sampleCandidate, legacyProof);
+  assert(
+    bypassAttemptDecision.status === "REJECTED_BLOCKED",
+    "evaluateReleaseCandidate strictly rejects signature matching only filenames JSON without content hash"
+  );
+  assert(
+    bypassAttemptDecision.reason.includes("PROPOSAL_DIGEST_MISMATCH"),
+    "Rejection reason confirms PROPOSAL_DIGEST_MISMATCH against actual disk content"
+  );
+
   // ─── PART 2: Mission C — Deployment Rollback Destination & Scope Verification ─
   console.log("\n▶ Part 2: Deployment Rollback Verification & Provenance Scope (Mission C)");
 
@@ -239,7 +298,7 @@ async function runP0R2VerificationBattery() {
       proposalId: "PROP-ROLLBACK-DEST-01",
       authorIdentity: "agent:autonomous_coder",
       category: "ENGINE",
-      targetFiles: ["apps/web/src/engine/core-a.ts"],
+      targetFiles: ["apps/web/src/engine/hashUtils.ts"],
       testResults: { passed: false, passCount: 0, failCount: 1, regressionsDetected: 1 },
       requestedAutonomyLevel: "L4_AUTO_PROMOTION",
     });
@@ -258,23 +317,14 @@ async function runP0R2VerificationBattery() {
     }
   }
 
-  // 2B. Successful destination restoration and scope receipt
-  const goodRollback = governor.executeDeploymentRollbackSync({
-    proposalId: "PROP-ROLLBACK-SAFE-01",
-    authorIdentity: "agent:autonomous_coder",
-    category: "ENGINE",
-    targetFiles: ["apps/web/src/engine/core-a.ts"],
-    testResults: { passed: false, passCount: 0, failCount: 1, regressionsDetected: 1 },
-    requestedAutonomyLevel: "L4_AUTO_PROMOTION",
-  });
-  // Restore canonical WASM to dist
+  // 2B. Successful destination restoration and whole-site release manifest verification
   const canonicalBytes = readFileSync(resolve(process.cwd(), "apps/web/deployments/pinned-base/spe_wasm.wasm"));
   writeFileSync(distWasmPath, canonicalBytes);
-  const recheckRollback = governor.executeDeploymentRollbackSync({
+  const recheckRollback = await governor.executeDeploymentRollback({
     proposalId: "PROP-ROLLBACK-SAFE-02",
     authorIdentity: "agent:autonomous_coder",
     category: "ENGINE",
-    targetFiles: ["apps/web/src/engine/core-a.ts"],
+    targetFiles: ["apps/web/src/engine/hashUtils.ts"],
     testResults: { passed: false, passCount: 0, failCount: 1, regressionsDetected: 1 },
     requestedAutonomyLevel: "L4_AUTO_PROMOTION",
   });
@@ -284,6 +334,45 @@ async function runP0R2VerificationBattery() {
     "Verified scope accurately bound to LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE"
   );
 
+  // 2C. Whole-site manifest coverage verified
+  const distManifestPath = resolve(process.cwd(), "apps/web/dist/release-manifest.json");
+  assert(existsSync(distManifestPath), "Whole-site release-manifest.json exists in apps/web/dist");
+  const manifestObj = JSON.parse(readFileSync(distManifestPath, "utf-8"));
+  assert(manifestObj.wholeSiteCoverage !== undefined, "Manifest specifies wholeSiteCoverage categories");
+  assert(manifestObj.artifacts["spe_wasm.wasm"] !== undefined, "Manifest tracks spe_wasm.wasm artifact digest");
+  assert(manifestObj.manifestDigest !== undefined, "Manifest computes manifestDigest over whole-site inventory");
+
+  // 2D. Failed rollback destination verification halts release gate fail-closed
+  const failCandidate = {
+    proposalId: "PROP-ROLLBACK-FAIL-TEST",
+    authorIdentity: "agent:autonomous_coder",
+    category: "ENGINE",
+    targetFiles: ["apps/web/src/engine/hashUtils.ts"],
+    testResults: { passed: false, passCount: 0, failCount: 1, regressionsDetected: 1 },
+    requestedAutonomyLevel: "L4_AUTO_PROMOTION",
+  };
+  const failCandidateDigest = governor.computeProposalContentDigest(failCandidate);
+  const failCandidateProof = generateReleaseAuthorityProof(
+    failCandidate.proposalId,
+    "founder_release_authority",
+    { privateKeyPem: TEST_PRIV_PEM },
+    failCandidateDigest
+  );
+
+  const rollbackSimDecision = await governor.evaluateReleaseCandidateAsync(
+    failCandidate,
+    failCandidateProof,
+    { simulateFailure: true }
+  );
+  assert(
+    rollbackSimDecision.status === "REJECTED_BLOCKED",
+    "evaluateReleaseCandidateAsync marks status REJECTED_BLOCKED when rollback verification fails"
+  );
+  assert(
+    rollbackSimDecision.reason.includes("ROLLBACK_VERIFICATION_FAILED"),
+    "Rejection reason cites ROLLBACK_VERIFICATION_FAILED"
+  );
+
   // ─── PART 3: Mission D — Network Isolation & Deny-by-Default Enforcement ───
   console.log("\n▶ Part 3: Active Network Isolation & Deny-by-Default Policy (Mission D)");
 
@@ -291,7 +380,6 @@ async function runP0R2VerificationBattery() {
 
   // 3A. Active deny-by-default blocks outbound fetch
   let fetchBlocked = false;
-  let blockedUrl = "";
   try {
     await NetworkEgressObserver.observeDuring(
       async () => {
@@ -301,7 +389,6 @@ async function runP0R2VerificationBattery() {
     );
   } catch (err) {
     fetchBlocked = err.message.includes("AIR_GAP_EGRESS_BLOCKED");
-    blockedUrl = err.message;
   }
   assert(fetchBlocked === true, "Deny-by-default policy actively throws and blocks outbound fetch requests");
   assert(
@@ -334,7 +421,32 @@ async function runP0R2VerificationBattery() {
   }
   assert(socketBlocked === true, "Deny-by-default policy actively destroys and blocks outbound TCP socket connect");
 
-  // 3C. Passive observation mode records packets without throwing
+  // 3C. Permitted connections handling: allowed destinations are recorded and NOT blocked
+  NetworkEgressObserver.resetForTesting();
+  let permittedFetchSucceeded = false;
+  const permittedReport = await NetworkEgressObserver.observeDuring(
+    async () => {
+      // Mock local destination check
+      try {
+        await globalThis.fetch("http://127.0.0.1:4199/local-model-manifest");
+      } catch (err) {
+        // If connection fails due to ECONNREFUSED (no server listening), it was permitted past air-gap!
+        permittedFetchSucceeded = !err.message.includes("AIR_GAP_EGRESS_BLOCKED");
+      }
+    },
+    { denyByDefault: true, permittedDestinations: ["127.0.0.1", "localhost"] }
+  );
+  assert(permittedFetchSucceeded === true, "Permitted local loopback destination is not blocked by air-gap");
+  assert(
+    permittedReport.report.permittedConnections.some((d) => d.includes("127.0.0.1")),
+    "Permitted destinations are explicitly recorded in NetworkObservationReport"
+  );
+  assert(
+    permittedReport.report.blockedConnections.length === 0,
+    "No blocked connection recorded for permitted destination"
+  );
+
+  // 3D. Passive observation mode records packets without throwing
   NetworkEgressObserver.resetForTesting();
   const passiveReport = await NetworkEgressObserver.observeDuring(
     async () => {
@@ -350,7 +462,7 @@ async function runP0R2VerificationBattery() {
   assert(passiveReport.report.observedPackets > 0, "Passive observation mode successfully counts attempted packets");
   assert(passiveReport.report.airGapViolated === true, "Flags airGapViolated when network egress is detected");
 
-  // ─── PART 4: Mission A — Benchmark Qualification Truthfulness & Chrome API ─
+  // ─── PART 4: Mission A — Benchmark Qualification Truthfulness & Scorecard ─
   console.log("\n▶ Part 4: Model Evaluation Truthfulness & Official Chrome API Audit (Mission A)");
 
   const reportPath = resolve(process.cwd(), "proofs/generated/CANDIDATE_MODEL_EVALUATION_REPORT.json");
@@ -358,6 +470,18 @@ async function runP0R2VerificationBattery() {
 
   const modelReport = JSON.parse(readFileSync(reportPath, "utf-8"));
   assert(modelReport.finalVerdict === "IMPLEMENTED_NOT_QUALIFIED", "Overall final verdict is honestly IMPLEMENTED_NOT_QUALIFIED");
+
+  // Verify 7-dimension benchmark scorecard
+  assert(
+    Array.isArray(modelReport.recommendedBenchmarkScorecard) &&
+      modelReport.recommendedBenchmarkScorecard.length === 7,
+    "Formalized 7-dimension benchmark scorecard in evaluation report"
+  );
+  const totalScorecardWeight = modelReport.recommendedBenchmarkScorecard.reduce(
+    (sum, d) => sum + d.weightPercent,
+    0
+  );
+  assert(totalScorecardWeight === 100, "7-dimension scorecard weights sum exactly to 100%");
 
   const smolLm = modelReport.candidates.find((c) => c.candidateId === "CANDIDATE-01-SMOLLM-135M");
   const gemma = modelReport.candidates.find((c) => c.candidateId === "CANDIDATE-02-GEMMA-2-2B-WEBGPU");
@@ -367,6 +491,10 @@ async function runP0R2VerificationBattery() {
   assert(smolLm.qualificationVerdict === "CANDIDATE_UNTESTED", "SmolLM-135M reclassified as CANDIDATE_UNTESTED");
   assert(smolLm.overallQualificationScore === null, "SmolLM unmeasured quality score removed from qualification decision");
   assert(smolLm.empiricalBenchmarkExecuted === false, "SmolLM empirical benchmark marked NOT executed");
+  assert(
+    smolLm.publishedBaselines?.ifevalInstructionFollowing === 17.2,
+    "SmolLM documents official IFEval baseline (17.2 / 29.9 for SmolLM2)"
+  );
 
   assert(gemma.qualificationVerdict === "CANDIDATE_UNTESTED", "Gemma-2-2B reclassified as CANDIDATE_UNTESTED");
   assert(gemma.overallQualificationScore === null, "Gemma unmeasured quality score removed from qualification decision");
@@ -375,6 +503,10 @@ async function runP0R2VerificationBattery() {
   assert(chromeAi.overallQualificationScore === null, "Gemini Nano unmeasured quality score removed from qualification decision");
   assert(chromeAi.supportedPlatforms.includes("Desktop only"), "Official Chrome API documentation: Desktop only platform constraint");
   assert(chromeAi.supportedPlatforms.includes("NOT supported on Android or iOS"), "Official Chrome API documentation: Android and iOS explicitly not supported");
+  assert(
+    chromeAi.mobileSupport?.android === "UNSUPPORTED" && chromeAi.mobileSupport?.ios === "UNSUPPORTED",
+    "Official Chrome API documentation: Structured mobileSupport reflects UNSUPPORTED for Android and iOS"
+  );
   assert(
     chromeAi.downloadSizeFormatted.includes("On-demand component download"),
     "Official Chrome API documentation: Requires initial on-demand component download, not 0 MB clean pre-install"

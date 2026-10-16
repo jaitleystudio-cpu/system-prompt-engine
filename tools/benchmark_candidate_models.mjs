@@ -11,6 +11,14 @@
  * Directive P0-R2 Compliance:
  * - Reclassifies all non-executed candidate models as CANDIDATE_UNTESTED / ESTIMATE_ONLY.
  * - Manually assigned scores strictly removed from qualification decisions.
+ * - Formalizes 7-dimension benchmark scorecard recommended in research grounding:
+ *   1. User intent & requirement preservation (25%)
+ *   2. Prompt usefulness on downstream tasks (25%)
+ *   3. Robustness to adversarial & conflicting instructions (15%)
+ *   4. Multilingual & cross-domain performance (10%)
+ *   5. Real-device speed and memory (10%)
+ *   6. Privacy, compatibility, and fallback reliability (10%)
+ *   7. Download and operating cost (5%)
  * - Chrome Prompt API documentation corrected: Desktop only (Chrome 131+ on macOS/Windows/Linux);
  *   NOT supported on Android or iOS (as of May 2026); requires substantial resources and initial download.
  * - SmolLM instruction following capabilities realistically noted (IFEval 17.2 / 29.9).
@@ -26,6 +34,58 @@ import { computeSha256 } from "../apps/web/src/engine/hashUtils.ts";
 console.log("========================================================================");
 console.log("🔬 SPE Ω — CANDIDATE PRETRAINED MODEL BENCHMARKING & EVALUATION SUITE (P0-R2)");
 console.log("========================================================================");
+
+export const RECOMMENDED_BENCHMARK_SCORECARD = [
+  {
+    dimensionId: "user_intent_preservation",
+    dimensionName: "User intent and requirement preservation",
+    weightPercent: 25,
+    weightFraction: 0.25,
+    evaluationFocus: "Requirement Graph preservation, non-negotiable constraints, zero deletion of user directives",
+  },
+  {
+    dimensionId: "downstream_task_usefulness",
+    dimensionName: "Prompt usefulness on actual downstream tasks",
+    weightPercent: 25,
+    weightFraction: 0.25,
+    evaluationFocus: "Task efficacy, functional prompt quality, domain adaptation across coding and research",
+  },
+  {
+    dimensionId: "adversarial_robustness",
+    dimensionName: "Robustness to adversarial and conflicting instructions",
+    weightPercent: 15,
+    weightFraction: 0.15,
+    evaluationFocus: "Jailbreak resistance, contradictory brief adjudication, safety invariant enforcement",
+  },
+  {
+    dimensionId: "multilingual_cross_domain",
+    dimensionName: "Multilingual and cross-domain performance",
+    weightPercent: 10,
+    weightFraction: 0.10,
+    evaluationFocus: "Hindi/Telugu/cross-lingual prompt synthesis, technical lexicon preservation",
+  },
+  {
+    dimensionId: "real_device_speed_memory",
+    dimensionName: "Real-device speed and memory",
+    weightPercent: 10,
+    weightFraction: 0.10,
+    evaluationFocus: "Time-to-first-token (TTFT), tokens/sec, peak RAM/VRAM ceiling compliance",
+  },
+  {
+    dimensionId: "privacy_compatibility_fallback",
+    dimensionName: "Privacy, compatibility, and fallback reliability",
+    weightPercent: 10,
+    weightFraction: 0.10,
+    evaluationFocus: "Zero network egress air-gap, instant deterministic Core B takeover on failure",
+  },
+  {
+    dimensionId: "download_operating_cost",
+    dimensionName: "Download and operating cost",
+    weightPercent: 5,
+    weightFraction: 0.05,
+    evaluationFocus: "$0 cloud compute spend, cold-start bandwidth, client-side caching efficiency",
+  },
+];
 
 export const CANDIDATE_MODELS = [
   {
@@ -46,7 +106,19 @@ export const CANDIDATE_MODELS = [
     empiricalEvaluationStatus: "CANDIDATE_UNTESTED",
     empiricalBenchmarkExecuted: false,
     empiricalScores: null,
+    publishedBaselines: {
+      ifevalInstructionFollowing: 17.2,
+      smolLm2IfevalInstructionFollowing: 29.9,
+      source: "Official Hugging Face SmolLM / SmolLM2 release benchmarks",
+    },
     theoreticalEstimateScores: {
+      userIntentPreservation: 82,
+      downstreamTaskUsefulness: 80,
+      adversarialRobustness: 76,
+      multilingualCrossDomain: 70,
+      realDeviceSpeedMemory: 95,
+      privacyCompatibilityFallback: 98,
+      downloadOperatingCost: 96,
       instructionFollowing: 82,
       constraintPreservation: 88,
       noveltyOverBaseline: 84,
@@ -87,6 +159,13 @@ export const CANDIDATE_MODELS = [
     empiricalBenchmarkExecuted: false,
     empiricalScores: null,
     theoreticalEstimateScores: {
+      userIntentPreservation: 94,
+      downstreamTaskUsefulness: 95,
+      adversarialRobustness: 90,
+      multilingualCrossDomain: 88,
+      realDeviceSpeedMemory: 78,
+      privacyCompatibilityFallback: 98,
+      downloadOperatingCost: 65,
       instructionFollowing: 94,
       constraintPreservation: 96,
       noveltyOverBaseline: 95,
@@ -120,6 +199,20 @@ export const CANDIDATE_MODELS = [
     downloadSizeFormatted: "On-demand component download (~1.5–3 GB on-device storage, not pre-installed on clean OS)",
     deviceMemoryRequiredMb: "Requires >= 4 GB VRAM or modern desktop GPU/NPU, >= 22 GB free disk space",
     supportedPlatforms: "Desktop only (Chrome 131+ on macOS, Windows, Linux). NOT supported on Android or iOS as of May 2026.",
+    mobileSupport: {
+      android: "UNSUPPORTED",
+      ios: "UNSUPPORTED",
+      officialSource: "Google Chrome Prompt API Documentation (May 2026 update)",
+    },
+    platformConstraints: {
+      desktopSupported: true,
+      androidSupported: false,
+      iosSupported: false,
+      minChromeVersion: 131,
+      initialDownloadMb: "1500–3000",
+      minDiskFreeGb: 22,
+      minVramGb: 4,
+    },
     estimatedLatencyMsPerToken: 12,
     offlineAirGapCapable: true,
     cloudCostUsd: 0,
@@ -128,6 +221,13 @@ export const CANDIDATE_MODELS = [
     empiricalBenchmarkExecuted: false,
     empiricalScores: null,
     theoreticalEstimateScores: {
+      userIntentPreservation: 91,
+      downstreamTaskUsefulness: 90,
+      adversarialRobustness: 86,
+      multilingualCrossDomain: 82,
+      realDeviceSpeedMemory: 90,
+      privacyCompatibilityFallback: 96,
+      downloadOperatingCost: 88,
       instructionFollowing: 91,
       constraintPreservation: 93,
       noveltyOverBaseline: 92,
@@ -213,6 +313,7 @@ export function runCandidateModelBenchmarking() {
     suite: "SPE Ω — Candidate Pretrained Model Benchmarking Suite",
     timestamp,
     standard: "SATSS v1 Autonomous Production Protocol / SPE Ω Governance (P0-R2)",
+    recommendedBenchmarkScorecard: RECOMMENDED_BENCHMARK_SCORECARD,
     evaluationCriteria: [
       "Device Memory Ceiling (< 512 MB for mobile, < 2.5 GB for desktop WebGPU)",
       "Download Bandwidth & Cold-Start Cacheability",
