@@ -1,10 +1,11 @@
 {
   "activeReleaseCommit": "177d9d0f",
-  "rejectedCandidateProposalId": "PROP-BAD-CANDIDATE-01",
+  "rejectedCandidateProposalId": "PROP-ROLLBACK-SAFE-02",
   "canonicalWasmHash": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
   "canonicalWasmSizeBytes": 1339691,
-  "restoredAtIso": "2026-10-15T23:14:15.607Z",
+  "restoredAtIso": "2026-10-16T07:01:52.235Z",
   "status": "RESTORED_TO_PINNED_BASE_COMMIT",
-  "controlPlane": "LOCAL_STAGING_AND_CDN_CONTROL_PLANE",
+  "controlPlane": "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+  "scope": "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
   "zeroCloudCostVerified": true
 }

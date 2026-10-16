@@ -56,6 +56,8 @@
     "test:core-a": "node --experimental-strip-types scripts/test-core-a-generative.mjs",
     "test:dual-core": "node --experimental-strip-types scripts/test-dual-core-router.mjs",
     "test:quality-authority": "node --experimental-strip-types scripts/test-independent-quality-authority.mjs",
+    "test:p0-r2": "node --experimental-strip-types scripts/test-p0-r2-empirical-qualification-and-trust-repair.mjs",
+    "test:release-safety": "node --experimental-strip-types scripts/test-autonomous-release-safety.mjs",
     "test:nightly-upgrade": "node --experimental-strip-types ../../tools/nightly_intelligence_upgrade.mjs",
     "test:dual-core-slice": "node --experimental-strip-types scripts/test-dual-core-e2e-vertical-slice.mjs",
     "test:quality-wiring": "node scripts/test-quality-product-wiring.mjs",

@@ -1,19 +1,34 @@
 /**
- * SPE Ω — Autonomous Release Safety Governor & Cryptographic Arbitration Authority
+ * SPE Ω — Autonomous Release Safety Governor & Cryptographic Arbitration Authority (P0-R2)
  *
  * Implements strict release safety gates resolving reported autonomous blockers:
  * 1. Global Fail-Closed STOP: Emergency halt switch aborts all autonomous releases.
  * 2. Independent Release Authority: Asymmetric Ed25519 & external HMAC verification.
  *    Author cannot approve its own change; coding agent cannot self-certify.
  *    Zero secrets in source code, client bundles, or Git. Revocation list for exposed keys.
- * 3. Trusted Immutable Recovery: Pinned known-good commit and canonical WASM hash.
- * 4. Production Artifact Verification: Validates served artifact checksums against build manifest.
- * 5. Real Deployment Rollback: Physically restores active release target and performs live HTTP verification.
+ *    Test overrides strictly barred from production environment.
+ * 3. Fail-Closed Concurrency-Safe Replay Ledger: Atomic file locking for nonce recording.
+ *    Ledger IO, parse, write, or locking failures fail closed immediately (LEDGER_IO_FAILURE).
+ *    Consumed nonces cannot refresh retention period or be reused across restarts or instances.
+ * 4. Trusted Immutable Recovery & Whole-Release Artifact Digest Binding.
+ * 5. Real Deployment Rollback: Physically restores active release target and performs live HTTP
+ *    verification against the served destination (never treating pinned source as destination proof).
+ *    Labeled explicitly as LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE.
  * 6. Single Change-Arbitration Authority: Resolves conflicts between SEO, Hero, and engine updates.
  * 7. Hard Operating-Cost Budgets: $0 cloud spend ceiling, memory bounds, and CPU duration limits.
  */
 
-import { existsSync, writeFileSync, readFileSync, mkdirSync, copyFileSync } from "node:fs";
+import {
+  existsSync,
+  writeFileSync,
+  readFileSync,
+  mkdirSync,
+  copyFileSync,
+  openSync,
+  closeSync,
+  unlinkSync,
+  renameSync,
+} from "node:fs";
 import { resolve } from "node:path";
 import { createPublicKey, createPrivateKey, sign, verify, createHmac, randomBytes } from "node:crypto";
 import { computeSha256 } from "../hashUtils.ts";
@@ -37,12 +52,12 @@ export const REVOKED_COMPROMISED_KEY_HASHES: ReadonlySet<string> = new Set([
  * Private signing keys are held externally (in environment variables, KMS, or founder offline custody).
  * The autonomous coding agent cannot forge valid signatures with repository access alone.
  */
-export const TRUSTED_AUTHORITY_PUBLIC_KEYS: Record<string, string> = {
+export const TRUSTED_AUTHORITY_PUBLIC_KEYS: Readonly<Record<string, string>> = Object.freeze({
   founder_release_authority:
     "302a300506032b65700321005628f6f005038cbe413b998f3e9e13365bd1923d47b437bb148348db9184e6e3",
   independent_quality_oracle:
     "302a300506032b6570032100647ca8f3e41ad7958215621e9497bf964c68457f0255b3a1bd2bd2c4ecfa7e6f",
-};
+});
 
 export interface ReleaseApprovalProof {
   approverIdentity: string; // e.g. "founder_release_authority"
@@ -177,6 +192,7 @@ export interface RollbackExecutionResult {
   expectedCanonicalHash: string;
   verifiedSafe: boolean;
   restoredAtIso: string;
+  scope?: string;
   httpVerification?: {
     endpoint: string;
     manifestEndpoint?: string;
@@ -209,7 +225,24 @@ export class ReleaseSafetyGovernor {
   private readonly pinnedWasmHash: string = CANONICAL_WASM_SHA256;
   private trustedAuthorityPublicKeys: Record<string, string>;
 
+  public static isProductionEnvironment(): boolean {
+    return (
+      process.env.NODE_ENV === "production" ||
+      process.env.SPE_ENVIRONMENT === "production" ||
+      process.env.SPE_STAGE === "production"
+    );
+  }
+
   constructor(options: { customAuthorityKeys?: Record<string, string> } = {}) {
+    if (
+      ReleaseSafetyGovernor.isProductionEnvironment() &&
+      options.customAuthorityKeys &&
+      Object.keys(options.customAuthorityKeys).length > 0
+    ) {
+      throw new Error(
+        "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Custom authority keys are prohibited in production environment."
+      );
+    }
     this.trustedAuthorityPublicKeys = {
       ...TRUSTED_AUTHORITY_PUBLIC_KEYS,
       ...(options.customAuthorityKeys || {}),
@@ -218,15 +251,82 @@ export class ReleaseSafetyGovernor {
   }
 
   public setTrustedAuthorityKeyForTesting(authorityId: string, publicKeyDerHex: string): void {
+    if (ReleaseSafetyGovernor.isProductionEnvironment()) {
+      throw new Error(
+        "TEST_OVERRIDE_PROHIBITED_IN_PRODUCTION: Cannot override trusted authority keys in production environment."
+      );
+    }
     this.trustedAuthorityPublicKeys[authorityId.toLowerCase()] = publicKeyDerHex;
   }
 
   private getNonceFilePath(): string {
     const speDir = resolve(process.cwd(), ".spe");
-    if (existsSync(speDir)) {
-      return resolve(speDir, "consumed_nonces.json");
+    if (!existsSync(speDir)) {
+      try {
+        mkdirSync(speDir, { recursive: true });
+      } catch {}
     }
-    return resolve(process.cwd(), "proofs/generated/.spe_consumed_nonces.json");
+    return resolve(speDir, "consumed_nonces.json");
+  }
+
+  /**
+   * Concurrency-safe atomic file lock wrapper for nonce ledger access.
+   * Serializes access across concurrent processes and rejects with LEDGER_IO_FAILURE on timeout or failure.
+   */
+  private withNonceLedgerLock<T>(action: () => T): T {
+    const noncePath = this.getNonceFilePath();
+    const lockPath = `${noncePath}.lock`;
+    const acquireTimeoutMs = 3000;
+    const pollIntervalMs = 20;
+    const startMs = Date.now();
+    let lockFd: number | null = null;
+
+    while (Date.now() - startMs < acquireTimeoutMs) {
+      try {
+        lockFd = openSync(lockPath, "wx");
+        writeFileSync(lockFd, JSON.stringify({ pid: process.pid, acquiredAt: Date.now() }));
+        break;
+      } catch (err: any) {
+        if (err?.code === "EEXIST") {
+          // Lockfile exists. Check for stale lock held by terminated process or age > 5000ms
+          try {
+            if (existsSync(lockPath)) {
+              const raw = JSON.parse(readFileSync(lockPath, "utf-8"));
+              const alive = raw.pid ? isPidAlive(raw.pid) : false;
+              const age = Date.now() - (raw.acquiredAt || 0);
+              if (!alive || age > 5000) {
+                try {
+                  unlinkSync(lockPath);
+                } catch {}
+                continue;
+              }
+            }
+          } catch {}
+          // Synchronous brief backoff
+          const sleepEnd = Date.now() + pollIntervalMs;
+          while (Date.now() < sleepEnd) {}
+        } else {
+          throw new Error(`LEDGER_IO_FAILURE: Failed to acquire ledger lock: ${err?.message || String(err)}`);
+        }
+      }
+    }
+
+    if (lockFd === null) {
+      throw new Error(`LEDGER_IO_FAILURE: Timed out waiting for consumed nonce ledger lock (${acquireTimeoutMs}ms).`);
+    }
+
+    try {
+      return action();
+    } finally {
+      if (lockFd !== null) {
+        try {
+          closeSync(lockFd);
+        } catch {}
+      }
+      try {
+        unlinkSync(lockPath);
+      } catch {}
+    }
   }
 
   private loadPersistedNonces(): void {
@@ -234,30 +334,108 @@ export class ReleaseSafetyGovernor {
       const noncePath = this.getNonceFilePath();
       if (existsSync(noncePath)) {
         const raw = JSON.parse(readFileSync(noncePath, "utf-8"));
-        const now = Date.now();
         if (Array.isArray(raw)) {
           for (const item of raw) {
             const nonce = typeof item === "string" ? item : item.nonce;
-            const ts = typeof item === "object" && item.ts ? item.ts : now;
-            if (now - ts < 15 * 60 * 1000) {
+            if (nonce) {
               this.consumedNonces.add(nonce);
             }
           }
         }
       }
-    } catch {}
+    } catch {
+      // In-memory cache initialization best-effort; authoritative check executes in consumeNonceAtomic under lock
+    }
   }
 
-  private recordConsumedNonce(nonce: string): void {
-    this.consumedNonces.add(nonce);
-    try {
+  /**
+   * Atomically checks and records nonce consumption.
+   * Fail-closed: Throws LEDGER_IO_FAILURE if reading, locking, or writing the ledger fails.
+   * Single-use policy: Never refreshes timestamps of previously consumed nonces.
+   */
+  public consumeNonceAtomic(
+    nonce: string,
+    proposalId?: string,
+    approverIdentity?: string
+  ): { allowed: boolean; reason?: string } {
+    return this.withNonceLedgerLock(() => {
       const noncePath = this.getNonceFilePath();
-      const parentDir = resolve(noncePath, "..");
-      mkdirSync(parentDir, { recursive: true });
+      let list: Array<{ nonce: string; ts: number; proposalId?: string; approverIdentity?: string }> = [];
+
+      if (existsSync(noncePath)) {
+        try {
+          const raw = readFileSync(noncePath, "utf-8");
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) {
+            throw new Error("Nonce ledger format corrupted: expected array.");
+          }
+          list = parsed;
+        } catch (err: any) {
+          throw new Error(`LEDGER_IO_FAILURE: Failed to read nonce ledger: ${err.message}`);
+        }
+      }
+
+      // Check if nonce was already consumed in durable ledger
+      const found = list.some((item) => (typeof item === "string" ? item : item.nonce) === nonce);
+      if (found) {
+        return {
+          allowed: false,
+          reason: "REPLAY_ATTACK_DETECTED: Cryptographic authorization nonce has already been consumed.",
+        };
+      }
+
+      // Append new nonce with its actual consumption timestamp — NEVER refresh older timestamps!
       const now = Date.now();
-      const list = Array.from(this.consumedNonces).map((n) => ({ nonce: n, ts: now }));
-      writeFileSync(noncePath, JSON.stringify(list, null, 2), "utf-8");
-    } catch {}
+      list.push({
+        nonce,
+        ts: now,
+        proposalId,
+        approverIdentity,
+      });
+
+      // Write atomically via temporary file and rename
+      try {
+        const tmpPath = `${noncePath}.tmp.${process.pid}.${Date.now()}`;
+        writeFileSync(tmpPath, JSON.stringify(list, null, 2), "utf-8");
+        renameSync(tmpPath, noncePath);
+      } catch (err: any) {
+        throw new Error(`LEDGER_IO_FAILURE: Failed to write consumed nonce ledger: ${err.message}`);
+      }
+
+      // Update in-memory set
+      this.consumedNonces.add(nonce);
+      return { allowed: true };
+    });
+  }
+
+  /**
+   * Computes a deterministic digest of candidate proposal artifacts.
+   * Binds authorization to actual target file contents on disk.
+   */
+  public computeProposalContentDigest(candidate: ReleaseCandidateProposal): string {
+    if (candidate.artifactChecksum && candidate.artifactChecksum.length === 64) {
+      return candidate.artifactChecksum;
+    }
+
+    if (Array.isArray(candidate.targetFiles) && candidate.targetFiles.length > 0) {
+      const fileHashes: string[] = [];
+      for (const filePath of [...candidate.targetFiles].sort()) {
+        const fullPath = resolve(process.cwd(), filePath);
+        if (existsSync(fullPath)) {
+          try {
+            const contentBuf = readFileSync(fullPath);
+            fileHashes.push(`${filePath}:${computeSha256(contentBuf)}`);
+          } catch {
+            fileHashes.push(`${filePath}:unreadable`);
+          }
+        } else {
+          fileHashes.push(`${filePath}:missing`);
+        }
+      }
+      return computeSha256(fileHashes.join(";"));
+    }
+
+    return computeSha256(`proposal:${candidate.proposalId}:${candidate.authorIdentity}:${candidate.category}`);
   }
 
   /**
@@ -327,7 +505,7 @@ export class ReleaseSafetyGovernor {
   /**
    * Check 3: Independent Release Acceptance & Cryptographic Authority Verification
    * Rejects self-certification, peer agent collusion, unauthenticated authority claims,
-   * replayed nonces, expired proofs, and revoked credentials.
+   * replayed nonces, expired proofs, revoked credentials, and fail-closed ledger IO failures.
    */
   public verifyReleaseAuthority(
     author: string,
@@ -413,21 +591,20 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    // Single-use Nonce & Replay Protection (checked against persisted storage)
-    this.loadPersistedNonces();
-    if (this.consumedNonces.has(approver.nonce)) {
-      return {
-        allowed: false,
-        reason: "REPLAY_ATTACK_DETECTED: Cryptographic authorization nonce has already been consumed.",
-      };
-    }
-
     // Freshness Check (signatures expire after 15 minutes)
     const sigAgeMs = Math.abs(Date.now() - new Date(approver.authorizedTimestamp).getTime());
     if (sigAgeMs > 15 * 60 * 1000) {
       return {
         allowed: false,
         reason: "EXPIRED_APPROVAL_PROOF: Release authorization signature has expired (> 15 minutes old).",
+      };
+    }
+
+    // Fast-path in-memory replay check
+    if (this.consumedNonces.has(approver.nonce)) {
+      return {
+        allowed: false,
+        reason: "REPLAY_ATTACK_DETECTED: Cryptographic authorization nonce has already been consumed.",
       };
     }
 
@@ -509,8 +686,25 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    // Consume nonce to guarantee single-use across restarts
-    this.recordConsumedNonce(approver.nonce);
+    // Atomic, Concurrency-Safe Durable Nonce Consumption (Fail-Closed)
+    try {
+      const consumeAudit = this.consumeNonceAtomic(
+        approver.nonce,
+        approver.proposalId,
+        approver.approverIdentity
+      );
+      if (!consumeAudit.allowed) {
+        return consumeAudit;
+      }
+    } catch (err: any) {
+      return {
+        allowed: false,
+        reason: err.message.startsWith("LEDGER_IO_FAILURE")
+          ? err.message
+          : `LEDGER_IO_FAILURE: ${err.message}`,
+      };
+    }
+
     return { allowed: true };
   }
 
@@ -559,7 +753,8 @@ export class ReleaseSafetyGovernor {
    * Executes genuine deployment rollback by:
    * 1. Physically restoring the served target (`apps/web/dist`) from immutable pinned storage.
    * 2. Updating the local pointer file as audit evidence.
-   * 3. Performing real live HTTP verification against the served endpoint to confirm the restored artifact.
+   * 3. Strictly verifying the DESTINATION artifact on disk and live served HTTP endpoint.
+   *    (Never treating the pinned source as successful verification of destination).
    * 4. Triggering an incident alert if restoration fails or served checksum mismatches.
    */
   public async executeDeploymentRollback(
@@ -588,11 +783,12 @@ export class ReleaseSafetyGovernor {
         expectedCanonicalHash: this.pinnedWasmHash,
         verifiedSafe: false,
         restoredAtIso: timestamp,
+        scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
         incidentAlertTriggered: true,
       };
     }
 
-    // 1. Physically restore from immutable pinned storage
+    // 1. Physically restore destination from immutable pinned storage
     const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
     const pinnedWasm = resolve(pinnedBaseDir, "spe_wasm.wasm");
     const distDir = resolve(process.cwd(), "apps/web/dist");
@@ -623,7 +819,7 @@ export class ReleaseSafetyGovernor {
       }
     }
 
-    // 2. Write local pointer file as evidence
+    // 2. Write local pointer file as evidence (explicitly scoped to local staging within tested scope)
     const pointerData = {
       activeReleaseCommit: this.pinnedCommit,
       rejectedCandidateProposalId: candidate.proposalId,
@@ -631,7 +827,8 @@ export class ReleaseSafetyGovernor {
       canonicalWasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
       restoredAtIso: timestamp,
       status: "RESTORED_TO_PINNED_BASE_COMMIT",
-      controlPlane: "LOCAL_STAGING_AND_CDN_CONTROL_PLANE",
+      controlPlane: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+      scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
       zeroCloudCostVerified: true,
     };
 
@@ -641,25 +838,48 @@ export class ReleaseSafetyGovernor {
       console.warn("Notice writing deployment pointer:", e);
     }
 
-    // 3. Verify disk canonical artifact
+    // 3. Strictly verify DESTINATION artifact on disk (never treat pinned source as destination proof)
     let verifiedSafe = false;
     let observedHash = "";
-    const wasmCandidates = [
-      pinnedWasm,
-      distWasm,
-      publicWasm,
-    ];
 
-    for (const p of wasmCandidates) {
-      if (existsSync(p)) {
-        try {
-          const buf = readFileSync(p);
-          observedHash = computeSha256(buf);
-          if (observedHash === this.pinnedWasmHash && buf.byteLength === CANONICAL_WASM_SIZE_BYTES) {
-            verifiedSafe = true;
-            break;
-          }
-        } catch {}
+    if (existsSync(distWasm)) {
+      try {
+        const distBuf = readFileSync(distWasm);
+        observedHash = computeSha256(distBuf);
+        if (observedHash === this.pinnedWasmHash && distBuf.byteLength === CANONICAL_WASM_SIZE_BYTES) {
+          verifiedSafe = true;
+        } else {
+          verifiedSafe = false;
+        }
+      } catch {
+        verifiedSafe = false;
+      }
+    } else {
+      verifiedSafe = false;
+    }
+
+    // Also verify public WASM destination if present in workspace
+    if (verifiedSafe && existsSync(publicWasm)) {
+      try {
+        const pubBuf = readFileSync(publicWasm);
+        const pubHash = computeSha256(pubBuf);
+        if (pubHash !== this.pinnedWasmHash || pubBuf.byteLength !== CANONICAL_WASM_SIZE_BYTES) {
+          verifiedSafe = false;
+        }
+      } catch {
+        verifiedSafe = false;
+      }
+    }
+
+    // Verify dist manifest exists and points to pinned commit and canonical hash
+    if (verifiedSafe && existsSync(distManifest)) {
+      try {
+        const mObj = JSON.parse(readFileSync(distManifest, "utf-8"));
+        if (mObj.releaseCommit !== this.pinnedCommit || mObj.wasmHash !== this.pinnedWasmHash) {
+          verifiedSafe = false;
+        }
+      } catch {
+        verifiedSafe = false;
       }
     }
 
@@ -710,7 +930,6 @@ export class ReleaseSafetyGovernor {
           verifiedSafe = false;
         }
       } catch (httpErr) {
-        // HTTP server might not be running in isolated unit test mode
         if (options.verifyHttp) {
           verifiedSafe = false;
         }
@@ -727,6 +946,7 @@ export class ReleaseSafetyGovernor {
       expectedCanonicalHash: this.pinnedWasmHash,
       verifiedSafe,
       restoredAtIso: timestamp,
+      scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
       httpVerification,
       incidentAlertTriggered,
     };
@@ -750,7 +970,8 @@ export class ReleaseSafetyGovernor {
       canonicalWasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
       restoredAtIso: timestamp,
       status: "RESTORED_TO_PINNED_BASE_COMMIT",
-      controlPlane: "LOCAL_STAGING_AND_CDN_CONTROL_PLANE",
+      controlPlane: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+      scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
       zeroCloudCostVerified: true,
     };
 
@@ -758,14 +979,26 @@ export class ReleaseSafetyGovernor {
       writeFileSync(pointerPath, JSON.stringify(pointerData, null, 2), "utf-8");
     } catch {}
 
+    const distWasm = resolve(process.cwd(), "apps/web/dist/spe_wasm.wasm");
+    let verifiedSafe = false;
+    let observedHash = "";
+    if (existsSync(distWasm)) {
+      try {
+        const buf = readFileSync(distWasm);
+        observedHash = computeSha256(buf);
+        verifiedSafe = observedHash === this.pinnedWasmHash && buf.byteLength === CANONICAL_WASM_SIZE_BYTES;
+      } catch {}
+    }
+
     return {
       triggered: true,
       restoredTarget: this.pinnedCommit,
       releasePointerPath: pointerPath,
-      observedRestoredHash: this.pinnedWasmHash,
+      observedRestoredHash: observedHash || this.pinnedWasmHash,
       expectedCanonicalHash: this.pinnedWasmHash,
-      verifiedSafe: true,
+      verifiedSafe,
       restoredAtIso: timestamp,
+      scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
     };
   }
 
@@ -806,8 +1039,17 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    // 3. Independent Release Authority Gate (Cryptographic Verification)
-    const candidateDigest = candidate.artifactChecksum || computeSha256(JSON.stringify(candidate.targetFiles));
+    // 3. Independent Release Authority Gate (Cryptographic Verification & Digest Binding)
+    let candidateDigest = candidate.artifactChecksum;
+    if (!candidateDigest) {
+      const legacyDigest = computeSha256(JSON.stringify(candidate.targetFiles));
+      if (typeof approverAuthority === "object" && approverAuthority.candidateDigest === legacyDigest) {
+        candidateDigest = legacyDigest;
+      } else {
+        candidateDigest = this.computeProposalContentDigest(candidate);
+      }
+    }
+
     const targetEnv = candidate.targetEnvironment || "production";
     const authAudit = this.verifyReleaseAuthority(
       candidate.authorIdentity,
@@ -887,7 +1129,16 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    const candidateDigest = candidate.artifactChecksum || computeSha256(JSON.stringify(candidate.targetFiles));
+    let candidateDigest = candidate.artifactChecksum;
+    if (!candidateDigest) {
+      const legacyDigest = computeSha256(JSON.stringify(candidate.targetFiles));
+      if (typeof approverAuthority === "object" && approverAuthority.candidateDigest === legacyDigest) {
+        candidateDigest = legacyDigest;
+      } else {
+        candidateDigest = this.computeProposalContentDigest(candidate);
+      }
+    }
+
     const targetEnv = candidate.targetEnvironment || "production";
     const authAudit = this.verifyReleaseAuthority(
       candidate.authorIdentity,

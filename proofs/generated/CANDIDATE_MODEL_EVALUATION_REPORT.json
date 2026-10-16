@@ -1,7 +1,7 @@
 {
   "suite": "SPE Ω — Candidate Pretrained Model Benchmarking Suite",
-  "timestamp": "2026-10-15T23:10:14.637Z",
-  "standard": "SATSS v1 Autonomous Production Protocol / SPE Ω Governance",
+  "timestamp": "2026-10-16T06:52:42.850Z",
+  "standard": "SATSS v1 Autonomous Production Protocol / SPE Ω Governance (P0-R2)",
   "evaluationCriteria": [
     "Device Memory Ceiling (< 512 MB for mobile, < 2.5 GB for desktop WebGPU)",
     "Download Bandwidth & Cold-Start Cacheability",
@@ -9,6 +9,7 @@
     "Zero-Cloud Air-Gap ($0 spend, 0 network egress)",
     "Learned Generative Competence on Held-Out Multi-Domain Briefs"
   ],
+  "governanceNotice": "Per SPE Ω Directive P0-R2: Non-executed models SmolLM-135M, Gemma-2-2B, and Gemini Nano are strictly reclassified as CANDIDATE_UNTESTED with estimated quality scores labeled ESTIMATE_ONLY. No model receives QUALIFIED_PRIMARY_GENERATOR status based on hard-coded or unmeasured scores. Chrome Prompt API is verified Desktop-only (macOS/Windows/Linux) and requires initial on-demand download (~1.5–3 GB); Android/iOS is unsupported as of May 2026.",
   "candidates": [
     {
       "candidateId": "CANDIDATE-01-SMOLLM-135M",
@@ -24,15 +25,21 @@
       "estimatedLatencyMsPerToken": 35,
       "offlineAirGapCapable": true,
       "cloudCostUsd": 0,
-      "heldOutTaskScores": {
+      "assessmentType": "ESTIMATE_ONLY",
+      "empiricalEvaluationStatus": "CANDIDATE_UNTESTED",
+      "empiricalBenchmarkExecuted": false,
+      "empiricalScores": null,
+      "theoreticalEstimateScores": {
         "instructionFollowing": 82,
         "constraintPreservation": 88,
         "noveltyOverBaseline": 84,
-        "structuralIntegrity": 89
+        "structuralIntegrity": 89,
+        "note": "Unmeasured theoretical design estimate; must not be used for qualification decisions"
       },
-      "overallQualificationScore": 85.75,
-      "qualificationVerdict": "QUALIFIED_PRIMARY_GENERATOR",
-      "tradeOffAnalysis": "Highest feasibility for universal in-browser client deployment: 78MB download is cacheable in CacheStorage on first visit. Operates 100% air-gapped on CPU WASM without requiring discrete WebGPU hardware. Produces genuine novel instruction prose from pretraining corpus.",
+      "overallQualificationScore": null,
+      "theoreticalEstimateScore": 85.75,
+      "qualificationVerdict": "CANDIDATE_UNTESTED",
+      "tradeOffAnalysis": "Universal cross-browser WASM CPU compatibility, manageable 78MB footprint. However, official SmolLM2 documentation reports an IFEval instruction-following score of 17.2 for SmolLM-135M-Instruct and 29.9 for SmolLM2-135M-Instruct. A 135M parameter SLM cannot be presumed to reliably satisfy complex multi-constraint instructions without empirical trial. Candidate is untested via empirical execution in this environment.",
       "integrationRoadmap": {
         "tokenizerType": "Byte-level BPE (tiktoken/sentencepiece vocab: 49,152)",
         "weightsFormat": "ONNX Opset 17 quantized int4/int8",
@@ -57,15 +64,21 @@
       "estimatedLatencyMsPerToken": 18,
       "offlineAirGapCapable": true,
       "cloudCostUsd": 0,
-      "heldOutTaskScores": {
+      "assessmentType": "ESTIMATE_ONLY",
+      "empiricalEvaluationStatus": "CANDIDATE_UNTESTED",
+      "empiricalBenchmarkExecuted": false,
+      "empiricalScores": null,
+      "theoreticalEstimateScores": {
         "instructionFollowing": 94,
         "constraintPreservation": 96,
         "noveltyOverBaseline": 95,
-        "structuralIntegrity": 96
+        "structuralIntegrity": 96,
+        "note": "Unmeasured theoretical design estimate; must not be used for qualification decisions"
       },
-      "overallQualificationScore": 95.25,
-      "qualificationVerdict": "SECONDARY_QUALIFIED",
-      "tradeOffAnalysis": "State-of-the-art local instruction following and task-specific generation. However, 1.42 GB download bandwidth and 2.4 GB VRAM ceiling make it unsuitable as default cold-start for mobile or constrained clients. Qualified as high-capability opt-in progressive enhancement.",
+      "overallQualificationScore": null,
+      "theoreticalEstimateScore": 95.25,
+      "qualificationVerdict": "CANDIDATE_UNTESTED",
+      "tradeOffAnalysis": "High-capability local instruction following and task-specific generation. However, 1.42 GB download bandwidth and 2.4 GB VRAM ceiling make it unsuitable as default cold-start for mobile or constrained clients. Requires progressive download confirmation. Model weights not executed in this harness; empirical benchmark not conducted. Classified as CANDIDATE_UNTESTED.",
       "integrationRoadmap": {
         "tokenizerType": "SentencePiece (vocab: 256,000)",
         "weightsFormat": "MLC / WebGPU Shaders (WGSL / SPIR-V)",
@@ -84,21 +97,28 @@
       "architecture": "Gemini Nano 4-bit On-Device Architecture",
       "parameterCount": "1.8 Billion (OS-Managed)",
       "runtimeBackend": "window.ai / document.modelContext Native Browser API",
-      "downloadSizeBytes": 0,
-      "downloadSizeFormatted": "0 MB (Pre-installed by browser)",
-      "deviceMemoryRequiredMb": 0,
+      "downloadSizeBytes": null,
+      "downloadSizeFormatted": "On-demand component download (~1.5–3 GB on-device storage, not pre-installed on clean OS)",
+      "deviceMemoryRequiredMb": "Requires >= 4 GB VRAM or modern desktop GPU/NPU, >= 22 GB free disk space",
+      "supportedPlatforms": "Desktop only (Chrome 131+ on macOS, Windows, Linux). NOT supported on Android or iOS as of May 2026.",
       "estimatedLatencyMsPerToken": 12,
       "offlineAirGapCapable": true,
       "cloudCostUsd": 0,
-      "heldOutTaskScores": {
+      "assessmentType": "ESTIMATE_ONLY",
+      "empiricalEvaluationStatus": "CANDIDATE_UNTESTED",
+      "empiricalBenchmarkExecuted": false,
+      "empiricalScores": null,
+      "theoreticalEstimateScores": {
         "instructionFollowing": 91,
         "constraintPreservation": 93,
         "noveltyOverBaseline": 92,
-        "structuralIntegrity": 94
+        "structuralIntegrity": 94,
+        "note": "Unmeasured theoretical design estimate; must not be used for qualification decisions"
       },
-      "overallQualificationScore": 92.5,
-      "qualificationVerdict": "QUALIFIED_PRIMARY_GENERATOR",
-      "tradeOffAnalysis": "Optimal web zero-cost profile: zero download bandwidth and zero client bundle size overhead since model weights reside in the browser runtime. 100% offline air-gap guaranteed by browser sandbox. Limitation: strictly restricted to Chrome 131+ desktop/Android; unsupported in Safari, Firefox, or Node.js.",
+      "overallQualificationScore": null,
+      "theoreticalEstimateScore": 92.5,
+      "qualificationVerdict": "CANDIDATE_UNTESTED",
+      "tradeOffAnalysis": "Google's official Chrome documentation confirms that the Prompt API is strictly supported on Desktop (Mac/Windows/Linux) only, and is NOT supported on Android or iOS (as of May 2026 update). It also requires substantial desktop hardware resources (minimum 4GB VRAM, 22GB disk space) and may require an initial 1.5–3 GB on-device model download via the browser component updater rather than zero download. Candidate is untested via empirical execution in this environment. Classified as CANDIDATE_UNTESTED.",
       "integrationRoadmap": {
         "tokenizerType": "Browser native internal BPE",
         "weightsFormat": "OS Component / Pre-compiled Native Tensor",
@@ -123,15 +143,19 @@
       "estimatedLatencyMsPerToken": 1,
       "offlineAirGapCapable": true,
       "cloudCostUsd": 0,
-      "heldOutTaskScores": {
+      "assessmentType": "LOCALLY_EXECUTED_FIXTURE",
+      "empiricalEvaluationStatus": "RESEARCH_FIXTURE_ONLY",
+      "empiricalBenchmarkExecuted": true,
+      "empiricalScores": {
         "instructionFollowing": 45,
         "constraintPreservation": 70,
         "noveltyOverBaseline": 15,
-        "structuralIntegrity": 65
+        "structuralIntegrity": 65,
+        "note": "Measured on 593 KB prototype fixture; weights lack learned language competence"
       },
       "overallQualificationScore": 48.75,
       "qualificationVerdict": "RESEARCH_FIXTURE_ONLY",
-      "tradeOffAnalysis": "Successfully demonstrates local in-browser WASM tensor execution, token decoding, and authentic runtime failure triggering (F02). However, weights are initialized randomly and rely on hand-configured token transitions. It does NOT possess learned language competence and cannot generate open-ended original instructions for arbitrary unseen briefs. Correctly reclassified as RESEARCH_FIXTURE_ONLY.",
+      "tradeOffAnalysis": "Successfully demonstrates local in-browser WASM tensor execution, token decoding, and authentic runtime failure triggering (F02). However, weights are initialized randomly and rely on hand-configured token transitions. It does NOT possess learned language competence and cannot generate open-ended original instructions for arbitrary unseen briefs. Correctly reclassified as RESEARCH_FIXTURE_ONLY and disqualified as production language generator.",
       "integrationRoadmap": {
         "tokenizerType": "320-token byte + special token table",
         "weightsFormat": "ONNX Opset 12",
@@ -147,26 +171,30 @@
     {
       "rank": 1,
       "candidateId": "CANDIDATE-03-CHROME-PROMPT-API-GEMINI-NANO",
-      "role": "PRIMARY_WHEN_BROWSER_SUPPORTED",
-      "rationale": "Zero bundle size, zero download latency, native OS integration on Chrome 131+."
+      "role": "CANDIDATE_UNTESTED (Proposed Chrome Desktop Only)",
+      "qualificationStatus": "CANDIDATE_UNTESTED",
+      "rationale": "Zero bundle size, but requires initial on-demand component download (~1.5–3 GB) and is restricted to Chrome 131+ desktop (macOS/Windows/Linux). Unsupported on Android/iOS. Blocked on empirical benchmark execution."
     },
     {
       "rank": 2,
       "candidateId": "CANDIDATE-01-SMOLLM-135M",
-      "role": "PRIMARY_UNIVERSAL_FALLBACK",
-      "rationale": "Universal cross-browser WASM CPU compatibility, manageable 78MB footprint, genuine learned open-ended instruction following."
+      "role": "CANDIDATE_UNTESTED (Proposed Universal WASM SLM)",
+      "qualificationStatus": "CANDIDATE_UNTESTED",
+      "rationale": "Universal cross-browser WASM CPU compatibility with 78MB download footprint. Blocked on real empirical benchmark execution (IFEval 17.2/29.9 warrants verification)."
     },
     {
       "rank": 3,
       "candidateId": "CANDIDATE-02-GEMMA-2-2B-WEBGPU",
-      "role": "SECONDARY_HIGH_FIDELITY_DESKTOP",
-      "rationale": "Superior reasoning and prose synthesis; gated behind progressive download confirmation."
+      "role": "CANDIDATE_UNTESTED (Proposed High-Fidelity Desktop WebGPU)",
+      "qualificationStatus": "CANDIDATE_UNTESTED",
+      "rationale": "High-capability local generation; 1.42 GB bandwidth requires progressive opt-in download confirmation. Blocked on real empirical benchmark execution."
     },
     {
       "rank": 4,
       "candidateId": "CANDIDATE-04-SPE-EXPERIMENTAL-RESEARCH-FIXTURE",
-      "role": "RESEARCH_FIXTURE_ONLY",
-      "rationale": "Retained for local tensor pipeline verification; explicitly disqualified as production language generator."
+      "role": "RESEARCH_FIXTURE_ONLY (Local Tensor Execution Verification)",
+      "qualificationStatus": "RESEARCH_FIXTURE_ONLY",
+      "rationale": "Retained for local in-process tensor pipeline verification; explicitly disqualified as production language generator."
     }
   ],
   "canonicalBaselineIntegration": {
@@ -178,5 +206,5 @@
     "speExportPreserved": true
   },
   "finalVerdict": "IMPLEMENTED_NOT_QUALIFIED",
-  "verdictNotice": "Per SPE Ω Release Rules, DUAL_CORE_QUALIFIED status is strictly withheld until candidate model weights (SmolLM-135M / Gemini Nano) are integrated and qualified across independent held-out benchmarks without template fallbacks."
+  "verdictNotice": "Per SPE Ω Directive P0-R2, candidate models SmolLM-135M, Gemma-2-2B, and Gemini Nano are strictly reclassified as CANDIDATE_UNTESTED with scores marked ESTIMATE_ONLY. No model receives QUALIFIED_PRIMARY_GENERATOR status based on hard-coded or unmeasured scores. DUAL_CORE_QUALIFIED status is strictly withheld until real pretrained weights are integrated and qualified across executed empirical benchmarks without template fallbacks."
 }
