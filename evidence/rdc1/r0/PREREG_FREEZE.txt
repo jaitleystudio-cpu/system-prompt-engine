@@ -1,0 +1,5 @@
+CONTRACT_R0.md sha256=390f4223a6da36ca3837a522004d91d5591906d9a9531fa3c40904d672a6efda
+frozen_before_code=true
+parent=73f1612b
+branch=grok/rdc1-r0-real-data-lf-ltt
+cycle=2026-10-16-17:05-IST
