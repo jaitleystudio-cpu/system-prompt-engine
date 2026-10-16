@@ -542,7 +542,7 @@ export function renderContractMarkdown(contract: ScientificPromptContract): stri
     "",
     `## 6. VERIFICATION STATUS & CRYPTOGRAPHIC RECEIPT`,
     `- **Status**: \`${contract.verificationStatus}\``,
-    `- **Integrity Seal**: SHA-256 Validated Offline`,
+    `- **Integrity Seal**: SHA-256 Validated In-Browser`,
     `- **Contract Standard**: SPE AGI BRAIN Ω Frontier-Science v1.0`,
   ].join("\n");
 }

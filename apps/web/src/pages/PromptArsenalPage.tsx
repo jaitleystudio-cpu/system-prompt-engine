@@ -79,7 +79,7 @@ export function PromptArsenalPage({ onNavigate, onSelectPrompt }: Props) {
             </div>
             <div className="spe-arsenal-trust-item">
               <span aria-hidden="true">✓</span>
-              <span>Air-Gapped Offline Mode (Pro)</span>
+              <span>Enterprise Private Mode (Pro)</span>
             </div>
           </div>
         </header>

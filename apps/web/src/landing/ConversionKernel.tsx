@@ -68,7 +68,7 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
                 Stop paying $20/month just to review AI agent error logs.
               </h2>
               <p className="spe-formula-subtitle">
-                SPE is the 100% free, offline CLI and browser workspace that reviews agent reports, catches silent regressions, and compiles the next atomic task contract at $0 cost.
+                SPE is the 100% free, client-side CLI and browser workspace that reviews agent reports, catches silent regressions, and compiles the next atomic task contract at $0 cost.
               </p>
             </div>
 

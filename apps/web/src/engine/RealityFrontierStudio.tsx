@@ -53,12 +53,12 @@ export const RealityFrontierStudio: React.FC = () => {
 
   const sampleIntents = [
     {
-      label: "3D Offline vs Live (Core Challenge)",
-      text: "Build an original cinematic 3D website inspired by this URL. It must work entirely offline, fetch live remote updates every second, achieve 60 FPS on every phone, and never transmit private user data.",
+      label: "3D Local vs Live (Core Challenge)",
+      text: "Build an original cinematic 3D website inspired by this URL. It must run on-device, fetch live remote updates every second, achieve 60 FPS on every phone, and never transmit private user data.",
     },
     {
-      label: "Offline Personal Portfolio (Solvable Clean)",
-      text: "Build an offline personal portfolio website using vanilla HTML, CSS, and LocalStorage with zero external dependencies.",
+      label: "Standalone Personal Portfolio (Solvable Clean)",
+      text: "Build a standalone personal portfolio website using vanilla HTML, CSS, and LocalStorage with zero external dependencies.",
     },
     {
       label: "E-Commerce with Guest Checkout (Dark-Matter Check)",

@@ -11,7 +11,7 @@ import {
 
 export const PossibilityEngineStudio: React.FC = () => {
   const [intentInput, setIntentInput] = useState(
-    "Build an offline-first inventory dashboard with barcode scanning and export"
+    "Build a high-performance inventory dashboard with barcode scanning and export"
   );
   const [selectedTopologyId, setSelectedTopologyId] = useState<TopologyId>("topology_resilient");
   const [selectedChoiceKey, setSelectedChoiceKey] = useState<string>("local_worker");
@@ -66,7 +66,7 @@ export const PossibilityEngineStudio: React.FC = () => {
   };
 
   const sampleIntents = [
-    { label: "Offline Inventory & Barcodes", text: "Build an offline-first inventory dashboard with barcode scanning and export" },
+    { label: "Smart Inventory & Barcodes", text: "Build a high-performance inventory dashboard with barcode scanning and export" },
     { label: "WCAG 2.1 AAA Design Tokens", text: "Create an accessible design token studio with high-contrast color auto-tuning" },
     { label: "Local AI Agent with Memory", text: "Design an in-browser local AI agent assistant with air-gapped memory retention" },
     { label: "High-Throughput Financial Ledger", text: "Build a high-throughput WebWorker transactional ledger with zero allocation" },
@@ -105,7 +105,7 @@ export const PossibilityEngineStudio: React.FC = () => {
           onChange={(e) => setIntentInput(e.target.value)}
           rows={3}
           style={{ width: "100%", background: "#0b1329", border: "1px solid #334155", borderRadius: 8, padding: "0.75rem", color: "#f8fafc", fontSize: "0.95rem", resize: "vertical", boxSizing: "border-box" }}
-          placeholder="Describe what you want to build (e.g. An offline-first inventory dashboard)..."
+          placeholder="Describe what you want to build (e.g. A high-performance inventory dashboard)..."
         />
         <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
           <span style={{ fontSize: "0.8rem", color: "#64748b" }}>Quick Inspiration:</span>

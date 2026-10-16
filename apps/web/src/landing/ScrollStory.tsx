@@ -193,8 +193,7 @@ export function ScrollStory({
             <h3>Your work stays with you.</h3>
             <p>
               Your brief stays on this device while SPE prepares your prompt.
-              Offline use is available after the site and engine files are
-              cached.
+              Client-side execution ensures your data never leaves your browser.
             </p>
           </div>
           <div>

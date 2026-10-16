@@ -221,7 +221,7 @@ export const SpePostPromptGuidedJourney: React.FC<SpePostPromptGuidedJourneyProp
 
   const handleDownloadCursorRules = () => {
     const filename = ".cursorrules";
-    const header = `# System Prompt Engine (.cursorrules)\n# Calibrated for Cursor AI & Claude 4.5 Sonnet / GPT-5\n# Generated 100% offline via SPE Ω\n\n`;
+    const header = `# System Prompt Engine (.cursorrules)\n# Calibrated for Cursor AI & Claude 4.5 Sonnet / GPT-5\n# Generated privately in-browser via SPE Ω\n\n`;
     const blob = new Blob([header + safePrompt], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -305,7 +305,7 @@ run();`;
     if (userRequest && userRequest.trim().length > 0) {
       return userRequest.trim();
     }
-    return "Build a real-time collaborative state engine with conflict resolution and offline-first persistence.";
+    return "Build a real-time collaborative state engine with conflict resolution and local-first persistence.";
   }, [userRequest]);
 
   const rawBriefTokens = useMemo(() => {
@@ -2339,7 +2339,7 @@ run();`;
                 Test Input Query:
               </span>
               <span style={{ fontSize: "0.7rem", color: "#64748b" }}>
-                Interactive simulator runs completely offline
+                Interactive simulator runs securely in your browser
               </span>
             </div>
             <textarea
@@ -2989,7 +2989,7 @@ run();`;
                   </span>
                   <button
                     type="button"
-                    onClick={() => copyText(shareableUrl, "copy-url", "Offline share link")}
+                    onClick={() => copyText(shareableUrl, "copy-url", "Direct share link")}
                     style={{
                       minHeight: "42px",
                       padding: "6px 14px",

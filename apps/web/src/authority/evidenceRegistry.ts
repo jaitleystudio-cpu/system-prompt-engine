@@ -122,7 +122,7 @@ export const AUTHORITY_DOCUMENTS: AuthorityDocument[] = [
       {
         heading: "Architecture Overview",
         content: [
-          "Local prompt preparation is intended to run on the device. Offline use depends on intact cached assets.",
+          "Local prompt preparation is intended to run on the device. Client-side execution uses cached browser assets.",
           "Our WebAssembly pipeline compiles the core parser into a deterministic binary that runs entirely inside the browser's sandbox."
         ]
       },

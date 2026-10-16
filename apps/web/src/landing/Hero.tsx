@@ -655,7 +655,7 @@ export function Hero(p: Props) {
       >
         <PromptRadarInspector
           promptText={p.prompt || CANONICAL_REFERENCE_SYSTEM_PROMPT}
-          userRequest={p.value || "Build a real-time collaborative state engine with conflict resolution and offline-first persistence"}
+          userRequest={p.value || "Build a real-time collaborative state engine with conflict resolution and local-first persistence"}
           category="code"
           activeTarget={p.target}
           onSelectTarget={p.onTarget}

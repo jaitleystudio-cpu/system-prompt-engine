@@ -56,9 +56,9 @@ const MATRIX_ROWS: MatrixRow[] = [
     cliCommand: "npx @systempromptengine/cli adopt .",
   },
   {
-    id: "offline-airgap",
+    id: "private-airgap",
     category: "airgap",
-    categoryLabel: "Offline Air-Gap",
+    categoryLabel: "On-Device Privacy",
     painTitle: "Cloud tools store your company prompts on their servers",
     painDetail: "Internal code architecture, confidential schemas, and IP stored on 3rd-party servers without guarantees.",
     solutionTitle: "100% WebAssembly in-browser sandbox — zero prompt bytes leave device",
@@ -208,7 +208,7 @@ export function ValueComparisonMatrix({ onNavigate }: ValueComparisonMatrixProps
           <div className="spe-matrix-footer-info">
             <h4 className="spe-matrix-footer-title">Developer CLI Quickstart</h4>
             <p className="spe-matrix-footer-sub">
-              Zero cloud telemetry · 100% offline air-gap · $0.00 spend
+              Zero cloud telemetry · 100% private on-device · $0.00 spend
             </p>
           </div>
 

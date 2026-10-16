@@ -213,7 +213,7 @@ Blended Cost Reduction: 84.2%`,
 Integrity Digest: 7e8910d...44fa
 Digital Signature: 3c18f0...98da
 AUDIT_STATUS: FULLY_VERIFIED
-On-Device: 100% Offline Verifiable`,
+On-Device: 100% Privately Verifiable`,
     invariantStatus: "100% Proven",
     securityScore: "Verified Audit",
     tokenSavings: "Zero Audit Overhead",

@@ -147,7 +147,7 @@ export const AiIncidentWire: React.FC<Props> = ({ onNavigate }) => {
             <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "#fbbf24", marginTop: "4px" }}>
               $0.00 / Run
             </div>
-            <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>100% Offline Air-Gapped</div>
+            <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>100% Private Sandbox</div>
           </div>
           <div>
             <div style={{ fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -537,7 +537,7 @@ export const AiIncidentWire: React.FC<Props> = ({ onNavigate }) => {
                 <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>✓</div>
                 <div style={{ fontWeight: 700, color: "#4ade80", marginBottom: "0.5rem" }}>Failure Received & Queued for Local Reproduction</div>
                 <p style={{ fontSize: "0.85rem", color: "#cbd5e1", margin: 0 }}>
-                  SPE will run the minimal reproducer inside the offline test harness and publish a verified post-mortem upon successful confirmation.
+                  SPE will run the minimal reproducer inside the isolated test harness and publish a verified post-mortem upon successful confirmation.
                 </p>
                 <button
                   onClick={() => {

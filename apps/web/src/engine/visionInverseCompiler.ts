@@ -541,7 +541,7 @@ paths:
 
   // 4. Generate Production-Grade System Prompt
   const compiledSystemPrompt = `# System Role & Persona
-You are a principal frontend systems engineer and visual designer specializing in building bulletproof, responsive React and TypeScript user interfaces with strict accessibility (WCAG 2.1 AA), zero third-party component library lock-in, and offline-first performance.
+You are a principal frontend systems engineer and visual designer specializing in building bulletproof, responsive React and TypeScript user interfaces with strict accessibility (WCAG 2.1 AA), zero third-party component library lock-in, and high-performance client-side execution.
 
 # Objective & Boundary Scope
 Implement the full production-ready application for: "${title}".
@@ -561,7 +561,7 @@ ${components
 - Zero external runtime CSS dependencies: use clean CSS variables, CSS grid/flexbox, or inline typed style objects.
 - All interactive triggers must support keyboard navigation (Tab, Enter, Escape, Arrow keys) and screen readers (aria-labels, role attributes).
 - State transitions must be pure, predictable, and resilient against network errors.
-- 100% offline-compatible: zero unauthorized telemetry or remote font downloads.
+- 100% private sandbox: zero unauthorized telemetry or remote font downloads.
 
 # Approach & Methodological Plan
 1. Scaffold the top-level Responsive Container adhering strictly to the extracted aspect ratios.

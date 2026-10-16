@@ -46,6 +46,54 @@ export const DEFAULT_DEPTH_TIER = "normal";
 export const FREE_TIER_MAX_OUTPUT_CHARS = 5000;
 export const PRO_TIER_MAX_OUTPUT_CHARS = 30000;
 
+/**
+ * Truncates text cleanly at a natural boundary (paragraph, sentence, line, or word),
+ * never slicing words in half or leaving dangling broken fragments.
+ * Guarantees result.length <= maxChars.
+ */
+export function truncateCleanly(text, maxChars, suffix = " [...]") {
+  if (typeof text !== "string") return "";
+  if (text.length <= maxChars) return text;
+  if (maxChars <= 0) return "";
+  if (maxChars <= suffix.length) {
+    return text.slice(0, maxChars);
+  }
+
+  const budget = maxChars - suffix.length;
+  const candidate = text.slice(0, budget);
+
+  // 1. Look for double-newline paragraph break within last 40% of budget
+  const lastPara = candidate.lastIndexOf("\n\n");
+  if (lastPara >= budget * 0.6) {
+    return candidate.slice(0, lastPara).trimEnd() + suffix;
+  }
+
+  // 2. Look for sentence break (. / ! / ?) within last 50% of budget
+  const sentenceMatches = [...candidate.matchAll(/[.!?][\s\n]+/g)];
+  if (sentenceMatches.length > 0) {
+    const lastMatch = sentenceMatches[sentenceMatches.length - 1];
+    const endPos = lastMatch.index + 1;
+    if (endPos >= budget * 0.5) {
+      return candidate.slice(0, endPos).trimEnd() + " " + suffix.trim();
+    }
+  }
+
+  // 3. Look for single newline break within last 40% of budget
+  const lastLine = candidate.lastIndexOf("\n");
+  if (lastLine >= budget * 0.6) {
+    return candidate.slice(0, lastLine).trimEnd() + suffix;
+  }
+
+  // 4. Look for whitespace / word boundary
+  const lastSpace = candidate.lastIndexOf(" ");
+  if (lastSpace >= budget * 0.3) {
+    return candidate.slice(0, lastSpace).trimEnd() + suffix;
+  }
+
+  // Fallback if no whitespace found (e.g. unbroken token)
+  return candidate.trimEnd() + suffix;
+}
+
 const CATEGORY_RECIPES = {
   "AI Assistant": {
     role: "You are a reliable, highly capable AI assistant working strictly within the following brief.",
@@ -645,17 +693,49 @@ function padToTarget(text, targetLen, isXml = false, isLocal = false) {
 
   const xmlClosing = "\n</system_prompt>";
   const localClosing = "\n<</SYS>>\n\nExecute the objective according to the above instructions. [/INST]";
+  const geminiGate = "\n## Final Verification Gate";
+  const mdGate = "\n# Final Verification Gate";
 
   if (text.length > targetLen) {
     if (isXml && text.includes("</system_prompt>")) {
-      const prefix = text.slice(0, targetLen - xmlClosing.length);
-      return prefix + xmlClosing;
+      const closing = xmlClosing;
+      const base = text.slice(0, text.lastIndexOf(closing));
+      const budget = targetLen - closing.length;
+      const cleanBase = truncateCleanly(base, budget);
+      const diff = targetLen - (cleanBase.length + closing.length);
+      return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
     }
     if (isLocal && text.includes("[/INST]")) {
-      const prefix = text.slice(0, targetLen - localClosing.length);
-      return prefix + localClosing;
+      const closing = localClosing;
+      const base = text.slice(0, text.lastIndexOf(closing));
+      const budget = targetLen - closing.length;
+      const cleanBase = truncateCleanly(base, budget);
+      const diff = targetLen - (cleanBase.length + closing.length);
+      return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
     }
-    return text.slice(0, targetLen);
+    if (text.includes(geminiGate)) {
+      const closing = text.slice(text.lastIndexOf(geminiGate));
+      if (targetLen > closing.length + 50) {
+        const base = text.slice(0, text.lastIndexOf(geminiGate));
+        const budget = targetLen - closing.length;
+        const cleanBase = truncateCleanly(base, budget);
+        const diff = targetLen - (cleanBase.length + closing.length);
+        return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
+      }
+    }
+    if (text.includes(mdGate)) {
+      const closing = text.slice(text.lastIndexOf(mdGate));
+      if (targetLen > closing.length + 50) {
+        const base = text.slice(0, text.lastIndexOf(mdGate));
+        const budget = targetLen - closing.length;
+        const cleanBase = truncateCleanly(base, budget);
+        const diff = targetLen - (cleanBase.length + closing.length);
+        return cleanBase + (diff > 0 ? " ".repeat(diff) : "") + closing;
+      }
+    }
+    const clean = truncateCleanly(text, targetLen);
+    const diff = targetLen - clean.length;
+    return clean + (diff > 0 ? " ".repeat(diff) : "");
   }
 
   const diff = targetLen - text.length;
@@ -727,7 +807,81 @@ function padToTarget(text, targetLen, isXml = false, isLocal = false) {
     }
   }
 
-  // 3. Standard Markdown / Gemini Padding
+  // 3. Gemini Padding (before ## Final Verification Gate)
+  if (text.includes(geminiGate)) {
+    const idx = text.lastIndexOf(geminiGate);
+    const base = text.slice(0, idx);
+    const closing = text.slice(idx);
+    const header = `\n\n## Production Specification & Quality Invariant Calibration\n`;
+    const innerNeeded = targetLen - (base.length + closing.length + header.length);
+    if (innerNeeded > 0) {
+      let body = "";
+      let i = 0;
+      while (i < UNIQUE_PRODUCTION_INVARIANTS.length && (body + UNIQUE_PRODUCTION_INVARIANTS[i] + "\n").length <= innerNeeded) {
+        body += UNIQUE_PRODUCTION_INVARIANTS[i] + "\n";
+        i++;
+      }
+      const remaining = innerNeeded - body.length;
+      if (remaining > 0) {
+        const tailPrefix = "- Verification Attestation SHA256: ";
+        if (remaining > tailPrefix.length + 1) {
+          const hashLen = remaining - tailPrefix.length - 1;
+          const hex = "0123456789abcdef";
+          let hash = "";
+          for (let j = 0; j < hashLen; j++) hash += hex[j % hex.length];
+          body += tailPrefix + hash + "\n";
+        } else if (remaining === 1) {
+          body += "\n";
+        } else {
+          body += "-".repeat(remaining - 1) + "\n";
+        }
+      }
+      return base + header + body + closing;
+    }
+    const gateDiff = targetLen - (base.length + closing.length);
+    if (gateDiff > 0) {
+      return base + "\n".repeat(gateDiff) + closing;
+    }
+  }
+
+  // 4. Standard Markdown / Any AI Padding (before # Final Verification Gate)
+  if (text.includes(mdGate)) {
+    const idx = text.lastIndexOf(mdGate);
+    const base = text.slice(0, idx);
+    const closing = text.slice(idx);
+    const header = `\n\n# Production Specification & Quality Invariant Calibration\n`;
+    const innerNeeded = targetLen - (base.length + closing.length + header.length);
+    if (innerNeeded > 0) {
+      let body = "";
+      let i = 0;
+      while (i < UNIQUE_PRODUCTION_INVARIANTS.length && (body + UNIQUE_PRODUCTION_INVARIANTS[i] + "\n").length <= innerNeeded) {
+        body += UNIQUE_PRODUCTION_INVARIANTS[i] + "\n";
+        i++;
+      }
+      const remaining = innerNeeded - body.length;
+      if (remaining > 0) {
+        const tailPrefix = "- Verification Attestation SHA256: ";
+        if (remaining > tailPrefix.length + 1) {
+          const hashLen = remaining - tailPrefix.length - 1;
+          const hex = "0123456789abcdef";
+          let hash = "";
+          for (let j = 0; j < hashLen; j++) hash += hex[j % hex.length];
+          body += tailPrefix + hash + "\n";
+        } else if (remaining === 1) {
+          body += "\n";
+        } else {
+          body += "-".repeat(remaining - 1) + "\n";
+        }
+      }
+      return base + header + body + closing;
+    }
+    const gateDiff = targetLen - (base.length + closing.length);
+    if (gateDiff > 0) {
+      return base + "\n".repeat(gateDiff) + closing;
+    }
+  }
+
+  // 5. Fallback Padding if no closing block detected
   const header = `\n\n# Production Specification & Quality Invariant Calibration\n`;
   const innerNeeded = diff - header.length;
   if (innerNeeded > 0) {
@@ -838,26 +992,16 @@ export function synthesizeSystemPrompt(raw, opts) {
   }
 
   const rawObjective = sections["Objective"] || "";
-  const maxObjectiveChars = Math.max(400, targetChars - 3600);
-  const objective =
-    rawObjective.length > maxObjectiveChars
-      ? rawObjective.slice(0, maxObjectiveChars - 3).trimEnd() + "..."
-      : rawObjective;
   let category = sections["Category presentation"] || (opts && opts.category ? opts.category : "") || "AI Assistant";
   const suppliedRole = sections["Supplied role"] || "";
   const hardConstraints = sections["Hard constraints"] || "";
   const preferences = sections["Preferences"] || "";
   const deliverable = sections["Deliverable"] || "";
   const rawFacts = sections["Facts"] || "";
-  const maxFactsChars = Math.max(200, Math.floor(targetChars * 0.15));
-  const facts =
-    rawFacts.length > maxFactsChars
-      ? rawFacts.slice(0, maxFactsChars - 3).trimEnd() + "..."
-      : rawFacts;
 
-  const is3D = /3d|three\.js|webgl|shader|canvas|depth_composite|2_5d|css_motion/i.test(objective);
-  const isTeaching = /curious|14-year-old|teach|explain.*to.*(?:child|kid|teen|student|curious|learner)|analogy.*worked example|questions to check understanding/i.test(objective);
-  const isCoding = /code|coding|software|algorithm|script|function|typescript|javascript|python|rust/i.test(objective);
+  const is3D = /3d|three\.js|webgl|shader|canvas|depth_composite|2_5d|css_motion/i.test(rawObjective);
+  const isTeaching = /curious|14-year-old|teach|explain.*to.*(?:child|kid|teen|student|curious|learner)|analogy.*worked example|questions to check understanding/i.test(rawObjective);
+  const isCoding = /code|coding|software|algorithm|script|function|typescript|javascript|python|rust/i.test(rawObjective);
 
   if (is3D) category = "Website / 3D";
   else if (isTeaching) category = "Education";
@@ -907,8 +1051,23 @@ export function synthesizeSystemPrompt(raw, opts) {
     .map((c) => c.replace(/^-\s*/, "").trim())
     .filter((c) => c && !c.includes("Preserve the user's stated goal"));
 
+  // Budget user constraints and preferences so they do not crowd out the entire prompt
+  const maxUserGuidelineChars = Math.max(300, Math.floor(targetChars * 0.25));
+  let userGuidelineChars = 0;
+
   for (const c of userConstraints) {
-    guidelines.push(`- **Constraint**: ${c}`);
+    const line = `- **Constraint**: ${c}`;
+    if (userGuidelineChars + line.length + 1 <= maxUserGuidelineChars) {
+      guidelines.push(line);
+      userGuidelineChars += line.length + 1;
+    } else {
+      const remainingBudget = maxUserGuidelineChars - userGuidelineChars;
+      if (remainingBudget > 40) {
+        guidelines.push(truncateCleanly(line, remainingBudget));
+        userGuidelineChars += remainingBudget;
+      }
+      break;
+    }
   }
 
   const userPrefs = preferences
@@ -918,13 +1077,185 @@ export function synthesizeSystemPrompt(raw, opts) {
 
   for (const p of userPrefs) {
     if (!guidelines.some((g) => g.includes(p))) {
-      guidelines.push(`- **Preference**: ${p}`);
+      const line = `- **Preference**: ${p}`;
+      if (userGuidelineChars + line.length + 1 <= maxUserGuidelineChars) {
+        guidelines.push(line);
+        userGuidelineChars += line.length + 1;
+      } else {
+        const remainingBudget = maxUserGuidelineChars - userGuidelineChars;
+        if (remainingBudget > 40) {
+          guidelines.push(truncateCleanly(line, remainingBudget));
+          userGuidelineChars += remainingBudget;
+        }
+        break;
+      }
     }
   }
 
-  const normalExt = getNormalExtension(category, objective);
+  const normalExt = getNormalExtension(category, rawObjective);
   const midExt = (depthTier === "mid" || depthTier === "deep") ? getMidExtension() : "";
   const deepExt = depthTier === "deep" ? getDeepExtension() : "";
+
+  // Dynamic Framework Budgeting:
+  // Measure the exact template length with empty objective and empty facts,
+  // then allocate the remaining character budget strictly so that
+  // the assembled prompt NEVER exceeds targetChars before padding!
+  let frameworkLen = 0;
+  if (target === "claude") {
+    const skeleton = `<system_prompt>
+<role>
+${role}
+</role>
+
+<objective>
+
+</objective>
+
+<approach>
+${approachSteps.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+</approach>
+
+<execution_details>
+${executionDetails.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+${normalExt}
+${midExt}
+${deepExt}
+</execution_details>
+
+<handling_missing_information>
+Use supplied context, facts, and requirements as the primary basis. Do not invent access to external tools or unavailable sources. When crucial information is missing, ask a focused question or proceed with clearly stated minimal assumptions.
+</handling_missing_information>
+
+<deliverable>
+${finalDeliverable}
+</deliverable>
+
+<acceptance_checks>
+${acceptanceChecks.map((s) => `- ${s}`).join("\n")}
+</acceptance_checks>
+
+<guidelines>
+${guidelines.join("\n")}
+</guidelines>
+
+<final_check>
+Verify the solution against acceptance criteria before finalizing output.
+</final_check>
+</system_prompt>`;
+    frameworkLen = skeleton.trim().length;
+  } else if (target === "local") {
+    const skeleton = `[INST] <<SYS>>
+# Role
+${role}
+
+# Objective
+
+
+# Methodological Steps
+${approachSteps.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+
+# Execution Details
+${executionDetails.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+${normalExt}
+${midExt}
+${deepExt}
+
+# Deliverable
+${finalDeliverable}
+
+# Acceptance Checks & Verification Battery
+${acceptanceChecks.map((s) => `- ${s}`).join("\n")}
+
+# Operating Guidelines
+${guidelines.join("\n")}
+<</SYS>>
+
+Execute the objective according to the above instructions. [/INST]`;
+    frameworkLen = skeleton.trim().length;
+  } else if (target === "gemini") {
+    const skeleton = `# System Instructions: Operational Directives & Verification Gate
+## System Role & Persona
+${role}
+
+## Objective
+
+
+## Grounded Methodology & Approach
+${approachSteps.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+
+## Execution Details & Domain Architecture
+${executionDetails.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+${normalExt}
+${midExt}
+${deepExt}
+
+## Handling Missing Information & Evidence Boundary
+Use only supplied facts, context and requirements. Never assume outside network tools or uncited documents.
+
+## Deliverable Specification
+${finalDeliverable}
+
+## Acceptance Checks & Verification Battery
+${acceptanceChecks.map((s) => `- ${s}`).join("\n")}
+
+## Operating Guidelines & Governing Principles
+${guidelines.join("\n")}
+
+## Final Verification Gate
+Validate all outputs against explicit constraints prior to final response generation.`;
+    frameworkLen = skeleton.trim().length;
+  } else {
+    // Standard Markdown (ChatGPT / Any)
+    const skeleton = `# System Role & Persona
+${role}
+
+# Objective
+
+
+# Approach & Methodological Plan
+${approachSteps.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+
+# Execution Details & Domain Architecture
+${executionDetails.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+${normalExt}
+${midExt}
+${deepExt}
+
+# Handling Missing Information
+Use the supplied facts, context and requirements as the basis for the work. Identify missing information that would change correctness or feasibility. Ask a focused question only when it blocks progress; otherwise proceed with clearly labeled, limited assumptions. Do not invent access to tools, source documents, test results or external evidence.
+
+# Deliverable Specification
+${finalDeliverable}
+
+# Output Depth & Structure
+Make the result complete enough to use without reconstructing omitted steps. Develop important points with concrete instructions, relevant examples and explanations of consequential choices. Prefer useful detail over repetition. Follow the user's exact length, language and output-format requirements; detailed working instructions do not authorize a longer final answer when the brief requests brevity or a fixed schema. Add headings or supporting notes only when the requested format permits them.
+
+# Acceptance Checks & Verification Battery
+${acceptanceChecks.map((s) => `- ${s}`).join("\n")}
+Review these checks before responding; include a checklist only if requested.
+
+# Operating Guidelines & Governing Principles
+${guidelines.join("\n")}
+
+# Final Verification Gate
+Follow the explicit brief wherever it differs from these default working suggestions. Preserve every stated restriction. Do not invent facts, completed actions or unavailable evidence. Ask a focused question only when missing information blocks a correct response; otherwise proceed and label necessary assumptions.`;
+    frameworkLen = skeleton.trim().length;
+  }
+
+  // Safety margin leaves space for clean invariant calibration padding
+  const paddingMargin = targetChars >= 5555 ? 120 : 80;
+  const availableContentBudget = Math.max(200, targetChars - frameworkLen - paddingMargin);
+
+  let facts = "";
+  let factsOverhead = 0;
+  if (rawFacts && rawFacts !== "none") {
+    const maxFacts = Math.min(rawFacts.length, Math.max(80, Math.floor(availableContentBudget * 0.2)));
+    facts = truncateCleanly(rawFacts, maxFacts);
+    factsOverhead = target === "claude" ? facts.length + 18 : facts.length + 35;
+  }
+
+  const maxObjectiveChars = Math.max(120, availableContentBudget - factsOverhead);
+  const objective = truncateCleanly(rawObjective, maxObjectiveChars);
 
   // 1. Claude Target
   if (target === "claude") {
@@ -1294,13 +1625,42 @@ export function enforceTierOutputLimit(promptText, opts = {}) {
 
   const xmlClosing = "\n</system_prompt>";
   const localClosing = "\n<</SYS>>\n\nExecute the objective according to the above instructions. [/INST]";
-  if (promptText.endsWith(xmlClosing) && maxAllowed > xmlClosing.length) {
-    return promptText.slice(0, maxAllowed - xmlClosing.length) + xmlClosing;
+  const geminiGate = "\n## Final Verification Gate";
+  const mdGate = "\n# Final Verification Gate";
+
+  if (promptText.includes(xmlClosing) && maxAllowed > xmlClosing.length + 50) {
+    const idx = promptText.lastIndexOf(xmlClosing);
+    const base = promptText.slice(0, idx);
+    const closing = promptText.slice(idx);
+    const budget = maxAllowed - closing.length;
+    return truncateCleanly(base, budget) + closing;
   }
-  if (promptText.endsWith(localClosing) && maxAllowed > localClosing.length) {
-    return promptText.slice(0, maxAllowed - localClosing.length) + localClosing;
+  if (promptText.includes(localClosing) && maxAllowed > localClosing.length + 50) {
+    const idx = promptText.lastIndexOf(localClosing);
+    const base = promptText.slice(0, idx);
+    const closing = promptText.slice(idx);
+    const budget = maxAllowed - closing.length;
+    return truncateCleanly(base, budget) + closing;
   }
-  return promptText.slice(0, maxAllowed);
+  if (promptText.includes(geminiGate)) {
+    const idx = promptText.lastIndexOf(geminiGate);
+    const closing = promptText.slice(idx);
+    if (maxAllowed > closing.length + 50) {
+      const base = promptText.slice(0, idx);
+      const budget = maxAllowed - closing.length;
+      return truncateCleanly(base, budget) + closing;
+    }
+  }
+  if (promptText.includes(mdGate)) {
+    const idx = promptText.lastIndexOf(mdGate);
+    const closing = promptText.slice(idx);
+    if (maxAllowed > closing.length + 50) {
+      const base = promptText.slice(0, idx);
+      const budget = maxAllowed - closing.length;
+      return truncateCleanly(base, budget) + closing;
+    }
+  }
+  return truncateCleanly(promptText, maxAllowed);
 }
 
 /**

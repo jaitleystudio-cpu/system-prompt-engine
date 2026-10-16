@@ -238,7 +238,7 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     path: "/uidrop",
     title: "UIDrop Web Design System Extractor & AI Prompt Compiler | SPE Ω",
     description:
-      "Extract design tokens, WCAG 2.1 contrast scores, and anti-cloning prompts from any live URL or uploaded screenshot — 100% offline with zero cloud compute.",
+      "Extract design tokens, WCAG 2.1 contrast scores, and anti-cloning prompts from any live URL or uploaded screenshot — 100% in-browser with zero cloud compute.",
   },
   possibility: {
     path: "/possibility-engine",

@@ -966,7 +966,7 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
               AST parsing, Kleene-3 logic compilation, and invariant checks run
               entirely inside your browser thread via Rust WebAssembly.
             </p>
-            <span className="spe-pillar-chip">Offline Ready</span>
+            <span className="spe-pillar-chip">Privacy Ready</span>
           </div>
 
           <div className="spe-pillar-card">
@@ -1267,7 +1267,7 @@ export function PlainEnglishShowcase({ onNavigate, onSelectPrompt }: PlainEnglis
               <p className="spe-pro-desc">
                 Catch regressions before merge. Includes <code>spe check --pre-commit</code>,
                 Ed25519 tamper-proof receipts, 100k+ token AST compilation, and
-                unlimited offline CLI runs.
+                unlimited local CLI runs.
               </p>
             </div>
             <div className="spe-pro-banner-right">

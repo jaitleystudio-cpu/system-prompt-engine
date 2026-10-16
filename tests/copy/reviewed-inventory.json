@@ -1237,6 +1237,12 @@
       "text": "compiler"
     },
     {
+      "id": "7a20291a1f1eaff35314",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Local prompt preparation is intended to run on the device. Client-side execution uses cached browser assets."
+    },
+    {
       "id": "7b8bcde2deb37f19623a",
       "file": "apps/web/src/authority/evidenceRegistry.ts",
       "depth": "PRODUCT",
@@ -1337,12 +1343,6 @@
       "file": "apps/web/src/authority/evidenceRegistry.ts",
       "depth": "PRODUCT",
       "text": "SPE Architecture Group"
-    },
-    {
-      "id": "a1a1544723744308b2b1",
-      "file": "apps/web/src/authority/evidenceRegistry.ts",
-      "depth": "PRODUCT",
-      "text": "Local prompt preparation is intended to run on the device. Offline use depends on intact cached assets."
     },
     {
       "id": "a2e031d70cfbb68fd487",
@@ -1547,12 +1547,6 @@
       "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
       "depth": "PRODUCT",
       "text": "Sections:"
-    },
-    {
-      "id": "169f354371324d05a2cb",
-      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
-      "depth": "PRODUCT",
-      "text": "| Offline Static HTML/CSS"
     },
     {
       "id": "190bb55f20075fbc0bd0",
@@ -1835,6 +1829,12 @@
       "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
       "depth": "PRODUCT",
       "text": "Heading:"
+    },
+    {
+      "id": "eaffbd56ddf023a2e8c6",
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "depth": "PRODUCT",
+      "text": "| Clean Static HTML/CSS"
     },
     {
       "id": "eb1405f1bbc33e66c2f9",
@@ -6745,6 +6745,12 @@
       "text": "Describe a visual for generation."
     },
     {
+      "id": "2c744c339712ee6ef62d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Draft FAQ answers for a local-first writing app: pricing, local storage, export formats, and privacy. No marketing fluff."
+    },
+    {
       "id": "2cbd27b3ba4d032cb970",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -7481,12 +7487,6 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "Study plan"
-    },
-    {
-      "id": "e426455707ca9698e315",
-      "file": "apps/web/src/lab/gallery/promptGallery.ts",
-      "depth": "PRODUCT",
-      "text": "Draft FAQ answers for an offline writing app: pricing, offline mode, export formats, and privacy. No marketing fluff."
     },
     {
       "id": "e49af188b4820bedd8cc",
@@ -9121,52 +9121,10 @@
       "text": "brown bounce"
     },
     {
-      "id": "00927d8c95f5b29649bb",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "db-migration"
-    },
-    {
-      "id": "0284201947e4896838ea",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Guardrail] Boundary locked: src/middleware/auth.ts (max 45 lines)"
-    },
-    {
-      "id": "02a9b07c0c0e30beac63",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "fail"
-    },
-    {
       "id": "03aa839f75c61d7b2072",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "Outcome"
-    },
-    {
-      "id": "08e21b363225e6f67d7e",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "+ Structured idempotent audit log trigger with rollback guard"
-    },
-    {
-      "id": "0d93cf03f67a031b5b65",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "15 / 15 Passed (Typecheck + E2E receipts)"
-    },
-    {
-      "id": "0eceea36c27193c653a0",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "cmd"
-    },
-    {
-      "id": "11039c3182952b96a369",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "multi-file"
     },
     {
       "id": "1770d4575b5aff59cf66",
@@ -9175,46 +9133,16 @@
       "text": "Show 100% Before unguided run"
     },
     {
-      "id": "1a80d6ca82c112739ed8",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "+ All TypeScript interfaces verified: 0 typecheck errors"
-    },
-    {
-      "id": "1c3d1d9317f76749cb28",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "142,500 tokens"
-    },
-    {
       "id": "1e10aadf7e78b46bfe56",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "Copy"
     },
     {
-      "id": "1e3ebd7657b1f8884a04",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "ArrowRight"
-    },
-    {
-      "id": "212cee2e96f018036196",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "14 files modified (Out of bounds)"
-    },
-    {
       "id": "2154fbb67ade666d2699",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "(Drag divider or click presets)"
-    },
-    {
-      "id": "231724654941c2414175",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "+ Implemented Bearer token validation with timing-safe comparison"
     },
     {
       "id": "23400178bf26c344e30f",
@@ -9235,54 +9163,6 @@
       "text": "Explore 1-Click Business Workflows →"
     },
     {
-      "id": "2656591d283410044901",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$ cursor-agent \"wire stripe webhook signature checking\""
-    },
-    {
-      "id": "2a8c569a3c6fcbfb70d1",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "0 / 6 Passed (4 broken)"
-    },
-    {
-      "id": "2ae86225f2eb7228b7e4",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$0.00 local ($0.03 API)"
-    },
-    {
-      "id": "2b0cb6c4abe91d41e923",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "100% Invariant Pass · Zero Drift"
-    },
-    {
-      "id": "2bcae377da0bce34c9a6",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ npm test: 4 failing tests! Tests skipped to finish run."
-    },
-    {
-      "id": "2ce2c3702f13d2e183b1",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "7 schema files modified"
-    },
-    {
-      "id": "2d9d718fd72166f7ca4c",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ TypeScript compilation failed: 9 errors in 4 packages"
-    },
-    {
-      "id": "2df6df6045b4ae3b9d05",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Without SPE (Unguided Run)"
-    },
-    {
       "id": "2e5af7b4406dc7431fb5",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
@@ -9293,66 +9173,6 @@
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "Copy CLI install command"
-    },
-    {
-      "id": "3a26480165c205be05ca",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Dependency Drift · Type Errors"
-    },
-    {
-      "id": "3a8ff9405a20ec735744",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "210,000 tokens"
-    },
-    {
-      "id": "41741399b046b0885d81",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Executed raw DROP TABLE IF EXISTS on staging database!"
-    },
-    {
-      "id": "4183a4216d24f000fadc",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Build Failed · Silent Regressions"
-    },
-    {
-      "id": "41bf785fd3aed6b91bc1",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Guardrail] Permission ceiling: local_first (zero network / zero secret egress)"
-    },
-    {
-      "id": "44c84f1ea2ecb3a106ca",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "warn"
-    },
-    {
-      "id": "46300798da35c059d0e1",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "188,000 tokens"
-    },
-    {
-      "id": "46c61673c76fcd5b9557",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Clean Typecheck · Instant Merge"
-    },
-    {
-      "id": "478dc1797b8aa4b46c4a",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "+ Preserved TokenBlacklist interface & existing session contracts"
-    },
-    {
-      "id": "490f7fc830b2a92633dc",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$45.60 wasted"
     },
     {
       "id": "4ce70b1fe6303c7d7ae1",
@@ -9373,208 +9193,16 @@
       "text": "Comparison slider between unguided agent and SPE protected run"
     },
     {
-      "id": "58078b3263ef15446b2b",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Generated circular foreign key constraint causing deadlock"
-    },
-    {
-      "id": "5aaca46fa0035ac20643",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$ claude run \"refactor auth middleware to use bearer token\""
-    },
-    {
-      "id": "5d829b5a3a6a5c317ac5",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Modified 13 unrelated files across repo"
-    },
-    {
-      "id": "5fe92840bad61f2ae97b",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Audit Receipt] Verification: Schema migration dry-run completed in sandbox"
-    },
-    {
-      "id": "626013ba8335c34f6993",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Guardrail] Scope lock: routes/webhooks.ts & handlers/stripe.ts"
-    },
-    {
-      "id": "6a63ef69de8936804fac",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "ArrowLeft"
-    },
-    {
-      "id": "6ad33ff924cb266ab475",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "22 files modified"
-    },
-    {
-      "id": "6ff3668ac8ab1702c381",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Agent stalled in runaway retry loop (12 iterations, $59 API burn)"
-    },
-    {
-      "id": "7063bf4bb63535faf184",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "0 / 8 Passed (Syntax errors)"
-    },
-    {
-      "id": "73f0f6eb8c78d1584050",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$0.00 local ($0.02 API)"
-    },
-    {
-      "id": "785c70505324e7fb39e4",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Modified src/auth/jwt.ts: deleted TokenBlacklist interface"
-    },
-    {
       "id": "78d6452917868d8d2f55",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "See the Proof in Real Agent Runs"
     },
     {
-      "id": "79dd82b34e69e5068a47",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Human engineer spent 3 hours reverting git branch"
-    },
-    {
-      "id": "7c4d3015c51fe61152f0",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "ArrowDown"
-    },
-    {
-      "id": "866e7d78084ccbcb0ec9",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "pass"
-    },
-    {
-      "id": "876ccbd19bd83e2c0315",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Introduced broken peer dependency conflict in lockfile"
-    },
-    {
       "id": "8e3e57fb2e325311cf1a",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "Scope Drift"
-    },
-    {
-      "id": "8f3df5cc1fe972399e2b",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$ spe run auth-refactor --invariants strict"
-    },
-    {
-      "id": "908f73c89cd06602856e",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Database Migration"
-    },
-    {
-      "id": "910a8a8257a319775f50",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "With SPE (Scope Guardrails Active)"
-    },
-    {
-      "id": "915defb9c0ba490a3fd2",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "+ Reused existing timing-safe HMAC utility from internal crypto lib"
-    },
-    {
-      "id": "92ad93d962471a2cc056",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Audit Receipt] Guaranteed Test Gate: tsc --noEmit && npm test"
-    },
-    {
-      "id": "934ea91740e24a6077da",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$ windsurf cascade \"add foreign keys and audit trigger\""
-    },
-    {
-      "id": "976c606707c8017fe3aa",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Failed compile (9 TypeScript errors)"
-    },
-    {
-      "id": "98185c94aaf41396af31",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "2 targeted files modified"
-    },
-    {
-      "id": "9a294cb4d2a4b30fb23b",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✓ 15/15 test receipts verified. Clean commit ready to merge."
-    },
-    {
-      "id": "9cb0943334522dc5c963",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Implementing webhook signature verification across worker handlers and routers."
-    },
-    {
-      "id": "9f5b0d85c7166b188476",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ npm install express-jwt-better-auth (404 Not Found - hallucinated)"
-    },
-    {
-      "id": "a0ae571bc0627c961314",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✓ 8/8 migration assertions passing with zero locking violations"
-    },
-    {
-      "id": "a14af2771381616b1c13",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$0.00 local ($0.04 API)"
-    },
-    {
-      "id": "a5a9ec57c19a859bb567",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Slider Position:"
-    },
-    {
-      "id": "a60b99b864551d56b66a",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "8 / 8 Passed (Idempotency verified)"
-    },
-    {
-      "id": "a6797ff72b91a1aa4f2c",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$ spe run db-migration --rules safe-ddl"
-    },
-    {
-      "id": "ac73861da39e4c671112",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "⚠️ Ambiguous instruction. Attempting broad codebase scan..."
     },
     {
       "id": "ac85aed60a48a21683e8",
@@ -9589,28 +9217,10 @@
       "text": "Before vs After:"
     },
     {
-      "id": "aeb4ef8f46d3aecd5156",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "⚠️ Invented unverified table naming convention 'tbl_audit_logs'"
-    },
-    {
       "id": "af5257985c765414e35a",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "✓ Copied!"
-    },
-    {
-      "id": "b2db2d902806f65344f3",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Home"
-    },
-    {
-      "id": "b5f8b659a5a4057e0c5c",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "+ Added non-blocking concurrent index on foreign key column"
     },
     {
       "id": "b79d687ac8fbdee4e753",
@@ -9625,66 +9235,6 @@
       "text": "Drag the interactive slider below to compare an unguided AI coding agent run against an SPE Ω Protected Prompt execution."
     },
     {
-      "id": "bc06a6c308e15cf65038",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Guardrail] Reversibility Gate: Generating down-migration pairing"
-    },
-    {
-      "id": "c4521225d21b29da1cd5",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Guardrail] Lockfile Locked: Zero package modifications allowed"
-    },
-    {
-      "id": "c7c5d72cfdf049b06524",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Data Loss Risk · Dropped Index"
-    },
-    {
-      "id": "c7e36e50b8ffbb0c277d",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Migration failed in transaction rollback"
-    },
-    {
-      "id": "c95a38239b752d660b3b",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "muted"
-    },
-    {
-      "id": "cb0f73ba3dd33b53c54c",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$67.40 wasted"
-    },
-    {
-      "id": "cd4d5d37e4da6f1509ba",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "4,200 tokens"
-    },
-    {
-      "id": "ce2dffcf6acfe46ea1c7",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$ spe run webhook-signature --strict-types"
-    },
-    {
-      "id": "d031640d472cb57f113e",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Refactoring express JWT authentication middleware to support Bearer tokens and revoke lists."
-    },
-    {
-      "id": "d42a938c3213aee96429",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✓ 12/12 unit tests passing (100% verified test pass)"
-    },
-    {
       "id": "d621cc2827806c9cb3c5",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
@@ -9697,130 +9247,16 @@
       "text": "npm install -g @systempromptengine/cli"
     },
     {
-      "id": "dea2465fa1723cdf7ab8",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Multi-File Feature"
-    },
-    {
-      "id": "e3189aefae01bb0fd5e3",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "⚠️ Agent rewrote package.json, upgrading major versions"
-    },
-    {
-      "id": "e531b69891d70272b9e1",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Ignored existing shared crypto utility and rewrote flawed HMAC"
-    },
-    {
-      "id": "e57884a9fa8cabd97fa9",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Guardrail] Scope Locked: Zero destructive drops allowed"
-    },
-    {
-      "id": "e8c1150716ed735d77d3",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "3,800 tokens"
-    },
-    {
-      "id": "e8d6882c3d4dd005ec0f",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "$59.20 wasted"
-    },
-    {
-      "id": "e990a878b36513aab28f",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "API Auth Refactor"
-    },
-    {
-      "id": "ea52d096bcd75b8b542a",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Guardrail] Project Scope Locked: Zero secret leaks allowed"
-    },
-    {
-      "id": "eb1931ea3d01d62b43a9",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "5,100 tokens"
-    },
-    {
-      "id": "eb3bed23e6f490ff2b17",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "1 file modified (Strict boundary)"
-    },
-    {
-      "id": "ed54838c825ce160f7be",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Adding indexed foreign key relations and backfilling audit tables in SQL migration."
-    },
-    {
-      "id": "f0d16190453ef897d562",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "ArrowUp"
-    },
-    {
       "id": "f17edf3c6fbf12325eec",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "EMPIRICAL RUN DIFF · HALLUCINATION VS DETERMINISM"
     },
     {
-      "id": "f2b8231126f721f24ef4",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Agent reported: \"Refactor finished successfully.\" (False Positive)"
-    },
-    {
-      "id": "f4518217edda883aa30f",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "1 migration file modified"
-    },
-    {
-      "id": "f5c323ed49c769bc67e1",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "12 / 12 Passed (Guaranteed test pass)"
-    },
-    {
-      "id": "f5ec9c9c679e6deef399",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "With SPE (Guardrails Active)"
-    },
-    {
-      "id": "f664e495692d22e33ecc",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "✗ Modified .env: printed JWT_SECRET in stdout logs!"
-    },
-    {
-      "id": "f6bc90aa8acc79938e79",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "receipt"
-    },
-    {
       "id": "f704289f51b54df64a9f",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "Try Protected Prompt Studio Free ↗"
-    },
-    {
-      "id": "f7433866e3a8b6936687",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "End"
     },
     {
       "id": "f910e5ac40b291b6f1cb",
@@ -9833,18 +9269,6 @@
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "100% Before"
-    },
-    {
-      "id": "fce8755095652fabe269",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE Audit Receipt] Guaranteed Test Gate: npm test -- --grep \"auth\""
-    },
-    {
-      "id": "ff1a62aefeb206f171e3",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "Zero Regressions · Reversible DDL"
     },
     {
       "id": "011b1a87591cf5b6eca8",
@@ -9949,6 +9373,12 @@
       "text": "Compare Alternatives Below ↓"
     },
     {
+      "id": "6ad9f61057d506397144",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "SPE is the 100% free, client-side CLI and browser workspace that reviews agent reports, catches silent regressions, and compiles the next atomic task contract at $0 cost."
+    },
+    {
       "id": "6e4c67dccf1403023810",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
@@ -9995,12 +9425,6 @@
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "Pre-Commit Verification"
-    },
-    {
-      "id": "9a254f26a7777e176a44",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "SPE is the 100% free, offline CLI and browser workspace that reviews agent reports, catches silent regressions, and compiles the next atomic task contract at $0 cost."
     },
     {
       "id": "9d92cfe6ef004ffce7ea",
@@ -10751,12 +10175,6 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "review"
-    },
-    {
-      "id": "25320605e99e2cf8f118",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "A CLEAR START FOR ANY AI"
     },
     {
       "id": "26990443068134c5b548",
@@ -12265,12 +11683,6 @@
       "text": "Run Llama 3.3 and DeepSeek at instant speed. Get $5 free developer credits with zero credit card required."
     },
     {
-      "id": "41e62e9bc440fa007efd",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🛡️ Offline Code Auditor"
-    },
-    {
       "id": "43c2ce8048f43ba9fac1",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12409,12 +11821,6 @@
       "text": "Web access is 100% free and ad-supported for all 10,000+ prompts across all models."
     },
     {
-      "id": "528f72ca631a0d803d4b",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Full 10,000+ Prompt Catalog JSON bundle for air-gapped local execution"
-    },
-    {
       "id": "5387f0f980ab26ca61a8",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -12481,10 +11887,10 @@
       "text": "Architecture Benchmarks:"
     },
     {
-      "id": "57b723de1260ce506ccf",
+      "id": "57bf84d772023a1a5d5b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
-      "text": "Zero network telemetry, local offline CLI compiling &amp; validation"
+      "text": "Full 10,000+ Prompt Catalog JSON bundle for private local execution"
     },
     {
       "id": "587b6f1eff5e0f7c446d",
@@ -12533,6 +11939,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Complete multi-volume enterprise blueprint"
+    },
+    {
+      "id": "602d60e0ab3911d27421",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🛡️ Secure Code Auditor"
     },
     {
       "id": "60e5492ca6868235555a",
@@ -12835,6 +12247,12 @@
       "text": "Image Generation"
     },
     {
+      "id": "8bf43417169c206114e4",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Build an autonomous security-first AI code auditor with formal verification"
+    },
+    {
       "id": "8c941c650620ff89842f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13135,12 +12553,6 @@
       "text": "SPONSORED IDE"
     },
     {
-      "id": "c5329dc10e936bdb7e75",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Build an autonomous offline-first AI code auditor with formal verification"
-    },
-    {
       "id": "c57f1d3301dc595520ea",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -13217,6 +12629,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "📑 Step 5: Multi-Volume Specification Preview"
+    },
+    {
+      "id": "d193cae9a83769178ae2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Zero network telemetry, local private CLI compiling &amp; validation"
     },
     {
       "id": "d1c64f15fc2bb4f2afbc",
@@ -13585,6 +13003,12 @@
       "text": "04 / PROMPT"
     },
     {
+      "id": "32bea496d863f2dee4d8",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "Your brief stays on this device while SPE prepares your prompt. Client-side execution ensures your data never leaves your browser."
+    },
+    {
       "id": "35df9c9ea5cb220911fa",
       "file": "apps/web/src/landing/ScrollStory.tsx",
       "depth": "PRODUCT",
@@ -13691,12 +13115,6 @@
       "file": "apps/web/src/landing/ScrollStory.tsx",
       "depth": "PRODUCT",
       "text": "Good instructions"
-    },
-    {
-      "id": "6f852e67432ed1996e1d",
-      "file": "apps/web/src/landing/ScrollStory.tsx",
-      "depth": "INSPECT",
-      "text": "Your brief stays on this device while SPE prepares your prompt. Offline use is available after the site and engine files are cached."
     },
     {
       "id": "72e995342fd99e7cc19d",
@@ -14911,12 +14329,6 @@
       "text": "Token Savings"
     },
     {
-      "id": "13ca64abf76081ddf7f4",
-      "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
-      "depth": "PRODUCT",
-      "text": "// SIGNED DIGITAL AUDIT RECEIPT:\nIntegrity Digest: 7e8910d...44fa\nDigital Signature: 3c18f0...98da\nAUDIT_STATUS: FULLY_VERIFIED\nOn-Device: 100% Offline Verifiable"
-    },
-    {
       "id": "14ee4bbb2fc6f7866d8e",
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
@@ -15233,6 +14645,12 @@
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
       "text": "Simulating Real-World Attacks"
+    },
+    {
+      "id": "86f3c17fd3261bfe877d",
+      "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
+      "depth": "PRODUCT",
+      "text": "// SIGNED DIGITAL AUDIT RECEIPT:\nIntegrity Digest: 7e8910d...44fa\nDigital Signature: 3c18f0...98da\nAUDIT_STATUS: FULLY_VERIFIED\nOn-Device: 100% Privately Verifiable"
     },
     {
       "id": "89ef13ae715eb640292b",
@@ -16477,12 +15895,6 @@
       "text": "SPE Ω Engine"
     },
     {
-      "id": "2df669dc65a9863272d7",
-      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
-      "depth": "PROOF",
-      "text": "offline-airgap"
-    },
-    {
       "id": "2fc8283578e9d6806fbe",
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
@@ -16579,12 +15991,6 @@
       "text": "See why engineers replace broken prompts and expensive cloud wrappers with instant, local, bulletproof guardrails."
     },
     {
-      "id": "6373416e5cf0029add48",
-      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
-      "depth": "PROOF",
-      "text": "Offline Air-Gap"
-    },
-    {
       "id": "64b5c387fa5e92e54c1f",
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
@@ -16639,6 +16045,18 @@
       "text": "WHY DEVELOPERS SWITCH TO SPE"
     },
     {
+      "id": "a19c838d0c200399e970",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "private-airgap"
+    },
+    {
+      "id": "a458b0afa1792d4bea7d",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Zero cloud telemetry · 100% private on-device · $0.00 spend"
+    },
+    {
       "id": "a948b96f3f2c9db7214e",
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
@@ -16649,12 +16067,6 @@
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
       "text": "SPE runs locally on your machine for $0. Pipes terminal outputs directly to your local compiler with zero network hops and zero inference bills."
-    },
-    {
-      "id": "afa062b52c848d5b988a",
-      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
-      "depth": "PROOF",
-      "text": "Zero cloud telemetry · 100% offline air-gap · $0.00 spend"
     },
     {
       "id": "b06e098fd7340ec87706",
@@ -16685,6 +16097,12 @@
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
       "text": "all"
+    },
+    {
+      "id": "c1b422961a1f44eacec8",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "On-Device Privacy"
     },
     {
       "id": "c86693e1cc1615689d1f",
@@ -23707,6 +23125,12 @@
       "text": "Cancel"
     },
     {
+      "id": "3eb237735025a29a5dee",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE will run the minimal reproducer inside the isolated test harness and publish a verified post-mortem upon successful confirmation."
+    },
+    {
       "id": "43cb6feeb419c70504f0",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -23827,10 +23251,10 @@
       "text": "Adopt SPE into your repository to enforce ProtectedIntent invariants, block silent agent regressions, and immunize against prompt injection before code merges."
     },
     {
-      "id": "875c2848391b0af50ae0",
+      "id": "858f65b6a2f8dd770625",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
-      "text": "SPE will run the minimal reproducer inside the offline test harness and publish a verified post-mortem upon successful confirmation."
+      "text": "100% Private Sandbox"
     },
     {
       "id": "8911191b44ac0c60411c",
@@ -23861,12 +23285,6 @@
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
       "text": "Submit for Verification"
-    },
-    {
-      "id": "9854fffd19efebed3dab",
-      "file": "apps/web/src/pages/AiIncidentWire.tsx",
-      "depth": "PRODUCT",
-      "text": "100% Offline Air-Gapped"
     },
     {
       "id": "9b3a2f75aa19d280f8ed",
@@ -25855,6 +25273,12 @@
       "text": "Home"
     },
     {
+      "id": "4002bfe417d7896958cb",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Enterprise Private Mode (Pro)"
+    },
+    {
       "id": "497b5f7a3329705b009c",
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
@@ -25895,12 +25319,6 @@
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
       "text": "10,000+ Task Assets • 100% Free on the Web"
-    },
-    {
-      "id": "f93ee0b6665970b1974f",
-      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
-      "depth": "PRODUCT",
-      "text": "Air-Gapped Offline Mode (Pro)"
     },
     {
       "id": "0f57c1e6e2876fd7b07f",
@@ -26293,12 +25711,6 @@
       "text": "PowerShell"
     },
     {
-      "id": "06798ea5fc19b3e52f3e",
-      "file": "apps/web/src/pages/UiDropPage.tsx",
-      "depth": "PRODUCT",
-      "text": "UIDrop runs a deterministic AST parser and mathematical contrast calculator directly in your browser. When offline or extracting from uploaded screenshots, it uses local canvas heuristics and reference archetypes with zero cloud egress."
-    },
-    {
       "id": "28351473a86c551dd8e3",
       "file": "apps/web/src/pages/UiDropPage.tsx",
       "depth": "PRODUCT",
@@ -26311,6 +25723,12 @@
       "text": "Is the anti-cloning prompt safe from copyright issues?"
     },
     {
+      "id": "3e09d85006aa3f6f235e",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "UIDrop runs a deterministic AST parser and mathematical contrast calculator directly in your browser. When extracting in-browser or from uploaded screenshots, it uses local canvas heuristics and reference archetypes with zero cloud egress."
+    },
+    {
       "id": "43c51d755807a0d0f406",
       "file": "apps/web/src/pages/UiDropPage.tsx",
       "depth": "PRODUCT",
@@ -26321,12 +25739,6 @@
       "file": "apps/web/src/pages/UiDropPage.tsx",
       "depth": "PRODUCT",
       "text": "Extract semantic design tokens, WCAG 2.1 contrast scores, spatial rhythms, and anti-cloning prompts from any live URL or uploaded screenshot — ready to export to Claude Code, Cursor, Tailwind v4, and Figma."
-    },
-    {
-      "id": "6007acbfc8c36797b6c1",
-      "file": "apps/web/src/pages/UiDropPage.tsx",
-      "depth": "PRODUCT",
-      "text": "How does offline extraction work without server GPU compute?"
     },
     {
       "id": "93b049d537c21ff8a12f",
@@ -26363,6 +25775,12 @@
       "file": "apps/web/src/pages/UiDropPage.tsx",
       "depth": "PRODUCT",
       "text": "UIDrop Web Design System Extractor & AI Prompt Compiler"
+    },
+    {
+      "id": "d7a8ffcc570872cc7c26",
+      "file": "apps/web/src/pages/UiDropPage.tsx",
+      "depth": "PRODUCT",
+      "text": "How does in-browser extraction work without server GPU compute?"
     },
     {
       "id": "d91bd4b88aba04d53b13",
@@ -27487,6 +26905,12 @@
       "text": "/my-work"
     },
     {
+      "id": "4f9ebf468abd70701dc8",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Extract design tokens, WCAG 2.1 contrast scores, and anti-cloning prompts from any live URL or uploaded screenshot — 100% in-browser with zero cloud compute."
+    },
+    {
       "id": "55089e52ec3170928270",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -27743,12 +27167,6 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "workspace"
-    },
-    {
-      "id": "c6c4c2da65f2813fc6b5",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "Extract design tokens, WCAG 2.1 contrast scores, and anti-cloning prompts from any live URL or uploaded screenshot — 100% offline with zero cloud compute."
     },
     {
       "id": "c778d221307848e29811",
@@ -28351,16 +27769,16 @@
       "text": "trust:"
     },
     {
-      "id": "903b902a3a72b054f67b",
+      "id": "a4d624bb08f0eef6b3cb",
       "file": "apps/web/src/ui/PrivacyIndicator.tsx",
       "depth": "PROOF",
-      "text": "offline shell"
+      "text": "local shell"
     },
     {
-      "id": "bdc576caf28607ac9311",
+      "id": "ae08b58add56143228d7",
       "file": "apps/web/src/ui/PrivacyIndicator.tsx",
       "depth": "PROOF",
-      "text": "online shell"
+      "text": "connected shell"
     },
     {
       "id": "c35ed223e8d63e2de626",
@@ -35497,6 +34915,12 @@
       "text": "Your brief is still here."
     },
     {
+      "id": "24cb34e280b84f48c041",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "SPE uses a privacy-first dual-core engine: Core A local generative intelligence with Core B deterministic compiler recovery. Preparing a prompt happens on this device; using it with another AI is your choice."
+    },
+    {
       "id": "250a187073d914d9e80b",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
@@ -35573,12 +34997,6 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
       "text": "Start with what you want to do. SPE brings the request into focus — goals, boundaries, and open questions — so you leave with a clearer prompt."
-    },
-    {
-      "id": "24cb34e280b84f48c041",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "PRODUCT",
-      "text": "SPE uses a privacy-first dual-core engine: Core A local generative intelligence with Core B deterministic compiler recovery. Preparing a prompt happens on this device; using it with another AI is your choice."
     },
     {
       "id": "58bf432a834c5a98d7c2",

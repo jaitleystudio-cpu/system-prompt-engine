@@ -582,7 +582,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             {activeModal === "quantum-shader" && (
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <CognitiveEnergyShader
-                  promptText="# System Role\nYou are an autonomous systems architect.\n# Operational Invariants\n- Zero hallucinated dependencies.\n- 100% offline verification."
+                  promptText="# System Role\nYou are an autonomous systems architect.\n# Operational Invariants\n- Zero hallucinated dependencies.\n- 100% client verification."
                   height={450}
                 />
               </div>

@@ -177,10 +177,10 @@ export const UiDropPage: React.FC<UiDropPageProps> = ({ onNavigate }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
             <h4 style={{ fontSize: "0.95rem", fontWeight: 600, color: "#F1F5F9", margin: "0 0 4px" }}>
-              How does offline extraction work without server GPU compute?
+              How does in-browser extraction work without server GPU compute?
             </h4>
             <p style={{ fontSize: "0.85rem", color: "#94A3B8", margin: 0, lineHeight: 1.5 }}>
-              UIDrop runs a deterministic AST parser and mathematical contrast calculator directly in your browser. When offline or extracting from uploaded screenshots, it uses local canvas heuristics and reference archetypes with zero cloud egress.
+              UIDrop runs a deterministic AST parser and mathematical contrast calculator directly in your browser. When extracting in-browser or from uploaded screenshots, it uses local canvas heuristics and reference archetypes with zero cloud egress.
             </p>
           </div>
 

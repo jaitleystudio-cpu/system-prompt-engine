@@ -100,7 +100,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
           <div>
             <h1 className="bld-title">Static Website Builder (website-spec/1)</h1>
             <div style={{ fontSize: "0.75rem", color: "var(--bld-muted)", marginTop: "4px" }}>
-              Specification: <code>{spec.spec_version}</code> | Emitter: <code>{spec.emitter}</code> | Offline Static HTML/CSS
+              Specification: <code>{spec.spec_version}</code> | Emitter: <code>{spec.emitter}</code> | Clean Static HTML/CSS
             </div>
           </div>
 

@@ -56,7 +56,7 @@ const SPEC_TIERS: { id: SpecificationTier; label: string; badge: string; desc: s
 ];
 
 const PLATFORM_PRESETS = [
-  { label: "🛡️ Offline Code Auditor", text: "Build an autonomous offline-first AI code auditor with formal verification" },
+  { label: "🛡️ Secure Code Auditor", text: "Build an autonomous security-first AI code auditor with formal verification" },
   { label: "🌐 3D WebGL Canvas", text: "Design a reactive, WebGL 3D design canvas with accessible controls" },
   { label: "💳 Financial Risk & Fraud", text: "Autonomous financial risk analyzer with zero-trust payment safeguards" },
   { label: "🔬 Causal Inference Lab", text: "Empirical causal inference protocol with DAG structural modeling" },
@@ -117,7 +117,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
 
   // Universal Platform & Deep Scaler state
   const [platformUserRequest, setPlatformUserRequest] = useState(
-    "Build an autonomous offline-first AI code auditor with formal verification"
+    "Build an autonomous security-first AI code auditor with formal verification"
   );
   const [selectedPlatform, setSelectedPlatform] = useState<ModelDialect>("antigravity-skills");
   const [selectedTier, setSelectedTier] = useState<SpecificationTier>("DEEP_15K");
@@ -1204,8 +1204,8 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
               </p>
 
               <ul className="spe-pro-perks-list">
-                <li><span>📥</span> Full 10,000+ Prompt Catalog JSON bundle for air-gapped local execution</li>
-                <li><span>🛡️</span> Zero network telemetry, local offline CLI compiling &amp; validation</li>
+                <li><span>📥</span> Full 10,000+ Prompt Catalog JSON bundle for private local execution</li>
+                <li><span>🛡️</span> Zero network telemetry, local private CLI compiling &amp; validation</li>
                 <li><span>💎</span> 100% clean, unwatermarked exports on web and local desktop</li>
                 <li><span>🚫</span> 100% ad-free experience across the entire web interface</li>
               </ul>

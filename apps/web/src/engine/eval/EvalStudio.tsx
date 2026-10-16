@@ -93,7 +93,7 @@ const DEFAULT_TEST_CASES: StudioTestCase[] = [
 ];
 
 const AVAILABLE_MODELS = [
-  { id: "mock:simulated-fast", label: "Mock Fast Runner (Zero Cost / Offline)", default: true },
+  { id: "mock:simulated-fast", label: "Mock Fast Runner (Zero Cost / In-Browser)", default: true },
   { id: "anthropic:claude-4-5-sonnet", label: "Claude 4.5 Sonnet (Anthropic 2026)", default: true },
   { id: "openai:gpt-5", label: "GPT-5 Omni (OpenAI 2026)", default: false },
   { id: "openai:o4-mini", label: "o4-mini (Frontier Reasoning 2026)", default: false },
@@ -740,7 +740,7 @@ export function EvalStudio() {
           </h3>
           <p style={{ margin: "0 0 1.25rem", fontSize: "0.85rem", color: "#94a3b8", lineHeight: 1.5 }}>
             API keys are saved <strong>only in your browser&apos;s localStorage</strong>. Zero keys are ever transmitted to or stored on SPE servers.
-            For 100% offline zero-egress execution, start Ollama locally (`ollama run llama3`) on port 11434.
+            For 100% local zero-egress execution, start Ollama locally (`ollama run llama3`) on port 11434.
           </p>
 
           {keySavedBanner && (

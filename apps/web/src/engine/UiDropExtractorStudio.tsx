@@ -716,7 +716,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
           <span>
             <strong style={{ color: "#F1F5F9" }}>Drag & Drop any UI Screenshot or Mockup here</strong>
             <span style={{ display: "block", fontSize: "0.72rem", color: "#64748B" }}>
-              Extracts palette, density, corner profile & WCAG contrast 100% offline ($0 cloud compute)
+              Extracts palette, density, corner profile & WCAG contrast in-browser ($0 cloud compute)
             </span>
           </span>
         </div>
@@ -831,7 +831,7 @@ export const UiDropExtractorStudio: React.FC<UiDropExtractorStudioProps> = ({
                 <span style={{ color: "#34D399" }}>✓</span> Trilingual output: English, 中文, and 日本語 with structured JSON
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ color: "#34D399" }}>✓</span> 100% offline air-gapped mode ($0.00 cloud inference bill) or BYOK frontier VLM
+                <span style={{ color: "#34D399" }}>✓</span> 100% private in-browser mode ($0.00 cloud inference bill) or BYOK frontier VLM
               </div>
             </div>
 
