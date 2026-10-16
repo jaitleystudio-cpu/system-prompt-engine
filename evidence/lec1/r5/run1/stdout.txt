@@ -1,0 +1,8 @@
+{
+  "G_abstain_guard": "PASS",
+  "H1_validity": "SUPPORTED",
+  "H2_utility_085_oracle": "NOT_PROVEN",
+  "H3_beats_lf_ltt_500": "REJECTED",
+  "H4_noninferior_lf_ltt_500": "REJECTED",
+  "overall": "REJECTED"
+}

@@ -1,0 +1,277 @@
+{
+  "alpha": 0.1,
+  "constants": {
+    "c_anchor": 0.55,
+    "c_f_primary": 0.6325,
+    "fit_frac": 0.2,
+    "isotonic": "non_increasing_PAVA_pure_python",
+    "learned_floor": "max_t>=f0_mean_ghat_U_le_alpha",
+    "n_unlabeled": 20000,
+    "safety": 1.15
+  },
+  "cost_inr": 0,
+  "delta": 0.1,
+  "experiment": "LEC-1 R5",
+  "n_draws": 1000,
+  "results": {
+    "cif_ltt_1000": {
+      "abstain_all": 0,
+      "coverage_ratio_vs_oracle": 0.419419,
+      "cp95": [
+        0.0,
+        0.003682
+      ],
+      "floor_cov_median": 0.18405,
+      "floor_cov_p10": 0.18065,
+      "floor_cov_p90": 0.18755,
+      "learned_raised_n": 999,
+      "mean_b_cert": 800.0,
+      "mean_b_fit": 200.0,
+      "mean_coverage": 0.183927,
+      "mean_risk": 0.043818,
+      "mean_screened": 4652.66,
+      "n": 1000,
+      "violation_rate": 0.0,
+      "violations": 0
+    },
+    "cif_ltt_250": {
+      "abstain_all": 40,
+      "coverage_ratio_vs_oracle": 0.405901,
+      "cp95": [
+        0.000619,
+        0.008742
+      ],
+      "floor_cov_median": 0.18415,
+      "floor_cov_p10": 0.18065,
+      "floor_cov_p90": 0.18775,
+      "learned_raised_n": 982,
+      "mean_b_cert": 200.0,
+      "mean_b_fit": 50.0,
+      "mean_coverage": 0.177999,
+      "mean_risk": 0.042378,
+      "mean_screened": 1150.08,
+      "n": 1000,
+      "violation_rate": 0.003,
+      "violations": 3
+    },
+    "cif_ltt_500": {
+      "abstain_all": 1,
+      "coverage_ratio_vs_oracle": 0.423078,
+      "cp95": [
+        0.000619,
+        0.008742
+      ],
+      "floor_cov_median": 0.1841,
+      "floor_cov_p10": 0.18065,
+      "floor_cov_p90": 0.1877,
+      "learned_raised_n": 989,
+      "mean_b_cert": 400.0,
+      "mean_b_fit": 100.0,
+      "mean_coverage": 0.185531,
+      "mean_risk": 0.044154,
+      "mean_screened": 2310.25,
+      "n": 1000,
+      "violation_rate": 0.003,
+      "violations": 3
+    },
+    "lf_ltt_1000": {
+      "abstain_all": 7,
+      "coverage_ratio_vs_oracle": 0.810252,
+      "cp95": [
+        0.047862,
+        0.07878
+      ],
+      "floor_cov_median": 0.6338,
+      "floor_cov_p10": 0.63275,
+      "floor_cov_p90": 0.635,
+      "mean_coverage": 0.355318,
+      "mean_risk": 0.079424,
+      "mean_screened": 1577.97,
+      "n": 1000,
+      "violation_rate": 0.062,
+      "violations": 62
+    },
+    "lf_ltt_250": {
+      "abstain_all": 365,
+      "coverage_ratio_vs_oracle": 0.434328,
+      "cp95": [
+        0.038205,
+        0.066513
+      ],
+      "floor_cov_median": 0.6338,
+      "floor_cov_p10": 0.63275,
+      "floor_cov_p90": 0.635,
+      "mean_coverage": 0.190465,
+      "mean_risk": 0.043212,
+      "mean_screened": 394.76,
+      "n": 1000,
+      "violation_rate": 0.051,
+      "violations": 51
+    },
+    "lf_ltt_400": {
+      "abstain_all": 183,
+      "coverage_ratio_vs_oracle": 0.598344,
+      "cp95": [
+        0.042576,
+        0.072108
+      ],
+      "floor_cov_median": 0.6338,
+      "floor_cov_p10": 0.63275,
+      "floor_cov_p90": 0.635,
+      "mean_coverage": 0.26239,
+      "mean_risk": 0.059193,
+      "mean_screened": 631.24,
+      "n": 1000,
+      "violation_rate": 0.056,
+      "violations": 56
+    },
+    "lf_ltt_500": {
+      "abstain_all": 116,
+      "coverage_ratio_vs_oracle": 0.662377,
+      "cp95": [
+        0.048747,
+        0.079888
+      ],
+      "floor_cov_median": 0.6338,
+      "floor_cov_p10": 0.63275,
+      "floor_cov_p90": 0.635,
+      "mean_coverage": 0.29047,
+      "mean_risk": 0.065408,
+      "mean_screened": 789.39,
+      "n": 1000,
+      "violation_rate": 0.063,
+      "violations": 63
+    },
+    "oracle": {
+      "coverage": 0.438528,
+      "risk": 0.098301,
+      "t": 0.9602
+    },
+    "paired": {
+      "cif_ltt_1000_minus_lf_ltt_1000": {
+        "lb95_1s": -0.174867,
+        "losses": 980,
+        "mean": -0.171391,
+        "sd": 0.066813,
+        "ub95_1s": -0.167916,
+        "wins": 8
+      },
+      "cif_ltt_250_minus_lf_ltt_250": {
+        "lb95_1s": -0.020846,
+        "losses": 515,
+        "mean": -0.012466,
+        "sd": 0.16109,
+        "ub95_1s": -0.004086,
+        "wins": 340
+      },
+      "cif_ltt_500_minus_lf_ltt_400": {
+        "lb95_1s": -0.084607,
+        "losses": 729,
+        "mean": -0.076859,
+        "sd": 0.148951,
+        "ub95_1s": -0.069111,
+        "wins": 188
+      },
+      "cif_ltt_500_minus_lf_ltt_500": {
+        "lb95_1s": -0.111843,
+        "losses": 806,
+        "mean": -0.104939,
+        "sd": 0.132727,
+        "ub95_1s": -0.098035,
+        "wins": 124
+      },
+      "cif_ltt_500_minus_rand_1000": {
+        "lb95_1s": -0.124029,
+        "losses": 855,
+        "mean": -0.117994,
+        "sd": 0.116011,
+        "ub95_1s": -0.111959,
+        "wins": 85
+      },
+      "cif_ltt_500_minus_rand_500": {
+        "lb95_1s": -0.031683,
+        "losses": 580,
+        "mean": -0.023376,
+        "sd": 0.159673,
+        "ub95_1s": -0.01507,
+        "wins": 321
+      },
+      "lf_ltt_400_minus_rand_500": {
+        "lb95_1s": 0.042254,
+        "losses": 335,
+        "mean": 0.053483,
+        "sd": 0.215854,
+        "ub95_1s": 0.064711,
+        "wins": 580
+      },
+      "lf_ltt_500_minus_rand_500": {
+        "lb95_1s": 0.070793,
+        "losses": 295,
+        "mean": 0.081563,
+        "sd": 0.207022,
+        "ub95_1s": 0.092332,
+        "wins": 636
+      }
+    },
+    "rand_1000": {
+      "abstain_all": 79,
+      "coverage_ratio_vs_oracle": 0.692147,
+      "cp95": [
+        0.037335,
+        0.06539
+      ],
+      "mean_coverage": 0.303526,
+      "mean_risk": 0.068245,
+      "n": 1000,
+      "violation_rate": 0.05,
+      "violations": 50
+    },
+    "rand_2000": {
+      "abstain_all": 2,
+      "coverage_ratio_vs_oracle": 0.823564,
+      "cp95": [
+        0.040823,
+        0.069874
+      ],
+      "mean_coverage": 0.361156,
+      "mean_risk": 0.080664,
+      "n": 1000,
+      "violation_rate": 0.054,
+      "violations": 54
+    },
+    "rand_250": {
+      "abstain_all": 611,
+      "coverage_ratio_vs_oracle": 0.261218,
+      "cp95": [
+        0.022822,
+        0.046034
+      ],
+      "mean_coverage": 0.114551,
+      "mean_risk": 0.026066,
+      "n": 1000,
+      "violation_rate": 0.033,
+      "violations": 33
+    },
+    "rand_500": {
+      "abstain_all": 316,
+      "coverage_ratio_vs_oracle": 0.476385,
+      "cp95": [
+        0.031291,
+        0.057486
+      ],
+      "mean_coverage": 0.208908,
+      "mean_risk": 0.047292,
+      "n": 1000,
+      "violation_rate": 0.043,
+      "violations": 43
+    }
+  },
+  "verdicts": {
+    "G_abstain_guard": "PASS",
+    "H1_validity": "SUPPORTED",
+    "H2_utility_085_oracle": "NOT_PROVEN",
+    "H3_beats_lf_ltt_500": "REJECTED",
+    "H4_noninferior_lf_ltt_500": "REJECTED",
+    "overall": "REJECTED"
+  }
+}
