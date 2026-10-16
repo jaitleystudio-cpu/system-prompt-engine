@@ -20,6 +20,7 @@ Disallow: /workspace
 Disallow: /my-work
 Disallow: /website
 Disallow: /media
+Disallow: /ocr
 Disallow: /research
 Disallow: /studio
 Disallow: /private/
