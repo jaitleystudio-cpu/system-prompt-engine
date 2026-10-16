@@ -1,0 +1,5 @@
+CONTRACT_R4.md sha256=da82854a4925df1750572a0efcaff1ed2efb65f0f1c274923c464603dc0f211e
+frozen_before_code=true
+parent=beeadcd5
+branch=grok/lec1-r4-ppi-bet-ltt
+cycle=2026-10-16-09:05-IST
