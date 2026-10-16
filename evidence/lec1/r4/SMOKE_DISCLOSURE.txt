@@ -1,0 +1,1 @@
+Pre-outcome disclosure: before this code commit a 20-draw throughput smoke run (draws 0-19, 6.1 s on box) was executed to check runtime. No constant, rule or hypothesis in CONTRACT_R4.md was changed after it (contract sha256 da82854a... unchanged). Only test INPUTS (not methods) were adjusted to make hand-built cases exercise the intended branch.

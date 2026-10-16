@@ -1,0 +1,16 @@
+PASS test_constants
+PASS test_f_pred
+PASS test_stake_predictable_hand_path
+PASS test_stake_truncation
+PASS test_running_max
+PASS test_direction
+PASS test_ppi_shift_uses_U
+PASS test_ppi_hi_bound
+PASS test_bern_uses_raw_y
+PASS test_acquisition_order_not_sorted
+PASS test_mask_and_lazy_equals_eager
+PASS test_floor_reuse_and_accounting
+PASS test_imports_baselines
+13/13 passed
+{'M1_wrong_f_pred_uses_s': 'KILLED', 'M2_p_equals_wealth_inverted': 'KILLED', 'M3_stake_peeks_current_w': 'KILLED', 'M4_no_truncation': 'KILLED', 'M5_mu_f_ignored': 'KILLED', 'M6_sorted_by_s': 'KILLED', 'M7_wrong_alpha': 'KILLED', 'M8_no_mask_eager': 'KILLED', 'M8b_no_mask_lazy': 'KILLED', 'M9_label_count_not_B': 'KILLED', 'M10_always_accept_mean_below': 'KILLED'}
+MUTATION GATE PASS 11/11 killed
