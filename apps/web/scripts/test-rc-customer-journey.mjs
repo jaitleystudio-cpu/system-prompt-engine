@@ -52,7 +52,7 @@ console.log("=================================================================="
 // -----------------------------------------------------------------------------
 // 1. Pricing, Signed Entitlement Verification & Waitlist Security Journey
 // -----------------------------------------------------------------------------
-console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security, Server Webhook Authority & 5,000-Char Free Output Cap...");
+console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security, Server Webhook Authority & 30,000-Char Free Output Cap...");
 {
   const pricingSource = readFileSync(join(webRoot, "src/pages/Pricing.tsx"), "utf8");
   const deckSource = readFileSync(join(webRoot, "src/landing/SpeCapabilityDeck.tsx"), "utf8");
@@ -90,15 +90,15 @@ console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security,
     "Pricing.tsx must verify server-issued signed entitlement tokens before granting paid tiers",
   );
 
-  // Finding 4 Closure: Ensure Free-tier copy distinguishes 100k context input from 5k Free output / 30k+ Pro output
+  // Finding 4 Closure: Ensure Free-tier copy distinguishes 100k context input from 30k Free output / 100k Pro output
   assert(
     pricingSource.includes("100,000+ Character (1 Lakh+) Context Input") &&
-      pricingSource.includes("up to 5,000-char prompt output in Free; 30,000+ in Pro"),
-    "Pricing.tsx must distinguish 100,000+ char context input from 5,000-char Free output limit",
+      pricingSource.includes("up to 30,000-char prompt output in Free; 100,000 in Pro"),
+    "Pricing.tsx must distinguish 100,000+ char context input from 30,000-char Free output limit",
   );
   assert(
-    deckSource.includes("Prompt output: 5,000 Free / 30,000+ Pro"),
-    "SpeCapabilityDeck.tsx must distinguish 100k context input from 5,000 Free / 30,000+ Pro output",
+    deckSource.includes("Prompt output: 30,000 Free / 100,000 Pro"),
+    "SpeCapabilityDeck.tsx must distinguish 100k context input from 30,000 Free / 100,000 Pro output",
   );
 
   // Verify standardized intro + renewal pricing
@@ -541,9 +541,9 @@ console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security,
 }
 
 // -----------------------------------------------------------------------------
-// 2. Customer 6-Format Export Journey & Runtime 5,000-Char Free Cap (`AgentExportTabs.tsx`)
+// 2. Customer 6-Format Export Journey & Runtime 30,000-Char Free Cap (`AgentExportTabs.tsx`)
 // -----------------------------------------------------------------------------
-console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-char Free-tier output limit...");
+console.log("\n[2/4] Verifying all 6 customer export formats and runtime 30,000-char Free-tier output limit...");
 {
   const bundle = await build({
     entryPoints: [join(webRoot, "src/components/AgentExportTabs.tsx")],
@@ -560,9 +560,9 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`
   );
 
-  // Finding D Closure: Verify 100,000+ character context input is accepted, while Free tier output is capped at <= 5,000 chars
-  assert.equal(FREE_TIER_MAX_OUTPUT_CHARS, 5000, "FREE_TIER_MAX_OUTPUT_CHARS must be 5,000");
-  assert.equal(PRO_TIER_MAX_OUTPUT_CHARS, 30000, "PRO_TIER_MAX_OUTPUT_CHARS must be 30,000");
+  // Finding D Closure: Verify 100,000+ character context input is accepted, while Free tier output is capped at <= 30,000 chars
+  assert.equal(FREE_TIER_MAX_OUTPUT_CHARS, 30000, "FREE_TIER_MAX_OUTPUT_CHARS must be 30,000");
+  assert.equal(PRO_TIER_MAX_OUTPUT_CHARS, 100000, "PRO_TIER_MAX_OUTPUT_CHARS must be 100,000");
 
   const oneLakhContextInput =
     "Build a zero-trust distributed payment ledger microservice in Rust and TypeScript. " +
@@ -571,44 +571,44 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     "A".repeat(105_000);
   assert(oneLakhContextInput.length >= 100_000, "Input context must exceed 100,000 characters (1 Lakh+)");
 
-  // Unauthenticated / Free-tier synthesis MUST cap output at <= 5,000 characters even when depthTier='deep' is requested
+  // Unauthenticated / Free-tier synthesis MUST cap output at <= 30,000 characters even when depthTier='titan' is requested
   const freeTierCompiled = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     entitlement: null,
   });
   assert.equal(typeof freeTierCompiled, "string");
   assert(
-    freeTierCompiled.length <= 5000,
-    `Free-tier compiled output length (${freeTierCompiled.length}) must be <= 5,000 chars`,
+    freeTierCompiled.length <= 30000,
+    `Free-tier compiled output length (${freeTierCompiled.length}) must be <= 30,000 chars`,
   );
 
-  // Bare subscriptionTier='pro' WITHOUT a cryptographically verified entitlement MUST still be capped at <= 5,000 chars
+  // Bare subscriptionTier='pro' WITHOUT a cryptographically verified entitlement MUST still be capped at <= 30,000 chars
   const unverifiedStringProAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     subscriptionTier: "pro",
   });
   assert(
-    unverifiedStringProAttempt.length <= 5000,
-    `Bare subscriptionTier='pro' without verified entitlement (${unverifiedStringProAttempt.length}) must be capped at <= 5,000 chars`,
+    unverifiedStringProAttempt.length <= 30000,
+    `Bare subscriptionTier='pro' without verified entitlement (${unverifiedStringProAttempt.length}) must be capped at <= 30,000 chars`,
   );
 
-  // Shallow fake entitlement `{ verified: true, tier: 'pro' }` without payload & 128-hex signature MUST still be capped at <= 5,000 chars
+  // Shallow fake entitlement `{ verified: true, tier: 'pro' }` without payload & 128-hex signature MUST still be capped at <= 30,000 chars
   const forgedShallowEntitlementAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     entitlement: { verified: true, tier: "pro" },
   });
   assert(
-    forgedShallowEntitlementAttempt.length <= 5000,
-    `Shallow fake entitlement without signed payload (${forgedShallowEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
+    forgedShallowEntitlementAttempt.length <= 30000,
+    `Shallow fake entitlement without signed payload (${forgedShallowEntitlementAttempt.length}) must be capped at <= 30,000 chars`,
   );
 
-  // Forged complete entitlement object with fake 128-hex signature ("00".repeat(64)) MUST still be capped at <= 5,000 chars
+  // Forged complete entitlement object with fake 128-hex signature ("00".repeat(64)) MUST still be capped at <= 30,000 chars
   const forgedCompleteEntitlementAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     entitlement: {
       verified: true,
       tier: "pro",
@@ -629,14 +629,14 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     },
   });
   assert(
-    forgedCompleteEntitlementAttempt.length <= 5000,
-    `Forged complete entitlement with dummy signature (${forgedCompleteEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
+    forgedCompleteEntitlementAttempt.length <= 30000,
+    `Forged complete entitlement with dummy signature (${forgedCompleteEntitlementAttempt.length}) must be capped at <= 30,000 chars`,
   );
 
-  // Forged entitlement object with verified: false MUST still be capped at <= 5,000 chars
+  // Forged entitlement object with verified: false MUST still be capped at <= 30,000 chars
   const verifiedFalseAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     entitlement: {
       verified: false,
       tier: "pro",
@@ -657,22 +657,22 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     },
   });
   assert(
-    verifiedFalseAttempt.length <= 5000,
-    `Entitlement object with verified: false must be capped at <= 5,000 chars`,
+    verifiedFalseAttempt.length <= 30000,
+    `Entitlement object with verified: false must be capped at <= 30,000 chars`,
   );
 
-  // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
+  // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 30,000 characters
   const directFreePrompt = synthesizeSystemPrompt(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     subscriptionTier: "free",
   });
   assert(
-    directFreePrompt.length <= 5000,
-    `synthesizeSystemPrompt with subscriptionTier='free' (${directFreePrompt.length}) must be <= 5,000 chars`,
+    directFreePrompt.length <= 30000,
+    `synthesizeSystemPrompt with subscriptionTier='free' (${directFreePrompt.length}) must be <= 30,000 chars`,
   );
 
-  // Verified Pro entitlement unlocks up to 30,000-char deep synthesis output
+  // Verified Pro entitlement unlocks up to 100,000-char titan synthesis output
   const proBilling = new AuthoritativeBillingAuthority();
   const proEvent = {
     eventId: "evt_pay_pro_002",
@@ -700,63 +700,63 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
   });
   const proTierCompiled = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     entitlement: verifiedProEnt,
     currentEpochMs: 1_791_760_000_000,
     trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
   });
   assert(
-    proTierCompiled.length > 5000 && proTierCompiled.length <= 30000,
-    `Verified Pro output length (${proTierCompiled.length}) must exceed 5,000 and be <= 30,000 chars`,
+    proTierCompiled.length > 30000 && proTierCompiled.length <= 100000,
+    `Verified Pro output length (${proTierCompiled.length}) must exceed 30,000 and be <= 100,000 chars`,
   );
 
-  // Raw signed token string passed directly to compilePromptWithTierEnforcement unlocks Pro tier (> 5,000 chars)
+  // Raw signed token string passed directly to compilePromptWithTierEnforcement unlocks Pro tier (> 30,000 chars)
   const rawTokenCompiled = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     entitlement: proToken,
     currentEpochMs: 1_791_760_000_000,
     trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
     authoritativeReceiptVerifier: proBilling.createAuthoritativeReceiptVerifier(),
   });
   assert(
-    rawTokenCompiled.length > 5000 && rawTokenCompiled.length <= 30000,
-    `Raw token string (${rawTokenCompiled.length}) must unlock Pro tier (> 5,000 and <= 30,000 chars)`,
+    rawTokenCompiled.length > 30000 && rawTokenCompiled.length <= 100000,
+    `Raw token string (${rawTokenCompiled.length}) must unlock Pro tier (> 30,000 and <= 100,000 chars)`,
   );
 
-  // Revoked receipt in revokedReceiptIds MUST be capped at <= 5,000 chars even with a valid signed token/object
+  // Revoked receipt in revokedReceiptIds MUST be capped at <= 30,000 chars even with a valid signed token/object
   const revokedViaListAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
     category: "Backend",
-    depthTier: "deep",
+    depthTier: "titan",
     entitlement: verifiedProEnt,
     currentEpochMs: 1_791_760_000_000,
     trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
     revokedReceiptIds: ["pay_rcpt_pro_deep_002"],
   });
   assert(
-    revokedViaListAttempt.length <= 5000,
-    `Entitlement revoked via revokedReceiptIds must be capped at <= 5,000 chars`,
+    revokedViaListAttempt.length <= 30000,
+    `Entitlement revoked via revokedReceiptIds must be capped at <= 30,000 chars`,
   );
 
-  // Verify formatForAgent enforces <= 5,000 chars by default (even when options are omitted!) and across promptfoo YAML
+  // Verify formatForAgent enforces <= 30,000 chars by default (even when options are omitted!) and across promptfoo YAML
   const defaultExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend");
   assert(
-    defaultExportOnFree.content.length <= 5000,
-    `formatForAgent with default options (${defaultExportOnFree.content.length}) must enforce <= 5,000 chars on Free tier`,
+    defaultExportOnFree.content.length <= 30000,
+    `formatForAgent with default options (${defaultExportOnFree.content.length}) must enforce <= 30,000 chars on Free tier`,
   );
   const oversizedExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend", {
     subscriptionTier: "free",
   });
   assert(
-    oversizedExportOnFree.content.length <= 5000,
-    `formatForAgent with subscriptionTier='free' (${oversizedExportOnFree.content.length}) must be <= 5,000 chars`,
+    oversizedExportOnFree.content.length <= 30000,
+    `formatForAgent with subscriptionTier='free' (${oversizedExportOnFree.content.length}) must be <= 30,000 chars`,
   );
   const promptfooExportOnFree = exportMod.formatForAgent(proTierCompiled, "promptfoo", "Backend", {
     subscriptionTier: "free",
   });
   assert(
-    promptfooExportOnFree.content.length <= 5000,
-    `formatForAgent promptfoo export on Free tier (${promptfooExportOnFree.content.length}) must be <= 5,000 chars`,
+    promptfooExportOnFree.content.length <= 30000,
+    `formatForAgent promptfoo export on Free tier (${promptfooExportOnFree.content.length}) must be <= 30,000 chars`,
   );
 
   const customerPrompt = `# System Role & Persona
@@ -813,11 +813,11 @@ Design and validate REST APIs returning strict JSON schemas.
     authoritativeReceiptVerifier: proBilling.createAuthoritativeReceiptVerifier(),
   });
   assert(
-    rawTokenExport.content.length > 5000,
-    `formatForAgent with raw token string (${rawTokenExport.content.length}) must allow Pro output (> 5,000 chars)`,
+    rawTokenExport.content.length > 30000,
+    `formatForAgent with raw token string (${rawTokenExport.content.length}) must allow Pro output (> 30,000 chars)`,
   );
 
-  console.log("✓ All 6 customer export artifacts and 5,000-char Free vs 30,000-char Pro runtime limits verified.");
+  console.log("✓ All 6 customer export artifacts and 30,000-char Free vs 100,000-char Pro runtime limits verified.");
 }
 
 // -----------------------------------------------------------------------------

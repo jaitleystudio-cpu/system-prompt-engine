@@ -1261,12 +1261,15 @@ run();`;
                   <span style={{ fontSize: "0.68rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase", display: "block", marginBottom: "4px" }}>
                     Prompt Depth:
                   </span>
-                  <div style={{ display: "flex", gap: "5px" }}>
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                     {(
                       [
                         { id: "normal", label: "Standard (5.5k)" },
                         { id: "mid", label: "Mid (15k)" },
-                        { id: "deep", label: "Deep (30k)" },
+                        { id: "deep", label: "Deep (30k) · Free Default" },
+                        { id: "ultra", label: "Ultra (50k) · Pro" },
+                        { id: "massive", label: "Massive (75k) · Pro" },
+                        { id: "titan", label: "Titan (100k) · Pro" },
                       ] as const
                     ).map((tier) => {
                       const isSelected = activeDepthTier === tier.id;

@@ -13549,12 +13549,6 @@
       "text": "YOUR IDEA."
     },
     {
-      "id": "3a6b0230d761a0699d26",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Paste up to 100,000+ characters of context input locally (up to 5,000-char prompt output in Free; 30,000+ in Pro)."
-    },
-    {
       "id": "3c7fe46e0c05e07f1e0a",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
@@ -13643,12 +13637,6 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "Export Agent Rules →"
-    },
-    {
-      "id": "47fe60cee49854726699",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Context input: 100,000+ chars (1 Lakh+)\nPrompt output: 5,000 Free / 30,000+ Pro\nProjected retry savings: ~42% (est.)"
     },
     {
       "id": "48a5ed5656244b009e3d",
@@ -13849,6 +13837,12 @@
       "text": "60+ Research Prompts & 101 Skills"
     },
     {
+      "id": "8309790a604ee9a4a6db",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Context input: 100,000+ chars (1 Lakh+)\nPrompt output: 30,000 Free / 100,000 Pro\nProjected retry savings: ~42% (est.)"
+    },
+    {
       "id": "8464ed2df4cd06af9251",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
@@ -13991,6 +13985,12 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "ANY VOICE/LINK."
+    },
+    {
+      "id": "b46cf97f1c913e3f8c57",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Paste up to 100,000+ characters of context input locally (up to 30,000-char prompt output in Free; 100,000 in Pro)."
     },
     {
       "id": "b5825ecfc6e663e1d16c",
@@ -24961,12 +24961,6 @@
       "text": "🍎 Independent Sister Product · Also Powered by the Prawin Jaitley Engine"
     },
     {
-      "id": "eb1c2316623250412f33",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "(up to 5,000-char prompt output in Free; 30,000+ in Pro)"
-    },
-    {
       "id": "ec27d1d1846d633751c6",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -24983,6 +24977,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Verified Entitlement Token:"
+    },
+    {
+      "id": "f1dd95daa0e6da149aed",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "(up to 30,000-char prompt output in Free; 100,000 in Pro)"
     },
     {
       "id": "f37e8fbff84821729763",

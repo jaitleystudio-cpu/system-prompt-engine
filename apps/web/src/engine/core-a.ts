@@ -47,7 +47,7 @@ export interface CoreAGenerationRequest {
   userRequest: string;
   target?: string;
   category?: string;
-  depthTier?: "free" | "normal" | "mid" | "deep";
+  depthTier?: "free" | "normal" | "mid" | "deep" | "ultra" | "massive" | "titan";
   explicitConstraints?: string[];
   intentConfirmed?: Array<{ id: string; text: string }>;
   intentConflicts?: Array<{ id: string; text: string }>;
@@ -266,9 +266,24 @@ export function synthesizeTaskSpecificPrompt(
     `# Acceptance Checks & Verification Battery\n${checks.join("\n")}`
   );
 
-  if (depthTier === "deep") {
+  if (depthTier === "deep" || depthTier === "ultra" || depthTier === "massive" || depthTier === "titan") {
     sections.push(
       `# Deep Architecture & Comprehensive Edge Cases\n- Exhaustive failure mode analysis and formal error state recovery.\n- Explicit concurrency, memory lifecycle, and deterministic garbage collection guarantees.`
+    );
+  }
+  if (depthTier === "ultra" || depthTier === "massive" || depthTier === "titan") {
+    sections.push(
+      `# Enterprise Scalability & CQRS Topology\n- Command-Query Responsibility Segregation with idempotent event streaming.\n- Formal verification harness and cryptographic receipt validation.`
+    );
+  }
+  if (depthTier === "massive" || depthTier === "titan") {
+    sections.push(
+      `# Neural Acceleration & Universal Runtime Matrix\n- WebGPU compute shaders and Apple Neural Engine pipeline integration.\n- Autonomic self-healing runbooks and chaos engineering resilience.`
+    );
+  }
+  if (depthTier === "titan") {
+    sections.push(
+      `# Grandmaster Multi-Agent Swarm Orchestration\n- Byzantine fault tolerant voting mechanisms with consensus arbiter.\n- Extreme high-availability active-active multi-cloud replication and automated rollback.`
     );
   }
 

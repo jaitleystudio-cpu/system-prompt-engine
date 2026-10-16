@@ -253,7 +253,7 @@ export function Pricing({
           <ul className="spe-pricing-features" aria-label="Free Community Features">
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>100,000+ Character (1 Lakh+) Context Input</strong> (up to 5,000-char prompt output in Free; 30,000+ in Pro)</span>
+              <span><strong>100,000+ Character (1 Lakh+) Context Input</strong> (up to 30,000-char prompt output in Free; 100,000 in Pro)</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>

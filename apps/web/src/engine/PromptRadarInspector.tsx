@@ -421,9 +421,12 @@ ${promptText}
           <span style={{ fontSize: "0.68rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>DEPTH:</span>
           {(
             [
-              { id: "normal", label: "🎯 Normal (5,555c)", badge: "5,555" },
-              { id: "mid", label: "🚀 Mid (15kc)", badge: "15,000" },
-              { id: "deep", label: "🌌 Deep (30kc)", badge: "30,000" },
+              { id: "normal", label: "Standard (5.5k)", badge: "5,555" },
+              { id: "mid", label: "Mid (15k)", badge: "15,000" },
+              { id: "deep", label: "Deep (30k) · Free Default", badge: "30,000" },
+              { id: "ultra", label: "Ultra (50k) · Pro", badge: "50,000" },
+              { id: "massive", label: "Massive (75k) · Pro", badge: "75,000" },
+              { id: "titan", label: "Titan (100k) · Pro", badge: "100,000" },
             ] as const
           ).map((tier) => (
             <button
@@ -535,7 +538,19 @@ ${promptText}
             </div>
             <div style={{ padding: "0.6rem", borderRadius: "6px", background: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
               <div style={{ fontSize: "0.65rem", color: "#64748b" }}>
-                Characters ({activeDepthTier === "normal" ? "5,555" : activeDepthTier === "mid" ? "15,000" : "30,000"} target)
+                Characters ({
+                  activeDepthTier === "normal"
+                    ? "5,555"
+                    : activeDepthTier === "mid"
+                      ? "15,000"
+                      : activeDepthTier === "deep"
+                        ? "30,000"
+                        : activeDepthTier === "ultra"
+                          ? "50,000"
+                          : activeDepthTier === "massive"
+                            ? "75,000"
+                            : "100,000"
+                } target)
               </div>
               <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff" }}>{metrics.charCount.toLocaleString()}</div>
             </div>

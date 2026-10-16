@@ -14,7 +14,7 @@ import {
   type DualPromptBundle,
 } from "../../../apps/web/src/engine/multilingualDualPrompt.ts";
 
-export const FREE_TIER_MAX_OUTPUT_CHARS = 15000;
+export const FREE_TIER_MAX_OUTPUT_CHARS = 30000;
 
 export interface CompilePromptRequest {
   goal: string;

@@ -8,5 +8,5 @@ export {
   enforceTierOutputLimit,
   compilePromptWithTierEnforcement,
 } from "./promptSynthesizer.mjs";
-export type DepthTier = "free" | "normal" | "mid" | "deep";
-export const DEFAULT_DEPTH_TIER: DepthTier = "normal";
+export type DepthTier = "free" | "normal" | "mid" | "deep" | "ultra" | "massive" | "titan";
+export const DEFAULT_DEPTH_TIER: DepthTier = "deep";

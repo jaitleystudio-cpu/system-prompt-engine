@@ -98,37 +98,56 @@ console.log("\n[3/4] Verifying all 4 targets (any, claude, gemini, local) across
 }
 
 // 4. Test depth tiers & Free tier limit
-console.log("\n[4/4] Verifying depth tiers (normal, mid, deep) & Free tier limit...");
+console.log("\n[4/4] Verifying depth tiers (normal, mid, deep, ultra, massive, titan) & Free/Pro tier limits...");
 {
   const longBrief = `## Preferences\nPrefer high density\n\n## Objective\n` + "Deep scalable architecture. ".repeat(200);
 
-  // Free tier
+  // Free tier ceiling check
+  assert.equal(FREE_TIER_MAX_OUTPUT_CHARS, 30000, "FREE_TIER_MAX_OUTPUT_CHARS must be 30,000");
+
   const freeOut = synthesizeSystemPrompt(longBrief, { target: "any", depthTier: "free", subscriptionTier: "free" });
   assert.ok(freeOut.length <= FREE_TIER_MAX_OUTPUT_CHARS, `Free tier must be <= ${FREE_TIER_MAX_OUTPUT_CHARS}, got ${freeOut.length}`);
   assert.ok(freeOut.includes("# Final Verification Gate"), "Free tier must preserve Final Verification Gate");
   assert.ok(freeOut.includes("otherwise proceed and label necessary assumptions."));
 
-  // Normal tier
+  // Normal tier (5,555 chars)
   const normalOut = synthesizeSystemPrompt(longBrief, { target: "any", depthTier: "normal" });
   assert.equal(normalOut.length, 5555);
   assert.ok(normalOut.includes("otherwise proceed and label necessary assumptions."));
 
-  // Mid tier
+  // Mid tier (15,000 chars)
   const midOut = synthesizeSystemPrompt(longBrief, { target: "any", depthTier: "mid" });
   assert.equal(midOut.length, 15000);
   assert.ok(midOut.includes("otherwise proceed and label necessary assumptions."));
 
-  // Deep tier
+  // Deep tier (30,000 chars - Free Default)
   const deepOut = synthesizeSystemPrompt(longBrief, { target: "any", depthTier: "deep" });
   assert.equal(deepOut.length, 30000);
   assert.ok(deepOut.includes("otherwise proceed and label necessary assumptions."));
 
-  // Tier enforcement with compilePromptWithTierEnforcement
-  const enforcedFree = compilePromptWithTierEnforcement(longBrief, { subscriptionTier: "free" });
-  assert.ok(enforcedFree.length <= FREE_TIER_MAX_OUTPUT_CHARS);
-  assert.ok(enforcedFree.includes("# Final Verification Gate"));
+  // Ultra tier (50,000 chars - Pro)
+  const ultraOut = synthesizeSystemPrompt(longBrief, { target: "any", depthTier: "ultra" });
+  assert.equal(ultraOut.length, 50000);
+  assert.ok(ultraOut.includes("otherwise proceed and label necessary assumptions."));
 
-  console.log("  ✓ Depth tiers (5,555, 15,000, 30,000) and Free tier (<= 5,000) verified with 100% intact gates.");
+  // Massive tier (75,000 chars - Pro)
+  const massiveOut = synthesizeSystemPrompt(longBrief, { target: "any", depthTier: "massive" });
+  assert.equal(massiveOut.length, 75000);
+  assert.ok(massiveOut.includes("otherwise proceed and label necessary assumptions."));
+
+  // Titan tier (100,000 chars - Pro)
+  const titanOut = synthesizeSystemPrompt(longBrief, { target: "any", depthTier: "titan" });
+  assert.equal(titanOut.length, 100000);
+  assert.ok(titanOut.includes("otherwise proceed and label necessary assumptions."));
+
+  // Tier enforcement with compilePromptWithTierEnforcement:
+  // Unauthenticated/Free caller requesting titan (100k) is clamped to FREE_TIER_MAX_OUTPUT_CHARS (30,000)
+  const enforcedFree = compilePromptWithTierEnforcement(longBrief, { subscriptionTier: "free", depthTier: "titan" });
+  assert.ok(enforcedFree.length <= FREE_TIER_MAX_OUTPUT_CHARS, `Enforced free tier output must be <= 30000, got ${enforcedFree.length}`);
+  assert.ok(enforcedFree.includes("# Final Verification Gate"), "Enforced free tier must preserve Final Verification Gate");
+  assert.ok(enforcedFree.includes("otherwise proceed and label necessary assumptions."));
+
+  console.log("  ✓ All 6 depth tiers (5,555, 15k, 30k, 50k, 75k, 100k) and Free tier ceiling (<= 30,000) verified with 100% intact gates.");
 }
 
 console.log("\n==================================================================");

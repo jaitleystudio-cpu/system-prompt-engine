@@ -64,7 +64,7 @@ const CHAMBERS: CapabilityChamber[] = [
     slabA: "YOUR IDEA.",
     slabB: "ZERO DRIFT.",
     snippetHeader: "SPE-STUDIO // 60_RESEARCH_PROMPTS_40_SKILLS",
-    snippetCode: "Context input: 100,000+ chars (1 Lakh+)\nPrompt output: 5,000 Free / 30,000+ Pro\nProjected retry savings: ~42% (est.)",
+    snippetCode: "Context input: 100,000+ chars (1 Lakh+)\nPrompt output: 30,000 Free / 100,000 Pro\nProjected retry savings: ~42% (est.)",
   },
   {
     id: "attack-gym",
@@ -208,7 +208,7 @@ const COMMAND_CAPSULES: CommandCapsule[] = [
     name: "100,000+ Char Input",
     badge: "1 LAKH+ INPUT",
     tier: "High Capacity",
-    desc: "Paste up to 100,000+ characters of context input locally (up to 5,000-char prompt output in Free; 30,000+ in Pro).",
+    desc: "Paste up to 100,000+ characters of context input locally (up to 30,000-char prompt output in Free; 100,000 in Pro).",
   },
   {
     id: "capsule-6",
