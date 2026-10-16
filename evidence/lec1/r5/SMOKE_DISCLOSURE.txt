@@ -1,0 +1,5 @@
+LEC-1 R5 smoke disclosure (pre-code-commit, NOT used to change contract).
+2026-10-16 ~13:25 IST, host Prawins-Mac-mini.local.
+5-draw throughput smoke: ~1.3s for 5 draws → ~4–5 min expected for 1000.
+Smoke verdict snapshot (n=5, not the registered experiment): cif×oracle≈0.42, lf≈0.85,
+H3 REJECTED on this tiny sample — consistent with preregistered prior; contract unchanged.
