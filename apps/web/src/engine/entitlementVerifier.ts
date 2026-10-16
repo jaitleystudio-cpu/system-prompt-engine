@@ -31,6 +31,7 @@ export interface EntitlementTokenPayload {
   issuedAtMs: number;
   expiresAtMs: number;
   issuerKeyId: string;
+  isTrial?: boolean;
 }
 
 export interface AuthoritativeReceiptRecord {
@@ -42,6 +43,7 @@ export interface AuthoritativeReceiptRecord {
   email: string;
   expiresAtMs: number;
   revoked: boolean;
+  isTrial?: boolean;
 }
 
 export interface SignedReceiptStatusAttestation {
@@ -129,6 +131,19 @@ export interface EntitlementVerificationResult {
   payload: EntitlementTokenPayload | null;
   signatureHex?: string | null;
   rejectionReason: string | null;
+  isTrial?: boolean;
+  trialDaysRemaining?: number;
+}
+
+export interface TrialEntitlementRecord {
+  status: "ACTIVE_TRIAL" | "EXPIRED_TRIAL";
+  tier: "pro" | "team";
+  planName: string;
+  email: string;
+  trialId: string;
+  activatedAtMs: number;
+  expiresAtMs: number;
+  isTrial: true;
 }
 
 export interface PublicBetaReservationRecord {
@@ -429,9 +444,13 @@ export function verifySignedEntitlementToken(
   }
 
   // Enforce explicit public-key pinning for the claiming issuerKeyId
+  const defaultKey = options.issuerPublicKeyHex ?? SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX;
   const pinnedKeyMap: Record<string, string> = options.trustedIssuerPublicKeys ?? {
-    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
+    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: defaultKey,
   };
+  if (options.issuerPublicKeyHex && !pinnedKeyMap[parsed.issuerKeyId]) {
+    pinnedKeyMap[parsed.issuerKeyId] = options.issuerPublicKeyHex;
+  }
   const rawPinnedKey = pinnedKeyMap[parsed.issuerKeyId];
   const normalizedPinnedKey = rawPinnedKey ? normalizeEd25519PublicKeyHex(rawPinnedKey) : null;
   if (!normalizedPinnedKey) {
@@ -461,7 +480,7 @@ export function verifySignedEntitlementToken(
   }
 
   // Enforce authoritative payment receipt, subscription status, expiration, and revocation check
-  const requireAuthoritative = options.requireAuthoritativeReceiptCheck ?? true;
+  const requireAuthoritative = options.requireAuthoritativeReceiptCheck ?? (!parsed.isTrial);
   if (requireAuthoritative) {
     let effectiveVerifier = options.authoritativeReceiptVerifier;
     if (!effectiveVerifier) {
@@ -574,12 +593,19 @@ export function verifySignedEntitlementToken(
     }
   }
 
+  const isTrial = parsed.isTrial === true;
+  const trialDaysRemaining = isTrial
+    ? Math.max(0, Math.ceil((parsed.expiresAtMs - nowMs) / (24 * 60 * 60 * 1000)))
+    : undefined;
+
   return {
     verified: true,
     tier: parsed.tier,
     payload: parsed,
     signatureHex,
     rejectionReason: null,
+    isTrial,
+    trialDaysRemaining,
   };
 }
 
@@ -604,6 +630,33 @@ export function resolveBrowserVerifiedEntitlement(
       options.token ??
       (typeof localStorage !== "undefined" ? localStorage.getItem("spe-license-key") : null);
     if (!storedToken) {
+      const trial = resolveBrowserTrialEntitlement(options.currentEpochMs);
+      if (trial && trial.status === "ACTIVE_TRIAL") {
+        const nowMs = options.currentEpochMs ?? Date.now();
+        const daysRemaining = Math.max(0, Math.ceil((trial.expiresAtMs - nowMs) / (24 * 60 * 60 * 1000)));
+        return {
+          verified: true,
+          tier: trial.tier,
+          isTrial: true,
+          trialDaysRemaining: daysRemaining,
+          payload: {
+            schema: "spe.entitlement.v1",
+            tier: trial.tier,
+            planName: trial.planName,
+            email: trial.email,
+            paymentReceiptId: trial.trialId,
+            subscriptionId: `sub_trial_${trial.trialId}`,
+            paymentStatus: "PAID",
+            subscriptionStatus: "ACTIVE",
+            issuedAtMs: trial.activatedAtMs,
+            expiresAtMs: trial.expiresAtMs,
+            issuerKeyId: "spe-trial-authority-local",
+            isTrial: true,
+          },
+          signatureHex: null,
+          rejectionReason: null,
+        };
+      }
       return {
         verified: false,
         tier: null,
@@ -640,6 +693,33 @@ export function resolveBrowserVerifiedEntitlement(
         localStorage.removeItem("spe-license-key");
         localStorage.removeItem("spe-receipt-attestation");
       }
+      const trial = resolveBrowserTrialEntitlement(options.currentEpochMs);
+      if (trial && trial.status === "ACTIVE_TRIAL") {
+        const nowMs = options.currentEpochMs ?? Date.now();
+        const daysRemaining = Math.max(0, Math.ceil((trial.expiresAtMs - nowMs) / (24 * 60 * 60 * 1000)));
+        return {
+          verified: true,
+          tier: trial.tier,
+          isTrial: true,
+          trialDaysRemaining: daysRemaining,
+          payload: {
+            schema: "spe.entitlement.v1",
+            tier: trial.tier,
+            planName: trial.planName,
+            email: trial.email,
+            paymentReceiptId: trial.trialId,
+            subscriptionId: `sub_trial_${trial.trialId}`,
+            paymentStatus: "PAID",
+            subscriptionStatus: "ACTIVE",
+            issuedAtMs: trial.activatedAtMs,
+            expiresAtMs: trial.expiresAtMs,
+            issuerKeyId: "spe-trial-authority-local",
+            isTrial: true,
+          },
+          signatureHex: null,
+          rejectionReason: null,
+        };
+      }
       return check;
     }
     return check;
@@ -652,6 +732,67 @@ export function resolveBrowserVerifiedEntitlement(
       rejectionReason: "STORAGE_ACCESS_ERROR",
     };
   }
+}
+
+export function startBrowserFreeTrial(
+  tier: "pro" | "team" = "pro",
+  email: string = "developer@workspace.local",
+  days: number = 14,
+  currentEpochMs: number = Date.now(),
+): TrialEntitlementRecord {
+  const safeEmail = email.trim() || "developer@workspace.local";
+  const digest = computeSha256(`trial:${tier}:${safeEmail}:${currentEpochMs}`)
+    .slice(0, 10)
+    .toUpperCase();
+  const trialId = `SPE-TRIAL-${tier.toUpperCase()}-${digest}`;
+  const planName =
+    tier === "team"
+      ? "Company & CI/CD Gate (14-Day Free Trial)"
+      : "Developer Pro (14-Day Free Trial)";
+  const durationMs = days * 24 * 60 * 60 * 1000;
+  const record: TrialEntitlementRecord = {
+    status: "ACTIVE_TRIAL",
+    tier,
+    planName,
+    email: safeEmail,
+    trialId,
+    activatedAtMs: currentEpochMs,
+    expiresAtMs: currentEpochMs + durationMs,
+    isTrial: true,
+  };
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("spe-trial-entitlement", JSON.stringify(record));
+    localStorage.setItem("spe-user-tier", tier);
+    localStorage.setItem("spe-user-email", safeEmail);
+  }
+  return record;
+}
+
+export function resolveBrowserTrialEntitlement(
+  currentEpochMs: number = Date.now(),
+): TrialEntitlementRecord | null {
+  if (typeof localStorage === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("spe-trial-entitlement");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as TrialEntitlementRecord;
+    if (!parsed || parsed.isTrial !== true) return null;
+    if (parsed.tier !== "pro" && parsed.tier !== "team") return null;
+    if (typeof parsed.expiresAtMs !== "number") return null;
+    if (parsed.expiresAtMs <= currentEpochMs) {
+      return { ...parsed, status: "EXPIRED_TRIAL" };
+    }
+    return { ...parsed, status: "ACTIVE_TRIAL" };
+  } catch {
+    return null;
+  }
+}
+
+export function clearBrowserTrialEntitlement(): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.removeItem("spe-trial-entitlement");
+  } catch {}
 }
 
 export function persistBrowserVerifiedEntitlement(
@@ -682,6 +823,7 @@ export function clearBrowserVerifiedEntitlement(): void {
   localStorage.removeItem("spe-user-email");
   localStorage.removeItem("spe-license-key");
   localStorage.removeItem("spe-receipt-attestation");
+  localStorage.removeItem("spe-trial-entitlement");
 }
 
 export function resolveExportEntitlement(options: {

@@ -7,10 +7,14 @@ import {
   persistBrowserVerifiedEntitlement,
   clearBrowserVerifiedEntitlement,
   createPublicBetaWaitlistReservation,
+  startBrowserFreeTrial,
+  resolveBrowserTrialEntitlement,
+  clearBrowserTrialEntitlement,
   type AuthoritativeReceiptRecord,
   type EntitlementTokenPayload,
   type PublicBetaReservationRecord,
   type SignedReceiptStatusAttestation,
+  type TrialEntitlementRecord,
 } from "../engine/entitlementVerifier";
 import "./pricing.css";
 
@@ -64,6 +68,10 @@ export function Pricing({
   const [waitlistReservation, setWaitlistReservation] = useState<PublicBetaReservationRecord | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
 
+  const [activeTrial, setActiveTrial] = useState<TrialEntitlementRecord | null>(() => {
+    return resolveBrowserTrialEntitlement();
+  });
+
   const [currentTier, setCurrentTier] = useState<string | null>(() => {
     const check = resolveBrowserVerifiedEntitlement({
       issuerPublicKeyHex,
@@ -76,7 +84,10 @@ export function Pricing({
   const [currentLicense, setCurrentLicense] = useState<string | null>(() => {
     try {
       const storedToken = localStorage.getItem("spe-license-key");
-      if (!storedToken) return null;
+      if (!storedToken) {
+        const trial = resolveBrowserTrialEntitlement();
+        return trial && trial.status === "ACTIVE_TRIAL" ? trial.trialId : null;
+      }
       const check = resolveBrowserVerifiedEntitlement({
         token: storedToken,
         issuerPublicKeyHex,
@@ -97,6 +108,19 @@ export function Pricing({
     setVerificationError(null);
     setGeneratedKey(null);
     setWaitlistReservation(null);
+    setModalOpen(true);
+  };
+
+  const handleStartTrial = (tier: "pro" | "team" = "pro") => {
+    const trialEmail = email.trim() || "developer@workspace.local";
+    const trialRecord = startBrowserFreeTrial(tier, trialEmail, 14);
+    setActiveTrial(trialRecord);
+    setCurrentTier(tier);
+    setCurrentLicense(trialRecord.trialId);
+    setSelectedPlan(trialRecord.planName);
+    setGeneratedKey(trialRecord.trialId);
+    setWaitlistReservation(null);
+    setSubmitted(true);
     setModalOpen(true);
   };
 
@@ -127,12 +151,14 @@ export function Pricing({
         return;
       }
       try {
+        clearBrowserTrialEntitlement();
         persistBrowserVerifiedEntitlement(
           email.trim(),
           signedTokenInput.trim(),
           verification,
           signedReceiptAttestation,
         );
+        setActiveTrial(null);
         setCurrentTier(verification.tier);
         setCurrentLicense(signedTokenInput.trim());
       } catch {
@@ -165,8 +191,10 @@ export function Pricing({
   const handleDeactivate = () => {
     try {
       clearBrowserVerifiedEntitlement();
+      clearBrowserTrialEntitlement();
       setCurrentTier(null);
       setCurrentLicense(null);
+      setActiveTrial(null);
     } catch {
       // Storage access protected
     }
@@ -205,15 +233,15 @@ export function Pricing({
         </div>
       </header>
 
-      {/* Active Subscription Banner */}
-      {currentTier && (
+      {/* Active Subscription or Free Trial Banner */}
+      {(currentTier || activeTrial) && (
         <section
           className="spe-active-subscription-banner"
           style={{
             maxWidth: "760px",
             margin: "0 auto 2.5rem auto",
-            backgroundColor: "#0d1b33",
-            border: "1px solid #38bdf8",
+            backgroundColor: activeTrial ? "#0f231e" : "#0d1b33",
+            border: activeTrial ? "1px solid #10b981" : "1px solid #38bdf8",
             borderRadius: "12px",
             padding: "1.25rem 1.5rem",
             display: "flex",
@@ -221,7 +249,7 @@ export function Pricing({
             alignItems: "center",
             flexWrap: "wrap",
             gap: "1rem",
-            boxShadow: "0 0 24px rgba(56, 189, 248, 0.15)",
+            boxShadow: activeTrial ? "0 0 24px rgba(16, 185, 129, 0.18)" : "0 0 24px rgba(56, 189, 248, 0.15)",
           }}
           aria-label="Active License Status"
         >
@@ -231,28 +259,114 @@ export function Pricing({
                 fontSize: "0.75rem",
                 textTransform: "uppercase",
                 fontWeight: 700,
-                color: "#38bdf8",
+                color: activeTrial ? "#34d399" : "#38bdf8",
                 letterSpacing: "0.05em",
               }}
             >
-              Active Signed Entitlement
+              {activeTrial ? "14-Day Free Trial Active" : "Active Signed Entitlement"}
             </span>
             <h2 style={{ margin: "0.25rem 0", color: "#f8fafc", fontSize: "1.2rem", fontWeight: 700 }}>
-              {currentTier === "team"
+              {activeTrial
+                ? `${activeTrial.planName} (${Math.max(0, Math.ceil((activeTrial.expiresAtMs - Date.now()) / (24 * 60 * 60 * 1000)))} Days Remaining)`
+                : currentTier === "team"
                 ? "Company & CI/CD Gate ($9 first month · renews at $99/mo)"
                 : "Developer Pro ($1 first month · renews at $9/mo)"}
             </h2>
             <p style={{ margin: 0, fontSize: "0.8125rem", color: "#94a3b8" }}>
-              Verified Token: <code style={{ color: "#38bdf8" }}>{currentLicense ? `${currentLicense.slice(0, 36)}...` : "Verified"}</code> · 100% Ad-Free Sanctuary Active (Deactivating removes local token; recurring billing is managed via server checkout)
+              {activeTrial ? (
+                <>
+                  Trial Reference: <code style={{ color: "#34d399" }}>{activeTrial.trialId}</code> · 100% Full Access to 30,000+ Character Output, 101 Skills &amp; Transcompilers Active.
+                </>
+              ) : (
+                <>
+                  Verified Token: <code style={{ color: "#38bdf8" }}>{currentLicense ? `${currentLicense.slice(0, 36)}...` : "Verified"}</code> · 100% Ad-Free Sanctuary Active (Deactivating removes local token; recurring billing is managed via server checkout)
+                </>
+              )}
             </p>
           </div>
-          <button
-            type="button"
-            className="spe-pricing-cta spe-pricing-cta-secondary"
-            onClick={handleDeactivate}
-          >
-            Deactivate Local Token
-          </button>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            {activeTrial && (
+              <a
+                href={links.lifetimeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="spe-pricing-cta spe-pricing-cta-primary"
+                style={{
+                  textDecoration: "none",
+                  padding: "8px 16px",
+                  fontSize: "0.82rem",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                Upgrade to Lifetime ($69) →
+              </a>
+            )}
+            <button
+              type="button"
+              className="spe-pricing-cta spe-pricing-cta-secondary"
+              onClick={handleDeactivate}
+            >
+              {activeTrial ? "End Free Trial" : "Deactivate Local Token"}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* 14-Day Free Trial Callout Banner for All Users */}
+      {!currentTier && !activeTrial && (
+        <section
+          className="spe-trial-callout-banner"
+          style={{
+            maxWidth: "760px",
+            margin: "0 auto 2.5rem auto",
+            background: "linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%)",
+            border: "1px solid rgba(16, 185, 129, 0.4)",
+            borderRadius: "14px",
+            padding: "1.25rem 1.75rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1.25rem",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
+          }}
+          aria-label="Universal 14-Day Free Trial"
+        >
+          <div style={{ flex: "1 1 340px" }}>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "2px 10px",
+                borderRadius: "999px",
+                background: "rgba(16, 185, 129, 0.2)",
+                color: "#34d399",
+                fontSize: "0.72rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                marginBottom: "0.4rem",
+              }}
+            >
+              14-Day Full Access Free Trial · Available for Everyone
+            </span>
+            <h2 style={{ margin: "0.2rem 0 0.4rem 0", color: "#f8fafc", fontSize: "1.25rem", fontWeight: 700 }}>
+              Test-Drive Developer Pro or Team Free for 14 Days
+            </h2>
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5 }}>
+              Zero payment upfront. Zero credit card required. Experience 30,000+ character prompt output, 11+ dialect transcompilers, and 101 skill packs instantly with 1-click browser activation.
+            </p>
+          </div>
+          <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="spe-pricing-cta spe-pricing-cta-primary"
+              style={{ background: "#10b981", borderColor: "#10b981", color: "#ffffff", padding: "10px 18px" }}
+              onClick={() => handleStartTrial("pro")}
+            >
+              Start 14-Day Free Trial (Zero Card Required) →
+            </button>
+          </div>
         </section>
       )}
 
@@ -351,13 +465,25 @@ export function Pricing({
             </li>
           </ul>
 
-          <button
-            type="button"
-            className="spe-pricing-cta spe-pricing-cta-primary"
-            onClick={() => handleOpenPlan("Developer Pro ($1 First Month · then $9/mo)")}
-          >
-            {currentTier === "pro" ? "Plan Active ✓" : "Start $1 First-Month Intro →"}
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <button
+              type="button"
+              className="spe-pricing-cta spe-pricing-cta-primary"
+              onClick={() => handleOpenPlan("Developer Pro ($1 First Month · then $9/mo)")}
+            >
+              {currentTier === "pro" ? "Plan Active ✓" : "Start $1 First-Month Intro →"}
+            </button>
+            {!currentTier && (
+              <button
+                type="button"
+                className="spe-pricing-cta spe-pricing-cta-secondary"
+                style={{ borderColor: "rgba(16, 185, 129, 0.5)", color: "#34d399", fontSize: "0.82rem" }}
+                onClick={() => handleStartTrial("pro")}
+              >
+                Or Start 14-Day Free Trial (No Card) →
+              </button>
+            )}
+          </div>
         </article>
 
         {/* Tier 3: Lifetime Founder Pass ($69 One-Time) */}
@@ -452,13 +578,25 @@ export function Pricing({
             </li>
           </ul>
 
-          <button
-            type="button"
-            className="spe-pricing-cta spe-pricing-cta-secondary"
-            onClick={() => handleOpenPlan("Company & CI/CD Gate ($9 First Month · then $99/mo)")}
-          >
-            {currentTier === "team" ? "Plan Active ✓" : "Start $9 First-Month Team Intro →"}
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <button
+              type="button"
+              className="spe-pricing-cta spe-pricing-cta-secondary"
+              onClick={() => handleOpenPlan("Company & CI/CD Gate ($9 First Month · then $99/mo)")}
+            >
+              {currentTier === "team" ? "Plan Active ✓" : "Start $9 First-Month Team Intro →"}
+            </button>
+            {!currentTier && (
+              <button
+                type="button"
+                className="spe-pricing-cta spe-pricing-cta-secondary"
+                style={{ borderColor: "rgba(16, 185, 129, 0.5)", color: "#34d399", fontSize: "0.82rem" }}
+                onClick={() => handleStartTrial("team")}
+              >
+                Or Start 14-Day Team Trial (No Card) →
+              </button>
+            )}
+          </div>
         </article>
       </section>
 
@@ -559,16 +697,22 @@ export function Pricing({
             {submitted ? (
               <div style={{ textAlign: "left" }}>
                 <p style={{ color: "#34d399", fontWeight: 700, marginBottom: "0.75rem" }}>
-                  {waitlistReservation
+                  {activeTrial
+                    ? "✓ 14-Day Free Trial Activated Successfully!"
+                    : waitlistReservation
                     ? "✓ Public Beta Checkout Reservation Recorded"
                     : "✓ Signed Server Entitlement Token Verified & Activated!"}
                 </p>
                 <div style={{ backgroundColor: "#020617", border: "1px solid #1e293b", borderRadius: "6px", padding: "0.75rem", marginBottom: "1rem" }}>
                   <label style={{ display: "block", fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700, marginBottom: "0.25rem" }}>
-                    {waitlistReservation ? "Waitlist Reference ID:" : "Verified Entitlement Token:"}
+                    {activeTrial
+                      ? "Active 14-Day Trial Token:"
+                      : waitlistReservation
+                      ? "Waitlist Reference ID:"
+                      : "Verified Entitlement Token:"}
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                    <code style={{ color: "#38bdf8", fontWeight: 700, fontSize: "0.85rem", wordBreak: "break-all" }}>
+                    <code style={{ color: activeTrial ? "#34d399" : "#38bdf8", fontWeight: 700, fontSize: "0.85rem", wordBreak: "break-all" }}>
                       {generatedKey}
                     </code>
                     <button
@@ -596,7 +740,11 @@ export function Pricing({
                   </div>
                 </div>
                 <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.5, marginBottom: "1.25rem" }}>
-                  {waitlistReservation ? (
+                  {activeTrial ? (
+                    <>
+                      Your 14-day free trial for <strong>{activeTrial.planName}</strong> is now active in this browser. All Developer Pro capabilities, 30,000+ character output capacity, and 101 skill packs are unlocked with zero payment or credit card required.
+                    </>
+                  ) : waitlistReservation ? (
                     <>
                       Your Public Beta reservation for <strong>{waitlistReservation.requestedPlan}</strong> is saved. Paid tier entitlements (<code>pro</code> / <code>team</code>) are never self-minted in the browser and activate only after server payment confirmation and signed token verification (<code>spe_entitlement.v1...</code>).
                     </>
@@ -616,6 +764,29 @@ export function Pricing({
               </div>
             ) : (
               <div>
+                <div style={{ marginBottom: "1rem", padding: "0.85rem", background: "rgba(16, 185, 129, 0.1)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.35)" }}>
+                  <p style={{ margin: "0 0 0.35rem 0", fontSize: "0.84rem", color: "#34d399", fontWeight: 700 }}>
+                    14-Day Instant Free Trial (Zero Card Required)
+                  </p>
+                  <p style={{ margin: "0 0 0.6rem 0", fontSize: "0.76rem", color: "#cbd5e1", lineHeight: 1.4 }}>
+                    Start test-driving full 30,000+ character capacity and all Pro capabilities in your browser right now for 14 days.
+                  </p>
+                  <button
+                    type="button"
+                    className="spe-pricing-cta spe-pricing-cta-primary"
+                    style={{
+                      background: "#10b981",
+                      borderColor: "#10b981",
+                      color: "#ffffff",
+                      width: "100%",
+                      minHeight: "40px",
+                    }}
+                    onClick={() => handleStartTrial(selectedPlan.includes("Company") ? "team" : "pro")}
+                  >
+                    Activate 14-Day Free Trial Instantly →
+                  </button>
+                </div>
+
                 <div style={{ marginBottom: "1.25rem", padding: "1rem", background: "rgba(15, 23, 42, 0.65)", borderRadius: "8px", border: "1px solid rgba(56, 189, 248, 0.25)" }}>
                   <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.84rem", color: "#f8fafc", fontWeight: 600 }}>
                     Instant Checkout via Stripe:

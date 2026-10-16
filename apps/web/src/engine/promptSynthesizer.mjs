@@ -1609,6 +1609,16 @@ export function isVerifiedPaidEntitlementResult(
   if (typeof entitlement !== "object") return false;
   if (entitlement.verified !== true) return false;
   if (entitlement.tier !== "pro" && entitlement.tier !== "team") return false;
+
+  // Active Trial Pass handling:
+  if (entitlement.isTrial === true || entitlement.payload?.isTrial === true) {
+    const p = entitlement.payload;
+    if (p && typeof p.expiresAtMs === "number" && p.expiresAtMs > effectiveEpochMs) {
+      return true;
+    }
+    return false;
+  }
+
   if (
     typeof entitlement.signatureHex !== "string" ||
     !/^[0-9a-fA-F]{128}$/.test(entitlement.signatureHex)

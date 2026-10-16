@@ -28,6 +28,7 @@
     "test:prompt-studio": "node scripts/test-spe-prompt-performance-studio.mjs",
     "test:post-prompt": "node scripts/test-post-prompt-guided-journey.mjs",
     "test:user-reqs": "node scripts/test-user-confirmed-requirements.mjs",
+    "test:trial": "node --experimental-strip-types scripts/test-universal-free-trial.mjs",
     "test:workflows-audit": "node --experimental-strip-types scripts/test-client-workflows-audit.mjs",
     "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",
     "test:capability-host": "node scripts/test-capability-host.mjs",

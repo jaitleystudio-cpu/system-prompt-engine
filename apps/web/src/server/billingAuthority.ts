@@ -470,6 +470,63 @@ export class AuthoritativeBillingAuthority {
   }
 
   /**
+   * Registers and issues an Ed25519-signed trial entitlement token without requiring a payment webhook.
+   */
+  issueSignedTrialEntitlementToken(
+    tier: "pro" | "team" = "pro",
+    email: string = "trial@developer.spe",
+    trialDays: number = 14,
+    currentEpochMs: number = Date.now(),
+  ): string {
+    const trialId = `SPE-TRIAL-${tier.toUpperCase()}-${randomBytes(6).toString("hex").toUpperCase()}`;
+    const expiresAtMs = currentEpochMs + trialDays * 24 * 60 * 60 * 1000;
+    const planName =
+      tier === "team"
+        ? "Company & CI/CD Gate (14-Day Free Trial)"
+        : "Developer Pro (14-Day Free Trial)";
+
+    const record: AuthoritativeLedgerRecord = {
+      paymentReceiptId: trialId,
+      subscriptionId: `sub_trial_${trialId}`,
+      planName,
+      amountCents: 0,
+      issuedAtMs: currentEpochMs,
+      expiresAtMs,
+      paid: true,
+      exists: true,
+      paymentStatus: "PAID",
+      subscriptionStatus: "ACTIVE",
+      tier,
+      email: email.trim(),
+      revoked: false,
+      isTrial: true,
+    };
+
+    this.#receiptLedger.set(trialId, record);
+    this.#saveLedger();
+
+    const payload: EntitlementTokenPayload = {
+      schema: "spe.entitlement.v1",
+      tier,
+      planName,
+      email: email.trim(),
+      paymentReceiptId: trialId,
+      subscriptionId: record.subscriptionId,
+      paymentStatus: "PAID",
+      subscriptionStatus: "ACTIVE",
+      issuedAtMs: currentEpochMs,
+      expiresAtMs,
+      issuerKeyId: this.issuerKeyId,
+      isTrial: true,
+    };
+
+    const canonical = canonicalizeJson(payload);
+    const payloadHex = utf8ToHex(canonical);
+    const sigHex = sign(null, Buffer.from(canonical, "utf8"), this.#privateKey).toString("hex");
+    return `spe_entitlement.v1.${payloadHex}.${sigHex}`;
+  }
+
+  /**
    * Authoritative server-side lifecycle mutators.
    */
   cancelSubscription(paymentReceiptId: string): void {
