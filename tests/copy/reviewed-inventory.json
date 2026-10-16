@@ -37793,6 +37793,48 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Building your prompt…"
+    },
+    {
+      "id": "55a641aca1785c0affab",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google (Gemini 2.5 Flash)"
+    },
+    {
+      "id": "57aa3abc524e1d1bd3ab",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-4-5-sonnet"
+    },
+    {
+      "id": "6e3a64edc61fe18a6732",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI (GPT-4o / GPT-5)"
+    },
+    {
+      "id": "b439d341bac0b543788a",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "llama4"
+    },
+    {
+      "id": "dd04e500d827a1a8f8f6",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic (Claude 4.5 Sonnet)"
+    },
+    {
+      "id": "e8602e814f7a9bda7842",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local Ollama (Llama 4 / 3.3)"
+    },
+    {
+      "id": "f5158c631464e1c76e85",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     }
   ]
 }

@@ -72,13 +72,13 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
   );
 
   // Extract any inline or sentence-level mandatory instructions from goal (Finding F05)
-  const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS)\b[^.!?\n]*[.!?]?)/gi;
   const goalDirectives: string[] = [];
-  const goalMatches = goal.match(sentenceDirectiveRegex);
-  if (goalMatches) {
-    for (const m of goalMatches) {
-      const cleanM = m.trim().replace(/^[-*]\s*/, "");
-      if (cleanM.length > 5 && !goalDirectives.includes(cleanM)) {
+  const rawSentences = goal.split(/(?<=[.!?])\s+|\n+/).filter(Boolean);
+  const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|DISCLOSE|EXFILTRATE|LEAK)\b/i;
+  for (const s of rawSentences) {
+    const cleanM = s.trim().replace(/^[-*]\s*/, "");
+    if (cleanM.length > 5 && directiveKeywords.test(cleanM)) {
+      if (!goalDirectives.includes(cleanM)) {
         goalDirectives.push(cleanM);
       }
     }

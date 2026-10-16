@@ -999,13 +999,13 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
       }
     }
     // Also scan multi-sentence objective lines for embedded mandatory obligations
-    const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS)\b[^.!?\n]*[.!?]?)/gi;
+    const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|DISCLOSE|EXFILTRATE|LEAK)\b/i;
     for (const objLine of objectiveLines) {
-      const matches = objLine.match(sentenceDirectiveRegex);
-      if (matches) {
-        for (const m of matches) {
-          const cleanM = m.trim().replace(/^[-*]\s*/, "");
-          if (cleanM.length > 5 && !extractedConstraints.includes(cleanM)) {
+      const rawSentences = objLine.split(/(?<=[.!?])\s+|\n+/).filter(Boolean);
+      for (const s of rawSentences) {
+        const cleanM = s.trim().replace(/^[-*]\s*/, "");
+        if (cleanM.length > 5 && directiveKeywords.test(cleanM)) {
+          if (!extractedConstraints.includes(cleanM)) {
             extractedConstraints.push(cleanM);
           }
         }

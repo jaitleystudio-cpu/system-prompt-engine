@@ -138,6 +138,8 @@ export interface PaymentWebhookEvent {
   currency: "USD";
   occurredAtMs: number;
   expiresAtMs: number;
+  licenseTerm?: "lifetime" | "annual" | "monthly" | "trial";
+  sku?: string;
 }
 
 export interface ServerBillingAuthorityOptions {
@@ -296,6 +298,20 @@ export class AuthoritativeBillingAuthority {
           `INSUFFICIENT_PAYMENT_AMOUNT: tier=${event.tier} requires >= ${minRequiredCents} cents`,
         );
       }
+      const isExplicitLifetime = Boolean(
+        event.licenseTerm === "lifetime" ||
+        (typeof event.sku === "string" && (
+          event.sku === "spe-pro-lifetime" ||
+          event.sku === "spe-team-lifetime" ||
+          event.sku.startsWith("spe-lifetime-")
+        ))
+      );
+      const licenseTerm = event.licenseTerm
+        ? event.licenseTerm
+        : isExplicitLifetime
+          ? "lifetime"
+          : "monthly";
+
       const record: AuthoritativeLedgerRecord = {
         paymentReceiptId: event.paymentReceiptId,
         exists: true,
@@ -310,6 +326,11 @@ export class AuthoritativeBillingAuthority {
         expiresAtMs: event.expiresAtMs,
         amountCents: event.amountCents,
         revoked: false,
+        licenseTerm,
+        sku: event.sku,
+        revocationTerms: licenseTerm === "lifetime"
+          ? "OFFLINE_PERPETUAL_SUBJECT_TO_REFUND_OR_REVOCATION_ATTESTATION"
+          : "RECURRING_SUBSCRIPTION_FRESHNESS_WINDOW_REQUIRED",
       };
       this.#receiptLedger.set(event.paymentReceiptId, record);
       this.#processedEventIds.add(event.eventId);
@@ -431,14 +452,28 @@ export class AuthoritativeBillingAuthority {
       subscriptionStatus: record.subscriptionStatus,
       tier: record.tier,
       planName: record.planName,
-      lifetime:
-        record.expiresAtMs >= 2_000_000_000_000 ||
-        (typeof record.planName === "string" && record.planName.toLowerCase().includes("lifetime")),
+      lifetime: Boolean(
+        (record.licenseTerm === "lifetime" ||
+          (typeof record.sku === "string" && (
+            record.sku === "spe-pro-lifetime" ||
+            record.sku === "spe-team-lifetime" ||
+            record.sku.startsWith("spe-lifetime-")
+          ))) &&
+        record.licenseTerm !== "monthly" &&
+        record.licenseTerm !== "annual"
+      ),
+      licenseTerm: record.licenseTerm,
+      sku: record.sku,
       email: record.email,
       expiresAtMs: record.expiresAtMs,
       revoked: Boolean(record.revoked),
       attestedAtMs: currentEpochMs,
       issuerKeyId: this.issuerKeyId,
+      revocationTerms: record.revocationTerms ?? (
+        record.licenseTerm === "lifetime"
+          ? "OFFLINE_PERPETUAL_SUBJECT_TO_REFUND_OR_REVOCATION_ATTESTATION"
+          : "RECURRING_SUBSCRIPTION_FRESHNESS_WINDOW_REQUIRED"
+      ),
     };
     const canonical = canonicalizeJson(attestationPayload);
     const signatureHex = sign(

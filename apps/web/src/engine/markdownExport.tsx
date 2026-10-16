@@ -35,7 +35,7 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
   sha256,
   className = "spe-ghost",
   disabled = false,
-  includeFrontmatter = false,
+  includeFrontmatter,
   agencyBranding,
   onExported,
 }) => {
@@ -46,10 +46,14 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
     setDownloading(true);
     try {
       const source = rawIrPrompt || promptText;
+      const effectiveFrontmatter =
+        includeFrontmatter !== undefined
+          ? includeFrontmatter
+          : Boolean(agencyBranding?.agencyName?.trim());
       const mdContent = constructMarkdownSystemPrompt(source, {
         category,
         depthTier,
-        includeFrontmatter,
+        includeFrontmatter: effectiveFrontmatter,
         sha256,
         agencyBranding,
         entitlement: resolveBrowserVerifiedEntitlement(),

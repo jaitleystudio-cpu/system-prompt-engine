@@ -109,6 +109,36 @@ console.log("\n[2/6] Verifying Finding F05: Mandatory instructions in goal never
     );
   }
   assert.equal(failedClosed, true, "Compiler must fail closed when mandatory goal obligations exceed capacity");
+
+  // Subtest: Verify full URLs, dotted identifiers, and specific obligations are NEVER truncated
+  const adversarialGoal =
+    "Build a secure microservice. Never send data to https://collector.internal/v1. Never disclose client.secret! Return only JSON. No customer data may leave this device. " +
+    "Background notes: ".repeat(300);
+
+  const advCompiled = compileSystemPrompt({
+    goal: adversarialGoal,
+    category: "Security",
+    target_model: "claude",
+    constraints: [],
+  });
+
+  assert.ok(
+    advCompiled.prompt.includes("https://collector.internal/v1"),
+    `Must preserve full URL 'https://collector.internal/v1', got:\n${advCompiled.prompt}`
+  );
+  assert.ok(
+    advCompiled.prompt.includes("client.secret"),
+    `Must preserve full dotted identifier 'client.secret', got:\n${advCompiled.prompt}`
+  );
+  assert.ok(
+    advCompiled.prompt.includes("Return only JSON"),
+    `Must preserve 'Return only JSON', got:\n${advCompiled.prompt}`
+  );
+  assert.ok(
+    advCompiled.prompt.includes("No customer data may leave this device"),
+    `Must preserve 'No customer data may leave this device', got:\n${advCompiled.prompt}`
+  );
+
   console.log("  ✓ Finding F05 verified: Mandatory goal obligations strictly preserved and fail-closed enforced.");
 }
 
@@ -164,6 +194,8 @@ console.log("\n[4/6] Verifying Perpetual Offline Validity for Lifetime Entitleme
     subscriptionId: "sub_lifetime_001",
     tier: "pro",
     planName: "Pioneer Lifetime Founder Key ($149 lifetime)",
+    licenseTerm: "lifetime",
+    sku: "spe-pro-lifetime",
     email: "founder@studio.com",
     amountCents: 14900,
     currency: "USD",
@@ -226,7 +258,77 @@ console.log("\n[4/6] Verifying Perpetual Offline Validity for Lifetime Entitleme
   });
   assert.equal(recurring25h, null, "Recurring attestation must expire after 25h freshness window");
 
-  console.log("  ✓ Perpetual offline validity for lifetime entitlements verified beyond 25h and 1 year (with recurring expiration control check).");
+  // Control Test 2: Synthetic 2034 Monthly Subscription MUST NOT be classified as lifetime
+  const synthetic2034Monthly = {
+    eventId: "evt_monthly_2034_001",
+    eventType: "payment.succeeded",
+    paymentReceiptId: "pay_rcpt_synth_2034",
+    subscriptionId: "sub_synth_2034",
+    tier: "pro",
+    planName: "Developer Pro Monthly ($9/mo)",
+    licenseTerm: "monthly",
+    email: "attacker@synth.com",
+    amountCents: 900,
+    currency: "USD",
+    occurredAtMs: 1_700_000_000_000,
+    expiresAtMs: 2_020_000_000_000, // Jan 2034
+  };
+  authority.processVerifiedPaymentWebhook(
+    synthetic2034Monthly,
+    authority.signWebhookPayload(synthetic2034Monthly),
+  );
+  const synthAttestation = authority.issueSignedReceiptStatusAttestation(
+    "pay_rcpt_synth_2034",
+    1_700_000_000_000,
+  );
+  assert.equal(synthAttestation.lifetime, false, "Synthetic 2034 monthly MUST NOT be classified as lifetime");
+  const synth25h = verifySignedReceiptStatusAttestation(synthAttestation, {
+    currentEpochMs: after25HoursMs,
+    trustedIssuerPublicKeys: authorityKeys,
+  });
+  assert.equal(synth25h, null, "Synthetic 2034 monthly must NOT bypass 24h freshness window");
+
+  // Control Test 3: Revoked or Refunded Lifetime attestation MUST fail closed immediately
+  authority.processVerifiedPaymentWebhook(
+    {
+      eventId: "evt_refund_001",
+      eventType: "payment.refunded",
+      paymentReceiptId: "pay_rcpt_lifetime_001",
+      subscriptionId: "sub_lifetime_001",
+      tier: "pro",
+      planName: "Pioneer Lifetime Founder Key ($149 lifetime)",
+      email: "founder@studio.com",
+      amountCents: 14900,
+      currency: "USD",
+      occurredAtMs: after25HoursMs,
+      expiresAtMs: 4_100_000_000_000,
+    },
+    authority.signWebhookPayload({
+      eventId: "evt_refund_001",
+      eventType: "payment.refunded",
+      paymentReceiptId: "pay_rcpt_lifetime_001",
+      subscriptionId: "sub_lifetime_001",
+      tier: "pro",
+      planName: "Pioneer Lifetime Founder Key ($149 lifetime)",
+      email: "founder@studio.com",
+      amountCents: 14900,
+      currency: "USD",
+      occurredAtMs: after25HoursMs,
+      expiresAtMs: 4_100_000_000_000,
+    }),
+  );
+  const refundedAttestation = authority.issueSignedReceiptStatusAttestation(
+    "pay_rcpt_lifetime_001",
+    after25HoursMs,
+  );
+  assert.equal(refundedAttestation.revoked, true, "Refunded attestation must be marked revoked");
+  const verifiedRefunded = verifySignedReceiptStatusAttestation(refundedAttestation, {
+    currentEpochMs: after25HoursMs,
+    trustedIssuerPublicKeys: authorityKeys,
+  });
+  assert.equal(verifiedRefunded, null, "Refunded lifetime attestation MUST be rejected fail-closed");
+
+  console.log("  ✓ Perpetual offline validity for lifetime entitlements verified beyond 25h and 1 year (with recurring expiration and refund rejection control checks).");
 }
 
 // -----------------------------------------------------------------------------
@@ -271,7 +373,18 @@ console.log("\n[5/6] Verifying Agency Export & Certification Claims...");
   assert.ok(!mdExport.includes("certified_by:"), "Frontmatter must not include unverified certified_by claim");
   assert.ok(mdExport.includes('specification_standard: "System Prompt Engine (SPE v1.2 AST)"'), "Frontmatter includes standard");
 
-  console.log("  ✓ Agency export disclaimers and automatic frontmatter emission verified.");
+  // Verify MarkdownExportButton.tsx activates frontmatter when agency branding is present
+  const buttonSource = readFileSync(resolve(__dirname, "../src/engine/markdownExport.tsx"), "utf8");
+  assert.ok(
+    buttonSource.includes("effectiveFrontmatter") || buttonSource.includes("agencyBranding"),
+    "MarkdownExportButton must respect agency branding frontmatter"
+  );
+  assert.ok(
+    !buttonSource.includes("includeFrontmatter = false"),
+    "MarkdownExportButton must NOT hardcode includeFrontmatter = false default overriding agency branding"
+  );
+
+  console.log("  ✓ Agency export disclaimers, button callback, and automatic frontmatter emission verified.");
 }
 
 // -----------------------------------------------------------------------------
@@ -282,11 +395,12 @@ console.log("\n[6/6] Verifying BYOK 2026 Frontier Models, Headers & CSP Permissi
   const simulatorSource = readFileSync(resolve(__dirname, "../src/components/AgentSimulatorPanel.tsx"), "utf8");
   const headersSource = readFileSync(resolve(__dirname, "../public/_headers"), "utf8");
 
-  // Model targets
-  assert.ok(simulatorSource.includes("claude-3-7-sonnet-20250219"), "Claude BYOK must target claude-3-7-sonnet");
-  assert.ok(!simulatorSource.includes("claude-3-5-sonnet-20241022"), "Deprecated claude-3-5-sonnet must be removed from BYOK");
-  assert.ok(simulatorSource.includes("gemini-2.0-flash"), "Gemini BYOK must target gemini-2.0-flash");
-  assert.ok(!simulatorSource.includes("gemini-1.5-pro"), "Deprecated gemini-1.5-pro must be removed from BYOK");
+  // Active 2026 Flagship Model targets
+  assert.ok(simulatorSource.includes("claude-4-5-sonnet"), "Claude BYOK must target 2026 active flagship claude-4-5-sonnet");
+  assert.ok(!simulatorSource.includes("claude-3-7-sonnet-20250219"), "Retired claude-3-7-sonnet must be replaced in BYOK");
+  assert.ok(simulatorSource.includes("gemini-2.5-flash"), "Gemini BYOK must target 2026 active flagship gemini-2.5-flash");
+  assert.ok(!simulatorSource.includes("gemini-2.0-flash"), "Shut-down gemini-2.0-flash must be replaced in BYOK");
+  assert.ok(simulatorSource.includes("llama4"), "Local Ollama BYOK must target llama4");
 
   // Headers
   assert.ok(

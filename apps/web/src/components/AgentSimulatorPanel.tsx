@@ -101,7 +101,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
             "anthropic-dangerous-direct-browser-access": "true",
           },
           body: JSON.stringify({
-            model: "claude-3-7-sonnet-20250219",
+            model: "claude-4-5-sonnet",
             max_tokens: 4096,
             system: promptText,
             messages: [{ role: "user", content: userQuery }],
@@ -112,7 +112,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
         responseText = data.content?.[0]?.text || "(Empty response)";
       } else if (byokProvider === "gemini") {
         const res = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
           {
             method: "POST",
             headers: {
@@ -133,7 +133,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            model: "llama3.3",
+            model: "llama4",
             system: promptText,
             prompt: userQuery,
             stream: false,
@@ -303,10 +303,10 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
                     onChange={(e) => setByokProvider(e.target.value as any)}
                     style={{ padding: "0.35rem 0.6rem", borderRadius: "4px", backgroundColor: "#020617", color: "#f8fafc", border: "1px solid #334155", fontSize: "0.8rem" }}
                   >
-                    <option value="openai">OpenAI (GPT-4o)</option>
-                    <option value="anthropic">Anthropic (Claude 3.7 Sonnet)</option>
-                    <option value="gemini">Google (Gemini 2.0 Flash)</option>
-                    <option value="ollama">Local Ollama (Llama 3.3)</option>
+                    <option value="openai">OpenAI (GPT-4o / GPT-5)</option>
+                    <option value="anthropic">Anthropic (Claude 4.5 Sonnet)</option>
+                    <option value="gemini">Google (Gemini 2.5 Flash)</option>
+                    <option value="ollama">Local Ollama (Llama 4 / 3.3)</option>
                   </select>
                 </div>
                 {byokProvider !== "ollama" && (

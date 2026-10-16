@@ -44,6 +44,9 @@ export interface AuthoritativeReceiptRecord {
   expiresAtMs: number;
   revoked: boolean;
   isTrial?: boolean;
+  licenseTerm?: "lifetime" | "annual" | "monthly" | "trial";
+  sku?: string;
+  revocationTerms?: string;
 }
 
 export interface SignedReceiptStatusAttestation {
@@ -57,11 +60,14 @@ export interface SignedReceiptStatusAttestation {
   tier: "pro" | "team";
   planName?: string;
   lifetime?: boolean;
+  licenseTerm?: "lifetime" | "annual" | "monthly" | "trial";
+  sku?: string;
   email: string;
   expiresAtMs: number;
   revoked: boolean;
   attestedAtMs: number;
   issuerKeyId: string;
+  revocationTerms?: string;
   signatureHex?: string;
 }
 
@@ -246,18 +252,35 @@ export function verifySignedReceiptStatusAttestation(
     return null;
   }
 
-  // Enforce attestation freshness window (default: 24h) for recurring subs, while preserving perpetual offline validity for lifetime keys
+  // Enforce attestation freshness window (default: 24h) for recurring subs, while preserving perpetual offline validity ONLY for explicit lifetime terms/SKUs
   const nowMs = options.currentEpochMs ?? Date.now();
-  const isLifetime =
-    parsed.lifetime === true ||
-    (typeof parsed.planName === "string" && parsed.planName.toLowerCase().includes("lifetime")) ||
-    parsed.expiresAtMs >= 2_000_000_000_000;
+  const isExplicitLifetime =
+    parsed.lifetime === true &&
+    parsed.licenseTerm !== "monthly" &&
+    parsed.licenseTerm !== "annual" &&
+    (parsed.licenseTerm === "lifetime" ||
+      (typeof parsed.sku === "string" &&
+        (parsed.sku === "spe-pro-lifetime" ||
+          parsed.sku === "spe-team-lifetime" ||
+          parsed.sku.startsWith("spe-lifetime-"))));
 
-  if (!isLifetime) {
+  if (!isExplicitLifetime) {
     const maxAgeMs = options.maxAttestationAgeMs ?? DEFAULT_MAX_ATTESTATION_AGE_MS;
     if (parsed.attestedAtMs + maxAgeMs < nowMs) {
       return null; // Expired / stale offline attestation window
     }
+  }
+
+  // Explicit revocation / refund / dispute boundary check:
+  // An attestation marked revoked, refunded, or disputed MUST fail immediately, even for lifetime
+  if (
+    parsed.revoked === true ||
+    parsed.paymentStatus === "REFUNDED" ||
+    parsed.paymentStatus === "DISPUTED" ||
+    parsed.subscriptionStatus === "REVOKED" ||
+    parsed.subscriptionStatus === "CANCELED"
+  ) {
+    return null;
   }
   if (parsed.attestedAtMs > nowMs + 60_000) {
     return null; // Future timestamp clock skew rejected
