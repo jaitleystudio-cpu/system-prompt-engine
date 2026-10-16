@@ -1,10 +1,10 @@
 {
-  "timestampIso": "2026-10-15T18:13:11.743Z",
+  "timestampIso": "2026-10-16T10:03:07.175Z",
   "qualificationStatus": "QUALIFIED_FOR_PROMOTION",
   "totalCases": 5,
   "passedCases": 5,
   "passRatePercent": 100,
-  "averageLatencyMs": 1.72,
+  "averageLatencyMs": 390.43,
   "requirementPreservationPercent": 100,
   "regressionsCount": 0,
   "caseResults": [
@@ -16,7 +16,7 @@
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 7.101
+      "latencyMs": 1863.195
     },
     {
       "caseId": "BENCH-02-3D-WEBGL-CANVAS",
@@ -26,17 +26,17 @@
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 0.574
+      "latencyMs": 33.055
     },
     {
       "caseId": "BENCH-03-DATA-PIPELINE-JSON",
       "name": "Strict JSON ETL Pipeline",
       "passed": true,
-      "actualStatus": "QUALIFIED_GENERATIVE_SUCCESS",
+      "actualStatus": "REPAIRED_GENERATIVE_SUCCESS",
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 0.323
+      "latencyMs": 24.372
     },
     {
       "caseId": "BENCH-04-CONTRADICTION-DETECTION",
@@ -46,20 +46,20 @@
       "expectedStatus": "CONTRADICTION_BLOCKED",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 0.205
+      "latencyMs": 0.743
     },
     {
       "caseId": "BENCH-05-ZERO-PII-SECURITY-GUARD",
       "name": "Zero-Trust Privacy Hardening",
       "passed": true,
-      "actualStatus": "QUALIFIED_GENERATIVE_SUCCESS",
+      "actualStatus": "REPAIRED_GENERATIVE_SUCCESS",
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 0.421
+      "latencyMs": 30.808
     }
   ],
   "zeroEgressAuditPassed": true,
   "costUsd": 0,
-  "releaseCandidateDigest": "4dca706060f86a982e9929a5976f605396dda3e5b498cf8edee4733e4f098f80"
+  "releaseCandidateDigest": "e8bdf99e4b25974d3197047990270faaa99900cced19723d0ccf998d044cf27b"
 }
