@@ -442,7 +442,7 @@ async function runP0R2VerificationBattery() {
         permittedFetchSucceeded = !err.message.includes("AIR_GAP_EGRESS_BLOCKED");
       }
     },
-    { denyByDefault: true, permittedDestinations: ["127.0.0.1", "localhost"] }
+    { denyByDefault: true, permittedDestinations: ["127.0.0.1:4199", "localhost:4199"] }
   );
   assert(permittedFetchSucceeded === true, "Permitted local loopback destination is not blocked by air-gap");
   assert(

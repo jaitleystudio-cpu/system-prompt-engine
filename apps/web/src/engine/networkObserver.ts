@@ -25,6 +25,18 @@ export interface ObservationOptions {
   permittedDestinations?: string[];
 }
 
+interface ActiveObservationSession {
+  id: string;
+  denyByDefault: boolean;
+  permittedDestinations: string[];
+  hasWildcard: boolean;
+  startMs: number;
+  initialCount: number;
+  initialDestLen: number;
+  initialBlockedLen: number;
+  initialPermittedLen: number;
+}
+
 export class NetworkEgressObserver {
   private static activeSessions = 0;
   private static activeDenySessions = 0;
@@ -32,7 +44,8 @@ export class NetworkEgressObserver {
   private static destinations: string[] = [];
   private static blockedConnections: string[] = [];
   private static permittedConnections: string[] = [];
-  private static permittedDestinationsList: string[] = [];
+  private static sessions: Map<string, ActiveObservationSession> = new Map();
+  private static sessionCounter = 0;
   private static isHooked = false;
   private static origSocketConnect: unknown = null;
   private static origFetch: unknown = null;
@@ -43,13 +56,41 @@ export class NetworkEgressObserver {
   private static origSendBeacon: unknown = null;
 
   public static isDenyByDefaultActive(): boolean {
-    return this.activeDenySessions > 0 || process.env.SPE_AIR_GAP_ENFORCE === "1";
+    if (process.env.SPE_AIR_GAP_ENFORCE === "1") return true;
+    for (const s of this.sessions.values()) {
+      if (s.denyByDefault) return true;
+    }
+    return false;
+  }
+
+  public static getActiveDenySessionsCount(): number {
+    return this.activeDenySessions;
   }
 
   public static isDestinationPermitted(dest: string): boolean {
     if (!dest) return false;
     if (this.isLocalResource(dest)) return true;
-    return this.permittedDestinationsList.some((allowed) => {
+
+    const denySessions = Array.from(this.sessions.values()).filter((s) => s.denyByDefault);
+    if (denySessions.length === 0) {
+      return true;
+    }
+
+    // Strict Multi-Session Isolation (Finding R2.2-P0-03 Closure):
+    // Egress is permitted IF AND ONLY IF EVERY active deny-by-default session independently permits it!
+    // A secondary session specifying wildcard '*' or loose permissions CANNOT override or loosen
+    // an active restrictive session in the same process.
+    for (const session of denySessions) {
+      if (!this.checkSessionPermits(session, dest)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static checkSessionPermits(session: ActiveObservationSession, dest: string): boolean {
+    if (session.hasWildcard) return true;
+    return session.permittedDestinations.some((allowed) => {
       if (allowed === "*" || allowed === dest) return true;
       try {
         const destNorm = dest.startsWith("http://") || dest.startsWith("https://") || dest.startsWith("ws://") || dest.startsWith("wss://")
@@ -353,40 +394,46 @@ export class NetworkEgressObserver {
    */
   public static startObservation(options: ObservationOptions = {}): () => NetworkObservationReport {
     this.ensureHooksInstalled();
-    const startMs = Date.now();
-    const initialCount = this.packetCount;
-    const initialDestLen = this.destinations.length;
-    const initialBlockedLen = this.blockedConnections.length;
-    const initialPermittedLen = this.permittedConnections.length;
-
-    this.activeSessions++;
-    // Default to deny-by-default air-gap protection unless explicitly set to false
+    const sessionId = `obs_session_${Date.now()}_${++this.sessionCounter}`;
     const denyEnforced = options.denyByDefault !== false;
-    if (denyEnforced) {
-      this.activeDenySessions++;
-    }
+    const permitted = Array.isArray(options.permittedDestinations)
+      ? [...options.permittedDestinations]
+      : [];
+    const hasWildcard = permitted.includes("*");
 
-    if (Array.isArray(options.permittedDestinations)) {
-      this.permittedDestinationsList = [...options.permittedDestinations];
-    }
+    const session: ActiveObservationSession = {
+      id: sessionId,
+      denyByDefault: denyEnforced,
+      permittedDestinations: permitted,
+      hasWildcard,
+      startMs: Date.now(),
+      initialCount: this.packetCount,
+      initialDestLen: this.destinations.length,
+      initialBlockedLen: this.blockedConnections.length,
+      initialPermittedLen: this.permittedConnections.length,
+    };
+
+    this.sessions.set(sessionId, session);
+    this.activeSessions = this.sessions.size;
+    this.activeDenySessions = Array.from(this.sessions.values()).filter((s) => s.denyByDefault).length;
 
     return (): NetworkObservationReport => {
-      this.activeSessions = Math.max(0, this.activeSessions - 1);
-      if (denyEnforced) {
-        this.activeDenySessions = Math.max(0, this.activeDenySessions - 1);
-      }
-      const packets = this.packetCount - initialCount;
-      const dests = this.destinations.slice(initialDestLen);
-      const blocked = this.blockedConnections.slice(initialBlockedLen);
-      const permitted = this.permittedConnections.slice(initialPermittedLen);
+      this.sessions.delete(sessionId);
+      this.activeSessions = this.sessions.size;
+      this.activeDenySessions = Array.from(this.sessions.values()).filter((s) => s.denyByDefault).length;
+
+      const packets = this.packetCount - session.initialCount;
+      const dests = this.destinations.slice(session.initialDestLen);
+      const blocked = this.blockedConnections.slice(session.initialBlockedLen);
+      const permittedConns = this.permittedConnections.slice(session.initialPermittedLen);
 
       return {
         observedPackets: packets,
         observedDestinations: dests,
         blockedConnections: blocked,
-        permittedConnections: permitted,
+        permittedConnections: permittedConns,
         airGapViolated: packets > 0,
-        observationDurationMs: Date.now() - startMs,
+        observationDurationMs: Date.now() - session.startMs,
         denyByDefaultEnforced: denyEnforced,
       };
     };
@@ -436,14 +483,20 @@ export class NetworkEgressObserver {
   }
 
   /**
-   * Resets observation counters (for testing).
+   * Resets observation counters (strictly prohibited while observation sessions are active).
    */
   public static resetForTesting(): void {
+    if (this.sessions.size > 0 || this.activeSessions > 0) {
+      throw new Error(
+        "ILLEGAL_RESET_ATTEMPT: Cannot reset NetworkEgressObserver while observation sessions are actively running. " +
+        "Active sessions must be completed or stopped cleanly before resetting."
+      );
+    }
     this.packetCount = 0;
     this.destinations = [];
     this.blockedConnections = [];
     this.permittedConnections = [];
-    this.permittedDestinationsList = [];
+    this.sessions.clear();
     this.activeSessions = 0;
     this.activeDenySessions = 0;
   }

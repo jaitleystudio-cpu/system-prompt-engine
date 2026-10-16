@@ -801,5 +801,8 @@
       "category": "JAVASCRIPT"
     }
   },
-  "manifestDigest": "a4fe3dd8777c78fb5ff04fc0765ac931300a2cd1283c1afd9f682359ffb8df2f"
+  "manifestDigest": "a4fe3dd8777c78fb5ff04fc0765ac931300a2cd1283c1afd9f682359ffb8df2f",
+  "signedAtIso": "2026-10-16T11:20:00.000Z",
+  "signatureAlgorithm": "Ed25519",
+  "signatureHex": "4f5415c761aa81036b2a9010f0f972e98bcbc796a22eafe70edffc5ffb931261b13a9019f01e67e534b08e8c9a8835f36eff2f242fa5de17487caf00df19ed0a"
 }

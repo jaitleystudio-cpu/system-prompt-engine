@@ -196,7 +196,7 @@ async function runAdversarialRecheckBattery() {
     // Core A's DEFAULT allowlist (DEFAULT_CORE_A_PERMITTED_DESTINATIONS) permits only 4173/5173/4177.
     // Ensure that arbitrary loopback port 8080 or 9000 is blocked by Core A's default allowlist!
     NetworkEgressObserver.resetForTesting();
-    NetworkEgressObserver.startObservation({
+    const endProdPortObs = NetworkEgressObserver.startObservation({
       denyByDefault: true,
       permittedDestinations: [...DEFAULT_CORE_A_PERMITTED_DESTINATIONS],
     });
@@ -213,14 +213,16 @@ async function runAdversarialRecheckBattery() {
 
     let isDest4173Permitted = NetworkEgressObserver.isDestinationPermitted("127.0.0.1:4173");
     assert(isDest4173Permitted === true, "Gate B: Approved local port 127.0.0.1:4173 is permitted");
+    endProdPortObs();
 
     // Test generic loopback rule without port under strict policy: does not permit port 8080
-    NetworkEgressObserver.startObservation({
+    const endGenericObs = NetworkEgressObserver.startObservation({
       denyByDefault: true,
       permittedDestinations: ["127.0.0.1"],
     });
     let genericPort8080Permitted = NetworkEgressObserver.isDestinationPermitted("127.0.0.1:8080");
     assert(genericPort8080Permitted === false, "Gate B: Generic '127.0.0.1' without port does NOT permit port 8080");
+    endGenericObs();
     NetworkEgressObserver.resetForTesting();
   } finally {
     globalThis.fetch = origFetch;
