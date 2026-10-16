@@ -18,6 +18,10 @@ export interface NetworkObservationReport {
   airGapViolated: boolean;
   observationDurationMs: number;
   denyByDefaultEnforced: boolean;
+  /** Explicit classification: In-process application-level guardrail, NOT OS-enforced container isolation */
+  isolationBoundaryClass: "IN_PROCESS_APPLICATION_LEVEL_OBSERVER_ONLY";
+  /** Always false for JS monkey-patching; true OS isolation requires kernel network namespaces / eBPF / firewall */
+  operatingSystemEnforced: false;
 }
 
 export interface ObservationOptions {
@@ -519,6 +523,8 @@ export class NetworkEgressObserver {
         airGapViolated: packets > 0,
         observationDurationMs: Date.now() - session.startMs,
         denyByDefaultEnforced: denyEnforced,
+        isolationBoundaryClass: "IN_PROCESS_APPLICATION_LEVEL_OBSERVER_ONLY",
+        operatingSystemEnforced: false,
       };
     };
   }

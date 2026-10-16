@@ -13,7 +13,7 @@
  * Gate G8: Finding R2.3-P1-G — Uniform Paid-Tier Enforcement & Free 30,000 Capacity Ceiling
  */
 
-import { existsSync, readFileSync, writeFileSync, symlinkSync, unlinkSync, mkdirSync, renameSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, symlinkSync, unlinkSync, mkdirSync, renameSync, rmSync, lstatSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import {
   ReleaseSafetyGovernor,
@@ -196,6 +196,32 @@ async function runR23CounterAuditBattery() {
     try { rmSync(ancestorCanaryDir, { recursive: true, force: true }); } catch {}
   }
 
+  // G2.3 TOCTOU Race & Leaf Symlink Substitution Mitigation Test
+  const toctouCanaryPath = resolve("/tmp", `spe_toctou_canary_${Date.now()}.txt`);
+  const toctouSecret = `TOCTOU_PROTECTED_DATA_${Date.now()}`;
+  writeFileSync(toctouCanaryPath, toctouSecret, "utf-8");
+  const toctouDestPath = resolve(distDir, `assets/toctou_test_${Date.now()}.js`);
+  try {
+    // Plant symlink at destination right before restoration
+    symlinkSync(toctouCanaryPath, toctouDestPath);
+    assert(lstatSync(toctouDestPath).isSymbolicLink(), "Test setup: Leaf destination is an active symlink targeting external canary");
+
+    // safeRestoreFile uses atomic temp file creation and renameSync, replacing the symlink atomically
+    ReleaseSafetyGovernor.safeRestoreFile(
+      resolve(pinnedBaseDir, "release-manifest.json"),
+      toctouDestPath,
+      distDir
+    );
+
+    // Verify external canary file was NOT written through!
+    assert(readFileSync(toctouCanaryPath, "utf-8") === toctouSecret, "TOCTOU: External canary remains 100% UNTOUCHED (zero write-through)");
+    // Verify destination is now a genuine regular file and NOT a symlink
+    assert(lstatSync(toctouDestPath).isFile() && !lstatSync(toctouDestPath).isSymbolicLink(), "TOCTOU: Atomic rename replaced leaf symlink with genuine regular file");
+  } finally {
+    try { unlinkSync(toctouDestPath); } catch {}
+    try { unlinkSync(toctouCanaryPath); } catch {}
+  }
+
   // ═══════════════════════════════════════════════════════════════════════
   // GATE G3: Finding R2.3-P1-C (Whole-Site Directory Invariance Without .tmp Exemptions)
   // ═══════════════════════════════════════════════════════════════════════
@@ -312,6 +338,18 @@ async function runR23CounterAuditBattery() {
     "Air gap: Raw TCP localhost on authorized port 4173 is permitted"
   );
 
+  // G4.6 Observation Report Boundaries Classification & Honesty Check
+  const obsSession = NetworkEgressObserver.startObservation();
+  const sampleReport = obsSession();
+  assert(
+    sampleReport.isolationBoundaryClass === "IN_PROCESS_APPLICATION_LEVEL_OBSERVER_ONLY",
+    "Air gap: Report honestly classifies isolation as IN_PROCESS_APPLICATION_LEVEL_OBSERVER_ONLY"
+  );
+  assert(
+    sampleReport.operatingSystemEnforced === false,
+    "Air gap: Report honestly reports operatingSystemEnforced as false (not OS container sandbox)"
+  );
+
   NetworkEgressObserver.setGlobalAirGapEnforce(false);
   NetworkEgressObserver.resetForTesting();
   assert(NetworkEgressObserver.isAirGapEnforced() === false, "Global air-gap clean reset");
@@ -322,6 +360,17 @@ async function runR23CounterAuditBattery() {
   console.log("\n▶ [GATE G5] Finding R2.3-P1-E: Rollback Pointer State Transition Ordering");
 
   const pointerPath = resolve(process.cwd(), "proofs/generated/ACTIVE_DEPLOYMENT_POINTER.json");
+
+  // G5.2 Atomic Write & OS Buffer Fsync Verification
+  const testFsyncPath = resolve(process.cwd(), `proofs/generated/test_fsync_${Date.now()}.json`);
+  try {
+    ReleaseSafetyGovernor.atomicWriteJson(testFsyncPath, { test: "fsync_persistence", timestamp: Date.now() });
+    assert(existsSync(testFsyncPath), "atomicWriteJson successfully persisted file with fsync");
+    const parsedFsync = JSON.parse(readFileSync(testFsyncPath, "utf-8"));
+    assert(parsedFsync.test === "fsync_persistence", "atomicWriteJson data round-trips correctly");
+  } finally {
+    try { unlinkSync(testFsyncPath); } catch {}
+  }
 
   // Perform verified rollback
   governor.executeDeploymentRollbackSync({

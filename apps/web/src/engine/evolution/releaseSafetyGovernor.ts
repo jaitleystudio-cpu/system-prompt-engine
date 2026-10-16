@@ -23,7 +23,6 @@ import {
   writeFileSync,
   readFileSync,
   mkdirSync,
-  copyFileSync,
   openSync,
   closeSync,
   unlinkSync,
@@ -32,6 +31,8 @@ import {
   lstatSync,
   rmSync,
   realpathSync,
+  fsyncSync,
+  writeSync,
 } from "node:fs";
 import { resolve, relative, dirname, sep } from "node:path";
 import { createPublicKey, createPrivateKey, sign, verify, createHmac, randomBytes } from "node:crypto";
@@ -804,8 +805,13 @@ export class ReleaseSafetyGovernor {
   }
 
   /**
-   * Atomic JSON file write: writes to temporary file with PID and timestamp,
-   * then atomically renames to targetPath, guaranteeing crash durability.
+   * Atomic JSON file write with explicit OS buffer flushing:
+   * 1. Writes to temporary file tagged with PID and timestamp.
+   * 2. Calls fsyncSync on file descriptor to flush data to stable storage.
+   * 3. Atomically renames temporary file over targetPath.
+   * 4. Attempts directory fsyncSync to ensure directory entry metadata persists.
+   * Note: Provides best-effort POSIX crash durability; physical power-loss durability
+   * depends on the underlying filesystem and hardware cache write-back semantics.
    */
   public static atomicWriteJson(targetPath: string, data: any): void {
     const dir = dirname(targetPath);
@@ -813,18 +819,46 @@ export class ReleaseSafetyGovernor {
       mkdirSync(dir, { recursive: true });
     }
     const tmpPath = `${targetPath}.tmp.${process.pid}.${Date.now()}`;
-    writeFileSync(tmpPath, JSON.stringify(data, null, 2), "utf-8");
+    const payload = JSON.stringify(data, null, 2);
+
+    const fd = openSync(tmpPath, "w", 0o644);
+    try {
+      writeSync(fd, payload, 0, "utf-8");
+      try {
+        fsyncSync(fd);
+      } catch {}
+    } finally {
+      closeSync(fd);
+    }
+
     renameSync(tmpPath, targetPath);
+
+    // Sync containing directory to persist directory entry mutation
+    try {
+      const dirFd = openSync(dir, "r");
+      try {
+        fsyncSync(dirFd);
+      } catch {}
+      closeSync(dirFd);
+    } catch {}
   }
 
   /**
-   * Safe file restoration with comprehensive filesystem boundary checks:
+   * Safe file restoration with TOCTOU mitigation & comprehensive filesystem boundary checks:
    * 1. Path traversal check (no '..' or drive escapes).
    * 2. Directory ancestry symlink defense: Every existing ancestor directory between baseDir and destPath
    *    is verified with lstatSync to guarantee zero symbolic links in directory ancestry.
    * 3. Realpath confinement: Ancestor realpaths and final destination realpath must stay strictly inside baseDir realpath.
-   * 4. Pre-copy unlink: If destPath exists and is a symlink or non-regular file, it is unlinked.
-   * 5. Post-copy verification: destPath is verified to be a regular file, not a symlink, and within baseDir.
+   * 4. Staged temporary atomic replacement: Writes to a private temporary file first, fsyncs it, and renames
+   *    it over destPath so that an existing or concurrently planted destination symlink is atomically
+   *    replaced rather than followed (avoiding write-through races).
+   * 5. Post-copy leaf verification: destPath is verified with lstatSync to be a regular file, not a symlink,
+   *    and realpath is confirmed within baseDir.
+   *
+   * Note on Concurrency Boundaries:
+   * While atomic rename replaces leaf symlinks and ancestry checks verify hierarchy invariants, full OS-level
+   * concurrency isolation against malicious background processes modifying ancestor directories requires
+   * kernel namespaces or chroot/container isolation.
    */
   public static safeRestoreFile(srcPath: string, destPath: string, baseDir: string): void {
     const normRel = relative(baseDir, resolve(baseDir, destPath));
@@ -863,17 +897,24 @@ export class ReleaseSafetyGovernor {
       mkdirSync(targetDir, { recursive: true });
     }
 
-    // Pre-copy leaf cleanup
-    if (existsSync(destPath)) {
+    // TOCTOU Mitigation: Write to unique temp file in target directory first, fsync, then renameSync.
+    // In POSIX, renameSync atomically replaces destPath even if destPath is a symlink,
+    // ensuring copy never writes THROUGH an attacker's symlink!
+    const tmpRestorePath = `${destPath}.restore.tmp.${process.pid}.${Date.now()}.${Math.random().toString(36).slice(2, 8)}`;
+    const content = readFileSync(srcPath);
+
+    const fd = openSync(tmpRestorePath, "w", 0o644);
+    try {
+      writeSync(fd, content);
       try {
-        const destStat = lstatSync(destPath);
-        if (destStat.isSymbolicLink() || !destStat.isFile()) {
-          unlinkSync(destPath);
-        }
+        fsyncSync(fd);
       } catch {}
+    } finally {
+      closeSync(fd);
     }
 
-    copyFileSync(srcPath, destPath);
+    // Atomically replace destPath with temp file
+    renameSync(tmpRestorePath, destPath);
 
     // Post-copy leaf verification
     const postStat = lstatSync(destPath);
