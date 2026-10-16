@@ -41,6 +41,7 @@ import {
 } from "../input/boundedText";
 import { UserConfirmedRequirements } from "../engine/UserConfirmedRequirements";
 import { RealPromptLiveHud } from "../engine/RealPromptLiveHud";
+import { InfinitePromptSuggestions } from "./InfinitePromptSuggestions";
 type Intent = {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
@@ -74,7 +75,7 @@ type Props = {
   onNavigate: (view: AppView) => void;
   onAutoOptimize?: (optimizedPrompt: string) => void;
 };
-const EXAMPLES = [
+export const EXAMPLES = [
   {
     label: "Review code without hallucinations",
     category: "Coding",
@@ -310,22 +311,24 @@ export function Hero(p: Props) {
                 {boundNotice}
               </p>
             )}
-            <div className="examples">
-              {EXAMPLES.map((e) => (
-                <button
-                  type="button"
-                  key={e.label}
-                  onClick={() => {
-                    p.onReset();
-                    p.onChange(e.text);
-                    p.onCategory(e.category);
-                  }}
-                >
-                  {e.label}
-                  <span>↗</span>
-                </button>
-              ))}
-            </div>
+            <InfinitePromptSuggestions
+              currentBrief={p.value}
+              onSelectPrompt={(text, category) => {
+                p.onReset();
+                p.onChange(text);
+                p.onCategory(category);
+              }}
+              onAppendModifier={(clause) => {
+                const trimmed = p.value.trim();
+                const updated = trimmed ? `${trimmed}\n\n${clause}` : clause;
+                const bounded = applyTextBound(updated, HOME_QUICK_START_MAX_CHARS, {
+                  createHint: true,
+                  fieldLabel: "Home quick-start",
+                });
+                p.onChange(bounded.value);
+                setBoundNotice(bounded.notice);
+              }}
+            />
             <div className="brief-selects">
               <label className="brief-field">
                 <span>Working template</span>

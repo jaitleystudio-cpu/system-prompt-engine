@@ -11143,6 +11143,1500 @@
       "text": "It turns a rough idea into a prompt you can read."
     },
     {
+      "id": "0026983bc53e7e3e4102",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "i18n"
+    },
+    {
+      "id": "005275648362ad1cbdf1",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Refactor the legacy React component into clean functional components using modern hooks, granular useMemo/useCallback boundaries, and zero unnecessary re-renders."
+    },
+    {
+      "id": "00b0a97d7558918a6683",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Education"
+    },
+    {
+      "id": "00eadd21a1063a1c04fc",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-interactive-dataviz"
+    },
+    {
+      "id": "01020d979e64bafee51e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-idempotency-keys"
+    },
+    {
+      "id": "0106760a4321a5af0201",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Extraction"
+    },
+    {
+      "id": "021038c9b5543ebd0c37",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Architecture"
+    },
+    {
+      "id": "02417c223be6070d104f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Telemetry"
+    },
+    {
+      "id": "030a2b624f0e448c8378",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-plg-funnel"
+    },
+    {
+      "id": "04eec902ee286ed61406",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Research"
+    },
+    {
+      "id": "04f611c1d77229f5514f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-unit-economics"
+    },
+    {
+      "id": "07918d98d16f1c9ef64d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Operations"
+    },
+    {
+      "id": "091d3d4cd64745df078a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Audit this TypeScript module for strict type safety. Eliminate all implicit or explicit 'any', replace type assertions with exhaustive discriminated unions and type guards."
+    },
+    {
+      "id": "09d07babb956a443dedb",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ Strict KaTeX Guardrails"
+    },
+    {
+      "id": "0acb57b379481884ae5a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-quarterly-okrs"
+    },
+    {
+      "id": "0b560021fddae64b52a9",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Analyze customer support inquiries, identify root causes, classify severity, and draft empathetic, accurate response drafts with concrete resolution steps."
+    },
+    {
+      "id": "0e45133141839ead9b56",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ Core Web Vitals & Perf"
+    },
+    {
+      "id": "0e52a3cef3237b533285",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design GraphQL cursor pagination"
+    },
+    {
+      "id": "0fc3bcc0aeec859aee99",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Construct a financial model evaluating CAC payback periods, net revenue retention (NRR), gross margin per customer tier, and cohort churn curves."
+    },
+    {
+      "id": "1214484a17a91ec1cb44",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Runtime"
+    },
+    {
+      "id": "12f4e44ec2236f73ff58",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Performance"
+    },
+    {
+      "id": "1693d6e3ef6d40f58141",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-multi-region-dr"
+    },
+    {
+      "id": "16d2bebcc5b793af58ee",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Pricing"
+    },
+    {
+      "id": "173277fe6702af75a9cf",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "canonical-code-review"
+    },
+    {
+      "id": "190dcf6a622029085bc5",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Coding"
+    },
+    {
+      "id": "19de04fb4403f9374433",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Traffic"
+    },
+    {
+      "id": "1afc22827bd6fc7dff64",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design a rigorous test battery for prompt regression testing. Include assertion checks, semantic similarity metrics, token economy gates, and adversarial edge cases."
+    },
+    {
+      "id": "1aff12b2cf178da428b7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Eval"
+    },
+    {
+      "id": "1bda37dcad34006a9da1",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-cobol-migration"
+    },
+    {
+      "id": "1c566b4a67f7431f4c10",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Executive weekly progress report"
+    },
+    {
+      "id": "1d2e919c2784fc5a0931",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Translate legacy COBOL to modern specs"
+    },
+    {
+      "id": "1f49c80f7a67873e8183",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-retry-backoff"
+    },
+    {
+      "id": "20466dbed8e69671684e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-incident-postmortem"
+    },
+    {
+      "id": "208800546119f8e37042",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Cloud"
+    },
+    {
+      "id": "2176d70b0130bb2a9f5b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Resilience"
+    },
+    {
+      "id": "22ad80eeb205a133d92c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Circuit breaker for upstream microservices"
+    },
+    {
+      "id": "2398bbbd1791f1fc2307",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Caching"
+    },
+    {
+      "id": "23e73416f78b60b2f14f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Interactive SVG & canvas data visualization"
+    },
+    {
+      "id": "24d5345136b98a92d66b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-multilingual-localization"
+    },
+    {
+      "id": "26172912942243b410ab",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-postgres-ddl"
+    },
+    {
+      "id": "269c0740f3f21b11641e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Reverse-engineer the arithmetic calculations and validation branches in this legacy COBOL routine into an unambiguous modern algorithmic specification with test vectors."
+    },
+    {
+      "id": "26cfa3b0dab7c08feb33",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Payment webhook idempotency engine"
+    },
+    {
+      "id": "288c558afc9255195a27",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Implement a hybrid lexical and dense vector search pipeline combining BM25, cosine embeddings, and Maximal Marginal Relevance (MMR) for diversity."
+    },
+    {
+      "id": "2911b7455e4646a201dc",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Offload compute to Web Worker"
+    },
+    {
+      "id": "29ab080237bcf85e0a6f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Draft an engineering readiness roadmap for SOC2 Type II compliance covering access control, CI/CD change management, secret rotation, and incident drills."
+    },
+    {
+      "id": "2aa9ca98ab7e43ca502d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Glassmorphic dark-mode component tokens"
+    },
+    {
+      "id": "2aa9d419ab79a32ee703",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Reliability"
+    },
+    {
+      "id": "31411f4197398073443f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Extract entities, monetary amounts, and jurisdiction dates from unstructured agreements into a strict, validated JSON schema with zero null hallucinations."
+    },
+    {
+      "id": "32ef4864dafee1dec016",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Academic"
+    },
+    {
+      "id": "334bfe2cdc2003c629cd",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-cqrs-event-sourcing"
+    },
+    {
+      "id": "3390b718b68cf26c2601",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Strategy"
+    },
+    {
+      "id": "3499a801a3804da12453",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Build an internationalization key structure supporting ICU message syntax, variable interpolation, and gender/plural inflection rules across English, Spanish, and Japanese."
+    },
+    {
+      "id": "36fdb5ec25ce5671c49a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Build an idempotent Stripe webhook processing pipeline with Redis distributed locks, deduplication windows, and ACID transaction safety."
+    },
+    {
+      "id": "37391186ccd147451ae2",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Write a security-hardened, multi-stage Dockerfile that compiles production assets, drops root privileges, strips dev dependencies, and minimizes image footprint."
+    },
+    {
+      "id": "38c845bf17b2223657cb",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "i18n locale localization with pluralization"
+    },
+    {
+      "id": "3af44ac26add178b5aa3",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Create a hands-on, week-by-week technical onboarding curriculum that guides a new engineer through architecture deep-dives, local sandbox setup, and first PR shipping."
+    },
+    {
+      "id": "3c31a973b4ca8532f8d2",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Analysis"
+    },
+    {
+      "id": "3d1324604748b7e1752a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Creative"
+    },
+    {
+      "id": "3da600e0955cc391df31",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Review the code I provide for correctness, security and maintainability. Rank findings by severity and include the affected code and a concrete fix. Do not invent files, imports, or unverified tests."
+    },
+    {
+      "id": "3e1a0ed26a6a5bff7073",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-race-condition-fsm"
+    },
+    {
+      "id": "3eac342c4f75a5573c12",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Formulate a multi-region active-passive failover protocol for cloud infrastructure, detailing RPO/RTO targets, DNS failover automation, and state synchronization."
+    },
+    {
+      "id": "40f529d1f94390995029",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Speed"
+    },
+    {
+      "id": "4242c945f34f88f45b7c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-webgl-particle"
+    },
+    {
+      "id": "42de09f8bdc68f228e16",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Cinematic prompt for sci-fi architecture"
+    },
+    {
+      "id": "443d86cdddb1cc1be687",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design"
+    },
+    {
+      "id": "4494b42f41a72111732c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-cache-invalidation"
+    },
+    {
+      "id": "4561061cb76cd019646c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-strict-ts-audit"
+    },
+    {
+      "id": "461b51fa0185f36f695a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ Playwright E2E Tests"
+    },
+    {
+      "id": "49e17ef5486a447d7aac",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ Anti-Hallucination Citations"
+    },
+    {
+      "id": "4b183cfae80155202bc3",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Orchestrate a tri-agent deliberation workflow where Proposer, Critic, and Arbiter agents iteratively debate trade-offs to reach an optimal technical decision."
+    },
+    {
+      "id": "4bbdd9d896501399aadb",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Multi-stage minimal Docker build"
+    },
+    {
+      "id": "4cbe173e2fe5607b9a5e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Growth"
+    },
+    {
+      "id": "4d46a81be856edc71109",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-playwright-e2e"
+    },
+    {
+      "id": "4f03734ab81784f55180",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Quarterly engineering OKR alignment matrix"
+    },
+    {
+      "id": "4f075e652241d8edf17f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-self-healing-ci"
+    },
+    {
+      "id": "4f3c606a30251ed4595b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Fault Tolerance"
+    },
+    {
+      "id": "4f5cdb08482ca0d9bb5f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Zero-downtime database migration"
+    },
+    {
+      "id": "51077908a61ce6202186",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Identify and resolve the concurrency race condition in this state machine. Formulate deterministic state transitions with atomic CAS semantics."
+    },
+    {
+      "id": "512878a63325b7a2c631",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Compliance"
+    },
+    {
+      "id": "558460f31885828eebd3",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Debug async state machine race condition"
+    },
+    {
+      "id": "55df1a7626d9e0701d50",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Product-led growth viral loop model"
+    },
+    {
+      "id": "55ea67355c955ba5af5a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-graphql-cursor"
+    },
+    {
+      "id": "5796dc7a12cfabf6e6c5",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-onboarding-choreography"
+    },
+    {
+      "id": "57d6c5528525a45e797e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "B2B SaaS unit economics & LTV/CAC model"
+    },
+    {
+      "id": "5a492e5c2aee7044bf79",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Agents"
+    },
+    {
+      "id": "5a778b7acf4af5087b20",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Layout"
+    },
+    {
+      "id": "5a8af2ff5d599fe08197",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Business"
+    },
+    {
+      "id": "5ab375f8aae0a548cfed",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Implement a resilient circuit breaker pattern wrapper with closed, open, and half-open states, failure rate counters, and fallback caches."
+    },
+    {
+      "id": "5afa9d6b0eb0b4b96966",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-edge-worker-cache"
+    },
+    {
+      "id": "5bd909a2acb188e04c1d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Architect Kafka event streaming topology"
+    },
+    {
+      "id": "5d39ca84a9e03b559a61",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Analyze this slow SQL query. Provide an optimized rewrite using covering indexes, CTE query plans, and partition pruning while eliminating table scans."
+    },
+    {
+      "id": "5dec1a9e41d5f513c513",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-typography-design-system"
+    },
+    {
+      "id": "5e3c1680bf089a112b0f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Domain"
+    },
+    {
+      "id": "5fa382932920c3baf966",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-soc2-compliance"
+    },
+    {
+      "id": "5fd8732d010b4bf87aea",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Synthesize findings across these research abstracts into a coherent comparative analysis. Include verifiable DOI references and explicitly flag conflicting findings."
+    },
+    {
+      "id": "616de9f43daba32439af",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Review this complex web application screen for WCAG 2.2 AA compliance, identifying keyboard focus traps, missing ARIA live regions, and contrast violations."
+    },
+    {
+      "id": "63823b842f581f6c9001",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-soc2-audit"
+    },
+    {
+      "id": "6487323c44d4714c6fe1",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Concurrency"
+    },
+    {
+      "id": "67c20fdf409210f214da",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Synthesize literature with DOI citations"
+    },
+    {
+      "id": "67d1a49d87aa2ec28f59",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ SOC2 Enterprise Audit"
+    },
+    {
+      "id": "68149ba09cc33b978535",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "High-density trading dashboard grid"
+    },
+    {
+      "id": "6a0a5c82c1f2c487fc71",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Micro-interaction onboarding choreography"
+    },
+    {
+      "id": "6a5c3ba625b778103fad",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "DevOps"
+    },
+    {
+      "id": "6dffe3a5224894295de4",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Implement a production-grade async retry utility featuring exponential backoff with full jitter, circuit breaking thresholds, and abort controller cancellation."
+    },
+    {
+      "id": "6fe1dc1e9720abdc3ab2",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Blameless engineering post-mortem template"
+    },
+    {
+      "id": "73977baef7000904d6fc",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Formulate a two-tier cache strategy (in-memory L1 + Redis L2) with pub/sub invalidation, stamped locks against cache stampedes, and TTL jitter."
+    },
+    {
+      "id": "748087c07e503612c074",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Edge"
+    },
+    {
+      "id": "761c32951a4b2b9d4cff",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Performant WebGL 3D particle field"
+    },
+    {
+      "id": "7748add941a6ef5e054f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "CQRS & Event Sourcing state transitions"
+    },
+    {
+      "id": "7791391fc3800c3dbe77",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Write a high-performance Cloudflare Edge Worker script that inspects incoming requests, manages stale-while-revalidate headers, and verifies JWT tokens at the edge."
+    },
+    {
+      "id": "77c37349adb9b1381a70",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "A11y"
+    },
+    {
+      "id": "795b51785a6936045a7c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-technical-onboarding"
+    },
+    {
+      "id": "7bd028964631c6780f47",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Multi-agent consensus debate protocol"
+    },
+    {
+      "id": "7d09f324eed79bcdf65c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Strict TypeScript zero-any audit"
+    },
+    {
+      "id": "7da9969572c8d8b35f8f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Customer ticket triage & response"
+    },
+    {
+      "id": "7dc6e740c0421aa96c1c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Styling"
+    },
+    {
+      "id": "7f34f4ffba94e87c18f1",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Usage-based SaaS pricing tier architecture"
+    },
+    {
+      "id": "8088345a29fa8718a206",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Structured Data"
+    },
+    {
+      "id": "808ff354c12e25f19cac",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Interactive engineer onboarding roadmap"
+    },
+    {
+      "id": "81d62389c3d8e8b5809c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-zero-trust"
+    },
+    {
+      "id": "822c8c41b184e31e056e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Constraint: Implement zero-trust authentication, granular role-based access control (RBAC), and strict session revocation guarantees."
+    },
+    {
+      "id": "825853b233dd96d2666b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-prompt-bias-audit"
+    },
+    {
+      "id": "82cd9704310ef886561d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-sql-covering-idx"
+    },
+    {
+      "id": "83060b0f9a351252a281",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Competitive moat & defensibility analysis"
+    },
+    {
+      "id": "85684a7c382d9482f12d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-opentelemetry-taxonomy"
+    },
+    {
+      "id": "87f5dda48473431e6430",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Draft a high-fidelity visual prompt describing a futuristic solarpunk metropolis at dusk, specifying camera focal length, volumetric lighting, and octagonal geometry."
+    },
+    {
+      "id": "8827a7ff55ca72a3b770",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-web-worker-calc"
+    },
+    {
+      "id": "8b18fa09bd0e432cc943",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "RAG"
+    },
+    {
+      "id": "8be7dd04c8746d6bb70e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-strict-katex"
+    },
+    {
+      "id": "8c8e9e858e81487e9c7d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Safety"
+    },
+    {
+      "id": "8ce068da837f0da5690c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design a high-throughput GraphQL schema featuring Relay-compliant cursor pagination, connection edges, total count projections, and efficient backward/forward navigation."
+    },
+    {
+      "id": "8d342f29877be21340c1",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Construct a mathematical fluid typography and spacing scale using CSS clamp functions, semantic color tokens, and WCAG AAA contrast guarantees."
+    },
+    {
+      "id": "9060a2397e356cbaaab9",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Frontend"
+    },
+    {
+      "id": "90c4634dec2c1a3d65a7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Audit this system prompt for hidden prompt injection vulnerabilities, unintended demographic skew, and jailbreak escape routes, providing fortified constraints."
+    },
+    {
+      "id": "944dc67054dbdb57eb32",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-zero-downtime-migration"
+    },
+    {
+      "id": "9476cfd20b87644ea5d8",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Finance"
+    },
+    {
+      "id": "987749f6172f5ac0457a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Types"
+    },
+    {
+      "id": "987c031f80710dc8a0e8",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "UX"
+    },
+    {
+      "id": "99871935d843fb52f282",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-responsive-dashboard"
+    },
+    {
+      "id": "9b345d387a430899e09d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "canonical-fullstack-feature"
+    },
+    {
+      "id": "9c7be630b25654fadaf6",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Onboarding"
+    },
+    {
+      "id": "9c981d261fbc15b54f9a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design a self-serve PLG adoption funnel mapping free user activation, natural collaboration touchpoints, in-app upgrade triggers, and retention loops."
+    },
+    {
+      "id": "9db4b68b1cc16e2e97b4",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Craft a few-shot Chain-of-Thought system prompt for multi-step algorithmic reasoning, including scratchpad formatting, intermediate verifications, and final answer delimiting."
+    },
+    {
+      "id": "a304aa587731c757f885",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ Edge Runtime Fallbacks"
+    },
+    {
+      "id": "a44ec26c0a8d08cc3242",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Plan a full-stack feature"
+    },
+    {
+      "id": "a4d554be7e00c0d03152",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "WebGL"
+    },
+    {
+      "id": "a75f0caccbd730284c17",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "OpenTelemetry tracing & metrics taxonomy"
+    },
+    {
+      "id": "a7e37adfd115b7ba1d98",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Choreograph a 4-step progressive onboarding sequence using subtle spring physics, haptic feedback cues, and accessible keyboard focus navigation."
+    },
+    {
+      "id": "a8c4a7a8994621d82fa7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Website / 3D"
+    },
+    {
+      "id": "a9d7e7bcbe2c6859373d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-glassmorphic-tokens"
+    },
+    {
+      "id": "a9e67173ffd1ee292548",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Self-healing CI/CD pipeline with canaries"
+    },
+    {
+      "id": "ab6a8b3c57e5c7c8367f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Multilingual"
+    },
+    {
+      "id": "ab8d2c3f31ca77b819c8",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ PostgreSQL DDL Schema"
+    },
+    {
+      "id": "ac38d544e31db8f815b4",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "RAG vector retrieval with MMR reranking"
+    },
+    {
+      "id": "acc28c1aa729659a6ac8",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-eval-suite-prompt"
+    },
+    {
+      "id": "af99656317804040f23e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Migrations"
+    },
+    {
+      "id": "b0b186784ca4dedfbd3c",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Database"
+    },
+    {
+      "id": "b1ab744daab5c23ed659",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Architect an event-driven microservices topology using Apache Kafka. Define topic partitioning, dead-letter queue strategies, and exactly-once processing semantics."
+    },
+    {
+      "id": "b4b6eea0f27955e121ba",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-event-driven-kafka"
+    },
+    {
+      "id": "b6159cdbdde2a16d30d6",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design a CQRS and Event Sourcing domain model. Define aggregate roots, event stores, projection snapshots, and read-model synchronization handlers."
+    },
+    {
+      "id": "b6323e9a034a91c42e25",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Optimize SQL & covering indexes"
+    },
+    {
+      "id": "b83efa9ca1fb2c421900",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-circuit-breaker"
+    },
+    {
+      "id": "b8cbd5042dd6892ff676",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-accessibility-audit"
+    },
+    {
+      "id": "bbc7966e1d3e1a814567",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "AI Assistant"
+    },
+    {
+      "id": "bc8ce4eae0596d2ca817",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Refactor to modern React hooks & memo"
+    },
+    {
+      "id": "bd6c7cb6e469a16ef259",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-anti-hallucination"
+    },
+    {
+      "id": "c1eae0978f2aea0a06f6",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Accuracy"
+    },
+    {
+      "id": "c1eb5f42844d9d575d12",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-cinematic-sci-fi"
+    },
+    {
+      "id": "c1fb7c803dfb8602d3bb",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "SOC2 Type II security readiness checklist"
+    },
+    {
+      "id": "c230fa041f2e87a15e4d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-multi-agent-debate"
+    },
+    {
+      "id": "c24ce60d5f04fc6636be",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-refactor-hooks"
+    },
+    {
+      "id": "c40452739fdd39d2bd47",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Formatting: Format all mathematical formulas using valid KaTeX syntax and adhere strictly to GitHub-flavored markdown standards."
+    },
+    {
+      "id": "c54cd77cfac51a1c0ec2",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Implement a 60fps WebGL custom particle simulation shader with GPU instancing, mouse-repulsion physics, and adaptive device-pixel-ratio scaling."
+    },
+    {
+      "id": "c577f7aee3aa779a2b70",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Extract validated JSON schema from text"
+    },
+    {
+      "id": "c815cfeaf82512c18778",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "+ Zero-Trust Auth & RBAC"
+    },
+    {
+      "id": "c89c47e2ffaa66c48f65",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Formulate a blameless post-mortem framework focusing on root causes (5 Whys), detection latency, blast radius containment, and actionable remediation items."
+    },
+    {
+      "id": "cb6d8494dd33380093e3",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Analyze our software platform against top market incumbents across switching costs, network effects, economies of scale, and proprietary data moats."
+    },
+    {
+      "id": "cc14938862eb3d90f4a3",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-mmr-reranking"
+    },
+    {
+      "id": "cc418a6bd6617982475e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design a sleek glassmorphic UI component library specification with backdrop-filter blurs, subtle specular border gradients, and accessible elevated surfaces."
+    },
+    {
+      "id": "cf31fc19face71106e7e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Security"
+    },
+    {
+      "id": "d10d87f77e3a07d914ce",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design a hybrid subscription and usage-based pricing model with fair entitlement thresholds, overage safety caps, and grandfathering migration paths."
+    },
+    {
+      "id": "d1369b7ee124a74de80e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Synthesize team achievements, key metrics, active blockers, and high-priority milestones into a concise executive summary formatted for leadership review."
+    },
+    {
+      "id": "d22b72217efe9ddd0966",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Build a responsive CSS subgrid layout for a financial analytics dashboard supporting 4K multi-monitors down to compact mobile viewports without horizontal scroll."
+    },
+    {
+      "id": "d43e6530ab48d8f04267",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design a complete end-to-end implementation plan for this full-stack feature. Include database schemas, API contracts, frontend state transitions, and step-by-step verification gates."
+    },
+    {
+      "id": "d500a17f14b9f5b13a4e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Fluid typography & design token scale"
+    },
+    {
+      "id": "d5a3217e1781688ec79f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Formatting"
+    },
+    {
+      "id": "d6b497661294c5a2b429",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "API"
+    },
+    {
+      "id": "d6b636fe4991dc869444",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Few-shot Chain-of-Thought meta-prompt"
+    },
+    {
+      "id": "d7a43e05562d561e3a9b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Fintech"
+    },
+    {
+      "id": "d9470b19474117ae7869",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-docker-multistage"
+    },
+    {
+      "id": "da72a1fbc944dc8298e7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Compliance: Integrate tamper-evident audit logging, least-privilege credential scopes, and encryption at rest and in transit."
+    },
+    {
+      "id": "db005bdac551dd6bbf5a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Requirement: Provide strict PostgreSQL DDL schemas including constraints, foreign keys, covering indexes, and rollback migration scripts."
+    },
+    {
+      "id": "dcb776252d894b3af35b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Implement a high-scale API rate limiter using the token bucket algorithm backed by atomic Redis Lua scripts with IP and API-key tier granularity."
+    },
+    {
+      "id": "dfa39ba0f55e664dd7ae",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Quality"
+    },
+    {
+      "id": "e24c15abc2abfb8ed42e",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "LLM prompt regression evaluation suite"
+    },
+    {
+      "id": "e34399551a787778c459",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Define measurable engineering Objectives and Key Results (OKRs) balancing platform reliability, feature velocity, developer experience, and tech debt reduction."
+    },
+    {
+      "id": "e3baafdb0cddc22a13a5",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-fewshot-cot"
+    },
+    {
+      "id": "e41680a9343528cf886a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Define a unified semantic observability schema for OpenTelemetry traces, spans, attributes, and structured error logs across distributed services."
+    },
+    {
+      "id": "e454ab86f93abd9b4710",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Cloudflare Edge Worker caching proxy"
+    },
+    {
+      "id": "e55826eec947f3258ba7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-saas-pricing-tiers"
+    },
+    {
+      "id": "e5a1b82b46ed25cd9620",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Resilient exponential backoff & jitter"
+    },
+    {
+      "id": "e61b732b0d6f62aaf1e7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Automation"
+    },
+    {
+      "id": "e654ae275b07ebc1fff5",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Distributed cache invalidation protocol"
+    },
+    {
+      "id": "e6e9b1e335a3286a2ac5",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Legacy"
+    },
+    {
+      "id": "e8eab0ca20e7592318d0",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Architecture: Ensure execution compatibility across Cloudflare/Vercel Edge runtimes with zero node-specific native dependencies."
+    },
+    {
+      "id": "e979911188e0600d92be",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Leadership"
+    },
+    {
+      "id": "ea26799721590534d615",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-json-schema-extract"
+    },
+    {
+      "id": "eac746475e58c9b27d66",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Extract heavy JSON transformation and cryptographic operations into a dedicated Web Worker with typed message passing and Comlink RPC compatibility."
+    },
+    {
+      "id": "eb787747fa5962d530e7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-token-bucket-limiter"
+    },
+    {
+      "id": "ed6b0db4c7d2d5d80e4b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design an interactive time-series chart component using SVG and Canvas with zoom/pan brushes, tooltip crosshairs, and smooth cubic bezier transitions."
+    },
+    {
+      "id": "ed86597792201097e69f",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "OKRs"
+    },
+    {
+      "id": "ed97181bcd5aeb4d3259",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-competitive-moat"
+    },
+    {
+      "id": "ee82a01c91a03505a935",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "WCAG 2.2 AA accessibility remediation"
+    },
+    {
+      "id": "efcdd5bf43c1643a71f1",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Dataviz"
+    },
+    {
+      "id": "f2278b7e8ac4aa652c1d",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "canonical-exec-report"
+    },
+    {
+      "id": "f34402752f045ee054f0",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Distributed token bucket rate limiter"
+    },
+    {
+      "id": "f43da07b414d5b562af7",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Requirement: Include automated Playwright end-to-end test suites covering primary, edge, and error recovery user flows with zero flaky timeouts."
+    },
+    {
+      "id": "f64ed413db31c403db3a",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Multi-region disaster recovery runbook"
+    },
+    {
+      "id": "f6f83e2b28b5e34f7f85",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-edge-runtime"
+    },
+    {
+      "id": "f75fa22de9535f24bce2",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Audit prompt instructions for safety & bias"
+    },
+    {
+      "id": "fa164ab6696b38f7a8ad",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Performance: Optimize strictly for sub-second LCP, zero CLS, and low INP latency using memoized render paths and asset preloading."
+    },
+    {
+      "id": "fc0b1d793794e19b7276",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Design an automated deployment pipeline with automated canary analysis, automatic rollbacks on error-rate spikes, and incident webhooks."
+    },
+    {
+      "id": "fc1756b7077c61105411",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Verification: Cite verified official documentation for all external APIs and libraries. Reject invented functions or unreleased features."
+    },
+    {
+      "id": "fc4e96342ec39d59bbda",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Support"
+    },
+    {
+      "id": "fcf224b6cca37b76db18",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "inf-academic-synthesis"
+    },
+    {
+      "id": "fd09c74af3a7c4a19d43",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "evo-core-web-vitals"
+    },
+    {
+      "id": "fe7e2f7ca46dc8f8e2da",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Draft an expand-and-contract zero-downtime database schema migration strategy. Include dual-writing steps, backfill scripts, and zero-data-loss rollback plans."
+    },
+    {
+      "id": "fed99edd9974d0e506f9",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Prompting"
+    },
+    {
+      "id": "ff8c5dba8c8390bbac0b",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "Review code without hallucinations"
+    },
+    {
+      "id": "ffb4ed40d723bc2cfa11",
+      "file": "apps/web/src/landing/infinitePromptCatalog.ts",
+      "depth": "PRODUCT",
+      "text": "canonical-ticket-triage"
+    },
+    {
+      "id": "010cc1d592587fc6941f",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Added constraint:"
+    },
+    {
+      "id": "029d3bcb19a3bef572d4",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ Next ready:"
+    },
+    {
+      "id": "3e2be07afbb8f762270d",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Roll four fresh prompt suggestions"
+    },
+    {
+      "id": "49c311ca75ac65b27c0b",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt evolution modifiers"
+    },
+    {
+      "id": "4bdbbdbed38895aa21fe",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Suggested starter prompts"
+    },
+    {
+      "id": "5f1cf0e458bf04b2dd59",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Use template:"
+    },
+    {
+      "id": "73563e5c8e9d40da1200",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Append"
+    },
+    {
+      "id": "7738be0ac3d4a5535057",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Infinite Prompts"
+    },
+    {
+      "id": "7b0a7b87f48bd1e39649",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Roll Infinity"
+    },
+    {
+      "id": "b09c4c1682d059c3eca1",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Dynamic prompt fountain with infinite cycling"
+    },
+    {
+      "id": "b646f386c8c33671c9d1",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Contextual prompt modifiers"
+    },
+    {
+      "id": "c2e1e108433f0dd84600",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Roll 4 fresh prompts from the infinite pool"
+    },
+    {
+      "id": "e7973608f05b224a48a4",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "constraint to brief"
+    },
+    {
+      "id": "e7ece5cf6dc158580a54",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "(Category:"
+    },
+    {
+      "id": "e9587d3380270674d361",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Click any pill to swap with next blueprint"
+    },
+    {
+      "id": "f00e58f1f9ecb91190ef",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Stackable architectural and quality guardrails"
+    },
+    {
+      "id": "f020051bf90de7332401",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Infinite prompt blueprints and evolution"
+    },
+    {
+      "id": "fb873728167135f52cfb",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "Evolve Brief with Constraints"
+    },
+    {
+      "id": "fc3ab2577fe17d5b8f56",
+      "file": "apps/web/src/landing/InfinitePromptSuggestions.tsx",
+      "depth": "PRODUCT",
+      "text": "🎲 4 fresh prompt blueprints loaded"
+    },
+    {
       "id": "3f52232b7f95985fe3fc",
       "file": "apps/web/src/landing/ModalModeSelector.tsx",
       "depth": "PRODUCT",
