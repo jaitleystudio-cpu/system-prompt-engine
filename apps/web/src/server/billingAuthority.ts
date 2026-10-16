@@ -430,6 +430,10 @@ export class AuthoritativeBillingAuthority {
       paid: record.paid,
       subscriptionStatus: record.subscriptionStatus,
       tier: record.tier,
+      planName: record.planName,
+      lifetime:
+        record.expiresAtMs >= 2_000_000_000_000 ||
+        (typeof record.planName === "string" && record.planName.toLowerCase().includes("lifetime")),
       email: record.email,
       expiresAtMs: record.expiresAtMs,
       revoked: Boolean(record.revoked),

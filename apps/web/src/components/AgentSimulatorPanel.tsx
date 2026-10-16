@@ -57,10 +57,17 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
   const [copied, setCopied] = useState(false);
   const [simulatorMode, setSimulatorMode] = useState<"local" | "byok">("local");
   const [byokProvider, setByokProvider] = useState<"openai" | "anthropic" | "gemini" | "ollama">("openai");
-  const [byokApiKey, setByokApiKey] = useState("");
+  const [byokApiKeys, setByokApiKeys] = useState<Record<string, string>>({
+    openai: "",
+    anthropic: "",
+    gemini: "",
+    ollama: "",
+  });
+  const currentApiKey = byokApiKeys[byokProvider] || "";
 
   const runByokTestFlight = async () => {
-    if (!userQuery.trim() || (!byokApiKey && byokProvider !== "ollama")) return;
+    const activeKey = byokApiKeys[byokProvider] || "";
+    if (!userQuery.trim() || (!activeKey && byokProvider !== "ollama")) return;
     setSimulating(true);
     setSimulatedResponse(null);
     const startTime = performance.now();
@@ -71,7 +78,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${byokApiKey.trim()}`,
+            Authorization: `Bearer ${activeKey.trim()}`,
           },
           body: JSON.stringify({
             model: "gpt-4o",
@@ -89,13 +96,13 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": byokApiKey.trim(),
+            "x-api-key": activeKey.trim(),
             "anthropic-version": "2023-06-01",
-            "dangerously-allow-browser": "true",
+            "anthropic-dangerous-direct-browser-access": "true",
           },
           body: JSON.stringify({
-            model: "claude-3-5-sonnet-20241022",
-            max_tokens: 2048,
+            model: "claude-3-7-sonnet-20250219",
+            max_tokens: 4096,
             system: promptText,
             messages: [{ role: "user", content: userQuery }],
           }),
@@ -105,10 +112,13 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
         responseText = data.content?.[0]?.text || "(Empty response)";
       } else if (byokProvider === "gemini") {
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${byokApiKey.trim()}`,
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": activeKey.trim(),
+            },
             body: JSON.stringify({
               system_instruction: { parts: [{ text: promptText }] },
               contents: [{ parts: [{ text: userQuery }] }],
@@ -119,11 +129,11 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
         const data = await res.json();
         responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "(Empty response)";
       } else if (byokProvider === "ollama") {
-        const res = await fetch("http://localhost:11434/api/generate", {
+        const res = await fetch("http://127.0.0.1:11434/api/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            model: "llama3",
+            model: "llama3.3",
             system: promptText,
             prompt: userQuery,
             stream: false,
@@ -294,26 +304,30 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
                     style={{ padding: "0.35rem 0.6rem", borderRadius: "4px", backgroundColor: "#020617", color: "#f8fafc", border: "1px solid #334155", fontSize: "0.8rem" }}
                   >
                     <option value="openai">OpenAI (GPT-4o)</option>
-                    <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
-                    <option value="gemini">Google (Gemini 1.5 Pro)</option>
-                    <option value="ollama">Local Ollama (Llama 3)</option>
+                    <option value="anthropic">Anthropic (Claude 3.7 Sonnet)</option>
+                    <option value="gemini">Google (Gemini 2.0 Flash)</option>
+                    <option value="ollama">Local Ollama (Llama 3.3)</option>
                   </select>
                 </div>
                 {byokProvider !== "ollama" && (
                   <div style={{ flex: 1, minWidth: "220px" }}>
-                    <label style={{ fontSize: "0.75rem", color: "#94a3b8", display: "block", marginBottom: "0.2rem" }}>API Key (in-memory only):</label>
+                    <label style={{ fontSize: "0.75rem", color: "#94a3b8", display: "block", marginBottom: "0.2rem" }}>
+                      {byokProvider.toUpperCase()} API Key (in-memory only):
+                    </label>
                     <input
                       type="password"
                       placeholder={byokProvider === "openai" ? "sk-..." : byokProvider === "anthropic" ? "sk-ant-..." : "AIzaSy..."}
-                      value={byokApiKey}
-                      onChange={(e) => setByokApiKey(e.target.value)}
+                      value={currentApiKey}
+                      onChange={(e) =>
+                        setByokApiKeys({ ...byokApiKeys, [byokProvider]: e.target.value })
+                      }
                       style={{ width: "100%", padding: "0.35rem 0.6rem", borderRadius: "4px", backgroundColor: "#020617", color: "#f8fafc", border: "1px solid #334155", fontSize: "0.8rem", fontFamily: "monospace" }}
                     />
                   </div>
                 )}
               </div>
               <p style={{ margin: 0, fontSize: "0.72rem", color: "#64748b" }}>
-                🔒 Client-Held Key: Directly dispatched from your browser to provider API. Zero server retention.
+                🔒 Direct Browser Egress: Dispatched directly from your browser sandbox to the official {byokProvider.toUpperCase()} API. Zero server proxy.
               </p>
             </div>
           )}
@@ -378,7 +392,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
             <button
               type="button"
               onClick={runSimulation}
-              disabled={simulating || !userQuery.trim() || (simulatorMode === "byok" && !byokApiKey && byokProvider !== "ollama")}
+              disabled={simulating || !userQuery.trim() || (simulatorMode === "byok" && !currentApiKey && byokProvider !== "ollama")}
               style={{
                 padding: "0.5rem 1rem",
                 backgroundColor: "#2563eb",

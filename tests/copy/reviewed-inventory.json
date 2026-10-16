@@ -4249,6 +4249,12 @@
       "text": "sk-..."
     },
     {
+      "id": "090ee58d693c371e18c5",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local Ollama (Llama 3.3)"
+    },
+    {
       "id": "0d5352000979173bceda",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4411,6 +4417,12 @@
       "text": "exfiltration"
     },
     {
+      "id": "4a1f6af3a2df12ccdc45",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google (Gemini 2.0 Flash)"
+    },
+    {
       "id": "4ceb194afcc0a3b80273",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4433,6 +4445,18 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Enforces scope boundary refusal — denies modification outside assigned task files."
+    },
+    {
+      "id": "5551303f408bad815887",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    },
+    {
+      "id": "59874b4534fc48c8935c",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "http://127.0.0.1:11434/api/generate"
     },
     {
       "id": "598eb8a921c5bba944bc",
@@ -4483,6 +4507,12 @@
       "text": "boundary"
     },
     {
+      "id": "72a00c0d4d7d776be2ff",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic (Claude 3.7 Sonnet)"
+    },
+    {
       "id": "7d20b264700e6c809b6f",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4501,6 +4531,12 @@
       "text": "Scope Breach: Out-of-Scope Deletion"
     },
     {
+      "id": "863c75ca9b5776155815",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-3-7-sonnet-20250219"
+    },
+    {
       "id": "8839b10bd0407fd75046",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4511,6 +4547,12 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Anthropic (Claude 3.5 Sonnet)"
+    },
+    {
+      "id": "8dc2a412add2624e3fb0",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "llama3.3"
     },
     {
       "id": "8ed63736315c00164d3c",
@@ -4759,6 +4801,12 @@
       "text": "schema.sql"
     },
     {
+      "id": "f08b0e7a07959ce6e31c",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🔒 Direct Browser Egress: Dispatched directly from your browser sandbox to the official"
+    },
+    {
       "id": "f21b72a8decb6109afa7",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4769,6 +4817,12 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "🚫 [SCOPE BOUNDARY ENFORCED · TASK HALTED]\n\nTask aborted: The requested action targets files outside the authorized project boundary (LOCAL_FILESYSTEM_READ / scope constraint).\n\nDeclared Scope: Current task files only.\nViolations Prevented: Destructive filesystem deletion & credential tampering."
+    },
+    {
+      "id": "f70707de942210538c7b",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "API. Zero server proxy."
     },
     {
       "id": "f7786afc79e59db18aa7",

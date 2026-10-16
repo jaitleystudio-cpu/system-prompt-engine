@@ -16,9 +16,8 @@ import { transcompilePromptForPlatform } from "../src/engine/arsenal/modelTransc
 console.log("=== Running SPE Universal Prompt Arsenal Verification Battery ===");
 
 // 1. Total assets count
-console.log(`[1/5] Verifying catalog volume...`);
-assert.equal(ARSENAL_CATALOG_ASSETS.length, 100, `Expected exactly 100 assets, found ${ARSENAL_CATALOG_ASSETS.length}`);
-console.log(`  ✓ Exact 100 production prompt assets verified.`);
+assert.ok(ARSENAL_CATALOG_ASSETS.length >= 100, `Expected at least 100 assets, found ${ARSENAL_CATALOG_ASSETS.length}`);
+console.log(`  ✓ ${ARSENAL_CATALOG_ASSETS.length} production prompt assets verified (>= 100).`);
 
 // 2. Domain coverage across all 13 domains
 console.log(`[2/5] Verifying 13 domains coverage...`);

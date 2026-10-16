@@ -55,6 +55,8 @@ export interface SignedReceiptStatusAttestation {
   paymentStatus?: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
   subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
   tier: "pro" | "team";
+  planName?: string;
+  lifetime?: boolean;
   email: string;
   expiresAtMs: number;
   revoked: boolean;
@@ -247,7 +249,6 @@ export function verifySignedReceiptStatusAttestation(
   const nowMs = options.currentEpochMs ?? Date.now();
   const isLifetime =
     parsed.lifetime === true ||
-    parsed.subscriptionStatus === "LIFETIME" ||
     (typeof parsed.planName === "string" && parsed.planName.toLowerCase().includes("lifetime")) ||
     parsed.expiresAtMs >= 2_000_000_000_000;
 

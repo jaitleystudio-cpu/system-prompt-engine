@@ -986,7 +986,7 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
     const rawLines = raw.split("\n");
     const extractedConstraints = [];
     const objectiveLines = [];
-    const mandatoryDirectiveRegex = /\b(?:MUST NOT|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|PROHIBITED|STRICTLY|MANDATORY)\b/i;
+    const mandatoryDirectiveRegex = /\b(?:MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS)\b/i;
     for (const l of rawLines) {
       const trimmed = l.trim();
       if (
@@ -999,7 +999,7 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
       }
     }
     // Also scan multi-sentence objective lines for embedded mandatory obligations
-    const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|PROHIBITED|STRICTLY|MANDATORY)\b[^.!?\n]*[.!?]?)/gi;
+    const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS)\b[^.!?\n]*[.!?]?)/gi;
     for (const objLine of objectiveLines) {
       const matches = objLine.match(sentenceDirectiveRegex);
       if (matches) {

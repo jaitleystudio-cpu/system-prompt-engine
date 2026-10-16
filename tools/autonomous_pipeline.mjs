@@ -92,6 +92,7 @@ export function executeAutonomousPipeline(options = {}) {
       { name: "arsenal-catalog", script: "apps/web/scripts/test-arsenal-catalog.mjs" },
       { name: "model-atlas", script: "apps/web/scripts/test-model-atlas.mjs" },
       { name: "forensic-r2-gates", script: "apps/web/scripts/test-forensic-r2-gates.mjs" },
+      { name: "chatgpt-counter-review-remediation", script: "apps/web/scripts/test-chatgpt-counter-review-remediation.mjs" },
     ];
 
     let totalSuccessMarkers = 0;
@@ -112,7 +113,7 @@ export function executeAutonomousPipeline(options = {}) {
         status: "PASS",
       });
     }
-    logSuccess(`All 5 verification suites executed cleanly (exitCode: 0) with ${totalSuccessMarkers} observed success markers.`);
+    logSuccess(`All ${testSuites.length} verification suites executed cleanly (exitCode: 0) with ${totalSuccessMarkers} observed success markers.`);
     results.steps.testBattery = {
       status: "PASS",
       testRunner: "node:child_process / custom-battery-runner",

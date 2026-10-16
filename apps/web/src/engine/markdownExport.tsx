@@ -1,133 +1,18 @@
 import React, { useState } from "react";
 import {
-  synthesizeSystemPrompt,
-  enforceTierOutputLimit,
-} from "./promptSynthesizer.mjs";
+  constructMarkdownSystemPrompt,
+  downloadMarkdownFile,
+  type MarkdownConstructOptions,
+} from "./markdownExportCore";
+export {
+  constructMarkdownSystemPrompt,
+  downloadMarkdownFile,
+  type MarkdownConstructOptions,
+};
 import type { DepthTier } from "./promptSynthesizer";
-import {
-  resolveBrowserVerifiedEntitlement,
-  type EntitlementVerificationResult,
-} from "./entitlementVerifier";
-
+import { resolveBrowserVerifiedEntitlement } from "./entitlementVerifier";
 import type { AgencyBranding } from "@spe/web-runtime";
 
-export interface MarkdownConstructOptions {
-  title?: string;
-  category?: string;
-  depthTier?: DepthTier;
-  includeFrontmatter?: boolean;
-  sha256?: string | null;
-  subscriptionTier?: "free" | "pro" | "team";
-  entitlement?: EntitlementVerificationResult | null;
-  agencyBranding?: AgencyBranding | null;
-  /**
-   * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
-   * enforced at production boundaries and cannot be bypassed via options.
-   */
-  enforceTierLimit?: never;
-  currentEpochMs?: number;
-}
-
-/**
- * Constructs a production-grade system prompt in pure Markdown format.
- * Incorporates role, bounded objective, cognitive scaffolding, execution details,
- * evidence boundaries, and verification batteries.
- */
-export function constructMarkdownSystemPrompt(
-  irOrPrompt: string,
-  options: MarkdownConstructOptions = {},
-): string {
-  const {
-    title = "SPE Calibrated System Prompt",
-    category,
-    depthTier = "normal",
-    includeFrontmatter = false,
-    sha256 = null,
-    subscriptionTier,
-    entitlement,
-    agencyBranding,
-    currentEpochMs,
-  } = options;
-
-  const resolvedEntitlement =
-    subscriptionTier === "free"
-      ? null
-      : entitlement !== undefined
-        ? entitlement
-        : resolveBrowserVerifiedEntitlement({ currentEpochMs });
-
-  // Synthesize Markdown structure via universal synthesizer
-  const mdBody = synthesizeSystemPrompt(irOrPrompt, {
-    target: "chatgpt", // Standard GFM Markdown spec
-    category,
-    depthTier,
-    subscriptionTier,
-    entitlement: resolvedEntitlement,
-    currentEpochMs,
-  });
-
-  const isWhiteLabeled = Boolean(agencyBranding?.agencyName?.trim());
-  const shouldIncludeFrontmatter = options.includeFrontmatter ?? isWhiteLabeled;
-
-  if (!shouldIncludeFrontmatter) {
-    return enforceTierOutputLimit(mdBody, {
-      subscriptionTier,
-      entitlement: resolvedEntitlement,
-      currentEpochMs,
-    });
-  }
-
-  const frontmatter = [
-    "---",
-    `title: ${JSON.stringify(title)}`,
-    isWhiteLabeled
-      ? `prepared_by: ${JSON.stringify(agencyBranding!.agencyName!.trim())}`
-      : 'generator: "System Prompt Engine (SPE v1.2)"',
-    isWhiteLabeled && agencyBranding?.clientName?.trim()
-      ? `prepared_for: ${JSON.stringify(agencyBranding.clientName.trim())}`
-      : null,
-    isWhiteLabeled && agencyBranding?.reportSubtitle?.trim()
-      ? `report_subtitle: ${JSON.stringify(agencyBranding.reportSubtitle.trim())}`
-      : null,
-    isWhiteLabeled
-      ? 'specification_standard: "System Prompt Engine (SPE v1.2 AST)"'
-      : null,
-    'format: "Markdown (CommonMark / GitHub Flavored Markdown)"',
-    `depth_tier: ${JSON.stringify(depthTier)}`,
-    `character_count: ${mdBody.length}`,
-    `created_at_utc: ${JSON.stringify(new Date().toISOString())}`,
-    sha256 ? `integrity_sha256: ${JSON.stringify(sha256)}` : null,
-    "---",
-    "",
-    "",
-  ]
-    .filter((line) => line !== null)
-    .join("\n");
-
-  const fullMarkdown = frontmatter + mdBody;
-  return enforceTierOutputLimit(fullMarkdown, {
-    subscriptionTier,
-    entitlement: resolvedEntitlement,
-    currentEpochMs,
-  });
-}
-
-/**
- * Initiates browser download of a Markdown (.md) file.
- */
-export function downloadMarkdownFile(filename: string, content: string): void {
-  if (typeof window === "undefined") return;
-  const safeFilename = filename.endsWith(".md") ? filename : `${filename}.md`;
-  const blob = new Blob([content], { type: "text/markdown; charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = safeFilename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
 
 export interface MarkdownExportButtonProps {
   promptText: string;

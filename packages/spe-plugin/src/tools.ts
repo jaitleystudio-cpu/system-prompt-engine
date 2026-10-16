@@ -72,7 +72,7 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
   );
 
   // Extract any inline or sentence-level mandatory instructions from goal (Finding F05)
-  const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|PROHIBITED|STRICTLY|MANDATORY)\b[^.!?\n]*[.!?]?)/gi;
+  const sentenceDirectiveRegex = /([^.!?\n]*\b(?:MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS)\b[^.!?\n]*[.!?]?)/gi;
   const goalDirectives: string[] = [];
   const goalMatches = goal.match(sentenceDirectiveRegex);
   if (goalMatches) {
@@ -227,7 +227,10 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
     throw new Error("CAPACITY_ERROR_ACCEPTANCE_MISSING: # Acceptance Verification Battery section was dropped.");
   }
 
-  if (req.output_format?.trim() && !finalPrompt.includes(req.output_format.trim())) {
+  const cleanedOutputFormat = req.output_format?.trim()
+    ? cleanSurrogateBoundaries(req.output_format.trim())
+    : null;
+  if (cleanedOutputFormat && !finalPrompt.includes(cleanedOutputFormat)) {
     throw new Error("CAPACITY_ERROR_OUTPUT_CONTRACT_MISSING: # Desired Output Contract was dropped.");
   }
 
