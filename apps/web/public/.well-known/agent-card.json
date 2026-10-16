@@ -27,7 +27,9 @@
     "dialectTranscompilation": true,
     "constraintAuditing": true,
     "offlineExecution": true,
-    "streaming": false
+    "streaming": false,
+    "freeTierCapacityCharacters": 30000,
+    "freeTierUniversal": true
   },
   "defaultInputMediaTypes": [
     "application/json",
@@ -73,7 +75,7 @@
     "schemes": [
       {
         "type": "none",
-        "description": "Public community catalog and standard prompt compilation are free and unauthenticated."
+        "description": "Public community catalog and standard prompt compilation up to 30,000 characters are 100% free and unauthenticated for all AI bots, AI models, and humans."
       },
       {
         "type": "bearer",

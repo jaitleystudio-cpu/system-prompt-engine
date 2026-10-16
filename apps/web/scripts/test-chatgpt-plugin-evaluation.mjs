@@ -10,7 +10,7 @@
  * - Precision >= 95%
  * - Recall >= 90%
  * - Specificity >= 95%
- * - Free tier ceiling enforcement (15,000 characters)
+ * - Free tier ceiling enforcement (30,000 characters)
  * - Zero unauthorized advertising or purchase pressure
  */
 
@@ -234,8 +234,8 @@ const promptOut = compileSystemPrompt({
 if (promptOut.character_count > FREE_TIER_MAX_OUTPUT_CHARS) {
   throw new Error(`Exceeded Free tier ceiling: ${promptOut.character_count} > ${FREE_TIER_MAX_OUTPUT_CHARS}`);
 }
-if (promptOut.capacity_limit !== 15000) {
-  throw new Error(`Expected Free tier capacity limit 15,000, got ${promptOut.capacity_limit}`);
+if (promptOut.capacity_limit !== 30000) {
+  throw new Error(`Expected Free tier capacity limit 30,000, got ${promptOut.capacity_limit}`);
 }
 if (promptOut.is_token_count_exact !== false) {
   throw new Error(`Token counts must be labeled as estimated approximations, not exact`);

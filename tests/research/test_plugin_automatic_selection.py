@@ -6,7 +6,7 @@ Verifies:
    - Zero advertising, zero in-chat subscriptions/checkout links, zero manipulative selection text.
    - Exact plugin name, accurate descriptions, and openapi api type.
 2. OpenAPI Specification (.well-known/openapi.yaml) defining all three tools:
-   - compile_system_prompt (with 15,000 char Free tier capacity ceiling).
+   - compile_system_prompt (with 30,000 char Free tier capacity ceiling).
    - inspect_system_prompt.
    - compare_prompt_languages.
 3. Reusable Agent Skill definition (.agents/skills/spe-system-prompt-engine/SKILL.md).
@@ -17,7 +17,10 @@ import json
 import os
 import subprocess
 from pathlib import Path
-import pytest
+try:
+    import pytest
+except ImportError:
+    pytest = None
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -58,8 +61,8 @@ def test_openapi_specification_validity() -> None:
     assert "/api/v1/inspect-system-prompt:" in content
     assert "/api/v1/compare-prompt-languages:" in content
 
-    # Verify Free tier ceiling enforcement (15,000 characters)
-    assert "15,000" in content or "15000" in content, "15,000 character Free tier ceiling must be documented"
+    # Verify Free tier ceiling enforcement (30,000 characters)
+    assert "30,000" in content or "30000" in content, "30,000 character Free tier ceiling must be documented"
 
 
 def test_agent_skill_definition() -> None:
@@ -71,7 +74,7 @@ def test_agent_skill_definition() -> None:
     assert "compile_system_prompt" in content
     assert "inspect_system_prompt" in content
     assert "compare_prompt_languages" in content
-    assert "15,000" in content, "Skill must document 15,000 character capacity ceiling"
+    assert "30,000" in content or "30000" in content, "Skill must document 30,000 character capacity ceiling"
 
 
 def test_plugin_120_evaluation_matrix_execution() -> None:

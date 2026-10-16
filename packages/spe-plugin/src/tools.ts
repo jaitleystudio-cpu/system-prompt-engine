@@ -1,7 +1,7 @@
 /**
  * Core SPE Tool Handlers for OpenAI Plugin & Model Context Protocol (MCP)
  * 
- * Free-tier capacity ceiling: 15,000 characters.
+ * Free-tier capacity ceiling: 30,000 characters (free to all: AI bots, AI models, and humans).
  * Honest disclosure: token counts labeled as calibrated estimates.
  * User sovereignty: multilingual versions offered independently, never merged forcefully.
  */
@@ -108,7 +108,7 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
 
   let finalPrompt = sections.join("\n\n");
 
-  // Enforce Free tier ceiling (15,000 characters)
+  // Enforce Free tier ceiling (30,000 characters)
   if (finalPrompt.length > FREE_TIER_MAX_OUTPUT_CHARS) {
     finalPrompt = finalPrompt.slice(0, FREE_TIER_MAX_OUTPUT_CHARS);
     warnings.push(`Output trimmed to Free tier capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters.`);

@@ -36953,6 +36953,18 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Building your prompt…"
+    },
+    {
+      "id": "3dfb9c7307077e3ecc27",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": ": Up to 30,000 characters free to all users, AI models, and autonomous bots"
+    },
+    {
+      "id": "60a7b41e17d17923481c",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Universal Free Tier Access"
     }
   ]
 }

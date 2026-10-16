@@ -257,6 +257,10 @@ export function Pricing({
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
+              <span><strong>Universal Free Tier Access</strong>: Up to 30,000 characters free to all users, AI models, and autonomous bots</span>
+            </li>
+            <li className="spe-pricing-feature-item">
+              <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
               <span><strong>Curated Prompt &amp; Template Catalog</strong> across coding, UI, and research tasks</span>
             </li>
             <li className="spe-pricing-feature-item">

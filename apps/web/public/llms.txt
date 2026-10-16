@@ -49,4 +49,4 @@ SPE provides a stateless MCP server conforming to the July 28, 2026 Model Contex
 - Zero Cloud Egress: Prompts are generated, compiled, and audited strictly in-browser or on-host via local WebAssembly.
 - Deterministic Verification: Rule verification powered by propositional Horn clauses and Kleene-3 logic.
 - Canonical Hash: `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`.
-- Free Core: System Prompt Engine is free for human developers and local agents, with optional commercial enterprise licensing.
+- Free Core: System Prompt Engine provides up to 30,000 characters free to all (including AI bots, AI models, and human developers), with optional commercial enterprise licensing.

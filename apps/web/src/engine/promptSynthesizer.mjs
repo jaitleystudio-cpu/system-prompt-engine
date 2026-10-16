@@ -1778,7 +1778,7 @@ export function enforceTierOutputLimit(promptText, opts = {}) {
 /**
  * Compiles a system prompt with strict runtime Free-vs-Pro tier output enforcement.
  * By default (when no verified Pro/Team entitlement is supplied), enforces the
- * 5,000-character Free tier ceiling even when given 100,000+ character context inputs.
+ * 30,000-character Free tier ceiling even when given 100,000+ character context inputs.
  */
 export function compilePromptWithTierEnforcement(raw, opts = {}) {
   const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;

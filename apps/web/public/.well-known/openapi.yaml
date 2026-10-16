@@ -84,7 +84,7 @@ paths:
                     description: Calibrated estimated token count for the target model.
                   capacity_limit:
                     type: integer
-                    description: Active capacity ceiling in characters (15,000 for Free tier).
+                    description: Active capacity ceiling in characters (30,000 for Free tier; free to all humans, AI models, and AI bots).
                   warnings:
                     type: array
                     items:

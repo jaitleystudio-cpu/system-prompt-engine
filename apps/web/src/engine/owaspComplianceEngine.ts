@@ -227,7 +227,7 @@ export function auditOwaspCompliance(promptText: string): OwaspAuditReport {
 
   // 10. LLM10: Unbounded Consumption (DoS)
   const isAligned = kvAlign.fragmentationIndex === 0;
-  const respectsBudget = promptText.length <= 15000;
+  const respectsBudget = promptText.length <= 30000;
   const llm10Passed = (isAligned ? 1 : 0) + (respectsBudget ? 1 : 0);
   categories.push({
     id: 'LLM10',
@@ -241,7 +241,7 @@ export function auditOwaspCompliance(promptText: string): OwaspAuditReport {
     totalChecks: 2,
     details: [
       isAligned ? `✓ KV-Cache aligned with 0.00 fragmentation index (Estimated TTFT savings: ${kvAlign.estimatedTtftSavingsMs}ms)` : '△ Prompt not aligned to PagedAttention page boundaries',
-      respectsBudget ? `✓ Prompt length (${promptText.length} chars) strictly within 15,000c safe volume budget` : '✗ Prompt exceeds maximum token budget'
+      respectsBudget ? `✓ Prompt length (${promptText.length} chars) strictly within 30,000c safe volume budget` : '✗ Prompt exceeds maximum token budget'
     ]
   });
 

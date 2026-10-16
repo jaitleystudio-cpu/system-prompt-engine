@@ -75,15 +75,15 @@ export function evaluatePromptDataQuality(
   });
 
   // 2. Validity
-  const lengthValid = text.length >= 50 && text.length <= 15000;
+  const lengthValid = text.length >= 50 && text.length <= 30000;
   expectations.push({
     dimension: "Validity",
     ruleId: "DQ-V01-LENGTH-BOUNDS",
     name: "Character Budget Bounds",
-    description: "Prompt length must reside within bounded character envelope (50c - 15,000c).",
+    description: "Prompt length must reside within bounded character envelope (50c - 30,000c).",
     status: lengthValid ? "PASSED" : "FAILED",
     observedValue: `${text.length} chars`,
-    threshold: "50 - 15,000 chars",
+    threshold: "50 - 30,000 chars",
   });
 
   const balancedFences = (text.match(/```/g) || []).length % 2 === 0;
