@@ -48,6 +48,7 @@ export class NetworkEgressObserver {
 
   public static isDestinationPermitted(dest: string): boolean {
     if (!dest) return false;
+    if (this.isLocalResource(dest)) return true;
     return this.permittedDestinationsList.some((allowed) => {
       if (allowed === "*" || allowed === dest) return true;
       try {
@@ -68,13 +69,32 @@ export class NetworkEgressObserver {
         if (allowUrl.port) {
           const destPort = destUrl.port || (destUrl.protocol === "https:" || destUrl.protocol === "wss:" ? "443" : "80");
           return destPort === allowUrl.port;
+        } else {
+          // Strict air-gap: If no port is specified in allowlist rule, only standard default scheme ports (80/443) match.
+          // Non-standard ports (e.g. 8080, 9222, etc.) are strictly forbidden unless explicitly declared.
+          const destPort = destUrl.port || (destUrl.protocol === "https:" || destUrl.protocol === "wss:" ? "443" : "80");
+          const defaultPort = allowUrl.protocol === "https:" || allowUrl.protocol === "wss:" ? "443" : "80";
+          return destPort === defaultPort;
         }
-
-        return true;
       } catch {
-        return dest.includes(allowed);
+        return dest === allowed;
       }
     });
+  }
+
+  /**
+   * Identifies whether a target represents a purely local in-memory or filesystem resource
+   * (e.g. file:// URIs, local absolute file paths in Node, data: or blob: URIs) rather than
+   * an outbound network interface connection.
+   */
+  public static isLocalResource(dest: string): boolean {
+    if (!dest) return false;
+    return (
+      dest.startsWith("file://") ||
+      dest.startsWith("data:") ||
+      dest.startsWith("blob:") ||
+      (typeof process !== "undefined" && (dest.startsWith("/") || /^[a-zA-Z]:[\\/]/.test(dest)))
+    );
   }
 
   private static extractSocketDestination(args: any[]): string {
@@ -177,8 +197,14 @@ export class NetworkEgressObserver {
       this.origFetch = globalThis.fetch;
       globalThis.fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
         if (self.activeSessions > 0) {
-          self.packetCount++;
           const urlStr = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+
+          // Purely local filesystem or in-memory resource reads do not create network packets
+          if (self.isLocalResource(urlStr)) {
+            return (self.origFetch as any).call(globalThis, input, init);
+          }
+
+          self.packetCount++;
           self.destinations.push(urlStr);
 
           if (self.isDestinationPermitted(urlStr)) {

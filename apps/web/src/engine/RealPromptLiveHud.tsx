@@ -20,7 +20,7 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
 
   useEffect(() => {
     setIsUpdating(true);
-    const timer = setTimeout(() => setIsUpdating(false), 320);
+    const timer = setTimeout(() => setIsUpdating(false), 240);
     return () => clearTimeout(timer);
   }, [value]);
 
@@ -30,322 +30,273 @@ export function RealPromptLiveHud({ value, busy, onBuild }: RealPromptLiveHudPro
     if (!text) return;
     navigator.clipboard?.writeText(text);
     setCopiedSlot(label);
-    setTimeout(() => setCopiedSlot(null), 1800);
+    setTimeout(() => setCopiedSlot(null), 1600);
   };
 
   if (!hasContent) {
     return (
-      <div className="spe-wow-canvas spe-wow-canvas--idle" role="region" aria-label="Prompt builder guide">
-        <div className="spe-wow-topbar">
-          <div className="spe-wow-status-pill">
-            <span className="spe-wow-idle-dot" />
+      <div className="spe-friendly-canvas spe-friendly-canvas--idle" role="region" aria-label="Prompt builder guide">
+        <div className="spe-friendly-topbar">
+          <div className="spe-friendly-badge">
+            <span className="spe-friendly-dot" />
             <span>HOW IT WORKS</span>
           </div>
-          <span className="spe-wow-privacy-tag">
+          <span className="spe-friendly-privacy">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            Private · Runs on Device
+            100% on your device · Private
           </span>
         </div>
 
-        <div className="spe-wow-header">
-          <h3 className="spe-wow-title">
-            The four pillars of an unbreakable prompt.
+        <div className="spe-friendly-header">
+          <h3 className="spe-friendly-title">
+            The 4 parts of a great prompt.
           </h3>
-          <p className="spe-wow-subtitle">
-            Type your idea on the left or select an example. SPE maps your brief into four clear instructions:
+          <p className="spe-friendly-subtitle">
+            Type your idea on the left. SPE automatically arranges your thoughts into four clear instructions:
           </p>
         </div>
 
-        <div className="spe-wow-bento">
+        <div className="spe-friendly-list">
           {/* Slot 1: ROLE */}
-          <div className="spe-wow-card is-idle card--role">
-            <div className="spe-wow-card-inner">
-              <div className="spe-wow-card-head">
-                <div className="spe-wow-tag-group">
-                  <span className="spe-wow-icon-box role">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
-                  </span>
-                  <span className="spe-wow-slot-label role">01 · ROLE</span>
-                </div>
-                <span className="spe-wow-hint">Persona & Authority</span>
+          <div className="spe-friendly-card card--role is-idle">
+            <div className="spe-friendly-card-top">
+              <div className="spe-friendly-slot-tag role">
+                <span className="spe-friendly-icon role">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </span>
+                <span className="spe-friendly-label">01 · Role</span>
               </div>
-              <p className="spe-wow-card-body placeholder">
-                Establishes the expert domain, voice, and perspective.
-              </p>
+              <span className="spe-friendly-hint">Who the AI is</span>
             </div>
+            <p className="spe-friendly-body placeholder">
+              Sets the right role, voice, and expertise for your task.
+            </p>
           </div>
 
           {/* Slot 2: GOAL */}
-          <div className="spe-wow-card is-idle card--goal">
-            <div className="spe-wow-card-inner">
-              <div className="spe-wow-card-head">
-                <div className="spe-wow-tag-group">
-                  <span className="spe-wow-icon-box goal">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <circle cx="12" cy="12" r="6" />
-                      <circle cx="12" cy="12" r="2" />
-                    </svg>
-                  </span>
-                  <span className="spe-wow-slot-label goal">02 · GOAL</span>
-                </div>
-                <span className="spe-wow-hint">Primary Objective</span>
+          <div className="spe-friendly-card card--goal is-idle">
+            <div className="spe-friendly-card-top">
+              <div className="spe-friendly-slot-tag goal">
+                <span className="spe-friendly-icon goal">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="6" />
+                    <circle cx="12" cy="12" r="2" />
+                  </svg>
+                </span>
+                <span className="spe-friendly-label">02 · Goal</span>
               </div>
-              <p className="spe-wow-card-body placeholder">
-                Locks in the singular outcome the model must accomplish.
-              </p>
+              <span className="spe-friendly-hint">What you want done</span>
             </div>
+            <p className="spe-friendly-body placeholder">
+              Locks in your main objective so the AI stays completely focused.
+            </p>
           </div>
 
           {/* Slot 3: RULES */}
-          <div className="spe-wow-card is-idle card--constraint">
-            <div className="spe-wow-card-inner">
-              <div className="spe-wow-card-head">
-                <div className="spe-wow-tag-group">
-                  <span className="spe-wow-icon-box constraint">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                  </span>
-                  <span className="spe-wow-slot-label constraint">03 · RULES</span>
-                </div>
-                <span className="spe-wow-hint">Strict Guardrails</span>
+          <div className="spe-friendly-card card--rules is-idle">
+            <div className="spe-friendly-card-top">
+              <div className="spe-friendly-slot-tag rules">
+                <span className="spe-friendly-icon rules">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </span>
+                <span className="spe-friendly-label">03 · Rules</span>
               </div>
-              <p className="spe-wow-card-body placeholder">
-                Zero hallucinations. Explicit boundaries to eliminate guesswork.
-              </p>
+              <span className="spe-friendly-hint">What to follow</span>
             </div>
+            <p className="spe-friendly-body placeholder">
+              Sets boundaries so the AI avoids guessing or making things up.
+            </p>
           </div>
 
           {/* Slot 4: OUTPUT */}
-          <div className="spe-wow-card is-idle card--output">
-            <div className="spe-wow-card-inner">
-              <div className="spe-wow-card-head">
-                <div className="spe-wow-tag-group">
-                  <span className="spe-wow-icon-box output">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="16 18 22 12 16 6" />
-                      <polyline points="8 6 2 12 8 18" />
-                    </svg>
-                  </span>
-                  <span className="spe-wow-slot-label output">04 · OUTPUT</span>
-                </div>
-                <span className="spe-wow-hint">Contract & Schema</span>
+          <div className="spe-friendly-card card--output is-idle">
+            <div className="spe-friendly-card-top">
+              <div className="spe-friendly-slot-tag output">
+                <span className="spe-friendly-icon output">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                </span>
+                <span className="spe-friendly-label">04 · Output</span>
               </div>
-              <p className="spe-wow-card-body placeholder">
-                The exact format, schema, and steps ready for execution.
-              </p>
+              <span className="spe-friendly-hint">How to answer</span>
             </div>
+            <p className="spe-friendly-body placeholder">
+              Defines the exact structure, format, or steps you need back.
+            </p>
           </div>
         </div>
 
-        <div className="spe-wow-footer idle">
-          <span className="spe-wow-spark">✦</span>
-          <span>Type your idea or select an example on the left to begin</span>
+        <div className="spe-friendly-footer idle">
+          <span>Type your idea or click an example on the left to begin</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`spe-wow-canvas spe-wow-canvas--live ${isUpdating ? "is-updating-all" : ""}`} role="region" aria-label="Live prompt structure">
-      {/* Dynamic ambient energy glow */}
-      <div className="spe-wow-ambient-glow" aria-hidden="true" />
-
-      {/* Top telemetry bar */}
-      <div className="spe-wow-topbar">
-        <div className="spe-wow-status-pill live">
-          <span className="spe-wow-live-beacon" />
-          <span>LIVE BLUEPRINT</span>
+    <div className={`spe-friendly-canvas spe-friendly-canvas--live ${isUpdating ? "is-updating" : ""}`} role="region" aria-label="Live prompt structure">
+      {/* Top clean status bar */}
+      <div className="spe-friendly-topbar">
+        <div className="spe-friendly-badge live">
+          <span className="spe-friendly-live-dot" />
+          <span>LIVE PREVIEW</span>
         </div>
 
-        <div className="spe-wow-progress-track">
-          <div className="spe-wow-progress-bar" />
-          <span className="spe-wow-progress-label">4 of 4 Pillars Locked</span>
-        </div>
-
-        <span className="spe-wow-privacy-tag">
+        <span className="spe-friendly-privacy">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          Private · Runs on Device
+          100% on your device · Private
         </span>
       </div>
 
-      {/* Clear, magnetic, prestigious headline */}
-      <div className="spe-wow-header">
-        <h3 className="spe-wow-title">
-          Turn your words into an unbreakable prompt.
+      {/* Warm, friendly headline */}
+      <div className="spe-friendly-header">
+        <h3 className="spe-friendly-title">
+          Say it plainly. See it take shape.
         </h3>
-        <p className="spe-wow-subtitle">
-          Structured in real time into four essential pillars any AI follows without drift.
+        <p className="spe-friendly-subtitle">
+          Structured in real time into four simple parts any AI follows without drift.
         </p>
       </div>
 
-      {/* 4 Gorgeous Double-Bezel Live Bento Cards */}
-      <div className="spe-wow-bento">
+      {/* 4 Clean, Beautiful, Vertical Cards */}
+      <div className="spe-friendly-list">
         {/* Slot 1: ROLE */}
-        <div className={`spe-wow-card is-active card--role ${isUpdating ? "is-updating" : ""}`}>
-          <div className="spe-wow-card-inner">
-            <div className="spe-wow-card-head">
-              <div className="spe-wow-tag-group">
-                <span className="spe-wow-icon-box role">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                </span>
-                <span className="spe-wow-slot-label role">01 · ROLE</span>
-                <span className="spe-wow-status-badge role">● Active Identity</span>
-              </div>
-              <div className="spe-wow-action-group">
-                <span className="spe-wow-hint">Persona & Authority</span>
-                <button
-                  type="button"
-                  className="spe-wow-copy-btn"
-                  title="Copy Role"
-                  onClick={() => copySlotText("Role", parsed.role)}
-                >
-                  {copiedSlot === "Role" ? "✓ Copied" : "Copy"}
-                </button>
-              </div>
+        <div className="spe-friendly-card card--role is-active">
+          <div className="spe-friendly-card-top">
+            <div className="spe-friendly-slot-tag role">
+              <span className="spe-friendly-icon role">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </span>
+              <span className="spe-friendly-label">01 · Role</span>
+              <span className="spe-friendly-sublabel">Who the AI is</span>
             </div>
-            <p className="spe-wow-card-body">{parsed.role}</p>
+            <button
+              type="button"
+              className="spe-friendly-copy-btn"
+              title="Copy Role"
+              onClick={() => copySlotText("Role", parsed.role)}
+            >
+              {copiedSlot === "Role" ? "✓ Copied" : "Copy"}
+            </button>
           </div>
+          <p className="spe-friendly-body">{parsed.role}</p>
         </div>
 
         {/* Slot 2: GOAL */}
-        <div className={`spe-wow-card is-active card--goal ${isUpdating ? "is-updating" : ""}`}>
-          <div className="spe-wow-card-inner">
-            <div className="spe-wow-card-head">
-              <div className="spe-wow-tag-group">
-                <span className="spe-wow-icon-box goal">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <circle cx="12" cy="12" r="6" />
-                    <circle cx="12" cy="12" r="2" />
-                  </svg>
-                </span>
-                <span className="spe-wow-slot-label goal">02 · GOAL</span>
-                <span className="spe-wow-status-badge goal">● Core Mission</span>
-              </div>
-              <div className="spe-wow-action-group">
-                <span className="spe-wow-hint">Primary Objective</span>
-                <button
-                  type="button"
-                  className="spe-wow-copy-btn"
-                  title="Copy Goal"
-                  onClick={() => copySlotText("Goal", parsed.goal)}
-                >
-                  {copiedSlot === "Goal" ? "✓ Copied" : "Copy"}
-                </button>
-              </div>
+        <div className="spe-friendly-card card--goal is-active">
+          <div className="spe-friendly-card-top">
+            <div className="spe-friendly-slot-tag goal">
+              <span className="spe-friendly-icon goal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="6" />
+                  <circle cx="12" cy="12" r="2" />
+                </svg>
+              </span>
+              <span className="spe-friendly-label">02 · Goal</span>
+              <span className="spe-friendly-sublabel">What you want done</span>
             </div>
-            <p className="spe-wow-card-body">
-              {parsed.goal || "The singular outcome the model must accomplish."}
-            </p>
+            <button
+              type="button"
+              className="spe-friendly-copy-btn"
+              title="Copy Goal"
+              onClick={() => copySlotText("Goal", parsed.goal)}
+            >
+              {copiedSlot === "Goal" ? "✓ Copied" : "Copy"}
+            </button>
           </div>
+          <p className="spe-friendly-body">
+            {parsed.goal || "The main objective your AI will accomplish."}
+          </p>
         </div>
 
         {/* Slot 3: RULES */}
-        <div className={`spe-wow-card is-active card--constraint ${isUpdating ? "is-updating" : ""}`}>
-          <div className="spe-wow-card-inner">
-            <div className="spe-wow-card-head">
-              <div className="spe-wow-tag-group">
-                <span className="spe-wow-icon-box constraint">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                </span>
-                <span className="spe-wow-slot-label constraint">03 · RULES</span>
-                <span className="spe-wow-status-badge constraint">● Zero Drift</span>
-              </div>
-              <div className="spe-wow-action-group">
-                <span className="spe-wow-hint">Strict Guardrails</span>
-                <button
-                  type="button"
-                  className="spe-wow-copy-btn"
-                  title="Copy Rules"
-                  onClick={() => copySlotText("Rules", parsed.constraint)}
-                >
-                  {copiedSlot === "Rules" ? "✓ Copied" : "Copy"}
-                </button>
-              </div>
+        <div className="spe-friendly-card card--rules is-active">
+          <div className="spe-friendly-card-top">
+            <div className="spe-friendly-slot-tag rules">
+              <span className="spe-friendly-icon rules">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </span>
+              <span className="spe-friendly-label">03 · Rules</span>
+              <span className="spe-friendly-sublabel">What to follow</span>
             </div>
-            <p className="spe-wow-card-body">
-              {parsed.constraint || "Zero hallucinations. Explicit boundaries to eliminate guesswork."}
-            </p>
+            <button
+              type="button"
+              className="spe-friendly-copy-btn"
+              title="Copy Rules"
+              onClick={() => copySlotText("Rules", parsed.constraint)}
+            >
+              {copiedSlot === "Rules" ? "✓ Copied" : "Copy"}
+            </button>
           </div>
+          <p className="spe-friendly-body">
+            {parsed.constraint || "Follow provided instructions only. Never invent facts or details."}
+          </p>
         </div>
 
         {/* Slot 4: OUTPUT */}
-        <div className={`spe-wow-card is-active card--output ${isUpdating ? "is-updating" : ""}`}>
-          <div className="spe-wow-card-inner">
-            <div className="spe-wow-card-head">
-              <div className="spe-wow-tag-group">
-                <span className="spe-wow-icon-box output">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="16 18 22 12 16 6" />
-                    <polyline points="8 6 2 12 8 18" />
-                  </svg>
-                </span>
-                <span className="spe-wow-slot-label output">04 · OUTPUT</span>
-                <span className="spe-wow-status-badge output">● Deliverable</span>
-              </div>
-              <div className="spe-wow-action-group">
-                <span className="spe-wow-hint">Contract & Schema</span>
-                <button
-                  type="button"
-                  className="spe-wow-copy-btn"
-                  title="Copy Output"
-                  onClick={() => copySlotText("Output", parsed.output)}
-                >
-                  {copiedSlot === "Output" ? "✓ Copied" : "Copy"}
-                </button>
-              </div>
+        <div className="spe-friendly-card card--output is-active">
+          <div className="spe-friendly-card-top">
+            <div className="spe-friendly-slot-tag output">
+              <span className="spe-friendly-icon output">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+              </span>
+              <span className="spe-friendly-label">04 · Output</span>
+              <span className="spe-friendly-sublabel">How to answer</span>
             </div>
-            <p className="spe-wow-card-body">
-              {parsed.output || "The exact format, schema, and steps ready for execution."}
-            </p>
+            <button
+              type="button"
+              className="spe-friendly-copy-btn"
+              title="Copy Output"
+              onClick={() => copySlotText("Output", parsed.output)}
+            >
+              {copiedSlot === "Output" ? "✓ Copied" : "Copy"}
+            </button>
           </div>
+          <p className="spe-friendly-body">
+            {parsed.output || "Clear, step-by-step response with concrete, verified details."}
+          </p>
         </div>
       </div>
 
-      {/* Awwwards Shimmer Island Button */}
-      <div className="spe-wow-footer live">
+      {/* Clean, Inviting CTA Footer */}
+      <div className="spe-friendly-footer">
         <button
           type="button"
-          className="spe-wow-shimmer-btn"
+          className="spe-friendly-cta"
           disabled={busy}
           onClick={onBuild}
           aria-busy={busy}
         >
-          <span className="spe-wow-btn-label">
-            {busy ? "Assembling prompt…" : "Generate Production Prompt"}
-          </span>
-          <span className="spe-wow-btn-orb">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg>
-          </span>
+          <span>{busy ? "Building prompt…" : "Build Full Prompt"}</span>
+          <span className="spe-friendly-cta-arrow">↗</span>
         </button>
 
-        <div className="spe-wow-shortcut">
-          <span>or press</span>
-          <kbd>⌘</kbd>
-          <span>/</span>
-          <kbd>Ctrl</kbd>
-          <span>+</span>
-          <kbd>Enter</kbd>
-        </div>
+        <span className="spe-friendly-shortcut">
+          or press <kbd>⌘</kbd> + <kbd>Enter</kbd>
+        </span>
       </div>
     </div>
   );

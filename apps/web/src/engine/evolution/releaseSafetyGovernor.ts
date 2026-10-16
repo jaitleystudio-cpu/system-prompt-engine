@@ -30,7 +30,7 @@ import {
   renameSync,
   readdirSync,
 } from "node:fs";
-import { resolve, relative } from "node:path";
+import { resolve, relative, dirname } from "node:path";
 import { createPublicKey, createPrivateKey, sign, verify, createHmac, randomBytes } from "node:crypto";
 import { computeSha256 } from "../hashUtils.ts";
 
@@ -809,21 +809,56 @@ export class ReleaseSafetyGovernor {
     const distWasm = resolve(distDir, "spe_wasm.wasm");
     const publicWasm = resolve(process.cwd(), "apps/web/public/spe_wasm.wasm");
     const distManifest = resolve(distDir, "release-manifest.json");
+    const pinnedManifest = resolve(pinnedBaseDir, "release-manifest.json");
 
     try {
       mkdirSync(distDir, { recursive: true });
     } catch {}
 
-    if (existsSync(pinnedWasm)) {
+    // Physically restore destination from immutable pinned storage
+    if (existsSync(pinnedManifest)) {
+      try {
+        const pManifest = JSON.parse(readFileSync(pinnedManifest, "utf-8"));
+        const artifacts = pManifest.artifacts || {};
+
+        // 1. Physically restore every tracked artifact (HTML, JS, CSS, WASM, models, config) from pinned-base to dist
+        for (const relPath of Object.keys(artifacts)) {
+          const srcPath = resolve(pinnedBaseDir, relPath);
+          const destPath = resolve(distDir, relPath);
+          if (existsSync(srcPath)) {
+            mkdirSync(dirname(destPath), { recursive: true });
+            copyFileSync(srcPath, destPath);
+          }
+        }
+
+        // 2. Restore the authentic pinned reference manifest directly into dist
+        copyFileSync(pinnedManifest, distManifest);
+
+        // 3. Restore canonical WASM to public if directory present in workspace
+        if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
+          copyFileSync(pinnedWasm, publicWasm);
+        }
+
+        // 4. Purge any unexpected / uncataloged files that were added to distDir
+        const diskFiles = ReleaseSafetyGovernor.scanDiskFiles(distDir);
+        for (const diskRel of diskFiles) {
+          if (diskRel !== "release-manifest.json" && !artifacts[diskRel]) {
+            try {
+              unlinkSync(resolve(distDir, diskRel));
+            } catch {}
+          }
+        }
+      } catch (err) {
+        console.warn("Rollback physical file restoration notice:", err);
+      }
+    } else if (existsSync(pinnedWasm)) {
       try {
         copyFileSync(pinnedWasm, distWasm);
         if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
           copyFileSync(pinnedWasm, publicWasm);
         }
-        const manifestData = this.buildWholeSiteManifest(distDir);
-        writeFileSync(distManifest, JSON.stringify(manifestData, null, 2), "utf-8");
       } catch (err) {
-        console.warn("Rollback physical file restoration notice:", err);
+        console.warn("Rollback physical WASM restoration notice:", err);
       }
     }
 
@@ -1037,67 +1072,140 @@ export class ReleaseSafetyGovernor {
   }
 
   /**
+   * Scans a directory recursively and returns all relative file paths.
+   */
+  public static scanDiskFiles(dir: string): string[] {
+    const files: string[] = [];
+    if (!existsSync(dir)) return files;
+    function walk(curr: string, base: string) {
+      const entries = readdirSync(curr, { withFileTypes: true });
+      for (const entry of entries) {
+        const full = resolve(curr, entry.name);
+        if (entry.isDirectory()) {
+          walk(full, base);
+        } else if (entry.isFile()) {
+          files.push(relative(base, full).replace(/\\/g, "/"));
+        }
+      }
+    }
+    walk(dir, dir);
+    return files;
+  }
+
+  /**
    * Cryptographically verifies the whole-site destination manifest and every single asset on disk.
-   * Fails closed if any asset is missing, corrupted, or unexpected.
+   * Fails closed if any asset is missing, corrupted, unexpected, or if destination manifest does not match pinned reference.
    */
   public verifyWholeSiteManifest(
     distDir: string,
     manifestObj?: any
-  ): { verifiedSafe: boolean; corruptedFiles: string[]; missingFiles: string[]; reason?: string } {
-    let mObj = manifestObj;
-    if (!mObj) {
-      const manifestPath = resolve(distDir, "release-manifest.json");
-      if (!existsSync(manifestPath)) {
+  ): {
+    verifiedSafe: boolean;
+    corruptedFiles: string[];
+    missingFiles: string[];
+    unexpectedFiles: string[];
+    reason?: string;
+  } {
+    const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
+    const pinnedManifestPath = resolve(pinnedBaseDir, "release-manifest.json");
+
+    let refManifest = manifestObj;
+    if (!refManifest) {
+      if (existsSync(pinnedManifestPath)) {
+        try {
+          refManifest = JSON.parse(readFileSync(pinnedManifestPath, "utf-8"));
+        } catch (err: any) {
+          return {
+            verifiedSafe: false,
+            corruptedFiles: [],
+            missingFiles: ["pinned-base/release-manifest.json"],
+            unexpectedFiles: [],
+            reason: `PINNED_MANIFEST_PARSE_ERROR: Failed to parse trusted pinned reference manifest: ${err.message}`,
+          };
+        }
+      } else {
         return {
           verifiedSafe: false,
           corruptedFiles: [],
-          missingFiles: ["release-manifest.json"],
-          reason: "WHOLE_SITE_MANIFEST_MISSING: release-manifest.json does not exist in destination.",
-        };
-      }
-      try {
-        mObj = JSON.parse(readFileSync(manifestPath, "utf-8"));
-      } catch (err: any) {
-        return {
-          verifiedSafe: false,
-          corruptedFiles: [],
-          missingFiles: [],
-          reason: `WHOLE_SITE_MANIFEST_PARSE_ERROR: ${err.message}`,
+          missingFiles: ["pinned-base/release-manifest.json"],
+          unexpectedFiles: [],
+          reason: "PINNED_MANIFEST_MISSING: Pinned reference manifest does not exist in pinned-base.",
         };
       }
     }
 
-    if (mObj.releaseCommit !== this.pinnedCommit) {
+    // Verify destination manifest exists on disk
+    const distManifestPath = resolve(distDir, "release-manifest.json");
+    if (!existsSync(distManifestPath)) {
       return {
         verifiedSafe: false,
         corruptedFiles: [],
-        missingFiles: [],
-        reason: `COMMIT_MISMATCH: Manifest commit '${mObj.releaseCommit}' does not match pinned commit '${this.pinnedCommit}'.`,
+        missingFiles: ["release-manifest.json"],
+        unexpectedFiles: [],
+        reason: "WHOLE_SITE_MANIFEST_MISSING: release-manifest.json does not exist in destination.",
       };
     }
 
-    if (mObj.wasmHash !== this.pinnedWasmHash) {
+    let distManifest: any;
+    try {
+      distManifest = JSON.parse(readFileSync(distManifestPath, "utf-8"));
+    } catch (err: any) {
       return {
         verifiedSafe: false,
         corruptedFiles: [],
         missingFiles: [],
+        unexpectedFiles: [],
+        reason: `WHOLE_SITE_MANIFEST_PARSE_ERROR: ${err.message}`,
+      };
+    }
+
+    // Authenticity check: destination manifest must match trusted reference manifest
+    if (distManifest.releaseCommit !== this.pinnedCommit) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles: [],
+        missingFiles: [],
+        unexpectedFiles: [],
+        reason: `COMMIT_MISMATCH: Manifest commit '${distManifest.releaseCommit}' does not match pinned commit '${this.pinnedCommit}'.`,
+      };
+    }
+
+    if (distManifest.wasmHash !== this.pinnedWasmHash) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles: [],
+        missingFiles: [],
+        unexpectedFiles: [],
         reason: `WASM_HASH_MISMATCH: Manifest wasmHash does not match canonical WASM hash.`,
+      };
+    }
+
+    if (refManifest.manifestDigest && distManifest.manifestDigest !== refManifest.manifestDigest) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles: [],
+        missingFiles: [],
+        unexpectedFiles: [],
+        reason: `MANIFEST_AUTHENTICITY_MISMATCH: Destination manifestDigest '${distManifest.manifestDigest}' does not match trusted reference manifestDigest '${refManifest.manifestDigest}'.`,
       };
     }
 
     const missingFiles: string[] = [];
     const corruptedFiles: string[] = [];
-    const artifacts = mObj.artifacts || {};
+    const unexpectedFiles: string[] = [];
+    const artifacts = refManifest.artifacts || {};
 
     if (Object.keys(artifacts).length === 0) {
       return {
         verifiedSafe: false,
         corruptedFiles: [],
         missingFiles: [],
+        unexpectedFiles: [],
         reason: "EMPTY_ARTIFACTS_INVENTORY: Manifest contains no tracked artifacts.",
       };
     }
 
+    // 1. Forward verification: All tracked artifacts in reference manifest must exist and match hash on disk
     for (const [relPath, meta] of Object.entries(artifacts) as [string, any][]) {
       const fullPath = resolve(distDir, relPath);
       if (!existsSync(fullPath)) {
@@ -1115,26 +1223,49 @@ export class ReleaseSafetyGovernor {
       }
     }
 
-    if (missingFiles.length > 0 || corruptedFiles.length > 0) {
+    // 2. Reverse verification: No unexpected / unapproved files on disk in destination
+    const diskFiles = ReleaseSafetyGovernor.scanDiskFiles(distDir);
+    for (const diskRel of diskFiles) {
+      if (
+        diskRel === "release-manifest.json" ||
+        diskRel.endsWith(".tmp") ||
+        diskRel.includes(".tmp.")
+      ) {
+        continue;
+      }
+      if (!artifacts[diskRel]) {
+        unexpectedFiles.push(diskRel);
+      }
+    }
+
+    if (missingFiles.length > 0 || corruptedFiles.length > 0 || unexpectedFiles.length > 0) {
+      const reasons: string[] = [];
+      if (corruptedFiles.length > 0) reasons.push(`${corruptedFiles.length} corrupted file(s) (${corruptedFiles.slice(0, 3).join(", ")})`);
+      if (missingFiles.length > 0) reasons.push(`${missingFiles.length} missing file(s) (${missingFiles.slice(0, 3).join(", ")})`);
+      if (unexpectedFiles.length > 0) reasons.push(`${unexpectedFiles.length} unexpected uncataloged file(s) (${unexpectedFiles.slice(0, 3).join(", ")})`);
+
       return {
         verifiedSafe: false,
         corruptedFiles,
         missingFiles,
-        reason: `WHOLE_SITE_INTEGRITY_VIOLATION: ${corruptedFiles.length} corrupted file(s) (${corruptedFiles.slice(0, 3).join(", ")}), ${missingFiles.length} missing file(s).`,
+        unexpectedFiles,
+        reason: `WHOLE_SITE_INTEGRITY_VIOLATION: ${reasons.join("; ")}.`,
       };
     }
 
+    // Recalculate manifest digest over sorted inventory to ensure self-consistency
     const sortedKeys = Object.keys(artifacts).sort();
     const sortedInventory: Record<string, any> = {};
     for (const key of sortedKeys) {
       sortedInventory[key] = artifacts[key];
     }
     const computedDigest = computeSha256(JSON.stringify(sortedInventory));
-    if (mObj.manifestDigest && mObj.manifestDigest !== computedDigest) {
+    if (distManifest.manifestDigest && distManifest.manifestDigest !== computedDigest) {
       return {
         verifiedSafe: false,
         corruptedFiles: [],
         missingFiles: [],
+        unexpectedFiles: [],
         reason: "MANIFEST_DIGEST_MISMATCH: Manifest digest does not match artifacts inventory.",
       };
     }
@@ -1143,6 +1274,7 @@ export class ReleaseSafetyGovernor {
       verifiedSafe: true,
       corruptedFiles: [],
       missingFiles: [],
+      unexpectedFiles: [],
     };
   }
 
@@ -1180,19 +1312,56 @@ export class ReleaseSafetyGovernor {
     const distWasm = resolve(distDir, "spe_wasm.wasm");
     const publicWasm = resolve(process.cwd(), "apps/web/public/spe_wasm.wasm");
     const distManifest = resolve(distDir, "release-manifest.json");
+    const pinnedManifest = resolve(pinnedBaseDir, "release-manifest.json");
 
-    // Physically restore destination WASM and manifest from pinned storage
-    if (existsSync(pinnedWasm)) {
+    try {
+      mkdirSync(distDir, { recursive: true });
+    } catch {}
+
+    // Physically restore destination from immutable pinned storage
+    if (existsSync(pinnedManifest)) {
       try {
-        mkdirSync(distDir, { recursive: true });
+        const pManifest = JSON.parse(readFileSync(pinnedManifest, "utf-8"));
+        const artifacts = pManifest.artifacts || {};
+
+        // 1. Physically restore every tracked artifact (HTML, JS, CSS, WASM, models, config) from pinned-base to dist
+        for (const relPath of Object.keys(artifacts)) {
+          const srcPath = resolve(pinnedBaseDir, relPath);
+          const destPath = resolve(distDir, relPath);
+          if (existsSync(srcPath)) {
+            mkdirSync(dirname(destPath), { recursive: true });
+            copyFileSync(srcPath, destPath);
+          }
+        }
+
+        // 2. Restore the authentic pinned reference manifest directly into dist
+        copyFileSync(pinnedManifest, distManifest);
+
+        // 3. Restore canonical WASM to public if directory present in workspace
+        if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
+          copyFileSync(pinnedWasm, publicWasm);
+        }
+
+        // 4. Purge any unexpected / uncataloged files that were added to distDir
+        const diskFiles = ReleaseSafetyGovernor.scanDiskFiles(distDir);
+        for (const diskRel of diskFiles) {
+          if (diskRel !== "release-manifest.json" && !artifacts[diskRel]) {
+            try {
+              unlinkSync(resolve(distDir, diskRel));
+            } catch {}
+          }
+        }
+      } catch (err) {
+        console.warn("Sync rollback physical restoration notice:", err);
+      }
+    } else if (existsSync(pinnedWasm)) {
+      try {
         copyFileSync(pinnedWasm, distWasm);
         if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
           copyFileSync(pinnedWasm, publicWasm);
         }
-        const manifestData = this.buildWholeSiteManifest(distDir);
-        writeFileSync(distManifest, JSON.stringify(manifestData, null, 2), "utf-8");
       } catch (err) {
-        console.warn("Sync rollback physical restoration notice:", err);
+        console.warn("Sync rollback physical WASM restoration notice:", err);
       }
     }
 

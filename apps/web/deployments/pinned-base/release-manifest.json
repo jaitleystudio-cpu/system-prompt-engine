@@ -4,5 +4,802 @@
   "wasmSizeBytes": 1339691,
   "status": "PINNED_BASE_IMMUTABLE",
   "pinnedAtIso": "2026-10-15T00:00:00.000Z",
-  "authority": "founder_release_authority"
+  "scope": "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+  "authority": "founder_release_authority",
+  "wholeSiteCoverage": [
+    "HTML",
+    "JAVASCRIPT",
+    "CSS",
+    "WASM",
+    "MODEL_ASSETS",
+    "CONFIG"
+  ],
+  "artifacts": {
+    "_headers": {
+      "sha256": "f66c72b1e62506e8b75da2c781fa1a8510ab5b23aaf2289417e28234bfa463a1",
+      "sizeBytes": 885,
+      "category": "CONFIG"
+    },
+    "_redirects": {
+      "sha256": "e1a5f5551a52ff75cf5a7b1d90594070cad61942f89826c02dbf776cdf4034a1",
+      "sizeBytes": 3569,
+      "category": "CONFIG"
+    },
+    "art/intent-core.webp": {
+      "sha256": "a2a64b98e20d67040fe9c7ae242e759b088a385cbd606153ae5ca0cc176fd178",
+      "sizeBytes": 50306,
+      "category": "CONFIG"
+    },
+    "assets/AiIncidentWire-DYLVeop3.js": {
+      "sha256": "9fb42e74a3ce7151bfa4a6888c1f0b347ef190a52d94c495f271a3d09b8c874e",
+      "sizeBytes": 29670,
+      "category": "JAVASCRIPT"
+    },
+    "assets/ChallengeResultPage-SRsoNXrK.js": {
+      "sha256": "9223bc6190b0a9c68b64dd37b86a07ca991530a7848efe00d2e0c137a63364ec",
+      "sizeBytes": 38556,
+      "category": "JAVASCRIPT"
+    },
+    "assets/DailyLab-C0Fy5J08.js": {
+      "sha256": "802951ca9b5213503da5759f93595df201eadb6f84b5ae8f259a1cff5c97d2ae",
+      "sizeBytes": 13316,
+      "category": "JAVASCRIPT"
+    },
+    "assets/EvalStudio-5zIleFgX.js": {
+      "sha256": "ff7c2a00286864c1afd751ded0c0d82b767c97392434283d3def99cc779c3c38",
+      "sizeBytes": 53154,
+      "category": "JAVASCRIPT"
+    },
+    "assets/EvalStudio-DG0VnmaU.css": {
+      "sha256": "2aae69c3967b3cd60f6a9fa8ee7a3029bb4b64c788aa598b1791c0ff83340c92",
+      "sizeBytes": 8493,
+      "category": "CSS"
+    },
+    "assets/HeadToHeadCompare-CHYa18zi.js": {
+      "sha256": "b38059ea1222ddc63c49088dddd7edf168485478c0000a793767def187025755",
+      "sizeBytes": 33170,
+      "category": "JAVASCRIPT"
+    },
+    "assets/LabStage-rGcXyx5e.js": {
+      "sha256": "b43da4f4948a4bd6559be9f632a9ec9d03ebe81bbe82fc422f309c6505b1afc2",
+      "sizeBytes": 5571,
+      "category": "JAVASCRIPT"
+    },
+    "assets/MediaProductPanel-CFEDPV7w.css": {
+      "sha256": "9812532ddcefa50488fe9ca312c3e63a7530c6022b593c65bec00b02ad4d7190",
+      "sizeBytes": 125,
+      "category": "CSS"
+    },
+    "assets/MediaRoute-CwsXJPV3.js": {
+      "sha256": "dc786dbcfb8153081d356f5ce06ff84a562766c240eec74753794291660eaf27",
+      "sizeBytes": 8560,
+      "category": "JAVASCRIPT"
+    },
+    "assets/OcrRoute-uq_qyppC.js": {
+      "sha256": "404089856a16e36f2e44a03bbe18c1f8558b0df40afa14a2d806148829f303f7",
+      "sizeBytes": 3012,
+      "category": "JAVASCRIPT"
+    },
+    "assets/PossibilityEnginePage-CQA9vHN7.js": {
+      "sha256": "cba1e884d3156510a9070ee218afb8ae6b4d6aa190bd6065992ea0dd5277b761",
+      "sizeBytes": 30871,
+      "category": "JAVASCRIPT"
+    },
+    "assets/Pricing-CJMKiY0Q.css": {
+      "sha256": "1468211c077c8405087f7af2ffa3e3fbe97a08f54d343e0333c6bd728e4237ed",
+      "sizeBytes": 5469,
+      "category": "CSS"
+    },
+    "assets/Pricing-DtVA5tvY.js": {
+      "sha256": "c9ff3ddb49f7083d39985abad6aeec4aa8f548881ad7b314974dc7c886ebb319",
+      "sizeBytes": 21019,
+      "category": "JAVASCRIPT"
+    },
+    "assets/PromptArsenalPage-CthIo_Lt.js": {
+      "sha256": "c2e766427cec72ad149b8505d068450d348cba036aa2487a87deac4df8154ae2",
+      "sizeBytes": 115343,
+      "category": "JAVASCRIPT"
+    },
+    "assets/PromptArsenalPage-DliF61D-.css": {
+      "sha256": "b5f874dd576dc4fef36bf041bcd820a17b463708a78564d90ad33c21f15565c5",
+      "sizeBytes": 22413,
+      "category": "CSS"
+    },
+    "assets/RealityFrontierPage-CQICnmoG.js": {
+      "sha256": "184edcc94fd63fef4d0f230721e0580368d5297d9a7b8c1f2d69e43f9e6ba0dc",
+      "sizeBytes": 39695,
+      "category": "JAVASCRIPT"
+    },
+    "assets/ResearchRoute-Bje75skk.js": {
+      "sha256": "eae038ed3374383ac2d94c47df6451e9bd4924480df7d46200820bc33995b638",
+      "sizeBytes": 7513,
+      "category": "JAVASCRIPT"
+    },
+    "assets/SemanticRevocationPage-BgJ33jaA.js": {
+      "sha256": "acee8ad4cc9062525ac11dc6bca50b56f1b921ce7158faf087b1c4a741baeb6b",
+      "sizeBytes": 23726,
+      "category": "JAVASCRIPT"
+    },
+    "assets/SkillBuilderStudio-B4WcSXh3.js": {
+      "sha256": "5b1c5a03ffa5718e136afb84813e67194fa1f70eca7e51402cd504a70c5c8455",
+      "sizeBytes": 17916,
+      "category": "JAVASCRIPT"
+    },
+    "assets/UiDropPage---CLlO56.js": {
+      "sha256": "20c7487925e9e0f084f4bb3fd47a9ebcc3b1efbb07a8e062b8146d103a44a267",
+      "sizeBytes": 5849,
+      "category": "JAVASCRIPT"
+    },
+    "assets/WebsiteProduct-C0RyLVK9.js": {
+      "sha256": "970641e793aa113c0ce57503095e7b3edca76986b8be62fe510f6fda9be27463",
+      "sizeBytes": 41038,
+      "category": "JAVASCRIPT"
+    },
+    "assets/WebsiteProduct-DMrnGom4.css": {
+      "sha256": "a8428a1b4ff180668751971b011bc520746f9f347ed81415f9d3c08e1fd7997c",
+      "sizeBytes": 878,
+      "category": "CSS"
+    },
+    "assets/WorkflowsCatalog-DU9lmD5s.js": {
+      "sha256": "b15474f063742245a15d427e3870de3687bdc50de064b8299b3f55c8ffe72804",
+      "sizeBytes": 12426,
+      "category": "JAVASCRIPT"
+    },
+    "assets/__vite-browser-external-BIHI7g3E.js": {
+      "sha256": "82507b0bb9ac4affaeb17c40968d830cbd6d14a2ffa04d8994faf1a78e58e1b5",
+      "sizeBytes": 33,
+      "category": "JAVASCRIPT"
+    },
+    "assets/engine.worker-DW3jy6WS.js": {
+      "sha256": "918f663635f0f1bf0b4e3304dd3de53ae92c64f9979fafc3352f62f55bb9a8fb",
+      "sizeBytes": 5492,
+      "category": "JAVASCRIPT"
+    },
+    "assets/feedoughComparison-DeXEhnZl.js": {
+      "sha256": "47f49b9cd116c0f9143bf3ece9fcf5f7060f9cdeaa234f86e5f7fe2466b789fa",
+      "sizeBytes": 12364,
+      "category": "JAVASCRIPT"
+    },
+    "assets/index-CALYsIRn.js": {
+      "sha256": "3a26ee8f168885cf49fbbcbc57c7573dc3190bf174f8b4c9e29ba691a39bfe8d",
+      "sizeBytes": 2495319,
+      "category": "JAVASCRIPT"
+    },
+    "assets/index-CqBZghax.css": {
+      "sha256": "18c2451d02627bd040d41f09540fd35df9f54280a04f34d334768809e0d82199",
+      "sizeBytes": 340489,
+      "category": "CSS"
+    },
+    "assets/ort-wasm-juE7TTNY.js": {
+      "sha256": "efa80a1d728d0ddd5002111f5e7f08a64dbc5d7465bde3b8d91a542fbe68e9c0",
+      "sizeBytes": 464100,
+      "category": "JAVASCRIPT"
+    },
+    "assets/ort-wasm-simd-threaded-BQQNiIPt.wasm": {
+      "sha256": "207d02be4591c156b0a98f024f3d58005b5b04c92274d759fb390338c63559ea",
+      "sizeBytes": 11246032,
+      "category": "WASM"
+    },
+    "assets/r3f-xIa7EeOl.js": {
+      "sha256": "694d5becde37d4f0eda345e7e3627adb6559b9389178c908f6c2b84439571d51",
+      "sizeBytes": 831590,
+      "category": "JAVASCRIPT"
+    },
+    "brand/favicon.ico": {
+      "sha256": "7412d1fa7d872f9ff4e1d5d44894ef8afb852c165bb81fb322fff40065fe1d3e",
+      "sizeBytes": 6083,
+      "category": "CONFIG"
+    },
+    "brand/spe-3d-core-logo.png": {
+      "sha256": "d717b00c5388b6f6e59461ef597d75533c0cec59805395277328b681a76d1df8",
+      "sizeBytes": 298164,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-1024.png": {
+      "sha256": "1c60ec23adc033a9a4da22447ac551e8be52d6d4740d794c4e7af807cd158658",
+      "sizeBytes": 1229005,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-128.png": {
+      "sha256": "41f1a3d9cf2260165dcb973bb811a1cc509c095c6d054b881c79aae296317577",
+      "sizeBytes": 27115,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-192.png": {
+      "sha256": "75fd49e494ce2af9a392f5d35736787af7ceb35d690b99f6aeb90fa56321f96a",
+      "sizeBytes": 55910,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-2048.png": {
+      "sha256": "012d9082ea60d9898ec4750ae56f3a93647b97bbe2c4340131a62b530f6c9709",
+      "sizeBytes": 4004011,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-256.png": {
+      "sha256": "8b25c93a27577d65bba356ccde6926be63e18bd359afb944941d1a625622fff3",
+      "sizeBytes": 94440,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-32.png": {
+      "sha256": "00bbea46d04a3b0fb99050ac86ace3f0ecc24adb8235b1cb7f3b9b008fac57dd",
+      "sizeBytes": 2502,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-4k.png": {
+      "sha256": "c5bcf5551e46f4bdb3e42db0ba7a291f435a5a50685288629f773cc5034781b1",
+      "sizeBytes": 12215080,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-512.png": {
+      "sha256": "fb52eafc058d92946fa6218f8c98734399d240d93fb2b6573810176e645ef6b1",
+      "sizeBytes": 343510,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem-64.png": {
+      "sha256": "c0d3349a1158d3c20be06d4e897bd8bf756990a162d03d73935247dafbf53a0c",
+      "sizeBytes": 8067,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-emblem.svg": {
+      "sha256": "8f68362d8f7481778a72006ac62829b683d70b4bb516a9330bc1d1c2f92ae30e",
+      "sizeBytes": 6075,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-1024.png": {
+      "sha256": "d34bb8749d0d91c9c0f2b82da281ddca3afbb721a3b07538223ed775449e0c9f",
+      "sizeBytes": 528874,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-2048.png": {
+      "sha256": "63862f584391dd743620f5b88088ab968470ed2a51221994211e70bf4bc8e1d8",
+      "sizeBytes": 1792949,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-256.png": {
+      "sha256": "bbbac86306eec94799317630b9326fd9a3227047077da23f737d06c5d13e8c1e",
+      "sizeBytes": 42143,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-4k.png": {
+      "sha256": "49b03ec68ab70c43ef9a8767065ea130764e129fbf5fb712c20511684b815889",
+      "sizeBytes": 5530611,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-512.png": {
+      "sha256": "5beb8ca4b793afa178d1d277159341e8735f032ee521df16d5a469265525c66c",
+      "sizeBytes": 147859,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-black-1024.png": {
+      "sha256": "153eba7431fe838def0fac787c5a275bbd4c97472c0e0a6f1d69a59d264645f5",
+      "sizeBytes": 18849,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-black-2048.png": {
+      "sha256": "679169052c4c58de0b6ac5b0aa21f992cfb7833f3c8be6588b89356ab0b15d5d",
+      "sizeBytes": 41538,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-black-256.png": {
+      "sha256": "e63d37947264ab5ffeba12a6a79471a66d914e8cb0737de05495c07355752dfc",
+      "sizeBytes": 4221,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-black-4k.png": {
+      "sha256": "ecbf8b16b25a69829f53ed84caa149f2665c09dbc2600e15efc0e5882e8695af",
+      "sizeBytes": 60782,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-black-512.png": {
+      "sha256": "47cd0d00383fef991e607eb2c9fef858aceb1569463d0d4536e99fb1fffa08b0",
+      "sizeBytes": 8916,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-black.svg": {
+      "sha256": "95e954d5862d5e9ff12741e6255dd02dab5da51da353463f319ffe2004cdf739",
+      "sizeBytes": 3938,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-white-1024.png": {
+      "sha256": "d2961079edb79a5724fa6ccbbdb20c033255505cfbcf181496d5121f623917af",
+      "sizeBytes": 20341,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-white-2048.png": {
+      "sha256": "9f593d0a7507bc3e662a9c215a139e4c2120053f2be66b8546e29c9858d2541b",
+      "sizeBytes": 44471,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-white-256.png": {
+      "sha256": "31bd78a32f7910a33ab0388091c6175bf2a95e3bf0333477cc451edd793d970b",
+      "sizeBytes": 4508,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-white-4k.png": {
+      "sha256": "1fae72cf56c07d3ff9e81c44b7e5e378668576ee9b0f92562cac3741ed86b631",
+      "sizeBytes": 63777,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-white-512.png": {
+      "sha256": "7853db5af77e3b3e6b08e2d993ab1297576c205846f938b5e2cbaa428a15d5a3",
+      "sizeBytes": 9559,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup-white.svg": {
+      "sha256": "3738cbf2777e71b14fdb8aa1572978d29fb298df2583c2c21f1c9139d7e67e61",
+      "sizeBytes": 3938,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-lockup.svg": {
+      "sha256": "ff75e1fffe48e2e608dfa9ef4118a59d3a6f5d4cb3fbc470037492127967f7e0",
+      "sizeBytes": 3948,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-1024.png": {
+      "sha256": "7a3ff91330e12d2ac1f252c2c630e3031efb38959fa91f0744afa857d515d341",
+      "sizeBytes": 38754,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-128.png": {
+      "sha256": "8ca88786d86b5bf16c9e90f15fcd5834fc58ef75dfeb8dfae51415117951fd6e",
+      "sizeBytes": 3949,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-192.png": {
+      "sha256": "4890a87f9fb695acc6ceebe9f9b9fcb383f517970bbd91ab364e4b69ee21fca0",
+      "sizeBytes": 6142,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-2048.png": {
+      "sha256": "6d6bc866d7d34f3f4faa2ce7cc9a203a84bff02735b8aee2b396f8c5d96ae10c",
+      "sizeBytes": 87692,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-256.png": {
+      "sha256": "99372abf77eba8f8551cf40aa2d085519f068af989f66c950ff6baf5c7c5e7b0",
+      "sizeBytes": 8375,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-32.png": {
+      "sha256": "df2957d03351b4becac58ce352a29cbd2ceb60f437c8bde3b1339bd795c6fa89",
+      "sizeBytes": 900,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-4k.png": {
+      "sha256": "36d684a94730722981465783d4fc54d06cd744e8ad8f7c508bb9d55b5a6cf9b8",
+      "sizeBytes": 138384,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-512.png": {
+      "sha256": "251ca81bef71ebeb993a5b541f678d4ea8e38d0c3f74ea5f2f71dd511f80fc74",
+      "sizeBytes": 17648,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black-64.png": {
+      "sha256": "fb44e5696a892eda9f3f987cf7ebced26dc3240daa7236474d8f781ffc2ab73e",
+      "sizeBytes": 1937,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-black.svg": {
+      "sha256": "c66d98e24fa0f178733860d0bf85ad80d4ec591c9cc51cc718d90727bd72312b",
+      "sizeBytes": 3305,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-1024.png": {
+      "sha256": "f7d54c449b3c770382566d4b1d814e56f3e1927d555f907aa135f581e219da8c",
+      "sizeBytes": 53589,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-128.png": {
+      "sha256": "1b8c0e47eac1ac0fb0c2061289f1605275606bfbe1c82a71067f205f986e4134",
+      "sizeBytes": 5241,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-192.png": {
+      "sha256": "5ef3c138802b11253ef4b79912f874c576b508dc76d0cf079030a20a1ea8bdcd",
+      "sizeBytes": 8124,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-2048.png": {
+      "sha256": "ff24c16abc61cf3f52268eaaee0f72dda12f44428a1a39ff5ecf2d7ef143654b",
+      "sizeBytes": 125846,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-256.png": {
+      "sha256": "7583a45f917713237e98f7a8d1e5db52de565752f2aaa530fd0f0b24bafcab63",
+      "sizeBytes": 11221,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-32.png": {
+      "sha256": "026a2ed1bb5c1b150e99b3d7a5bff043e192ac53b7fa758dad567d76528cf52c",
+      "sizeBytes": 1164,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-4k.png": {
+      "sha256": "d88959ad33d3390fc7b4936a6ff4e6585e67e04d1fb8833f4d781988c595d9a7",
+      "sizeBytes": 241236,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-512.png": {
+      "sha256": "32ac6db75665094d1f9c17f9f9b3669186e9aed71c38563567d5f90fd6c5d890",
+      "sizeBytes": 24212,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white-64.png": {
+      "sha256": "34e0cb11ef1210ae6f3e7f3fe3033727874e05e77daee1d96b817964f9c2b066",
+      "sizeBytes": 2536,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark-white.svg": {
+      "sha256": "c03912d8cbde0ad95c95b75f7a9f7c5047ce7ebc59125b6948b716a5e7e84039",
+      "sizeBytes": 3305,
+      "category": "CONFIG"
+    },
+    "brand/spe-logo-mark.svg": {
+      "sha256": "84dbebba6ec471a5ea397d5bc7bee90ca7167e46f0440aeabac4d25591d8dfcc",
+      "sizeBytes": 3310,
+      "category": "CONFIG"
+    },
+    "evidence-pages/ai-agent-security.html": {
+      "sha256": "f87e3427c852f51928faacad1192195da2e2545e3d3735c3c623217e036b6481",
+      "sizeBytes": 3944,
+      "category": "HTML"
+    },
+    "evidence-pages/ai-governance-evidence.html": {
+      "sha256": "6eab337f178c22a71b2986ea290f3b583417f5bf8dc423ac5632481f07ef7534",
+      "sizeBytes": 3972,
+      "category": "HTML"
+    },
+    "evidence-pages/ai-instruction-assurance.html": {
+      "sha256": "6587a2564a47ec0033ab7410d3f39ee1f177dfada020c6478ddf1e8d2ccfed59",
+      "sizeBytes": 4193,
+      "category": "HTML"
+    },
+    "evidence-pages/ai-instruction-compiler.html": {
+      "sha256": "9c14288eeeffd7d3a28103d6abecc10f0d773e9b2bb9391919030c226f7c9088",
+      "sizeBytes": 4103,
+      "category": "HTML"
+    },
+    "evidence-pages/build-skill.html": {
+      "sha256": "246940a7ca8de5b30f67a503ec5634036560f66ce22eb23e05391ee504f57232",
+      "sizeBytes": 4167,
+      "category": "HTML"
+    },
+    "evidence-pages/capabilities.html": {
+      "sha256": "0d8491313f0840c9b09049c6f8fcb69a906f44cd11556eda92f3c0ec06e03c0e",
+      "sizeBytes": 5268,
+      "category": "HTML"
+    },
+    "evidence-pages/code.html": {
+      "sha256": "7dc5079b886d7d5d575a18c18a9ac865c5f7a48bdfa1211686d4b7268db35198",
+      "sizeBytes": 4039,
+      "category": "HTML"
+    },
+    "evidence-pages/compare.html": {
+      "sha256": "06063b791b75c3348106b3059d45153220ad3dc3bab9c5634165e9fe27924635",
+      "sizeBytes": 4825,
+      "category": "HTML"
+    },
+    "evidence-pages/compare_spe-vs-aiprm.html": {
+      "sha256": "70c11729c641b91ada65717d7d6dbbddc473fd2f282d6cb0f827abb566532473",
+      "sizeBytes": 5067,
+      "category": "HTML"
+    },
+    "evidence-pages/compare_spe-vs-all.html": {
+      "sha256": "2dd163941aaf427d9a757e27e7d4c01371a3dd6726059969ca318a8db5c25e38",
+      "sizeBytes": 4306,
+      "category": "HTML"
+    },
+    "evidence-pages/compare_spe-vs-braintrust.html": {
+      "sha256": "ab48610a727f11cca56815dd6a7b7e7f24261db8d7856f225f915b4174e674d5",
+      "sizeBytes": 4945,
+      "category": "HTML"
+    },
+    "evidence-pages/compare_spe-vs-feedough.html": {
+      "sha256": "caa83025ff31e97a29813a502a3bbc21add2184da10a030c876fe048ba51b89e",
+      "sizeBytes": 5158,
+      "category": "HTML"
+    },
+    "evidence-pages/compare_spe-vs-langfuse.html": {
+      "sha256": "f683bf82e2ce14785a63adda23f5d492e72d100bb9156c1b3dbcd8420996d02b",
+      "sizeBytes": 5119,
+      "category": "HTML"
+    },
+    "evidence-pages/compare_spe-vs-litellm.html": {
+      "sha256": "c09a2f137ec1373e220f470a85aced5e89d9baa44481d149f2c6cd452fce483b",
+      "sizeBytes": 3709,
+      "category": "HTML"
+    },
+    "evidence-pages/compare_spe-vs-promptfoo.html": {
+      "sha256": "484b7fb0ebdb4af4c177296c0f3defd6f985295dba67a6be6c0b9732bc211ad5",
+      "sizeBytes": 5245,
+      "category": "HTML"
+    },
+    "evidence-pages/create.html": {
+      "sha256": "ec8b9396087ec5e108027bac7540c63a21c2d6127b64d12efe604a5fcd0a7f6e",
+      "sizeBytes": 3956,
+      "category": "HTML"
+    },
+    "evidence-pages/daily-lab.html": {
+      "sha256": "83b59d419b94f3f4a53f6b58bea197b930fd18e008a5ff47c0b3a07658c6edb4",
+      "sizeBytes": 3847,
+      "category": "HTML"
+    },
+    "evidence-pages/failure-genome_SPE-FG-2026-000001.html": {
+      "sha256": "8728b185abee82157a3da8a97a611402908578fb598a77e04b19c1d88aaaeaee",
+      "sizeBytes": 4472,
+      "category": "HTML"
+    },
+    "evidence-pages/failure-genome_SPE-FG-2026-000002.html": {
+      "sha256": "3549247e7d095dc99e6e7e08c694e0a9972ce371a1c64e584fd1b8ad279eb807",
+      "sizeBytes": 3984,
+      "category": "HTML"
+    },
+    "evidence-pages/incidents.html": {
+      "sha256": "7d16030df2e4cd0889d53c3bdd496d6918138e9f4dda266df3a4dad1a175f6f2",
+      "sizeBytes": 6431,
+      "category": "HTML"
+    },
+    "evidence-pages/incidents_claude-code-file-deletion.html": {
+      "sha256": "716c8d8226ecdc6d3a273a4f8d60aad2c456ce576d13e5741a553caf71c97ad8",
+      "sizeBytes": 4946,
+      "category": "HTML"
+    },
+    "evidence-pages/incidents_cursor-agent-cost-runaway.html": {
+      "sha256": "f4951337a706131317c3e5006734f9a8621f294cd8a280e07ec8dc0b22a208e1",
+      "sizeBytes": 4981,
+      "category": "HTML"
+    },
+    "evidence-pages/incidents_deepseek-r1-prompt-leak.html": {
+      "sha256": "21dcd61bb064fa25c045554bd59c3e6f64f33bce9ae24a42a97f42a659fcef57",
+      "sizeBytes": 4998,
+      "category": "HTML"
+    },
+    "evidence-pages/incidents_gemini-2-tool-confusion.html": {
+      "sha256": "6562d852fa39efbc707bfb67ec88b82fe0c47b63c55bccfce1e60b158d6d106e",
+      "sizeBytes": 4945,
+      "category": "HTML"
+    },
+    "evidence-pages/incidents_llama-3-currency-drift.html": {
+      "sha256": "097c7258206ee364791886f1aef5e23699e7c3d52ffd636c63e163c6defc60a8",
+      "sizeBytes": 4973,
+      "category": "HTML"
+    },
+    "evidence-pages/incidents_openai-o3-negation-collapse.html": {
+      "sha256": "10ba48a843be8667d8b2003b55279d3257a53a8dbf74f134cc0d9184b7a2e0a7",
+      "sizeBytes": 5083,
+      "category": "HTML"
+    },
+    "evidence-pages/index.html": {
+      "sha256": "9f1636acfab7e6b959fb7fa031993bfc6e24ebf69e951407903a2849f0520cbc",
+      "sizeBytes": 4705,
+      "category": "HTML"
+    },
+    "evidence-pages/integrations_anthropic.html": {
+      "sha256": "b94ca14e5f86dfc30e39716d278885ce24cfabc600dfe064a37335dc91d4a971",
+      "sizeBytes": 4011,
+      "category": "HTML"
+    },
+    "evidence-pages/integrations_github-actions.html": {
+      "sha256": "7002f3d2b160aa0bb4f59738ad00cb3e8207a9baf8c83a81dc9f90279c15f582",
+      "sizeBytes": 3959,
+      "category": "HTML"
+    },
+    "evidence-pages/integrations_mcp.html": {
+      "sha256": "cd285a1d0674dcbfc6f33c5b2083b2d57d02ca5ef75d3cca2ac9ded4bcbabb96",
+      "sizeBytes": 3814,
+      "category": "HTML"
+    },
+    "evidence-pages/integrations_openai.html": {
+      "sha256": "f964b2a1f391256779d88e24b62eec12cf5f3e4a8d56890b5b9fd25978ed9708",
+      "sizeBytes": 4071,
+      "category": "HTML"
+    },
+    "evidence-pages/mcp-security.html": {
+      "sha256": "e24292a78fd8d5198b9287dd0b1934434714befaabe8a3f0c1270a4090321741",
+      "sizeBytes": 3959,
+      "category": "HTML"
+    },
+    "evidence-pages/migrate_from-raw-prompts.html": {
+      "sha256": "db598461b5d80826762da3ef236afa54254897510d48ae9991998797e0f726e1",
+      "sizeBytes": 4233,
+      "category": "HTML"
+    },
+    "evidence-pages/model-drift-monitoring.html": {
+      "sha256": "6b1ed37808bd502837f98a7049485af31b98c7a283c00cd2ad5446416c646989",
+      "sizeBytes": 4020,
+      "category": "HTML"
+    },
+    "evidence-pages/models_anthropic_claude-6-2-sonnet.html": {
+      "sha256": "316dcf10a5a336fea175ef676b017dbaefafe1fd3a17813ac986948f66010407",
+      "sizeBytes": 4573,
+      "category": "HTML"
+    },
+    "evidence-pages/models_deepseek_deepseek-4-5.html": {
+      "sha256": "db2f740deb2fd5d2da8eb88de21d17f7b5c197d5f362be68482e930161ab2513",
+      "sizeBytes": 4414,
+      "category": "HTML"
+    },
+    "evidence-pages/models_google_gemini-3-9-pro.html": {
+      "sha256": "0622ac89d9a8d3e7d767796eb31446044399de11196592f8f1c3972bdb6f6c06",
+      "sizeBytes": 4535,
+      "category": "HTML"
+    },
+    "evidence-pages/models_moonshot_kimi-3-5.html": {
+      "sha256": "c513f36c2d70c127b30feddc263ffe99a80f926156c2600026a81b96b1b301c0",
+      "sizeBytes": 4507,
+      "category": "HTML"
+    },
+    "evidence-pages/models_openai_gpt-6-1.html": {
+      "sha256": "41a86f61ffdf833069e5c2cd5b946eaa34475e6b8bc83f3f0131d46f25af4f57",
+      "sizeBytes": 4487,
+      "category": "HTML"
+    },
+    "evidence-pages/models_xai_grok-4-9.html": {
+      "sha256": "1032ec7c4b5bd22f9b8294f12982d23eb9d86af9e64c563cc84ac6a592c407c5",
+      "sizeBytes": 4487,
+      "category": "HTML"
+    },
+    "evidence-pages/pricing.html": {
+      "sha256": "39913bf0fdf252323f051ee684d451bf5141ee4ebfbffa71445f9fa36778316f",
+      "sizeBytes": 8237,
+      "category": "HTML"
+    },
+    "evidence-pages/privacy.html": {
+      "sha256": "12aa1e49659a4f1e9cf7bdffc7ec78361d67f03b61a0d1e95c95c2376a154898",
+      "sizeBytes": 4400,
+      "category": "HTML"
+    },
+    "evidence-pages/prompt-compiler.html": {
+      "sha256": "8411ca8faa538fce56798fcdb6536f753ee747b18b07500998e95e478f868807",
+      "sizeBytes": 3926,
+      "category": "HTML"
+    },
+    "evidence-pages/prompt-security.html": {
+      "sha256": "234b9be7afb2e365a5066224450a81517f8321e119bc4dce40a6dbadf5125614",
+      "sizeBytes": 3925,
+      "category": "HTML"
+    },
+    "evidence-pages/tools_audio-to-text.html": {
+      "sha256": "4bd06b04f7bd40dacd0ec747c5fb70a2caa80a610f318567299f03a31be25574",
+      "sizeBytes": 3907,
+      "category": "HTML"
+    },
+    "evidence-pages/tools_free-3d-website-builder.html": {
+      "sha256": "2ba556aa7b233374bf014acac41c09d626590ad0e212ea859aa14673453c4e6d",
+      "sizeBytes": 3869,
+      "category": "HTML"
+    },
+    "evidence-pages/tools_screenshot-to-code.html": {
+      "sha256": "98707200870a978413deb1e0d01f5a0b6db28fccf8db3314bdb2acb03dc44d89",
+      "sizeBytes": 3930,
+      "category": "HTML"
+    },
+    "evidence-pages/tools_system-prompt-generator.html": {
+      "sha256": "7797937fe735ae0629ada3702a97524b8db02a74906463ddca3636aea42c9054",
+      "sizeBytes": 3986,
+      "category": "HTML"
+    },
+    "evidence-pages/tools_video-to-text.html": {
+      "sha256": "d70ef437610a1f6b9fa028474adaf04b71237d40d09fca82b0a04b32a5ed6f74",
+      "sizeBytes": 3832,
+      "category": "HTML"
+    },
+    "evidence-pages/workflows.html": {
+      "sha256": "a7efa154765c7401476bc7d1f7af3f522ab676de6ea88698b6876490aa38f7ed",
+      "sizeBytes": 4549,
+      "category": "HTML"
+    },
+    "favicon.ico": {
+      "sha256": "7412d1fa7d872f9ff4e1d5d44894ef8afb852c165bb81fb322fff40065fe1d3e",
+      "sizeBytes": 6083,
+      "category": "CONFIG"
+    },
+    "hero/founder-hero-story.png": {
+      "sha256": "fb7edd8fbb1e197fed417a5866441ee950c58600b0c805aa7377d2bc06a6da93",
+      "sizeBytes": 1270110,
+      "category": "CONFIG"
+    },
+    "icon.svg": {
+      "sha256": "5b933304094e19172528e563891cfa7fae399329167ad0b05edd4bdfcff86e08",
+      "sizeBytes": 3459,
+      "category": "CONFIG"
+    },
+    "index.html": {
+      "sha256": "225465cdbadd408a6b85b037d03b34f4481738ca5af3e8309a2f0fa8d3391e3f",
+      "sizeBytes": 11821,
+      "category": "HTML"
+    },
+    "manifest.webmanifest": {
+      "sha256": "47ef6d5c572524dd081c26a80ca590ed5bc3c91abccb9ba741c4bd23234918d9",
+      "sizeBytes": 428,
+      "category": "CONFIG"
+    },
+    "models/LICENSE.md": {
+      "sha256": "274fb0f31589cd0c65e9c19a483d6af5cab8a9941926e208baa17d61e5c52557",
+      "sizeBytes": 783,
+      "category": "MODEL_ASSETS"
+    },
+    "models/imagenet_classes.txt": {
+      "sha256": "1f386e0d1cb6e28b9c2dac651c3dea6801e98ad1b41a14ce6bb1a093d72069f5",
+      "sizeBytes": 10472,
+      "category": "MODEL_ASSETS"
+    },
+    "models/mobilenetv2-12-int8.onnx": {
+      "sha256": "cc028fe6cae7bc11a4ff53cfc9b79c920e8be65ce33a904ec3e2a8f66d77f95f",
+      "sizeBytes": 3655033,
+      "category": "MODEL_ASSETS"
+    },
+    "models/spe-core-a-neural-generator-v1.json": {
+      "sha256": "a3d8200663d5d2ae69468fe7dd873bb297e1dfe08277a02c5c5236ad3391657e",
+      "sizeBytes": 837,
+      "category": "MODEL_ASSETS"
+    },
+    "models/spe-core-a-neural-generator-v1.onnx": {
+      "sha256": "7ad350986a0d4437085abd12fd34070698a54609de13906fae62a53396d32864",
+      "sizeBytes": 593399,
+      "category": "MODEL_ASSETS"
+    },
+    "ort/ort-wasm-simd-threaded.mjs": {
+      "sha256": "745eb7c0ce6f18a6aa521971b2877babc7ffb27eecb58ab3bc6e5ef4692672e8",
+      "sizeBytes": 24618,
+      "category": "JAVASCRIPT"
+    },
+    "ort/ort-wasm-simd-threaded.wasm": {
+      "sha256": "207d02be4591c156b0a98f024f3d58005b5b04c92274d759fb390338c63559ea",
+      "sizeBytes": 11246032,
+      "category": "WASM"
+    },
+    "robots.txt": {
+      "sha256": "98569b9445a49bb84969c5707acd0303123100d8159cfcc1cc60056d3efc8a5e",
+      "sizeBytes": 549,
+      "category": "CONFIG"
+    },
+    "sitemap-core.xml": {
+      "sha256": "1cde6f3cf7207306b62d947d71665f1d417d9337ce0e383802d4581bcc2724a4",
+      "sizeBytes": 7116,
+      "category": "CONFIG"
+    },
+    "sitemap-prompts.xml": {
+      "sha256": "3b3c753525cf11deca828a5648535a8a6ca5ad3775096209e9c40459c8de24bd",
+      "sizeBytes": 1880109,
+      "category": "CONFIG"
+    },
+    "sitemap.xml": {
+      "sha256": "e3e3947587cb5a974826b354b34934c2a101d311321c7762d927d7f7ba0adbf8",
+      "sizeBytes": 368,
+      "category": "CONFIG"
+    },
+    "spe-ambient-vision-slides.html": {
+      "sha256": "629683e452372687c5db6a86a7747e55c808685e8fbbb7fd37f9ae7ddb97c110",
+      "sizeBytes": 55717,
+      "category": "HTML"
+    },
+    "spe_wasm.sha256.json": {
+      "sha256": "44c0344735b8e53603334db249aff3328a46abd11fc3cfd8ab1f38286cdcc8d8",
+      "sizeBytes": 1823,
+      "category": "CONFIG"
+    },
+    "spe_wasm.wasm": {
+      "sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+      "sizeBytes": 1339691,
+      "category": "WASM"
+    },
+    "sw.js": {
+      "sha256": "9404554af2fa62726a7ae09a6edd5496317f273067b0157ed5790504e971a420",
+      "sizeBytes": 3517,
+      "category": "JAVASCRIPT"
+    },
+    "vendor/ort.wasm.min.js": {
+      "sha256": "e66568724f8848e57cc2a56e4bea3a5b86ce3ff81b2da11eac8ed7ab02b27bd4",
+      "sizeBytes": 49026,
+      "category": "JAVASCRIPT"
+    },
+    "vendor/ort.wasm.min.mjs": {
+      "sha256": "f53ed4792e758e7232f779d479eb8931b97ff3ab2e3b9a33ee00d1251ffdaad6",
+      "sizeBytes": 48904,
+      "category": "JAVASCRIPT"
+    }
+  },
+  "manifestDigest": "a4fe3dd8777c78fb5ff04fc0765ac931300a2cd1283c1afd9f682359ffb8df2f"
 }

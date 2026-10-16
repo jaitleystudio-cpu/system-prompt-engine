@@ -22,7 +22,7 @@ import {
 } from "../src/engine/evolution/releaseSafetyGovernor.ts";
 import { computeSha256 } from "../src/engine/hashUtils.ts";
 import { NetworkEgressObserver } from "../src/engine/networkObserver.ts";
-import { generateCoreAPrompt, probeChromePromptApi } from "../src/engine/core-a.ts";
+import { generateCoreAPrompt, probeChromePromptApi, DEFAULT_CORE_A_PERMITTED_DESTINATIONS } from "../src/engine/core-a.ts";
 
 let passed = 0;
 let failed = 0;
@@ -192,19 +192,35 @@ async function runAdversarialRecheckBattery() {
     );
     assert(report.airGapViolated === true, "Gate B: airGapViolated flag is accurately raised");
 
-    // 3. Port Enforcement Verification:
+    // 3. Port Enforcement Verification with Core A's DEFAULT Production Allowlist:
+    // Core A's DEFAULT allowlist (DEFAULT_CORE_A_PERMITTED_DESTINATIONS) permits only 4173/5173/4177.
+    // Ensure that arbitrary loopback port 8080 or 9000 is blocked by Core A's default allowlist!
+    NetworkEgressObserver.resetForTesting();
     NetworkEgressObserver.startObservation({
       denyByDefault: true,
-      permittedDestinations: ["127.0.0.1:4173"], // Specific port 4173 permitted
+      permittedDestinations: [...DEFAULT_CORE_A_PERMITTED_DESTINATIONS],
     });
-    // Attempting localhost on unpermitted port 8080 must be BLOCKED
-    let wrongPortBlocked = false;
+    let prodPortBlocked = false;
     try {
       await globalThis.fetch("http://127.0.0.1:8080/unauthorized-endpoint");
     } catch (err) {
-      wrongPortBlocked = err.message.includes("AIR_GAP_EGRESS_BLOCKED");
+      prodPortBlocked = err.message.includes("AIR_GAP_EGRESS_BLOCKED");
     }
-    assert(wrongPortBlocked, "Gate B: Port enforcement: Port 8080 blocked when only port 4173 is permitted on loopback");
+    assert(prodPortBlocked, "Gate B: Core A default production allowlist strictly blocks unapproved loopback port 8080");
+
+    let isDest8080Permitted = NetworkEgressObserver.isDestinationPermitted("127.0.0.1:8080");
+    assert(isDest8080Permitted === false, "Gate B: isDestinationPermitted('127.0.0.1:8080') is strictly false under production allowlist");
+
+    let isDest4173Permitted = NetworkEgressObserver.isDestinationPermitted("127.0.0.1:4173");
+    assert(isDest4173Permitted === true, "Gate B: Approved local port 127.0.0.1:4173 is permitted");
+
+    // Test generic loopback rule without port under strict policy: does not permit port 8080
+    NetworkEgressObserver.startObservation({
+      denyByDefault: true,
+      permittedDestinations: ["127.0.0.1"],
+    });
+    let genericPort8080Permitted = NetworkEgressObserver.isDestinationPermitted("127.0.0.1:8080");
+    assert(genericPort8080Permitted === false, "Gate B: Generic '127.0.0.1' without port does NOT permit port 8080");
     NetworkEgressObserver.resetForTesting();
   } finally {
     globalThis.fetch = origFetch;
@@ -215,7 +231,8 @@ async function runAdversarialRecheckBattery() {
   // ═══════════════════════════════════════════════════════════════════════
   console.log("\n▶ Gate C: Physical Deployment Rollback Restoration (Sync & Async)");
 
-  const distWasmPath = resolve(process.cwd(), "apps/web/dist/spe_wasm.wasm");
+  const distDir = resolve(process.cwd(), "apps/web/dist");
+  const distWasmPath = resolve(distDir, "spe_wasm.wasm");
   const pinnedWasmPath = resolve(process.cwd(), "apps/web/deployments/pinned-base/spe_wasm.wasm");
   const backupWasm = existsSync(distWasmPath) ? readFileSync(distWasmPath) : null;
 
@@ -253,13 +270,63 @@ async function runAdversarialRecheckBattery() {
     );
 
     // 4. Test failure case: If destination cannot be restored or is unverified, verifiedSafe MUST BE false
-    // Simulate by corrupting destination and checking an unwriteable directory
     const fakeDistDir = resolve(process.cwd(), "apps/web/dist/__fake_unwriteable_dir");
     const badAudit = governor.verifyWholeSiteManifest(fakeDistDir);
     assert(
       badAudit.verifiedSafe === false,
       "Gate C: Missing/unrestorable whole-site manifest strictly sets verifiedSafe: false (no false success authority)"
     );
+
+    // 5. R2.2 Challenge: Corrupt a deployed JavaScript bundle BEFORE rollback is invoked,
+    // invoke rollback, and prove that the original authentic bundle is physically recovered from pinned-base!
+    const testJsRelPath = "assets/HeadToHeadCompare-CHYa18zi.js";
+    const distJsPath = resolve(distDir, testJsRelPath);
+    const pinnedJsPath = resolve(process.cwd(), "apps/web/deployments/pinned-base", testJsRelPath);
+
+    if (existsSync(distJsPath) && existsSync(pinnedJsPath)) {
+      const canonicalJsBuf = readFileSync(pinnedJsPath);
+      const canonicalJsHash = computeSha256(canonicalJsBuf);
+
+      // Corrupt the JavaScript bundle in dist BEFORE rollback!
+      writeFileSync(distJsPath, Buffer.from("console.log('CORRUPTED_BEFORE_ROLLBACK');"));
+      assert(
+        computeSha256(readFileSync(distJsPath)) !== canonicalJsHash,
+        "Gate C: Deployed JavaScript bundle confirmed corrupted in dist BEFORE rollback"
+      );
+
+      // Verify that before rollback, verifyWholeSiteManifest FAILS
+      const preRollbackAudit = governor.verifyWholeSiteManifest(distDir);
+      assert(
+        preRollbackAudit.verifiedSafe === false && preRollbackAudit.corruptedFiles.includes(testJsRelPath),
+        "Gate C: verifyWholeSiteManifest strictly catches pre-existing JavaScript corruption before rollback"
+      );
+
+      // Now execute deployment rollback!
+      const rollbackResult = governor.executeDeploymentRollbackSync({
+        proposalId: "PROP-GATE-C-JS-RECOVER",
+        authorIdentity: "agent:autonomous_coder",
+        category: "ENGINE",
+        targetFiles: ["apps/web/src/engine/hashUtils.ts"],
+        testResults: { passed: false, passCount: 0, failCount: 1, regressionsDetected: 1 },
+      });
+
+      // Assert that rollback physically restored the authentic JS bundle from pinned-base!
+      const restoredJsBuf = readFileSync(distJsPath);
+      const restoredJsHash = computeSha256(restoredJsBuf);
+      assert(
+        restoredJsHash === canonicalJsHash,
+        "Gate C: Rollback physically recovered original authentic JavaScript bundle from pinned-base bit-for-bit"
+      );
+      assert(
+        rollbackResult.verifiedSafe === true,
+        "Gate C: Rollback verifiedSafe is true after restoring all assets from pinned-base"
+      );
+      const postRollbackAudit = governor.verifyWholeSiteManifest(distDir);
+      assert(
+        postRollbackAudit.verifiedSafe === true,
+        "Gate C: Post-rollback whole-site verification passes cleanly without certifying corrupted code"
+      );
+    }
   } finally {
     if (backupWasm) {
       writeFileSync(distWasmPath, backupWasm);
@@ -271,7 +338,7 @@ async function runAdversarialRecheckBattery() {
   // ═══════════════════════════════════════════════════════════════════════
   console.log("\n▶ Gate D: Whole-Site Asset Integrity (HTML, JS, CSS, WASM & Config)");
 
-  const distDir = resolve(process.cwd(), "apps/web/dist");
+  // distDir is already defined in Gate C
 
   // 1. Build whole-site manifest and verify coverage
   const wholeSiteManifest = governor.buildWholeSiteManifest(distDir);
@@ -324,6 +391,71 @@ async function runAdversarialRecheckBattery() {
       );
     } finally {
       writeFileSync(jsFullPath, backupJs);
+    }
+  }
+
+  // 5. R2.2 Challenge: Add an unexpected JavaScript file and prove the whole-site verifier rejects it
+  const unexpectedJsPath = resolve(distDir, "assets/backdoor-injected-malicious.js");
+  writeFileSync(unexpectedJsPath, Buffer.from("console.log('UNAUTHORIZED_BACKDOOR_FILE');"));
+  try {
+    const unexpectedAudit = governor.verifyWholeSiteManifest(distDir);
+    assert(
+      unexpectedAudit.verifiedSafe === false,
+      "Gate D: Whole-site verifier strictly FAILS when an unexpected uncataloged file is added"
+    );
+    assert(
+      unexpectedAudit.unexpectedFiles.includes("assets/backdoor-injected-malicious.js"),
+      "Gate D: Audit report explicitly identifies unexpected file in unexpectedFiles array"
+    );
+    assert(
+      unexpectedAudit.reason.includes("unexpected uncataloged file"),
+      "Gate D: Audit failure reason explicitly cites unexpected uncataloged file"
+    );
+  } finally {
+    try { unlinkSync(unexpectedJsPath); } catch {}
+  }
+
+  // 6. R2.2 Challenge: Modify an asset AND its accompanying manifest together; prove the verifier rejects both!
+  const manifestDistPath = resolve(distDir, "release-manifest.json");
+  const originalManifestContent = readFileSync(manifestDistPath, "utf-8");
+  const testTamperJsRel = "assets/DailyLab-C0Fy5J08.js";
+  const testTamperJsFull = resolve(distDir, testTamperJsRel);
+
+  if (existsSync(testTamperJsFull)) {
+    const origJsBuf = readFileSync(testTamperJsFull);
+    try {
+      // Tamper with the JS file
+      const tamperedContent = Buffer.from("console.log('TAMPERED_ASSET_AND_MANIFEST');");
+      writeFileSync(testTamperJsFull, tamperedContent);
+      const tamperedHash = computeSha256(tamperedContent);
+
+      // Also tamper with dist/release-manifest.json to match the tampered file!
+      const parsedManifest = JSON.parse(originalManifestContent);
+      parsedManifest.artifacts[testTamperJsRel] = {
+        sha256: tamperedHash,
+        sizeBytes: tamperedContent.byteLength,
+        category: "JAVASCRIPT",
+      };
+      const sortedInv = {};
+      for (const k of Object.keys(parsedManifest.artifacts).sort()) {
+        sortedInv[k] = parsedManifest.artifacts[k];
+      }
+      parsedManifest.manifestDigest = computeSha256(JSON.stringify(sortedInv));
+      writeFileSync(manifestDistPath, JSON.stringify(parsedManifest, null, 2), "utf-8");
+
+      // Verify that verifier rejects BOTH asset and modified manifest because it compares against trusted pinned-base!
+      const dualTamperAudit = governor.verifyWholeSiteManifest(distDir);
+      assert(
+        dualTamperAudit.verifiedSafe === false,
+        "Gate D: Dual-tamper of asset + accompanying manifest is strictly REJECTED"
+      );
+      assert(
+        dualTamperAudit.reason.includes("MANIFEST_AUTHENTICITY_MISMATCH") || dualTamperAudit.corruptedFiles.includes(testTamperJsRel),
+        "Gate D: Verifier detects manifest authenticity mismatch against immutable pinned reference"
+      );
+    } finally {
+      writeFileSync(testTamperJsFull, origJsBuf);
+      writeFileSync(manifestDistPath, originalManifestContent);
     }
   }
 
@@ -452,11 +584,50 @@ async function runAdversarialRecheckBattery() {
       simResult.modelMetadata.modelName.includes("Chrome Built-in AI"),
       "Gate F: Model metadata truthfully reflects Chrome Built-in AI"
     );
+
+    // 4. R2.2 Challenge: Test Documented Chrome Availability States
+    // Chrome documentation specifies: "readily", "after-download", "unavailable", "no"
+    
+    // Test "unavailable" state:
+    globalThis.LanguageModel.availability = async () => "unavailable";
+    const unavailableProbe = await probeChromePromptApi();
+    assert(
+      unavailableProbe.supported === false,
+      "Gate F: LanguageModel.availability()='unavailable' correctly reports supported: false"
+    );
+    assert(
+      unavailableProbe.availability === "unavailable",
+      "Gate F: Availability field correctly reflects 'unavailable'"
+    );
+
+    // Test "no" state:
+    globalThis.LanguageModel.availability = async () => "no";
+    const noProbe = await probeChromePromptApi();
+    assert(
+      noProbe.supported === false,
+      "Gate F: LanguageModel.availability()='no' correctly reports supported: false"
+    );
+
+    // Test "after-download" state:
+    globalThis.LanguageModel.availability = async () => "after-download";
+    const downloadProbe = await probeChromePromptApi();
+    assert(
+      downloadProbe.supported === true,
+      "Gate F: LanguageModel.availability()='after-download' correctly reports supported: true"
+    );
+
+    // Test "readily" state:
+    globalThis.LanguageModel.availability = async () => "readily";
+    const readilyProbe = await probeChromePromptApi();
+    assert(
+      readilyProbe.supported === true,
+      "Gate F: LanguageModel.availability()='readily' correctly reports supported: true"
+    );
   } finally {
     delete globalThis.LanguageModel;
   }
 
-  // 4. Test Truthful Fallback when Prompt API is UNAVAILABLE
+  // 5. Test Truthful Fallback when Prompt API is UNAVAILABLE
   const fallbackResult = await generateCoreAPrompt({
     userRequest: "Create a verified system prompt with fallback",
     runtimePreference: "browser_ai", // Requested, but API is not present!

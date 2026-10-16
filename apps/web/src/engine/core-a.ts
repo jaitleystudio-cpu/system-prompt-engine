@@ -443,12 +443,15 @@ export async function probeChromePromptApi(): Promise<ChromePromptApiProbe> {
         avail = "no";
       }
     }
+    const isSupported = avail === "readily" || avail === "after-download";
     return {
-      supported: avail !== "no",
+      supported: isSupported,
       entryPoint: "LanguageModel",
       availability: avail as any,
       platformSupported: true,
-      notes: "Standard documented Chrome LanguageModel API detected.",
+      notes: isSupported
+        ? "Standard documented Chrome LanguageModel API detected and available."
+        : `Chrome LanguageModel API reported availability status: '${avail}'.`,
     };
   }
 
@@ -468,12 +471,15 @@ export async function probeChromePromptApi(): Promise<ChromePromptApiProbe> {
         avail = "no";
       }
     }
+    const isSupported = avail === "readily" || avail === "after-download";
     return {
-      supported: avail !== "no",
+      supported: isSupported,
       entryPoint: "ai.languageModel",
       availability: avail as any,
       platformSupported: true,
-      notes: "Chrome ai.languageModel namespace detected.",
+      notes: isSupported
+        ? "Chrome ai.languageModel namespace detected and available."
+        : `Chrome ai.languageModel reported availability status: '${avail}'.`,
     };
   }
 
@@ -487,22 +493,36 @@ export async function probeChromePromptApi(): Promise<ChromePromptApiProbe> {
 }
 
 /**
+ * Standard approved loopback destinations and ports for local SPE web preview/dev/staging servers.
+ * Any other loopback port (e.g. 8080, 9222) or external egress is strictly forbidden by default air-gap policy.
+ */
+export const DEFAULT_CORE_A_PERMITTED_DESTINATIONS: readonly string[] = Object.freeze([
+  "127.0.0.1:4173",
+  "localhost:4173",
+  "127.0.0.1:5173",
+  "localhost:5173",
+  "127.0.0.1:4177",
+  "localhost:4177",
+]);
+
+/**
  * Primary Core A prompt generation execution function.
  */
 export async function generateCoreAPrompt(
   req: CoreAGenerationRequest
 ): Promise<CoreAGenerationResult> {
+  // Enforce deny-by-default air-gap policy covering BOTH model loading and inference execution
+  const endNetworkObservation = NetworkEgressObserver.startObservation({
+    denyByDefault: true,
+    permittedDestinations: [...DEFAULT_CORE_A_PERMITTED_DESTINATIONS],
+  });
+
   const neuralRuntime = NeuralModelRuntime.getInstance();
   if (!neuralRuntime.isLoaded() && !req.injectedFailureMode && !req.runtimePreference) {
     try {
       await neuralRuntime.loadModel();
     } catch {}
   }
-  // Enforce deny-by-default air-gap policy for all Core A inference sessions
-  const endNetworkObservation = NetworkEgressObserver.startObservation({
-    denyByDefault: true,
-    permittedDestinations: ["127.0.0.1", "localhost"],
-  });
   const startTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
   const userRequest = (req.userRequest || "").trim();
   const explicitConstraints = req.explicitConstraints || [];

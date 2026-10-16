@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://systempromptengine.com/sitemap-core.xml</loc>
+    <lastmod>2026-10-15</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://systempromptengine.com/sitemap-prompts.xml</loc>
+    <lastmod>2026-10-15</lastmod>
+  </sitemap>
+</sitemapindex>
