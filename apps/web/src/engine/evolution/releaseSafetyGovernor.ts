@@ -31,8 +31,9 @@ import {
   readdirSync,
   lstatSync,
   rmSync,
+  realpathSync,
 } from "node:fs";
-import { resolve, relative, dirname } from "node:path";
+import { resolve, relative, dirname, sep } from "node:path";
 import { createPublicKey, createPrivateKey, sign, verify, createHmac, randomBytes } from "node:crypto";
 import { computeSha256 } from "../hashUtils.ts";
 
@@ -803,6 +804,92 @@ export class ReleaseSafetyGovernor {
   }
 
   /**
+   * Atomic JSON file write: writes to temporary file with PID and timestamp,
+   * then atomically renames to targetPath, guaranteeing crash durability.
+   */
+  public static atomicWriteJson(targetPath: string, data: any): void {
+    const dir = dirname(targetPath);
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+    }
+    const tmpPath = `${targetPath}.tmp.${process.pid}.${Date.now()}`;
+    writeFileSync(tmpPath, JSON.stringify(data, null, 2), "utf-8");
+    renameSync(tmpPath, targetPath);
+  }
+
+  /**
+   * Safe file restoration with comprehensive filesystem boundary checks:
+   * 1. Path traversal check (no '..' or drive escapes).
+   * 2. Directory ancestry symlink defense: Every existing ancestor directory between baseDir and destPath
+   *    is verified with lstatSync to guarantee zero symbolic links in directory ancestry.
+   * 3. Realpath confinement: Ancestor realpaths and final destination realpath must stay strictly inside baseDir realpath.
+   * 4. Pre-copy unlink: If destPath exists and is a symlink or non-regular file, it is unlinked.
+   * 5. Post-copy verification: destPath is verified to be a regular file, not a symlink, and within baseDir.
+   */
+  public static safeRestoreFile(srcPath: string, destPath: string, baseDir: string): void {
+    const normRel = relative(baseDir, resolve(baseDir, destPath));
+    if (normRel.startsWith("..") || /^[a-zA-Z]:[\\/]/.test(destPath)) {
+      throw new Error(`SECURITY_PATH_TRAVERSAL_REJECTED: ${destPath}`);
+    }
+
+    const baseDirReal = existsSync(baseDir) ? realpathSync(baseDir) : resolve(baseDir);
+    const targetDir = dirname(destPath);
+    const relDir = relative(baseDir, targetDir);
+
+    // Verify all ancestor directories between baseDir and destPath
+    if (relDir && relDir !== "." && !relDir.startsWith("..")) {
+      const segments = relDir.split(/[\\/]/).filter(Boolean);
+      let current = baseDir;
+      for (const seg of segments) {
+        current = resolve(current, seg);
+        if (existsSync(current)) {
+          const st = lstatSync(current);
+          if (st.isSymbolicLink()) {
+            throw new Error(`SECURITY_SYMLINK_IN_ANCESTRY_REJECTED: Ancestor directory component '${current}' is a symbolic link.`);
+          }
+          if (!st.isDirectory()) {
+            unlinkSync(current);
+            mkdirSync(current, { recursive: false });
+          }
+          const curReal = realpathSync(current);
+          if (!curReal.startsWith(baseDirReal)) {
+            throw new Error(`SECURITY_REALPATH_ESCAPE_DETECTED: Ancestor directory '${current}' realpath escapes base directory.`);
+          }
+        } else {
+          mkdirSync(current, { recursive: false });
+        }
+      }
+    } else if (!existsSync(targetDir)) {
+      mkdirSync(targetDir, { recursive: true });
+    }
+
+    // Pre-copy leaf cleanup
+    if (existsSync(destPath)) {
+      try {
+        const destStat = lstatSync(destPath);
+        if (destStat.isSymbolicLink() || !destStat.isFile()) {
+          unlinkSync(destPath);
+        }
+      } catch {}
+    }
+
+    copyFileSync(srcPath, destPath);
+
+    // Post-copy leaf verification
+    const postStat = lstatSync(destPath);
+    if (postStat.isSymbolicLink() || !postStat.isFile()) {
+      try { unlinkSync(destPath); } catch {}
+      throw new Error(`SECURITY_SYMLINK_DETECTED_AT_DESTINATION: ${destPath}`);
+    }
+
+    const destReal = realpathSync(destPath);
+    if (destReal !== baseDirReal && !destReal.startsWith(baseDirReal + sep)) {
+      try { unlinkSync(destPath); } catch {}
+      throw new Error(`SECURITY_REALPATH_ESCAPE_DETECTED: Restored file realpath '${destReal}' escapes base directory '${baseDirReal}'.`);
+    }
+  }
+
+  /**
    * Executes genuine deployment rollback by:
    * 1. Physically restoring the served target (`apps/web/dist`) from immutable pinned storage.
    * 2. Updating the local pointer file as audit evidence.
@@ -841,7 +928,7 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    // 1. Write IN-PROGRESS pointer state (never claim success before verification succeeds)
+    // 1. Write IN-PROGRESS pointer state atomically (never claim success before verification succeeds)
     const inProgressPointerData = {
       activeReleaseCommit: this.pinnedCommit,
       rejectedCandidateProposalId: candidate.proposalId,
@@ -855,7 +942,7 @@ export class ReleaseSafetyGovernor {
     };
 
     try {
-      writeFileSync(pointerPath, JSON.stringify(inProgressPointerData, null, 2), "utf-8");
+      ReleaseSafetyGovernor.atomicWriteJson(pointerPath, inProgressPointerData);
     } catch (e) {
       console.warn("Notice writing deployment pointer:", e);
     }
@@ -884,7 +971,7 @@ export class ReleaseSafetyGovernor {
             status: "ROLLBACK_FAILED",
             failureReason: `PINNED_BASELINE_MANIFEST_UNAUTHENTICATED: ${baselineAudit.reason}`,
           };
-          writeFileSync(pointerPath, JSON.stringify(failPointer, null, 2), "utf-8");
+          ReleaseSafetyGovernor.atomicWriteJson(pointerPath, failPointer);
         } catch {}
 
         return {
@@ -905,51 +992,21 @@ export class ReleaseSafetyGovernor {
         const artifacts = pManifest.artifacts || {};
 
         // Direct Safe Restoration & Symlink Overwrite Prevention (Finding R2.3-P0-B / Gate G2):
-        // Before writing any artifact, verify path traversal bounds and unlink any pre-existing
-        // symlink or non-regular file at destPath so copyFileSync can NEVER write through a symlink!
+        // Verifies directory ancestry (0 symlinks), realpath containment, and unlinks destination leaf symlinks.
         for (const relPath of Object.keys(artifacts)) {
-          const normRel = relative(distDir, resolve(distDir, relPath));
-          if (normRel.startsWith("..") || /^[a-zA-Z]:[\\/]/.test(relPath)) {
-            throw new Error(`SECURITY_PATH_TRAVERSAL_REJECTED: ${relPath}`);
-          }
           const srcPath = resolve(pinnedBaseDir, relPath);
           const destPath = resolve(distDir, relPath);
           if (existsSync(srcPath)) {
-            mkdirSync(dirname(destPath), { recursive: true });
-            try {
-              const destStat = lstatSync(destPath);
-              if (destStat.isSymbolicLink() || !destStat.isFile()) {
-                unlinkSync(destPath);
-              }
-            } catch {}
-            copyFileSync(srcPath, destPath);
-            // Verify written destination is a regular file and not an attacker symlink
-            const postStat = lstatSync(destPath);
-            if (postStat.isSymbolicLink() || !postStat.isFile()) {
-              unlinkSync(destPath);
-              throw new Error(`SECURITY_SYMLINK_DETECTED_AT_DESTINATION: ${relPath}`);
-            }
+            ReleaseSafetyGovernor.safeRestoreFile(srcPath, destPath, distDir);
           }
         }
 
-        // Step 3: Restore the authentic pinned reference manifest directly into dist (unlinking symlinks)
-        try {
-          const dmStat = lstatSync(distManifest);
-          if (dmStat.isSymbolicLink() || !dmStat.isFile()) {
-            unlinkSync(distManifest);
-          }
-        } catch {}
-        copyFileSync(pinnedManifest, distManifest);
+        // Step 3: Restore authentic pinned reference manifest directly into dist
+        ReleaseSafetyGovernor.safeRestoreFile(pinnedManifest, distManifest, distDir);
 
         // Step 4: Restore canonical WASM to public if directory present in workspace
         if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
-          try {
-            const pwStat = lstatSync(publicWasm);
-            if (pwStat.isSymbolicLink() || !pwStat.isFile()) {
-              unlinkSync(publicWasm);
-            }
-          } catch {}
-          copyFileSync(pinnedWasm, publicWasm);
+          ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(process.cwd(), "apps/web/public"));
         }
 
         // Step 5: Purge any unexpected / uncataloged files (including symlinks) that were added to distDir
@@ -972,21 +1029,9 @@ export class ReleaseSafetyGovernor {
       }
     } else if (existsSync(pinnedWasm)) {
       try {
-        try {
-          const dwStat = lstatSync(distWasm);
-          if (dwStat.isSymbolicLink() || !dwStat.isFile()) {
-            unlinkSync(distWasm);
-          }
-        } catch {}
-        copyFileSync(pinnedWasm, distWasm);
+        ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, distWasm, distDir);
         if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
-          try {
-            const pwStat = lstatSync(publicWasm);
-            if (pwStat.isSymbolicLink() || !pwStat.isFile()) {
-              unlinkSync(publicWasm);
-            }
-          } catch {}
-          copyFileSync(pinnedWasm, publicWasm);
+          ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(process.cwd(), "apps/web/public"));
         }
       } catch (err) {
         console.warn("Rollback physical WASM restoration notice:", err);
@@ -1104,7 +1149,7 @@ export class ReleaseSafetyGovernor {
         verifiedSafe,
         failureReason: verifiedSafe ? undefined : "DESTINATION_VERIFICATION_FAILED",
       };
-      writeFileSync(pointerPath, JSON.stringify(finalPointerData, null, 2), "utf-8");
+      ReleaseSafetyGovernor.atomicWriteJson(pointerPath, finalPointerData);
     } catch {}
 
     return {
@@ -1260,23 +1305,27 @@ export class ReleaseSafetyGovernor {
       return { verified: false, reason: `MANIFEST_REVOKED_AUTHORITY_KEY: Authority '${authorityId}' uses a revoked key.` };
     }
 
-    // 2.1 Detached Signature Equivalence Check (if verifying from file path)
+    // 2.1 Mandatory Detached Signature Equivalence Check (if verifying from file path)
     if (typeof manifestObjOrPath === "string") {
       const sigPath = manifestObjOrPath.endsWith(".json")
         ? `${manifestObjOrPath}.sig`
         : resolve(dirname(manifestObjOrPath), "release-manifest.json.sig");
-      if (existsSync(sigPath)) {
-        try {
-          const detachedSig = readFileSync(sigPath, "utf-8").trim();
-          if (detachedSig !== manifest.signatureHex) {
-            return {
-              verified: false,
-              reason: "DETACHED_SIGNATURE_MISMATCH: Detached signature (.sig) does not match embedded signature in baseline manifest.",
-            };
-          }
-        } catch (err: any) {
-          return { verified: false, reason: `DETACHED_SIGNATURE_READ_ERROR: ${err.message}` };
+      if (!existsSync(sigPath)) {
+        return {
+          verified: false,
+          reason: `DETACHED_SIGNATURE_MISSING: Mandatory detached signature file (.sig) not found at '${sigPath}'.`,
+        };
+      }
+      try {
+        const detachedSig = readFileSync(sigPath, "utf-8").trim();
+        if (detachedSig !== manifest.signatureHex) {
+          return {
+            verified: false,
+            reason: "DETACHED_SIGNATURE_MISMATCH: Detached signature (.sig) does not match embedded signature in baseline manifest.",
+          };
         }
+      } catch (err: any) {
+        return { verified: false, reason: `DETACHED_SIGNATURE_READ_ERROR: ${err.message}` };
       }
     }
 
@@ -1607,7 +1656,7 @@ export class ReleaseSafetyGovernor {
     };
 
     try {
-      writeFileSync(pointerPath, JSON.stringify(inProgressPointerData, null, 2), "utf-8");
+      ReleaseSafetyGovernor.atomicWriteJson(pointerPath, inProgressPointerData);
     } catch {}
 
     const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
@@ -1633,7 +1682,7 @@ export class ReleaseSafetyGovernor {
           status: "ROLLBACK_FAILED",
           failureReason: `PINNED_BASELINE_MANIFEST_UNAUTHENTICATED: ${baselineAudit.reason}`,
         };
-        writeFileSync(pointerPath, JSON.stringify(failPointer, null, 2), "utf-8");
+        ReleaseSafetyGovernor.atomicWriteJson(pointerPath, failPointer);
       } catch {}
 
       return {
@@ -1653,51 +1702,21 @@ export class ReleaseSafetyGovernor {
       const artifacts = pManifest.artifacts || {};
 
       // Direct Safe Restoration & Symlink Overwrite Prevention (Finding R2.3-P0-B / Gate G2):
-      // Before writing any artifact, verify path traversal bounds and unlink any pre-existing
-      // symlink or non-regular file at destPath so copyFileSync can NEVER write through a symlink!
+      // Verifies directory ancestry (0 symlinks), realpath containment, and unlinks destination leaf symlinks.
       for (const relPath of Object.keys(artifacts)) {
-        const normRel = relative(distDir, resolve(distDir, relPath));
-        if (normRel.startsWith("..") || /^[a-zA-Z]:[\\/]/.test(relPath)) {
-          throw new Error(`SECURITY_PATH_TRAVERSAL_REJECTED: ${relPath}`);
-        }
         const srcPath = resolve(pinnedBaseDir, relPath);
         const destPath = resolve(distDir, relPath);
         if (existsSync(srcPath)) {
-          mkdirSync(dirname(destPath), { recursive: true });
-          try {
-            const destStat = lstatSync(destPath);
-            if (destStat.isSymbolicLink() || !destStat.isFile()) {
-              unlinkSync(destPath);
-            }
-          } catch {}
-          copyFileSync(srcPath, destPath);
-          // Verify written destination is a regular file and not an attacker symlink
-          const postStat = lstatSync(destPath);
-          if (postStat.isSymbolicLink() || !postStat.isFile()) {
-            unlinkSync(destPath);
-            throw new Error(`SECURITY_SYMLINK_DETECTED_AT_DESTINATION: ${relPath}`);
-          }
+          ReleaseSafetyGovernor.safeRestoreFile(srcPath, destPath, distDir);
         }
       }
 
-      // Step 3: Restore the authentic pinned reference manifest directly into dist (unlinking symlinks)
-      try {
-        const dmStat = lstatSync(distManifest);
-        if (dmStat.isSymbolicLink() || !dmStat.isFile()) {
-          unlinkSync(distManifest);
-        }
-      } catch {}
-      copyFileSync(pinnedManifest, distManifest);
+      // Step 3: Restore authentic pinned reference manifest directly into dist
+      ReleaseSafetyGovernor.safeRestoreFile(pinnedManifest, distManifest, distDir);
 
       // Step 4: Restore canonical WASM to public if directory present in workspace
       if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
-        try {
-          const pwStat = lstatSync(publicWasm);
-          if (pwStat.isSymbolicLink() || !pwStat.isFile()) {
-            unlinkSync(publicWasm);
-          }
-        } catch {}
-        copyFileSync(pinnedWasm, publicWasm);
+        ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(process.cwd(), "apps/web/public"));
       }
 
       // Step 5: Purge any unexpected / uncataloged files (including symlinks and special files) that were added to distDir
@@ -1752,7 +1771,7 @@ export class ReleaseSafetyGovernor {
         verifiedSafe,
         failureReason: verifiedSafe ? undefined : "DESTINATION_VERIFICATION_FAILED",
       };
-      writeFileSync(pointerPath, JSON.stringify(finalPointerData, null, 2), "utf-8");
+      ReleaseSafetyGovernor.atomicWriteJson(pointerPath, finalPointerData);
     } catch {}
 
     return {

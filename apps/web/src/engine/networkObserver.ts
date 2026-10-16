@@ -58,6 +58,9 @@ export class NetworkEgressObserver {
 
   public static setGlobalAirGapEnforce(enforce: boolean): void {
     this.globalAirGapEnforce = enforce;
+    if (enforce) {
+      this.ensureHooksInstalled();
+    }
   }
 
   public static isAirGapEnforced(): boolean {
@@ -76,12 +79,76 @@ export class NetworkEgressObserver {
     return this.activeDenySessions;
   }
 
+  /**
+   * Robust destination normalizer that extracts host, port, loopback status, and protocol
+   * across URLs, TCP host:port strings, raw hostnames, IPv4, and bracketed IPv6.
+   */
+  public static normalizeDestination(dest: string): {
+    hostname: string;
+    port: string;
+    isLoopback: boolean;
+    protocol: string;
+  } {
+    if (!dest) {
+      return { hostname: "", port: "", isLoopback: false, protocol: "" };
+    }
+    try {
+      const hasScheme = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(dest);
+      const urlToParse = hasScheme ? dest : (dest.startsWith("//") ? `http:${dest}` : `http://${dest}`);
+      const u = new URL(urlToParse);
+      const hostname = (u.hostname || "").toLowerCase().replace(/^\[|\]$/g, "");
+      const protocol = hasScheme ? u.protocol : "";
+      let port = u.port;
+      if (!port) {
+        if (protocol === "https:" || protocol === "wss:") {
+          port = "443";
+        } else if (protocol === "http:" || protocol === "ws:") {
+          port = "80";
+        } else {
+          const colonIdx = dest.lastIndexOf(":");
+          if (colonIdx !== -1 && !dest.endsWith("]")) {
+            const potentialPort = dest.slice(colonIdx + 1).split("/")[0];
+            if (/^\d+$/.test(potentialPort)) {
+              port = potentialPort;
+            }
+          }
+        }
+      }
+      const isLoopback =
+        hostname === "127.0.0.1" ||
+        hostname === "localhost" ||
+        hostname === "::1" ||
+        hostname === "0.0.0.0" ||
+        hostname.startsWith("127.");
+      return { hostname, port, isLoopback, protocol };
+    } catch {
+      const clean = dest.split("/")[0] || "";
+      const parts = clean.split(":");
+      const hostname = (parts[0] || "").toLowerCase();
+      const port = parts[1] || "";
+      const isLoopback =
+        hostname === "127.0.0.1" ||
+        hostname === "localhost" ||
+        hostname === "::1" ||
+        hostname === "0.0.0.0" ||
+        hostname.startsWith("127.");
+      return { hostname, port, isLoopback, protocol: "" };
+    }
+  }
+
   public static isDestinationPermitted(dest: string): boolean {
     if (!dest) return false;
     if (this.isLocalResource(dest)) return true;
 
     // Strict deny-by-default air gap enforcement (Finding R2.3-P0-D / Gate G4):
     if (this.isDenyByDefaultActive()) {
+      const norm = this.normalizeDestination(dest);
+
+      // When air-gap is enforced, non-loopback egress is strictly forbidden
+      if (this.isAirGapEnforced() && !norm.isLoopback) {
+        return false;
+      }
+
       const denySessions = Array.from(this.sessions.values()).filter((s) => s.denyByDefault);
       if (denySessions.length === 0) {
         // Air-gap mode is active globally without explicit sessions.
@@ -89,16 +156,12 @@ export class NetworkEgressObserver {
         const AIR_GAP_DEFAULT_ALLOWLIST = [
           "http://127.0.0.1:4173",
           "http://localhost:4173",
+          "127.0.0.1:4173",
+          "localhost:4173",
         ];
         return AIR_GAP_DEFAULT_ALLOWLIST.some((allowed) => {
-          if (dest === allowed || dest === `${allowed}/`) return true;
-          try {
-            const u = new URL(dest.startsWith("http") ? dest : `http://${dest}`);
-            const a = new URL(allowed);
-            return u.hostname === a.hostname && (u.port || "80") === (a.port || "80");
-          } catch {
-            return false;
-          }
+          const aNorm = this.normalizeDestination(allowed);
+          return norm.hostname === aNorm.hostname && (norm.port || "80") === (aNorm.port || "80");
         });
       }
 
@@ -115,46 +178,31 @@ export class NetworkEgressObserver {
   }
 
   private static checkSessionPermits(session: ActiveObservationSession, dest: string): boolean {
-    if (this.globalAirGapEnforce && (dest.startsWith("http://") || dest.startsWith("https://") || dest.startsWith("ws://") || dest.startsWith("wss://"))) {
-      try {
-        const u = new URL(dest);
-        const isLoopback = u.hostname === "127.0.0.1" || u.hostname === "localhost";
-        if (!isLoopback) {
-          // Global air-gap enforcement strictly forbids external cloud domains regardless of session wildcard
-          return false;
-        }
-      } catch {}
+    const norm = this.normalizeDestination(dest);
+
+    if (this.isAirGapEnforced() && !norm.isLoopback) {
+      // Global air-gap enforcement strictly forbids external cloud domains regardless of session wildcard
+      return false;
     }
-    if (session.hasWildcard) return !this.globalAirGapEnforce;
+
+    if (session.hasWildcard) {
+      return this.isAirGapEnforced() ? norm.isLoopback : true;
+    }
+
     return session.permittedDestinations.some((allowed) => {
-      if (allowed === "*" || allowed === dest) return true;
-      try {
-        const destNorm = dest.startsWith("http://") || dest.startsWith("https://") || dest.startsWith("ws://") || dest.startsWith("wss://")
-          ? dest
-          : `http://${dest}`;
-        const allowedNorm = allowed.startsWith("http://") || allowed.startsWith("https://") || allowed.startsWith("ws://") || allowed.startsWith("wss://")
-          ? allowed
-          : `http://${allowed}`;
+      if (allowed === "*") return this.isAirGapEnforced() ? norm.isLoopback : true;
+      if (allowed === dest) return true;
 
-        const destUrl = new URL(destNorm);
-        const allowUrl = new URL(allowedNorm);
+      const allowedNorm = this.normalizeDestination(allowed);
+      if (norm.hostname !== allowedNorm.hostname) return false;
 
-        const hostMatches = destUrl.hostname === allowUrl.hostname;
-        if (!hostMatches) return false;
-
-        // If allowed specifies an explicit port, destination port must strictly match
-        if (allowUrl.port) {
-          const destPort = destUrl.port || (destUrl.protocol === "https:" || destUrl.protocol === "wss:" ? "443" : "80");
-          return destPort === allowUrl.port;
-        } else {
-          // Strict air-gap: If no port is specified in allowlist rule, only standard default scheme ports (80/443) match.
-          // Non-standard ports (e.g. 8080, 9222, etc.) are strictly forbidden unless explicitly declared.
-          const destPort = destUrl.port || (destUrl.protocol === "https:" || destUrl.protocol === "wss:" ? "443" : "80");
-          const defaultPort = allowUrl.protocol === "https:" || allowUrl.protocol === "wss:" ? "443" : "80";
-          return destPort === defaultPort;
-        }
-      } catch {
-        return dest === allowed;
+      // Port checking
+      if (allowedNorm.port) {
+        return norm.port === allowedNorm.port;
+      } else {
+        const destPort = norm.port || (norm.protocol === "https:" || norm.protocol === "wss:" ? "443" : "80");
+        const defaultPort = allowedNorm.protocol === "https:" || allowedNorm.protocol === "wss:" ? "443" : "80";
+        return destPort === defaultPort;
       }
     });
   }
@@ -206,7 +254,7 @@ export class NetworkEgressObserver {
         if (net?.Socket?.prototype && !this.origSocketConnect) {
           this.origSocketConnect = net.Socket.prototype.connect;
           net.Socket.prototype.connect = function (this: any, ...args: any[]) {
-            if (self.activeSessions > 0) {
+            if (self.activeSessions > 0 || self.isDenyByDefaultActive()) {
               self.packetCount++;
               const dest = self.extractSocketDestination(args);
               self.destinations.push(dest);
@@ -238,7 +286,7 @@ export class NetworkEgressObserver {
             if (!this.origSocketConnect && mod?.Socket?.prototype) {
               this.origSocketConnect = mod.Socket.prototype.connect;
               mod.Socket.prototype.connect = function (this: any, ...args: any[]) {
-                if (self.activeSessions > 0) {
+                if (self.activeSessions > 0 || self.isDenyByDefaultActive()) {
                   self.packetCount++;
                   const dest = self.extractSocketDestination(args);
                   self.destinations.push(dest);
@@ -273,7 +321,7 @@ export class NetworkEgressObserver {
     if (typeof globalThis.fetch === "function" && !this.origFetch) {
       this.origFetch = globalThis.fetch;
       globalThis.fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-        if (self.activeSessions > 0) {
+        if (self.activeSessions > 0 || self.isDenyByDefaultActive()) {
           const urlStr = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
 
           // Purely local filesystem or in-memory resource reads do not create network packets
@@ -313,7 +361,7 @@ export class NetworkEgressObserver {
       };
 
       xhrProto.send = function (this: any, ...args: any[]) {
-        if (self.activeSessions > 0) {
+        if (self.activeSessions > 0 || self.isDenyByDefaultActive()) {
           self.packetCount++;
           const dest = this._speObservedUrl || "unknown_xhr_endpoint";
           self.destinations.push(dest);
@@ -341,7 +389,7 @@ export class NetworkEgressObserver {
 
       const WrappedWebSocket = function (this: any, url: string | URL, protocols?: string | string[]) {
         const dest = typeof url === "string" ? url : url.toString();
-        if (self.activeSessions > 0) {
+        if (self.activeSessions > 0 || self.isDenyByDefaultActive()) {
           self.packetCount++;
           self.destinations.push(dest);
 
@@ -370,7 +418,7 @@ export class NetworkEgressObserver {
 
       const WrappedEventSource = function (this: any, url: string | URL, eventSourceInitDict?: any) {
         const dest = typeof url === "string" ? url : url.toString();
-        if (self.activeSessions > 0) {
+        if (self.activeSessions > 0 || self.isDenyByDefaultActive()) {
           self.packetCount++;
           self.destinations.push(dest);
 
@@ -402,7 +450,7 @@ export class NetworkEgressObserver {
       this.origSendBeacon = nav.sendBeacon;
       nav.sendBeacon = function (url: string | URL, data?: any): boolean {
         const dest = typeof url === "string" ? url : url.toString();
-        if (self.activeSessions > 0) {
+        if (self.activeSessions > 0 || self.isDenyByDefaultActive()) {
           self.packetCount++;
           self.destinations.push(dest);
 

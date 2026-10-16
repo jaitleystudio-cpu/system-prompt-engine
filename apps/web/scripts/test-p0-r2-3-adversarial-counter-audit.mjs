@@ -13,7 +13,7 @@
  * Gate G8: Finding R2.3-P1-G — Uniform Paid-Tier Enforcement & Free 30,000 Capacity Ceiling
  */
 
-import { existsSync, readFileSync, writeFileSync, symlinkSync, unlinkSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, symlinkSync, unlinkSync, mkdirSync, renameSync, rmSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import {
   ReleaseSafetyGovernor,
@@ -98,6 +98,22 @@ async function runR23CounterAuditBattery() {
     writeFileSync(pinnedSigPath, authenticSig, "utf-8");
   }
 
+  // G1.5 Mandatory Detached Signature Existence (.sig missing must fail closed)
+  const tempBackupSigPath = `${pinnedSigPath}.bak_${Date.now()}`;
+  try {
+    renameSync(pinnedSigPath, tempBackupSigPath);
+    const missingSigAudit = governor.verifyPinnedBaselineManifest(pinnedManifestPath);
+    assert(missingSigAudit.verified === false, "Adversarial: Missing detached signature (.sig) fails baseline verification");
+    assert(
+      missingSigAudit.reason.includes("DETACHED_SIGNATURE_MISSING"),
+      `Reason specifies DETACHED_SIGNATURE_MISSING (${missingSigAudit.reason})`
+    );
+  } finally {
+    if (existsSync(tempBackupSigPath)) {
+      renameSync(tempBackupSigPath, pinnedSigPath);
+    }
+  }
+
   // ═══════════════════════════════════════════════════════════════════════
   // GATE G2: Finding R2.3-P0-B (Destination Symlink Write-Through Defense)
   // ═══════════════════════════════════════════════════════════════════════
@@ -146,6 +162,38 @@ async function runR23CounterAuditBattery() {
         unlinkSync(canaryPath);
       } catch {}
     }
+  }
+
+  // G2.2 Directory Ancestry Symlink Traversal Defense
+  const ancestorCanaryDir = resolve("/tmp", `spe_ancestor_canary_${Date.now()}`);
+  mkdirSync(ancestorCanaryDir, { recursive: true });
+  const symlinkAncestorDir = resolve(distDir, `assets_symlink_${Date.now()}`);
+  try {
+    symlinkSync(ancestorCanaryDir, symlinkAncestorDir, "dir");
+    let ancestorSymlinkThrew = false;
+    let ancestorSymlinkError = "";
+    try {
+      ReleaseSafetyGovernor.safeRestoreFile(
+        resolve(pinnedBaseDir, "release-manifest.json"),
+        resolve(symlinkAncestorDir, "nested_file.json"),
+        distDir
+      );
+    } catch (err) {
+      ancestorSymlinkThrew = true;
+      ancestorSymlinkError = err.message;
+    }
+    assert(ancestorSymlinkThrew === true, "Adversarial: Ancestor directory symlink traversal is rejected");
+    assert(
+      ancestorSymlinkError.includes("SECURITY_SYMLINK_IN_ANCESTRY_REJECTED"),
+      `Error confirms SECURITY_SYMLINK_IN_ANCESTRY_REJECTED (${ancestorSymlinkError})`
+    );
+    assert(
+      !existsSync(resolve(ancestorCanaryDir, "nested_file.json")),
+      "Canary directory outside tree received 0 written files"
+    );
+  } finally {
+    try { unlinkSync(symlinkAncestorDir); } catch {}
+    try { rmSync(ancestorCanaryDir, { recursive: true, force: true }); } catch {}
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -224,6 +272,45 @@ async function runR23CounterAuditBattery() {
     "Air gap dominance: Permissive session cannot bypass global air gap"
   );
   endPermissive();
+
+  // G4.4 Unconditional interception when activeSessions === 0 but globalAirGapEnforce === true
+  let directFetchThrew = false;
+  let directFetchError = "";
+  try {
+    await globalThis.fetch("https://api.openai.com/v1/chat/completions");
+  } catch (err) {
+    directFetchThrew = true;
+    directFetchError = err.message;
+  }
+  assert(directFetchThrew === true, "Air gap: Direct fetch throws when activeSessions === 0 under global air-gap");
+  assert(
+    directFetchError.includes("AIR_GAP_EGRESS_BLOCKED"),
+    `Error confirms AIR_GAP_EGRESS_BLOCKED (${directFetchError})`
+  );
+
+  // G4.5 Normalization of non-URL TCP destinations and raw host:port
+  const normOpenAi = NetworkEgressObserver.normalizeDestination("api.openai.com:443");
+  assert(normOpenAi.hostname === "api.openai.com" && normOpenAi.port === "443" && normOpenAi.isLoopback === false, "normalizeDestination correctly identifies api.openai.com:443 as non-loopback");
+
+  const normLoopback8080 = NetworkEgressObserver.normalizeDestination("127.0.0.1:8080");
+  assert(normLoopback8080.isLoopback === true && normLoopback8080.port === "8080", "normalizeDestination correctly parses 127.0.0.1:8080");
+
+  assert(
+    NetworkEgressObserver.isDestinationPermitted("api.openai.com:443") === false,
+    "Air gap: Raw TCP 'api.openai.com:443' is strictly DENIED"
+  );
+  assert(
+    NetworkEgressObserver.isDestinationPermitted("127.0.0.1:8080") === false,
+    "Air gap: Raw TCP loopback on unauthorized port 8080 is strictly DENIED"
+  );
+  assert(
+    NetworkEgressObserver.isDestinationPermitted("127.0.0.1:4173") === true,
+    "Air gap: Raw TCP loopback on authorized port 4173 is permitted"
+  );
+  assert(
+    NetworkEgressObserver.isDestinationPermitted("localhost:4173") === true,
+    "Air gap: Raw TCP localhost on authorized port 4173 is permitted"
+  );
 
   NetworkEgressObserver.setGlobalAirGapEnforce(false);
   NetworkEgressObserver.resetForTesting();
@@ -329,6 +416,49 @@ async function runR23CounterAuditBattery() {
   assert(
     cPrompt.includes("CONSTRAINT_OMEGA"),
     "User constraint from END ('CONSTRAINT_OMEGA') is preserved in guidelines"
+  );
+
+  // G7.2 Hard constraints preservation under tight capacity ceiling
+  const oversizedBrief = [
+    "CONSTRAINT_A: Must use SHA-256 for all token signatures.",
+    "CONSTRAINT_B: Must strictly forbid eval and dynamic execution.",
+    "CONSTRAINT_C: Memory usage must never exceed 512MB.",
+    "CONSTRAINT_D: All outbound calls must be logged to audit ledger.",
+    "CONSTRAINT_E: User consent required before disk write operations.",
+    "Build a comprehensive enterprise autonomous agent with multi-modal capabilities.",
+  ].join("\n");
+
+  const tightResult = synthesizeSystemPromptWithDetails({
+    brief: oversizedBrief,
+    depthTier: "normal",
+    maxOutputChars: 5555,
+  });
+
+  const tightPrompt = tightResult.prompt;
+  assert(tightPrompt.length <= 5555, `Tight capacity ceiling enforced (length: ${tightPrompt.length} <= 5555)`);
+  assert(tightPrompt.includes("CONSTRAINT_A"), "CONSTRAINT_A preserved under capacity ceiling");
+  assert(tightPrompt.includes("CONSTRAINT_B"), "CONSTRAINT_B preserved under capacity ceiling");
+  assert(tightPrompt.includes("CONSTRAINT_C"), "CONSTRAINT_C preserved under capacity ceiling");
+  assert(tightPrompt.includes("CONSTRAINT_D"), "CONSTRAINT_D preserved under capacity ceiling");
+  assert(tightPrompt.includes("CONSTRAINT_E"), "CONSTRAINT_E preserved under capacity ceiling");
+
+  // G7.3 Explicit error thrown if protected constraints exceed capacity ceiling
+  let ceilingOverflowThrew = false;
+  let ceilingOverflowError = "";
+  try {
+    synthesizeSystemPromptWithDetails({
+      brief: oversizedBrief,
+      depthTier: "normal",
+      maxOutputChars: 150, // Insufficient budget for 5 hard constraints
+    });
+  } catch (err) {
+    ceilingOverflowThrew = true;
+    ceilingOverflowError = err.message;
+  }
+  assert(ceilingOverflowThrew === true, "Hard constraints: Fails closed when constraints exceed ceiling budget");
+  assert(
+    ceilingOverflowError.includes("CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING"),
+    `Error confirms CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING (${ceilingOverflowError})`
   );
 
   // ═══════════════════════════════════════════════════════════════════════

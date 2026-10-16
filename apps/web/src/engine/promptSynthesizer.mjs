@@ -846,47 +846,113 @@ export function enforceCapacityCeiling(text, maxChars, isXml = false, isLocal = 
   if (typeof text !== "string") return "";
   if (text.length <= maxChars) return text;
 
-  const xmlClosing = "\n</system_prompt>";
-  const localClosing = "\n<</SYS>>\n\nExecute the objective according to the above instructions. [/INST]";
-  const geminiGate = "\n## Final Verification Gate";
-  const mdGate = "\n# Final Verification Gate";
+  // Extract all protected user constraint lines (- **Constraint**: ... or explicit CONSTRAINT_ tokens)
+  const constraintLines = text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith("- **Constraint**:") || /\bCONSTRAINT_[A-Z0-9]+\b/.test(l));
 
-  if (isXml && text.includes("</system_prompt>")) {
-    const closing = xmlClosing;
-    const base = text.slice(0, text.lastIndexOf(closing));
-    const budget = maxChars - closing.length;
-    const cleanBase = truncateCleanly(base, budget);
-    return cleanBase + closing;
-  }
-  if (isLocal && text.includes("[/INST]")) {
-    const closing = localClosing;
-    const base = text.slice(0, text.lastIndexOf(closing));
-    const budget = maxChars - closing.length;
-    const cleanBase = truncateCleanly(base, budget);
-    return cleanBase + closing;
-  }
-  if (text.includes(geminiGate)) {
-    const idx = text.lastIndexOf(geminiGate);
-    const closing = text.slice(idx);
-    if (maxChars > closing.length + 50) {
-      const base = text.slice(0, idx);
-      const budget = maxChars - closing.length;
-      const cleanBase = truncateCleanly(base, budget);
-      return cleanBase + closing;
-    }
-  }
-  if (text.includes(mdGate)) {
-    const idx = text.lastIndexOf(mdGate);
-    const closing = text.slice(idx);
-    if (maxChars > closing.length + 50) {
-      const base = text.slice(0, idx);
-      const budget = maxChars - closing.length;
-      const cleanBase = truncateCleanly(base, budget);
-      return cleanBase + closing;
-    }
+  // Check if constraints themselves exceed capacity ceiling
+  const minRequiredLen = constraintLines.reduce((acc, l) => acc + l.length + 1, 0);
+  if (minRequiredLen > maxChars) {
+    throw new Error(
+      `CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING: User hard constraints (${minRequiredLen} chars) exceed available capacity ceiling (${maxChars} chars). Hard constraints cannot be silently dropped.`
+    );
   }
 
-  return truncateCleanly(text, maxChars);
+  let result = text;
+
+  // Step 1: Attempt to trim optional narrative / domain execution sections first,
+  // preserving the entire bottom section (Operating Guidelines, Constraints, Acceptance Checks, Final Gate)
+  if (isXml && result.includes("<execution_details>") && result.includes("</execution_details>")) {
+    const startTag = "<execution_details>\n";
+    const endTag = "\n</execution_details>";
+    const startIdx = result.indexOf(startTag);
+    const endIdx = result.indexOf(endTag, startIdx);
+    if (startIdx !== -1 && endIdx !== -1) {
+      const excess = result.length - maxChars;
+      const currentExec = result.slice(startIdx + startTag.length, endIdx);
+      if (currentExec.length > excess) {
+        const newExecLen = currentExec.length - excess;
+        const trimmedExec = truncateCleanly(currentExec, newExecLen);
+        result = result.slice(0, startIdx + startTag.length) + trimmedExec + result.slice(endIdx);
+      }
+    }
+  } else {
+    // Markdown, Gemini, or Local formats
+    // Find Execution Details header and next major section header
+    const execHeaderRegex = /\n(#+ Execution Details(?: & Domain Architecture)?\n)/;
+    const nextHeaderRegex = /\n(#+ (?:Handling Missing Information|Deliverable Specification|Deliverable|Supplied Context|Acceptance Checks)\n)/;
+    const execMatch = execHeaderRegex.exec(result);
+    if (execMatch) {
+      const execStart = execMatch.index + execMatch[0].length;
+      const rest = result.slice(execStart);
+      const nextMatch = nextHeaderRegex.exec(rest);
+      if (nextMatch) {
+        const execEnd = execStart + nextMatch.index;
+        const currentExec = result.slice(execStart, execEnd);
+        const excess = result.length - maxChars;
+        if (currentExec.length > excess + 20) {
+          const newExecLen = currentExec.length - excess;
+          const trimmedExec = truncateCleanly(currentExec, newExecLen);
+          result = result.slice(0, execStart) + trimmedExec + "\n\n" + result.slice(execEnd).trimStart();
+        }
+      }
+    }
+  }
+
+  // Step 2: If still exceeding maxChars, apply structural boundary truncation
+  if (result.length > maxChars) {
+    const xmlClosing = "\n</system_prompt>";
+    const localClosing = "\n<</SYS>>\n\nExecute the objective according to the above instructions. [/INST]";
+    const geminiGate = "\n## Final Verification Gate";
+    const mdGate = "\n# Final Verification Gate";
+
+    if (isXml && result.includes("</system_prompt>")) {
+      const closing = xmlClosing;
+      const base = result.slice(0, result.lastIndexOf(closing));
+      const budget = maxChars - closing.length;
+      result = truncateCleanly(base, budget) + closing;
+    } else if (isLocal && result.includes("[/INST]")) {
+      const closing = localClosing;
+      const base = result.slice(0, result.lastIndexOf(closing));
+      const budget = maxChars - closing.length;
+      result = truncateCleanly(base, budget) + closing;
+    } else if (result.includes(geminiGate)) {
+      const idx = result.lastIndexOf(geminiGate);
+      const closing = result.slice(idx);
+      if (maxChars > closing.length + 50) {
+        const base = result.slice(0, idx);
+        const budget = maxChars - closing.length;
+        result = truncateCleanly(base, budget) + closing;
+      } else {
+        result = truncateCleanly(result, maxChars);
+      }
+    } else if (result.includes(mdGate)) {
+      const idx = result.lastIndexOf(mdGate);
+      const closing = result.slice(idx);
+      if (maxChars > closing.length + 50) {
+        const base = result.slice(0, idx);
+        const budget = maxChars - closing.length;
+        result = truncateCleanly(base, budget) + closing;
+      } else {
+        result = truncateCleanly(result, maxChars);
+      }
+    } else {
+      result = truncateCleanly(result, maxChars);
+    }
+  }
+
+  // Step 3: Strictly verify that NO protected hard constraints were dropped
+  for (const cLine of constraintLines) {
+    if (!result.includes(cLine)) {
+      throw new Error(
+        `CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING: User hard constraint '${cLine}' was truncated at capacity ceiling of ${maxChars} characters. Constraints must never be silently dropped.`
+      );
+    }
+  }
+
+  return result;
 }
 
 export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
@@ -898,10 +964,25 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
   }
   if (!raw || typeof raw !== "string") return "";
 
-  // If input doesn't contain AST headers, wrap it as Objective
+  // If input doesn't contain AST headers, parse and wrap into Objective and Hard constraints
   let input = raw;
   if (!input.includes("## Objective")) {
-    input = `## Objective\n${raw.trim()}\n`;
+    const rawLines = raw.split("\n");
+    const extractedConstraints = [];
+    const objectiveLines = [];
+    for (const l of rawLines) {
+      const trimmed = l.trim();
+      if (/^(?:CONSTRAINT[\w\d]*\s*[:—\-]|\bMust strictly\b|\bStrictly\b|\bHard constraint:)/i.test(trimmed)) {
+        extractedConstraints.push(trimmed.replace(/^[-*]\s*/, ""));
+      } else {
+        objectiveLines.push(l);
+      }
+    }
+    if (extractedConstraints.length > 0) {
+      input = `## Objective\n${objectiveLines.join("\n").trim()}\n\n## Hard constraints\n${extractedConstraints.map((c) => `- ${c}`).join("\n")}\n`;
+    } else {
+      input = `## Objective\n${raw.trim()}\n`;
+    }
   }
 
   const target = typeof opts === "string" ? opts : (opts && opts.target ? opts.target : "any");
