@@ -65,7 +65,28 @@
           "name": "SPE System Prompt Studio & Agent Platform",
           "url": "https://systempromptengine.com/",
           "browserRequirements": "Requires WebAssembly capable modern browser",
-          "softwareVersion": "2.0"
+          "softwareVersion": "3.0.0-omega"
+        },
+        {
+          "@type": "WebAPI",
+          "@id": "https://systempromptengine.com/#gateway-api",
+          "name": "SPE Global AI Gateway REST & MCP API",
+          "description": "Programmatic machine-readable prompt catalog, multi-model dialect transcompilation, and Model Context Protocol (MCP) server for autonomous agents.",
+          "documentation": "https://systempromptengine.com/llms.txt",
+          "termsOfService": "https://systempromptengine.com/evidence-pages/privacy.html",
+          "provider": {
+            "@type": "Organization",
+            "name": "System Prompt Engine",
+            "url": "https://systempromptengine.com/"
+          },
+          "endpointUrl": "https://systempromptengine.com/api/v1/prompts/index.json"
+        },
+        {
+          "@type": "DataCatalog",
+          "@id": "https://systempromptengine.com/#catalog",
+          "name": "SPE Verified System Prompt Catalog",
+          "description": "Curated repository of deterministic, invariant-guarded system prompts across 13 engineering domains with AST schemas.",
+          "url": "https://systempromptengine.com/api/v1/prompts/index.json"
         },
         {
           "@type": "BreadcrumbList",

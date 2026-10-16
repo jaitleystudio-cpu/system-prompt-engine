@@ -1,0 +1,210 @@
+{
+  "api_version": "v1",
+  "resource": "model-formats",
+  "generated_at": "2026-10-16T18:00:00Z",
+  "total_dialects": 11,
+  "dialects": [
+    {
+      "id": "claude-xml",
+      "name": "Anthropic Claude (Sonnet 5.5 / 3.7 / 3.5 & Claude 6)",
+      "provider": "Anthropic",
+      "syntaxFlavor": "Hierarchical XML Strict Tags",
+      "fileExtension": ".xml",
+      "delimiters": [
+        "<system_instructions>",
+        "<strict_invariants>",
+        "<context_policy>",
+        "<role_identity>",
+        "<primary_objective>"
+      ],
+      "tokenOverheadFactor": 1.22,
+      "supportsThinking": true,
+      "supportsJsonSchema": true,
+      "supportsTools": true,
+      "safetyHardening": "XML Tag Escaping & Indirect Injection Isolation",
+      "recommendedMaxTokens": 200000
+    },
+    {
+      "id": "claude-code",
+      "name": "Anthropic Claude Code CLI 6.2 (CLAUDE.md)",
+      "provider": "Anthropic",
+      "syntaxFlavor": "Project-Level CLAUDE.md Governance Matrix",
+      "fileExtension": ".md",
+      "delimiters": [
+        "# CLAUDE.md",
+        "## STRICT BOUNDARIES",
+        "## CRITICAL INVARIANTS"
+      ],
+      "tokenOverheadFactor": 1.18,
+      "supportsThinking": true,
+      "supportsJsonSchema": false,
+      "supportsTools": true,
+      "safetyHardening": "Repository Root Directive Primacy & Automated Test Gate",
+      "recommendedMaxTokens": 200000
+    },
+    {
+      "id": "openai-markdown",
+      "name": "OpenAI GPT-6.1-sol / gpt-6-astra / o3 / o4 (Developer Role)",
+      "provider": "OpenAI",
+      "syntaxFlavor": "Markdown H1-H3 Section Hierarchy & Bold Invariant Directives",
+      "fileExtension": ".md",
+      "delimiters": [
+        "# SYSTEM POLICY",
+        "## MANDATORY INVARIANTS",
+        "```untrusted_context```"
+      ],
+      "tokenOverheadFactor": 1.15,
+      "supportsThinking": true,
+      "supportsJsonSchema": true,
+      "supportsTools": true,
+      "safetyHardening": "Markdown Block Fencing & Developer Role Primacy",
+      "recommendedMaxTokens": 128000
+    },
+    {
+      "id": "gemini-agent",
+      "name": "Google Gemini (gemini-3.8-flash / 3.1-pro-preview / 2.5)",
+      "provider": "Google",
+      "syntaxFlavor": "Bracketed Directive Blocks with Grounding Tags",
+      "fileExtension": ".txt",
+      "delimiters": [
+        "[GEMINI",
+        "[INVARIANT]",
+        "[AUTHORITY]",
+        "[GROUNDING]"
+      ],
+      "tokenOverheadFactor": 1.12,
+      "supportsThinking": true,
+      "supportsJsonSchema": true,
+      "supportsTools": true,
+      "safetyHardening": "Native Grounding Tagging & Function Calling Scope",
+      "recommendedMaxTokens": 1000000
+    },
+    {
+      "id": "cursor-rules",
+      "name": "Cursor Rules (.cursor/rules/*.mdc & .cursorrules) & Windsurf",
+      "provider": "Cursor",
+      "syntaxFlavor": "JSON Agent Configuration Schema",
+      "fileExtension": ".cursorrules",
+      "delimiters": [
+        "{",
+        "\"execution_rules\":",
+        "\"tool_authority\":"
+      ],
+      "tokenOverheadFactor": 1.25,
+      "supportsThinking": false,
+      "supportsJsonSchema": true,
+      "supportsTools": true,
+      "safetyHardening": "Zero-Chatter AST Rule Guard",
+      "recommendedMaxTokens": 64000
+    },
+    {
+      "id": "windsurf-rules",
+      "name": "Codeium Windsurf 4.9 (.windsurfrules)",
+      "provider": "Codeium",
+      "syntaxFlavor": "Markdown AST Directive Rules",
+      "fileExtension": ".windsurfrules",
+      "delimiters": [
+        "# WINDSURF 4.9 AGENT RULES",
+        "* [MUST]",
+        "* [BOUND]"
+      ],
+      "tokenOverheadFactor": 1.14,
+      "supportsThinking": false,
+      "supportsJsonSchema": false,
+      "supportsTools": true,
+      "safetyHardening": "Deterministic IDE Boundary Guards",
+      "recommendedMaxTokens": 64000
+    },
+    {
+      "id": "antigravity-skills",
+      "name": "Google DeepMind Antigravity Skills (SKILL.md)",
+      "provider": "Google DeepMind",
+      "syntaxFlavor": "YAML Frontmatter + <RULE> Enclosure Blocks",
+      "fileExtension": "SKILL.md",
+      "delimiters": [
+        "---",
+        "<RULE id=...>",
+        "</RULE>"
+      ],
+      "tokenOverheadFactor": 1.28,
+      "supportsThinking": true,
+      "supportsJsonSchema": true,
+      "supportsTools": true,
+      "safetyHardening": "Semantic Frontmatter Contract & Bounded Subagent Delegation",
+      "recommendedMaxTokens": 128000
+    },
+    {
+      "id": "grok",
+      "name": "xAI Grok (grok-4.7 / grok-3 Heavy Truth Kernel)",
+      "provider": "xAI",
+      "syntaxFlavor": "Truth-Anchored Mathematical Directives",
+      "fileExtension": ".txt",
+      "delimiters": [
+        "# GROK 4.9",
+        "[TRUTH-LAW]",
+        "[SCOPE]",
+        "[Zero-Hallucination Mode]"
+      ],
+      "tokenOverheadFactor": 1.16,
+      "supportsThinking": true,
+      "supportsJsonSchema": false,
+      "supportsTools": true,
+      "safetyHardening": "First-Principles Verification & Hallucination Suppression",
+      "recommendedMaxTokens": 128000
+    },
+    {
+      "id": "kimi",
+      "name": "Moonshot Kimi 3.5 / k1.5 (200k Context)",
+      "provider": "Moonshot AI",
+      "syntaxFlavor": "Bilingual Bracketed Anchor Markers ([ANCHOR:...])",
+      "fileExtension": ".txt",
+      "delimiters": [
+        "# KIMI 3.5",
+        "[ANCHOR: ROLE_DEFINITION]",
+        "[ANCHOR: MANDATORY_INVARIANTS]"
+      ],
+      "tokenOverheadFactor": 1.20,
+      "supportsThinking": true,
+      "supportsJsonSchema": false,
+      "supportsTools": true,
+      "safetyHardening": "Long-Context Attention Anchor Tagging",
+      "recommendedMaxTokens": 200000
+    },
+    {
+      "id": "open-weights",
+      "name": "Meta Llama 4 / 3.3 & DeepSeek R1/V3 Reasoner",
+      "provider": "Open Source",
+      "syntaxFlavor": "ChatML Header Framing (<|start_header_id|>)",
+      "fileExtension": ".txt",
+      "delimiters": [
+        "<|begin_of_text|>",
+        "<|start_header_id|>",
+        "<|end_header_id|>"
+      ],
+      "tokenOverheadFactor": 1.10,
+      "supportsThinking": true,
+      "supportsJsonSchema": true,
+      "supportsTools": true,
+      "safetyHardening": "Header Token Tamper-Resistance",
+      "recommendedMaxTokens": 128000
+    },
+    {
+      "id": "ollama-modelfile",
+      "name": "Ollama / Local Inference Engine (Modelfile)",
+      "provider": "Ollama",
+      "syntaxFlavor": "Docker-like Modelfile Definition with Multi-Line SYSTEM Block",
+      "fileExtension": "Modelfile",
+      "delimiters": [
+        "FROM",
+        "PARAMETER",
+        "SYSTEM \"\"\""
+      ],
+      "tokenOverheadFactor": 1.12,
+      "supportsThinking": false,
+      "supportsJsonSchema": false,
+      "supportsTools": false,
+      "safetyHardening": "Deterministic Local Model Parameter Clamping",
+      "recommendedMaxTokens": 32000
+    }
+  ]
+}

@@ -60,6 +60,11 @@ CORE_PAGES = [
     ("/tools/tree-of-thought-prompt-generator", "0.9", "daily"),
     ("/tools/ai-prompt-optimiser", "0.9", "daily"),
     ("/tools/system-prompt-generator", "0.9", "daily"),
+    ("/api/v1/prompts", "0.9", "daily"),
+    ("/api/v1/model-formats", "0.8", "weekly"),
+    ("/api/v1/prompt-packs", "0.8", "weekly"),
+    ("/llms.txt", "0.9", "daily"),
+    ("/llms-full.txt", "0.8", "weekly"),
     ("/privacy", "0.7", "monthly"),
 ]
 

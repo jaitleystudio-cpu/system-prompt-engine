@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from "node:url";
 import { localMediaHostPlugin } from "./scripts/local-media-host-plugin.mjs";
 import { localOcrHostPlugin } from "./scripts/local-ocr-host-plugin.mjs";
 import { localExtractDesignPlugin } from "./scripts/local-extract-design-plugin.mjs";
+import { localMcpGatewayPlugin } from "./scripts/local-mcp-gateway-plugin.mjs";
 
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
 let buildSha = process.env.SPE_BUILD_SHA;
@@ -26,6 +27,7 @@ export default defineConfig({
     localMediaHostPlugin(repoRoot),
     localOcrHostPlugin(repoRoot),
     localExtractDesignPlugin(),
+    localMcpGatewayPlugin(),
   ],
   define: {
     __SPE_BUILD_SHA__: JSON.stringify(buildSha),

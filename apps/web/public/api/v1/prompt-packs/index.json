@@ -1,0 +1,66 @@
+{
+  "api_version": "v1",
+  "resource": "prompt-packs",
+  "generated_at": "2026-10-16T18:00:00Z",
+  "total_packs": 4,
+  "packs": [
+    {
+      "id": "spe-pack-cloud-enterprise",
+      "name": "Cloud Enterprise & Autonomous Infrastructure Pack",
+      "description": "Comprehensive specification bundle for multi-region cloud architecture, terraform governance, chaos engineering, and distributed resilience.",
+      "version": "2026.10",
+      "prompts": [
+        "spe-fullstack-cloud-architect",
+        "spe-microservice-resilience-lead",
+        "spe-security-auditor-owasp"
+      ],
+      "totalInvariants": 6,
+      "speBundleUri": "/packages/spe-pack-cloud-enterprise.spe",
+      "verificationChecksum": "4e7194f1c71285038c92a6c3f5ea973b1e779b6d859fa47cfb8812c77d643801",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "id": "spe-pack-agentic-engineer",
+      "name": "Autonomous Agent & Swarm Engineering Pack",
+      "description": "Full-lifecycle autonomous coding, subagent swarm dispatch, capability auditing, and Antigravity SKILL.md compilation.",
+      "version": "2026.10",
+      "prompts": [
+        "spe-autonomous-code-reviewer",
+        "spe-agent-swarm-orchestrator",
+        "spe-antigravity-skill-builder"
+      ],
+      "totalInvariants": 6,
+      "speBundleUri": "/packages/spe-pack-agentic-engineer.spe",
+      "verificationChecksum": "8a329ecb78b54e3d092cf08126bca5019dd14f1797e59048a60bb72ce51a70cc",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "id": "spe-pack-frontier-creative",
+      "name": "Frontier 3D WebGL & Multimodal Experience Pack",
+      "description": "Production shaders, 60fps mobile WebGL graphics, and screenshot-to-React reverse engineering.",
+      "version": "2026.10",
+      "prompts": [
+        "spe-3d-webgl-storyteller",
+        "spe-vlm-ui-reverse-engineer"
+      ],
+      "totalInvariants": 4,
+      "speBundleUri": "/packages/spe-pack-frontier-creative.spe",
+      "verificationChecksum": "c62047bc18a513c9e6bb02e0719e7a83501a52f464010b985f543163351ec8a2",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "id": "spe-pack-reasoning-rigor",
+      "name": "Formal Verification & High-Assurance Reasoning Pack",
+      "description": "Zero-hallucination mathematical logic derivation and untrusted context RAG fencing.",
+      "version": "2026.10",
+      "prompts": [
+        "spe-zero-hallucination-reasoner",
+        "spe-hybrid-rag-synthesizer"
+      ],
+      "totalInvariants": 4,
+      "speBundleUri": "/packages/spe-pack-reasoning-rigor.spe",
+      "verificationChecksum": "1df887e411b9ec8b71d49e6f28b49706317beff9b28a49fa7e1f40d6c561b365",
+      "license": "MIT OR Apache-2.0"
+    }
+  ]
+}
