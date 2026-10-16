@@ -40,7 +40,7 @@ import {
   nearLimit,
 } from "../input/boundedText";
 import { UserConfirmedRequirements } from "../engine/UserConfirmedRequirements";
-import { RealPromptLiveHud, RealPromptExtractionRibbon } from "../engine/RealPromptLiveHud";
+import { RealPromptLiveHud } from "../engine/RealPromptLiveHud";
 type Intent = {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
@@ -310,7 +310,6 @@ export function Hero(p: Props) {
                 {boundNotice}
               </p>
             )}
-            <RealPromptExtractionRibbon value={p.value} />
             <div className="examples">
               {EXAMPLES.map((e) => (
                 <button

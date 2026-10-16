@@ -30,8 +30,8 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
 
   let role = "Specialized AI domain assistant";
   let goal = "";
-  let constraint = "Do not assume unstated facts or violate safety policies";
-  let output = "Clear, structured text responses";
+  let constraint = "Preserve verified boundaries, strict safety, and zero hallucinations.";
+  let output = "Clear, structured deliverables with concrete, verified steps.";
 
   let rolePhrase = "";
   let goalPhrase = "";
@@ -47,7 +47,11 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     if (!role.endsWith(".")) role += ".";
   } else {
     const low = text.toLowerCase();
-    if (low.includes("code") || low.includes("bug") || low.includes("refactor") || low.includes("security") || low.includes("test")) {
+    if (low.includes("full-stack") || low.includes("full stack") || low.includes("fullstack")) {
+      role = "Full-Stack Software Architect.";
+    } else if (low.includes("database") || low.includes("postgres") || low.includes("sql") || low.includes("schema")) {
+      role = "Principal Systems & Database Architect.";
+    } else if (low.includes("code") || low.includes("bug") || low.includes("refactor") || low.includes("security") || low.includes("test")) {
       role = "Senior Software & Security Architect.";
     } else if (low.includes("customer") || low.includes("support") || low.includes("ticket") || low.includes("triage")) {
       role = "Customer Experience & Support Lead.";
@@ -55,6 +59,8 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
       role = "Executive Operations & Strategy Lead.";
     } else if (low.includes("design") || low.includes("ui") || low.includes("ux") || low.includes("layout")) {
       role = "Product Design & Frontend Systems Lead.";
+    } else if (low.includes("plan") || low.includes("architect")) {
+      role = "Principal Systems Architect.";
     }
   }
 
