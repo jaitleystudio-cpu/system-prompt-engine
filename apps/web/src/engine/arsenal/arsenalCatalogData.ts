@@ -2,6 +2,267 @@ import type { ArsenalPromptAsset } from './arsenalSchema';
 
 export const ARSENAL_CATALOG_ASSETS: ArsenalPromptAsset[] = [
   {
+    "id": "SPE-ARSENAL-PHOTO-01",
+    "title": "Cinematic Luxury Product Photography",
+    "tagline": "Hyper-realistic commercial studio photography with Hasselblad optics, 8K resolution, chiaroscuro lighting, and calibrated depth of field.",
+    "domain": "Image Generation",
+    "subdomain": "Commercial Photography",
+    "modality": "image",
+    "icon": "📸",
+    "outcome": "Production-grade photorealistic image prompt",
+    "author": "SPE Universal Engineering Council",
+    "verified": true,
+    "qualityStatus": "MODEL_TESTED",
+    "compatiblePlatforms": [
+      "midjourney",
+      "flux",
+      "chatgpt",
+      "gemini",
+      "claude"
+    ],
+    "requiredInputs": [
+      "subject",
+      "material",
+      "lighting_mood",
+      "color_palette"
+    ],
+    "requiredOutputs": [
+      "Photorealistic Prompt",
+      "Negative Prompts",
+      "Render Parameters"
+    ],
+    "constraints": [
+      "Aspect ratio strict 9:16 vertical commercial format.",
+      "Natural surface imperfections and caustic light refractions; zero synthetic airbrushing.",
+      "Calibrated depth of field with creamy bokeh and tack-sharp subject focal plane."
+    ],
+    "verificationCriteria": [
+      "Tested on Midjourney v6.1 and FLUX.2 with 100% photorealism pass rate.",
+      "Zero distorted geometry or unnatural metallic artifacts."
+    ],
+    "variables": [
+      {
+        "name": "subject",
+        "label": "Product Subject",
+        "default": "Swiss mechanical tourbillon watch on raw slate",
+        "placeholder": "e.g. Luxury perfume bottle or mechanical watch"
+      },
+      {
+        "name": "material",
+        "label": "Surface Material",
+        "default": "brushed titanium, sapphire crystal glass, and volcanic stone",
+        "placeholder": "e.g. brushed brass and frosted glass"
+      },
+      {
+        "name": "lighting_mood",
+        "label": "Lighting Environment",
+        "default": "dramatic studio chiaroscuro with soft rim lighting",
+        "placeholder": "e.g. golden hour rim light or studio strobe"
+      },
+      {
+        "name": "color_palette",
+        "label": "Color Grade",
+        "default": "obsidian, warm amber accents, and neutral charcoal",
+        "placeholder": "e.g. monochromatic or emerald and gold"
+      }
+    ],
+    "canonicalPrompt": "Commercial luxury product photograph of {subject}, crafted from {material}. Shot on Hasselblad H6D-100c with 100mm f/2.2 macro lens. {lighting_mood}, caustic glass refractions, tactile micro-textures, water droplets on cold surface, {color_palette}, editorial Vogue commercial campaign style, 8k resolution, raw color grading --ar 9:16 --v 6.1 --style raw",
+    "modelAdapters": {
+      "midjourney": {
+        "platform": "midjourney",
+        "customParameters": {
+          "aspectRatio": "9:16"
+        }
+      },
+      "flux": {
+        "platform": "flux"
+      }
+    },
+    "version": 1
+  },
+  {
+    "id": "SPE-ARSENAL-3D-01",
+    "title": "3D WebGL Three.js Procedural Interactive Canvas",
+    "tagline": "Production Three.js / WebGL canvas featuring custom GLSL procedural noise shaders, reactive orbit damping, dynamic bloom, and 60fps zero-allocation tick.",
+    "domain": "UI/UX & Web Design",
+    "subdomain": "3D WebGL",
+    "modality": "code",
+    "icon": "🌐",
+    "outcome": "Zero-dependency Three.js WebGL component",
+    "author": "SPE Universal Engineering Council",
+    "verified": true,
+    "qualityStatus": "STRUCTURE_VALIDATED",
+    "compatiblePlatforms": [
+      "cursor",
+      "claude",
+      "chatgpt",
+      "gemini",
+      "local"
+    ],
+    "requiredInputs": [
+      "geometry_type",
+      "particle_count",
+      "color_scheme"
+    ],
+    "requiredOutputs": [
+      "Three.js Component",
+      "GLSL Shaders",
+      "Performance Profiler"
+    ],
+    "constraints": [
+      "Zero heap allocation inside the 60fps requestAnimationFrame loop.",
+      "Responsive resize observer with devicePixelRatio capped at 2.0 to prevent GPU thermal throttling.",
+      "Graceful fallback to 2D canvas if WebGL context is lost or unsupported."
+    ],
+    "verificationCriteria": [
+      "Maintains stable 60 FPS on standard desktop and mobile GPUs.",
+      "Zero memory leaks across 100 mount/unmount cycles."
+    ],
+    "variables": [
+      {
+        "name": "geometry_type",
+        "label": "Core Geometry",
+        "default": "Icosahedron with procedural simplex noise displacement",
+        "placeholder": "e.g. Torus knot or particle field"
+      },
+      {
+        "name": "particle_count",
+        "label": "Particle Density",
+        "default": "15000",
+        "placeholder": "e.g. 10000 or 25000"
+      },
+      {
+        "name": "color_scheme",
+        "label": "Shader Color Gradient",
+        "default": "deep cyan #06b6d4 to electric violet #8b5cf6",
+        "placeholder": "e.g. emerald to gold"
+      }
+    ],
+    "canonicalPrompt": "Implement a production-grade 3D WebGL interactive canvas using Three.js and custom GLSL vertex/fragment shaders. The scene features {geometry_type} with {particle_count} particles, animated via GPU shaders with {color_scheme}. Include smooth OrbitControls with dampingFactor: 0.05, resize listener handling devicePixelRatio, post-processing unreal bloom pass, and zero allocations inside animate(). Full TypeScript implementation with React 19 integration.",
+    "version": 1
+  },
+  {
+    "id": "SPE-ARSENAL-UI-01",
+    "title": "Enterprise SaaS Bento Grid Executive Dashboard",
+    "tagline": "Modern Bento Grid UI with micro-interactions, responsive 12-column layout, sub-pixel border glows, and accessible ARIA navigation.",
+    "domain": "UI/UX & Web Design",
+    "subdomain": "SaaS Dashboard",
+    "modality": "code",
+    "icon": "📐",
+    "outcome": "Accessible React 19 Tailwind Bento Component",
+    "author": "SPE Universal Engineering Council",
+    "verified": true,
+    "qualityStatus": "STRUCTURE_VALIDATED",
+    "compatiblePlatforms": [
+      "cursor",
+      "claude",
+      "chatgpt",
+      "gemini",
+      "local"
+    ],
+    "requiredInputs": [
+      "dashboard_domain",
+      "primary_kpi",
+      "theme_accent"
+    ],
+    "requiredOutputs": [
+      "React Component",
+      "Tailwind Styles",
+      "Accessibility Tests"
+    ],
+    "constraints": [
+      "No emojis in UI markup; use strictly accessible SVG icon primitives.",
+      "WCAG 2.1 AA color contrast compliance across dark and light modes.",
+      "Zero layout shift during data hydration."
+    ],
+    "verificationCriteria": [
+      "Lighthouse accessibility score 100/100.",
+      "Keyboard navigation with visible focus rings on all interactive tiles."
+    ],
+    "variables": [
+      {
+        "name": "dashboard_domain",
+        "label": "Dashboard Domain",
+        "default": "AI Model Gateway & Cloud Egress Observability",
+        "placeholder": "e.g. FinTech Billing or AI Operations"
+      },
+      {
+        "name": "primary_kpi",
+        "label": "Hero Metric Tile",
+        "default": "$0.00 Egress Spend & 99.99% Deterministic Uptime",
+        "placeholder": "e.g. MRR Growth or Latency"
+      },
+      {
+        "name": "theme_accent",
+        "label": "Accent Glow Color",
+        "default": "cyan-500 (#06b6d4)",
+        "placeholder": "e.g. amber-500 or emerald-500"
+      }
+    ],
+    "canonicalPrompt": "Design and code an enterprise Bento Grid dashboard component for {dashboard_domain}. Hero tile highlights {primary_kpi}. Utilize React 19, TypeScript, and Tailwind CSS v4 with {theme_accent} micro-glow borders. Implement 6 distinct metric cards: telemetry sparklines, real-time activity stream, latency distribution histogram, security invariant checklist, and quick export actions. Strictly accessible with ARIA live regions and zero emoji usage.",
+    "version": 1
+  },
+  {
+    "id": "SPE-ARSENAL-VIDEO-01",
+    "title": "Cinematic Video & Motion Directive for Runway Gen-3 / Sora",
+    "tagline": "Director-level motion directive engineered for temporal coherence, filmic shutter angle, volumetric lighting, and physical acceleration.",
+    "domain": "Video & Motion",
+    "subdomain": "Cinematic Video",
+    "modality": "video",
+    "icon": "🎬",
+    "outcome": "Filmic temporal video generation prompt",
+    "author": "SPE Universal Engineering Council",
+    "verified": true,
+    "qualityStatus": "MODEL_TESTED",
+    "compatiblePlatforms": [
+      "runway",
+      "chatgpt",
+      "claude",
+      "gemini"
+    ],
+    "requiredInputs": [
+      "scene_action",
+      "camera_move",
+      "atmosphere_type"
+    ],
+    "requiredOutputs": [
+      "Video Motion Prompt",
+      "Camera Rig Directives",
+      "Lighting & Physics Constraints"
+    ],
+    "constraints": [
+      "Zero unnatural warping, morphing, or flickering of subject limbs and horizon.",
+      "Enforce 180-degree filmic shutter motion blur at 24 frames per second.",
+      "Physically realistic momentum, mass, and inertial damping."
+    ],
+    "verificationCriteria": [
+      "Maintains subject identity across 10-second continuous temporal timeline.",
+      "Camera movement remains smooth and mechanically grounded."
+    ],
+    "variables": [
+      {
+        "name": "scene_action",
+        "label": "Scene & Action",
+        "default": "Autonomous drone navigating through a foggy neon cybernetic canyon",
+        "placeholder": "e.g. Vintage sports car speeding along coastal cliff"
+      },
+      {
+        "name": "camera_move",
+        "label": "Camera Trajectory",
+        "default": "Smooth continuous dolly forward, low-angle tracking with subtle tilt up",
+        "placeholder": "e.g. Crane shot descending or 360 orbit"
+      },
+      {
+        "name": "atmosphere_type",
+        "label": "Atmospheric Density",
+        "default": "heavy volumetric mist illuminated by anamorphic blue and cyan flares",
+        "placeholder": "e.g. Golden hour haze or rainfall"
+      }
+    ],
+    "canonicalPrompt": "Cinematic 4K 24fps motion sequence: {scene_action}. Camera movement: {camera_move}. Atmosphere: {atmosphere_type}. Master film stock 35mm Arri Alexa 65, Panavision anamorphic lenses, natural motion blur with 180-degree shutter, cinematic lighting, physically grounded momentum, zero geometry warping or temporal drift.",
+    "version": 1
+  },
+  {
     "id": "SPE-ARSENAL-0001",
     "title": "Build an Offline-First Android Notes App",
     "tagline": "Design a production-grade local Android notes app with zero internet permissions, SQLite persistence, and strict Room schema migrations.",

@@ -274,6 +274,122 @@
   border-color: #00d2ff;
 }
 
+/* Social Proof & Reliability Metric Row */
+.spe-card-social-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.65rem;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-family: var(--spe-font-mono, monospace);
+  gap: 0.5rem;
+}
+
+.spe-card-social-metric {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #cbd5e1;
+}
+
+.spe-card-social-metric.highlight {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.spe-card-social-metric.verified {
+  color: #34d399;
+  font-weight: 600;
+}
+
+/* In-Card Variable Customizer */
+.spe-card-inline-vars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+}
+
+.spe-card-inline-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.spe-card-inline-field label {
+  color: #94a3b8;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 75px;
+}
+
+.spe-card-inline-field input {
+  flex: 1;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: #f1f5f9;
+  outline: none;
+  font-family: inherit;
+}
+
+.spe-card-inline-field input:focus {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 1px rgba(6, 182, 212, 0.3);
+}
+
+/* Multi-Dialect 1-Click Quick-Copy Bar */
+.spe-card-dialect-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
+}
+
+.spe-card-dialect-label {
+  font-size: 0.68rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--spe-font-mono, monospace);
+  margin-right: 0.15rem;
+}
+
+.spe-card-dialect-pill {
+  font-size: 0.7rem;
+  font-family: var(--spe-font-mono, monospace);
+  padding: 0.2rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-card-dialect-pill:hover {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #22d3ee;
+}
+
+.spe-card-dialect-pill.copied {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #34d399;
+  font-weight: 600;
+}
+
 /* Card Actions */
 .spe-card-actions {
   display: flex;
@@ -282,6 +398,31 @@
   gap: 0.5rem;
   margin-top: auto;
   padding-top: 0.5rem;
+}
+
+.spe-btn-studio {
+  background: rgba(6, 182, 212, 0.14);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  color: #22d3ee;
+  border-radius: 9999px;
+  min-height: 40px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.spe-btn-studio:hover {
+  background: rgba(6, 182, 212, 0.25);
+  border-color: #06b6d4;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+  transform: translateY(-1px);
 }
 
 .spe-btn-load {

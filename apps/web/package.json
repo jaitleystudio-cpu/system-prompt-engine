@@ -25,6 +25,7 @@
     "test:vertical-reveal": "node scripts/test-vertical-before-after-reveal.mjs",
     "test:vertical-reveal-e2e": "node scripts/test-vertical-reveal-e2e.mjs",
     "test:theme-routes": "node scripts/test-theme-routes.mjs",
+    "test:prompt-studio": "node scripts/test-spe-prompt-performance-studio.mjs",
     "test:post-prompt": "node scripts/test-post-prompt-guided-journey.mjs",
     "test:user-reqs": "node scripts/test-user-confirmed-requirements.mjs",
     "test:workflows-audit": "node --experimental-strip-types scripts/test-client-workflows-audit.mjs",
