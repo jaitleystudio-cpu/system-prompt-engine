@@ -94,3 +94,21 @@ def test_plugin_120_evaluation_matrix_execution() -> None:
     assert "Precision:   100.00%" in output or "Target >= 95.00%" in output
     assert "Recall:      100.00%" in output or "Target >= 90.00%" in output
     assert "ALL 120 AUTOMATIC SELECTION EVALUATIONS & TOOL CONSTRAINTS PASSED CLEANLY!" in output
+
+
+def test_plugin_boundary_and_invariant_preservation() -> None:
+    eval_script = REPO_ROOT / "apps/web/scripts/test-chatgpt-plugin-evaluation.mjs"
+    result = subprocess.run(
+        ["node", "--experimental-strip-types", str(eval_script)],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, f"Evaluation script failed:\n{result.stderr}\n{result.stdout}"
+    output = result.stdout
+    assert "Case A (29k chars): Output" in output
+    assert "Case B (30,000 boundary): Output 30000 chars <= 30,000" in output
+    assert "Case C (ChatGPT 30,295 repro): Output" in output
+    assert "Invariants, Acceptance Battery, and Desired Output Contract 100% PRESERVED" in output
+    assert "Case D (Unicode surrogate boundary): Valid UTF-16 code units verified" in output
+    assert "Case E (Fail-closed constraint gate): Threw CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING" in output

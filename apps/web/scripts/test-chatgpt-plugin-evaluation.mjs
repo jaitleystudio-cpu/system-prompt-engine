@@ -88,8 +88,8 @@ const TEST_MATRIX = [
   { id: 56, category: "indirect", utterance: "सिस्टम प्रॉम्प्ट बनाएं: वित्तीय विश्लेषण और स्टॉक मार्केट सलाहकार के लिए", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
   { id: 57, category: "indirect", utterance: "சிஸ்டம் பிராம்ப்ட் உருவாக்கவும்: வாடிக்கையாளர் சேவை முகவர்", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
   { id: 58, category: "indirect", utterance: "Compare prompt tokens across models for this multilingual prompt", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
-  { id: 59, category: "indirect", utterance: "Optimize this prompt to reduce token consumption without changing behavior", expectedRelevant: true },
-  { id: 60, category: "indirect", utterance: "Reduce prompt tokens for this draft so it fits within context window", expectedRelevant: true },
+  { id: 59, category: "indirect", utterance: "Optimize this prompt to reduce token consumption without changing behavior", expectedRelevant: true, expectedTool: "compile_system_prompt" },
+  { id: 60, category: "indirect", utterance: "Reduce prompt tokens for this draft so it fits within context window", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 61, category: "indirect", utterance: "How should I instruct Claude to act as a rigorous code reviewer?", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 62, category: "indirect", utterance: "How should I instruct ChatGPT to act as a senior database administrator?", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 63, category: "indirect", utterance: "Write instructions for ChatGPT to act as a compliance auditor", expectedRelevant: true, expectedTool: "compile_system_prompt" },
@@ -101,7 +101,7 @@ const TEST_MATRIX = [
   { id: 69, category: "indirect", utterance: "Generate CLAUDE.md guidelines for an open source repository", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 70, category: "indirect", utterance: "Compile a prompt for a customer support agent based on these FAQs", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 71, category: "indirect", utterance: "Scaffold a prompt for an automated customer onboarding agent", expectedRelevant: true, expectedTool: "compile_system_prompt" },
-  { id: 72, category: "indirect", utterance: "Optimize this prompt for GPT-4o token efficiency", expectedRelevant: true },
+  { id: 72, category: "indirect", utterance: "Optimize this prompt for GPT-4o token efficiency", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 73, category: "indirect", utterance: "Native prompt vs English prompt token cost comparison for Indian languages", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
   { id: 74, category: "indirect", utterance: "Crée un prompt système pour un assistant financier", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
   { id: 75, category: "indirect", utterance: "Erstelle einen System-Prompt für einen Programmierassistenten", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
@@ -171,7 +171,17 @@ for (const tc of TEST_MATRIX) {
   const actualRelevant = result.isRelevant;
 
   if (tc.expectedRelevant && actualRelevant) {
-    tp++;
+    if (tc.expectedTool && result.selectedTool !== tc.expectedTool) {
+      failures.push({
+        id: tc.id,
+        utterance: tc.utterance,
+        expected: `${tc.expectedRelevant} (tool=${tc.expectedTool})`,
+        actual: `${actualRelevant} (tool=${result.selectedTool})`,
+        reason: `Mismatched Tool: Expected tool "${tc.expectedTool}" but classifier selected "${result.selectedTool}"`,
+      });
+    } else {
+      tp++;
+    }
   } else if (!tc.expectedRelevant && !actualRelevant) {
     tn++;
   } else if (!tc.expectedRelevant && actualRelevant) {
@@ -275,6 +285,123 @@ if (/(subscribe now|checkout\.stripe|upgrade to pro|upgrade now|monthly subscrip
   throw new Error("VIOLATION: Found promotional or purchase pressure copy in tool outputs!");
 }
 console.log("[PASS] Policy compliance: ZERO in-chat promotional text or checkout links detected.");
+
+// ----------------------------------------------------
+// 5. INVARIANT-PRESERVING CAPACITY CEILING & BOUNDARY BATTERY
+// ----------------------------------------------------
+console.log("\nVERIFYING INVARIANT-PRESERVING CAPACITY CEILING & UNICODE BOUNDARIES:");
+
+// Case A: 29,999 characters (unaltered, passes completely within Free tier ceiling)
+const baseGoal29k = "Execute deterministic financial risk analysis. ".repeat(600); // ~28,200 chars
+const out29k = compileSystemPrompt({
+  goal: baseGoal29k.slice(0, 28500),
+  category: "Finance",
+  constraints: ["User Invariant Alpha: Never hallucinate balances", "User Invariant Beta: Strictly verify audit log"],
+  output_format: "JSON schema with fields { status: string, score: number }",
+});
+if (out29k.character_count > FREE_TIER_MAX_OUTPUT_CHARS) {
+  throw new Error(`Case A: Prompt exceeded Free tier ceiling: ${out29k.character_count}`);
+}
+if (!out29k.prompt.includes("User Invariant Alpha") || !out29k.prompt.includes("User Invariant Beta")) {
+  throw new Error("Case A: Lost user constraints in 29k char prompt!");
+}
+if (!out29k.prompt.includes("# Acceptance Verification Battery") || !out29k.prompt.includes("# Desired Output Contract")) {
+  throw new Error("Case A: Lost acceptance criteria or output contract in 29k char prompt!");
+}
+console.log(`[PASS] Case A (29k chars): Output ${out29k.character_count} chars <= 30,000. All invariants, acceptance criteria, and output contract intact.`);
+
+// Case B: 30,000 characters exact boundary
+const out30kExact = compileSystemPrompt({
+  goal: "A".repeat(30000),
+  category: "Engineering",
+  constraints: ["Constraint X: Maintain zero external egress", "Constraint Y: Air-gapped execution only"],
+  output_format: "Markdown report format",
+});
+if (out30kExact.character_count > FREE_TIER_MAX_OUTPUT_CHARS) {
+  throw new Error(`Case B: Output exceeded 30,000 ceiling: ${out30kExact.character_count}`);
+}
+if (!out30kExact.prompt.includes("Constraint X") || !out30kExact.prompt.includes("Constraint Y")) {
+  throw new Error("Case B: Lost user constraints at 30k boundary!");
+}
+if (!out30kExact.prompt.includes("# Acceptance Verification Battery") || !out30kExact.prompt.includes("# Desired Output Contract")) {
+  throw new Error("Case B: Lost acceptance criteria or output contract at 30k boundary!");
+}
+console.log(`[PASS] Case B (30,000 boundary): Output ${out30kExact.character_count} chars <= 30,000. Invariants and acceptance battery preserved under trimming.`);
+
+// Case C: 30,295 characters (ChatGPT exact reproduction scenario)
+// Raw assembled prompt exceeds 30,000 characters (e.g. 30,295 chars).
+// Verify that narrative was trimmed, but # Acceptance Verification Battery and # Desired Output Contract were NEVER dropped!
+const chatGptReproGoal = "Detailed system analysis directive narrative with extensive background context. ".repeat(400);
+const out30295 = compileSystemPrompt({
+  goal: chatGptReproGoal,
+  category: "Compliance",
+  constraints: [
+    "MANDATORY_INVARIANT_1: Zero unauthorized telemetry",
+    "MANDATORY_INVARIANT_2: Preserve complete provenance ledger",
+  ],
+  output_format: "XML document with <audit_verdict> and <signatures>",
+});
+if (out30295.character_count > FREE_TIER_MAX_OUTPUT_CHARS) {
+  throw new Error(`Case C (30,295 repro): Output exceeded 30,000 ceiling: ${out30295.character_count}`);
+}
+if (!out30295.prompt.includes("MANDATORY_INVARIANT_1") || !out30295.prompt.includes("MANDATORY_INVARIANT_2")) {
+  throw new Error("Case C: CRITICAL DEFECT - User invariants were truncated!");
+}
+if (!out30295.prompt.includes("# Acceptance Verification Battery")) {
+  throw new Error("Case C: CRITICAL DEFECT - # Acceptance Verification Battery was sliced off at the bottom!");
+}
+if (!out30295.prompt.includes("# Desired Output Contract") || !out30295.prompt.includes("<audit_verdict>")) {
+  throw new Error("Case C: CRITICAL DEFECT - # Desired Output Contract was sliced off at the bottom!");
+}
+if (out30295.warnings.length === 0 || !out30295.warnings[0].includes("preserving all operational invariants")) {
+  throw new Error("Case C: Warning must state that operational invariants and acceptance criteria were preserved");
+}
+console.log(`[PASS] Case C (ChatGPT 30,295 repro): Output ${out30295.character_count} chars <= 30,000. Invariants, Acceptance Battery, and Desired Output Contract 100% PRESERVED.`);
+
+// Case D: Unicode Surrogate Pair Safety at Truncation Boundary
+// An emoji (e.g., 🚀 "\uD83D\uDE80") consists of 2 code units.
+// Position multibyte emoji right across the truncation boundary to test against orphan high surrogate slicing.
+const emojiGoal = "Analysis narrative ".repeat(1500) + " 🚀🌟🔥";
+const outEmoji = compileSystemPrompt({
+  goal: emojiGoal,
+  category: "Data",
+  constraints: ["Invariant Emoji Safety: UTF-16 surrogate pairs must never be split"],
+});
+if (outEmoji.character_count > FREE_TIER_MAX_OUTPUT_CHARS) {
+  throw new Error(`Case D: Output exceeded 30,000 ceiling: ${outEmoji.character_count}`);
+}
+const tailCode = outEmoji.prompt.charCodeAt(outEmoji.prompt.length - 1);
+if (tailCode >= 0xd800 && tailCode <= 0xdbff) {
+  throw new Error(`Case D: Orphan high surrogate 0x${tailCode.toString(16)} found at prompt boundary!`);
+}
+try {
+  encodeURIComponent(outEmoji.prompt);
+} catch (e) {
+  throw new Error(`Case D: Malformed UTF-16 surrogate split detected: ${e.message}`);
+}
+console.log(`[PASS] Case D (Unicode surrogate boundary): Valid UTF-16 code units verified. No orphan high surrogates (tail=0x${tailCode.toString(16)}).`);
+
+// Case E: Constraints alone exceed 30,000 characters (Fail-Closed Gate)
+let failClosedTriggered = false;
+try {
+  compileSystemPrompt({
+    goal: "Small goal",
+    constraints: [
+      "MEGA_CONSTRAINT_PART_1: " + "C".repeat(15000),
+      "MEGA_CONSTRAINT_PART_2: " + "D".repeat(16000),
+    ],
+  });
+} catch (e) {
+  if (e.message.includes("CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING")) {
+    failClosedTriggered = true;
+  } else {
+    throw new Error(`Case E: Unexpected error: ${e.message}`);
+  }
+}
+if (!failClosedTriggered) {
+  throw new Error("Case E: CRITICAL DEFECT - Failed to trigger fail-closed exception when constraints alone exceed 30,000 characters!");
+}
+console.log("[PASS] Case E (Fail-closed constraint gate): Threw CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING when protected constraints exceeded 30,000 chars.");
 
 console.log("\n===============================================================================");
 console.log("   ALL 120 AUTOMATIC SELECTION EVALUATIONS & TOOL CONSTRAINTS PASSED CLEANLY! ");

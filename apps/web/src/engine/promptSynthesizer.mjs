@@ -47,8 +47,30 @@ export const FREE_TIER_MAX_OUTPUT_CHARS = 30000;
 export const PRO_TIER_MAX_OUTPUT_CHARS = 100000;
 
 /**
+ * Safely removes any trailing unpaired high surrogate (0xD800-0xDBFF)
+ * or leading unpaired low surrogate (0xDC00-0xDFFF) to prevent malformed UTF-16 code units.
+ */
+export function cleanSurrogateBoundaries(str) {
+  if (typeof str !== "string" || str.length === 0) return "";
+  let s = str;
+  if (s.length > 0) {
+    const firstCode = s.charCodeAt(0);
+    if (firstCode >= 0xdc00 && firstCode <= 0xdfff) {
+      s = s.slice(1);
+    }
+  }
+  if (s.length > 0) {
+    const lastCode = s.charCodeAt(s.length - 1);
+    if (lastCode >= 0xd800 && lastCode <= 0xdbff) {
+      s = s.slice(0, -1);
+    }
+  }
+  return s;
+}
+
+/**
  * Truncates text cleanly at a natural boundary (paragraph, sentence, line, or word),
- * never slicing words in half or leaving dangling broken fragments.
+ * never slicing words in half or leaving dangling broken fragments or broken surrogate pairs.
  * Guarantees result.length <= maxChars.
  */
 export function truncateCleanly(text, maxChars, suffix = " [...]") {
@@ -56,16 +78,16 @@ export function truncateCleanly(text, maxChars, suffix = " [...]") {
   if (text.length <= maxChars) return text;
   if (maxChars <= 0) return "";
   if (maxChars <= suffix.length) {
-    return text.slice(0, maxChars);
+    return cleanSurrogateBoundaries(text.slice(0, maxChars));
   }
 
   const budget = maxChars - suffix.length;
-  const candidate = text.slice(0, budget);
+  let candidate = cleanSurrogateBoundaries(text.slice(0, budget));
 
   // 1. Look for double-newline paragraph break within last 40% of budget
   const lastPara = candidate.lastIndexOf("\n\n");
   if (lastPara >= budget * 0.6) {
-    return candidate.slice(0, lastPara).trimEnd() + suffix;
+    return cleanSurrogateBoundaries(candidate.slice(0, lastPara).trimEnd()) + suffix;
   }
 
   // 2. Look for sentence break (. / ! / ?) within last 50% of budget
@@ -74,24 +96,24 @@ export function truncateCleanly(text, maxChars, suffix = " [...]") {
     const lastMatch = sentenceMatches[sentenceMatches.length - 1];
     const endPos = lastMatch.index + 1;
     if (endPos >= budget * 0.5) {
-      return candidate.slice(0, endPos).trimEnd() + " " + suffix.trim();
+      return cleanSurrogateBoundaries(candidate.slice(0, endPos).trimEnd()) + " " + suffix.trim();
     }
   }
 
   // 3. Look for single newline break within last 40% of budget
   const lastLine = candidate.lastIndexOf("\n");
   if (lastLine >= budget * 0.6) {
-    return candidate.slice(0, lastLine).trimEnd() + suffix;
+    return cleanSurrogateBoundaries(candidate.slice(0, lastLine).trimEnd()) + suffix;
   }
 
   // 4. Look for whitespace / word boundary
   const lastSpace = candidate.lastIndexOf(" ");
   if (lastSpace >= budget * 0.3) {
-    return candidate.slice(0, lastSpace).trimEnd() + suffix;
+    return cleanSurrogateBoundaries(candidate.slice(0, lastSpace).trimEnd()) + suffix;
   }
 
   // Fallback if no whitespace found (e.g. unbroken token)
-  return candidate.trimEnd() + suffix;
+  return cleanSurrogateBoundaries(candidate.trimEnd()) + suffix;
 }
 
 const CATEGORY_RECIPES = {

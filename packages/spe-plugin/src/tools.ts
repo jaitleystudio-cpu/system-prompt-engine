@@ -13,6 +13,10 @@ import {
   SUPPORTED_LANGUAGES,
   type DualPromptBundle,
 } from "../../../apps/web/src/engine/multilingualDualPrompt.ts";
+import {
+  truncateCleanly,
+  cleanSurrogateBoundaries,
+} from "../../../apps/web/src/engine/promptSynthesizer.ts";
 
 export const FREE_TIER_MAX_OUTPUT_CHARS = 30000;
 
@@ -65,15 +69,10 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
   const detected = detectLanguage(goal);
   const role = req.role?.trim() || `You are an expert ${category} specialist operating with deterministic boundary discipline and zero hallucinations.`;
 
-  const sections: string[] = [];
+  // Protected Section 1: Role & Persona
+  const secRole = `# System Role & Persona\n${role}`;
 
-  // Section 1: Role & Persona
-  sections.push(`# System Role & Persona\n${role}`);
-
-  // Section 2: Core Mission & Objective
-  sections.push(`# Core Mission & Objective\nGoal: ${goal || "Execute assigned directives accurately."}\nCategory: ${category}\nTarget Model: ${targetModel}`);
-
-  // Section 3: Hard Operational Invariants
+  // Protected Section 2: Hard Operational Invariants
   const invariantLines = [
     "- Strictly preserve all user-supplied requirements and operational boundaries.",
     "- Never assume outside network tools, credentials, or uncited documents without verification.",
@@ -84,34 +83,122 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
       invariantLines.push(`- User Invariant: ${c}`);
     }
   }
-  sections.push(`# Operational & Security Invariants\n${invariantLines.join("\n")}`);
+  const secInvariants = `# Operational & Security Invariants\n${invariantLines.join("\n")}`;
 
-  // Section 4: Execution Methodology
-  sections.push(
-    `# Execution Methodology\n1. Analyze input requirements and isolate known constraints from unstated assumptions.\n2. Formulate step-by-step deliverables adhering strictly to verified facts.\n3. Validate output against acceptance criteria prior to final completion.`
-  );
+  // Protected Section 3: Acceptance Verification Battery
+  const secAcceptance = `# Acceptance Verification Battery\n- Does the output satisfy all explicit user constraints?\n- Are all stated invariants maintained without contradiction?\n- Has hallucination of outside tools or unverifiable dependencies been eliminated?`;
 
-  // Section 5: Handling Missing Information
-  sections.push(
-    `# Handling Missing Information\nUse only confirmed user facts. If essential parameters are missing, state assumptions explicitly rather than fabricating dependencies.`
-  );
+  // Protected Section 4: Desired Output Contract (if specified)
+  const secOutputContract = req.output_format?.trim()
+    ? `# Desired Output Contract\n${req.output_format.trim()}`
+    : null;
 
-  // Section 6: Acceptance Verification Battery
-  sections.push(
-    `# Acceptance Verification Battery\n- Does the output satisfy all explicit user constraints?\n- Are all stated invariants maintained without contradiction?\n- Has hallucination of outside tools or unverifiable dependencies been eliminated?`
-  );
+  // Fail-closed verification: Protected constraints alone must NOT exceed Free tier capacity ceiling
+  const protectedSections = [secRole, secInvariants, secAcceptance];
+  if (secOutputContract) protectedSections.push(secOutputContract);
+  const minProtectedLength = protectedSections.join("\n\n").length;
 
-  // Section 7: Output Schema / Format
-  if (req.output_format?.trim()) {
-    sections.push(`# Desired Output Contract\n${req.output_format.trim()}`);
+  if (minProtectedLength > FREE_TIER_MAX_OUTPUT_CHARS) {
+    throw new Error(
+      `CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING: User hard constraints and acceptance invariants (${minProtectedLength} chars) exceed Free tier capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters. Protected constraints cannot be silently dropped.`
+    );
   }
 
-  let finalPrompt = sections.join("\n\n");
+  // Flexible Sections
+  const secMethodology = `# Execution Methodology\n1. Analyze input requirements and isolate known constraints from unstated assumptions.\n2. Formulate step-by-step deliverables adhering strictly to verified facts.\n3. Validate output against acceptance criteria prior to final completion.`;
+  const secMissingInfo = `# Handling Missing Information\nUse only confirmed user facts. If essential parameters are missing, state assumptions explicitly rather than fabricating dependencies.`;
 
-  // Enforce Free tier ceiling (30,000 characters)
+  const objHeader = "# Core Mission & Objective\n";
+  const objMeta = `\nCategory: ${category}\nTarget Model: ${targetModel}`;
+  const currentGoal = goal || "Execute assigned directives accurately.";
+  let secObjective = `${objHeader}Goal: ${currentGoal}${objMeta}`;
+
+  const assemble = (objective: string, meth: string | null, missing: string | null): string => {
+    const list: string[] = [secRole, objective, secInvariants];
+    if (meth) list.push(meth);
+    if (missing) list.push(missing);
+    list.push(secAcceptance);
+    if (secOutputContract) list.push(secOutputContract);
+    return list.join("\n\n");
+  };
+
+  let finalPrompt = assemble(secObjective, secMethodology, secMissingInfo);
+
+  // If total assembled prompt exceeds capacity ceiling, trim flexible narrative sections
+  // while strictly protecting role, invariants, acceptance criteria, and output contract
   if (finalPrompt.length > FREE_TIER_MAX_OUTPUT_CHARS) {
-    finalPrompt = finalPrompt.slice(0, FREE_TIER_MAX_OUTPUT_CHARS);
-    warnings.push(`Output trimmed to Free tier capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters.`);
+    const fixedObjLen = objHeader.length + "Goal: ".length + objMeta.length;
+
+    // Strategy 1: Trim goal within secObjective, keeping methodology and missing info intact
+    const otherSections1 = [secRole, secInvariants, secMethodology, secMissingInfo, secAcceptance];
+    if (secOutputContract) otherSections1.push(secOutputContract);
+    const otherLen1 = otherSections1.reduce((sum, s) => sum + s.length, 0) + otherSections1.length * 2;
+    const maxObjBudget1 = FREE_TIER_MAX_OUTPUT_CHARS - otherLen1;
+
+    if (maxObjBudget1 >= fixedObjLen + 40) {
+      const goalBudget = maxObjBudget1 - fixedObjLen;
+      const trimmedGoal = truncateCleanly(currentGoal, goalBudget);
+      secObjective = `${objHeader}Goal: ${trimmedGoal}${objMeta}`;
+      finalPrompt = assemble(secObjective, secMethodology, secMissingInfo);
+    } else {
+      // Strategy 2: If invariants are very large, compress methodology and omit missing info
+      const compactMethodology = `# Execution Methodology\nAnalyze requirements, strictly adhere to verified invariants, and validate output against acceptance criteria.`;
+      const otherSections2 = [secRole, secInvariants, compactMethodology, secAcceptance];
+      if (secOutputContract) otherSections2.push(secOutputContract);
+      const otherLen2 = otherSections2.reduce((sum, s) => sum + s.length, 0) + otherSections2.length * 2;
+      const maxObjBudget2 = FREE_TIER_MAX_OUTPUT_CHARS - otherLen2;
+
+      if (maxObjBudget2 >= fixedObjLen + 20) {
+        const goalBudget = maxObjBudget2 - fixedObjLen;
+        const trimmedGoal = truncateCleanly(currentGoal, goalBudget);
+        secObjective = `${objHeader}Goal: ${trimmedGoal}${objMeta}`;
+        finalPrompt = assemble(secObjective, compactMethodology, null);
+      } else {
+        // Strategy 3: Minimal objective with remaining budget, omitting methodology and missing info
+        const otherSectionsMin = [secRole, secInvariants, secAcceptance];
+        if (secOutputContract) otherSectionsMin.push(secOutputContract);
+        const otherLenMin = otherSectionsMin.reduce((sum, s) => sum + s.length, 0) + otherSectionsMin.length * 2;
+        const maxObjBudgetMin = FREE_TIER_MAX_OUTPUT_CHARS - otherLenMin;
+        const goalBudget = Math.max(10, maxObjBudgetMin - fixedObjLen);
+        const trimmedGoal = truncateCleanly(currentGoal, goalBudget);
+        secObjective = `${objHeader}Goal: ${trimmedGoal}${objMeta}`;
+        finalPrompt = assemble(secObjective, null, null);
+      }
+    }
+
+    warnings.push(
+      `Output trimmed to Free tier capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters while strictly preserving all operational invariants and acceptance verification criteria.`
+    );
+  }
+
+  // Guarantee Unicode surrogate boundary safety at final tail
+  finalPrompt = cleanSurrogateBoundaries(finalPrompt);
+
+  // Verification Gate: Verify invariants and acceptance battery remain 100% intact
+  if (finalPrompt.length > FREE_TIER_MAX_OUTPUT_CHARS) {
+    throw new Error(
+      `CAPACITY_ERROR_CEILING_EXCEEDED: Assembled prompt (${finalPrompt.length} chars) exceeds capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters.`
+    );
+  }
+
+  for (const c of constraints) {
+    if (!finalPrompt.includes(c)) {
+      throw new Error(
+        `CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING: User hard constraint '${c}' was truncated at capacity ceiling of ${FREE_TIER_MAX_OUTPUT_CHARS} characters. Constraints must never be silently dropped.`
+      );
+    }
+  }
+
+  if (!finalPrompt.includes("# Operational & Security Invariants")) {
+    throw new Error("CAPACITY_ERROR_INVARIANTS_MISSING: # Operational & Security Invariants section was dropped.");
+  }
+
+  if (!finalPrompt.includes("# Acceptance Verification Battery")) {
+    throw new Error("CAPACITY_ERROR_ACCEPTANCE_MISSING: # Acceptance Verification Battery section was dropped.");
+  }
+
+  if (req.output_format?.trim() && !finalPrompt.includes(req.output_format.trim())) {
+    throw new Error("CAPACITY_ERROR_OUTPUT_CONTRACT_MISSING: # Desired Output Contract was dropped.");
   }
 
   const metrics = computePromptMetrics(finalPrompt, detected, targetModel);
