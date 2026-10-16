@@ -80,6 +80,7 @@ import { SkipLink } from "./shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE } from "./shell/shellGuards";
 import { FeaturesHub } from "./engine/FeaturesHub";
 import { PromptRadarInspector } from "./engine/PromptRadarInspector";
+import { SpePostPromptGuidedJourney } from "./engine/SpePostPromptGuidedJourney";
 import { PlainEnglishShowcase } from "./engine/PlainEnglishShowcase";
 import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
@@ -1298,18 +1299,31 @@ export default function App() {
             )}
             {rendered?.finalPrompt && (
               <section className="spe-create-result" aria-label="Your prompt">
-                <h2>Your prompt</h2>
-                <AgentExportTabs
-                  promptText={rendered.finalPrompt}
-                  category={category}
-                  activeFormat={agentFormat}
-                  onFormatChange={setAgentFormat}
-                  onCopyNotice={(msg) => setNotice(msg)}
-                />
-                <pre tabIndex={0}>{activePromptView}</pre>
-                <AgentSimulatorPanel promptText={rendered.finalPrompt} category={category} />
-                <div style={{ margin: "1rem 0" }}>
-                  <PromptRadarInspector
+                <div className="spe-experience-toggle-wrap" role="group" aria-label="Prompt View Experience">
+                  <div className="spe-experience-toggle">
+                    <button
+                      type="button"
+                      className={`spe-experience-mode-btn ${mode === "simple" ? "active" : ""}`}
+                      onClick={() => setMode("simple")}
+                      aria-pressed={mode === "simple"}
+                    >
+                      <span aria-hidden="true">✦</span>
+                      <span>Simple View (Clean & Ready)</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`spe-experience-mode-btn ${mode !== "simple" ? "active" : ""}`}
+                      onClick={() => setMode("inspect")}
+                      aria-pressed={mode !== "simple"}
+                    >
+                      <span aria-hidden="true">⬡</span>
+                      <span>Architect View (Deep Spec & Verification)</span>
+                    </button>
+                  </div>
+                </div>
+
+                {mode === "simple" ? (
+                  <SpePostPromptGuidedJourney
                     promptText={rendered.finalPrompt}
                     userRequest={rendered.userRequest || userRequest}
                     category={category}
@@ -1318,53 +1332,84 @@ export default function App() {
                     activeDepthTier={depthTier}
                     onSelectTarget={handleSelectTarget}
                     onSelectDepthTier={handleSelectDepthTier}
+                    onAutoOptimize={(opt) =>
+                      setRendered((prev) => (prev ? { ...prev, finalPrompt: opt } : prev))
+                    }
                     onNavigate={setView}
+                    onToggleProRadar={() => setMode("inspect")}
+                    isProRadarOpen={false}
                   />
-                </div>
-                <QualityReceiptPanel receipt={qualityView} fallback={false} />
-                <div className="spe-actions">
-                  <button type="button" className="spe-build" onClick={() => void onCopy()}>
-                    Copy
-                  </button>
-                  <button
-                    type="button"
-                    className="spe-ghost"
-                    onClick={onExportSpe}
-                    disabled={!artifact}
-                  >
-                    .spe
-                  </button>
-                  <button type="button" className="spe-ghost" onClick={onExportJson}>
-                    JSON
-                  </button>
-                  <button type="button" className="spe-ghost" onClick={onExportPdf}>
-                    PDF
-                  </button>
-                  <MarkdownExportButton
-                    promptText={rendered?.finalPrompt || ""}
-                    rawIrPrompt={rawIrPrompt}
-                    category={category}
-                    depthTier={depthTier}
-                    sha256={sha256}
-                    disabled={!rendered?.finalPrompt}
-                  />
-                  <button
-                    type="button"
-                    className="spe-ghost"
-                    onClick={() => setView("workspace")}
-                  >
-                    Open workspace
-                  </button>
-                </div>
-                <ul className="spe-export-help">
-                  <li>Copy puts the prompt on your clipboard.</li>
-                  <li>.spe saves a file you can reopen here later.</li>
-                  <li>JSON saves the same work as plain data.</li>
-                  <li>
-                    Print / Save PDF is for printing. It does not restore the
-                    prompt.
-                  </li>
-                </ul>
+                ) : (
+                  <>
+                    <h2>Your prompt</h2>
+                    <AgentExportTabs
+                      promptText={rendered.finalPrompt}
+                      category={category}
+                      activeFormat={agentFormat}
+                      onFormatChange={setAgentFormat}
+                      onCopyNotice={(msg) => setNotice(msg)}
+                    />
+                    <pre tabIndex={0}>{activePromptView}</pre>
+                    <AgentSimulatorPanel promptText={rendered.finalPrompt} category={category} />
+                    <div style={{ margin: "1rem 0" }}>
+                      <PromptRadarInspector
+                        promptText={rendered.finalPrompt}
+                        userRequest={rendered.userRequest || userRequest}
+                        category={category}
+                        rawIrPrompt={rawIrPrompt ?? undefined}
+                        activeTarget={target}
+                        activeDepthTier={depthTier}
+                        onSelectTarget={handleSelectTarget}
+                        onSelectDepthTier={handleSelectDepthTier}
+                        onNavigate={setView}
+                      />
+                    </div>
+                    <QualityReceiptPanel receipt={qualityView} fallback={false} />
+                    <div className="spe-actions">
+                      <button type="button" className="spe-build" onClick={() => void onCopy()}>
+                        Copy
+                      </button>
+                      <button
+                        type="button"
+                        className="spe-ghost"
+                        onClick={onExportSpe}
+                        disabled={!artifact}
+                      >
+                        .spe
+                      </button>
+                      <button type="button" className="spe-ghost" onClick={onExportJson}>
+                        JSON
+                      </button>
+                      <button type="button" className="spe-ghost" onClick={onExportPdf}>
+                        PDF
+                      </button>
+                      <MarkdownExportButton
+                        promptText={rendered?.finalPrompt || ""}
+                        rawIrPrompt={rawIrPrompt}
+                        category={category}
+                        depthTier={depthTier}
+                        sha256={sha256}
+                        disabled={!rendered?.finalPrompt}
+                      />
+                      <button
+                        type="button"
+                        className="spe-ghost"
+                        onClick={() => setView("workspace")}
+                      >
+                        Open workspace
+                      </button>
+                    </div>
+                    <ul className="spe-export-help">
+                      <li>Copy puts the prompt on your clipboard.</li>
+                      <li>.spe saves a file you can reopen here later.</li>
+                      <li>JSON saves the same work as plain data.</li>
+                      <li>
+                        Print / Save PDF is for printing. It does not restore the
+                        prompt.
+                      </li>
+                    </ul>
+                  </>
+                )}
               </section>
             )}
             {view === "create" && (contextProtocol || executionRecord) && (

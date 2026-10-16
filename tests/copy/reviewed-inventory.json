@@ -36965,6 +36965,24 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Universal Free Tier Access"
+    },
+    {
+      "id": "2f2d482d4f33e2e2a395",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Simple View (Clean & Ready)"
+    },
+    {
+      "id": "c58a178f9f25004d5155",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt View Experience"
+    },
+    {
+      "id": "de9baf27d13b272739f2",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Architect View (Deep Spec & Verification)"
     }
   ]
 }

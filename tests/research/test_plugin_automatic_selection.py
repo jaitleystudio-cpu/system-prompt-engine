@@ -112,3 +112,17 @@ def test_plugin_boundary_and_invariant_preservation() -> None:
     assert "Invariants, Acceptance Battery, and Desired Output Contract 100% PRESERVED" in output
     assert "Case D (Unicode surrogate boundary): Valid UTF-16 code units verified" in output
     assert "Case E (Fail-closed constraint gate): Threw CAPACITY_ERROR_PROTECTED_CONSTRAINTS_EXCEED_CEILING" in output
+
+
+if __name__ == "__main__":
+    print("Running test_manifest_schema_and_policy_compliance...")
+    test_manifest_schema_and_policy_compliance()
+    print("Running test_openapi_specification_validity...")
+    test_openapi_specification_validity()
+    print("Running test_agent_skill_definition...")
+    test_agent_skill_definition()
+    print("Running test_plugin_120_evaluation_matrix_execution...")
+    test_plugin_120_evaluation_matrix_execution()
+    print("Running test_plugin_boundary_and_invariant_preservation...")
+    test_plugin_boundary_and_invariant_preservation()
+    print("ALL 5 PYTHON PLUGIN SELECTION & BOUNDARY TESTS PASSED (5/5 PASS)")
