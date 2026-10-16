@@ -290,10 +290,11 @@ async function runP0R2VerificationBattery() {
 
   try {
     mkdirSync(resolve(process.cwd(), "apps/web/dist"), { recursive: true });
-    // Write corrupted bytes to destination
+    // Write corrupted bytes to destination to simulate broken release artifact
     writeFileSync(distWasmPath, Buffer.from("CORRUPT_DESTINATION_ARTIFACT"));
+    assert(computeSha256(readFileSync(distWasmPath)) !== CANONICAL_WASM_SHA256, "Destination artifact is confirmed corrupted before rollback");
 
-    // Verify synchronous rollback check checks destination and fails safe
+    // Verify synchronous rollback physically restores destination and verifies on disk
     const syncResult = governor.executeDeploymentRollbackSync({
       proposalId: "PROP-ROLLBACK-DEST-01",
       authorIdentity: "agent:autonomous_coder",
@@ -303,9 +304,16 @@ async function runP0R2VerificationBattery() {
       requestedAutonomyLevel: "L4_AUTO_PROMOTION",
     });
 
+    // Check physical restoration occurred: destination WASM is no longer corrupted!
+    const restoredBuf = readFileSync(distWasmPath);
+    const restoredHash = computeSha256(restoredBuf);
     assert(
-      syncResult.verifiedSafe === false,
-      "Rollback verification FAILS when destination dist artifact is corrupt (even though pinned-base is healthy)"
+      restoredHash === CANONICAL_WASM_SHA256,
+      "executeDeploymentRollbackSync physically restores destination artifact from pinned storage"
+    );
+    assert(
+      syncResult.verifiedSafe === true,
+      "Rollback verification succeeds after physical restoration matches canonical hash bit-for-bit"
     );
     assert(
       syncResult.scope === "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
@@ -513,7 +521,8 @@ async function runP0R2VerificationBattery() {
   );
 
   assert(fixture.qualificationVerdict === "RESEARCH_FIXTURE_ONLY", "593 KB ONNX fixture strictly classified as RESEARCH_FIXTURE_ONLY");
-  assert(fixture.overallQualificationScore === 48.75, "Research fixture retains in-process tensor prototype score (48.75)");
+  assert(fixture.overallQualificationScore === null, "Research fixture unsupported empirical scores withheld (overallQualificationScore is null)");
+  assert(fixture.tensorPipelineVerified === true, "Research fixture confirms local in-process tensor execution pipeline without unverified language claims");
 
   console.log("\n------------------------------------------------------------------------");
   console.log(`P0-R2 Verification Results: ${passed} Passed, ${failed} Failed.`);

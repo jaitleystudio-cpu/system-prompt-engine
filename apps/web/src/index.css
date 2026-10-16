@@ -697,20 +697,23 @@ html[data-theme="dark"] .hero-copy h1 {
 .studio-shell {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  max-width: 1240px;
+  max-width: 1260px;
   margin: 0 auto;
-  border: 1px solid rgba(226, 232, 240, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 24px;
   overflow: hidden;
-  background: #090d16;
+  background:
+    radial-gradient(ellipse 65% 70% at 50% 50%, rgba(56, 189, 248, 0.08) 0%, transparent 70%),
+    linear-gradient(135deg, #090e1a 0%, #0d1527 50%, #090e1a 100%);
   box-shadow:
-    0 36px 90px rgba(0, 0, 0, 0.7),
+    0 36px 90px rgba(0, 0, 0, 0.75),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  position: relative;
 }
 .spe-command {
   min-width: 0;
   padding: 36px;
-  background: radial-gradient(120% 100% at 0% 0%, rgba(18, 26, 44, 0.95) 0%, #090d16 100%);
+  background: transparent;
   margin: 0;
 }
 .studio-panel-head {
@@ -957,15 +960,46 @@ html[data-theme="light"] .spe-bound-notice {
 }
 .studio-output {
   padding: 36px;
-  background: radial-gradient(120% 100% at 100% 0%, rgba(217, 197, 154, 0.07) 0%, rgba(15, 23, 40, 0.96) 55%, #080c15 100%);
-  border-left: 1px solid rgba(226, 232, 240, 0.12);
+  background: transparent;
+  position: relative;
   min-width: 0;
   scroll-margin-top: 30px;
+}
+.studio-output::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6%;
+  bottom: 6%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(56, 189, 248, 0.3) 30%, rgba(16, 185, 129, 0.3) 70%, transparent 100%);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+  pointer-events: none;
 }
 .compile-status {
   letter-spacing: 0;
   color: #d9c59a;
   font: 0.72rem var(--spe-font-mono, monospace);
+}
+.spe-output-stage {
+  min-height: 470px;
+  width: 100%;
+}
+.spe-stage-enter {
+  animation: speStageFadeIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform, filter;
+}
+@keyframes speStageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.992);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 .output-empty {
   min-height: 470px;

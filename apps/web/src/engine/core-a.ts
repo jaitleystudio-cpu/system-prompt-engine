@@ -66,7 +66,7 @@ export interface CoreAModelMetadata {
   processHeapBytes?: number;
   generationLatencyMs: number;
   environmentDevice: string;
-  networkEgressPackets: 0;
+  networkEgressPackets: number;
   observedNetworkEgressPackets: number;
   modelRole: "EXPERIMENTAL_RESEARCH_FIXTURE" | "ON_DEVICE_SYSTEM_FOUNDATION_MODEL";
   qualificationStatus: "IMPLEMENTED_NOT_QUALIFIED";
@@ -87,7 +87,7 @@ export interface CoreAGenerationResult {
   repairPasses: number;
   latencyMs: number;
   costUsd: 0;
-  zeroEgressGuaranteed: true;
+  zeroEgressGuaranteed: boolean;
   executionDigestHex: string;
   blockingReason?: string;
 }
@@ -406,6 +406,86 @@ export function autoOptimizeSystemPrompt(
   return result;
 }
 
+export interface ChromePromptApiProbe {
+  supported: boolean;
+  entryPoint: "LanguageModel" | "ai.languageModel" | "NONE";
+  availability: "readily" | "after-download" | "no" | "UNAVAILABLE";
+  platformSupported: boolean;
+  notes: string;
+}
+
+/**
+ * Detects presence of documented Chrome Prompt API (LanguageModel or ai.languageModel)
+ * and verifies desktop platform constraints (rejecting unsupported Android / iOS).
+ */
+export async function probeChromePromptApi(): Promise<ChromePromptApiProbe> {
+  const isMobile =
+    typeof navigator !== "undefined" &&
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+
+  if (isMobile) {
+    return {
+      supported: false,
+      entryPoint: "NONE",
+      availability: "no",
+      platformSupported: false,
+      notes: "Google Chrome Prompt API is desktop-only (Mac/Windows/Linux) and explicitly unsupported on Android and iOS.",
+    };
+  }
+
+  const g = globalThis as any;
+  if (typeof g.LanguageModel?.create === "function") {
+    let avail = "readily";
+    if (typeof g.LanguageModel.availability === "function") {
+      try {
+        avail = await g.LanguageModel.availability();
+      } catch {
+        avail = "no";
+      }
+    }
+    return {
+      supported: avail !== "no",
+      entryPoint: "LanguageModel",
+      availability: avail as any,
+      platformSupported: true,
+      notes: "Standard documented Chrome LanguageModel API detected.",
+    };
+  }
+
+  if (typeof g.ai?.languageModel?.create === "function") {
+    let avail = "readily";
+    if (typeof g.ai.languageModel.availability === "function") {
+      try {
+        avail = await g.ai.languageModel.availability();
+      } catch {
+        avail = "no";
+      }
+    } else if (typeof g.ai.languageModel.capabilities === "function") {
+      try {
+        const caps = await g.ai.languageModel.capabilities();
+        avail = caps.available || "readily";
+      } catch {
+        avail = "no";
+      }
+    }
+    return {
+      supported: avail !== "no",
+      entryPoint: "ai.languageModel",
+      availability: avail as any,
+      platformSupported: true,
+      notes: "Chrome ai.languageModel namespace detected.",
+    };
+  }
+
+  return {
+    supported: false,
+    entryPoint: "NONE",
+    availability: "UNAVAILABLE",
+    platformSupported: true,
+    notes: "Chrome Prompt API (LanguageModel or ai.languageModel) is not present in the current environment.",
+  };
+}
+
 /**
  * Primary Core A prompt generation execution function.
  */
@@ -418,7 +498,11 @@ export async function generateCoreAPrompt(
       await neuralRuntime.loadModel();
     } catch {}
   }
-  const endNetworkObservation = NetworkEgressObserver.startObservation();
+  // Enforce deny-by-default air-gap policy for all Core A inference sessions
+  const endNetworkObservation = NetworkEgressObserver.startObservation({
+    denyByDefault: true,
+    permittedDestinations: ["127.0.0.1", "localhost"],
+  });
   const startTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
   const userRequest = (req.userRequest || "").trim();
   const explicitConstraints = req.explicitConstraints || [];
@@ -428,7 +512,8 @@ export async function generateCoreAPrompt(
   // Check for immediate contradictions in the request
   const initialContradictions = detectContradictions(userRequest, userRequest);
   if (initialContradictions.length > 0) {
-    endNetworkObservation();
+    const netReport = endNetworkObservation();
+    const zeroEgress = netReport.observedPackets === 0 && netReport.blockedConnections.length === 0 && !netReport.airGapViolated;
     const endTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
     const latencyMs = Math.max(0.001, Number((endTime - startTime).toFixed(3)));
     return {
@@ -454,7 +539,7 @@ export async function generateCoreAPrompt(
       repairPasses: 0,
       latencyMs,
       costUsd: 0,
-      zeroEgressGuaranteed: true,
+      zeroEgressGuaranteed: zeroEgress,
       executionDigestHex: computeSha256(userRequest),
       blockingReason: initialContradictions.join(" "),
       modelMetadata: {
@@ -504,7 +589,7 @@ export async function generateCoreAPrompt(
       repairPasses: 2,
       latencyMs,
       costUsd: 0,
-      zeroEgressGuaranteed: true,
+      zeroEgressGuaranteed: networkReport.observedPackets === 0 && networkReport.blockedConnections.length === 0 && !networkReport.airGapViolated,
       executionDigestHex: computeSha256(`quality_failed:${userRequest}`),
       blockingReason: "CORE_A_REPAIR_EXHAUSTED: Missing mandatory requirements after max repair passes",
       modelMetadata: {
@@ -533,19 +618,23 @@ export async function generateCoreAPrompt(
   let runtimeUsed: CoreARuntime = "IN_PROCESS_ONNX_NEURAL";
   let neuralResult: any = null;
   let candidatePrompt = "";
-  const hasBrowserAi =
-    typeof (globalThis as unknown as { ai?: { languageModel?: { create?: () => Promise<{ prompt: (p: string) => Promise<string> }> } } }).ai?.languageModel?.create === "function";
+  let egressBlockedError: Error | null = null;
 
-  if (req.runtimePreference === "browser_ai" && hasBrowserAi) {
-    try {
-      const session = await (globalThis as any).ai.languageModel.create();
-      const output = await session.prompt(userRequest);
-      if (output && typeof output === "string" && output.trim().length > 0) {
-        runtimeUsed = "BROWSER_PROMPT_API";
-        candidatePrompt = output.trim();
+  if (req.runtimePreference === "browser_ai") {
+    const probe = await probeChromePromptApi();
+    if (probe.supported) {
+      try {
+        const g = globalThis as any;
+        const factory = typeof g.LanguageModel?.create === "function" ? g.LanguageModel : g.ai?.languageModel;
+        const session = await factory.create();
+        const output = await session.prompt(userRequest);
+        if (output && typeof output === "string" && output.trim().length > 0) {
+          runtimeUsed = "BROWSER_PROMPT_API";
+          candidatePrompt = output.trim();
+        }
+      } catch {
+        // Browser AI invocation failed; fallback to local ONNX without misrepresenting runtime
       }
-    } catch {
-      // Browser AI invocation failed; fallback to local ONNX without misrepresenting runtime
     }
   }
 
@@ -625,6 +714,12 @@ ${checksContent}
 
   const networkReport = endNetworkObservation();
   const observedNetworkEgressPackets = networkReport.observedPackets;
+  const isAirGapClean =
+    networkReport.observedPackets === 0 &&
+    networkReport.blockedConnections.length === 0 &&
+    !networkReport.airGapViolated &&
+    !egressBlockedError;
+  const zeroEgressGuaranteed = isAirGapClean;
 
   const endTime = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
   const latencyMs = Math.max(0.001, Number((endTime - startTime).toFixed(3)));
@@ -634,7 +729,17 @@ ${checksContent}
   );
 
   let status: CoreAGenerationResult["status"] = "QUALIFIED_GENERATIVE_SUCCESS";
-  if (qualityReport.verdict === "BLOCKED_BY_CONFLICT") {
+  let blockingReason: string | undefined = undefined;
+
+  if (!isAirGapClean) {
+    status = "REPAIR_BUDGET_EXHAUSTED";
+    blockingReason = `AIR_GAP_EGRESS_ATTEMPTED: Unauthorized network egress detected and blocked during inference (${networkReport.blockedConnections.join(", ") || "outbound network packet"}).`;
+    qualityReport = {
+      ...qualityReport,
+      verdict: "BLOCKED_BY_CONFLICT",
+      limitationsDisclaimer: "Inference failed due to unauthorized network egress attempt violating offline air-gap policy.",
+    };
+  } else if (qualityReport.verdict === "BLOCKED_BY_CONFLICT") {
     status = "CONTRADICTION_BLOCKED";
   } else if (!qualityReport.mandatoryRequirementsPassed) {
     status = "REPAIR_BUDGET_EXHAUSTED";
@@ -653,7 +758,7 @@ ${checksContent}
     processHeapBytes: neuralResult?.processHeapBytes ?? (typeof process !== "undefined" && typeof process.memoryUsage === "function" ? process.memoryUsage().heapUsed : 0),
     generationLatencyMs: Math.max(latencyMs, neuralResult?.latencyMs || latencyMs),
     environmentDevice: runtimeUsed === "BROWSER_PROMPT_API" ? (typeof navigator !== "undefined" ? navigator.userAgent : "Chrome Built-in AI Gemini Nano Runtime") : (neuralResult?.executionDevice || "Local WebAssembly CPU Runtime"),
-    networkEgressPackets: 0,
+    networkEgressPackets: observedNetworkEgressPackets,
     observedNetworkEgressPackets,
     modelRole: runtimeUsed === "BROWSER_PROMPT_API" ? "ON_DEVICE_SYSTEM_FOUNDATION_MODEL" : "EXPERIMENTAL_RESEARCH_FIXTURE",
     qualificationStatus: "IMPLEMENTED_NOT_QUALIFIED",
@@ -670,7 +775,8 @@ ${checksContent}
     repairPasses,
     latencyMs,
     costUsd: 0,
-    zeroEgressGuaranteed: true,
+    zeroEgressGuaranteed,
     executionDigestHex,
+    ...(blockingReason ? { blockingReason } : {}),
   };
 }

@@ -28,8 +28,9 @@ import {
   closeSync,
   unlinkSync,
   renameSync,
+  readdirSync,
 } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, relative } from "node:path";
 import { createPublicKey, createPrivateKey, sign, verify, createHmac, randomBytes } from "node:crypto";
 import { computeSha256 } from "../hashUtils.ts";
 
@@ -425,33 +426,30 @@ export class ReleaseSafetyGovernor {
 
   /**
    * Computes a deterministic digest of candidate proposal artifacts.
-   * Binds authorization to actual target file contents on disk.
+   * Binds authorization strictly to actual target file contents on disk.
+   * A candidate-supplied checksum is never accepted as a substitute for disk hashing.
    */
   public computeProposalContentDigest(candidate: ReleaseCandidateProposal): string {
-    if (candidate.artifactChecksum && candidate.artifactChecksum.length === 64) {
-      return candidate.artifactChecksum;
+    if (!Array.isArray(candidate.targetFiles) || candidate.targetFiles.length === 0) {
+      throw new Error(
+        "PROPOSAL_TARGET_FILES_REQUIRED: Proposal must specify a non-empty targetFiles array to bind release authorization to physical disk contents."
+      );
     }
 
-    if (Array.isArray(candidate.targetFiles) && candidate.targetFiles.length > 0) {
-      const fileHashes: string[] = [];
-      for (const filePath of [...candidate.targetFiles].sort()) {
-        const fullPath = resolve(process.cwd(), filePath);
-        if (!existsSync(fullPath)) {
-          throw new Error(`PROPOSAL_TARGET_FILE_UNREADABLE: Target file '${filePath}' does not exist on disk.`);
-        }
-        try {
-          const contentBuf = readFileSync(fullPath);
-          fileHashes.push(`${filePath}:${computeSha256(contentBuf)}`);
-        } catch (err: any) {
-          throw new Error(`PROPOSAL_TARGET_FILE_UNREADABLE: Target file '${filePath}' is unreadable: ${err.message}`);
-        }
+    const fileHashes: string[] = [];
+    for (const filePath of [...candidate.targetFiles].sort()) {
+      const fullPath = resolve(process.cwd(), filePath);
+      if (!existsSync(fullPath)) {
+        throw new Error(`PROPOSAL_TARGET_FILE_UNREADABLE: Target file '${filePath}' does not exist on disk.`);
       }
-      return computeSha256(fileHashes.join(";"));
+      try {
+        const contentBuf = readFileSync(fullPath);
+        fileHashes.push(`${filePath}:${computeSha256(contentBuf)}`);
+      } catch (err: any) {
+        throw new Error(`PROPOSAL_TARGET_FILE_UNREADABLE: Target file '${filePath}' is unreadable: ${err.message}`);
+      }
     }
-
-    throw new Error(
-      "PROPOSAL_ARTIFACT_DIGEST_UNSPECIFIED: Proposal must provide a 64-character artifactChecksum or non-empty targetFiles list."
-    );
+    return computeSha256(fileHashes.join(";"));
   }
 
   /**
@@ -822,54 +820,7 @@ export class ReleaseSafetyGovernor {
         if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
           copyFileSync(pinnedWasm, publicWasm);
         }
-        const artifactsInventory: Record<string, { sha256: string; sizeBytes: number; category: string }> = {
-          "spe_wasm.wasm": {
-            sha256: this.pinnedWasmHash,
-            sizeBytes: CANONICAL_WASM_SIZE_BYTES,
-            category: "WASM_CORE",
-          },
-        };
-
-        const modelOnnx = resolve(process.cwd(), "apps/web/public/models/spe-core-a-neural-generator-v1.onnx");
-        if (existsSync(modelOnnx)) {
-          const mBuf = readFileSync(modelOnnx);
-          artifactsInventory["models/spe-core-a-neural-generator-v1.onnx"] = {
-            sha256: computeSha256(mBuf),
-            sizeBytes: mBuf.byteLength,
-            category: "NEURAL_RESEARCH_FIXTURE",
-          };
-        }
-        const modelJson = resolve(process.cwd(), "apps/web/public/models/spe-core-a-neural-generator-v1.json");
-        if (existsSync(modelJson)) {
-          const jBuf = readFileSync(modelJson);
-          artifactsInventory["models/spe-core-a-neural-generator-v1.json"] = {
-            sha256: computeSha256(jBuf),
-            sizeBytes: jBuf.byteLength,
-            category: "MODEL_METADATA",
-          };
-        }
-        const shaJson = resolve(process.cwd(), "apps/web/public/spe_wasm.sha256.json");
-        if (existsSync(shaJson)) {
-          const sBuf = readFileSync(shaJson);
-          artifactsInventory["spe_wasm.sha256.json"] = {
-            sha256: computeSha256(sBuf),
-            sizeBytes: sBuf.byteLength,
-            category: "CONFIG",
-          };
-        }
-
-        const manifestData = {
-          releaseCommit: this.pinnedCommit,
-          wasmHash: this.pinnedWasmHash,
-          wasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
-          status: "RESTORED_TO_PINNED_BASE_COMMIT",
-          restoredAtIso: timestamp,
-          scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
-          deploymentProvider: "LOCAL_STAGING_EMULATOR",
-          wholeSiteCoverage: ["HTML", "JAVASCRIPT", "CSS", "WASM", "MODEL_ASSETS", "CONFIG"],
-          artifacts: artifactsInventory,
-          manifestDigest: computeSha256(JSON.stringify(artifactsInventory)),
-        };
+        const manifestData = this.buildWholeSiteManifest(distDir);
         writeFileSync(distManifest, JSON.stringify(manifestData, null, 2), "utf-8");
       } catch (err) {
         console.warn("Rollback physical file restoration notice:", err);
@@ -928,20 +879,10 @@ export class ReleaseSafetyGovernor {
       }
     }
 
-    // Verify dist manifest exists and points to pinned commit and canonical hash
-    if (verifiedSafe && existsSync(distManifest)) {
-      try {
-        const mObj = JSON.parse(readFileSync(distManifest, "utf-8"));
-        if (
-          mObj.releaseCommit !== this.pinnedCommit ||
-          mObj.wasmHash !== this.pinnedWasmHash ||
-          !mObj.artifacts ||
-          !mObj.artifacts["spe_wasm.wasm"] ||
-          mObj.artifacts["spe_wasm.wasm"].sha256 !== this.pinnedWasmHash
-        ) {
-          verifiedSafe = false;
-        }
-      } catch {
+    // Verify whole-site destination manifest and every single asset on disk
+    if (verifiedSafe) {
+      const siteAudit = this.verifyWholeSiteManifest(distDir);
+      if (!siteAudit.verifiedSafe) {
         verifiedSafe = false;
       }
     }
@@ -1016,7 +957,198 @@ export class ReleaseSafetyGovernor {
   }
 
   /**
-   * Synchronous baseline fallback for rollback execution when async execution is not required.
+   * Scans a directory recursively and builds an inventory of all served web assets.
+   * Categorizes files into HTML, JAVASCRIPT, CSS, WASM, MODEL_ASSETS, and CONFIG.
+   */
+  public static buildWholeSiteArtifactsInventory(
+    distDir: string
+  ): Record<string, { sha256: string; sizeBytes: number; category: string }> {
+    const inventory: Record<string, { sha256: string; sizeBytes: number; category: string }> = {};
+    if (!existsSync(distDir)) return inventory;
+
+    function walkDir(dir: string, baseDir: string) {
+      const entries = readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = resolve(dir, entry.name);
+        if (entry.isDirectory()) {
+          walkDir(fullPath, baseDir);
+        } else if (entry.isFile()) {
+          const relPath = relative(baseDir, fullPath).replace(/\\/g, "/");
+          // Exclude dynamic manifests and temporary rollback pointers
+          if (
+            relPath === "release-manifest.json" ||
+            relPath.endsWith(".tmp") ||
+            relPath.includes(".tmp.")
+          ) {
+            continue;
+          }
+          try {
+            const buf = readFileSync(fullPath);
+            const sha256 = computeSha256(buf);
+            let category = "CONFIG";
+            if (relPath.endsWith(".html")) {
+              category = "HTML";
+            } else if (relPath.endsWith(".js") || relPath.endsWith(".mjs")) {
+              category = "JAVASCRIPT";
+            } else if (relPath.endsWith(".css")) {
+              category = "CSS";
+            } else if (relPath.endsWith(".wasm")) {
+              category = "WASM";
+            } else if (relPath.endsWith(".onnx") || relPath.startsWith("models/")) {
+              category = "MODEL_ASSETS";
+            }
+            inventory[relPath] = {
+              sha256,
+              sizeBytes: buf.byteLength,
+              category,
+            };
+          } catch {}
+        }
+      }
+    }
+
+    walkDir(distDir, distDir);
+    return inventory;
+  }
+
+  /**
+   * Generates a whole-site release manifest over all assets in distDir.
+   */
+  public buildWholeSiteManifest(distDir: string): any {
+    const rawInventory = ReleaseSafetyGovernor.buildWholeSiteArtifactsInventory(distDir);
+    const sortedKeys = Object.keys(rawInventory).sort();
+    const sortedInventory: Record<string, { sha256: string; sizeBytes: number; category: string }> = {};
+    for (const key of sortedKeys) {
+      sortedInventory[key] = rawInventory[key];
+    }
+
+    return {
+      releaseCommit: this.pinnedCommit,
+      wasmHash: this.pinnedWasmHash,
+      wasmSizeBytes: CANONICAL_WASM_SIZE_BYTES,
+      status: "RESTORED_TO_PINNED_BASE_COMMIT",
+      restoredAtIso: new Date().toISOString(),
+      scope: "LOCAL_STAGING_ROLLBACK_VERIFIED_WITHIN_TESTED_SCOPE",
+      deploymentProvider: "LOCAL_STAGING_EMULATOR",
+      wholeSiteCoverage: ["HTML", "JAVASCRIPT", "CSS", "WASM", "MODEL_ASSETS", "CONFIG"],
+      artifacts: sortedInventory,
+      manifestDigest: computeSha256(JSON.stringify(sortedInventory)),
+    };
+  }
+
+  /**
+   * Cryptographically verifies the whole-site destination manifest and every single asset on disk.
+   * Fails closed if any asset is missing, corrupted, or unexpected.
+   */
+  public verifyWholeSiteManifest(
+    distDir: string,
+    manifestObj?: any
+  ): { verifiedSafe: boolean; corruptedFiles: string[]; missingFiles: string[]; reason?: string } {
+    let mObj = manifestObj;
+    if (!mObj) {
+      const manifestPath = resolve(distDir, "release-manifest.json");
+      if (!existsSync(manifestPath)) {
+        return {
+          verifiedSafe: false,
+          corruptedFiles: [],
+          missingFiles: ["release-manifest.json"],
+          reason: "WHOLE_SITE_MANIFEST_MISSING: release-manifest.json does not exist in destination.",
+        };
+      }
+      try {
+        mObj = JSON.parse(readFileSync(manifestPath, "utf-8"));
+      } catch (err: any) {
+        return {
+          verifiedSafe: false,
+          corruptedFiles: [],
+          missingFiles: [],
+          reason: `WHOLE_SITE_MANIFEST_PARSE_ERROR: ${err.message}`,
+        };
+      }
+    }
+
+    if (mObj.releaseCommit !== this.pinnedCommit) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles: [],
+        missingFiles: [],
+        reason: `COMMIT_MISMATCH: Manifest commit '${mObj.releaseCommit}' does not match pinned commit '${this.pinnedCommit}'.`,
+      };
+    }
+
+    if (mObj.wasmHash !== this.pinnedWasmHash) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles: [],
+        missingFiles: [],
+        reason: `WASM_HASH_MISMATCH: Manifest wasmHash does not match canonical WASM hash.`,
+      };
+    }
+
+    const missingFiles: string[] = [];
+    const corruptedFiles: string[] = [];
+    const artifacts = mObj.artifacts || {};
+
+    if (Object.keys(artifacts).length === 0) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles: [],
+        missingFiles: [],
+        reason: "EMPTY_ARTIFACTS_INVENTORY: Manifest contains no tracked artifacts.",
+      };
+    }
+
+    for (const [relPath, meta] of Object.entries(artifacts) as [string, any][]) {
+      const fullPath = resolve(distDir, relPath);
+      if (!existsSync(fullPath)) {
+        missingFiles.push(relPath);
+        continue;
+      }
+      try {
+        const buf = readFileSync(fullPath);
+        const actualHash = computeSha256(buf);
+        if (actualHash !== meta.sha256) {
+          corruptedFiles.push(relPath);
+        }
+      } catch {
+        corruptedFiles.push(relPath);
+      }
+    }
+
+    if (missingFiles.length > 0 || corruptedFiles.length > 0) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles,
+        missingFiles,
+        reason: `WHOLE_SITE_INTEGRITY_VIOLATION: ${corruptedFiles.length} corrupted file(s) (${corruptedFiles.slice(0, 3).join(", ")}), ${missingFiles.length} missing file(s).`,
+      };
+    }
+
+    const sortedKeys = Object.keys(artifacts).sort();
+    const sortedInventory: Record<string, any> = {};
+    for (const key of sortedKeys) {
+      sortedInventory[key] = artifacts[key];
+    }
+    const computedDigest = computeSha256(JSON.stringify(sortedInventory));
+    if (mObj.manifestDigest && mObj.manifestDigest !== computedDigest) {
+      return {
+        verifiedSafe: false,
+        corruptedFiles: [],
+        missingFiles: [],
+        reason: "MANIFEST_DIGEST_MISMATCH: Manifest digest does not match artifacts inventory.",
+      };
+    }
+
+    return {
+      verifiedSafe: true,
+      corruptedFiles: [],
+      missingFiles: [],
+    };
+  }
+
+  /**
+   * Synchronous baseline for rollback execution: physically restores destination artifacts
+   * from pinned immutable storage and verifies destination on disk.
    */
   public executeDeploymentRollbackSync(candidate: ReleaseCandidateProposal): RollbackExecutionResult {
     const timestamp = new Date().toISOString();
@@ -1042,7 +1174,28 @@ export class ReleaseSafetyGovernor {
       writeFileSync(pointerPath, JSON.stringify(pointerData, null, 2), "utf-8");
     } catch {}
 
-    const distWasm = resolve(process.cwd(), "apps/web/dist/spe_wasm.wasm");
+    const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
+    const pinnedWasm = resolve(pinnedBaseDir, "spe_wasm.wasm");
+    const distDir = resolve(process.cwd(), "apps/web/dist");
+    const distWasm = resolve(distDir, "spe_wasm.wasm");
+    const publicWasm = resolve(process.cwd(), "apps/web/public/spe_wasm.wasm");
+    const distManifest = resolve(distDir, "release-manifest.json");
+
+    // Physically restore destination WASM and manifest from pinned storage
+    if (existsSync(pinnedWasm)) {
+      try {
+        mkdirSync(distDir, { recursive: true });
+        copyFileSync(pinnedWasm, distWasm);
+        if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
+          copyFileSync(pinnedWasm, publicWasm);
+        }
+        const manifestData = this.buildWholeSiteManifest(distDir);
+        writeFileSync(distManifest, JSON.stringify(manifestData, null, 2), "utf-8");
+      } catch (err) {
+        console.warn("Sync rollback physical restoration notice:", err);
+      }
+    }
+
     let verifiedSafe = false;
     let observedHash = "";
     if (existsSync(distWasm)) {
@@ -1051,6 +1204,14 @@ export class ReleaseSafetyGovernor {
         observedHash = computeSha256(buf);
         verifiedSafe = observedHash === this.pinnedWasmHash && buf.byteLength === CANONICAL_WASM_SIZE_BYTES;
       } catch {}
+    }
+
+    // Verify whole-site manifest
+    if (verifiedSafe) {
+      const siteAudit = this.verifyWholeSiteManifest(distDir);
+      if (!siteAudit.verifiedSafe) {
+        verifiedSafe = false;
+      }
     }
 
     return {
@@ -1102,8 +1263,27 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    // 3. Independent Release Authority Gate (Cryptographic Verification & Digest Binding)
-    const candidateDigest = candidate.artifactChecksum || this.computeProposalContentDigest(candidate);
+    // 3. Independent Release Authority Gate (Cryptographic Verification & Disk-Bound Digest)
+    let candidateDigest: string;
+    try {
+      candidateDigest = this.computeProposalContentDigest(candidate);
+    } catch (err: any) {
+      return {
+        status: "REJECTED_BLOCKED",
+        reason: err.message || "Failed to compute candidate proposal disk content digest.",
+        authorizedBy: approverIdentity,
+        auditDigest: computeSha256(`digest_err:${candidate.proposalId}:${timestamp}`),
+      };
+    }
+
+    if (candidate.artifactChecksum && candidate.artifactChecksum !== candidateDigest) {
+      return {
+        status: "REJECTED_BLOCKED",
+        reason: `PROPOSAL_DIGEST_MISMATCH: Supplied artifactChecksum '${candidate.artifactChecksum}' does not match disk content digest '${candidateDigest}'.`,
+        authorizedBy: approverIdentity,
+        auditDigest: computeSha256(`checksum_mismatch:${candidate.proposalId}:${timestamp}`),
+      };
+    }
 
     const targetEnv = candidate.targetEnvironment || "production";
     const authAudit = this.verifyReleaseAuthority(
@@ -1193,8 +1373,27 @@ export class ReleaseSafetyGovernor {
       };
     }
 
-    // 3. Independent Release Authority Gate (Cryptographic Verification & Digest Binding)
-    const candidateDigest = candidate.artifactChecksum || this.computeProposalContentDigest(candidate);
+    // 3. Independent Release Authority Gate (Cryptographic Verification & Disk-Bound Digest)
+    let candidateDigest: string;
+    try {
+      candidateDigest = this.computeProposalContentDigest(candidate);
+    } catch (err: any) {
+      return {
+        status: "REJECTED_BLOCKED",
+        reason: err.message || "Failed to compute candidate proposal disk content digest.",
+        authorizedBy: approverIdentity,
+        auditDigest: computeSha256(`digest_err:${candidate.proposalId}:${timestamp}`),
+      };
+    }
+
+    if (candidate.artifactChecksum && candidate.artifactChecksum !== candidateDigest) {
+      return {
+        status: "REJECTED_BLOCKED",
+        reason: `PROPOSAL_DIGEST_MISMATCH: Supplied artifactChecksum '${candidate.artifactChecksum}' does not match disk content digest '${candidateDigest}'.`,
+        authorizedBy: approverIdentity,
+        auditDigest: computeSha256(`checksum_mismatch:${candidate.proposalId}:${timestamp}`),
+      };
+    }
 
     const targetEnv = candidate.targetEnvironment || "production";
     const authAudit = this.verifyReleaseAuthority(

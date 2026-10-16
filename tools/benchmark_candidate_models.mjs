@@ -265,18 +265,13 @@ export const CANDIDATE_MODELS = [
     cloudCostUsd: 0,
     assessmentType: "LOCALLY_EXECUTED_FIXTURE",
     empiricalEvaluationStatus: "RESEARCH_FIXTURE_ONLY",
-    empiricalBenchmarkExecuted: true,
-    empiricalScores: {
-      instructionFollowing: 45,
-      constraintPreservation: 70,
-      noveltyOverBaseline: 15,
-      structuralIntegrity: 65,
-      note: "Measured on 593 KB prototype fixture; weights lack learned language competence",
-    },
-    overallQualificationScore: 48.75,
+    empiricalBenchmarkExecuted: false,
+    empiricalScores: null,
+    overallQualificationScore: null,
     qualificationVerdict: "RESEARCH_FIXTURE_ONLY",
+    tensorPipelineVerified: true,
     tradeOffAnalysis:
-      "Successfully demonstrates local in-browser WASM tensor execution, token decoding, and authentic runtime failure triggering (F02). However, weights are initialized randomly and rely on hand-configured token transitions. It does NOT possess learned language competence and cannot generate open-ended original instructions for arbitrary unseen briefs. Correctly reclassified as RESEARCH_FIXTURE_ONLY and disqualified as production language generator.",
+      "Successfully demonstrates local in-browser WASM tensor execution, token decoding, and authentic runtime failure triggering (F02). Numerical quality scores are withheld because the fixture weights are initialized randomly and rely on hand-configured token transitions rather than a trained language corpus. Correctly classified as RESEARCH_FIXTURE_ONLY with empirical scores withheld.",
     integrationRoadmap: {
       tokenizerType: "320-token byte + special token table",
       weightsFormat: "ONNX Opset 12",
@@ -304,7 +299,9 @@ export function runCandidateModelBenchmarking() {
     console.log(`  Air-Gap / Cost:  100% Offline / $${c.cloudCostUsd} cloud spend`);
     const scoreStr = c.overallQualificationScore !== null
       ? `${c.overallQualificationScore}/100`
-      : `UNMEASURED / ESTIMATE_ONLY (${c.theoreticalEstimateScore}/100 theoretical)`;
+      : c.theoreticalEstimateScore
+        ? `UNMEASURED / ESTIMATE_ONLY (${c.theoreticalEstimateScore}/100 theoretical)`
+        : `SCORES_WITHHELD (Pretrained corpus training required)`;
     console.log(`  Score:           ${scoreStr} -> ${c.qualificationVerdict}`);
     console.log(`  Trade-off:       ${c.tradeOffAnalysis.slice(0, 110)}...`);
   }

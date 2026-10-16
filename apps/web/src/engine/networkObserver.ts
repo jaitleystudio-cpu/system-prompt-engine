@@ -51,9 +51,26 @@ export class NetworkEgressObserver {
     return this.permittedDestinationsList.some((allowed) => {
       if (allowed === "*" || allowed === dest) return true;
       try {
-        const destUrl = new URL(dest.startsWith("http") || dest.startsWith("ws") ? dest : `http://${dest}`);
-        const allowUrl = new URL(allowed.startsWith("http") || allowed.startsWith("ws") ? allowed : `http://${allowed}`);
-        return destUrl.hostname === allowUrl.hostname || destUrl.host === allowUrl.host;
+        const destNorm = dest.startsWith("http://") || dest.startsWith("https://") || dest.startsWith("ws://") || dest.startsWith("wss://")
+          ? dest
+          : `http://${dest}`;
+        const allowedNorm = allowed.startsWith("http://") || allowed.startsWith("https://") || allowed.startsWith("ws://") || allowed.startsWith("wss://")
+          ? allowed
+          : `http://${allowed}`;
+
+        const destUrl = new URL(destNorm);
+        const allowUrl = new URL(allowedNorm);
+
+        const hostMatches = destUrl.hostname === allowUrl.hostname;
+        if (!hostMatches) return false;
+
+        // If allowed specifies an explicit port, destination port must strictly match
+        if (allowUrl.port) {
+          const destPort = destUrl.port || (destUrl.protocol === "https:" || destUrl.protocol === "wss:" ? "443" : "80");
+          return destPort === allowUrl.port;
+        }
+
+        return true;
       } catch {
         return dest.includes(allowed);
       }
@@ -317,7 +334,8 @@ export class NetworkEgressObserver {
     const initialPermittedLen = this.permittedConnections.length;
 
     this.activeSessions++;
-    const denyEnforced = Boolean(options.denyByDefault);
+    // Default to deny-by-default air-gap protection unless explicitly set to false
+    const denyEnforced = options.denyByDefault !== false;
     if (denyEnforced) {
       this.activeDenySessions++;
     }

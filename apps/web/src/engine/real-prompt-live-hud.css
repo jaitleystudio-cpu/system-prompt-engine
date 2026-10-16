@@ -1,45 +1,60 @@
-/* User-Friendly Real-Time Structure Preview Styles */
+/* ==========================================================================
+   SPE WORLD-CLASS PROMPT BUILDER — AWWWARDS LEVEL CRAFT
+   Ultra-pure universal English, double-bezel hardware modules,
+   radiant conduits, and fluid micro-interactions.
+   ========================================================================== */
 
-.spe-preview-container {
+.spe-wow-canvas {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 100%;
   padding: 1.5rem;
-  background: rgba(13, 19, 33, 0.6);
-  border-radius: 12px;
-  animation: speFadeIn 0.25s ease-out;
   box-sizing: border-box;
+  position: relative;
+  animation: speCanvasReveal 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.spe-preview-container.empty {
-  border: 1px dashed rgba(255, 255, 255, 0.12);
+@keyframes speCanvasReveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.spe-preview-container.active {
-  border: 1px solid rgba(56, 189, 248, 0.28);
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(10, 15, 29, 0.9) 100%);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+/* Ambient Radial Luminescence Behind Live Stage */
+.spe-wow-ambient-glow {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, rgba(16, 185, 129, 0.05) 50%, transparent 70%);
+  pointer-events: none;
+  filter: blur(50px);
+  z-index: 0;
 }
 
-/* Header Area */
-.spe-preview-header {
-  margin-bottom: 1.25rem;
-}
-
-.spe-preview-header-top {
+/* 1. Top Telemetry Bar */
+.spe-wow-topbar {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.spe-preview-badge {
+.spe-wow-status-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -47,120 +62,312 @@
   color: #94a3b8;
 }
 
-.spe-preview-badge.live {
+.spe-wow-status-pill.live {
   color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.09);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.18);
 }
 
-.spe-live-indicator-dot {
-  width: 7px;
-  height: 7px;
+.spe-wow-idle-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.spe-wow-live-beacon {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #38bdf8;
   box-shadow: 0 0 10px #38bdf8;
-  animation: spePulseDot 1.8s infinite;
+  animation: speBeaconBreathe 1.8s infinite ease-in-out;
 }
 
-@keyframes spePulseDot {
-  0% { transform: scale(0.9); opacity: 0.6; }
-  50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 12px #38bdf8; }
-  100% { transform: scale(0.9); opacity: 0.6; }
+@keyframes speBeaconBreathe {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px #38bdf8; }
+  100% { transform: scale(0.9); opacity: 0.7; }
 }
 
-.spe-preview-private-tag {
+/* Progress track */
+.spe-wow-progress-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0.65rem;
+  background: rgba(16, 185, 129, 0.07);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 999px;
+}
+
+.spe-wow-progress-bar {
+  width: 38px;
+  height: 4px;
+  background: linear-gradient(90deg, #10b981, #38bdf8);
+  border-radius: 999px;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.spe-wow-progress-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #a7f3d0;
+}
+
+.spe-wow-privacy-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   font-size: 0.72rem;
+  font-weight: 500;
   color: #64748b;
 }
 
-.spe-preview-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #f1f5f9;
-  margin: 0.15rem 0 0.4rem;
-  letter-spacing: -0.015em;
-  line-height: 1.35;
+/* 2. Headline & Subtitle Block */
+.spe-wow-header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.1rem;
 }
 
-.spe-preview-intro {
-  font-size: 0.86rem;
+.spe-wow-title {
+  font-size: 1.28rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+}
+
+.spe-wow-subtitle {
+  font-size: 0.88rem;
   line-height: 1.5;
   color: #94a3b8;
   margin: 0;
 }
 
-/* 4 Cards Grid */
-.spe-preview-cards {
+/* 3. The 4 Bento Cards */
+.spe-wow-bento {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.75rem;
   margin-bottom: 1.25rem;
 }
 
-.spe-preview-card {
-  padding: 0.9rem 1.1rem;
-  background: rgba(18, 26, 46, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 8px;
-  transition: all 0.2s ease;
+/* Outer Shell (Doppelrand) */
+.spe-wow-card {
+  position: relative;
+  border-radius: 12px;
+  padding: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.spe-preview-card:hover {
-  background: rgba(22, 32, 56, 0.75);
-  border-color: rgba(255, 255, 255, 0.12);
+.spe-wow-card:hover {
+  transform: translateY(-2px);
 }
 
-.spe-preview-card.role { border-left: 3px solid #10b981; }
-.spe-preview-card.goal { border-left: 3px solid #38bdf8; }
-.spe-preview-card.constraint { border-left: 3px solid #f97316; }
-.spe-preview-card.output { border-left: 3px solid #c084fc; }
+/* Staggered entrance cascade */
+.spe-wow-canvas--live .spe-wow-card.card--role {
+  animation: speSlotCascade 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both;
+}
+.spe-wow-canvas--live .spe-wow-card.card--goal {
+  animation: speSlotCascade 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.09s both;
+}
+.spe-wow-canvas--live .spe-wow-card.card--constraint {
+  animation: speSlotCascade 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
+}
+.spe-wow-canvas--live .spe-wow-card.card--output {
+  animation: speSlotCascade 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.19s both;
+}
 
-.spe-preview-card-head {
+@keyframes speSlotCascade {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Real-time reactive pulse on typing or preset change */
+.spe-wow-card.is-updating {
+  animation: speCardPulse 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes speCardPulse {
+  0% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28), 0 0 20px rgba(56, 189, 248, 0.22);
+    transform: translateY(-1px);
+  }
+  100% {
+    box-shadow: none;
+    transform: translateY(0);
+  }
+}
+
+/* Inner Core */
+.spe-wow-card-inner {
+  position: relative;
+  border-radius: calc(12px - 1px);
+  padding: 0.85rem 1.1rem;
+  background: #0a0f1d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Slot Color Themes & Glowing Insets */
+.spe-wow-card.card--role {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.45) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(16, 185, 129, 0.15) 100%);
+}
+.spe-wow-card.card--role:hover {
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.25);
+}
+
+.spe-wow-card.card--goal {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.45) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(56, 189, 248, 0.15) 100%);
+}
+.spe-wow-card.card--goal:hover {
+  box-shadow: 0 8px 24px -4px rgba(56, 189, 248, 0.25);
+}
+
+.spe-wow-card.card--constraint {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.45) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(249, 115, 22, 0.15) 100%);
+}
+.spe-wow-card.card--constraint:hover {
+  box-shadow: 0 8px 24px -4px rgba(249, 115, 22, 0.25);
+}
+
+.spe-wow-card.card--output {
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.45) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(192, 132, 252, 0.15) 100%);
+}
+.spe-wow-card.card--output:hover {
+  box-shadow: 0 8px 24px -4px rgba(192, 132, 252, 0.25);
+}
+
+/* Card Header */
+.spe-wow-card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.4rem;
+  gap: 0.5rem;
 }
 
-.spe-preview-pill {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
+.spe-wow-tag-group {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
-.spe-preview-pill.role {
+.spe-wow-icon-box {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spe-wow-icon-box.role {
+  background: rgba(16, 185, 129, 0.15);
   color: #10b981;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
-.spe-preview-pill.goal {
+.spe-wow-icon-box.goal {
+  background: rgba(56, 189, 248, 0.15);
   color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.25);
 }
 
-.spe-preview-pill.constraint {
+.spe-wow-icon-box.constraint {
+  background: rgba(249, 115, 22, 0.15);
   color: #f97316;
-  background: rgba(249, 115, 22, 0.12);
-  border: 1px solid rgba(249, 115, 22, 0.25);
 }
 
-.spe-preview-pill.output {
+.spe-wow-icon-box.output {
+  background: rgba(192, 132, 252, 0.15);
   color: #c084fc;
-  background: rgba(192, 132, 252, 0.12);
-  border: 1px solid rgba(192, 132, 252, 0.25);
 }
 
-.spe-preview-hint {
+.spe-wow-slot-label {
+  font-family: var(--spe-font-mono, monospace);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.spe-wow-slot-label.role { color: #10b981; }
+.spe-wow-slot-label.goal { color: #38bdf8; }
+.spe-wow-slot-label.constraint { color: #f97316; }
+.spe-wow-slot-label.output { color: #c084fc; }
+
+.spe-wow-status-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.spe-wow-status-badge.role {
+  color: #a7f3d0;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.spe-wow-status-badge.goal {
+  color: #bae6fd;
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.spe-wow-status-badge.constraint {
+  color: #fed7aa;
+  background: rgba(249, 115, 22, 0.12);
+}
+
+.spe-wow-status-badge.output {
+  color: #e9d5ff;
+  background: rgba(192, 132, 252, 0.12);
+}
+
+.spe-wow-action-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spe-wow-hint {
   font-size: 0.72rem;
   color: #64748b;
 }
 
-.spe-preview-card-text {
+.spe-wow-copy-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #94a3b8;
+  font-size: 0.64rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-wow-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.spe-wow-card-body {
   font-size: 0.88rem;
   line-height: 1.5;
   color: #e2e8f0;
@@ -168,65 +375,101 @@
   word-break: break-word;
 }
 
-.spe-preview-card-text.placeholder {
+.spe-wow-card-body.placeholder {
   color: #64748b;
-  font-style: italic;
   font-size: 0.82rem;
+  font-style: italic;
 }
 
-/* Footer / Action Area */
-.spe-preview-footer {
+/* 4. Awwwards Shimmer Island Button */
+.spe-wow-footer {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.85rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.spe-preview-footer.empty {
+.spe-wow-footer.idle {
+  justify-content: center;
   color: #64748b;
   font-size: 0.82rem;
-  justify-content: center;
-  text-align: center;
 }
 
-.spe-preview-build-btn {
-  padding: 0.7rem 1.4rem !important;
-  font-size: 0.9rem !important;
-  font-weight: 600 !important;
-  border-radius: 8px !important;
-  background: #f8fafc !important;
-  color: #0b1120 !important;
+.spe-wow-spark {
+  color: #d9c59a;
+  margin-right: 0.4rem;
+}
+
+.spe-wow-shimmer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.55rem 0.65rem 0.55rem 1.4rem;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #060913;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.12) !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25), 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.spe-preview-build-btn:hover:not(:disabled) {
-  background: #ffffff !important;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2) !important;
+.spe-wow-shimmer-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.spe-preview-shortcut-hint {
-  font-size: 0.76rem;
+.spe-wow-shimmer-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.spe-wow-btn-label {
+  color: #060913;
+}
+
+.spe-wow-btn-orb {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #090e1a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spe-wow-shimmer-btn:hover:not(:disabled) .spe-wow-btn-orb {
+  transform: scale(1.1) rotate(45deg);
+  background: #000000;
+}
+
+.spe-wow-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.74rem;
   color: #94a3b8;
 }
 
-.spe-preview-shortcut-hint kbd {
+.spe-wow-shortcut kbd {
   display: inline-block;
-  padding: 0.15rem 0.4rem;
+  padding: 0.15rem 0.38rem;
   font-family: inherit;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 600;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+  border-radius: 5px;
   color: #e2e8f0;
-}
-
-@keyframes speFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
 }

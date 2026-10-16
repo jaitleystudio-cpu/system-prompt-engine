@@ -466,7 +466,7 @@ export function Hero(p: Props) {
                 </button>
               </div>
             ) : p.prompt && p.result ? (
-              <>
+              <div className="spe-output-stage spe-stage-enter" key="result-stage">
                 <div className="output-heading">
                   <h3 id="result-title">{ui.ready}</h3>
                   <div
@@ -601,16 +601,18 @@ export function Hero(p: Props) {
                   </button>
                 </div>
                 <p className="output-footnote">{ui.claim}</p>
-              </>
+              </div>
             ) : p.value.trim() ? (
-              <RealPromptLiveHud
-                value={p.value}
-                busy={p.busy}
-                onBuild={p.onBuild}
-                category={p.category}
-              />
+              <div className="spe-output-stage spe-stage-enter" key="live-hud-stage">
+                <RealPromptLiveHud
+                  value={p.value}
+                  busy={p.busy}
+                  onBuild={p.onBuild}
+                  category={p.category}
+                />
+              </div>
             ) : (
-              <div className="output-empty">
+              <div className="output-empty spe-stage-enter" key="empty-stage">
                 <span className="document-mark">
                   SPE<span> / YOUR PROMPT</span>
                 </span>
