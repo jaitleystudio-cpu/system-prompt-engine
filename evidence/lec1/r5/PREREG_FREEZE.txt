@@ -1,0 +1,5 @@
+CONTRACT_R5.md sha256=a9b05464da5d1e3812b5b7156a99abc607c421c2ec7bda32b7ef9b8f19739643
+frozen_before_any_R5_code_or_outcome=yes
+host=Prawins-Mac-mini.local
+parent=218d9ce9
+IST=2026-10-16 ~13:18
