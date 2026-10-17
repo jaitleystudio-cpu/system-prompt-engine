@@ -5,7 +5,7 @@
  * Prereq: npx playwright install chromium
  */
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
+import { createHash, generateKeyPairSync } from "node:crypto";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -17,6 +17,9 @@ import {
 } from "./spe-crash-recovery-harness.mjs";
 import { inspectRecoveryCheckpoint, sealCheckpoint } from "./spe-recovery-journal-custody.mjs";
 import { reconcileRecoveryReadOnly } from "./spe-recovery-reconciliation.mjs";
+import {
+  getR4HarnessDigest, reviewRecoveryAndSign, verifyBrowserReplayReceipt,
+} from "./spe-recovery-receipt.mjs";
 
 const broken = [
   '<!doctype html><html><body>',
@@ -106,6 +109,92 @@ try {
   assert.equal(reconciled.retryEligible, false);
   assert.equal(reconciled.providerOutcomeProven, false);
   assert.equal(reconciled.releaseAuthorized, false);
+
+  // R4 pinned-key review: the CI test's ephemeral key is a fixture,
+  // NOT an independently operated production root of trust.
+  const reviewer = generateKeyPairSync("ed25519");
+  const otherReviewer = generateKeyPairSync("ed25519");
+  const reviewerKeyId = "spe-r4-ci-reviewer";
+  const audience = "spe-r4-acceptance";
+  const operationId = "spe-r4-replay-fixture";
+  const browserVersion = browser.version();
+  const harnessDigest = await getR4HarnessDigest();
+  const issuedTime = new Date();
+  const actualReview = await reviewRecoveryAndSign({
+    evidenceDirectory: join(dir, "positive"), browser,
+    goal, originalPrompt: goal,
+    reviewerPrivateKey: reviewer.privateKey,
+    reviewerKeyId, audience, operationId, now: issuedTime,
+  });
+  assert.equal(actualReview.disposition, "REVIEW_ONLY_SIGNED_BROWSER_REPLAY");
+  assert.equal(actualReview.reconciliation.browserReplay.passed, true);
+  const receipt = actualReview.receipt;
+  const pin = {
+    pinnedReviewerPublicKey: reviewer.publicKey,
+    reviewerKeyId, audience, operationId,
+    goal, originalPrompt: goal,
+    candidateDigest: reconciled.candidateDigest,
+    checkpointDigest: reconciled.checkpointDigest,
+    harnessDigest, browserVersion, now: issuedTime,
+  };
+  const validReceipt = verifyBrowserReplayReceipt(receipt, pin);
+  assert.equal(validReceipt.valid, true, validReceipt.reason);
+  assert.equal(validReceipt.authority, "REVIEW_ONLY_NO_MODEL_OR_RELEASE_AUTHORITY");
+  assert.equal(validReceipt.nextModelCallAuthorized, false);
+  assert.equal(validReceipt.retryEligible, false);
+  assert.equal(validReceipt.providerOutcomeProven, false);
+  assert.equal(validReceipt.releaseAuthorized, false);
+
+  const wrongKey = verifyBrowserReplayReceipt(receipt, {
+    ...pin, pinnedReviewerPublicKey: otherReviewer.publicKey,
+  });
+  assert.equal(wrongKey.valid, false);
+  assert.equal(wrongKey.reason, "BAD_REVIEWER_SIGNATURE");
+  assert.equal(verifyBrowserReplayReceipt(receipt, {
+    ...pin, pinnedReviewerPublicKey: undefined,
+  }).reason, "UNPINNED_REVIEWER_KEY");
+  for (const [mutation, changed] of Object.entries({
+    crossOperation: { operationId: "a-different-operation" },
+    wrongAudience: { audience: "a-different-audience" },
+    wrongReviewer: { reviewerKeyId: "a-different-reviewer" },
+    differentGoal: { goal: "Different user goal" },
+    differentPrompt: { originalPrompt: "Tampered Prompt" },
+    differentArtifact: { candidateDigest: "sha256:" + "0".repeat(64) },
+    differentJournal: { checkpointDigest: "sha256:" + "0".repeat(64) },
+    differentHarness: { harnessDigest: "sha256:" + "0".repeat(64) },
+    differentBrowser: { browserVersion: "Fake browser v0" },
+    expired: { now: new Date(issuedTime.getTime() + 10 * 60_000) },
+  })) {
+    const attack = verifyBrowserReplayReceipt(receipt, { ...pin, ...changed });
+    assert.equal(attack.valid, false, mutation + " should not verify");
+    assert.equal(attack.nextModelCallAuthorized, false, mutation + " must not authorize a model");
+  }
+  const forgedReceipt = structuredClone(receipt);
+  forgedReceipt.signed.observations.tests.interactionWorking = false;
+  assert.equal(verifyBrowserReplayReceipt(forgedReceipt, pin).valid, false);
+  const replayForgery = structuredClone(receipt);
+  replayForgery.signed.receiptNonce = "attacker-changed-nonce";
+  assert.equal(verifyBrowserReplayReceipt(replayForgery, pin).reason, "BAD_REVIEWER_SIGNATURE");
+  const authorizationForgery = structuredClone(receipt);
+  authorizationForgery.signed.authority = "ALLOW_DEPLOY";
+  assert.equal(verifyBrowserReplayReceipt(authorizationForgery, pin).valid, false);
+
+  const deniedReview = await reviewRecoveryAndSign({
+    evidenceDirectory: join(dir, "positive"), browser: null,
+    goal, originalPrompt: goal, reviewerPrivateKey: reviewer.privateKey,
+    reviewerKeyId, audience, operationId,
+  });
+  assert.equal(deniedReview.disposition, "HOLD_RECONCILIATION_REQUIRED");
+  assert.equal(deniedReview.receipt, null);
+  const badIdentityReview = await reviewRecoveryAndSign({
+    evidenceDirectory: join(dir, "positive"), browser,
+    goal: "wrong goal", originalPrompt: goal,
+    reviewerPrivateKey: reviewer.privateKey,
+    reviewerKeyId, audience, operationId,
+  });
+  assert.equal(badIdentityReview.receipt, null);
+  console.log("PASS R4: pinned Ed25519 reviewer signature bound to browser/candidate/intent/scope");
+  console.log("PASS R4: forged, stale, reused, and mismatched receipts rejected; authority NONE");
 
   const fakeGoal = await reconcileRecoveryReadOnly({
     evidenceDirectory: join(dir, "positive"), goal: "different goal", originalPrompt: goal, browser,
