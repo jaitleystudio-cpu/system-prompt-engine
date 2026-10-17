@@ -1,0 +1,4581 @@
+
+> spe-web@0.3.0 build
+> npm run spe:copy-check && npm run wasm:build-canonical && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs
+
+
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 3324,
+  "unreviewed": 912,
+  "violations": [
+    {
+      "file": "apps/web/src/a11y/focusOnView.ts",
+      "text": "main",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/a11y/focusOnView.ts",
+      "text": "instant",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/App.tsx",
+      "text": "research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/App.tsx",
+      "text": "media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/App.tsx",
+      "text": "website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/App.tsx",
+      "text": "EMPTY_BRIEF",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/App.tsx",
+      "text": "Website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/App.tsx",
+      "text": "not-found",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/App.tsx",
+      "text": "ocr",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Provider format compatibility requires versioned validation receipts.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Record the environment and raw results.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Local-First Compiler Latency and Determinism in Modern Web Runtimes",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Architecture Overview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "2026-09-25T00:00:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "UNKNOWN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "EV-2026-ADAPT-03",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "local-first-compiler-latency-and-determinism",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Qualification plan for workspace privacy and network behavior. Full workflow evidence remains pending.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "External requests and transmitted bytes for the tested workflow",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "The proposed audit combines content policy checks, browser traffic observation and independent network measurement.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "The Threat Model",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "EV-2026-PRIVACY-02",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Freeze the candidate and workload.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Evaluation Pending",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "2026-09-20T00:00:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Format Engineering",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Memory results remain unknown until the workload, environment and raw logs are bound to the candidate.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "The Multi-Model Challenge",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Workspace privacy and network behavior require candidate-bound traces.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Verification Pending",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Workspace Privacy: Verification Plan and Pending Evidence",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "2026-09-30T12:00:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "prompt_adaptation",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "https://schema.org",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "proficiencyLevel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "compiler",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "research_guide",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Local compiler latency and network behavior require candidate-bound measurements.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Advanced",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Prompt Engineering Research Team",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Provider validation results remain unknown until attributable test receipts are supplied.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Qualification plan for local compiler execution, memory bounds and latency. Results remain unknown.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Systems Research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "https://systempromptengine.com/authority/",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "2026-09-15T00:00:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Cross-Provider Prompt Adaptation: Syntactic Fidelity and Schema Compliance",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "cross-provider-prompt-adaptation-fidelity",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Full lifecycle network results remain unknown for this record.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Security & Privacy Working Group",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Independently reproduce the same workload before promotion.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Schema validation results for the tested provider versions",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "https://systempromptengine.com",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "SPE Architecture Group",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Local prompt preparation is intended to run on the device. Offline use depends on intact cached assets.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "dependencies",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "EV-2026-COMPILER-01",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Syntax validation alone does not establish model quality or instruction adherence.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "provisional",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Security Audit",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Article",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "zero-egress-privacy-guarantee-and-verification",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Qualification plan for versioned provider formats. Compatibility results remain unknown.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "WebAssembly, ECMAScript 2022+",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Audit Protocol",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "The donor record lacked attributable receipts. Historical measurements are archived for custody, not accepted as verified results.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "The ledger below records the pending evidence requirements and provisional status.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Prompt contents frequently contain proprietary code, confidential business requirements, and private communications.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Organization",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Compilation latency and outgoing request count",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "System Prompt Engine",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Required: bind the exact candidate, workload, environment, raw logs and independent check before promotion.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "privacy",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Our WebAssembly pipeline compiles the core parser into a deterministic binary that runs entirely inside the browser's sandbox.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "WebPage",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Network and privacy conclusions must identify the tested workflow and its data boundaries.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "TechArticle",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Candidate-bound latency measurements have not been supplied for this record.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "technical_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "text": "Provider formats can differ. Format compatibility must be checked against identified provider versions.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Static Website Builder",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Sections:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "| Offline Static HTML/CSS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Section Kind:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Specification:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "🌐 Hosted publish:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "📦 Sandbox execution:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "application/json",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": ".json",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Section Editor",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "🧊 3D graphics:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "System Boundaries",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Body Text:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Section Body",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "desktop",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Viewport Controls",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Mobile (360px)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Compiled Code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Select a section to edit.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "mobile",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Desktop (1200px)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Compiler Receipt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "| Status: VERIFIED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Live Preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Mobile viewport 360px",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "tablet",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Tablet (768px)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Static Preview Representation",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Sections (",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Static Website Preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "website-spec-",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Page Structure",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "| Emitter:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "768px",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Label:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "360px",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Page and Section Navigation",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "index.html (Static Semantic Output)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Select page",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Select section",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Static Website Builder (G13 Spec Compiler)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "styles.css (WCAG 2.1 AA Styled CSS)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Tablet viewport",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Pages (",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Viewport:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Download Static Website Spec JSON",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Section Heading",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Section Content Editor",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Heading:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "| Target:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Export Spec JSON",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "Desktop viewport",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "🤖 AI generation:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
+      "text": "CTA Button",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": ";\n  --site-surface:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "website-spec/1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Zero client-side JavaScript execution required",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "must be a same-site page or fragment. Network, script, and path-escape links are refused (got",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</style>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "expected exactly one doctype in compiled html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "UNSUPPORTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#1e3a8a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Deterministic, offline-first prompt compilers and multi-provider adaptation engines.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<!DOCTYPE html>\n<html lang=\"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</ul>\n    </section>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": ";\n}\n\nbody {\n  margin: 0;\n  padding: 0;\n  background-color: var(--site-bg);\n  color: var(--site-text);\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n  line-height: 1.6;\n}\n\n.site-container {\n  max-width: 900px;\n  margin: 0 auto;\n  padding: 32px 20px;\n}\n\n.site-section {\n  margin-bottom: 48px;\n}\n\n.site-hero {\n  padding: 48px 0;\n  border-bottom: 1px solid var(--site-border);\n}\n\n.site-hero h1 {\n  font-size: 2.25rem;\n  margin: 0 0 16px 0;\n  letter-spacing: -0.02em;\n}\n\n.site-cta-btn {\n  display: inline-block;\n  padding: 12px 24px;\n  background-color: var(--site-accent);\n  color: #ffffff;\n  text-decoration: none;\n  border-radius: 6px;\n  font-weight: 600;\n  margin-top: 16px;\n}\n\n.site-list {\n  padding-left: 20px;\n}\n\n.site-list li {\n  margin-bottom: 8px;\n}\n\n.site-cta-btn:focus-visible,\n.skip-link:focus-visible {\n  outline: 3px solid var(--site-focus);\n  outline-offset: 2px;\n}\n\n.skip-link {\n  position: absolute;\n  left: -999px;\n  top: 0;\n}\n\n.skip-link:focus {\n  left: 8px;\n  top: 8px;\n  background: var(--site-accent);\n  color: #ffffff;\n  padding: 8px 12px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  *,\n  *::before,\n  *::after {\n    animation-duration: 0.001ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.001ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n\n@media (max-width: 360px) {\n  .site-hero h1 { font-size: 1.75rem; }\n  .site-container { padding: 16px 12px; }\n}",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "prose",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "light",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "activePagePath",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "section heading must be a non-empty string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#9ca3af",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "View Specification",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#e5e7eb",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</header>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<li>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "System Invariants",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</li>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "cta_label present without cta_href",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</p>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#download",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<a href=\"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Download Bundle",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "cta",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "duplicate page path refused:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "&quot;",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</title>\n  <link rel=\"stylesheet\" href=\"styles.css\" />\n</head>\n<body>\n  <a class=\"skip-link\" href=\"#content\">Skip to content</a>\n  <main id=\"content\" class=\"site-container\">",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "must match ^[a-z0-9][a-z0-9-]*\\.html$ (got",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "LOCAL_TS_WEBSITE_SPEC_1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "is refused as a network or escape path",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Overview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<style>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "System Prompt Engine Architecture",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<section class=\"site-section site-cta\">\n      <h2>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "pages must contain at least one page",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "css refuses style-tag breakout or script",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "compiled html missing styles.css link for standalone conversion",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "standalone must be a single document (doctype=",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<link rel=\"stylesheet\" href=\"styles.css\"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "cta_href",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "activePagePath is not a page in this spec:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "hero",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "path",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</main>\n</body>\n</html>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "refuses path-escape or separator:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "unknown section kind",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": ", htmlOpen=",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "page.path",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</h1>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "SPE Architecture Documentation",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</h2>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "&lt;",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<article class=\"site-section site-prose\">\n      <h2>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "/* Compiled from website-spec/1 (local TS emitter; not G13 Python package) */\n:root {\n  --site-bg:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": ";\n  --site-text:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "en",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "index.html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<header class=\"site-section site-hero\">\n      <h1>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "\">\n<head>\n  <meta charset=\"utf-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\" />\n  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; script-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'\" />\n  <title>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "list",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#090d16",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</article>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#specs",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "\" class=\"site-cta-btn\">",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<section class=\"site-section site-list-sec\">\n      <h2>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#ffffff",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Deterministic static HTML5 & CSS3 layout",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": ";\n  --site-muted:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "&#x27;",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "WebsiteCompileError",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Download self-contained offline HTML and CSS bundles directly to your machine.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<p>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "&gt;",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</a>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Dual-theme WCAG 2.1 AA focus rings",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "</section>",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#bbceff",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "points at unknown page",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Supported Static Targets",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "dark",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Static site overview and technical specifications.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#4b5563",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": ";\n  --site-border:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "SPE enforces immutable custody over semantic compiler cores and ensures zero unverified cloud exposure.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "#f9fafb",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "download.path",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "&amp;",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Export Static Artifacts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": ";\n  --site-accent: #4338ca;\n  --site-focus:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "private",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "NOT_AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "Fluid reflow down to 360px viewport",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "section body must be a string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "static-html-css",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "<ul class=\"site-list\">",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/builder/websiteSpecModel.ts",
+      "text": "section items must be an array of strings",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "text": "Research preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "text": "Queue date",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Standard Synthesis",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Synthesis Modes",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Enforces strict output contracts, schema guarantees, and verifiable boundaries.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "standard",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "fast",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "button:not([disabled]), [tabindex]:not([tabindex=\"-1\"])",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "keydown",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Rapid turnaround for live experimentation and rapid specification prototyping.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Tab",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Fast Iteration",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Swift",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Thorough",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Optimal balance of precision, reasoning depth, and synthesis speed.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Balanced",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Deterministic Strict",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "deep",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Select Synthesis Mode",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "strict",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Multi-layered reasoning and systematic requirement expansion for complex workflows.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Deep Synthesis",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Escape",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Close mode selector dialog",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/ModalModeSelector.tsx",
+      "text": "Verifiable",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Execute",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "url",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Transcribe",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Add optional contextual guidelines for this",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Build",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "TRANSCRIPTION_STATUS=UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Supported Input Formats",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Attached references",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Processing...",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Context notes for",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "https://example.com/reference-page",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "screenshot",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "video",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": ": Transcription backend not yet integrated. Audio/video upload accepted for local file packaging only.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Prompt and specification input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "reference file",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Screenshot",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "build",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "image/",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Text",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Universal Input Workspace",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": ". Click to change.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "input type",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Synthesize production-ready source code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "URL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "paste-",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Document",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Current mode:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Describe your objective, requirements, or attach reference media...",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Attach",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Compile structured system prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "file",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "URL Reference input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "files here",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "transcribe",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Universal Operations Toolbar",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "create",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "document",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Mode:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Transcribe audio & video into structured transcript",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Ready (",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Remove attachment",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "standard",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Audio",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Video",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Supported formats depend on media type. Maximum file size 50MB. Audio/video upload supported for local processing where available.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Conduct empirical investigation & citation search",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Produce visual assets & creative media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Pasted Screenshot",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Generate project architecture & implementation",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "audio",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Create",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Click or drag & drop",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Upload",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "text",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "text": "Prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/layout/Nav.tsx",
+      "text": "Research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/layout/Nav.tsx",
+      "text": "website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/layout/Nav.tsx",
+      "text": "Website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/layout/Nav.tsx",
+      "text": "research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "history must be an array",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Invalid visibility: expected \"private\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "rev_00000000000000000000000000000001",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "REVISION",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Review the system specification according to ISO 25010 with p99 < 50ms constraint.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "ev:typecheck_pass",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "2026-09-30T10:25:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "openai:gpt-4o",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "v1.0.0",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "2026-09-30T10:05:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Invalid noindex: expected true, got",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "rev_00000000000000000000000000000002",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Invalid schema: expected \"spe.project-library.v1\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "ROLLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "prov:prompt_v1_seed",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Invalid indexing: expected \"noindex\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "ev:syntax_validation_pass",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Project ID must match ^prj_[0-9a-f]{32}$",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "ev:cwv_lcp_verified",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "private",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "You are an enterprise system architect specializing in low-latency systems.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "prov:code_spec_init",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "artifacts must be an array",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "src/index.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "You are an enterprise system architect.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "export const initEngine = () => ({ status: 'ready' });",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "HEAD_MOVE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "prov:eval_delta_pass",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "2026-09-30T10:20:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Review the system specification according to ISO 25010.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "spe.project-library.v1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Bundle must be a non-null object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "revisions must be an array",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Enterprise Architecture Review Pack",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "art_b2000000000000000000000000000002",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "2026-09-30T10:00:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "v1.1.0",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "typescript",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Invalid spe_contract: expected \"NOT_YET_BOUND\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "anthropic:claude-3-5-sonnet",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "Missing project metadata",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "prj_0123456789abcdef0123456789abcdef",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "NOT_YET_BOUND",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "2026-09-30T10:30:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "art_a1000000000000000000000000000001",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "noindex",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "rev_10000000000000000000000000000001",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "text": "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Research Pack",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revision",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Artifacts List",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Rollback event to revision",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "HEAD:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Validate & Load",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revision Timeline",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Parent:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revisions)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "refs",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "HEAD_MOVE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Target:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Artifacts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "project-library-",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Visibility: Private",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Artifact",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revision Details",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revision Body",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "HEAD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Tab",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revision ID",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Evidence:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Close Import Dialog",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Template",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "SHA-256 Digest",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "SHA-256 Digest",
+      "reason": "TECHNICAL_JARGON"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revisions:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Provenance References",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Export Bundle JSON",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "button:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Escape",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "unlabeled",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Export Project Library Bundle JSON",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "All Types (",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": ".json",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Validation failed:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "ID:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Quality Evidence References",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "SPE Contract Status: NOT_YET_BOUND",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "keydown",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "all",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Project ID:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Provenance:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Timestamp:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Project Library Bundle JSON",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "label",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Import Bundle",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Select a revision from the timeline to inspect its details.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "⚠️ HEAD MOVE:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "application/json",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Transcript",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Artifact ID & Type",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Rolled back HEAD pointer to revision:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Artifacts:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Filter artifacts by type",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Paste {\"schema\": \"spe.project-library.v1\", ...} here",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Invalid JSON:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Provider Target",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Paste a valid",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revision Inspector",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "of type",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Revisions & History:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Branched",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "spe.project-library.v1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Search indexing: noindex",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "SPE Project Library",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "None",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Import Project Library Bundle",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Filter by Type:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "JSON bundle. Local private parsing only (no network transfer).",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "text": "Created:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "http://",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "local-cpu",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "webm",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "Refusing LOCAL_NEURAL without a real neural session.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "retry",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "cloud",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "azure",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "NO_FILE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "audio",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "result",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "FALSE_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "wav",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "browser",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "Choose an audio or video file on this device.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "working",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "Reading the file on this device.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "CANCELLED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "unknown",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "LOCAL_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "cancelled",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "aac",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "mov",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "web-speech",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "remote",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "idle",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "pinned-whisper-cpp",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "mp4",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "whisper-cli",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "flac",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "Select a local audio or video file first.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "mkv",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "fail",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "error",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "oga",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "UNSUPPORTED_TYPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "start",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "video",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "aws",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "selected",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "BROWSER_SERVICE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "mp3",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "ogg",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "m4a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "Cancelled.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "google",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "progress",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "m4v",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "LOCAL_FALLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "select",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "openai",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "webspeech",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "WORKING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "review",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "text": "https://",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Local neural transcription is not mounted in this browser. The shell still has to mount this panel. The file stayed on this device.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Working",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "result",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "LOCAL_FALLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "start",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "RUNTIME_ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Mode:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Transcription failed.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Network sends for this file:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Browser speech service",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "fail",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Local neural session",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "progress",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Choose an audio or video file on this device. It is not uploaded.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "NOT_MOUNTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Unavailable",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "error",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "working",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Local media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Segment timestamps came from the model.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Segment timestamps are not proven.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Local fallback (no neural session)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Retry",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "text": "Transcribe",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "text": "/api/media/health",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "text": "PASS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "text": "route",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "text": "mount",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "text": "NOT_PASS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mount-contract.ts",
+      "text": "/media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mount-contract.ts",
+      "text": "JOURNEY_NOT_RECORDED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mount-contract.ts",
+      "text": "NOT_PASS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mount-contract.ts",
+      "text": "MediaProductPanel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/mount-contract.ts",
+      "text": "apps/web/src/media/MediaProductPanel.tsx",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "FALSE_MODE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "POST",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "application/octet-stream",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "HOST_ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "image/png",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "CANCELLED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "LOCAL_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "number",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "HEURISTIC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "function",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "high",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "/api/ocr/recognize",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "DECODE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "LOCAL_OCR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "ocr-tesseract",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "ENGINE_FAILED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/ocrLite.ts",
+      "text": "NOT_MOUNTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Network sends for this image:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "OCR product:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Choose or drop an image. The pinned engine reads it on this machine.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Copy text",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Local OCR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Mode:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Export text",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Export JSON",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "Read image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "text": "/api/ocr/health",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "FALSE_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "NO_SPEECH",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "CANCELLED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "NOT_MOUNTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "/api/media/transcribe",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "SPEECH",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "POST",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "number",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "LOCAL_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "application/octet-stream",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "/api/media/cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "Starting the local media session on this machine.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "BROWSER_SERVICE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "abort",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "HOST_ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "LOCAL_FALLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "text": "application/json",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Upload screenshot or UI image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Visual Evidence Inspector",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Copy generated code to clipboard",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Copy Code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Verifiable Observation Ledger",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "responsive:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Replace Image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "✓ Copied to Clipboard",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "(OBSERVED / UNKNOWN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "react",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Evidence Disclosure Ledger",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Image Reference Input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "// Upload an image or screenshot to synthesize",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Visual & Screenshot Intelligence",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Reference Image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Compiler Targets",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "assets:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Screenshot to Code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Click or drop UI screenshot here",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Synthesized component code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "fidelity:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Generated Code & Spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "UNPROVEN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "OCR:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "components.\n// The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "OBSERVED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "UNKNOWN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "PNG, JPEG, WebP up to 20MB. Fully local processing.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "* Honest boundary: Visual fidelity remains UNPROVEN until measured against rendered browser DOM. No artificial guarantees or synthetic pixel metrics.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Compiler Target Output",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "image/",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Client-side UI structure recovery and visual evidence extraction. Honest semantic boundaries with verified compiler target generation.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "(FOUND / INFERRED / UNKNOWN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Uploaded reference UI",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "File upload",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "screenshot_to_code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Select Framework Target",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "INFERRED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "(OBSERVED / INFERRED / UNKNOWN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "(MEASURED / UNPROVEN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "// Analyzing image layout and extracting UI regions...",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "text": "Visual Intelligence Modes",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "replicated",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Available publications",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Technical Specifications",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "All Publications",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Tech Spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Evidence & Authority Hub",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Filter authority publications",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Qualification plans and evidence requirements for the System Prompt Engine. Provisional records do not establish measured results or independent verification.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "all",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Research Guides",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "verified",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "records verified",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Read →",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Privacy & Security",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Read",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "technical_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "research_guide",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Guide",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Verified Claims",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "text": "Technical Specs",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "technical_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "spe-jsonld-",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Metric:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Verifiable Evidence Ledger",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Baseline:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Breadcrumbs",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Schema:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Measurement Date:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "noopener noreferrer",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "https://",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Back to Authority Hub",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Last Verified:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Authority",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Evidence Links:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "By",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "TechArticle",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Provider Version:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Raw Results:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Dataset:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Article",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "application/ld+json",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Audit Status:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "script",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Limitations:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Each record shows its evidence status. Provisional records await attributable receipts and independent verification.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "← Back to Hub",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "http://",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Published",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "_blank",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Claim:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Technical Specification",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Sample Size:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Updated",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Repro Steps:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Research Guide",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "UNKNOWN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "text": "Methodology:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Verification status",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "IDLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "OPENALEX",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "STORED_RECEIPT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Ask a public question. Search stays off unless you consent. This page does not send the question, a private document, code, audio, or an image. PubMed and PMC are one NCBI family. Live index and live retraction stay HOLD.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "URL / API",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "is not a new request. Receipt status",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Response digest",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Nothing has been sent.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "PubMed (NCBI, includes PMC)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Query",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Stored receipt only. No new provider request. LIVE_INDEX HOLD. LIVE_RETRACTION HOLD.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "PUBMED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "HELD_NO_CONSENT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": ". DOI",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": ". May promote: no.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Provider",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "I consent to a public research lookup. Off means no search.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "CROSSREF",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Question",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Selected provider",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Identifier",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Consent is off. The question was not sent.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Stored receipt for",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Timestamp",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "text": "Continue",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "/website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "Ask a public research question. Search stays off until you consent. This route does not send the question and does not promote live index or retraction.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "Turn a local website spec into a preview and a saved file. This does not open a web address or publish a site.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "Media is not mounted in this build. Nothing on this route can capture or generate media.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "/media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "Website — Local spec preview | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "not-found",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "Media — Not available | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "view",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "/ocr",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "Read text from an image on this machine with the pinned local engine. If that engine is not verified, this route stays unavailable.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "my-work",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "OCR — Local text from an image | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "ocr",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "workspace",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "Research — Stored receipt only | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/routing.ts",
+      "text": "/research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "ONLY_WHEN_NEURAL_SESSION_RAN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "/website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "spe_runtime/grounding/research_journey.py",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "OWNER_WIRED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "JOURNEY_NOT_RECORDED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "ResearchRoute",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "a93e87d0efb247204883ecbd18203fe248c5c8e5",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "NOT_AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "/research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "pinnedWhisperRuntime",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "MOUNTED_STORED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "apps/web/src/website/mount-contract.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "MediaProductPanel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "MOUNTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "NOT_RUN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "NOT_PASS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "MOUNTED_LOCAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "/media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "text": "aa823977fc14db66d06f52fc38a85045d122ae05",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "text": "Page not found",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "text": "Nothing in this preview lives at",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "text": "Not found",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "text": ". Your idea on this page was not cleared.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "text": "Back to Home",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/shellGuards.ts",
+      "text": "Enter what you want SPE to build.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/shell/SkipLink.tsx",
+      "text": "Skip to main content",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/ui/HumanError.tsx",
+      "text": "Add an idea first.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/ui/HumanError.tsx",
+      "text": "EMPTY_BRIEF",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "text": "index, follow",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "text": "Page not found — SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "text": "robots",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "text": "That address is not a page in this preview.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "text": "noindex, nofollow",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "apps/web/src/builder/websiteSpecModel.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "UNSUPPORTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "live_url",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "website_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "packages/website-generator",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "NOT_IMPLEMENTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "apps/web/src/engine/multimodal/sceneCompiler.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "NOT_AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "NOT_RUN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "WebsiteProduct",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "OWNER_WIRED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "apps/web/src/website/WebsiteProduct.tsx",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "spe_runtime/webrecon",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "READY_FOR_SHELL_MOUNT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "NOT_DONE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "spe.web.website-product",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/mount-contract.ts",
+      "text": "apps/web/src/website/productFlow.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "UNSUPPORTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "NOT_RUN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SPEC_HAS_NO_PAGE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "prefers-reduced-motion",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": ".dispose()",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENEIR_OPTIONAL_ATTACHED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "MALICIOUS_SCENEIR_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "plane",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "STATIC_FILES_ONLY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "torus",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "scrollRatio",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SPEC_JSON_INVALID",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "NOT_DONE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "website_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "CSP_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENEIR_VALIDATION_FAILED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_INVALID_GEOMETRY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_SHAPE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "EXPORT_NOT_DETERMINISTIC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "LOCAL_SAVED_HTML_IS_NOT_A_SPEC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SPEC_SHAPE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "OWNER_WIRED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_COMPILE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_REDUCED_MOTION_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SPEC_EMPTY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "NOT_AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "cylinder",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "wave-mesh",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_DEFINITION_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "REJECTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "RAW_DOCUMENT_NOT_REPLAYED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_ZERO_OBJECTS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "http-equiv=\"Content-Security-Policy\"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "live_url",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SPEC_COMPILE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "sphere",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "beforeunload",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "apps/web/src/engine/multimodal/sceneCompiler.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "LIVE_URL_NOT_FETCHED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "REDUCED_MOTION_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "NO_ACQUISITION_GRANT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "LOCAL_EXPORT_READY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "LOCAL_TS_WEBSITE_SPEC_1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "NOT_IMPLEMENTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_JSON_INVALID",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCENE_TOO_LARGE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "LOCAL_DOCUMENT_EMPTY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "website-spec/1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "MALICIOUS_OR_REMOTE_MARKUP_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "HTML_IS_NOT_A_WEBSITE_SPEC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "box",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "SCRIPT_ELEMENT_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/productFlow.ts",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Save HTML",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "live_url",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Local website preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "index.html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Build preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "page.html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Website result",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Web address",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Saved file",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "text/html;charset=utf-8",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Fetched: no. Live site: no. SceneIR owner: wired. Live URL: unavailable. Shell mount: not done.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "File name",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "A local spec can become a preview and a saved file. A saved file is not a web address. A web address is not opened.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Input kind",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Website product",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Website input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "{\n  \"spec_version\": \"website-spec/1\",\n  \"title\": \"Local notes\",\n  \"language\": \"en\",\n  \"summary\": \"A private static page.\",\n  \"theme\": \"light\",\n  \"pages\": [\n    {\n      \"path\": \"index.html\",\n      \"title\": \"Home\",\n      \"sections\": [\n        {\n          \"kind\": \"prose\",\n          \"heading\": \"Notes\",\n          \"body\": \"This page is a local file.\"\n        }\n      ]\n    }\n  ]\n}",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "Website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "text": "website_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": ". Non-clear pixels",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "ok",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "threw:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": ". Three",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "WebGL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "not executed",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "NOT_RUN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "pending",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "bundled as",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "Scene",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "text": "Unmount scene",
+      "reason": "UNREVIEWED_COPY"
+    }
+  ],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}

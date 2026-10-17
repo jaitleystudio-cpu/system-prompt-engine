@@ -1,0 +1,562 @@
+{
+  "registry_version": "1",
+  "description": "Paired outcome evaluators for category protocol families. Statuses: PASS|FAIL|UNKNOWN|NOT_APPLICABLE. Never mint authority.",
+  "evaluators": [
+    {
+      "domain_id": "research",
+      "protocol_id": "protocol.research",
+      "evaluator_id": "evaluator.research",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "citation_support",
+          "description": "Claims are backed by citations."
+        },
+        {
+          "criterion_id": "evidence_coverage",
+          "description": "Required evidence classes covered."
+        },
+        {
+          "criterion_id": "contradiction_search",
+          "description": "Contradictory evidence sought."
+        },
+        {
+          "criterion_id": "source_quality",
+          "description": "Source tier/quality acceptable."
+        },
+        {
+          "criterion_id": "unsupported_claims",
+          "description": "Unsupported claims flagged or absent."
+        },
+        {
+          "criterion_id": "uncertainty_disclosure",
+          "description": "Uncertainty explicitly disclosed."
+        }
+      ]
+    },
+    {
+      "domain_id": "coding",
+      "protocol_id": "protocol.coding",
+      "evaluator_id": "evaluator.coding",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "acceptance_criteria",
+          "description": "Acceptance criteria satisfied."
+        },
+        {
+          "criterion_id": "build_tests_lint",
+          "description": "Build/tests/lint signals reviewed."
+        },
+        {
+          "criterion_id": "constraints",
+          "description": "Hard coding constraints respected."
+        },
+        {
+          "criterion_id": "security_impact",
+          "description": "Security impact considered."
+        },
+        {
+          "criterion_id": "performance_when_relevant",
+          "description": "Performance checked when relevant."
+        }
+      ]
+    },
+    {
+      "domain_id": "debugging",
+      "protocol_id": "protocol.debugging",
+      "evaluator_id": "evaluator.debugging",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "repro_steps",
+          "description": "Reproduction steps clear."
+        },
+        {
+          "criterion_id": "root_cause",
+          "description": "Root cause identified or bounded."
+        },
+        {
+          "criterion_id": "fix_verification",
+          "description": "Fix verification path stated."
+        }
+      ]
+    },
+    {
+      "domain_id": "cybersecurity",
+      "protocol_id": "protocol.cybersecurity",
+      "evaluator_id": "evaluator.cybersecurity",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "threat_model",
+          "description": "Threat model scoped."
+        },
+        {
+          "criterion_id": "no_exploit_steps",
+          "description": "No actionable exploit procedures."
+        },
+        {
+          "criterion_id": "mitigation_first",
+          "description": "Mitigations prioritized."
+        }
+      ]
+    },
+    {
+      "domain_id": "data_statistics",
+      "protocol_id": "protocol.data_statistics",
+      "evaluator_id": "evaluator.data_statistics",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "method_assumptions",
+          "description": "Method assumptions stated."
+        },
+        {
+          "criterion_id": "deterministic_recomputation",
+          "description": "Deterministic recomputation path."
+        },
+        {
+          "criterion_id": "uncertainty_effect_size",
+          "description": "Uncertainty/effect size reported."
+        },
+        {
+          "criterion_id": "sensitivity_analysis",
+          "description": "Sensitivity analysis when relevant."
+        }
+      ]
+    },
+    {
+      "domain_id": "math_engineering",
+      "protocol_id": "protocol.math_engineering",
+      "evaluator_id": "evaluator.math_engineering",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "units_dimensions",
+          "description": "Units/dimensions consistent."
+        },
+        {
+          "criterion_id": "derivation_check",
+          "description": "Derivation or formula check present."
+        },
+        {
+          "criterion_id": "boundary_conditions",
+          "description": "Boundary conditions considered."
+        }
+      ]
+    },
+    {
+      "domain_id": "health_information",
+      "protocol_id": "protocol.health_information",
+      "evaluator_id": "evaluator.health_information",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "not_medical_advice",
+          "description": "Non-advice framing preserved."
+        },
+        {
+          "criterion_id": "source_tier",
+          "description": "Health source tier disclosed."
+        },
+        {
+          "criterion_id": "uncertainty_disclosure",
+          "description": "Uncertainty disclosed."
+        }
+      ]
+    },
+    {
+      "domain_id": "legal_information",
+      "protocol_id": "protocol.legal_information",
+      "evaluator_id": "evaluator.legal_information",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "not_legal_advice",
+          "description": "Non-advice framing preserved."
+        },
+        {
+          "criterion_id": "jurisdiction_scope",
+          "description": "Jurisdiction scope stated."
+        },
+        {
+          "criterion_id": "source_citations",
+          "description": "Legal sources cited when used."
+        }
+      ]
+    },
+    {
+      "domain_id": "finance",
+      "protocol_id": "protocol.finance",
+      "evaluator_id": "evaluator.finance",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "not_financial_advice",
+          "description": "Non-advice framing preserved."
+        },
+        {
+          "criterion_id": "assumption_disclosure",
+          "description": "Assumptions disclosed."
+        },
+        {
+          "criterion_id": "risk_disclosure",
+          "description": "Risks disclosed."
+        }
+      ]
+    },
+    {
+      "domain_id": "business_strategy",
+      "protocol_id": "protocol.business_strategy",
+      "evaluator_id": "evaluator.business_strategy",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "objective_clarity",
+          "description": "Business objective clear."
+        },
+        {
+          "criterion_id": "option_tradeoffs",
+          "description": "Options and tradeoffs compared."
+        },
+        {
+          "criterion_id": "evidence_link",
+          "description": "Recommendations linked to evidence."
+        },
+        {
+          "criterion_id": "risk_assumptions",
+          "description": "Risks and assumptions stated."
+        }
+      ]
+    },
+    {
+      "domain_id": "marketing_growth",
+      "protocol_id": "protocol.marketing_growth",
+      "evaluator_id": "evaluator.marketing_growth",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "audience_fit",
+          "description": "Audience fit considered."
+        },
+        {
+          "criterion_id": "metric_definition",
+          "description": "Success metrics defined."
+        },
+        {
+          "criterion_id": "claim_support",
+          "description": "Marketing claims supported."
+        }
+      ]
+    },
+    {
+      "domain_id": "product_management",
+      "protocol_id": "protocol.product_management",
+      "evaluator_id": "evaluator.product_management",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "user_problem",
+          "description": "User problem stated."
+        },
+        {
+          "criterion_id": "success_metrics",
+          "description": "Success metrics defined."
+        },
+        {
+          "criterion_id": "constraint_fit",
+          "description": "Constraints respected."
+        }
+      ]
+    },
+    {
+      "domain_id": "ux_ui_web_design",
+      "protocol_id": "protocol.ux_ui_web_design",
+      "evaluator_id": "evaluator.ux_ui_web_design",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "accessibility_check",
+          "description": "Accessibility considered."
+        },
+        {
+          "criterion_id": "user_goal_fit",
+          "description": "Design serves user goals."
+        },
+        {
+          "criterion_id": "consistency",
+          "description": "Visual/interaction consistency."
+        },
+        {
+          "criterion_id": "responsive_states",
+          "description": "Key responsive/states covered."
+        }
+      ]
+    },
+    {
+      "domain_id": "writing_communication",
+      "protocol_id": "protocol.writing_communication",
+      "evaluator_id": "evaluator.writing_communication",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "audience_tone",
+          "description": "Audience and tone fit."
+        },
+        {
+          "criterion_id": "clarity",
+          "description": "Clarity and structure."
+        },
+        {
+          "criterion_id": "claim_support",
+          "description": "Factual claims supported when needed."
+        }
+      ]
+    },
+    {
+      "domain_id": "education",
+      "protocol_id": "protocol.education",
+      "evaluator_id": "evaluator.education",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "learning_objective",
+          "description": "Learning objective clear."
+        },
+        {
+          "criterion_id": "accuracy",
+          "description": "Content accuracy reviewed."
+        },
+        {
+          "criterion_id": "scaffolding",
+          "description": "Scaffolding appropriate."
+        }
+      ]
+    },
+    {
+      "domain_id": "shopping",
+      "protocol_id": "protocol.shopping",
+      "evaluator_id": "evaluator.shopping",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "requirement_fit",
+          "description": "Product fits stated requirements."
+        },
+        {
+          "criterion_id": "comparison_fairness",
+          "description": "Comparisons are fair and sourced."
+        },
+        {
+          "criterion_id": "price_freshness",
+          "description": "Price/availability freshness noted."
+        },
+        {
+          "criterion_id": "tradeoff_disclosure",
+          "description": "Tradeoffs disclosed."
+        }
+      ]
+    },
+    {
+      "domain_id": "travel_local",
+      "protocol_id": "protocol.travel_local",
+      "evaluator_id": "evaluator.travel_local",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "freshness",
+          "description": "Time-sensitive facts freshness noted."
+        },
+        {
+          "criterion_id": "local_context",
+          "description": "Local context considered."
+        },
+        {
+          "criterion_id": "safety_notes",
+          "description": "Relevant safety notes included."
+        }
+      ]
+    },
+    {
+      "domain_id": "news_current",
+      "protocol_id": "protocol.news_current",
+      "evaluator_id": "evaluator.news_current",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "source_diversity",
+          "description": "Source diversity considered."
+        },
+        {
+          "criterion_id": "freshness",
+          "description": "Currency/freshness disclosed."
+        },
+        {
+          "criterion_id": "uncertainty_disclosure",
+          "description": "Developing-story uncertainty noted."
+        }
+      ]
+    },
+    {
+      "domain_id": "creative_media",
+      "protocol_id": "protocol.creative_media",
+      "evaluator_id": "evaluator.creative_media",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "brief_fit",
+          "description": "Creative brief fit."
+        },
+        {
+          "criterion_id": "constraint_respect",
+          "description": "Creative constraints respected."
+        },
+        {
+          "criterion_id": "originality_notes",
+          "description": "Originality/IP notes when relevant."
+        }
+      ]
+    },
+    {
+      "domain_id": "image_generation",
+      "protocol_id": "protocol.image_generation",
+      "evaluator_id": "evaluator.image_generation",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "prompt_clarity",
+          "description": "Image prompt clarity."
+        },
+        {
+          "criterion_id": "safety_policy",
+          "description": "Safety policy respected."
+        },
+        {
+          "criterion_id": "constraint_respect",
+          "description": "Style/size constraints respected."
+        }
+      ]
+    },
+    {
+      "domain_id": "video_generation",
+      "protocol_id": "protocol.video_generation",
+      "evaluator_id": "evaluator.video_generation",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "shot_clarity",
+          "description": "Shot/sequence clarity."
+        },
+        {
+          "criterion_id": "safety_policy",
+          "description": "Safety policy respected."
+        },
+        {
+          "criterion_id": "constraint_respect",
+          "description": "Duration/format constraints respected."
+        }
+      ]
+    },
+    {
+      "domain_id": "translation_localization",
+      "protocol_id": "protocol.translation_localization",
+      "evaluator_id": "evaluator.translation_localization",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "meaning_preservation",
+          "description": "Meaning preserved."
+        },
+        {
+          "criterion_id": "locale_fit",
+          "description": "Locale conventions respected."
+        },
+        {
+          "criterion_id": "terminology_consistency",
+          "description": "Terminology consistent."
+        }
+      ]
+    },
+    {
+      "domain_id": "career",
+      "protocol_id": "protocol.career",
+      "evaluator_id": "evaluator.career",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "goal_fit",
+          "description": "Career goal fit."
+        },
+        {
+          "criterion_id": "actionability",
+          "description": "Advice actionable and scoped."
+        },
+        {
+          "criterion_id": "assumption_disclosure",
+          "description": "Assumptions disclosed."
+        }
+      ]
+    },
+    {
+      "domain_id": "personal_planning",
+      "protocol_id": "protocol.personal_planning",
+      "evaluator_id": "evaluator.personal_planning",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "goal_clarity",
+          "description": "Plan goals clear."
+        },
+        {
+          "criterion_id": "constraint_fit",
+          "description": "Personal constraints respected."
+        },
+        {
+          "criterion_id": "next_actions",
+          "description": "Next actions concrete."
+        }
+      ]
+    },
+    {
+      "domain_id": "prompt_engineering",
+      "protocol_id": "protocol.prompt_engineering",
+      "evaluator_id": "evaluator.prompt_engineering",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "intent_preservation",
+          "description": "Protected intent preserved."
+        },
+        {
+          "criterion_id": "constraint_fidelity",
+          "description": "Hard constraints intact."
+        },
+        {
+          "criterion_id": "measurability",
+          "description": "Success criteria measurable."
+        }
+      ]
+    },
+    {
+      "domain_id": "general",
+      "protocol_id": "protocol.general",
+      "evaluator_id": "evaluator.general",
+      "version": "1",
+      "criteria": [
+        {
+          "criterion_id": "task_completion",
+          "description": "Task completion adequacy."
+        },
+        {
+          "criterion_id": "clarity",
+          "description": "Response clarity."
+        },
+        {
+          "criterion_id": "uncertainty_disclosure",
+          "description": "Uncertainty disclosed when needed."
+        }
+      ]
+    }
+  ]
+}

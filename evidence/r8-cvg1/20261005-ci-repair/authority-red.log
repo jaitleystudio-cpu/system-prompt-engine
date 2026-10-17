@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: EV-2026-COMPILER-01 must not claim verification without a receipt
++ actual - expected
+
++ 'verified'
+- 'provisional'
+
+    at file:///Users/prawinpalisetty/.codex/.chatgpt-projects/g-p-6aa32fc67f688191aae39cb61faa5250/spe-r8-cvg1/apps/web/scripts/test-authority-evidence-truth.mjs:30:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'verified',
+  expected: 'provisional',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

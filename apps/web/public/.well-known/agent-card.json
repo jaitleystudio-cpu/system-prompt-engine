@@ -1,0 +1,93 @@
+{
+  "$schema": "https://a2a-standard.org/schemas/v1.0.1/agent-card.json",
+  "name": "SPE — Global AI Gateway",
+  "version": "1.0.1",
+  "description": "Universal prompt engineering, invariant preservation, and model dialect transcompilation gateway for autonomous AI agents.",
+  "url": "https://systempromptengine.com",
+  "provider": {
+    "name": "System Prompt Engine",
+    "url": "https://systempromptengine.com"
+  },
+  "supportedInterfaces": [
+    {
+      "type": "mcp",
+      "version": "2026-07-28",
+      "transport": "http-post",
+      "endpoint": "https://systempromptengine.com/api/v1/mcp"
+    },
+    {
+      "type": "rest",
+      "version": "v1",
+      "endpoint": "https://systempromptengine.com/api/v1/index.json"
+    }
+  ],
+  "capabilities": {
+    "promptCompilation": true,
+    "invariantVerification": true,
+    "dialectTranscompilation": true,
+    "constraintAuditing": true,
+    "offlineExecution": true,
+    "streaming": false,
+    "freeTierCapacityCharacters": 30000,
+    "freeTierUniversal": true
+  },
+  "defaultInputMediaTypes": [
+    "application/json",
+    "text/plain",
+    "text/markdown"
+  ],
+  "defaultOutputMediaTypes": [
+    "application/json",
+    "text/plain",
+    "application/octet-stream"
+  ],
+  "skills": [
+    {
+      "id": "search_spe_prompts",
+      "name": "Search SPE Prompts Catalog",
+      "description": "Search the System Prompt Engine catalog of verified prompt assets across engineering domains with AST schemas and invariant guarantees.",
+      "inputMediaTypes": ["application/json"],
+      "outputMediaTypes": ["application/json"]
+    },
+    {
+      "id": "get_prompt_asset",
+      "name": "Get SPE Prompt Asset",
+      "description": "Retrieve a specific prompt asset by ID, with optional template variable substitution and target model dialect transcompilation.",
+      "inputMediaTypes": ["application/json"],
+      "outputMediaTypes": ["application/json"]
+    },
+    {
+      "id": "compile_for_model",
+      "name": "Compile For Target Model",
+      "description": "Transcompile raw prompt instructions or tasks into any of 11 model-native dialects using robust AST block parsing.",
+      "inputMediaTypes": ["application/json"],
+      "outputMediaTypes": ["application/json"]
+    },
+    {
+      "id": "validate_prompt_constraints",
+      "name": "Validate Prompt Constraints",
+      "description": "Audit prompt instructions against drift risks, verify hard invariant preservation, check authority bounds, and calculate token budget.",
+      "inputMediaTypes": ["application/json"],
+      "outputMediaTypes": ["application/json"]
+    }
+  ],
+  "authentication": {
+    "schemes": [
+      {
+        "type": "none",
+        "description": "Public community catalog and standard prompt compilation up to 30,000 characters are 100% free and unauthenticated for all AI bots, AI models, and humans."
+      },
+      {
+        "type": "bearer",
+        "header": "X-SPE-Entitlement-Token",
+        "description": "Ed25519-signed offline entitlement token for Pro/Enterprise tier features."
+      }
+    ]
+  },
+  "security": {
+    "airGap": true,
+    "offlineWasm": true,
+    "cloudEgress": false,
+    "canonicalWasmSha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d"
+  }
+}

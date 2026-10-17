@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-10-17T08:04:10.369Z",
+  "steps": {
+    "modelAtlas": {
+      "status": "PASS",
+      "verified": true
+    },
+    "sitemaps": {
+      "status": "PASS",
+      "totalUrls": 10011
+    },
+    "testBattery": {
+      "status": "PASS",
+      "testRunner": "node:child_process / custom-battery-runner",
+      "suitesExecuted": 6,
+      "suitesPassed": 6,
+      "failures": 0,
+      "exitCode": 0,
+      "totalConsoleSuccessMarkers": 123,
+      "suiteDetails": [
+        {
+          "suite": "model-atlas-sync",
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 4,
+          "status": "PASS"
+        },
+        {
+          "suite": "pro-features",
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 8,
+          "status": "PASS"
+        },
+        {
+          "suite": "arsenal-catalog",
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 20,
+          "status": "PASS"
+        },
+        {
+          "suite": "model-atlas",
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 13,
+          "status": "PASS"
+        },
+        {
+          "suite": "forensic-r2-gates",
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 64,
+          "status": "PASS"
+        },
+        {
+          "suite": "chatgpt-counter-review-remediation",
+          "testRunner": "node:child_process / custom-mjs",
+          "exitCode": 0,
+          "consoleSuccessMarkers": 14,
+          "status": "PASS"
+        }
+      ]
+    },
+    "copyCheck": {
+      "status": "PASS",
+      "candidateCount": 6294,
+      "violations": 0
+    },
+    "build": {
+      "status": "PASS"
+    }
+  },
+  "success": true,
+  "durationMs": 54682,
+  "contentDigestSha256": "df635053596476ba851fbf09d80f35f4008cea772d1b5836f4a04f4dd76123fc",
+  "digestAlgorithm": "SHA-256",
+  "canonicalization": "RFC_8785_CANONICAL_JSON",
+  "attestationType": "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",
+  "signatureNotice": "Content-addressed integrity digest over deterministic execution results. Not an external PKI certificate.",
+  "executionEngine": "SPE-Autonomous-A2Z-Pipeline/v2.1.0"
+}

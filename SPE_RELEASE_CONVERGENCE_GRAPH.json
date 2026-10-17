@@ -1,0 +1,268 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SPE Ω Master Release Convergence & Dependency Graph",
+  "version": "1.0.0",
+  "timestamp": "2026-10-03T05:50:00+05:30",
+  "targetRelease": "2026-10-10T22:10:00+05:30",
+  "baseCommit": "3b2d360028fbb41a79a718dc148bbbcfd4518ee0",
+  "convergenceHead": "dd6f9b125113b0183af2082a3f85582beef5068e",
+  "branch": "antigravity/spe-v1-program-completion-20261003",
+  "pullRequests": [
+    {
+      "id": 108,
+      "title": "DRAFT: privacy egress truth — network assertions on media and LLM paths",
+      "branch": "grok/lane-privacy-egress-truth-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 5,
+      "dependsOn": [104],
+      "rationale": "Asserts zero egress across media and runtime paths."
+    },
+    {
+      "id": 107,
+      "title": "test(perf): unpublished bundle truth — critical asset thresholds",
+      "branch": "grok/lane-perf-truth-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 5,
+      "dependsOn": [105],
+      "rationale": "Enforces bundle size and performance limits without large weights."
+    },
+    {
+      "id": 106,
+      "title": "DRAFT: SEO index truth — private routes noindex",
+      "branch": "grok/lane-seo-index-truth-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 5,
+      "dependsOn": [79],
+      "rationale": "Ensures private workspace routes are marked noindex."
+    },
+    {
+      "id": 105,
+      "title": "DRAFT: G4 website export offline port",
+      "branch": "grok/lane-g4-website-closure-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 2,
+      "dependsOn": [95],
+      "rationale": "Ports packages/website-generator library offline without route mounting."
+    },
+    {
+      "id": 104,
+      "title": "feat: local media product session over pinned whisper-cli",
+      "branch": "grok/lane-g2-media-product-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 3,
+      "dependsOn": [94],
+      "rationale": "Drives local Telugu media model through local CPU session with silence truth."
+    },
+    {
+      "id": 103,
+      "title": "DRAFT: locale publication truth",
+      "branch": "grok/lane-g3-l10n-truth-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 5,
+      "dependsOn": [80],
+      "rationale": "Separates translation catalog readiness from published UI locales."
+    },
+    {
+      "id": 102,
+      "title": "test: lane G6 .spe binding test",
+      "branch": "grok/lane-g6-spe-binding-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 2,
+      "dependsOn": [81],
+      "rationale": "Links G11 export and verified G6 .spe binding test harness."
+    },
+    {
+      "id": 101,
+      "title": "DRAFT: Lane G3 screenshot SSIM bounded repair",
+      "branch": "grok/lane-g3-vision-closure-20261003",
+      "status": "MERGE_CANDIDATE_AFTER_AUTHORIZATION",
+      "layer": 3,
+      "dependsOn": [82],
+      "rationale": "Enforces 3 repair bounded loop, local Tesseract real OCR, and honest below-bar SSIM reporting."
+    },
+    {
+      "id": 100,
+      "title": "RT-LIVE-P3: promotion gate HOLD",
+      "branch": "grok/rt-live-scholarly-p3-promotion-proof-20261003",
+      "status": "SUPERSEDED",
+      "layer": 1,
+      "supersededBy": "dd6f9b125113b0183af2082a3f85582beef5068e",
+      "rationale": "In-process live network execution completed and verified in commit dd6f9b1 with 8/8 mutants killed."
+    },
+    {
+      "id": 99,
+      "title": "RT live scholarly fabric",
+      "branch": "grok/rt-live-scholarly-fabric-20261002",
+      "status": "SUPERSEDED",
+      "layer": 1,
+      "supersededBy": 100,
+      "rationale": "Superseded by PR 100 and commit dd6f9b1."
+    },
+    {
+      "id": 98,
+      "title": "ci(rt-vr2r): single-parent re-gate",
+      "branch": "grok/rt-vr2r-single-parent-regate-20261002",
+      "status": "EVIDENCE_ONLY",
+      "layer": 1,
+      "rationale": "Remote CI single-parent re-gate verification evidence."
+    },
+    {
+      "id": 97,
+      "title": "DRAFT: RT-VR2 remote CI gated",
+      "branch": "grok/rt-vr2-ci-gated-20261002",
+      "status": "SUPERSEDED",
+      "layer": 1,
+      "supersededBy": 98,
+      "rationale": "Superseded by PR 98 single-parent re-gate."
+    },
+    {
+      "id": 96,
+      "title": "DRAFT: RT-VR1 truth hardening",
+      "branch": "grok/rt-vr1-truth-hardening-20261002",
+      "status": "SUPERSEDED",
+      "layer": 1,
+      "supersededBy": 99,
+      "rationale": "Reconciled into scholarly fabric PR 99."
+    },
+    {
+      "id": 95,
+      "title": "DRAFT: #93→#88 R2 reconcile",
+      "branch": "grok/spe-r2-88-reconcile-20261001",
+      "status": "KEEP",
+      "layer": 2,
+      "rationale": "Round 2 staging compiler reconcile with F1-F7 rules."
+    },
+    {
+      "id": 94,
+      "title": "docs: G12-H Telugu model qual",
+      "branch": "grok/spe-g12h-te-indep-qual-20261001",
+      "status": "EVIDENCE_ONLY",
+      "layer": 3,
+      "rationale": "Offline qualification record for Telugu whisper model."
+    },
+    {
+      "id": 93,
+      "title": "DRAFT: R2-WEB-W bounded repair",
+      "branch": "grok/spe-r2-web-repair-20261001",
+      "status": "SUPERSEDED",
+      "layer": 2,
+      "supersededBy": 95,
+      "rationale": "Superseded by PR 95 reconciliation."
+    },
+    {
+      "id": 91,
+      "title": "docs(a9-link-v): link-resolution oracle",
+      "branch": "antigravity/spe-a9-link-v-20261001",
+      "status": "NEEDS_REVERIFY",
+      "layer": 5,
+      "rationale": "Authority hub link resolution oracle verification."
+    },
+    {
+      "id": 90,
+      "title": "[DRAFT] A9-Q Authority Hub QA",
+      "branch": "antigravity/spe-authority-hub-q-clean-20261001",
+      "status": "SUPERSEDED",
+      "layer": 5,
+      "supersededBy": 91,
+      "rationale": "Superseded by PR 91 link oracle."
+    },
+    {
+      "id": 89,
+      "title": "docs: G12-G Telugu human bench",
+      "branch": "grok/spe-g12g-te-human-bench-20261001",
+      "status": "EVIDENCE_ONLY",
+      "layer": 4,
+      "rationale": "Protocol for native speaker evaluation."
+    },
+    {
+      "id": 88,
+      "title": "DRAFT: Round-2 Web Staging",
+      "branch": "antigravity/spe-staging-round2-qual-20261001",
+      "status": "SUPERSEDED",
+      "layer": 2,
+      "supersededBy": 95,
+      "rationale": "Superseded by PR 95 reconcile."
+    },
+    {
+      "id": 82,
+      "title": "A12 visual screenshot capability",
+      "branch": "antigravity/spe-visual-screenshot-ux-v1-20261001",
+      "status": "SUPERSEDED",
+      "layer": 3,
+      "supersededBy": 101,
+      "rationale": "Upgraded and superseded by Lane G3 PR 101."
+    },
+    {
+      "id": 81,
+      "title": "feat: Project Library UX",
+      "branch": "antigravity/spe-project-library-ui-v1-20261001",
+      "status": "NEEDS_REPAIR",
+      "layer": 2,
+      "rationale": "spe_contract = NOT_YET_BOUND; needs Lane G6 binding integration."
+    },
+    {
+      "id": 80,
+      "title": "fix: close C9 localization",
+      "branch": "cursor/spe-localization-r1-repair-20261001",
+      "status": "SUPERSEDED",
+      "layer": 5,
+      "supersededBy": 103,
+      "rationale": "Superseded by Lane G3 L10N PR 103."
+    },
+    {
+      "id": 79,
+      "title": "docs: A6-Q Universal Shell QA",
+      "branch": "cursor/a6q-universal-shell-qa-bbc4",
+      "status": "EVIDENCE_ONLY",
+      "layer": 4,
+      "rationale": "Defect baseline for Lane G5 repairs."
+    },
+    {
+      "id": 78,
+      "title": "Add offline website-generator",
+      "branch": "grok/spe-website-generator-v1-20260930",
+      "status": "SUPERSEDED",
+      "layer": 2,
+      "supersededBy": 105,
+      "rationale": "Superseded by Lane G4 PR 105."
+    }
+  ],
+  "integrationLayers": [
+    {
+      "layer": 1,
+      "name": "Scholarly Grounding & Promotion Fabric",
+      "prList": [100, 99, 98],
+      "status": "CONVERGED_AT_DD6F9B1"
+    },
+    {
+      "layer": 2,
+      "name": "Offline Core Packages & Storage Binding",
+      "prList": [105, 102, 95],
+      "status": "READY_FOR_INTEGRATION"
+    },
+    {
+      "layer": 3,
+      "name": "Local Media & Vision Pipelines",
+      "prList": [104, 101],
+      "status": "READY_FOR_INTEGRATION"
+    },
+    {
+      "layer": 4,
+      "name": "Universal Shell, UX & A11y",
+      "prList": ["LANE_G5"],
+      "status": "READY_FOR_INTEGRATION"
+    },
+    {
+      "layer": 5,
+      "name": "Release Hardening & Truth Gates",
+      "prList": [108, 107, 106, 103],
+      "status": "READY_FOR_INTEGRATION"
+    }
+  ],
+  "releaseBlockers": [
+    "Founder authorization required for final main merge",
+    "Real neural weights unbundled in git (CUSTODY_PENDING_DOWNLOAD)",
+    "WCAG 2.1 AA certified human accessibility sign-off",
+    "Certified native human speaker Telugu/Hindi dialect scoring"
+  ]
+}

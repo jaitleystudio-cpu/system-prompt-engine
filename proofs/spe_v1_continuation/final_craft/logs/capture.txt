@@ -1,0 +1,42 @@
+SHOT home-dark-desktop.png 560254
+SHOT home-light-desktop.png 695265
+SHOT home-dark-mobile.png 842787
+SHOT home-light-mobile.png 835440
+SHOT create-dark-desktop.png 570114
+SHOT create-light-desktop.png 552903
+SHOT create-mobile-collapsed.png 209303
+SHOT create-mobile-advanced-expanded.png 272896
+SHOT create-mobile-focus.png 210060
+SHOT capabilities-dark-desktop.png 315492
+SHOT capabilities-light-desktop.png 321211
+SHOT capabilities-dark-mobile.png 289268
+SHOT capabilities-light-mobile.png 293103
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('button.spe-build').first()
+    - locator resolved to <button disabled type="button" class="spe-build" aria-busy="false" data-ready="false">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+      - waiting 100ms
+    45 × waiting for element to be visible, enabled and stable
+       - element is not enabled
+     - retrying click action
+       - waiting 500ms
+
+    at /Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/capture_final_craft.mjs:212:15
+    at async withPage (/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/capture_final_craft.mjs:111:5)
+    at /Users/prawinpalisetty/system-prompt-engine/async file:/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/capture_final_craft.mjs:200:1 {
+  name: 'TimeoutError'
+}
+
+Node.js v22.23.2

@@ -1,0 +1,400 @@
+/**
+ * SPE Ω — In-Browser AI Skill Builder & Audit Studio
+ * Create, audit, and export portable AI skills (SKILL.md) locally on-device.
+ * Zero server inference ($0 compute cost).
+ */
+
+import React, { useState, useMemo } from "react";
+import { auditSkillContent, type ClientAuditReport } from "../engine/workflows/clientAuditScanner";
+import { buildSkillMarkdown } from "../engine/workflows/skillBuilder";
+import { copyTextSafe } from "../engine/workflows/clipboard";
+import { ContextualAdSlot } from "../components/ads/ContextualAdSlot";
+
+interface SkillPreset {
+  name: string;
+  desc: string;
+  cat: string;
+  steps: string;
+  allowNet: boolean;
+}
+
+const FRAMEWORK_PRESETS: Record<string, SkillPreset> = {
+  "Next.js": {
+    name: "Next.js Security Auditor",
+    desc: "Audits Next.js App Router server actions, route handlers, and environment variables for client-side data leaks.",
+    cat: "Engineering Operations",
+    steps: "Scan app/ directory for exposed process.env secrets in client components\nVerify server actions validate inputs with Zod schemas\nFlag insecure cookies or headers and emit a NEXTJS_SECURITY_AUDIT.md report",
+    allowNet: false,
+  },
+  "FastAPI": {
+    name: "FastAPI REST Architect",
+    desc: "Scaffolds typed FastAPI routers with Pydantic V2 models, HTTPException handling, and pytest fixtures.",
+    cat: "Engineering Operations",
+    steps: "Parse OpenAPI schema or model specifications\nGenerate router endpoints with explicit status codes and Pydantic schemas\nAdd dependency-injected database sessions and generate unit tests",
+    allowNet: false,
+  },
+  "Docker": {
+    name: "Docker CI/CD Optimizer",
+    desc: "Audits Dockerfiles for multi-stage build layers, non-root user execution, and minimal image size.",
+    cat: "Security & Compliance",
+    steps: "Analyze Dockerfile and docker-compose.yml for security flaws\nEnforce non-root USER directives and pin base image SHA digests\nOptimize layer caching and output DOCKER_OPTIMIZATION.md with savings",
+    allowNet: false,
+  },
+  "Postgres": {
+    name: "Postgres Migration Verifier",
+    desc: "Verifies SQL migration scripts for zero-downtime safety, lock avoidance, and rollback idempotency.",
+    cat: "Engineering Operations",
+    steps: "Parse SQL DDL migration files for table alters\nFlag table-locking operations like unindexed foreign keys or blocking index creation\nVerify CONCURRENTLY index creation and generate safe rollback scripts",
+    allowNet: false,
+  },
+};
+
+export const SkillBuilderStudio: React.FC = () => {
+  const [skillName, setSkillName] = useState("Weekly Report Auditor");
+  const [description, setDescription] = useState(
+    "Reviews completed weekly engineering tasks, audits git commits against requirements, and prepares the next-task instructions."
+  );
+  const [category, setCategory] = useState("Engineering Operations");
+  const [stepsText, setStepsText] = useState(
+    "Parse recent git commits and issue tracking IDs\nCross-reference modified files against declared scope invariants\nEmit a structured WEEKLY_STATUS.md report and flag regressions"
+  );
+  const [allowNetwork, setAllowNetwork] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [platform, setPlatform] = useState<"bash" | "powershell">("bash");
+
+  const applyPreset = (preset: SkillPreset) => {
+    setSkillName(preset.name);
+    setDescription(preset.desc);
+    setCategory(preset.cat);
+    setStepsText(preset.steps);
+    setAllowNetwork(preset.allowNet);
+  };
+
+  const steps = useMemo(() => stepsText.split("\n").filter((s) => s.trim().length > 0), [stepsText]);
+
+  const compiledMarkdown = useMemo(() => {
+    return buildSkillMarkdown({
+      name: skillName,
+      description,
+      domainCategory: category,
+      proceduralSteps: steps,
+      allowedPermissions: allowNetwork ? ["NETWORK_EGRESS", "LOCAL_FILESYSTEM_READ"] : ["LOCAL_FILESYSTEM_READ"],
+      acceptanceCriteria: [
+        "All output reports conform to markdown standards",
+        "Zero regressions detected in test suite",
+      ],
+    });
+  }, [skillName, description, category, steps, allowNetwork]);
+
+  const auditReport: ClientAuditReport = useMemo(() => {
+    return auditSkillContent(compiledMarkdown);
+  }, [compiledMarkdown]);
+
+  const slug = skillName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const bashCmd = `mkdir -p ~/.claude/skills/${slug} && cat << 'EOF' > ~/.claude/skills/${slug}/SKILL.md\n${compiledMarkdown}\nEOF`;
+  const powershellCmd = `New-Item -ItemType Directory -Force -Path "$HOME\\.claude\\skills\\${slug}"; @'\n${compiledMarkdown}\n'@ | Set-Content -Path "$HOME\\.claude\\skills\\${slug}\\SKILL.md" -Encoding UTF8`;
+  const installCmd = platform === "bash" ? bashCmd : powershellCmd;
+
+  const copyInstall = async () => {
+    await copyTextSafe(installCmd);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  const downloadSkillFile = () => {
+    const blob = new Blob([compiledMarkdown], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${slug || "skill"}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="spe-skill-builder-container" style={{ maxWidth: "1100px", margin: "0 auto", padding: "2rem 1rem" }}>
+      <header style={{ marginBottom: "2rem", textAlign: "center" }}>
+        <h1 style={{ fontSize: "2.25rem", fontWeight: 800, color: "#f8fafc", marginBottom: "0.5rem" }}>
+          Skill Builder · In-Browser Agent Plugin Studio
+        </h1>
+        <p style={{ fontSize: "1.125rem", color: "#94a3b8", maxWidth: "700px", margin: "0 auto" }}>
+          Build portable AI agent skills (SKILL.md) in seconds. Audited for security in your browser with $0 server inference.
+        </p>
+      </header>
+
+      <ContextualAdSlot slotId="skillbuilder-top-leaderboard" format="leaderboard" />
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "2rem", marginTop: "2rem" }}>
+        {/* Input Form Column */}
+        <div style={{ backgroundColor: "#0b1329", border: "1px solid #1e293b", borderRadius: "8px", padding: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }}>
+            <h2 style={{ fontSize: "1.25rem", color: "#f8fafc", margin: 0 }}>Define Procedure</h2>
+            <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+              {Object.keys(FRAMEWORK_PRESETS).map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => applyPreset(FRAMEWORK_PRESETS[k])}
+                  style={{
+                    minHeight: "38px",
+                    padding: "6px 14px",
+                    fontSize: "0.78rem",
+                    fontWeight: 600,
+                    borderRadius: "9999px",
+                    backgroundColor: "rgba(217, 197, 154, 0.14)",
+                    border: "1px solid rgba(217, 197, 154, 0.35)",
+                    color: "#e5d5b0",
+                    cursor: "pointer",
+                  }}
+                >
+                  ⚡ {k}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "block", color: "#94a3b8", fontSize: "0.875rem", marginBottom: "0.35rem" }}>
+              Skill Name
+            </label>
+            <input
+              type="text"
+              value={skillName}
+              onChange={(e) => setSkillName(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.6rem",
+                backgroundColor: "#0f172a",
+                border: "1px solid #334155",
+                borderRadius: "6px",
+                color: "#f8fafc",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "block", color: "#94a3b8", fontSize: "0.875rem", marginBottom: "0.35rem" }}>
+              Description & Purpose
+            </label>
+            <textarea
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.6rem",
+                backgroundColor: "#0f172a",
+                border: "1px solid #334155",
+                borderRadius: "6px",
+                color: "#f8fafc",
+                fontSize: "0.875rem",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "block", color: "#94a3b8", fontSize: "0.875rem", marginBottom: "0.35rem" }}>
+              Domain Category
+            </label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.6rem",
+                backgroundColor: "#0f172a",
+                border: "1px solid #334155",
+                borderRadius: "6px",
+                color: "#f8fafc",
+              }}
+            >
+              <option>Engineering Operations</option>
+              <option>Business Operations</option>
+              <option>Document Automation</option>
+              <option>Customer Support</option>
+              <option>Security & Compliance</option>
+            </select>
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "block", color: "#94a3b8", fontSize: "0.875rem", marginBottom: "0.35rem" }}>
+              Step-by-Step Directives (one per line)
+            </label>
+            <textarea
+              rows={5}
+              value={stepsText}
+              onChange={(e) => setStepsText(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.6rem",
+                backgroundColor: "#0f172a",
+                border: "1px solid #334155",
+                borderRadius: "6px",
+                color: "#f8fafc",
+                fontSize: "0.875rem",
+                fontFamily: "monospace",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#94a3b8", fontSize: "0.875rem", cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={allowNetwork}
+                onChange={(e) => setAllowNetwork(e.target.checked)}
+              />
+              Allow External Network Egress (Defaults to $0 / Local-Only)
+            </label>
+          </div>
+        </div>
+
+        {/* Live Preview & Audit Column */}
+        <div style={{ backgroundColor: "#0b1329", border: "1px solid #1e293b", borderRadius: "8px", padding: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+            <h2 style={{ fontSize: "1.25rem", color: "#f8fafc", margin: 0 }}>Security Audit & Export</h2>
+            <div
+              style={{
+                padding: "0.25rem 0.6rem",
+                borderRadius: "4px",
+                fontSize: "0.8125rem",
+                fontWeight: 700,
+                backgroundColor: auditReport.isSafe ? "rgba(16, 185, 129, 0.2)" : "rgba(239, 68, 68, 0.2)",
+                color: auditReport.isSafe ? "#10b981" : "#ef4444",
+                border: `1px solid ${auditReport.isSafe ? "#10b981" : "#ef4444"}`,
+              }}
+            >
+              {auditReport.verdict} (Score: {auditReport.safetyScore}/100)
+            </div>
+          </div>
+
+          {auditReport.violations.length > 0 && (
+            <div style={{ backgroundColor: "rgba(239, 68, 68, 0.1)", border: "1px solid #ef4444", borderRadius: "6px", padding: "0.75rem", marginBottom: "1rem" }}>
+              <strong style={{ color: "#ef4444", fontSize: "0.875rem" }}>Violations Detected:</strong>
+              <ul style={{ margin: "0.5rem 0 0 1rem", padding: 0, fontSize: "0.8125rem", color: "#fca5a5" }}>
+                {auditReport.violations.map((v, i) => (
+                  <li key={i}>{v.description} (Matched: <code>{v.matchedText}</code>)</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "block", color: "#64748b", fontSize: "0.75rem", textTransform: "uppercase", marginBottom: "0.35rem" }}>
+              Generated SKILL.md Spec
+            </label>
+            <pre
+              style={{
+                backgroundColor: "#020617",
+                border: "1px solid #1e293b",
+                borderRadius: "6px",
+                padding: "0.75rem",
+                fontSize: "0.75rem",
+                color: "#cbd5e1",
+                height: "220px",
+                overflowY: "auto",
+                overflowX: "auto",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+              }}
+            >
+              {compiledMarkdown}
+            </pre>
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.75rem" }}>
+            <button
+              type="button"
+              onClick={downloadSkillFile}
+              disabled={!auditReport.isSafe}
+              style={{
+                width: "auto",
+                minWidth: "200px",
+                padding: "10px 22px",
+                backgroundColor: !auditReport.isSafe ? "#334155" : "#dec99e",
+                color: !auditReport.isSafe ? "#cbd5e1" : "#050812",
+                border: "1px solid rgba(229, 213, 176, 0.85)",
+                borderRadius: "9999px",
+                fontWeight: 700,
+                cursor: !auditReport.isSafe ? "not-allowed" : "pointer",
+                fontSize: "0.875rem",
+                minHeight: "44px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                touchAction: "manipulation",
+              }}
+            >
+              <span>📥 Download SKILL.md</span>
+            </button>
+
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              <span style={{ fontSize: "0.75rem", color: "#cbd5e1", textTransform: "uppercase" }}>Terminal:</span>
+              <button
+                type="button"
+                onClick={() => setPlatform("bash")}
+                style={{
+                  padding: "6px 14px",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  borderRadius: "9999px",
+                  border: platform === "bash" ? "1px solid rgba(217, 197, 154, 0.5)" : "1px solid #334155",
+                  backgroundColor: platform === "bash" ? "#1e293b" : "#0f172a",
+                  color: platform === "bash" ? "#e5d5b0" : "#cbd5e1",
+                  cursor: "pointer",
+                  minHeight: "38px",
+                }}
+              >
+                Bash / macOS / Linux
+              </button>
+              <button
+                type="button"
+                onClick={() => setPlatform("powershell")}
+                style={{
+                  padding: "6px 14px",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  borderRadius: "9999px",
+                  border: platform === "powershell" ? "1px solid rgba(217, 197, 154, 0.5)" : "1px solid #334155",
+                  backgroundColor: platform === "powershell" ? "#1e293b" : "#0f172a",
+                  color: platform === "powershell" ? "#e5d5b0" : "#cbd5e1",
+                  cursor: "pointer",
+                  minHeight: "38px",
+                }}
+              >
+                PowerShell / Windows
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={copyInstall}
+              disabled={!auditReport.isSafe}
+              style={{
+                width: "auto",
+                minWidth: "220px",
+                padding: "10px 22px",
+                backgroundColor: !auditReport.isSafe ? "#475569" : copied ? "#059669" : "#1e293b",
+                color: "#ffffff",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                borderRadius: "9999px",
+                fontWeight: 600,
+                cursor: !auditReport.isSafe ? "not-allowed" : "pointer",
+                fontSize: "0.875rem",
+                minHeight: "44px",
+                touchAction: "manipulation",
+              }}
+            >
+              {copied
+                ? `✓ Copied ${platform === "bash" ? "Bash" : "PowerShell"} Command!`
+                : `Copy ${platform === "bash" ? "Bash" : "PowerShell"} Install Command`}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

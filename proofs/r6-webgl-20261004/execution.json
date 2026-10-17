@@ -1,0 +1,82 @@
+{
+  "route": "/website",
+  "installedThreeVersion": "0.170.0",
+  "constants": {
+    "ledgerWebglNotRun": true,
+    "ledgerSceneNotPass": true,
+    "flowNotRun": true,
+    "compilerNotBundled": true,
+    "compilerNotRun": true
+  },
+  "executed": {
+    "webglExecution": "EXECUTED",
+    "threeVersion": "0.170.0",
+    "threeRevision": "170",
+    "contextCreated": "1",
+    "sceneCreated": "1",
+    "nonClearPixels": 11910,
+    "sampledPixels": 172800,
+    "reducedMotion": "0",
+    "fallbackShown": "0",
+    "unavailableHonest": "0",
+    "bundling": "vite-import-three-package",
+    "note": "readPixels found a non-clear frame",
+    "canvasWidth": 480,
+    "canvasHeight": 360
+  },
+  "reducedMotion": {
+    "scene": {
+      "webglExecution": "NOT_RUN",
+      "threeVersion": "0.170.0",
+      "threeRevision": "170",
+      "contextCreated": "0",
+      "sceneCreated": "0",
+      "nonClearPixels": 0,
+      "sampledPixels": 0,
+      "reducedMotion": "1",
+      "fallbackShown": "1",
+      "unavailableHonest": "0",
+      "bundling": "vite-import-three-package",
+      "note": "prefers-reduced-motion: static fallback, WebGL not started",
+      "canvasWidth": 0,
+      "canvasHeight": 0
+    },
+    "consoleErrors": []
+  },
+  "unavailable": {
+    "scene": {
+      "webglExecution": "UNAVAILABLE",
+      "threeVersion": "0.170.0",
+      "threeRevision": "170",
+      "contextCreated": "0",
+      "sceneCreated": "0",
+      "nonClearPixels": 0,
+      "sampledPixels": 0,
+      "reducedMotion": "0",
+      "fallbackShown": "0",
+      "unavailableHonest": "1",
+      "bundling": "vite-import-three-package",
+      "note": "getContext(webgl) returned null",
+      "canvasWidth": 0,
+      "canvasHeight": 0
+    },
+    "consoleErrors": []
+  },
+  "dispose": {
+    "label": "ok",
+    "pageErrorsDuringDispose": []
+  },
+  "contextLoss": {
+    "contextLossRecovery": "REBUILT",
+    "contextLossNonClearPixels": 11910,
+    "webglExecution": "EXECUTED"
+  },
+  "consoleErrors": [],
+  "framePng": "proofs/r6-webgl-20261004/frame.png",
+  "checks": {
+    "frameOk": true,
+    "fallbackOk": true,
+    "unavailableOk": true,
+    "disposeOk": true
+  }
+}

@@ -1,0 +1,80 @@
+# Progress: SPE Free 3D Websites Spec v1.1
+
+## Session Log
+
+- **2026-10-06 07:43**: Session initialized.
+  - Vetted Spec v1.1 and Implementation Delta with `/seo-plan` and `/frontend-developer` perspectives.
+  - Initialized `task_plan.md`, `findings.md`, and `progress.md`.
+  - Commencing Phase 1: Canonical Data Models (Workstream A).
+- **2026-10-06 07:46**: Phase 1 Complete (Workstream A).
+  - Implemented `behaviorGraph.ts`, `motionBlock.ts`, `cameraPlan.ts`, `dataBinding.ts`, `enhancementMetadata.ts`, `agentPolicy.ts`, `runtimeExtension.ts`, and unified `websiteSpecV2.ts`.
+  - Added and executed `test-v1-1-models.mjs` verifying schema validation, range guards, FOV bounds, and wildcard agent rejection.
+  - Verified `tsc --noEmit` and existing test regression suites cleanly pass.
+  - Commencing Phase 2: Intent Compilation (Workstream B).
+- **2026-10-06 07:47**: Phase 2 Complete (Workstream B).
+  - Implemented `compileBehaviorIntent.ts`, `compileCameraIntent.ts`, `compileDataIntent.ts`.
+  - Created and executed `test-v1-1-intent.mjs` validating behavior rule extraction, fallback generation, multi-shot automotive camera generation, data binding extraction, and `INTENT_CONFLICT` contradiction detection.
+  - Verified TypeScript compilation and regression tests pass.
+  - Commencing Phase 3: Reference Intelligence & Enhancement (Workstream C).
+- **2026-10-06 07:49**: Phase 3 Complete (Workstream C).
+  - Implemented `enhancementTypes.ts`, `analyzeEnhancementOpportunities.ts`, and `EnhancementProposal.tsx`.
+  - Created and executed `test-v1-1-enhancement.mjs` validating truthful categorization, rejection of false `TRUE_3D` claims on CSS parallax, and proposal generation.
+  - Verified TypeScript compilation and regression tests pass.
+  - Commencing Phase 4: Inspiration Gallery & Experience Recipes (Workstream D).
+- **2026-10-06 07:50**: Phase 4 Complete (Workstream D).
+  - Implemented `inspirationRecipes.ts` with curated 3D experience recipes.
+  - Built `remixInspirationRecipe` and `validateOriginalityFirewall` ensuring user customization without copying original proprietary brands or assets.
+  - Executed `test-v1-1-explore-recipes.mjs` and verified clean passing.
+  - Commencing Phase 5: Scene Runtime (Workstream E).
+- **2026-10-06 07:51**: Phase 5 Complete (Workstream E).
+  - Implemented `executeSceneAction.ts`, `executeCameraAction.ts`, `executeMaterialAction.ts`.
+  - Enforced zero-eval security via typed switch branches over validated actions.
+  - Executed `test-v1-1-scene-runtime.mjs` verifying rotations, scaling, camera dolly, and material properties.
+  - Commencing Phase 6: Timeline Engine & Camera Director (Workstream F).
+- **2026-10-06 07:53**: Phase 6 Complete (Workstream F).
+  - Implemented `expandMotionBlock.ts`, `reconcileMotionBlocks.ts`, `MotionBlockEditor.tsx`.
+  - Implemented `cameraPresets.ts` (all 8 required presets), `validateCameraPlan.ts` (mesh boundary collision and excessive velocity guards), `cameraDirector.ts`, and `CameraDirectorPanel.tsx`.
+  - Executed `test-v1-1-motion-camera.mjs` verifying track generation, timeline reconciliation, collision guards, and presets.
+  - Commencing Phase 7: Studio UI & BehaviorGraph Authoring (Workstream G).
+- **2026-10-06 07:55**: Phase 7 Complete (Workstream G).
+  - Implemented `validateBehaviorGraph.ts` with `BEHAVIOR_CYCLE_REFUSED` cycle refusal.
+  - Implemented `executeBehaviorGraph.ts` with desktop/mobile condition splitting and typed action dispatching.
+  - Built `BehaviorRuleCard.tsx`, `BehaviorGraphEditor.tsx`, and `WebsiteStudioWorkspace.tsx` featuring 4 coordinated surfaces and scoped Copilot chips.
+  - Executed `test-v1-1-behavior-graph.mjs` and verified clean passing.
+  - Commencing Phase 8: Scene Performance Doctor (Workstream H).
+- **2026-10-06 07:56**: Phase 8 Complete (Workstream H).
+  - Implemented `scenePerformanceReceipt.ts` (with strict `MEASURED` vs `ESTIMATED` contract), `measureScene.ts`, `diagnosePerformance.ts`, `proposeOptimization.ts`, and `PerformanceDoctor.tsx`.
+  - Added safety gate `validateOptimizationSafety` forbidding removal of essential semantic sections (hero/navigation).
+  - Executed `test-v1-1-performance-doctor.mjs` verifying measurement, diagnosis tiers, proposal generation, and safety gates.
+  - Commencing Phase 9: Portable Projects & Offline Exports (Workstream I).
+- **2026-10-06 07:58**: Phase 9 Complete (Workstream I).
+  - Implemented `exportSpeSite.ts` for .spe-site package bundles and offline roundtrip verification.
+  - Added `exportStandaloneHtml` generating 100% crawlable semantic HTML with Schema.org JSON-LD.
+  - Executed `test-v1-1-spe-site-export.mjs` verifying package contents, lossless roundtrip restoration, and HTML metadata.
+  - Commencing Phase 10: Route Gate & Public Copy Policy (Workstream J).
+- **2026-10-06 07:58**: Phase 10 Complete (Workstream J).
+  - Created `test-v1-1-route-gate.mjs` verifying `/website` remains unmounted in public routes until full qualification.
+  - Enforced public copy honesty rules (no unproven "world's best" claims, no 9.9 rounding).
+  - Commencing Phase 11: Data & Network Boundary (Workstream K).
+- **2026-10-06 08:00**: Phase 11 Complete (Workstream K).
+  - Implemented `dataSource.ts`, `safeTransform.ts` (sandboxed without eval), `evaluateBinding.ts`, and `DataBindingInspector.tsx`.
+  - Added preflight privacy disclosure (`createPrivacyDisclosure`) for external API requests with origin labeling.
+  - Executed `test-v1-1-data-bindings.mjs` confirming safe transforms, privacy disclosures, and passive treatment of malicious injection data.
+  - Commencing Phase 12: Quality Repair Loop (Workstream L).
+- **2026-10-06 08:01**: Phase 12 Complete (Workstream L).
+  - Implemented `qualityRepairLoop.ts` auditing defects (`MISSING_MOBILE_FALLBACK`, `MISSING_REDUCED_MOTION_VARIANT`).
+  - Proposes and applies non-destructive `SitePatch` operations with automated re-audit verification.
+  - Executed `test-v1-1-repair-loop.mjs` confirming clean remediation of defects.
+  - Commencing Phase 13: Structured Agent Protocol (Workstream M).
+- **2026-10-06 08:03**: Phase 13 Complete (Workstream M).
+  - Implemented `commandTypes.ts`, `agentCapabilities.ts`, `agentReceipt.ts`, `validateAgentCommand.ts`, and `executeAgentCommand.ts`.
+  - Enforced capability policy validation, `PATCH_CONFLICT` detection via `beforeHash`, and rejection of unapproved raw filesystem mutations.
+  - Executed `test-v1-1-agent-protocol.mjs` verifying clean passing.
+  - Commencing Phase 14: Mutation Suite & 10/10 Acceptance Qualification (Workstream N).
+- **2026-10-06 08:07**: Phase 14 Complete (Workstream N).
+  - Executed master mutation kill suite `test-v1-1-qualification.mjs`.
+  - Killed all 17/17 deliberate mutation defects (0 survived).
+  - Passed all 7 v1.1 mandatory sub-gates and scored 20/20 across all 10 parent dimensions (10/10 exact normalized).
+  - Verified full test suite across Workstreams A through N and confirmed clean `tsc --noEmit`.
+  - Zero deployment or merge violations: production/Cloudflare/DNS/main merge remain strictly locked.
+  - Implementation of SPE Free 3D Websites Spec v1.1 across Workstreams A–N is fully complete.

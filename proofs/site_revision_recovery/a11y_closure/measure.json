@@ -1,0 +1,188 @@
+{
+  "light": {
+    "measured": {
+      "inactive": {
+        "text": "Create",
+        "color": "rgb(58, 66, 80)",
+        "opacity": "0.8",
+        "fontSize": "12.48px",
+        "fontWeight": "400",
+        "background": "rgb(244, 241, 234)",
+        "painted": "#5f656f",
+        "backgroundHex": "#f4f1ea",
+        "ratio": 5.204
+      },
+      "active": {
+        "text": "Home",
+        "color": "rgb(42, 74, 138)",
+        "opacity": "1",
+        "fontSize": "12.48px",
+        "fontWeight": "400",
+        "background": "rgb(244, 241, 234)",
+        "painted": "#2a4a8a",
+        "backgroundHex": "#f4f1ea",
+        "ratio": 7.614
+      },
+      "cta": {
+        "text": "Build my prompt ↗",
+        "color": "rgb(244, 241, 234)",
+        "opacity": "1",
+        "fontSize": "12.48px",
+        "fontWeight": "400",
+        "background": "rgb(20, 24, 32)",
+        "painted": "#f4f1ea",
+        "backgroundHex": "#141820",
+        "ratio": 15.76
+      },
+      "mark": {
+        "text": "SPE",
+        "color": "rgb(91, 100, 114)",
+        "opacity": "1",
+        "fontSize": "16px",
+        "fontWeight": "560",
+        "background": "rgb(255, 255, 255)",
+        "painted": "#5b6472",
+        "backgroundHex": "#ffffff",
+        "ratio": 5.982
+      },
+      "footerColor": "rgb(20, 24, 32)",
+      "footerBg": "rgb(255, 255, 255)",
+      "theme": "light"
+    },
+    "axe": {
+      "violationCount": 0,
+      "contrast": [],
+      "other": []
+    }
+  },
+  "dark": {
+    "measured": {
+      "inactive": {
+        "text": "Create",
+        "color": "rgb(238, 241, 250)",
+        "opacity": "0.72",
+        "fontSize": "12.48px",
+        "fontWeight": "400",
+        "background": "rgb(5, 8, 18)",
+        "painted": "#adb0b9",
+        "backgroundHex": "#050812",
+        "ratio": 9.227
+      },
+      "active": {
+        "text": "Home",
+        "color": "rgb(125, 211, 252)",
+        "opacity": "1",
+        "fontSize": "12.48px",
+        "fontWeight": "400",
+        "background": "rgb(5, 8, 18)",
+        "painted": "#7dd3fc",
+        "backgroundHex": "#050812",
+        "ratio": 11.996
+      },
+      "cta": {
+        "text": "Build my prompt ↗",
+        "color": "rgb(238, 241, 250)",
+        "opacity": "1",
+        "fontSize": "12.48px",
+        "fontWeight": "400",
+        "background": "rgb(5, 8, 18)",
+        "painted": "#eef1fa",
+        "backgroundHex": "#050812",
+        "ratio": 17.714
+      },
+      "mark": {
+        "text": "SPE",
+        "color": "rgb(232, 238, 252)",
+        "opacity": "1",
+        "fontSize": "16px",
+        "fontWeight": "560",
+        "background": "rgb(5, 8, 18)",
+        "painted": "#e8eefc",
+        "backgroundHex": "#050812",
+        "ratio": 17.208
+      },
+      "footerColor": "rgb(183, 194, 216)",
+      "footerBg": "rgba(0, 0, 0, 0)",
+      "theme": "dark"
+    },
+    "axe": {
+      "violationCount": 0,
+      "contrast": [],
+      "other": []
+    }
+  },
+  "responsive": [
+    {
+      "theme": "light",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "overflow": false
+    }
+  ],
+  "zoom": [
+    {
+      "theme": "light",
+      "zoom": "200%",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "zoom": "200%",
+      "overflow": false
+    }
+  ]
+}

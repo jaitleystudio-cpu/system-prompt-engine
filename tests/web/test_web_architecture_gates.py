@@ -56,20 +56,21 @@ def test_shipped_release_wasm_matches_kernel_artifact_hash():
     digest = hashlib.sha256(public_wasm.read_bytes()).hexdigest()
     assert meta["sha256"] == digest
     assert meta["bytes"] == public_wasm.stat().st_size
-    assert public_wasm.stat().st_size > 100_000
-    # Prefer matching the Sprint-5 release artifact when present.
+    assert public_wasm.stat().st_size == 1339691
+    assert digest == "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d"
+    # Prefer matching the canonical release candidate when present.
     rust_wasm = (
         REPO
         / "portable"
         / "spe-wasm"
-        / "target"
+        / "target-canonical"
         / "wasm32-unknown-unknown"
         / "release"
         / "spe_wasm.wasm"
     )
     if rust_wasm.is_file():
         rust_digest = hashlib.sha256(rust_wasm.read_bytes()).hexdigest()
-        assert digest == rust_digest, "web WASM is not the spe-wasm release artifact"
+        assert digest == rust_digest, "web WASM is not the canonical spe-wasm release artifact"
 
 
 def test_ts_does_not_duplicate_semantic_detectors():
@@ -108,6 +109,15 @@ def test_no_python_in_browser_path():
             assert "pyodide" not in src.lower()
             assert "cpython" not in src.lower()
             assert "/spe_runtime/" not in src
+
+
+def test_ts_quality_transport_does_not_decide_delta():
+    text = (WEB / "src" / "engine" / "qualityTransport.ts").read_text(encoding="utf-8")
+    assert 'spe_api: "quality"' in text
+    assert "IMPROVED" not in text
+    assert "RESTORE_MISSING_CONSTRAINT" not in text
+    assert "quality_percentage" not in text
+    assert "VALIDATE_ONLY" not in text
 
 
 def test_wasm_integrity_checked_before_instantiate():

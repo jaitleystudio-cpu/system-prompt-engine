@@ -1,0 +1,202 @@
+[
+  {
+    "workflow_id": "WF-a1b2c3d4",
+    "slug": "weekly-project-status",
+    "title": "Weekly Engineering & Project Status Report",
+    "job_category": "business-operations",
+    "summary": "Consolidates recent git commit logs, closed issue tickets, and blocker reports into an executive status brief with verifiable milestone tracking.",
+    "required_capabilities": ["git-history", "markdown-reporting", "task-aggregation"],
+    "input_artifacts": ["git_log_since_last_week.txt", "completed_tickets.json"],
+    "output_artifacts": ["WEEKLY_STATUS_REPORT.md"],
+    "max_permissions": {
+      "allow_network": false,
+      "allow_credentials": false,
+      "allowed_filesystem_paths": ["./"],
+      "max_cost_nanousd": 0
+    },
+    "steps": [
+      {
+        "step_id": "step-1",
+        "title": "Digest Commit History",
+        "instruction": "Parse git commits and completed issues, categorizing by feature, fix, and operational improvement.",
+        "recommended_skill": "git-pr-review",
+        "verification_probe": "test -f WEEKLY_STATUS_REPORT.md",
+        "required_inputs": ["git_log_since_last_week.txt"],
+        "produced_outputs": []
+      },
+      {
+        "step_id": "step-2",
+        "title": "Synthesize Executive Metrics & Blockers",
+        "instruction": "Extract velocity metrics, flag open blockers, and draft actionable goals for the upcoming sprint.",
+        "recommended_skill": "data-storytelling",
+        "verification_probe": "grep -q '## Blockers' WEEKLY_STATUS_REPORT.md",
+        "required_inputs": ["completed_tickets.json"],
+        "produced_outputs": ["WEEKLY_STATUS_REPORT.md"]
+      }
+    ],
+    "verification_fixture_id": "FIXTURE-WEEKLY-STATUS-V1",
+    "top_skills": ["git-pr-review", "data-storytelling"],
+    "average_token_savings_pct": 34.5,
+    "reproducibility_rate": 0.98
+  },
+  {
+    "workflow_id": "WF-e5f6a7b8",
+    "slug": "meeting-followup-synthesis",
+    "title": "Meeting Transcript Action Item Synthesis",
+    "job_category": "business-operations",
+    "summary": "Transforms raw meeting transcripts or bullet notes into clear action matrices, assigned owners, and ready-to-import task specifications.",
+    "required_capabilities": ["transcript-analysis", "action-item-extraction", "task-formatting"],
+    "input_artifacts": ["meeting_transcript.txt"],
+    "output_artifacts": ["ACTION_ITEMS_SUMMARY.md", "tasks_import.json"],
+    "max_permissions": {
+      "allow_network": false,
+      "allow_credentials": false,
+      "allowed_filesystem_paths": ["./"],
+      "max_cost_nanousd": 0
+    },
+    "steps": [
+      {
+        "step_id": "step-1",
+        "title": "Identify Decisions and Commitments",
+        "instruction": "Extract explicit consensus decisions and individual commitments with quoted conversational attribution.",
+        "recommended_skill": "clarity-gate",
+        "verification_probe": "grep -q '### Decisions' ACTION_ITEMS_SUMMARY.md",
+        "required_inputs": ["meeting_transcript.txt"],
+        "produced_outputs": ["ACTION_ITEMS_SUMMARY.md"]
+      },
+      {
+        "step_id": "step-2",
+        "title": "Generate Structured Task Payloads",
+        "instruction": "Format each action item with owner, due date, priority, and acceptance criteria.",
+        "recommended_skill": "product-manager-toolkit",
+        "verification_probe": "jq . tasks_import.json",
+        "required_inputs": ["ACTION_ITEMS_SUMMARY.md"],
+        "produced_outputs": ["tasks_import.json"]
+      }
+    ],
+    "verification_fixture_id": "FIXTURE-MEETING-SYNTH-V1",
+    "top_skills": ["clarity-gate", "product-manager-toolkit"],
+    "average_token_savings_pct": 42.1,
+    "reproducibility_rate": 0.96
+  },
+  {
+    "workflow_id": "WF-c9d0e1f2",
+    "slug": "customer-ticket-triage",
+    "title": "Customer Support Ticket Triage & Draft",
+    "job_category": "customer-success",
+    "summary": "Categorizes incoming customer tickets by sentiment, urgency, and technical component, producing verified draft resolutions and triage tags.",
+    "required_capabilities": ["sentiment-analysis", "issue-classification", "support-response"],
+    "input_artifacts": ["inbox_tickets.json"],
+    "output_artifacts": ["triaged_tickets.json", "DRAFT_RESPONSES.md"],
+    "max_permissions": {
+      "allow_network": false,
+      "allow_credentials": false,
+      "allowed_filesystem_paths": ["./"],
+      "max_cost_nanousd": 0
+    },
+    "steps": [
+      {
+        "step_id": "step-1",
+        "title": "Classify Urgency & Sentiment",
+        "instruction": "Tag tickets into P0/P1/P2/P3 severity and categorize root causes.",
+        "recommended_skill": "customer-support",
+        "verification_probe": "jq '.[0].severity' triaged_tickets.json",
+        "required_inputs": ["inbox_tickets.json"],
+        "produced_outputs": ["triaged_tickets.json"]
+      },
+      {
+        "step_id": "step-2",
+        "title": "Formulate Empathetic Resolution Drafts",
+        "instruction": "Generate draft replies resolving known issues using internal documentation links.",
+        "recommended_skill": "copywriting-psychologist",
+        "verification_probe": "test -s DRAFT_RESPONSES.md",
+        "required_inputs": ["triaged_tickets.json"],
+        "produced_outputs": ["DRAFT_RESPONSES.md"]
+      }
+    ],
+    "verification_fixture_id": "FIXTURE-SUPPORT-TRIAGE-V1",
+    "top_skills": ["customer-support", "copywriting-psychologist"],
+    "average_token_savings_pct": 38.0,
+    "reproducibility_rate": 0.95
+  },
+  {
+    "workflow_id": "WF-3a4b5c6d",
+    "slug": "invoice-data-extraction",
+    "title": "Invoice OCR & Accounting Verification",
+    "job_category": "document-automation",
+    "summary": "Extracts line items, vendor details, tax computations, and verifies mathematical integrity before generating accounting ledger records.",
+    "required_capabilities": ["ocr-extraction", "math-verification", "accounting-schema"],
+    "input_artifacts": ["invoice_raw_text.txt"],
+    "output_artifacts": ["INVOICE_AUDIT_REPORT.md", "ledger_entry.json"],
+    "max_permissions": {
+      "allow_network": false,
+      "allow_credentials": false,
+      "allowed_filesystem_paths": ["./"],
+      "max_cost_nanousd": 0
+    },
+    "steps": [
+      {
+        "step_id": "step-1",
+        "title": "Parse Tabular Line Items",
+        "instruction": "Extract quantities, unit prices, description, tax percentages, and stated invoice totals.",
+        "recommended_skill": "xlsx-official",
+        "verification_probe": "jq '.items | length > 0' ledger_entry.json",
+        "required_inputs": ["invoice_raw_text.txt"],
+        "produced_outputs": ["ledger_entry.json"]
+      },
+      {
+        "step_id": "step-2",
+        "title": "Deterministic Math Verification",
+        "instruction": "Recalculate line totals and tax sums; flag discrepancies between stated total and calculated total.",
+        "recommended_skill": "mathguard",
+        "verification_probe": "grep -q 'RECALCULATION_VERIFIED' INVOICE_AUDIT_REPORT.md",
+        "required_inputs": ["ledger_entry.json"],
+        "produced_outputs": ["INVOICE_AUDIT_REPORT.md"]
+      }
+    ],
+    "verification_fixture_id": "FIXTURE-INVOICE-MATH-V1",
+    "top_skills": ["xlsx-official", "mathguard"],
+    "average_token_savings_pct": 49.2,
+    "reproducibility_rate": 0.99
+  },
+  {
+    "workflow_id": "WF-7e8f9a0b",
+    "slug": "spreadsheet-to-exec-brief",
+    "title": "Financial Spreadsheet to Executive Brief",
+    "job_category": "document-automation",
+    "summary": "Ingests CSV or Excel quarterly KPI data, calculates growth rates and variances, and renders a concise executive brief with markdown charts.",
+    "required_capabilities": ["csv-parsing", "variance-calculation", "executive-summarization"],
+    "input_artifacts": ["quarterly_kpis.csv"],
+    "output_artifacts": ["EXECUTIVE_BRIEF.md"],
+    "max_permissions": {
+      "allow_network": false,
+      "allow_credentials": false,
+      "allowed_filesystem_paths": ["./"],
+      "max_cost_nanousd": 0
+    },
+    "steps": [
+      {
+        "step_id": "step-1",
+        "title": "Compute Key Financial Ratios",
+        "instruction": "Compute gross margin, quarter-over-quarter burn delta, and CAC:LTV ratios.",
+        "recommended_skill": "startup-financial-modeling",
+        "verification_probe": "grep -q '## Variance Analysis' EXECUTIVE_BRIEF.md",
+        "required_inputs": ["quarterly_kpis.csv"],
+        "produced_outputs": []
+      },
+      {
+        "step_id": "step-2",
+        "title": "Draft Strategic Commentary",
+        "instruction": "Summarize outliers, runway projections, and actionable highlights for the board.",
+        "recommended_skill": "data-storytelling",
+        "verification_probe": "grep -q '## Runway & Cash Position' EXECUTIVE_BRIEF.md",
+        "required_inputs": [],
+        "produced_outputs": ["EXECUTIVE_BRIEF.md"]
+      }
+    ],
+    "verification_fixture_id": "FIXTURE-FINANCIAL-BRIEF-V1",
+    "top_skills": ["startup-financial-modeling", "data-storytelling"],
+    "average_token_savings_pct": 31.8,
+    "reproducibility_rate": 0.97
+  }
+]

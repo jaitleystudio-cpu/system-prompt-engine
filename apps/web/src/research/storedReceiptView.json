@@ -1,0 +1,100 @@
+{
+  "canonical_doi": "10.1038/nature00870",
+  "status": "ACQUIRED_STORED_RECEIPT",
+  "egress_classification": "STORED_RECEIPT_REUSE_NO_NEW_HTTP",
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "may_promote": false,
+  "provenance": [
+    {
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "query": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T08:40:08+05:30",
+      "url": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+      "response_digest": "c3c48504f75e84ae0b71379321fde62730d2c2bf10d6559873887af3e3ec534a",
+      "verification_status": "DOI_MATCH"
+    },
+    {
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "query": "https://api.crossref.org/works/10.1038/nature00870",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T08:40:09+05:30",
+      "url": "https://api.crossref.org/works/10.1038/nature00870",
+      "response_digest": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "verification_status": "DOI_MATCH"
+    },
+    {
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=%2210.1038%2Fnature00870%22&tool=spe_grounding",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T08:40:11+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=%2210.1038%2Fnature00870%22&tool=spe_grounding",
+      "response_digest": "6cc39093c826fb2ad8e33a014598138f47f862f86537412e4c2711d78a0adde5",
+      "verification_status": "ID_WITHOUT_DOI"
+    },
+    {
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=10.1038%2Fnature00870%5Bdoi%5D&tool=spe_grounding",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T08:40:12+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=10.1038%2Fnature00870%5Bdoi%5D&tool=spe_grounding",
+      "response_digest": "6554f96ca7c048a41b6837ee6d17ea9c61de9e1768f561418c646db804cffaf1",
+      "verification_status": "ID_WITHOUT_DOI"
+    },
+    {
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=12077603&tool=spe_grounding",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T08:40:15+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=12077603&tool=spe_grounding",
+      "response_digest": "a89d6abd660223b36f8302fea056b15bb537f4c4a1106a3b23dd28ec97a8d7d5",
+      "verification_status": "DOI_STATED_IN_SAME_NCBI_RECORD"
+    },
+    {
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "query": "https://api.openalex.org/works/https://doi.org/10.1038%2Fnature00870?select=id,doi,ids,is_retracted,display_name,type",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T10:47:06+05:30",
+      "url": "https://api.openalex.org/works/https://doi.org/10.1038%2Fnature00870?select=id,doi,ids,is_retracted,display_name,type",
+      "response_digest": "81f2808bda3a0d7bad2a72c76537fe55b823803b153946ed3feb465b48782e59",
+      "verification_status": "OPENALEX_IS_RETRACTED"
+    },
+    {
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "query": "https://api.crossref.org/works/10.1038/nature00870",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T10:47:24+05:30",
+      "url": "https://api.crossref.org/works/10.1038/nature00870",
+      "response_digest": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "verification_status": "CROSSREF_UPDATE_RELATION"
+    },
+    {
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=%2210.1038/nature00870%22&tool=spe_grounding",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T10:47:08+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=%2210.1038/nature00870%22&tool=spe_grounding",
+      "response_digest": "6cc39093c826fb2ad8e33a014598138f47f862f86537412e4c2711d78a0adde5",
+      "verification_status": "PMID_RESOLUTION"
+    },
+    {
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=12077603&retmode=json&tool=spe_grounding",
+      "identifier": "10.1038/nature00870",
+      "timestamp": "2026-10-04T10:47:27+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=12077603&retmode=json&tool=spe_grounding",
+      "response_digest": "a89d6abd660223b36f8302fea056b15bb537f4c4a1106a3b23dd28ec97a8d7d5",
+      "verification_status": "PUBMED_ESUMMARY_PUBTYPE"
+    }
+  ]
+}

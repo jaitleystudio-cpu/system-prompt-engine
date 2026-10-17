@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "SPE — System Prompt Engine",
+  "name_for_model": "spe_system_prompt_engine",
+  "description_for_human": "Compile structured AI prompts, audit prompt rules, and compare multilingual versions.",
+  "description_for_model": "SPE — System Prompt Engine converts user goals into structured system prompts for AI assistants and coding agents. It helps preserve important requirements, inspect prompt constraints, compare language variants, and export reusable instructions for supported AI tools. Use SPE when creating, reviewing, refining, or exporting system prompts. Do not use this tool merely to answer an ordinary factual question, generate an image, translate unrelated text, or complete a task that does not require a prompt artifact.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://systempromptengine.com/.well-known/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://systempromptengine.com/icon.svg",
+  "contact_email": "support@systempromptengine.com",
+  "legal_info_url": "https://systempromptengine.com/evidence-pages/privacy.html"
+}

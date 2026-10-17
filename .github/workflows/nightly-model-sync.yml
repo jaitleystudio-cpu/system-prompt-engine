@@ -1,0 +1,101 @@
+name: SPE Frontier Model Autonomous Night-Watch & Continuous Sync Engine
+
+on:
+  schedule:
+    # Executes autonomously every night at 02:00 UTC (7:30 AM IST)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run without committing changes'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: spe-nightly-model-sync
+  cancel-in-progress: true
+
+jobs:
+  night-watch-sync:
+    name: Nightly AI Model Currency & Zero-Stale-Model Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'apps/web/package-lock.json'
+
+      - name: Setup Python Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --upgrade pip
+          if [ -f pyproject.toml ]; then pip install pytest; fi
+
+      - name: Execute Autonomous Nightly Model Synchronizer
+        run: |
+          node apps/web/scripts/nightly-model-sync.mjs --apply
+
+      - name: Verify Python Runtime Model Currency Parity
+        run: |
+          python -m spe_runtime.model_governor.nightly_sync --apply
+
+      - name: Execute Model Currency Verification Suite
+        run: |
+          node apps/web/scripts/test-model-currency.mjs
+          pytest tests/unit/test_model_currency.py
+          python3 tools/sync_model_atlas.py --check
+
+      - name: Enforce Language Perspective UI Copy Gate (Zero Violations)
+        run: |
+          npm --prefix apps/web run spe:copy-check
+
+      - name: Compile Production Web Application Bundle
+        run: |
+          npm --prefix apps/web run build
+
+      - name: Verify Bit-for-Bit Canonical WASM Hash Preservation
+        run: |
+          EXPECTED_WASM_HASH="ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d"
+          ACTUAL_WASM_HASH=$(sha256sum apps/web/public/spe_wasm.wasm | awk '{print $1}')
+          echo "Expected WASM Hash: $EXPECTED_WASM_HASH"
+          echo "Actual WASM Hash:   $ACTUAL_WASM_HASH"
+          if [ "$ACTUAL_WASM_HASH" != "$EXPECTED_WASM_HASH" ]; then
+            echo "❌ CRITICAL: Canonical WASM hash drift detected!"
+            exit 1
+          fi
+          echo "✓ Canonical WASM artifact preserved bit-for-bit."
+
+      - name: Upload Cryptographic Model Currency Attestation
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-currency-attestation
+          path: evidence/model-currency-attestation.json
+          retention-days: 90
+
+      - name: Commit & Push Model Currency Updates (Autonomous Nightly Sync)
+        if: github.event_name == 'schedule' && !inputs.dry_run
+        run: |
+          git config user.name "SPE Night-Watch Autonomous Bot"
+          git config user.email "bot@systempromptengine.com"
+          if [[ -n $(git status --porcelain apps/web/src/engine/modelAtlas evidence) ]]; then
+            git add apps/web/src/engine/modelAtlas evidence
+            git commit -m "chore(night-watch): autonomous 2026 frontier model currency sync [$(date -u +'%Y-%m-%d')]"
+            git push origin HEAD
+          else
+            echo "No model changes detected. Working tree clean."
+          fi

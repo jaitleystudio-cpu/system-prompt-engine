@@ -1,0 +1,110 @@
+{
+  "recorded_at": "2026-10-08T07:15:00Z",
+  "main_sha": "3abe3df936082296b6a1ddc94923d757129cfdff",
+  "candidate_bases": {
+    "origin_main": "3abe3df936082296b6a1ddc94923d757129cfdff",
+    "feature_spe_v11r_north_star_studio": "df22033a0ffed711a60477f40a0741046afbc9b8",
+    "chatgpt_r8_cvg1_20261005": "d1c927f5f7b6902659e5ff62dd7ac14010136184",
+    "grok_r9_d_studio_runtime_journey": "895a3230d445089b3fdb48fbbb101e7b539f58c8",
+    "cursor_spe_quality_delta_planb": "b39bfc0f27143bbe1a39ae3e15e7f3c9c386d609"
+  },
+  "branch_tips": {
+    "main": "3abe3df936082296b6a1ddc94923d757129cfdff",
+    "feature/spe-v11r-north-star-studio": "df22033a0ffed711a60477f40a0741046afbc9b8",
+    "chatgpt/r8-cvg1-20261005": "d1c927f5f7b6902659e5ff62dd7ac14010136184",
+    "feature/spe-free-3d-studio-v1": "61e4d5b887616990c1d9f7ef4b8aaec2609a45bb",
+    "grok/r9-a-free3d-reconcile-d1c927f": null,
+    "grok/r9-d-studio-runtime-journey": "895a3230d445089b3fdb48fbbb101e7b539f58c8",
+    "grok/r9-g-studio-security": null,
+    "integration/spe-2026-10-26": "df22033a0ffed711a60477f40a0741046afbc9b8"
+  },
+  "pr_states": {
+    "121": {
+      "title": "feat(release): SPE R8 Full Public Release [Candidate be286fa]",
+      "state": "OPEN",
+      "base": "main"
+    },
+    "122": {
+      "title": "SPE Free 3D Websites v1.1 \u2014 implementation workstream A\u2013N",
+      "state": "OPEN",
+      "base": "chatgpt/r8-cvg1-20261005"
+    },
+    "123": {
+      "title": "SPE R9-A: Free 3D reconcile onto R8 (d1c927f)",
+      "state": "OPEN",
+      "base": "chatgpt/r8-cvg1-20261005"
+    },
+    "124": {
+      "title": "SPE-R9-B: Website Studio UI foundation",
+      "state": "OPEN",
+      "base": "grok/r9-a-free3d-reconcile-d1c927f"
+    },
+    "125": {
+      "title": "SPE-R9-D: Studio runtime journey (Explore\u2192Create\u2192edit\u2192render\u2192preview\u2192export)",
+      "state": "OPEN",
+      "base": "main",
+      "commits": 372,
+      "status": "DONOR_ONLY_DO_NOT_MERGE_WHOLESALE"
+    },
+    "126": {
+      "title": "SPE-R9-G: Studio security hardening (injection/XSS/export/DoS)",
+      "state": "OPEN",
+      "base": "grok/r9-d-studio-runtime-journey"
+    },
+    "127": {
+      "title": "SPE-R9-H: Studio/mobile performance honesty + a11y fixes",
+      "state": "OPEN",
+      "base": "grok/r9-d-studio-runtime-journey"
+    },
+    "128": {
+      "title": "SPE-R9-F: repair scholarly/retraction path on research_journey owner (HOLD)",
+      "state": "OPEN",
+      "base": "grok/r9-d-studio-runtime-journey"
+    },
+    "129": {
+      "title": "R9-H repair: independent mobile frame measurement + frozen-candidate external receipts",
+      "state": "OPEN"
+    },
+    "130": {
+      "title": "SPE-R9-G repair: SSRF at the network execution boundary",
+      "state": "OPEN"
+    },
+    "131": {
+      "title": "SPE-R9-E repair: ASR/OCR journey hooks for independent verifier",
+      "state": "OPEN"
+    },
+    "132": {
+      "title": "R9-E: ASR runtime authority separation",
+      "state": "OPEN"
+    },
+    "133": {
+      "title": "R9-G: destination binding fail-closed at ingestUrl",
+      "state": "OPEN"
+    },
+    "134": {
+      "title": "R9-G: close public IP-literal binding bypass",
+      "state": "OPEN"
+    }
+  },
+  "ci_results": {
+    "pytest_suite": "1136 passed, 0 failed",
+    "wasm_canonical_supply_chain": "PASS",
+    "web_architecture_gates": "PASS",
+    "audio_adversarial_vad": "PASS (11/11)"
+  },
+  "known_conflicts": [
+    "PR #125 is an oversized divergent branch (372 commits, 1389 files); must be treated as donor branch and never merged wholesale.",
+    "WASM target-canonical build directory was sensitive to stale intermediate artifacts; resolved by verifying canonical supply-chain hash.",
+    "Audio VAD required stationarity ratio threshold (std_rms/mean_rms < 0.03) to distinguish sustained harmonic dual tones and chords from variable human speech."
+  ],
+  "recommended_integration_base": {
+    "branch": "integration/spe-2026-10-26",
+    "base_commit": "df22033a0ffed711a60477f40a0741046afbc9b8",
+    "donor_branches": [
+      "feature/spe-v11r-north-star-studio",
+      "chatgpt/r8-cvg1-20261005",
+      "grok/r9-d-studio-runtime-journey"
+    ],
+    "strategy": "Single authoritative integration train with modular stackable PR branches"
+  }
+}

@@ -11,10 +11,12 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+dist-studio/
 downloads/
 eggs/
 .eggs/
-lib/
+/lib/
+!apps/web/src/lib/
 lib64/
 parts/
 sdist/
@@ -37,6 +39,8 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+tmp/
+.coverage
 htmlcov/
 .tox/
 .nox/
@@ -50,6 +54,7 @@ coverage.xml
 *.lcov
 .hypothesis/
 .pytest_cache/
+.spe/
 cover/
 
 # Translations
@@ -75,6 +80,7 @@ docs/_build/
 # PyBuilder
 .pybuilder/
 target/
+portable/spe-wasm/target-canonical/
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -223,12 +229,37 @@ __marimo__/
 **/*.rs.bk
 
 # Node / Web PWA (Sprint 6)
+node_modules
 node_modules/
 apps/web/dist/
 
 # SPE-WEB-01
+apps/web/node_modules
 apps/web/node_modules/
 
 
 # Local provider qualification evidence
 qualification/*_receipt.json
+.worktrees/
+# Local media pack bytes. PACK_MANIFEST.json stays committed.
+/media-pack/whisper-cli
+/media-pack/whisper-cli.partial
+/media-pack/.whisper-build/
+/media-pack/models/*.bin
+/media-pack/models/*.partial
+
+# Local OCR pack bytes. PACK_MANIFEST.json stays committed.
+/ocr-pack/tessdata/*.traineddata
+/ocr-pack/tessdata/*.partial
+/ocr-pack/.session/
+/ocr-pack/tesseract
+/ocr-pack/lib/
+/ocr-pack/.bottle/
+/.ocr-scratch/
+
+# Agent & local tooling artifacts
+.DS_Store
+.agents/
+.local-bin/
+.xocor/
+

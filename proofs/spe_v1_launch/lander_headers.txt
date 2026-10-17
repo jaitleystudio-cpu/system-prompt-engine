@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=60
+Content-Type: text/html
+Date: Thu, 24 Sep 2026 01:58:00 GMT
+Server: openresty
+Set-Cookie: traffic_target=gd; Path=/; Max-Age=86400
+Set-Cookie: caf_ipaddr=104.30.180.108; Path=/; Max-Age=86400
+Set-Cookie: country=US; Path=/; Max-Age=86400
+Set-Cookie: city=""; Path=/; Max-Age=86400
+Set-Cookie: lander_type=parkweb; Path=/; Max-Age=86400
+X-Adblock-Key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJRmzcpTevQqkWn6dJuX/N/Hxl7YxbOwy8+73ijqYSQEN+WGxrruAKtZtliWC86+ewQ0msW1W8psOFL/b00zWqsCAwEAAQ_jdwmYEUudf1VahBAniVOPjNjfAnuq0dtn2DGt/0eyTT9b2mdiK271+zdFjITR6g/YnHFCyhFC79mrfS4Gx+JrA
+X-Content-Type-Options: nosniff
+

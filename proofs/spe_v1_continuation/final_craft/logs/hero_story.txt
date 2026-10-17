@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:hero-story
+> node scripts/test-hero-story.mjs
+
+PASS hero semantic story contract

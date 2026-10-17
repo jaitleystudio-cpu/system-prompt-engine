@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:execution-contract
+> node scripts/test-execution-contract.mjs
+
+PASS execution contract + profile bind + local record + conformance laws

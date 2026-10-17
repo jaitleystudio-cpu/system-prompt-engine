@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROMPTCARD · V1.4.0</title>
+  <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="pc-header">
+    <div class="pc-brand">
+      <img src="icons/icon48.png" alt="PromptCard Logo" class="pc-logo">
+      <span class="pc-title">PROMPTCARD</span>
+      <span class="pc-version">V1.4.0</span>
+    </div>
+    <div class="pc-header-actions">
+      <span class="pc-badge-offline" title="100% On-Device / $0 Cloud Compute">Offline</span>
+      <button id="btn-options" class="pc-btn-icon" title="Settings & Options">⚙️</button>
+    </div>
+  </header>
+
+  <!-- Quick Action Tools -->
+  <div class="pc-tools-grid">
+    <button id="btn-snip-region" class="pc-tool-btn primary" title="Drag to crop any area of active webpage">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M6 3v3H3v2h3v8H3v2h3v3h2v-3h8v3h2v-3h3v-2h-3V8h3V6h-3V3h-2v3H8V3H6zm2 5h8v8H8V8z"/>
+      </svg>
+      <span>Snip Screen</span>
+    </button>
+    <button id="btn-open-uidrop" class="pc-tool-btn" title="Open SPE Ω UIDrop Design Extractor">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+        <path d="M2 12h20"/>
+      </svg>
+      <span>Open in UIDrop</span>
+    </button>
+  </div>
+
+  <!-- File Dropzone -->
+  <div id="dropzone" class="pc-dropzone" title="Click or drag image to analyze">
+    <div class="pc-dropzone-text">📸 Drop image here or <strong>Click to Upload</strong></div>
+    <div class="pc-dropzone-sub">PNG, JPEG, WebP, AVIF · 100% In-Browser Reverse-Engineering</div>
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+  </div>
+
+  <!-- Active Card Analysis View -->
+  <div id="active-card" class="pc-card">
+    <div class="pc-card-header">
+      <img id="thumb-preview" class="pc-thumb-preview" src="icons/icon48.png" alt="Preview">
+      <div class="pc-card-meta">
+        <div id="card-title" class="pc-card-title">Awaiting Image Input</div>
+        <div id="card-subtitle" class="pc-card-subtitle">Right-click web image, snip, or upload above</div>
+      </div>
+    </div>
+
+    <!-- 4 Tag Pills -->
+    <div id="tags-container" class="pc-tags-container">
+      <span class="pc-tag-pill">visual concept</span>
+      <span class="pc-tag-pill">composition</span>
+      <span class="pc-tag-pill">palette</span>
+      <span class="pc-tag-pill">aesthetic</span>
+    </div>
+
+    <!-- Language Tabs -->
+    <div class="pc-mode-tabs">
+      <button class="pc-tab-btn active" data-mode="en">EN</button>
+      <button class="pc-tab-btn" data-mode="zh">中文</button>
+      <button class="pc-tab-btn" data-mode="ja">日本語</button>
+      <button class="pc-tab-btn" data-mode="json">{} JSON</button>
+    </div>
+
+    <!-- Semicolon Prompt Output Area -->
+    <textarea id="prompt-output" class="pc-prompt-box" readonly placeholder="Reverse-engineered 12-clause semicolon prompt will appear here..."></textarea>
+
+    <!-- Multi-Model 1-Click Exports -->
+    <div class="pc-export-row">
+      <button id="btn-export-mj" class="pc-model-btn" title="Format for Midjourney v6.1">Midjourney</button>
+      <button id="btn-export-flux" class="pc-model-btn" title="Format for FLUX.1">FLUX.1</button>
+      <button id="btn-export-sd" class="pc-model-btn" title="Format for Stable Diffusion 3.5">SD 3.5</button>
+      <button id="btn-export-llm" class="pc-model-btn" title="Format for Claude / GPT-4o">Claude/GPT</button>
+    </div>
+
+    <!-- Primary Copy Button -->
+    <button id="btn-copy-prompt" class="pc-copy-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      <span>Copy Prompt</span>
+    </button>
+  </div>
+
+  <!-- History Drawer -->
+  <section class="pc-history-section">
+    <div class="pc-history-header">
+      <span class="pc-history-title">History (<span id="history-count">0/20</span>)</span>
+      <button id="btn-clear-history" class="pc-history-clear">Clear</button>
+    </div>
+    <div id="history-list" class="pc-history-list">
+      <!-- Injected history items -->
+    </div>
+  </section>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="pc-toast">Copied to clipboard!</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

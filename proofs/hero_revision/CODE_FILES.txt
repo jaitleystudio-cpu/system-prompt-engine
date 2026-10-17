@@ -1,0 +1,9 @@
+apps/web/src/landing/Hero.tsx
+apps/web/src/landing/HeroStory.tsx
+apps/web/src/landing/hero-native.css
+apps/web/src/landing/dailyHero.ts
+apps/web/src/landing/useDailyHero.ts
+apps/web/scripts/test-hero-story.mjs
+apps/web/scripts/test-daily-hero.mjs
+apps/web/scripts/test-final-craft.mjs
+tests/copy/reviewed-inventory.json

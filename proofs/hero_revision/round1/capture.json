@@ -1,0 +1,118 @@
+[
+  {
+    "name": "dark-desktop",
+    "errors": [],
+    "title": "Have something in mind?\nPut it into words.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-DhDXNDhI.js",
+        "bytes": 121908
+      },
+      {
+        "name": "/assets/index-DXEOvrZZ.css",
+        "bytes": 32063
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      },
+      {
+        "name": "/assets/SpeIntelligence-C5pAjgd3.js",
+        "bytes": 2518
+      }
+    ]
+  },
+  {
+    "name": "light-desktop",
+    "errors": [],
+    "title": "Have something in mind?\nPut it into words.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-DhDXNDhI.js",
+        "bytes": 121908
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/assets/index-DXEOvrZZ.css",
+        "bytes": 32063
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      },
+      {
+        "name": "/assets/SpeIntelligence-C5pAjgd3.js",
+        "bytes": 2518
+      }
+    ]
+  },
+  {
+    "name": "mobile",
+    "errors": [],
+    "title": "Have something in mind?\nPut it into words.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-DhDXNDhI.js",
+        "bytes": 121908
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/assets/index-DXEOvrZZ.css",
+        "bytes": 32063
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      }
+    ]
+  },
+  {
+    "name": "reduced-motion",
+    "errors": [],
+    "title": "Have something in mind?\nPut it into words.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-DhDXNDhI.js",
+        "bytes": 121908
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/assets/index-DXEOvrZZ.css",
+        "bytes": 32063
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      }
+    ]
+  }
+]

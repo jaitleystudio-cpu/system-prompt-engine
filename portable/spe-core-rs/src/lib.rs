@@ -8,6 +8,15 @@ pub mod protected;
 pub mod reasons;
 pub mod semantic;
 pub mod value;
+pub mod sha256_lite;
+pub mod grounding;
+pub mod protocols;
+pub mod k3;
+pub mod effect;
+pub mod requirements;
+pub mod xcat;
+pub mod xcat_auto;
+pub mod quality;
 
 use serde::Serialize;
 use serde_json::Value;
@@ -56,10 +65,57 @@ pub fn evaluate_json_str(input: &str) -> String {
             return wrap_error("PORTABILITY_INVALID_FIXTURE", "malformed JSON");
         }
     };
+    // Context-protocol / grounding differential API (Task 11).
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("context_protocol") {
+        return match protocols::evaluate_context_protocol(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("grounding") {
+        return match grounding::evaluate_grounding(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("k3") {
+        return match k3::evaluate(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("requirement_graph") {
+        return match requirements::evaluate(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("xcat") {
+        return match xcat::evaluate(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("quality") {
+        return match quality::evaluate(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
     match evaluate_fixture(&parsed) {
         Ok(result) => wrap_result(&result),
         Err(err) => wrap_error(err.code(), &err.message),
     }
+}
+
+fn wrap_raw_output(output: Value) -> String {
+    let body = serde_json::json!({
+        "status": "VALID",
+        "disposition": "VALID",
+        "reason_code": null,
+        "output": output,
+    });
+    value::raw_dumps(&body).unwrap_or_else(|_| "{}".to_string())
 }
 
 fn wrap_result(result: &ConformanceResult) -> String {
@@ -69,7 +125,7 @@ fn wrap_result(result: &ConformanceResult) -> String {
         "reason_code": result.reason_code,
         "output": result.output,
     });
-    value::canonical_dumps(&body).unwrap_or_else(|_| "{}".to_string())
+    value::raw_dumps(&body).unwrap_or_else(|_| "{}".to_string())
 }
 
 fn wrap_error(code: &str, message: &str) -> String {
@@ -79,5 +135,6 @@ fn wrap_error(code: &str, message: &str) -> String {
         "reason_code": code,
         "output": serde_json::json!({"message": message}),
     });
-    value::canonical_dumps(&body).unwrap_or_else(|_| "{}".to_string())
+    value::raw_dumps(&body).unwrap_or_else(|_| "{}".to_string())
 }
+

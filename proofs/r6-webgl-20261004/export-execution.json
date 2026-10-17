@@ -1,0 +1,132 @@
+{
+  "surface": "export-page",
+  "server": "static-http-not-vite",
+  "gates": {
+    "productWebglExecution": "NOT_RUN",
+    "productNotPass": true,
+    "compilerWebglExecution": "NOT_RUN",
+    "compilerThreeVersion": "0.170.0",
+    "ledgerWebglExecution": "NOT_RUN",
+    "ledgerNotPass": true
+  },
+  "pin": {
+    "version": "0.170.0",
+    "sha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7",
+    "integrity": "sha512-FQK+LEpYc0fBD+J8g6oSEyyNzjp+Q7Ks1C568WWaoMRLW+TkNNWmenWeGgJjV105Gd+p/2ql1ZcjYvNiPZBhuQ==",
+    "resolved": "https://registry.npmjs.org/three/-/three-0.170.0.tgz",
+    "bytes": 691648,
+    "artifact": "./vendor/three.min.js",
+    "source": "node_modules/three/build/three.module.min.js"
+  },
+  "executed": {
+    "webglExecution": "EXECUTED_WITHIN_TESTED_SCOPE",
+    "exportExecution": "EXECUTED_WITHIN_TESTED_SCOPE",
+    "threeVersion": "0.170.0",
+    "threeSha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7",
+    "threeRevision": "170",
+    "contextCreated": "1",
+    "sceneCreated": "1",
+    "nonClearPixels": 74400,
+    "sampledPixels": 1152000,
+    "reducedMotion": "0",
+    "fallbackShown": "0",
+    "unavailableHonest": "0",
+    "threeMissing": null,
+    "canvasCount": 1,
+    "canvasWidth": 1280,
+    "canvasHeight": 900,
+    "getContextCalls": {
+      "webgl2": 1
+    },
+    "importError": null,
+    "webglError": null
+  },
+  "pixels": {
+    "width": 1280,
+    "height": 900,
+    "sampled": 1152000,
+    "nonClearPixels": 74400,
+    "nearBackground": 1077600,
+    "nearIndigo": 806,
+    "uniqueColorBuckets": 44,
+    "minLum": 7.333333333333333,
+    "maxLum": 255,
+    "notClearOnly": true
+  },
+  "reducedMotion": {
+    "scene": {
+      "webglExecution": "NOT_RUN",
+      "exportExecution": "NOT_RUN",
+      "threeVersion": "0.170.0",
+      "threeSha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7",
+      "threeRevision": null,
+      "contextCreated": "0",
+      "sceneCreated": "0",
+      "nonClearPixels": 0,
+      "sampledPixels": 0,
+      "reducedMotion": "1",
+      "fallbackShown": "1",
+      "unavailableHonest": null,
+      "threeMissing": null,
+      "canvasCount": 0,
+      "canvasWidth": 0,
+      "canvasHeight": 0,
+      "getContextCalls": {},
+      "importError": null,
+      "webglError": null
+    },
+    "consoleErrors": []
+  },
+  "unavailable": {
+    "scene": {
+      "webglExecution": "UNAVAILABLE",
+      "exportExecution": "UNAVAILABLE",
+      "threeVersion": "0.170.0",
+      "threeSha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7",
+      "threeRevision": null,
+      "contextCreated": "0",
+      "sceneCreated": "0",
+      "nonClearPixels": 0,
+      "sampledPixels": 0,
+      "reducedMotion": "0",
+      "fallbackShown": "1",
+      "unavailableHonest": "1",
+      "threeMissing": null,
+      "canvasCount": 0,
+      "canvasWidth": 0,
+      "canvasHeight": 0,
+      "getContextCalls": {
+        "webgl2": 2
+      },
+      "importError": null,
+      "webglError": "Error: Error creating WebGL context."
+    },
+    "consoleErrors": [
+      {
+        "type": "error",
+        "text": "THREE.WebGLRenderer: A WebGL context could not be created. Reason:  disabled by enterprise policy or commandline switch"
+      },
+      {
+        "type": "error",
+        "text": "THREE.WebGLRenderer: A WebGL context could not be created. Reason:  disabled by enterprise policy or commandline switch"
+      },
+      {
+        "type": "error",
+        "text": "THREE.WebGLRenderer: Error creating WebGL context."
+      }
+    ]
+  },
+  "consoleErrors": {
+    "executed": []
+  },
+  "framePng": "proofs/r6-webgl-20261004/export-frame.png",
+  "frameSha256": "8aabddbcbd37d1f9135a1d243bdd2f6e8a131773c399ef0cf75a27486815f4e6",
+  "exportExecution": "EXECUTED_WITHIN_TESTED_SCOPE",
+  "urlShape": "static index.html",
+  "checks": {
+    "frameOk": true,
+    "fallbackOk": true,
+    "unavailableOk": true,
+    "gatesOk": true
+  }
+}

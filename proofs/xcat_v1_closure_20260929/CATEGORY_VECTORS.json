@@ -1,0 +1,1401 @@
+{
+  "schema_version": "xcat_category_vectors.v1",
+  "taxonomy": "DOMAIN",
+  "taxonomy_version": "2",
+  "normal_count": 60,
+  "adversarial_count": 56,
+  "vectors": [
+    {
+      "id": "N001",
+      "class": "normal",
+      "category": "CAT:C01",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Advise / Plan / Decide: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N002",
+      "class": "normal",
+      "category": "CAT:C01",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Advise / Plan / Decide: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N003",
+      "class": "normal",
+      "category": "CAT:C01",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Advise / Plan / Decide: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N004",
+      "class": "normal",
+      "category": "CAT:C01",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Advise / Plan / Decide: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N005",
+      "class": "normal",
+      "category": "CAT:C01",
+      "kind": "active_set",
+      "input": {
+        "summary": "Advise / Plan / Decide: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A001",
+      "class": "adversarial",
+      "category": "CAT:C01",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Advise / Plan / Decide: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A002",
+      "class": "adversarial",
+      "category": "CAT:C01",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Advise / Plan / Decide: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A003",
+      "class": "adversarial",
+      "category": "CAT:C01",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Advise / Plan / Decide: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A004",
+      "class": "adversarial",
+      "category": "CAT:C01",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Advise / Plan / Decide: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N006",
+      "class": "normal",
+      "category": "CAT:C02",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Research: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N007",
+      "class": "normal",
+      "category": "CAT:C02",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Research: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N008",
+      "class": "normal",
+      "category": "CAT:C02",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Research: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N009",
+      "class": "normal",
+      "category": "CAT:C02",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Research: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N010",
+      "class": "normal",
+      "category": "CAT:C02",
+      "kind": "active_set",
+      "input": {
+        "summary": "Research: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A005",
+      "class": "adversarial",
+      "category": "CAT:C02",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Research: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A006",
+      "class": "adversarial",
+      "category": "CAT:C02",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Research: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A007",
+      "class": "adversarial",
+      "category": "CAT:C02",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Research: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A008",
+      "class": "adversarial",
+      "category": "CAT:C02",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Research: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N011",
+      "class": "normal",
+      "category": "CAT:C03",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N012",
+      "class": "normal",
+      "category": "CAT:C03",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N013",
+      "class": "normal",
+      "category": "CAT:C03",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N014",
+      "class": "normal",
+      "category": "CAT:C03",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N015",
+      "class": "normal",
+      "category": "CAT:C03",
+      "kind": "active_set",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A009",
+      "class": "adversarial",
+      "category": "CAT:C03",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A010",
+      "class": "adversarial",
+      "category": "CAT:C03",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A011",
+      "class": "adversarial",
+      "category": "CAT:C03",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A012",
+      "class": "adversarial",
+      "category": "CAT:C03",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Write / Rewrite / Communicate: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N016",
+      "class": "normal",
+      "category": "CAT:C04",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N017",
+      "class": "normal",
+      "category": "CAT:C04",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N018",
+      "class": "normal",
+      "category": "CAT:C04",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N019",
+      "class": "normal",
+      "category": "CAT:C04",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N020",
+      "class": "normal",
+      "category": "CAT:C04",
+      "kind": "active_set",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A013",
+      "class": "adversarial",
+      "category": "CAT:C04",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A014",
+      "class": "adversarial",
+      "category": "CAT:C04",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A015",
+      "class": "adversarial",
+      "category": "CAT:C04",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A016",
+      "class": "adversarial",
+      "category": "CAT:C04",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Translate / Localize / Language Transform: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N021",
+      "class": "normal",
+      "category": "CAT:C05",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Learn: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N022",
+      "class": "normal",
+      "category": "CAT:C05",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Learn: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N023",
+      "class": "normal",
+      "category": "CAT:C05",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Learn: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N024",
+      "class": "normal",
+      "category": "CAT:C05",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Learn: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N025",
+      "class": "normal",
+      "category": "CAT:C05",
+      "kind": "active_set",
+      "input": {
+        "summary": "Learn: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A017",
+      "class": "adversarial",
+      "category": "CAT:C05",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Learn: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A018",
+      "class": "adversarial",
+      "category": "CAT:C05",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Learn: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A019",
+      "class": "adversarial",
+      "category": "CAT:C05",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Learn: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A020",
+      "class": "adversarial",
+      "category": "CAT:C05",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Learn: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N026",
+      "class": "normal",
+      "category": "CAT:C06",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Analyze / Compare / Extract: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N027",
+      "class": "normal",
+      "category": "CAT:C06",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Analyze / Compare / Extract: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N028",
+      "class": "normal",
+      "category": "CAT:C06",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Analyze / Compare / Extract: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N029",
+      "class": "normal",
+      "category": "CAT:C06",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Analyze / Compare / Extract: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N030",
+      "class": "normal",
+      "category": "CAT:C06",
+      "kind": "active_set",
+      "input": {
+        "summary": "Analyze / Compare / Extract: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A021",
+      "class": "adversarial",
+      "category": "CAT:C06",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Analyze / Compare / Extract: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A022",
+      "class": "adversarial",
+      "category": "CAT:C06",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Analyze / Compare / Extract: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A023",
+      "class": "adversarial",
+      "category": "CAT:C06",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Analyze / Compare / Extract: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A024",
+      "class": "adversarial",
+      "category": "CAT:C06",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Analyze / Compare / Extract: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N031",
+      "class": "normal",
+      "category": "CAT:C07",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Work / Execute: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N032",
+      "class": "normal",
+      "category": "CAT:C07",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Work / Execute: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N033",
+      "class": "normal",
+      "category": "CAT:C07",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Work / Execute: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N034",
+      "class": "normal",
+      "category": "CAT:C07",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Work / Execute: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N035",
+      "class": "normal",
+      "category": "CAT:C07",
+      "kind": "active_set",
+      "input": {
+        "summary": "Work / Execute: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A025",
+      "class": "adversarial",
+      "category": "CAT:C07",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Work / Execute: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A026",
+      "class": "adversarial",
+      "category": "CAT:C07",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Work / Execute: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A027",
+      "class": "adversarial",
+      "category": "CAT:C07",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Work / Execute: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A028",
+      "class": "adversarial",
+      "category": "CAT:C07",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Work / Execute: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N036",
+      "class": "normal",
+      "category": "CAT:C08",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Business: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N037",
+      "class": "normal",
+      "category": "CAT:C08",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Business: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N038",
+      "class": "normal",
+      "category": "CAT:C08",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Business: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N039",
+      "class": "normal",
+      "category": "CAT:C08",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Business: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N040",
+      "class": "normal",
+      "category": "CAT:C08",
+      "kind": "active_set",
+      "input": {
+        "summary": "Business: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A029",
+      "class": "adversarial",
+      "category": "CAT:C08",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Business: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A030",
+      "class": "adversarial",
+      "category": "CAT:C08",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Business: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A031",
+      "class": "adversarial",
+      "category": "CAT:C08",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Business: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A032",
+      "class": "adversarial",
+      "category": "CAT:C08",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Business: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N041",
+      "class": "normal",
+      "category": "CAT:C09",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Code: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N042",
+      "class": "normal",
+      "category": "CAT:C09",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Code: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N043",
+      "class": "normal",
+      "category": "CAT:C09",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Code: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N044",
+      "class": "normal",
+      "category": "CAT:C09",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Code: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N045",
+      "class": "normal",
+      "category": "CAT:C09",
+      "kind": "active_set",
+      "input": {
+        "summary": "Code: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A033",
+      "class": "adversarial",
+      "category": "CAT:C09",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Code: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A034",
+      "class": "adversarial",
+      "category": "CAT:C09",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Code: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A035",
+      "class": "adversarial",
+      "category": "CAT:C09",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Code: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A036",
+      "class": "adversarial",
+      "category": "CAT:C09",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Code: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N046",
+      "class": "normal",
+      "category": "CAT:C10",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Multimedia: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N047",
+      "class": "normal",
+      "category": "CAT:C10",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Multimedia: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N048",
+      "class": "normal",
+      "category": "CAT:C10",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Multimedia: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N049",
+      "class": "normal",
+      "category": "CAT:C10",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Multimedia: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N050",
+      "class": "normal",
+      "category": "CAT:C10",
+      "kind": "active_set",
+      "input": {
+        "summary": "Multimedia: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A037",
+      "class": "adversarial",
+      "category": "CAT:C10",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Multimedia: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A038",
+      "class": "adversarial",
+      "category": "CAT:C10",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Multimedia: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A039",
+      "class": "adversarial",
+      "category": "CAT:C10",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Multimedia: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A040",
+      "class": "adversarial",
+      "category": "CAT:C10",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Multimedia: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N051",
+      "class": "normal",
+      "category": "CAT:C11",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Career: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N052",
+      "class": "normal",
+      "category": "CAT:C11",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Career: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N053",
+      "class": "normal",
+      "category": "CAT:C11",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Career: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N054",
+      "class": "normal",
+      "category": "CAT:C11",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Career: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N055",
+      "class": "normal",
+      "category": "CAT:C11",
+      "kind": "active_set",
+      "input": {
+        "summary": "Career: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A041",
+      "class": "adversarial",
+      "category": "CAT:C11",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Career: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A042",
+      "class": "adversarial",
+      "category": "CAT:C11",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Career: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A043",
+      "class": "adversarial",
+      "category": "CAT:C11",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Career: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A044",
+      "class": "adversarial",
+      "category": "CAT:C11",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Career: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "N056",
+      "class": "normal",
+      "category": "CAT:C12",
+      "kind": "payload_apply",
+      "input": {
+        "summary": "Creative / Story / Roleplay: valid minimal payload"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N057",
+      "class": "normal",
+      "category": "CAT:C12",
+      "kind": "payload_fields",
+      "input": {
+        "summary": "Creative / Story / Roleplay: payload with core IR fields"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N058",
+      "class": "normal",
+      "category": "CAT:C12",
+      "kind": "trace_append",
+      "input": {
+        "summary": "Creative / Story / Roleplay: category_trace appends id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N059",
+      "class": "normal",
+      "category": "CAT:C12",
+      "kind": "proposals_ok",
+      "input": {
+        "summary": "Creative / Story / Roleplay: proof_obligation_proposals recorded"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "N060",
+      "class": "normal",
+      "category": "CAT:C12",
+      "kind": "active_set",
+      "input": {
+        "summary": "Creative / Story / Roleplay: active_category set to id"
+      },
+      "expected": {
+        "disposition": "ACCEPT"
+      }
+    },
+    {
+      "id": "A045",
+      "class": "adversarial",
+      "category": "CAT:C12",
+      "kind": "authority_write",
+      "input": {
+        "summary": "Creative / Story / Roleplay: forbidden authority mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A046",
+      "class": "adversarial",
+      "category": "CAT:C12",
+      "kind": "facts_write",
+      "input": {
+        "summary": "Creative / Story / Roleplay: forbidden facts mutation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A047",
+      "class": "adversarial",
+      "category": "CAT:C12",
+      "kind": "forbidden_key",
+      "input": {
+        "summary": "Creative / Story / Roleplay: forbidden payload key"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A048",
+      "class": "adversarial",
+      "category": "CAT:C12",
+      "kind": "unknown_field",
+      "input": {
+        "summary": "Creative / Story / Roleplay: unknown IR field"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A049",
+      "class": "adversarial",
+      "category": "CAT:C04",
+      "kind": "legacy_plan",
+      "input": {
+        "summary": "legacy Plan reinterpretation"
+      },
+      "expected": {
+        "disposition": "LEGACY_TAXONOMY_UNMIGRATED"
+      }
+    },
+    {
+      "id": "A050",
+      "class": "adversarial",
+      "category": "CAT:C05",
+      "kind": "mastery_no_evidence",
+      "input": {
+        "summary": "MASTERED without mastery_evidence"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A051",
+      "class": "adversarial",
+      "category": "CAT:C09",
+      "kind": "build_pass",
+      "input": {
+        "summary": "BUILD_PASS from generation"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A052",
+      "class": "adversarial",
+      "category": "CAT:C08",
+      "kind": "hypothesis_fact",
+      "input": {
+        "summary": "hypothesis elevated to fact"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A053",
+      "class": "adversarial",
+      "category": "CAT:C10",
+      "kind": "licensed_oracle",
+      "input": {
+        "summary": "rights oracle claim"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A054",
+      "class": "adversarial",
+      "category": "CAT:C11",
+      "kind": "claim_as_credential",
+      "input": {
+        "summary": "USER_CLAIM as VERIFIED_CREDENTIAL"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A055",
+      "class": "adversarial",
+      "category": "CAT:C12",
+      "kind": "canon_silent",
+      "input": {
+        "summary": "silent canon overwrite"
+      },
+      "expected": {
+        "disposition": "REJECT"
+      }
+    },
+    {
+      "id": "A056",
+      "class": "adversarial",
+      "category": "CAT:C09",
+      "kind": "legacy_privacy",
+      "input": {
+        "summary": "legacy Privacy as Code"
+      },
+      "expected": {
+        "disposition": "LEGACY_TAXONOMY_UNMIGRATED"
+      }
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+............FFFFFF                                                       [100%]
+=================================== FAILURES ===================================
+_ test_media_copy_does_not_imply_unproven_processing[media/MediaProductPanel.tsx-It is not uploaded.] _
+
+file = 'media/MediaProductPanel.tsx', unsupported = 'It is not uploaded.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('media/MediaProductPanel.tsx', 'It is not uploaded.'),
+        ('media/MediaProductPanel.tsx', 'The shell still has to mount this panel.'),
+        ('media/pinnedWhisperRuntime.ts', 'Starting the local media session on this machine.'),
+        ('media/OcrRoute.tsx', 'The pinned engine reads it on this machine.'),
+        ('media/VisualScreenshotWorkspace.tsx', 'Click or drop UI screenshot here'),
+        ('media/VisualScreenshotWorkspace.tsx', 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'),
+    ])
+    def test_media_copy_does_not_imply_unproven_processing(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'It is not uploaded.' not in 'import { us...>\n  );\n}\n'
+E         
+E         'It is not uploaded.' is contained here:
+E           s device. It is not uploaded.</p>
+E                 <p data-testid="media-mode">
+E                   Mode: <strong>{MODE_COPY[state.mode]}</strong> <span>({state.mode})</span>
+E                 </p>
+E                 <input...
+E         
+E         ...Full output truncated (59 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:31: AssertionError
+_ test_media_copy_does_not_imply_unproven_processing[media/MediaProductPanel.tsx-The shell still has to mount this panel.] _
+
+file = 'media/MediaProductPanel.tsx'
+unsupported = 'The shell still has to mount this panel.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('media/MediaProductPanel.tsx', 'It is not uploaded.'),
+        ('media/MediaProductPanel.tsx', 'The shell still has to mount this panel.'),
+        ('media/pinnedWhisperRuntime.ts', 'Starting the local media session on this machine.'),
+        ('media/OcrRoute.tsx', 'The pinned engine reads it on this machine.'),
+        ('media/VisualScreenshotWorkspace.tsx', 'Click or drop UI screenshot here'),
+        ('media/VisualScreenshotWorkspace.tsx', 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'),
+    ])
+    def test_media_copy_does_not_imply_unproven_processing(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'The shell s... this panel.' not in 'import { us...>\n  );\n}\n'
+E         
+E         'The shell still has to mount this panel.' is contained here:
+E            browser. The shell still has to mount this panel. The file stayed on this device.",
+E                   }),
+E                 );
+E                 return;
+E               }...
+E         
+E         ...Full output truncated (96 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:31: AssertionError
+_ test_media_copy_does_not_imply_unproven_processing[media/pinnedWhisperRuntime.ts-Starting the local media session on this machine.] _
+
+file = 'media/pinnedWhisperRuntime.ts'
+unsupported = 'Starting the local media session on this machine.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('media/MediaProductPanel.tsx', 'It is not uploaded.'),
+        ('media/MediaProductPanel.tsx', 'The shell still has to mount this panel.'),
+        ('media/pinnedWhisperRuntime.ts', 'Starting the local media session on this machine.'),
+        ('media/OcrRoute.tsx', 'The pinned engine reads it on this machine.'),
+        ('media/VisualScreenshotWorkspace.tsx', 'Click or drop UI screenshot here'),
+        ('media/VisualScreenshotWorkspace.tsx', 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'),
+    ])
+    def test_media_copy_does_not_imply_unproven_processing(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Starting th...his machine.' not in 'import type...\n  },\n};\n'
+E         
+E         'Starting the local...on on this machine.' is contained here:
+E           l, note: "Starting the local media session on this machine." });
+E               try {
+E                 const bytes = await file.arrayBuffer();
+E                 if (hooks.signal.aborted) return cancelled();
+E                 const response = await fetch("/api/media/transcribe", {...
+E         
+E         ...Full output truncated (20 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:31: AssertionError
+_ test_media_copy_does_not_imply_unproven_processing[media/OcrRoute.tsx-The pinned engine reads it on this machine.] _
+
+file = 'media/OcrRoute.tsx'
+unsupported = 'The pinned engine reads it on this machine.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('media/MediaProductPanel.tsx', 'It is not uploaded.'),
+        ('media/MediaProductPanel.tsx', 'The shell still has to mount this panel.'),
+        ('media/pinnedWhisperRuntime.ts', 'Starting the local media session on this machine.'),
+        ('media/OcrRoute.tsx', 'The pinned engine reads it on this machine.'),
+        ('media/VisualScreenshotWorkspace.tsx', 'Click or drop UI screenshot here'),
+        ('media/VisualScreenshotWorkspace.tsx', 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'),
+    ])
+    def test_media_copy_does_not_imply_unproven_processing(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'The pinned ...his machine.' not in 'import { us...>\n  );\n}\n'
+E         
+E         'The pinned engine ...it on this machine.' is contained here:
+E           an image. The pinned engine reads it on this machine.</p>
+E                 <p data-testid="ocr-mode">
+E                   Mode: <strong>{mode}</strong>
+E                 </p>
+E                 <p data-testid="ocr-product">OCR product: {product}</p>...
+E         
+E         ...Full output truncated (64 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:31: AssertionError
+_ test_media_copy_does_not_imply_unproven_processing[media/VisualScreenshotWorkspace.tsx-Click or drop UI screenshot here] _
+
+file = 'media/VisualScreenshotWorkspace.tsx'
+unsupported = 'Click or drop UI screenshot here'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('media/MediaProductPanel.tsx', 'It is not uploaded.'),
+        ('media/MediaProductPanel.tsx', 'The shell still has to mount this panel.'),
+        ('media/pinnedWhisperRuntime.ts', 'Starting the local media session on this machine.'),
+        ('media/OcrRoute.tsx', 'The pinned engine reads it on this machine.'),
+        ('media/VisualScreenshotWorkspace.tsx', 'Click or drop UI screenshot here'),
+        ('media/VisualScreenshotWorkspace.tsx', 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'),
+    ])
+    def test_media_copy_does_not_imply_unproven_processing(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Click or dr...eenshot here' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Click or drop UI screenshot here' is contained here:
+E                     Click or drop UI screenshot here
+E                         </strong>
+E                         <span style={{ fontSize: "0.8125rem", color: "var(--spe-vis-muted)", marginTop: "4px" }}>
+E                           PNG, JPEG, WebP up to 20MB. Fully local processing.
+E                         </span>...
+E         
+E         ...Full output truncated (114 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:31: AssertionError
+_ test_media_copy_does_not_imply_unproven_processing[media/VisualScreenshotWorkspace.tsx-The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.] _
+
+file = 'media/VisualScreenshotWorkspace.tsx'
+unsupported = 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('media/MediaProductPanel.tsx', 'It is not uploaded.'),
+        ('media/MediaProductPanel.tsx', 'The shell still has to mount this panel.'),
+        ('media/pinnedWhisperRuntime.ts', 'Starting the local media session on this machine.'),
+        ('media/OcrRoute.tsx', 'The pinned engine reads it on this machine.'),
+        ('media/VisualScreenshotWorkspace.tsx', 'Click or drop UI screenshot here'),
+        ('media/VisualScreenshotWorkspace.tsx', 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'),
+    ])
+    def test_media_copy_does_not_imply_unproven_processing(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'The synthes...ve controls.' not in 'import Reac...\n  );\n};\n'
+E         
+E         'The synthesizer ex...teractive controls.' is contained here:
+E           ents.\n// The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.`}
+E                     </pre>
+E           
+E                     {/* Actions */}
+E                     <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end", flexWrap: "wrap" }}>...
+E         
+E         ...Full output truncated (15 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:31: AssertionError
+=========================== short test summary info ============================
+FAILED tests/web/test_r8_copy_truth.py::test_media_copy_does_not_imply_unproven_processing[media/MediaProductPanel.tsx-It is not uploaded.]
+FAILED tests/web/test_r8_copy_truth.py::test_media_copy_does_not_imply_unproven_processing[media/MediaProductPanel.tsx-The shell still has to mount this panel.]
+FAILED tests/web/test_r8_copy_truth.py::test_media_copy_does_not_imply_unproven_processing[media/pinnedWhisperRuntime.ts-Starting the local media session on this machine.]
+FAILED tests/web/test_r8_copy_truth.py::test_media_copy_does_not_imply_unproven_processing[media/OcrRoute.tsx-The pinned engine reads it on this machine.]
+FAILED tests/web/test_r8_copy_truth.py::test_media_copy_does_not_imply_unproven_processing[media/VisualScreenshotWorkspace.tsx-Click or drop UI screenshot here]
+FAILED tests/web/test_r8_copy_truth.py::test_media_copy_does_not_imply_unproven_processing[media/VisualScreenshotWorkspace.tsx-The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.]
+6 failed, 12 passed in 0.04s

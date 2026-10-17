@@ -79,6 +79,10 @@ class CrossCategoryEnvelope:
     taint_labels: tuple[str, ...] = ()
     sensitivity_labels: tuple[str, ...] = ()
     category_trace: tuple[str, ...] = ()
+    taxonomy_version: str = "2"
+    active_category: str | None = None
+    category_payload: Mapping[str, Any] | None = None
+    proof_obligation_proposals: tuple[Mapping[str, Any], ...] = ()
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "facts", _freeze_mapping_tuple(self.facts))
@@ -104,6 +108,16 @@ class CrossCategoryEnvelope:
         object.__setattr__(self, "sensitivity_labels", tuple(self.sensitivity_labels))
         object.__setattr__(self, "category_trace", tuple(self.category_trace))
         object.__setattr__(self, "failures", tuple(self.failures))
+        object.__setattr__(self, "taxonomy_version", str(self.taxonomy_version))
+        object.__setattr__(self, "active_category", self.active_category)
+        object.__setattr__(
+            self, "category_payload", _freeze_mapping(self.category_payload)
+        )
+        object.__setattr__(
+            self,
+            "proof_obligation_proposals",
+            _freeze_mapping_tuple(self.proof_obligation_proposals),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -134,4 +148,10 @@ class CrossCategoryEnvelope:
             "taint_labels": list(self.taint_labels),
             "sensitivity_labels": list(self.sensitivity_labels),
             "category_trace": list(self.category_trace),
+            "taxonomy_version": self.taxonomy_version,
+            "active_category": self.active_category,
+            "category_payload": _deep_unfreeze(self.category_payload),
+            "proof_obligation_proposals": _deep_unfreeze(
+                self.proof_obligation_proposals
+            ),
         }

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="promptcardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff8c37"/>
+      <stop offset="50%" stop-color="#ff5500"/>
+      <stop offset="100%" stop-color="#d62200"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <circle cx="64" cy="64" r="56" fill="url(#promptcardGrad)" filter="url(#shadow)"/>
+  <!-- Central Aperture / PromptCard Icon -->
+  <rect x="36" y="34" width="56" height="60" rx="10" fill="#ffffff" fill-opacity="0.95"/>
+  <rect x="44" y="44" width="40" height="26" rx="4" fill="#18181c"/>
+  <circle cx="56" cy="54" r="4" fill="#ff7a18"/>
+  <path d="M46 66 L56 56 L66 66 L74 60 L82 68" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <rect x="44" y="76" width="30" height="4" rx="2" fill="#71717a"/>
+  <rect x="44" y="83" width="20" height="4" rx="2" fill="#a1a1aa"/>
+</svg>

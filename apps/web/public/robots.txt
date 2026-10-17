@@ -1,0 +1,113 @@
+# robots.txt for SPE Ω — Global AI Gateway (October 2026 Policy)
+# Three-tier crawler governance: Search Discovery, Agent Integration, and Training Bots
+
+# -----------------------------------------------------------------------------
+# Tier 1: Search Discovery Crawlers (Organic Search & Assistant Retrieval)
+# -----------------------------------------------------------------------------
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Googlebot-Video
+User-agent: Bingbot
+User-agent: OAI-SearchBot
+User-agent: Claude-Web
+User-agent: PerplexityBot
+User-agent: Applebot
+Allow: /
+Allow: /prompts
+Allow: /create
+Allow: /code
+Allow: /daily-lab
+Allow: /capabilities
+Allow: /privacy
+Allow: /evidence-pages/
+Allow: /models/
+Allow: /failure-genome/
+Allow: /tools/
+Allow: /workflows/
+Allow: /build-skill
+Allow: /incidents/
+Allow: /integrations/
+Allow: /compare/
+Allow: /migrate/
+Allow: /eval-studio
+Allow: /api/v1/
+Allow: /.well-known/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /workspace
+Disallow: /my-work
+Disallow: /website
+Disallow: /media
+Disallow: /ocr
+Disallow: /research
+Disallow: /studio
+Disallow: /private/
+
+# -----------------------------------------------------------------------------
+# Tier 2: Model Training Crawlers & Unverified Bulk Scrapers (Controlled Access)
+# Training requires explicit commercial data licensing. Public discovery allowed.
+# -----------------------------------------------------------------------------
+User-agent: GPTBot
+User-agent: Google-Extended
+User-agent: CCBot
+User-agent: anthropic-ai
+User-agent: ClaudeBot
+User-agent: Bytespider
+User-agent: FacebookBot
+User-agent: Diffbot
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /api/v1/
+Allow: /.well-known/agent.json
+Disallow: /workspace
+Disallow: /my-work
+Disallow: /website
+Disallow: /media
+Disallow: /ocr
+Disallow: /research
+Disallow: /studio
+Disallow: /private/
+Disallow: /
+
+# -----------------------------------------------------------------------------
+# Tier 3: Default User-Agents & Integrated AI Assistants
+# -----------------------------------------------------------------------------
+User-agent: *
+Allow: /
+Allow: /prompts
+Allow: /create
+Allow: /code
+Allow: /daily-lab
+Allow: /capabilities
+Allow: /privacy
+Allow: /evidence-pages/
+Allow: /models/
+Allow: /failure-genome/
+Allow: /tools/
+Allow: /workflows/
+Allow: /build-skill
+Allow: /incidents/
+Allow: /integrations/
+Allow: /compare/
+Allow: /migrate/
+Allow: /eval-studio
+Allow: /api/v1/
+Allow: /.well-known/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /workspace
+Disallow: /my-work
+Disallow: /website
+Disallow: /media
+Disallow: /ocr
+Disallow: /research
+Disallow: /studio
+Disallow: /private/
+
+# Sitemaps & Gateway Disclosures
+Sitemap: https://systempromptengine.com/sitemap.xml
+# Machine-Readable AI Gateway Discovery: https://systempromptengine.com/llms.txt
+# Machine-Readable AI Gateway Full Spec: https://systempromptengine.com/llms-full.txt
+# Stateless MCP Server: https://systempromptengine.com/api/v1/mcp
+# Agent-to-Agent (A2A) Discovery: https://systempromptengine.com/.well-known/agent.json

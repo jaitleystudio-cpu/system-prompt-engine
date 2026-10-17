@@ -1,0 +1,287 @@
+[
+  {
+    "name": "theme dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "all five stages dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six real fragments dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no production PNG or canvas dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not requested dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "reduced motion static dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete readable prompt dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "semantic equivalent dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "axe hero dark/dark",
+    "pass": true,
+    "detail": "[]"
+  },
+  {
+    "name": "no runtime errors dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "theme light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "all five stages light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six real fragments light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no production PNG or canvas light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not requested light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "reduced motion static light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete readable prompt light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "semantic equivalent light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "axe hero light/dark",
+    "pass": true,
+    "detail": "[]"
+  },
+  {
+    "name": "no runtime errors light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "theme system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "all five stages system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six real fragments system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no production PNG or canvas system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not requested system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "reduced motion static system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete readable prompt system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "semantic equivalent system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "axe hero system/dark",
+    "pass": true,
+    "detail": "[]"
+  },
+  {
+    "name": "system live switch dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no runtime errors system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "theme system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "all five stages system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six real fragments system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no production PNG or canvas system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not requested system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "reduced motion static system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete readable prompt system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "semantic equivalent system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "axe hero system/light",
+    "pass": true,
+    "detail": "[]"
+  },
+  {
+    "name": "system live switch light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no runtime errors system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "keyboard pause",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "pause freezes timeline",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "resume advances timeline",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "live reduced motion change",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "finite story settles",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "replay restarts",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "offscreen animation paused",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "responsive 320",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"visible\":true,\"vertical\":true}"
+  },
+  {
+    "name": "responsive 390",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"visible\":true,\"vertical\":true}"
+  },
+  {
+    "name": "responsive 700",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"visible\":true,\"vertical\":true}"
+  },
+  {
+    "name": "responsive 768",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"visible\":true,\"vertical\":false}"
+  },
+  {
+    "name": "responsive 1024",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"visible\":true,\"vertical\":false}"
+  },
+  {
+    "name": "responsive 1440",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"visible\":true,\"vertical\":false}"
+  },
+  {
+    "name": "responsive 1920",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"visible\":true,\"vertical\":false}"
+  },
+  {
+    "name": "200% zoom no horizontal overflow",
+    "pass": true,
+    "detail": ""
+  }
+]

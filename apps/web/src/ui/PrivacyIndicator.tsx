@@ -10,7 +10,7 @@ export function PrivacyIndicator({ sensitivity, trust, authority, online }: Prop
   return (
     <div className="header-meta" aria-label="Privacy status">
       <span className={`pill ${online ? "ok" : "warn"}`}>
-        {online ? "online shell" : "offline shell"}
+        {online ? "connected shell" : "local shell"}
       </span>
       <span className="pill">sensitivity: {sensitivity ?? "—"}</span>
       <span className="pill">trust: {trust ?? "—"}</span>

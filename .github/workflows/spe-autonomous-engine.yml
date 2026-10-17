@@ -1,0 +1,81 @@
+name: SPE Autonomous A-to-Z Production Engine
+
+on:
+  push:
+    branches: [main, feature/**, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run autonomously every day at 04:00 UTC (9:30 AM IST)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: spe-autonomous-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  autonomous-pipeline:
+    name: Autonomous A-to-Z Verification & Build Engine
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'apps/web/package-lock.json'
+
+      - name: Install Web Dependencies
+        working-directory: apps/web
+        run: npm ci
+
+      - name: Execute Autonomous A-to-Z Master Pipeline
+        run: node tools/autonomous_pipeline.mjs
+
+      - name: Verify Fail-Closed Repository Cleanliness Gate (AUD-06)
+        run: |
+          echo "[*] Verifying complete repository cleanliness..."
+          git status --short
+
+          # 1. Strict check on primary generated artifacts
+          git diff --exit-code apps/web/src/engine/modelAtlas/modelAtlasRegistry.json
+          git diff --exit-code apps/web/public/sitemap-prompts.xml
+
+          # 2. Complete check against any untracked files anywhere in repo
+          UNTRACKED=$(git ls-files --others --exclude-standard)
+          if [ -n "$UNTRACKED" ]; then
+            echo "❌ Error: Untracked files detected in repository (AUD-06 violation):"
+            echo "$UNTRACKED"
+            exit 1
+          fi
+
+          # 3. Complete check against any unexpected tracked modifications outside the execution receipt
+          UNEXPECTED_DIFF=$(git diff --name-only -- ':!evidence/autonomous_execution_receipt.json')
+          if [ -n "$UNEXPECTED_DIFF" ]; then
+            echo "❌ Error: Unexpected tracked files modified in working tree (AUD-06 violation):"
+            echo "$UNEXPECTED_DIFF"
+            git diff -- ':!evidence/autonomous_execution_receipt.json'
+            exit 1
+          fi
+
+          echo "✓ Complete repository cleanliness verified: 0 untracked files, 0 unexpected modifications."
+
+
+      - name: Upload Cryptographic Audit Receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-execution-receipt
+          path: evidence/autonomous_execution_receipt.json
+          retention-days: 30

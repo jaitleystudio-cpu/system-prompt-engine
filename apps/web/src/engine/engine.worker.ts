@@ -3,9 +3,16 @@
  * Web Worker: load actual spe_wasm.wasm, verify SHA-256, call spe_evaluate.
  * Uses WebAssembly via wasm-host (exports: memory, spe_alloc, spe_evaluate, spe_free).
  * No SPE semantic detectors. No TypeScript fallback. No Python. No fallback evaluator.
+ * Context-protocol compile is transport-only: JSON in → WASM → JSON out.
  */
-import { loadAndEvaluate } from "./wasm-host.mjs";
-import type { CompilePhase, EngineError, EngineSuccessBody, WorkerRequest, WorkerResponse } from "./types";
+import { evaluateTrustedQuality, loadAndEvaluate, resolveQualityRoute } from "./wasm-host.mjs";
+import type {
+  CompilePhase,
+  EngineError,
+  EngineSuccessBody,
+  WorkerRequest,
+  WorkerResponse,
+} from "./types";
 
 const ctx = self as DedicatedWorkerGlobalScope;
 
@@ -27,19 +34,52 @@ async function readWasm(): Promise<{ bytes: Uint8Array; sha: string }> {
   return { bytes, sha: meta.sha256 };
 }
 
+function requestJsonText(msg: WorkerRequest): string {
+  if (msg.type === "init") return "{}";
+  if (msg.type === "context_protocol") {
+    // Transport only — do not interpret or synthesize protocol fields here.
+    return JSON.stringify(msg.request);
+  }
+  if (msg.type === "quality") return JSON.stringify(msg.request);
+  return msg.jsonText;
+}
+
 ctx.onmessage = async (ev: MessageEvent<WorkerRequest>) => {
   const msg = ev.data;
   const onPhase = (phase: string) => {
     post({ id: msg.id, type: "status", phase: phase as CompilePhase });
   };
+  const route = resolveQualityRoute(
+    msg.type === "quality"
+      ? { type: "quality", request: msg.request }
+      : msg.type === "evaluate"
+        ? { type: "evaluate", jsonText: msg.jsonText }
+        : { type: msg.type },
+  );
+  if (route.error) {
+    post({
+      id: msg.id,
+      type: "done",
+      error: {
+        code: "TRUSTED_QUALITY_PATH_REQUIRED",
+        message: "quality requests require the trusted quality worker path. Caller attestation is ignored.",
+      },
+      result: null,
+      phases: ["unavailable"],
+      sha256: null,
+      imports: null,
+      used_ts_fallback: false,
+    });
+    return;
+  }
   try {
     post({ id: msg.id, type: "status", phase: "loading_wasm" });
     const { bytes, sha } = await readWasm();
-    if (msg.type === "init") {
-      const out = await loadAndEvaluate({
+    if (msg.type === "quality") {
+      const out = await evaluateTrustedQuality({
         wasmBytes: bytes,
         expectedSha256: sha,
-        jsonText: "{}",
+        request: msg.request,
         onPhase,
       });
       post({
@@ -54,10 +94,11 @@ ctx.onmessage = async (ev: MessageEvent<WorkerRequest>) => {
       });
       return;
     }
+    const jsonText = requestJsonText(msg);
     const out = await loadAndEvaluate({
       wasmBytes: bytes,
       expectedSha256: sha,
-      jsonText: msg.jsonText,
+      jsonText,
       onPhase,
     });
     post({

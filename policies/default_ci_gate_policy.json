@@ -1,0 +1,29 @@
+{
+  "policy_id": "spe.policy.default-ci-gate",
+  "version": "1.0.0",
+  "description": "Default CI/CD Evidence Gate policy enforcing protected intent preservation, bounded rule consistency, and secret prevention.",
+  "rules": {
+    "require_protected_intent_preserved": true,
+    "max_allowed_hard_constraint_failures": 0,
+    "max_allowed_secrets_detected": 0,
+    "min_owasp_coverage_pct": 80.0,
+    "fail_on_contradiction": true,
+    "require_ed25519_signed_receipt": true
+  },
+  "verdict_thresholds": {
+    "ship": {
+      "hard_constraints_failed": 0,
+      "secrets_found": 0,
+      "bounded_rule_consistency": "PASS"
+    },
+    "review": {
+      "hard_constraints_failed": 0,
+      "advisory_warnings_count_max": 3
+    },
+    "block": {
+      "hard_constraints_failed_gt": 0,
+      "secrets_found_gt": 0,
+      "contradiction_detected": true
+    }
+  }
+}

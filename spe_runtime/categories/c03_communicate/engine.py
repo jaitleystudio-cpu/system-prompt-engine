@@ -1,4 +1,9 @@
-"""CAT:C03 Communicate — may add rendering/presentation ONLY."""
+"""CAT:C03 legacy compatibility writer.
+
+OWNERSHIP_CLASS = LEGACY_COMPATIBILITY
+DOMAIN v2 production must use apply_domain_category.
+This function directly commits envelope.rendering and is not a DOMAIN writer.
+"""
 
 from __future__ import annotations
 
@@ -13,6 +18,8 @@ from spe_runtime.categories.c03_communicate.validate import validate_c03_output
 from spe_runtime.xcat.models import CrossCategoryEnvelope
 
 CATEGORY_ID = "CAT:C03"
+OWNERSHIP_CLASS = "LEGACY_COMPATIBILITY"
+DOMAIN_PRODUCTION = False
 
 
 def communicate(

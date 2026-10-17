@@ -1,0 +1,124 @@
+..................FFFFF                                                  [100%]
+=================================== FAILURES ===================================
+_______ test_project_library_sample_does_not_claim_measured_verification _______
+
+    def test_project_library_sample_does_not_claim_measured_verification():
+        text = (WEB / "src" / "library" / "projectLibraryModel.ts").read_text()
+>       assert "complete, fully verified spe.project-library.v1 sample bundle" not in text
+E       assert 'complete, f...ample bundle' not in '/**\n * SPE...\n  ],\n};\n'
+E         
+E         'complete, fully ve...ry.v1 sample bundle' is contained here:
+E           ixture: A complete, fully verified spe.project-library.v1 sample bundle.
+E            */
+E           export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
+E             schema: "spe.project-library.v1",
+E             visibility: "private",...
+E         
+E         ...Full output truncated (153 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:36: AssertionError
+_ test_mounted_routes_describe_actual_request_behavior[routing.ts-Media is not mounted in this build.] _
+
+file = 'routing.ts', unsupported = 'Media is not mounted in this build.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('routing.ts', 'Media is not mounted in this build.'),
+        ('routing.ts', 'Read text from an image on this machine with the pinned local engine.'),
+        ('website/WebsiteProduct.tsx', 'Shell mount: not done.'),
+        ('research/ResearchRoute.tsx', 'I consent to a public research lookup. Off means no search.'),
+    ])
+    def test_mounted_routes_describe_actual_request_behavior(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Media is no... this build.' not in '/** History...,\n  };\n}\n'
+E         
+E         'Media is not mounted in this build.' is contained here:
+E           n:
+E                 "Media is not mounted in this build. Nothing on this route can capture or generate media.",
+E         ?        +++++++++++++++++++++++++++++++++++
+E             },
+E             ocr: {...
+E         
+E         ...Full output truncated (99 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:49: AssertionError
+_ test_mounted_routes_describe_actual_request_behavior[routing.ts-Read text from an image on this machine with the pinned local engine.] _
+
+file = 'routing.ts'
+unsupported = 'Read text from an image on this machine with the pinned local engine.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('routing.ts', 'Media is not mounted in this build.'),
+        ('routing.ts', 'Read text from an image on this machine with the pinned local engine.'),
+        ('website/WebsiteProduct.tsx', 'Shell mount: not done.'),
+        ('research/ResearchRoute.tsx', 'I consent to a public research lookup. Off means no search.'),
+    ])
+    def test_mounted_routes_describe_actual_request_behavior(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Read text f...ocal engine.' not in '/** History...,\n  };\n}\n'
+E         
+E         'Read text from an ...inned local engine.' is contained here:
+E           n:
+E                 "Read text from an image on this machine with the pinned local engine. If that engine is not verified, this route stays unavailable.",
+E             },
+E             research: {
+E               path: "/research",...
+E         
+E         ...Full output truncated (92 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:49: AssertionError
+_ test_mounted_routes_describe_actual_request_behavior[website/WebsiteProduct.tsx-Shell mount: not done.] _
+
+file = 'website/WebsiteProduct.tsx', unsupported = 'Shell mount: not done.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('routing.ts', 'Media is not mounted in this build.'),
+        ('routing.ts', 'Read text from an image on this machine with the pinned local engine.'),
+        ('website/WebsiteProduct.tsx', 'Shell mount: not done.'),
+        ('research/ResearchRoute.tsx', 'I consent to a public research lookup. Off means no search.'),
+    ])
+    def test_mounted_routes_describe_actual_request_behavior(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       AssertionError: assert 'Shell mount: not done.' not in 'import { us...>\n  );\n}\n'
+E         
+E         'Shell mount: not done.' is contained here:
+E           vailable. Shell mount: not done.</p>
+E                   </div>
+E                 ) : null}
+E                 {result?.previewHtml ? (
+E                   <iframe...
+E         
+E         ...Full output truncated (9 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:49: AssertionError
+_ test_mounted_routes_describe_actual_request_behavior[research/ResearchRoute.tsx-I consent to a public research lookup. Off means no search.] _
+
+file = 'research/ResearchRoute.tsx'
+unsupported = 'I consent to a public research lookup. Off means no search.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('routing.ts', 'Media is not mounted in this build.'),
+        ('routing.ts', 'Read text from an image on this machine with the pinned local engine.'),
+        ('website/WebsiteProduct.tsx', 'Shell mount: not done.'),
+        ('research/ResearchRoute.tsx', 'I consent to a public research lookup. Off means no search.'),
+    ])
+    def test_mounted_routes_describe_actual_request_behavior(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'I consent t...s no search.' not in 'import { us...>\n  );\n}\n'
+E         
+E         'I consent to a pub...ff means no search.' is contained here:
+E                     I consent to a public research lookup. Off means no search.
+E                     </label>
+E                   </div>
+E                   <button type="submit">Continue</button>
+E                 </form>...
+E         
+E         ...Full output truncated (45 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:49: AssertionError
+=========================== short test summary info ============================
+FAILED tests/web/test_r8_copy_truth.py::test_project_library_sample_does_not_claim_measured_verification
+FAILED tests/web/test_r8_copy_truth.py::test_mounted_routes_describe_actual_request_behavior[routing.ts-Media is not mounted in this build.]
+FAILED tests/web/test_r8_copy_truth.py::test_mounted_routes_describe_actual_request_behavior[routing.ts-Read text from an image on this machine with the pinned local engine.]
+FAILED tests/web/test_r8_copy_truth.py::test_mounted_routes_describe_actual_request_behavior[website/WebsiteProduct.tsx-Shell mount: not done.]
+FAILED tests/web/test_r8_copy_truth.py::test_mounted_routes_describe_actual_request_behavior[research/ResearchRoute.tsx-I consent to a public research lookup. Off means no search.]
+5 failed, 18 passed in 0.04s

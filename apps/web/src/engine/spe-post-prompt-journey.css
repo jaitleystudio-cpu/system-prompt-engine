@@ -1,0 +1,169 @@
+/* ==========================================================================
+   SPE Post-Prompt Guided Journey Styles
+   Linear / Apple-Grade Dark Aesthetics · Fluid Micro-Interactions · 0 Emojis
+   ========================================================================== */
+
+@keyframes speFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes speSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spePulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.45);
+  }
+}
+
+@keyframes speShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.spe-journey-fade-in {
+  animation: speFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.spe-journey-spin {
+  animation: speSpin 0.8s linear infinite;
+}
+
+.spe-journey-pulse {
+  animation: spePulseGlow 2.5s ease-in-out infinite;
+}
+
+/* Custom Sleek Scrollbar */
+.spe-journey-custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.spe-journey-custom-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 9999px;
+}
+
+.spe-journey-custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+
+.spe-journey-custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Fluid Hover Micro-interactions */
+.spe-interactive-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.spe-interactive-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.spe-btn-touch-target {
+  min-height: 42px;
+  min-width: 42px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spe-btn-touch-target:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.spe-btn-touch-target:active {
+  transform: translateY(1px);
+  filter: brightness(0.95);
+}
+
+.spe-btn-touch-target:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Experience Mode Switcher: Simple vs Architect View (P0 UX)
+   ========================================================================== */
+
+.spe-experience-toggle-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.25rem 0 1.5rem 0;
+  width: 100%;
+}
+
+.spe-experience-toggle {
+  display: inline-flex;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 4px;
+  gap: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.spe-experience-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #94a3b8;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 40px;
+}
+
+.spe-experience-mode-btn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.spe-experience-mode-btn.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.28) 0%, rgba(14, 165, 233, 0.38) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.25);
+}
+
+.spe-experience-mode-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+

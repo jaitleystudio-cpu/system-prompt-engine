@@ -1,0 +1,11 @@
+{
+  "apps/web/src/landing/Hero.tsx": "34184c7867b44c8363216f2e0d8ab5d8f2af8fabd4b4d72aec532f5008d67c13",
+  "apps/web/src/landing/HeroStory.tsx": "72e50245c395f3fe6fe78c4a97d67131e53e60cb92e70410a7ee06dc7c3f65ac",
+  "apps/web/src/landing/hero-native.css": "adbecb3bd2c764f84f24161d8789a4e7ff332f47097d3bcde4e38dfcdcc387ad",
+  "apps/web/src/landing/dailyHero.ts": "2cd4f62224160f39c6be801303ef69c60d0104673ce1055780ea99e78fb20cc6",
+  "apps/web/src/landing/useDailyHero.ts": "edce3eaeeb1197c019de9cec3500ebe542e5cba9ccb803aad94dca675153fd44",
+  "apps/web/scripts/test-hero-story.mjs": "30028fc48704edc9bcc05ef27afa2f9399ef06e02f8994a0893a344d794204c0",
+  "apps/web/scripts/test-daily-hero.mjs": "3a0d393f306b0161f6ce5a91f7b921450eac33c211f9e7c3b12e9c75bdb33958",
+  "apps/web/scripts/test-final-craft.mjs": "3e49ae85016c6bfb78eb0ddfc7b796fb3ab53d7bfa79a6d456d1356d0725c34c",
+  "tests/copy/reviewed-inventory.json": "4c96e024505c05e2b077e2fb86dd9f98ba0fa8d62eb55ad36bf6570dc77b3196"
+}

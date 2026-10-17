@@ -1,0 +1,19 @@
+{
+  "baseline": "ba11607694a4febc09012d3339dfd8c1be89e44b",
+  "protected": {
+    "pythonSemanticCore": "UNCHANGED",
+    "rustSemanticCore": "UNCHANGED",
+    "wasmSemanticBindings": "UNCHANGED",
+    "protectedIntent": "UNCHANGED",
+    "k3": "UNCHANGED",
+    "contextProtocol": "UNCHANGED",
+    "providerProfileSemantics": "UNCHANGED",
+    "authorityRules": "UNCHANGED",
+    "speSemantics": "UNCHANGED",
+    "executionRecordSemantics": "UNCHANGED",
+    "g6h": "UNCHANGED",
+    "workflows": "UNCHANGED"
+  },
+  "workflowDiff": [],
+  "scope": "web presentation, plain-English copy, reviewed copy inventory, and this recovery evidence folder"
+}

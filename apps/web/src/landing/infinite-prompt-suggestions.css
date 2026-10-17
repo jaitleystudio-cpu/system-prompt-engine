@@ -1,0 +1,403 @@
+/* ==========================================================================
+   SPE Infinite Prompt Suggestions Fountain & Contextual Evolution
+   ========================================================================== */
+
+.spe-infinite-fountain {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 14px 0 24px;
+  position: relative;
+}
+
+/* Header bar with infinity badge, telemetry count, and Roll Reel trigger */
+.spe-fountain-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+.spe-fountain-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spe-fountain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.spe-fountain-badge .spe-fountain-icon {
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.spe-fountain-counter {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.spe-fountain-roll-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.2);
+  border-radius: 9999px;
+  padding: 5px 13px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.spe-fountain-roll-btn:hover {
+  background: rgba(45, 62, 90, 0.95);
+  border-color: rgba(251, 191, 36, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(251, 191, 36, 0.18);
+}
+
+.spe-fountain-roll-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.spe-fountain-roll-btn .spe-roll-icon {
+  display: inline-block;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.spe-fountain-roll-btn:hover .spe-roll-icon {
+  transform: rotate(180deg);
+}
+
+/* Slots Grid / Flex */
+.spe-fountain-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  perspective: 900px;
+}
+
+/* Individual Slot Button */
+.spe-fountain-slot {
+  position: relative;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(226, 232, 240, 0.14);
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 9px 14px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  color: #cbd5e1;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.spe-fountain-slot:hover {
+  background: rgba(26, 38, 62, 0.9);
+  border-color: rgba(217, 197, 154, 0.45);
+  color: #f8fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.4), 0 0 12px rgba(217, 197, 154, 0.12);
+}
+
+.spe-fountain-slot:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.spe-fountain-slot:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+.spe-slot-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.spe-slot-top-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spe-slot-category {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.spe-slot-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.spe-slot-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spe-slot-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fbbf24;
+  opacity: 0.8;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.spe-fountain-slot:hover .spe-slot-arrow {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+/* 3D Flip Keyframes */
+@keyframes speSlotFlip3D {
+  0% {
+    transform: rotateX(0deg) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+  45% {
+    transform: rotateX(85deg) scale(0.96);
+    opacity: 0.1;
+    filter: blur(1px);
+  }
+  55% {
+    transform: rotateX(-85deg) scale(0.96);
+    opacity: 0.1;
+    filter: blur(1px);
+  }
+  100% {
+    transform: rotateX(0deg) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.spe-fountain-slot.is-flipping {
+  animation: speSlotFlip3D 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.spe-fountain-slot.is-rolling {
+  animation: speSlotFlip3D 0.42s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: calc(var(--slot-idx, 0) * 60ms);
+}
+
+/* Subtle Toast for Slot Update */
+.spe-fountain-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: 9999px;
+  padding: 2px 8px;
+  animation: speToastFade 1.6s ease forwards;
+}
+
+@keyframes speToastFade {
+  0% {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+/* Contextual Evolution Modifiers shelf */
+.spe-fountain-evolution {
+  margin-top: 4px;
+  padding: 10px 14px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px dashed rgba(226, 232, 240, 0.16);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spe-evolution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.spe-evolution-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #cbd5e1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.spe-evolution-hint {
+  font-size: 0.66rem;
+  color: #94a3b8;
+}
+
+.spe-evolution-chips {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.spe-evolution-chip {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.12);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.18s ease;
+}
+
+.spe-evolution-chip:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+  transform: translateY(-1px);
+}
+
+.spe-evolution-chip:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.spe-evolution-chip.is-applied {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: rgba(16, 185, 129, 0.55);
+  color: #a7f3d0;
+}
+
+/* Light Mode Overrides */
+html[data-theme="light"] .spe-fountain-slot {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #334155;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .spe-fountain-slot:hover {
+  background: #ffffff;
+  border-color: rgba(217, 119, 6, 0.4);
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.12);
+}
+
+html[data-theme="light"] .spe-slot-label {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .spe-fountain-roll-btn {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #1e293b;
+}
+
+html[data-theme="light"] .spe-fountain-evolution {
+  background: rgba(248, 250, 252, 0.85);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="light"] .spe-evolution-chip {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #475569;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .spe-fountain-slot.is-flipping,
+  .spe-fountain-slot.is-rolling {
+    animation: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .spe-fountain-roll-btn:hover .spe-roll-icon {
+    transform: none;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .spe-fountain-slots {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .spe-fountain-slot {
+    min-height: 48px;
+    padding: 10px 12px;
+  }
+
+  .spe-slot-label {
+    white-space: normal;
+    font-size: 0.74rem;
+  }
+}

@@ -1,0 +1,19 @@
+# SPE Ω — GitLab CI Gate Template
+# Include this template in your .gitlab-ci.yml to qualify prompts and AI instructions before merge.
+
+stages:
+  - assurance
+
+spe:check:
+  stage: assurance
+  image: node:20-alpine
+  script:
+    - npx spe check . --strict
+  artifacts:
+    when: always
+    paths:
+      - evidence/ci-receipt.json
+      - evidence/pr-report.md
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

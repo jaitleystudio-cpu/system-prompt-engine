@@ -1,6 +1,6 @@
-import { ui, selectHero } from "@spe/human-perspective";
+import { ui } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CATEGORIES,
   TARGETS,
@@ -16,13 +16,32 @@ import type {
   EngineSuccessBody,
   CompilePhase,
 } from "../engine/types";
-import { StaticPress } from "../scene/StaticPress";
 import { semanticGroups } from "../scene/semantic";
-const Scene = lazy(() =>
-  import("../scene/SpeIntelligence").then((m) => ({
-    default: m.SpeIntelligence,
-  })),
-);
+import { DotPattern } from "../ui/DotPattern";
+import type { AppView } from "../routing";
+import { InAppLink } from "../shell/inAppLink";
+import { useDailyHero } from "./useDailyHero";
+import { HeroStory } from "./HeroStory";
+import { HeroPlatformRotator } from "../engine/HeroPlatformRotator";
+import { ConversionKernel } from "./ConversionKernel";
+import { FeaturedArsenalPreview } from "./FeaturedArsenalPreview";
+import { MarkdownExportButton } from "../engine/markdownExport";
+import {
+  PromptRadarInspector,
+  AutoOptimizeCTAButton,
+  autoOptimizeSystemPrompt,
+  CANONICAL_REFERENCE_SYSTEM_PROMPT,
+} from "../engine/PromptRadarInspector";
+import { SpeClickyContinuationHub } from "../engine/SpeClickyContinuationHub";
+import {
+  HOME_QUICK_START_MAX_CHARS,
+  applyTextBound,
+  formatCharCount,
+  nearLimit,
+} from "../input/boundedText";
+import { UserConfirmedRequirements } from "../engine/UserConfirmedRequirements";
+import { RealPromptLiveHud } from "../engine/RealPromptLiveHud";
+import { InfinitePromptSuggestions } from "./InfinitePromptSuggestions";
 type Intent = {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
@@ -30,6 +49,7 @@ type Intent = {
   conflicts: IntentAtom[];
 };
 type Props = {
+  hideTheater?: boolean;
   onReset: () => void;
   value: string;
   onChange: (v: string) => void;
@@ -51,35 +71,132 @@ type Props = {
   onTarget: (v: TargetId) => void;
   intent: Intent;
   onIntent: (bucket: keyof Intent, id: string, text: string) => void;
+  onConfirmedChange?: (atoms: IntentAtom[]) => void;
+  onNavigate: (view: AppView) => void;
+  onAutoOptimize?: (optimizedPrompt: string) => void;
 };
-const EXAMPLES = [
+export const EXAMPLES = [
   {
-    label: "Launch a product",
-    category: "Business",
-    text: "Plan a four-week launch for an offline writing app. Our team has two people and a $2,000 budget. Prioritize practical steps and avoid paid influencer campaigns.",
-  },
-  {
-    label: "Review code",
+    label: "Review code without hallucinations",
     category: "Coding",
-    text: "Review the code I provide for correctness, security and maintainability. Rank findings by severity and include the affected code and a concrete fix. Do not invent files or executed tests.",
+    text: "Review the code I provide for correctness, security and maintainability. Rank findings by severity and include the affected code and a concrete fix. Do not invent files, imports, or unverified tests.",
   },
   {
-    label: "Teach an idea",
-    category: "Education",
-    text: "Explain how a neural network learns to a curious 14-year-old. Use one everyday analogy, a worked example and three questions to check understanding.",
+    label: "Plan a full-stack feature",
+    category: "Coding",
+    text: "Design a complete end-to-end implementation plan for this full-stack feature. Include database schemas, API contracts, frontend state transitions, and step-by-step verification gates.",
+  },
+  {
+    label: "Executive weekly progress report",
+    category: "Business",
+    text: "Synthesize team achievements, key metrics, active blockers, and high-priority milestones into a concise executive summary formatted for leadership review.",
+  },
+  {
+    label: "Customer ticket triage & response",
+    category: "Business",
+    text: "Analyze customer support inquiries, identify root causes, classify severity, and draft empathetic, accurate response drafts with concrete resolution steps.",
   },
 ] as const;
+/** Standalone Main Hero Theater — exact Apple-grade design requested as Hero #1 */
+export function HeroTheater({ onNavigate }: { onNavigate?: (view: AppView) => void }) {
+  const hero = useDailyHero();
+  return (
+    <section className="spe-hero spe-hero--main-theater" id="top" aria-labelledby="hero-title">
+      <div className="hero-theater">
+        <DotPattern surface="hero" />
+        <div className="hero-topline">
+          <span className="eyebrow">
+            <i /> YOUR IDEAS. YOUR WORDS.
+          </span>
+          <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Account Required</span>
+        </div>
+        <div className="hero-copy">
+          <HeroPlatformRotator onNavigate={onNavigate} />
+          <h1 id="hero-title" data-daily-title={hero.index}>
+            <span className="visually-hidden">
+              Free System Prompt Generator & AI Prompt Builder —{" "}
+            </span>
+            {hero.title}
+            <br />
+            <em>{hero.accent}</em>
+          </h1>
+          <p className="hero-description">
+            {hero.support || (
+              <>
+                Turn your ideas into clear prompts for any AI.
+                Start with a few words. Add what matters.
+              </>
+            )}
+          </p>
+          <a
+            className="hero-start spe-gold-treasury-btn"
+            href="#prompt-studio"
+            aria-label="Open System Prompt Studio to build your prompt"
+            onClick={(e) => {
+              const el = document.getElementById("prompt-studio");
+              if (el) {
+                e.preventDefault();
+                el.scrollIntoView({ behavior: "smooth" });
+              } else if (onNavigate) {
+                onNavigate("create");
+              }
+            }}
+          >
+            <span className="spe-gold-sparkle" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+              </svg>
+            </span>
+            <span className="spe-gold-text">{hero.cta || "Make my prompt"}</span>
+            <span className="spe-gold-coin-arrow" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </span>
+          </a>
+        </div>
+        <div className="hero-stage">
+          <HeroStory />
+        </div>
+        <div className="theater-bottom">
+          <span>YOUR IDEA → YOUR PROMPT</span>
+          <a
+            href="#prompt-studio"
+            onClick={(e) => {
+              const el = document.getElementById("prompt-studio");
+              if (el) {
+                e.preventDefault();
+                el.scrollIntoView({ behavior: "smooth" });
+              } else if (onNavigate) {
+                onNavigate("create");
+              }
+            }}
+          >
+            TRY IT BELOW ↓
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function Hero(p: Props) {
-  const hero = selectHero(p.category, Boolean(p.result));
-  const [paused, setPaused] = useState(false),
-    [explore, setExplore] = useState(false),
+  const [reduced, setReduced] = useState(() =>
+      matchMedia("(prefers-reduced-motion: reduce)").matches,
+    ),
     [resultTab, setResultTab] = useState<"prompt" | "structure" | "review">(
       "prompt",
-    );
+    ),
+    [boundNotice, setBoundNotice] = useState<string | null>(null);
   const resultRef = useRef<HTMLElement>(null);
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const useStatic = p.quality === "LITE" && (!explore || reduced);
   const groups = semanticGroups(p.result?.output);
+  useEffect(() => {
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
   useEffect(() => {
     if (p.prompt) {
       setResultTab("prompt");
@@ -110,79 +227,9 @@ export function Hero(p: Props) {
     ) : null;
   };
   return (
-    <section className="spe-hero" id="top" aria-labelledby="hero-title">
-      <div className="hero-theater">
-        <div className="hero-topline">
-          <span className="eyebrow">
-            <i /> PRIVATE BY DESIGN. OPEN BY NATURE.
-          </span>
-          <span className="edition">SYSTEM PROMPT ENGINE / 03</span>
-        </div>
-        <div className="hero-copy">
-          <p className="eyebrow">FROM A THOUGHT TO A PRECISE BRIEF</p>
-          <h1 id="hero-title">
-            {hero.title}
-            <br />
-            <em>{hero.accent}</em>
-          </h1>
-          <p className="hero-description">
-            {p.quality === "LITE" ? ui.mobileHeroSupport : hero.support}
-          </p>
-          <a className="hero-start" href="#prompt-studio">
-            {ui.start} <span>↗</span>
-          </a>
-        </div>
-        <div className="hero-stage">
-          <div
-            className="hero-scene-inner"
-            data-renderer={useStatic ? "static" : "webgl"}
-          >
-            {useStatic ? (
-              <StaticPress output={p.result?.output} />
-            ) : (
-              <Suspense fallback={<StaticPress />}>
-                <Scene
-                  state={p.sceneState}
-                  quality={p.quality === "LITE" ? "BALANCED" : p.quality}
-                  output={p.result?.output}
-                  paused={paused}
-                />
-              </Suspense>
-            )}
-          </div>
-          <div className="orbit-label orbit-one">
-            <span>01</span> YOUR IDEA
-          </div>
-          <div className="orbit-label orbit-two">
-            <span>02</span> YOUR BOUNDARIES
-          </div>
-          <div className="orbit-label orbit-three">
-            <span>03</span> YOUR PROMPT
-          </div>
-        </div>
-        <div className="theater-bottom">
-          <span>ONE BRIEF. ANY AI.</span>
-          <button
-            className="motion-button"
-            type="button"
-            disabled={reduced}
-            aria-pressed={paused}
-            onClick={() => {
-              if (useStatic && !reduced) setExplore(true);
-              else setPaused(!paused);
-            }}
-          >
-            {reduced
-              ? "Reduced motion"
-              : useStatic
-                ? "Explore live 3D"
-                : paused
-                  ? "Resume motion"
-                  : "Pause motion"}
-          </button>
-          <a href="#prompt-studio">SCROLL TO CREATE ↓</a>
-        </div>
-      </div>
+    <section className="spe-hero" id={p.hideTheater ? "prompt-studio-wrapper" : "top"} aria-labelledby={p.hideTheater ? "studio-title" : "hero-title"}>
+      {!p.hideTheater && <HeroTheater onNavigate={p.onNavigate} />}
+      {!p.hideTheater && <div className="spe-hero-story-bridge" aria-hidden="true" />}
       <section
         className="prompt-studio"
         id="prompt-studio"
@@ -224,10 +271,17 @@ export function Hero(p: Props) {
               id="spe-one-line"
               className="request-input"
               rows={5}
-              maxLength={20000}
+              aria-describedby="spe-one-line-meter spe-one-line-limit-help"
               placeholder="Describe the task. Include what matters, what to avoid, and what a good result looks like…"
               value={p.value}
-              onChange={(e) => p.onChange(e.target.value)}
+              onChange={(e) => {
+                const next = applyTextBound(e.target.value, HOME_QUICK_START_MAX_CHARS, {
+                  createHint: true,
+                  fieldLabel: "Home quick-start",
+                });
+                p.onChange(next.value);
+                setBoundNotice(next.notice);
+              }}
               onKeyDown={(e) => {
                 if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
                   e.preventDefault();
@@ -235,22 +289,46 @@ export function Hero(p: Props) {
                 }
               }}
             />
-            <div className="examples">
-              {EXAMPLES.map((e) => (
-                <button
-                  type="button"
-                  key={e.label}
-                  onClick={() => {
-                    p.onReset();
-                    p.onChange(e.text);
-                    p.onCategory(e.category);
-                  }}
-                >
-                  {e.label}
-                  <span>↗</span>
-                </button>
-              ))}
+            <div className="spe-bound-row" id="spe-one-line-meter">
+              <p
+                className={`spe-bound-meter${nearLimit(p.value.length, HOME_QUICK_START_MAX_CHARS) ? " is-near" : ""}`}
+                aria-live="polite"
+              >
+                {formatCharCount(p.value.length)} /{" "}
+                {formatCharCount(HOME_QUICK_START_MAX_CHARS)} characters
+              </p>
+              <p id="spe-one-line-limit-help" className="spe-bound-hint">
+                Quick-start limit {formatCharCount(HOME_QUICK_START_MAX_CHARS)}.
+                For 100,000+ character (1 Lakh+) input &amp; output, use{" "}
+                <InAppLink view="create" onNavigate={p.onNavigate}>
+                  Create
+                </InAppLink>
+                .
+              </p>
             </div>
+            {boundNotice && (
+              <p className="spe-bound-notice" role="status" aria-live="assertive">
+                {boundNotice}
+              </p>
+            )}
+            <InfinitePromptSuggestions
+              currentBrief={p.value}
+              onSelectPrompt={(text, category) => {
+                p.onReset();
+                p.onChange(text);
+                p.onCategory(category);
+              }}
+              onAppendModifier={(clause) => {
+                const trimmed = p.value.trim();
+                const updated = trimmed ? `${trimmed}\n\n${clause}` : clause;
+                const bounded = applyTextBound(updated, HOME_QUICK_START_MAX_CHARS, {
+                  createHint: true,
+                  fieldLabel: "Home quick-start",
+                });
+                p.onChange(bounded.value);
+                setBoundNotice(bounded.notice);
+              }}
+            />
             <div className="brief-selects">
               <label className="brief-field">
                 <span>Working template</span>
@@ -277,6 +355,19 @@ export function Hero(p: Props) {
                 </select>
               </label>
             </div>
+            <UserConfirmedRequirements
+              confirmedAtoms={p.intent.confirmed}
+              onChangeConfirmed={(atoms) => {
+                if (p.onConfirmedChange) {
+                  p.onConfirmedChange(atoms);
+                } else {
+                  for (const atom of atoms) {
+                    p.onIntent("confirmed", atom.id, atom.text);
+                  }
+                }
+              }}
+              disabled={p.busy}
+            />
             <details className="brief-details">
               <summary>
                 Refine the brief <span>Role · audience · requirements</span>
@@ -325,6 +416,19 @@ export function Hero(p: Props) {
                 {p.busy ? ui.working : ui.build}
                 <span>↗</span>
               </button>
+              <AutoOptimizeCTAButton
+                disabled={p.busy || !p.value.trim()}
+                busy={p.busy}
+                onOptimize={() => {
+                  p.onBuild();
+                  setTimeout(() => {
+                    const radar = document.querySelector("#spe-auto-optimize-section, .spe-prompt-radar-inspector");
+                    if (radar) {
+                      radar.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                  }, 600);
+                }}
+              />
               <span>⌘ / Ctrl + Enter</span>
             </div>
             <p className="compiler-note">{ui.note}</p>
@@ -346,7 +450,9 @@ export function Hero(p: Props) {
                   ? ui.phases[p.phase]
                   : p.prompt
                     ? "Ready to use"
-                    : "Awaiting your brief"}
+                    : p.value.trim()
+                      ? "Live preview"
+                      : "Awaiting your brief"}
               </span>
             </div>
             {p.error ? (
@@ -365,7 +471,7 @@ export function Hero(p: Props) {
                 </button>
               </div>
             ) : p.prompt && p.result ? (
-              <>
+              <div className="spe-output-stage spe-stage-enter" key="result-stage">
                 <div className="output-heading">
                   <h3 id="result-title">{ui.ready}</h3>
                   <div
@@ -472,17 +578,46 @@ export function Hero(p: Props) {
                   <button className="spe-build" onClick={p.onCopy}>
                     Copy prompt <span>↗</span>
                   </button>
+                  <AutoOptimizeCTAButton
+                    disabled={!p.prompt}
+                    onOptimize={() => {
+                      if (p.prompt) {
+                        const opt = autoOptimizeSystemPrompt(p.prompt, p.value, p.target);
+                        p.onAutoOptimize?.(opt);
+                        setTimeout(() => {
+                          const radar = document.querySelector("#spe-auto-optimize-section, .spe-prompt-radar-inspector");
+                          if (radar) {
+                            radar.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }
+                        }, 200);
+                      }
+                    }}
+                  />
                   <button className="spe-ghost" onClick={p.onExport}>
                     Download .spe
                   </button>
+                  <MarkdownExportButton
+                    promptText={p.prompt || ""}
+                    category={p.category}
+                    disabled={!p.prompt}
+                  />
                   <button className="spe-ghost" onClick={p.onOpen}>
                     {ui.inspect}
                   </button>
                 </div>
                 <p className="output-footnote">{ui.claim}</p>
-              </>
+              </div>
+            ) : p.value.trim() ? (
+              <div className="spe-output-stage spe-stage-enter" key="live-hud-stage">
+                <RealPromptLiveHud
+                  value={p.value}
+                  busy={p.busy}
+                  onBuild={p.onBuild}
+                  category={p.category}
+                />
+              </div>
             ) : (
-              <div className="output-empty">
+              <div className="output-empty spe-stage-enter" key="empty-stage">
                 <span className="document-mark">
                   SPE<span> / YOUR PROMPT</span>
                 </span>
@@ -513,13 +648,53 @@ export function Hero(p: Props) {
             )}
           </section>
         </div>
-        <div className="studio-trust">
-          <span>Runs locally</span>
-          <span>No analytics</span>
-          <span>Works offline once cached</span>
-          <span>Portable .spe files</span>
-        </div>
       </section>
+      <section
+        id="spe-auto-optimize-section"
+        className="spe-radar-auto-optimize-mount"
+        style={{
+          width: "min(1440px, 100%)",
+          margin: "1.5rem auto",
+          padding: "0 1.5rem",
+        }}
+      >
+        <PromptRadarInspector
+          promptText={p.prompt || CANONICAL_REFERENCE_SYSTEM_PROMPT}
+          userRequest={p.value || "Build a real-time collaborative state engine with conflict resolution and local-first persistence"}
+          category="code"
+          activeTarget={p.target}
+          onSelectTarget={p.onTarget}
+          onNavigate={p.onNavigate}
+          onAutoOptimize={(opt) => {
+            p.onChange(opt);
+          }}
+        />
+      </section>
+      <section
+        className="spe-clicky-mount"
+        style={{
+          width: "min(1440px, 100%)",
+          margin: "0 auto 2rem",
+          padding: "0 1.5rem",
+        }}
+      >
+        <SpeClickyContinuationHub
+          onNavigate={p.onNavigate}
+          generatedPrompt={p.prompt || CANONICAL_REFERENCE_SYSTEM_PROMPT}
+          onUsePromptInStudio={(promptText) => {
+            p.onChange(promptText);
+            window.scrollTo(0, 0);
+          }}
+        />
+      </section>
+      <FeaturedArsenalPreview
+        onNavigate={p.onNavigate}
+        onSelectPrompt={(compiledPrompt, cat) => {
+          p.onChange(compiledPrompt);
+          p.onCategory(cat);
+        }}
+      />
+      <ConversionKernel onNavigate={p.onNavigate} />
     </section>
   );
 }

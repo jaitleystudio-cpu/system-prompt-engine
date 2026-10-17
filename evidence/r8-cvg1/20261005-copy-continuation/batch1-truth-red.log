@@ -1,0 +1,411 @@
+FFFFFFFFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+_ test_unimplemented_surface_claims_are_absent[builder/StaticWebsiteBuilder.tsx-Desktop (1200px)] _
+
+file = 'builder/StaticWebsiteBuilder.tsx', unsupported = 'Desktop (1200px)'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Desktop (1200px)' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Desktop (1200px)' is contained here:
+E                     Desktop (1200px)
+E                       </button>
+E                       <button
+E                         type="button"
+E                         className={`bld-btn ${viewport === "tablet" ? "active" : ""}`}...
+E         
+E         ...Full output truncated (228 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[builder/websiteSpecModel.ts-Download self-contained offline HTML and CSS bundles directly to your machine.] _
+
+file = 'builder/websiteSpecModel.ts'
+unsupported = 'Download self-contained offline HTML and CSS bundles directly to your machine.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Download se...our machine.' not in '/**\n * Lan...path");\n}\n'
+E         
+E         'Download self-cont...ly to your machine.' is contained here:
+E              body: "Download self-contained offline HTML and CSS bundles directly to your machine.",
+E                     cta_label: "Download Bundle",
+E                     cta_href: "#download",
+E                   },
+E                 ],...
+E         
+E         ...Full output truncated (252 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Maximum file size 50MB.] _
+
+file = 'landing/UniversalInputShell.tsx'
+unsupported = 'Maximum file size 50MB.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       AssertionError: assert 'Maximum file size 50MB.' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Maximum file size 50MB.' is contained here:
+E           dia type. Maximum file size 50MB. Audio/video upload supported for local processing where available.
+E         ?           +++++++++++++++++++++++
+E                         </div>
+E                       </div>
+E           ...
+E         
+E         ...Full output truncated (127 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Synthesize production-ready source code] _
+
+file = 'landing/UniversalInputShell.tsx'
+unsupported = 'Synthesize production-ready source code'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Synthesize ... source code' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Synthesize production-ready source code' is contained here:
+E           ription: "Synthesize production-ready source code" },
+E             { id: "research", label: "Research", description: "Conduct empirical investigation & citation search" },
+E             { id: "create", label: "Create", description: "Produce visual assets & creative media" },
+E           ];
+E           ...
+E         
+E         ...Full output truncated (375 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Transcribe audio & video into structured transcript] _
+
+file = 'landing/UniversalInputShell.tsx'
+unsupported = 'Transcribe audio & video into structured transcript'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Transcribe ...d transcript' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Transcribe audio &...ructured transcript' is contained here:
+E           ription: "Transcribe audio & video into structured transcript" },
+E             { id: "build", label: "Build", description: "Generate project architecture & implementation" },
+E             { id: "code", label: "Code", description: "Synthesize production-ready source code" },
+E             { id: "research", label: "Research", description: "Conduct empirical investigation & citation search" },
+E             { id: "create", label: "Create", description: "Produce visual assets & creative media" },...
+E         
+E         ...Full output truncated (377 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Generate project architecture & implementation] _
+
+file = 'landing/UniversalInputShell.tsx'
+unsupported = 'Generate project architecture & implementation'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Generate pr...plementation' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Generate project a...re & implementation' is contained here:
+E           ription: "Generate project architecture & implementation" },
+E             { id: "code", label: "Code", description: "Synthesize production-ready source code" },
+E             { id: "research", label: "Research", description: "Conduct empirical investigation & citation search" },
+E             { id: "create", label: "Create", description: "Produce visual assets & creative media" },
+E           ];...
+E         
+E         ...Full output truncated (376 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Conduct empirical investigation & citation search] _
+
+file = 'landing/UniversalInputShell.tsx'
+unsupported = 'Conduct empirical investigation & citation search'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Conduct emp...ation search' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Conduct empirical ...n & citation search' is contained here:
+E           ription: "Conduct empirical investigation & citation search" },
+E             { id: "create", label: "Create", description: "Produce visual assets & creative media" },
+E           ];
+E           
+E           const INPUT_TYPE_DEFINITIONS: Array<{ id: ShellInputType; label: string; icon: string }> = [...
+E         
+E         ...Full output truncated (374 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Produce visual assets & creative media] _
+
+file = 'landing/UniversalInputShell.tsx'
+unsupported = 'Produce visual assets & creative media'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Produce vis...eative media' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Produce visual assets & creative media' is contained here:
+E           ription: "Produce visual assets & creative media" },
+E           ];
+E           
+E           const INPUT_TYPE_DEFINITIONS: Array<{ id: ShellInputType; label: string; icon: string }> = [
+E             { id: "text", label: "Text", icon: "✎" },...
+E         
+E         ...Full output truncated (373 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Optimal balance of precision, reasoning depth, and synthesis speed.] _
+
+file = 'landing/ModalModeSelector.tsx'
+unsupported = 'Optimal balance of precision, reasoning depth, and synthesis speed.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Optimal bal...hesis speed.' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Optimal balance of...nd synthesis speed.' is contained here:
+E           ription: "Optimal balance of precision, reasoning depth, and synthesis speed.",
+E             },
+E             {
+E               id: "deep",
+E               name: "Deep Synthesis",...
+E         
+E         ...Full output truncated (163 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Multi-layered reasoning and systematic requirement expansion for complex workflows.] _
+
+file = 'landing/ModalModeSelector.tsx'
+unsupported = 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Multi-layer...x workflows.' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Multi-layered reas... complex workflows.' is contained here:
+E           ription: "Multi-layered reasoning and systematic requirement expansion for complex workflows.",
+E             },
+E             {
+E               id: "fast",
+E               name: "Fast Iteration",...
+E         
+E         ...Full output truncated (157 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Rapid turnaround for live experimentation and rapid specification prototyping.] _
+
+file = 'landing/ModalModeSelector.tsx'
+unsupported = 'Rapid turnaround for live experimentation and rapid specification prototyping.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Rapid turna...prototyping.' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Rapid turnaround f...cation prototyping.' is contained here:
+E           ription: "Rapid turnaround for live experimentation and rapid specification prototyping.",
+E             },
+E             {
+E               id: "strict",
+E               name: "Deterministic Strict",...
+E         
+E         ...Full output truncated (151 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+_ test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Enforces strict output contracts, schema guarantees, and verifiable boundaries.] _
+
+file = 'landing/ModalModeSelector.tsx'
+unsupported = 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'
+
+    @pytest.mark.parametrize('file,unsupported', [
+        ('builder/StaticWebsiteBuilder.tsx', 'Desktop (1200px)'),
+        ('builder/websiteSpecModel.ts', 'Download self-contained offline HTML and CSS bundles directly to your machine.'),
+        ('landing/UniversalInputShell.tsx', 'Maximum file size 50MB.'),
+        ('landing/UniversalInputShell.tsx', 'Synthesize production-ready source code'),
+        ('landing/UniversalInputShell.tsx', 'Transcribe audio & video into structured transcript'),
+        ('landing/UniversalInputShell.tsx', 'Generate project architecture & implementation'),
+        ('landing/UniversalInputShell.tsx', 'Conduct empirical investigation & citation search'),
+        ('landing/UniversalInputShell.tsx', 'Produce visual assets & creative media'),
+        ('landing/ModalModeSelector.tsx', 'Optimal balance of precision, reasoning depth, and synthesis speed.'),
+        ('landing/ModalModeSelector.tsx', 'Multi-layered reasoning and systematic requirement expansion for complex workflows.'),
+        ('landing/ModalModeSelector.tsx', 'Rapid turnaround for live experimentation and rapid specification prototyping.'),
+        ('landing/ModalModeSelector.tsx', 'Enforces strict output contracts, schema guarantees, and verifiable boundaries.'),
+    ])
+    def test_unimplemented_surface_claims_are_absent(file, unsupported):
+>       assert unsupported not in (WEB / 'src' / file).read_text()
+E       assert 'Enforces st... boundaries.' not in 'import Reac...\n  );\n};\n'
+E         
+E         'Enforces strict ou...ifiable boundaries.' is contained here:
+E           ription: "Enforces strict output contracts, schema guarantees, and verifiable boundaries.",
+E             },
+E           ];
+E           
+E           interface ModalModeSelectorProps {...
+E         
+E         ...Full output truncated (145 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[builder/StaticWebsiteBuilder.tsx-Desktop (1200px)]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[builder/websiteSpecModel.ts-Download self-contained offline HTML and CSS bundles directly to your machine.]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Maximum file size 50MB.]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Synthesize production-ready source code]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Transcribe audio & video into structured transcript]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Generate project architecture & implementation]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Conduct empirical investigation & citation search]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/UniversalInputShell.tsx-Produce visual assets & creative media]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Optimal balance of precision, reasoning depth, and synthesis speed.]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Multi-layered reasoning and systematic requirement expansion for complex workflows.]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Rapid turnaround for live experimentation and rapid specification prototyping.]
+FAILED tests/web/test_r8_copy_truth.py::test_unimplemented_surface_claims_are_absent[landing/ModalModeSelector.tsx-Enforces strict output contracts, schema guarantees, and verifiable boundaries.]
+12 failed in 0.04s

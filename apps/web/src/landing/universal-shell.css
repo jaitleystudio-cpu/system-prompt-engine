@@ -1,0 +1,527 @@
+/**
+ * Universal Input Shell & Mode Selector Design System
+ * Focus: High craft, precision utilitarian, fully accessible, 360px mobile reflow
+ */
+
+:root {
+  --spe-shell-bg: rgba(15, 23, 42, 0.85);
+  --spe-shell-border: rgba(255, 255, 255, 0.12);
+  --spe-shell-border-active: rgba(99, 102, 241, 0.6);
+  --spe-shell-text: #f8fafc;
+  --spe-shell-muted: #94a3b8;
+  --spe-shell-accent: #6366f1;
+  --spe-shell-accent-hover: #4f46e5;
+  --spe-shell-focus-ring: #818cf8;
+  --spe-shell-surface: #1e293b;
+  --spe-shell-surface-hover: #334155;
+  --spe-shell-radius: 12px;
+  --spe-touch-target: 44px;
+}
+
+/* ==========================================================================
+   Shell Container & Layout
+   ========================================================================== */
+
+.spe-universal-shell {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  background: var(--spe-shell-bg);
+  border: 1px solid var(--spe-shell-border);
+  border-radius: var(--spe-shell-radius);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: var(--spe-shell-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.spe-universal-shell:focus-within {
+  border-color: var(--spe-shell-border-active);
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================================================
+   Header: Action Selector Toolbar
+   ========================================================================== */
+
+.spe-shell-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--spe-shell-border);
+  background: rgba(0, 0, 0, 0.15);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.spe-shell-actions-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.spe-shell-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--spe-shell-muted);
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.spe-shell-action-btn:hover {
+  background: var(--spe-shell-surface);
+  color: var(--spe-shell-text);
+}
+
+.spe-shell-action-btn[aria-selected="true"],
+.spe-shell-action-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+  border-color: rgba(99, 102, 241, 0.4);
+  font-weight: 600;
+}
+
+.spe-shell-mode-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--spe-shell-surface);
+  color: var(--spe-shell-text);
+  border: 1px solid var(--spe-shell-border);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.spe-shell-mode-trigger:hover {
+  background: var(--spe-shell-surface-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================================================
+   Input Type Tabs
+   ========================================================================== */
+
+.spe-shell-types-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.spe-shell-types-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.spe-shell-type-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--spe-shell-muted);
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-shell-type-tab:hover {
+  color: var(--spe-shell-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.spe-shell-type-tab[aria-selected="true"],
+.spe-shell-type-tab.active {
+  color: var(--spe-shell-text);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================================================
+   Editor / Input Stage
+   ========================================================================== */
+
+.spe-shell-editor-stage {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spe-shell-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--spe-shell-border);
+  color: var(--spe-shell-text);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.spe-shell-textarea:focus {
+  border-color: var(--spe-shell-accent);
+}
+
+.spe-shell-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  min-height: 120px;
+  border: 2px dashed var(--spe-shell-border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.spe-shell-dropzone:hover,
+.spe-shell-dropzone.dragging {
+  border-color: var(--spe-shell-accent);
+  background: rgba(99, 102, 241, 0.06);
+}
+
+.spe-shell-dropzone-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  color: var(--spe-shell-muted);
+}
+
+.spe-shell-dropzone-text {
+  font-size: 0.875rem;
+  color: var(--spe-shell-text);
+  font-weight: 500;
+}
+
+.spe-shell-dropzone-subtext {
+  font-size: 0.75rem;
+  color: var(--spe-shell-muted);
+  margin-top: 4px;
+}
+
+.spe-shell-url-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.spe-shell-url-field {
+  flex: 1;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--spe-shell-border);
+  color: var(--spe-shell-text);
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+
+.spe-shell-url-field:focus {
+  border-color: var(--spe-shell-accent);
+}
+
+/* ==========================================================================
+   Footer & Primary Execution Actions
+   ========================================================================== */
+
+.spe-shell-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid var(--spe-shell-border);
+  background: rgba(0, 0, 0, 0.1);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.spe-shell-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: var(--spe-shell-muted);
+}
+
+.spe-shell-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.spe-shell-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: var(--spe-shell-accent);
+  color: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.spe-shell-primary-btn:hover:not(:disabled) {
+  background: var(--spe-shell-accent-hover);
+  transform: translateY(-1px);
+}
+
+.spe-shell-primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==========================================================================
+   Modal Dialog Styles
+   ========================================================================== */
+
+.spe-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.spe-modal-container {
+  width: 100%;
+  max-width: 520px;
+  background: #0f172a;
+  border: 1px solid var(--spe-shell-border);
+  border-radius: var(--spe-shell-radius);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: var(--spe-shell-text);
+}
+
+.spe-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--spe-shell-border);
+}
+
+.spe-modal-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--spe-shell-text);
+}
+
+.spe-modal-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--spe-shell-muted);
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.spe-modal-close-btn:hover {
+  color: var(--spe-shell-text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.spe-modal-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.spe-mode-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  min-height: 44px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--spe-shell-border);
+  cursor: pointer;
+  box-sizing: border-box;
+  text-align: left;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.spe-mode-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.spe-mode-card[aria-selected="true"],
+.spe-mode-card.selected {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: var(--spe-shell-accent);
+}
+
+.spe-mode-card-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--spe-shell-text);
+}
+
+.spe-mode-card-content p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--spe-shell-muted);
+  line-height: 1.4;
+}
+
+.spe-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 16px;
+  border-top: 1px solid var(--spe-shell-border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Focus Visible (High Contrast)
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--spe-shell-focus-ring) !important;
+  outline-offset: 2px !important;
+}
+
+/* ==========================================================================
+   360px Mobile Responsive Reflow
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .spe-universal-shell {
+    border-radius: 8px;
+    margin: 0;
+  }
+
+  .spe-shell-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+  }
+
+  .spe-shell-actions-nav {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .spe-shell-action-btn {
+    flex: 1;
+    min-width: 44px;
+    padding: 8px 6px;
+    font-size: 0.75rem;
+  }
+
+  .spe-shell-mode-trigger {
+    width: 100%;
+  }
+
+  .spe-shell-footer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .spe-shell-primary-btn {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

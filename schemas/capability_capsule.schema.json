@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/capability_capsule.schema.json",
+  "title": "CapabilityCapsule",
+  "description": "Canonical typed specification for a qualified portable capability capsule chi = (P, C, G, W, I, T, R).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capsule_id",
+    "name",
+    "version",
+    "admission_state",
+    "procedure",
+    "contracts",
+    "guards",
+    "witnesses",
+    "interventions",
+    "transfer",
+    "revocation_rules"
+  ],
+  "properties": {
+    "capsule_id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "admission_state": {
+      "type": "string",
+      "enum": [
+        "HYPOTHESIS",
+        "STRUCTURALLY_VALID",
+        "BEHAVIORALLY_QUALIFIED",
+        "TRANSFER_QUALIFIED",
+        "DEPLOYMENT_ELIGIBLE",
+        "SUSPENDED",
+        "REJECTED"
+      ]
+    },
+    "procedure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "entrypoint", "payload", "sha256"],
+      "properties": {
+        "format": { "type": "string", "enum": ["ast_json", "python_sandbox", "wasm_bytes"] },
+        "entrypoint": { "type": "string", "minLength": 1 },
+        "payload": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_schema", "output_schema", "deterministic"],
+      "properties": {
+        "input_schema": { "type": "object" },
+        "output_schema": { "type": "object" },
+        "deterministic": { "type": "boolean" },
+        "allowed_effects": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "guards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applicability_conditions", "invalidation_conditions"],
+      "properties": {
+        "applicability_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "invalidation_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "witnesses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["witness_id", "verified_at", "proof_type", "hash"],
+        "properties": {
+          "witness_id": { "type": "string" },
+          "verified_at": { "type": "string" },
+          "proof_type": { "type": "string" },
+          "hash": { "type": "string" }
+        }
+      }
+    },
+    "interventions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trial_count",
+        "active_success_rate",
+        "baseline_success_rate",
+        "placebo_success_rate",
+        "lcb_95_delta"
+      ],
+      "properties": {
+        "trial_count": { "type": "integer", "minimum": 0 },
+        "active_success_rate": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "baseline_success_rate": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "placebo_success_rate": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "lcb_95_delta": { "type": "number" },
+        "early_stopped": { "type": "boolean" }
+      }
+    },
+    "transfer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["qualified_models", "rejected_models"],
+      "properties": {
+        "qualified_models": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "rejected_models": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "revocation_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dependency_hashes", "max_drift_tolerance"],
+      "properties": {
+        "dependency_hashes": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "max_drift_tolerance": { "type": "number", "minimum": 0.0 }
+      }
+    }
+  }
+}

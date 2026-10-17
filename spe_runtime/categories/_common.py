@@ -60,6 +60,10 @@ def replace_envelope(
         "taint_labels": envelope.taint_labels,
         "sensitivity_labels": envelope.sensitivity_labels,
         "category_trace": envelope.category_trace,
+        "taxonomy_version": envelope.taxonomy_version,
+        "active_category": envelope.active_category,
+        "category_payload": envelope.category_payload,
+        "proof_obligation_proposals": envelope.proof_obligation_proposals,
     }
     data.update(changes)
     return CrossCategoryEnvelope(**data)

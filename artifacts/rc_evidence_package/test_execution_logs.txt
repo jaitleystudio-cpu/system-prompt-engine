@@ -1,0 +1,101 @@
+=== 1. PYTHON UNIFIED RELEASE-CANDIDATE & REC-2E ED25519 PASSPORT TESTS ===
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine
+configfile: pyproject.toml
+collected 20 items
+
+tests/unit/test_unified_release_candidate_pipeline.py .......            [ 35%]
+tests/research/rec2/test_rec2_capability_passport.py .............       [100%]
+
+============================= 20 passed in 25.16s ==============================
+
+=== 2. WEB PROOF ENGINE & PRODUCER SIGNATURE TESTS ===
+================================================================================
+🔬 SPE Ω Proof-Centric Intelligence Compiler — Verification Suite
+================================================================================
+
+[1/5] Validating Prompt Type System & Compiler Diagnostics...
+  ✓ Type system verified: Detected 2 errors in naive prompt; 0 errors in hardened prompt.
+
+[2/5] Validating Adversarial Retrieval Firewall...
+  ✓ Retrieval Firewall verified: Sandboxed 2 chunks with 2 neutralized threats.
+
+[3/5] Validating Counterfactual Prompt Twin...
+  ✓ Counterfactual Twin verified: Candidate reduced constraint violations by 8 (from 36 to 28) with +12.5% defense gain; zero intent degradation.
+
+[4/5] Validating Hostile Gym Ω (1,024 attacks) & Metamorphic Lab...
+  ✓ Hostile baseline confirmed: Naive prompt killed only 34.4% of attacks.
+  ✓ Hostile Gym Ω verified: Fortified Mutation Kill Rate = 1024/1024 (100.0%) across 16 attack families.
+  ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
+
+[5/5] Validating Proof Receipt Protocol, Cryptographic Attestations & JCS Canonicalization...
+  ✓ Proof Receipt verified: Digest = 2577564f201e3a83b250be41c7ca40a3d6b240fa101baefe6016660c27b61e76
+  ✓ Signed NetworkObservationAttestation, LiveEvaluationAttestation & Ed25519 Producer Verification passed.
+  ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
+
+================================================================================
+🌟 ALL SPE Ω PROOF-CENTRIC MODULES PASSED WITH 100% SUCCESS!
+================================================================================
+
+=== 3. PROMPTFOO EXPORTER & PROVENANCE HONESTY TESTS ===
+==================================================================
+🧪 TESTING: SPE Promptfoo CI/CD Bridge Exporter (Measured Proofs)
+==================================================================
+
+[1/7] Generating Promptfoo evaluation bundle with measured SPE proofs...
+
+[2/7] Validating promptfooconfig.yaml structure, {{user_input}} binding, and SHA-256 digests...
+✓ promptfooconfig.yaml structure, {{user_input}} binding, and cryptographic metadata validated.
+
+[3/7] Validating GitHub Actions CI/CD workflow & measured JSON telemetry...
+✓ GitHub Actions workflow and measured JSON artifact verified.
+
+[4/7] Validating cryptographic tamper rejection & unfortified prompt measurement...
+✓ Cryptographic tamper rejection and honest weak-prompt measurement verified.
+
+[5/7] Validating invalid receipt halts downstream evaluation before any provider call...
+✓ Invalid receipt stops downstream evaluation with 0 provider calls; valid receipt passes each input to model.
+
+[6/7] Risk A & Finding C Closure: Validating Ed25519 producer authentication & signed attestations...
+✓ Ed25519 producer signature verification, signed NetworkObservationAttestation, and static-vs-live validity separation verified.
+
+[7/7] Risk B Closure: Writing & executing assertions from the actual exported promptfooconfig.yaml file...
+✓ Exported promptfooconfig.yaml written to disk, parsed, and verified against passing and failing model outputs.
+
+==================================================================
+🎉 ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (7/7)
+==================================================================
+
+=== 4. FULL WEB-APP CUSTOMER JOURNEY & SIGNED ENTITLEMENT TESTS ===
+==================================================================
+🧭 TESTING: SPE Ω Full Web-App Customer Journey (Risk C Closure)
+==================================================================
+
+[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security, Server Webhook Authority & 5,000-Char Free Output Cap...
+✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.
+
+[2/4] Verifying all 6 customer export formats and runtime 5,000-char Free-tier output limit...
+✓ All 6 customer export artifacts and 5,000-char Free vs 30,000-char Pro runtime limits verified.
+
+[3/4] Verifying Canonical WebAssembly Zero-Import Sandbox & Live Execution...
+✓ Canonical WASM verified (1,339,691 bytes, imports=0, sha256=ac3f0c3ecb19a756...).
+
+[4/4] Verifying all 9 SPE Web Platform Pillars exist and compile cleanly...
+✓ All 9 SPE Web Platform pillars verified.
+
+==================================================================
+🎉 FULL WEB-APP CUSTOMER JOURNEY SUITE PASSED! (4/4)
+==================================================================
+
+=== 5. COPY CHECK GATE ===
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 5722,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}

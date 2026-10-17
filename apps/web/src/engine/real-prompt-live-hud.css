@@ -1,0 +1,353 @@
+/* ==========================================================================
+   SPE CLEAN & USER-FRIENDLY PROMPT BUILDER — APPLE / LINEAR TIER
+   Calm, elegant, accessible, zero-confusion hierarchy.
+   ========================================================================== */
+
+.spe-friendly-canvas {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  position: relative;
+  animation: speCanvasFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes speCanvasFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 1. Top Clean Bar */
+.spe-friendly-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.spe-friendly-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.spe-friendly-badge.live {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.spe-friendly-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.spe-friendly-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: speFriendlyPulse 2s infinite ease-in-out;
+}
+
+@keyframes speFriendlyPulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px #38bdf8; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.spe-friendly-privacy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* 2. Header Block */
+.spe-friendly-header {
+  margin-bottom: 1.25rem;
+}
+
+.spe-friendly-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.spe-friendly-subtitle {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* 3. The 4 Clean Vertical Cards */
+.spe-friendly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.spe-friendly-card {
+  position: relative;
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  background: #090e1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.spe-friendly-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* Smooth entry cascade for cards */
+.spe-friendly-card:nth-child(1) { animation: speCardSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both; }
+.spe-friendly-card:nth-child(2) { animation: speCardSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both; }
+.spe-friendly-card:nth-child(3) { animation: speCardSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+.spe-friendly-card:nth-child(4) { animation: speCardSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both; }
+
+@keyframes speCardSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle, soft color hints on active cards */
+.spe-friendly-card.card--role.is-active {
+  border-left: 3px solid #10b981;
+}
+.spe-friendly-card.card--role.is-active:hover {
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+}
+
+.spe-friendly-card.card--goal.is-active {
+  border-left: 3px solid #38bdf8;
+}
+.spe-friendly-card.card--goal.is-active:hover {
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.15);
+}
+
+.spe-friendly-card.card--rules.is-active {
+  border-left: 3px solid #f59e0b;
+}
+.spe-friendly-card.card--rules.is-active:hover {
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.15);
+}
+
+.spe-friendly-card.card--output.is-active {
+  border-left: 3px solid #a855f7;
+}
+.spe-friendly-card.card--output.is-active:hover {
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.15);
+}
+
+/* Card Top Row */
+.spe-friendly-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spe-friendly-slot-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spe-friendly-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spe-friendly-icon.role {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.spe-friendly-icon.goal {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.spe-friendly-icon.rules {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.spe-friendly-icon.output {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.spe-friendly-label {
+  font-family: var(--spe-font-mono, monospace);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #f1f5f9;
+}
+
+.spe-friendly-sublabel {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-left: 0.25rem;
+}
+
+.spe-friendly-hint {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.spe-friendly-copy-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #94a3b8;
+  font-size: 0.64rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-friendly-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+/* Card Body Text */
+.spe-friendly-body {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #e2e8f0;
+  margin: 0;
+  word-break: break-word;
+  transition: opacity 0.2s ease;
+}
+
+.spe-friendly-canvas.is-updating .spe-friendly-body {
+  opacity: 0.75;
+}
+
+.spe-friendly-body.placeholder {
+  color: #64748b;
+  font-size: 0.84rem;
+  font-style: italic;
+}
+
+/* 4. Action Footer */
+.spe-friendly-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.spe-friendly-footer.idle {
+  justify-content: center;
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+.spe-friendly-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #060913;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2), 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spe-friendly-cta:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.3);
+}
+
+.spe-friendly-cta:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.spe-friendly-cta-arrow {
+  font-size: 1.05rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.spe-friendly-cta:hover .spe-friendly-cta-arrow {
+  transform: translate(2px, -2px);
+}
+
+.spe-friendly-shortcut {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.spe-friendly-shortcut kbd {
+  padding: 0.15rem 0.38rem;
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #e2e8f0;
+}

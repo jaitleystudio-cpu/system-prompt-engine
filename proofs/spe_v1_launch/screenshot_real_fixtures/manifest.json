@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "fixtures": [
+    {
+      "id": "desktop-landing",
+      "file": "desktop-landing.png",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "id": "mobile-app",
+      "file": "mobile-app.png",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "id": "form",
+      "file": "form.png",
+      "width": 960,
+      "height": 720
+    },
+    {
+      "id": "dashboard-sidebar",
+      "file": "dashboard-sidebar.png",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "id": "card-grid",
+      "file": "card-grid.png",
+      "width": 1100,
+      "height": 760
+    },
+    {
+      "id": "dark-difficult",
+      "file": "dark-difficult.png",
+      "width": 1200,
+      "height": 800
+    }
+  ]
+}

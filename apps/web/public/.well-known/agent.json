@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "name": "SPE — Global AI Gateway",
+  "description": "Universal prompt compilation, constraint preservation, and model dialect transcompilation engine for autonomous AI agents.",
+  "url": "https://systempromptengine.com",
+  "version": "2026.10-omega",
+  "provider": {
+    "name": "System Prompt Engine",
+    "url": "https://systempromptengine.com"
+  },
+  "capabilities": [
+    "prompt_compilation",
+    "invariant_verification",
+    "dialect_transcompilation",
+    "constraint_auditing",
+    "mcp_server",
+    "offline_wasm"
+  ],
+  "protocols": {
+    "mcp": {
+      "version": "2026-07-28",
+      "transport": "http-post",
+      "endpoint": "https://systempromptengine.com/api/v1/mcp",
+      "tools": [
+        "search_spe_prompts",
+        "get_prompt_asset",
+        "compile_for_model",
+        "validate_prompt_constraints"
+      ]
+    },
+    "rest": {
+      "version": "v1",
+      "discovery": "https://systempromptengine.com/api/v1/index.json"
+    }
+  },
+  "security": {
+    "authentication": "none",
+    "air_gap": true,
+    "offline_supported": true,
+    "cloud_egress": false,
+    "zero_telemetry": true,
+    "free_tier_characters": 30000,
+    "free_tier_scope": "all_humans_models_and_bots",
+    "canonical_wasm_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d"
+  },
+  "documentation": {
+    "llms_txt": "https://systempromptengine.com/llms.txt",
+    "llms_full_txt": "https://systempromptengine.com/llms-full.txt",
+    "openapi": "https://systempromptengine.com/.well-known/openapi.yaml"
+  }
+}

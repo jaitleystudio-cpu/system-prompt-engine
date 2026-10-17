@@ -1,0 +1,67 @@
+PASS theme dark/dark
+PASS no PNG or Canvas dark/dark
+PASS PNG not fetched dark/dark
+PASS six native fragments dark/dark
+PASS five text steps dark/dark
+PASS complete reduced-motion state dark/dark
+PASS prompt visible dark/dark
+PASS axe dark/dark []
+PASS runtime dark/dark
+PASS theme light/dark
+PASS no PNG or Canvas light/dark
+PASS PNG not fetched light/dark
+PASS six native fragments light/dark
+PASS five text steps light/dark
+PASS complete reduced-motion state light/dark
+PASS prompt visible light/dark
+PASS axe light/dark []
+PASS runtime light/dark
+PASS theme system/dark
+PASS no PNG or Canvas system/dark
+PASS PNG not fetched system/dark
+PASS six native fragments system/dark
+PASS five text steps system/dark
+PASS complete reduced-motion state system/dark
+PASS prompt visible system/dark
+PASS axe system/dark []
+PASS system live dark
+PASS runtime system/dark
+PASS theme system/light
+PASS no PNG or Canvas system/light
+PASS PNG not fetched system/light
+PASS six native fragments system/light
+PASS five text steps system/light
+PASS complete reduced-motion state system/light
+PASS prompt visible system/light
+PASS axe system/light []
+PASS system live light
+PASS runtime system/light
+PASS keyboard pause
+PASS pause freezes motion
+PASS pause freezes stage
+PASS play resumes
+PASS offscreen pauses
+PASS step navigation ideas
+PASS step navigation meaning
+PASS step navigation spe
+PASS step navigation plan
+PASS step navigation prompt
+PASS finite end and replay
+PASS replay starts at ideas
+PASS live reduced motion
+PASS layout 320 {"overflow":false,"sceneHeight":1040,"artInHero":true,"captionBelowArt":true,"ctaInHero":true}
+PASS layout 390 {"overflow":false,"sceneHeight":1040,"artInHero":true,"captionBelowArt":true,"ctaInHero":true}
+PASS layout 700 {"overflow":false,"sceneHeight":1040,"artInHero":true,"captionBelowArt":true,"ctaInHero":true}
+PASS layout 768 {"overflow":false,"sceneHeight":1040,"artInHero":true,"captionBelowArt":true,"ctaInHero":true}
+PASS layout 1024 {"overflow":false,"sceneHeight":1040,"artInHero":true,"captionBelowArt":true,"ctaInHero":true}
+PASS layout 1440 {"overflow":false,"sceneHeight":490,"artInHero":true,"captionBelowArt":true,"ctaInHero":true}
+PASS layout 1920 {"overflow":false,"sceneHeight":570,"artInHero":true,"captionBelowArt":true,"ctaInHero":true}
+PASS 200% zoom
+PASS open tab title changes at midnight
+PASS title stable within same day
+PASS returning tab refreshes daily title
+PASS all 31 headlines fit 320 []
+PASS all 31 headlines fit 768 []
+PASS all 31 headlines fit 1440 []
+PASS all 31 headlines fit 1920 []
+66 hero checks passed

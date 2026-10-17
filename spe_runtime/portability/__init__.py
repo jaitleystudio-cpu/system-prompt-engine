@@ -39,6 +39,19 @@ from spe_runtime.portability.conformance import (
 )
 from spe_runtime.portability.oracle import oracle_detect
 from spe_runtime.portability.reasons import PortabilityReason
+from spe_runtime.portability.spe_artifact import (
+    CONTEXT_PROTOCOL_LINEAGE_KEY,
+    SPE_FORMAT_V1,
+    SPE_FORMAT_V2,
+    build_context_protocol_lineage,
+    build_spe_artifact,
+    dumps_spe_artifact,
+    loads_spe_artifact,
+    protected_intent_of,
+    refresh_stale_context,
+    roundtrip_spe_artifact,
+    verify_integrity,
+)
 
 __all__ = [
     "ABI_ID",
@@ -67,4 +80,15 @@ __all__ = [
     "validate_round_trip",
     "oracle_detect",
     "PortabilityReason",
+    "CONTEXT_PROTOCOL_LINEAGE_KEY",
+    "SPE_FORMAT_V1",
+    "SPE_FORMAT_V2",
+    "build_context_protocol_lineage",
+    "build_spe_artifact",
+    "dumps_spe_artifact",
+    "loads_spe_artifact",
+    "protected_intent_of",
+    "refresh_stale_context",
+    "roundtrip_spe_artifact",
+    "verify_integrity",
 ]

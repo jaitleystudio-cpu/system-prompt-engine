@@ -1,0 +1,29 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (portable/spe-wasm/target/debug/deps/spe_wasm-7a636113dd0c43e3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/context_protocol_web.rs (portable/spe-wasm/target/debug/deps/context_protocol_web-1fa9976dbdb09420)
+
+running 2 tests
+test wrapper_maps_fast_to_quick_and_off_sources ... ok
+test wrapper_exposes_context_protocol_compile_fields ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/wrapper_conformance.rs (portable/spe-wasm/target/debug/deps/wrapper_conformance-e87d0fe6b6770949)
+
+running 2 tests
+test wrapper_matches_core_on_negative ... ok
+test wrapper_matches_core_on_positive ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests spe_wasm
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

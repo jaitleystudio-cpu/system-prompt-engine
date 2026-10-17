@@ -1,0 +1,874 @@
+/* SPE Browser Companion Styles - Injected into ChatGPT, Claude & Gemini */
+
+:root {
+  --spe-bg-primary: #09090b;
+  --spe-bg-secondary: #121215;
+  --spe-bg-card: #18181b;
+  --spe-border: rgba(255, 255, 255, 0.08);
+  --spe-border-subtle: rgba(255, 255, 255, 0.05);
+  --spe-accent: #ffffff;
+  --spe-emerald: #10b981;
+  --spe-text-primary: #f4f4f5;
+  --spe-text-secondary: #a1a1aa;
+  --spe-text-muted: #71717a;
+  --spe-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+#spe-companion-root {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  z-index: 9999999;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Geist", system-ui, sans-serif;
+  color: var(--spe-text-primary);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Floating Trigger Pill - Obsidian Glassmorphism */
+.spe-trigger-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 18, 22, 0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px);
+  color: #f4f4f5;
+  font-weight: 600;
+  font-size: 12.5px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  letter-spacing: -0.01em;
+}
+
+.spe-trigger-pill:hover {
+  transform: translateY(-1.5px);
+  background: rgba(26, 26, 32, 0.98);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.spe-trigger-pill svg {
+  width: 13px;
+  height: 13px;
+  color: #fff;
+}
+
+.spe-trigger-pill .spe-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Main Drawer Panel - Raycast / Linear Glass */
+.spe-drawer-panel {
+  position: fixed;
+  bottom: 80px;
+  right: 28px;
+  width: 440px;
+  max-height: 600px;
+  background: rgba(14, 14, 18, 0.96);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.98);
+}
+
+.spe-drawer-panel.spe-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Header */
+.spe-header {
+  padding: 14px 18px;
+  background: rgba(20, 20, 25, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.spe-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.spe-shield-badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.spe-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--spe-text-muted);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spe-close-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Search & Categories */
+.spe-filter-bar {
+  padding: 12px 18px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.spe-search-input {
+  width: 100%;
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: #f4f4f5;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border 0.15s;
+}
+
+.spe-search-input:focus {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.spe-category-pills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.spe-category-pill {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--spe-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.spe-category-pill.spe-active,
+.spe-category-pill:hover {
+  background: #ffffff;
+  color: #09090b;
+  font-weight: 600;
+  border-color: #ffffff;
+}
+
+/* Prompt List */
+.spe-prompt-list {
+  padding: 12px 18px;
+  overflow-y: auto;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.spe-prompt-card {
+  background: #141417;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 13px 14px;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.spe-prompt-card:hover {
+  background: #19191d;
+  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(-0.5px);
+}
+
+.spe-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.spe-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f4f4f5;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.spe-card-tagline {
+  font-size: 11.5px;
+  color: var(--spe-text-secondary);
+  line-height: 1.4;
+}
+
+.spe-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.spe-card-stats {
+  font-size: 10.5px;
+  color: var(--spe-text-muted);
+  display: flex;
+  gap: 6px;
+}
+
+.spe-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.spe-btn-insert {
+  background: #ffffff;
+  color: #09090b;
+  border: none;
+  border-radius: 7px;
+  padding: 4px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.spe-btn-insert:hover {
+  opacity: 0.92;
+  transform: translateY(-0.5px);
+}
+
+.spe-btn-vars {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--spe-text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  padding: 4px 9px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.spe-btn-vars:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Variables Popover inside card */
+.spe-var-drawer {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spe-var-input-group label {
+  display: block;
+  font-size: 10.5px;
+  color: var(--spe-text-secondary);
+  margin-bottom: 2px;
+}
+
+.spe-var-input-group input {
+  width: 100%;
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  color: #f4f4f5;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.spe-var-input-group input:focus {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Footer Status */
+.spe-footer {
+  padding: 10px 18px;
+  background: rgba(18, 18, 22, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--spe-text-muted);
+}
+
+.spe-footer a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* ========================================================================== */
+/* SPE Real-Time Discovery Lift Floating Badge                                */
+/* ========================================================================== */
+.spe-lift-container {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  z-index: 9999998;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spe-lift-container.spe-lift-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.spe-lift-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(14, 14, 18, 0.95);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 7px 14px 7px 16px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Geist", system-ui, sans-serif;
+  color: #f4f4f5;
+}
+
+.spe-lift-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.spe-lift-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+}
+
+.spe-lift-label {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.spe-lift-desc {
+  color: #71717a;
+  font-size: 11.5px;
+  font-weight: 400;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spe-lift-action-btn {
+  background: #ffffff;
+  color: #09090b;
+  border: none;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.spe-lift-action-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-0.5px);
+}
+
+.spe-lift-dismiss-btn {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.spe-lift-dismiss-btn:hover {
+  color: #f4f4f5;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+
+/* ========================================================================= */
+/* SPE Universal Inline Auto-Action Bubble (Grammarly + QuillBot Killer)     */
+/* Obsidian Glassmorphism with Top Specular Rim & Spring Physics             */
+/* ========================================================================= */
+
+#spe-inline-action-bar {
+  position: absolute;
+  z-index: 2147483647;
+  display: none;
+  align-items: center;
+  background: rgba(14, 14, 17, 0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  padding: 4px 6px;
+  gap: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Geist", system-ui, sans-serif;
+  user-select: none;
+  animation: speBubblePop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes speBubblePop {
+  0% { opacity: 0; transform: scale(0.94) translateY(4px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.spe-bar-brand {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a1a1aa;
+  padding: 0 8px 0 6px;
+  letter-spacing: 0.04em;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.spe-bar-logo {
+  width: 12px;
+  height: 12px;
+  color: #fff;
+}
+
+.spe-action-btn {
+  background: transparent;
+  color: #e4e4e7;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.spe-action-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transform: translateY(-0.5px);
+}
+
+.spe-action-btn:active {
+  transform: scale(0.97);
+}
+
+.spe-btn-key {
+  font-size: 9.5px;
+  color: #71717a;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-family: "SF Mono", "Geist Mono", monospace;
+}
+
+/* ========================================================================= */
+/* SPE Live Transformation Diff Inspector (#spe-diff-modal)                 */
+/* ========================================================================= */
+
+#spe-diff-modal {
+  position: absolute;
+  z-index: 2147483647;
+  display: none;
+  flex-direction: column;
+  width: 480px;
+  max-width: calc(100vw - 32px);
+  background: rgba(14, 14, 18, 0.96);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 14px 16px;
+  gap: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Geist", system-ui, sans-serif;
+  color: #f4f4f5;
+  user-select: text;
+  animation: speModalSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes speModalSlideIn {
+  0% { opacity: 0; transform: scale(0.96) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.spe-diff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 8px;
+}
+
+.spe-diff-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spe-diff-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.spe-diff-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.spe-diff-mode-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-family: "SF Mono", "Geist Mono", monospace;
+}
+
+.spe-diff-close {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.spe-diff-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Micro-Telemetry Metadata Row */
+.spe-diff-stats-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #a1a1aa;
+}
+
+.spe-stat-tag {
+  font-weight: 500;
+}
+
+.spe-stat-tag.emerald {
+  color: #10b981;
+}
+
+.spe-stat-sep {
+  opacity: 0.3;
+}
+
+/* Diff Body Text Viewer */
+.spe-diff-body {
+  background: rgba(22, 22, 26, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #e4e4e7;
+  max-height: 200px;
+  overflow-y: auto;
+  word-break: break-word;
+}
+
+.spe-diff-del {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fda4af;
+  text-decoration: line-through;
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid rgba(244, 63, 94, 0.22);
+  margin: 0 1px;
+}
+
+.spe-diff-ins {
+  background: rgba(16, 185, 129, 0.14);
+  color: #6ee7b7;
+  font-weight: 500;
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  margin: 0 1px;
+}
+
+.spe-diff-same {
+  color: #e4e4e7;
+}
+
+/* Footer */
+.spe-diff-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.spe-diff-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #71717a;
+}
+
+.spe-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.spe-diff-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spe-diff-btn-copy {
+  background: rgba(255, 255, 255, 0.05);
+  color: #d4d4d8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s;
+}
+
+.spe-diff-btn-copy:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.spe-diff-btn-apply {
+  background: #ffffff;
+  color: #09090b;
+  border: none;
+  border-radius: 7px;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.15s;
+}
+
+.spe-diff-btn-apply:hover {
+  opacity: 0.92;
+  transform: translateY(-0.5px);
+}
+
+.spe-diff-btn-apply kbd {
+  font-size: 10px;
+  font-family: "SF Mono", monospace;
+  opacity: 0.6;
+}
+
+/* =========================================================================
+   SPE CLICKY AMBIENT CURSOR BUDDY, VOICE PILL, SCREEN INK & AGENT DOCK
+   ========================================================================= */
+#spe-clicky-buddy {
+  position: fixed;
+  z-index: 2147483645;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px 5px 8px;
+  border-radius: 9999px;
+  background: rgba(14, 14, 18, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: #f4f4f5;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  transition: transform 0.14s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+  cursor: pointer;
+  user-select: none;
+}
+
+#spe-clicky-buddy:hover {
+  border-color: #34d399;
+  transform: scale(1.04);
+}
+
+#spe-clicky-buddy.is-listening {
+  background: linear-gradient(180deg, #d6e6ff 0%, #9ec5ff 42%, #d2f1f7 100%);
+  border: 1.5px solid #221898;
+  color: #000000;
+  box-shadow: 0 14px 34px rgba(34, 24, 152, 0.32), inset 0 1px 1px #ffffff;
+}
+
+.spe-clicky-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #d6e6ff 0%, #9ec5ff 42%, #d2f1f7 100%);
+  border: 1px solid #221898;
+  color: #000;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: -0.3px;
+}
+
+#spe-clicky-buddy.is-listening .spe-clicky-face {
+  background: #221898;
+  color: #ffffff;
+}
+
+.spe-clicky-wbars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 14px;
+}
+
+.spe-clicky-wbars i {
+  width: 2.5px;
+  background: #221898;
+  border-radius: 2px;
+  display: inline-block;
+  transition: height 0.12s ease;
+}
+
+#spe-clicky-ink-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2147483644;
+}
+
+#spe-clicky-agent-dock {
+  position: fixed;
+  top: 18px;
+  right: 24px;
+  width: 320px;
+  z-index: 2147483646;
+  background: rgba(14, 14, 18, 0.96);
+  border: 1.5px solid #221898;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: #f4f4f5;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#spe-clicky-agent-dock.is-open {
+  display: flex;
+}

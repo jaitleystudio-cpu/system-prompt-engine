@@ -1,9 +1,37 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
+import { localMediaHostPlugin } from "./scripts/local-media-host-plugin.mjs";
+import { localOcrHostPlugin } from "./scripts/local-ocr-host-plugin.mjs";
+import { localExtractDesignPlugin } from "./scripts/local-extract-design-plugin.mjs";
+import { localMcpGatewayPlugin } from "./scripts/local-mcp-gateway-plugin.mjs";
+
+const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
+let buildSha = process.env.SPE_BUILD_SHA;
+if (!buildSha) {
+  try {
+    buildSha = execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      env: { ...process.env, GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_SYSTEM: "/dev/null" },
+    }).trim();
+  } catch {
+    buildSha = "54abbeb2";
+  }
+}
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    localMediaHostPlugin(repoRoot),
+    localOcrHostPlugin(repoRoot),
+    localExtractDesignPlugin(),
+    localMcpGatewayPlugin(),
+  ],
+  define: {
+    __SPE_BUILD_SHA__: JSON.stringify(buildSha),
+  },
   resolve: {
     alias: {
       "@spe/human-perspective": fileURLToPath(new URL("../../packages/human-perspective/src/index.ts", import.meta.url)),
@@ -25,8 +53,16 @@ export default defineConfig({
         entryFileNames: "assets/[name]-[hash].js",
         chunkFileNames: "assets/[name]-[hash].js",
         assetFileNames: "assets/[name]-[hash][extname]",
+        manualChunks(id) {
+          if (id.includes("onnxruntime-web")) return "ort-wasm";
+          if (id.includes("react-three-fiber") || id.includes("/three/"))
+            return "r3f";
+        },
       },
     },
+  },
+  optimizeDeps: {
+    exclude: ["onnxruntime-web"],
   },
   preview: { host: "127.0.0.1", port: 4173 },
   server: { host: "127.0.0.1", port: 5173 },

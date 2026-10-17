@@ -75,6 +75,8 @@ export const CLAIMS = {
     "Offline use requires a successful initial load and intact cached assets.",
   editableTemplates:
     "Editorial templates add task guidance. They do not infer missing facts or call a generative model.",
+  dualCoreEngine:
+    "Dual-core prompt engine pairs Core A genuine local generative intelligence with Core B deterministic compiler recovery.",
   portableFile:
     "An exported .spe file carries the request, explicit details and generated prompt with integrity metadata.",
   optionalHistory:

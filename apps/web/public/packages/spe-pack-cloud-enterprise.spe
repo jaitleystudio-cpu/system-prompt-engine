@@ -1,0 +1,20 @@
+{
+  "format": "spe-bundle-v1",
+  "id": "spe-pack-cloud-enterprise",
+  "name": "Cloud Enterprise & Autonomous Infrastructure Pack",
+  "description": "Comprehensive specification bundle for multi-region cloud architecture, terraform governance, chaos engineering, and distributed resilience.",
+  "prompts": [
+    "spe-fullstack-cloud-architect",
+    "spe-microservice-resilience-lead",
+    "spe-security-auditor-owasp"
+  ],
+  "totalInvariants": 6,
+  "license": "MIT OR Apache-2.0",
+  "manifest": {
+    "engine": "SPE Ω",
+    "engineRelease": "2026.10-omega",
+    "wasmCompatibility": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    "contentSha256": "11fe84a22b39c29cd6d8ba6891b1184285d4f2634dcec69cfa1bb6bd316f45d9",
+    "generatedAt": "2026-10-17T00:00:00Z"
+  }
+}

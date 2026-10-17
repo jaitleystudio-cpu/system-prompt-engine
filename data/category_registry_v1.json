@@ -1,1 +1,40 @@
-{"version":"1","categories":[{"id":"CAT:C01","name":"Decide"},{"id":"CAT:C02","name":"Research"},{"id":"CAT:C03","name":"Communicate"},{"id":"CAT:C04","name":"Plan"},{"id":"CAT:C05","name":"Verify"},{"id":"CAT:C06","name":"Analyze"},{"id":"CAT:C07","name":"Execute"},{"id":"CAT:C08","name":"Recover"},{"id":"CAT:C09","name":"Privacy"},{"id":"CAT:C10","name":"Authority"},{"id":"CAT:C11","name":"Provenance"},{"id":"CAT:C12","name":"Capability"}]}
+{
+  "version": "2",
+  "taxonomy": "DOMAIN",
+  "supersedes_version": "1",
+  "ratification_ref": "proofs/xcat_v1_closure_20260929/FOUNDER_XCAT_V1_RATIFICATION.md",
+  "ratification_date": "2026-09-29",
+  "categories": [
+    {"id": "CAT:C01", "name": "Advise / Plan / Decide"},
+    {"id": "CAT:C02", "name": "Research"},
+    {"id": "CAT:C03", "name": "Write / Rewrite / Communicate"},
+    {"id": "CAT:C04", "name": "Translate / Localize / Language Transform"},
+    {"id": "CAT:C05", "name": "Learn"},
+    {"id": "CAT:C06", "name": "Analyze / Compare / Extract"},
+    {"id": "CAT:C07", "name": "Work / Execute"},
+    {"id": "CAT:C08", "name": "Business"},
+    {"id": "CAT:C09", "name": "Code"},
+    {"id": "CAT:C10", "name": "Multimedia"},
+    {"id": "CAT:C11", "name": "Career"},
+    {"id": "CAT:C12", "name": "Creative / Story / Roleplay"}
+  ],
+  "legacy_taxonomy": {
+    "version": "1",
+    "status": "MIGRATION_METADATA_ONLY",
+    "note": "Superseded English names are migration metadata only — never canonical aliases. UNKNOWN != SAFE MIGRATION.",
+    "categories": [
+      {"id": "CAT:C01", "name": "Decide"},
+      {"id": "CAT:C02", "name": "Research"},
+      {"id": "CAT:C03", "name": "Communicate"},
+      {"id": "CAT:C04", "name": "Plan"},
+      {"id": "CAT:C05", "name": "Verify"},
+      {"id": "CAT:C06", "name": "Analyze"},
+      {"id": "CAT:C07", "name": "Execute"},
+      {"id": "CAT:C08", "name": "Recover"},
+      {"id": "CAT:C09", "name": "Privacy"},
+      {"id": "CAT:C10", "name": "Authority"},
+      {"id": "CAT:C11", "name": "Provenance"},
+      {"id": "CAT:C12", "name": "Capability"}
+    ]
+  }
+}

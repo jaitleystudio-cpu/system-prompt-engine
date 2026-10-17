@@ -1,7 +1,9 @@
 import type {
   CompilePhase,
+  ContextProtocolCompileRequest,
   EngineError,
   EngineSuccessBody,
+  QualityCompileRequest,
   WorkerRequest,
   WorkerResponse,
 } from "./types";
@@ -38,8 +40,59 @@ export class EngineClient {
     jsonText: string,
     onPhase: (phase: CompilePhase) => void,
   ): Promise<CompileOutcome> {
+    const req: WorkerRequest = { id: "", type: "evaluate", jsonText };
+    return this.dispatch(req, onPhase);
+  }
+
+  /**
+   * Transport context-protocol compile to WASM. Does not synthesize
+   * context_summary / execution_contract / quality_record in TypeScript.
+   * If the worker/WASM path fails, the outcome is ENGINE_UNAVAILABLE.
+   */
+  compileContextProtocol(
+    request: ContextProtocolCompileRequest,
+    onPhase: (phase: CompilePhase) => void,
+  ): Promise<CompileOutcome> {
+    const payload: ContextProtocolCompileRequest = {
+      ...request,
+      spe_api: "context_protocol",
+      op: "compile",
+    };
+    const req: WorkerRequest = {
+      id: "",
+      type: "context_protocol",
+      request: payload,
+    };
+    return this.dispatch(req, onPhase);
+  }
+
+  /**
+   * Trusted quality path. The Worker overwrites caller runtime attestation
+   * after verifying the WASM bytes. Generic compile() cannot mint that receipt.
+   */
+  compileQuality(
+    request: QualityCompileRequest,
+    onPhase: (phase: CompilePhase) => void,
+  ): Promise<CompileOutcome> {
+    const payload: QualityCompileRequest = {
+      ...request,
+      spe_api: "quality",
+    };
+    const req: WorkerRequest = {
+      id: "",
+      type: "quality",
+      request: payload,
+    };
+    return this.dispatch(req, onPhase);
+  }
+
+  private dispatch(
+    partial: Omit<WorkerRequest, "id"> & { id: string },
+    onPhase: (phase: CompilePhase) => void,
+  ): Promise<CompileOutcome> {
     if (this.closed) return Promise.reject(new Error("ENGINE_UNAVAILABLE"));
     const id = `req-${++this.seq}`;
+    const req = { ...partial, id } as WorkerRequest;
     return new Promise((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timer);
@@ -48,7 +101,10 @@ export class EngineClient {
         this.worker.removeEventListener("error", onError);
         this.worker.removeEventListener("messageerror", onMessageError);
       };
-      const cancel = (error: Error) => { cleanup(); reject(error); };
+      const cancel = (error: Error) => {
+        cleanup();
+        reject(error);
+      };
       const onError = (ev: ErrorEvent) => {
         cleanup();
         reject(new Error(ev.message || "The local worker could not start."));
@@ -80,7 +136,6 @@ export class EngineClient {
       this.worker.addEventListener("message", onMsg);
       this.worker.addEventListener("error", onError);
       this.worker.addEventListener("messageerror", onMessageError);
-      const req: WorkerRequest = { id, type: "evaluate", jsonText };
       try {
         this.worker.postMessage(req);
       } catch (err) {

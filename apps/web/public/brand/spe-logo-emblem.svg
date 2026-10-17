@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <defs>
+    <!-- Titanium gradients -->
+    <linearGradient id="titanium-base" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a5260"/>
+      <stop offset="30%" stop-color="#2e3440"/>
+      <stop offset="70%" stop-color="#1f242d"/>
+      <stop offset="100%" stop-color="#11141a"/>
+    </linearGradient>
+    <linearGradient id="titanium-chamfer" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#9aa6b8"/>
+      <stop offset="45%" stop-color="#505969"/>
+      <stop offset="75%" stop-color="#252b36"/>
+      <stop offset="100%" stop-color="#7e8a9d"/>
+    </linearGradient>
+    <radialGradient id="titanium-face" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#545e6f"/>
+      <stop offset="50%" stop-color="#2c323f"/>
+      <stop offset="85%" stop-color="#1c2028"/>
+      <stop offset="100%" stop-color="#101318"/>
+    </radialGradient>
+
+    <!-- Rose Gold / Copper gradients -->
+    <linearGradient id="copper-track" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5d3be"/>
+      <stop offset="25%" stop-color="#d89b7b"/>
+      <stop offset="60%" stop-color="#b06c4b"/>
+      <stop offset="85%" stop-color="#79432b"/>
+      <stop offset="100%" stop-color="#e2aa8d"/>
+    </linearGradient>
+    <linearGradient id="copper-bevel" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#633520"/>
+      <stop offset="50%" stop-color="#f3cbb4"/>
+      <stop offset="100%" stop-color="#8e4f32"/>
+    </linearGradient>
+
+    <!-- Neon Cyan Core Glow -->
+    <filter id="cyan-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="blur1"/>
+      <feGaussianBlur stdDeviation="18" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient id="cyan-energy" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c8f9ff"/>
+      <stop offset="40%" stop-color="#00f0ff"/>
+      <stop offset="80%" stop-color="#00a6c0"/>
+      <stop offset="100%" stop-color="#003d47"/>
+    </radialGradient>
+    <radialGradient id="spindle-hub" cx="48%" cy="46%" r="50%">
+      <stop offset="0%" stop-color="#4a5464"/>
+      <stop offset="60%" stop-color="#181c22"/>
+      <stop offset="100%" stop-color="#0a0d11"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Gear Shadow -->
+  <path d="M 190.18,97.09 L 214.95,88.97 L 218.67,35.13 L 293.33,35.13 L 297.05,88.97 L 321.82,97.09 L 345.09,108.87 L 385.78,73.42 L 438.58,126.22 L 403.13,166.91 L 414.91,190.18 L 423.03,214.95 L 476.87,218.67 L 476.87,293.33 L 423.03,297.05 L 414.91,321.82 L 403.13,345.09 L 438.58,385.78 L 385.78,438.58 L 345.09,403.13 L 321.82,414.91 L 297.05,423.03 L 293.33,476.87 L 218.67,476.87 L 214.95,423.03 L 190.18,414.91 L 166.91,403.13 L 126.22,438.58 L 73.42,385.78 L 108.87,345.09 L 97.09,321.82 L 88.97,297.05 L 35.13,293.33 L 35.13,218.67 L 88.97,214.95 L 97.09,190.18 L 108.87,166.91 L 73.42,126.22 L 126.22,73.42 L 166.91,108.87 Z" fill="#000000" opacity="0.6" transform="translate(0, 10)" filter="blur(14px)"/>
+
+  <!-- Outer 8-Tooth Titanium Gear Body -->
+  <path d="M 190.18,97.09 L 214.95,88.97 L 218.67,35.13 L 293.33,35.13 L 297.05,88.97 L 321.82,97.09 L 345.09,108.87 L 385.78,73.42 L 438.58,126.22 L 403.13,166.91 L 414.91,190.18 L 423.03,214.95 L 476.87,218.67 L 476.87,293.33 L 423.03,297.05 L 414.91,321.82 L 403.13,345.09 L 438.58,385.78 L 385.78,438.58 L 345.09,403.13 L 321.82,414.91 L 297.05,423.03 L 293.33,476.87 L 218.67,476.87 L 214.95,423.03 L 190.18,414.91 L 166.91,403.13 L 126.22,438.58 L 73.42,385.78 L 108.87,345.09 L 97.09,321.82 L 88.97,297.05 L 35.13,293.33 L 35.13,218.67 L 88.97,214.95 L 97.09,190.18 L 108.87,166.91 L 73.42,126.22 L 126.22,73.42 L 166.91,108.87 Z" fill="url(#titanium-base)" stroke="url(#titanium-chamfer)" stroke-width="4" stroke-linejoin="bevel"/>
+
+  <!-- Tooth Chamfer Facets Highlight Ring -->
+  <circle cx="256" cy="256" r="172" fill="none" stroke="url(#titanium-chamfer)" stroke-width="3" opacity="0.7"/>
+
+  <!-- Recessed Titanium Sub-plate -->
+  <circle cx="256" cy="256" r="156" fill="url(#titanium-face)" stroke="#0d1015" stroke-width="5"/>
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#384050" stroke-width="1" opacity="0.5"/>
+
+  <!-- Concentric CNC Grooves in Gear Recess -->
+  <circle cx="256" cy="256" r="142" fill="none" stroke="#1f242d" stroke-width="2"/>
+  <circle cx="256" cy="256" r="136" fill="none" stroke="#161a22" stroke-width="1.5"/>
+
+  <!-- Stylized Rose-Gold P Loop (Interlocking Mechanical Track) -->
+  <!-- Stem: from (150, 360) up to (150, 200) then outer loop around to (256, 150) and back to (256, 270) into (180, 270) -->
+  <g>
+    <!-- P-loop outer track -->
+    <path d="M 144 366 L 144 200 C 144 140 190 106 256 106 C 322 106 368 148 368 214 C 368 280 322 320 256 320 L 196 320 L 196 366 Z"
+          fill="url(#copper-track)"
+          stroke="url(#copper-bevel)"
+          stroke-width="4"
+          stroke-linejoin="round"/>
+
+    <!-- P-loop inner groove (revealing inner cyan illumination) -->
+    <path d="M 182 344 L 182 208 C 182 165 214 142 256 142 C 298 142 330 170 330 214 C 330 258 298 284 256 284 L 230 284"
+          fill="none"
+          stroke="#5c321e"
+          stroke-width="4"/>
+  </g>
+
+  <!-- Cyan Energy Core Light Ring (Inside P eye) -->
+  <circle cx="256" cy="214" r="52" fill="none" stroke="url(#cyan-energy)" stroke-width="8" filter="url(#cyan-glow)"/>
+  <circle cx="256" cy="214" r="52" fill="none" stroke="#e0ffff" stroke-width="2.5" opacity="0.9"/>
+
+  <!-- Center Stainless Spindle Hub -->
+  <circle cx="256" cy="214" r="38" fill="url(#spindle-hub)" stroke="url(#titanium-chamfer)" stroke-width="2.5"/>
+  <circle cx="256" cy="214" r="26" fill="none" stroke="#2e3644" stroke-width="1.5"/>
+  <circle cx="256" cy="214" r="12" fill="#12161c" stroke="#00f0ff" stroke-width="1.5"/>
+  <circle cx="256" cy="214" r="4" fill="#00f0ff"/>
+</svg>

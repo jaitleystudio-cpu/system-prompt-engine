@@ -1,0 +1,118 @@
+name: R8 Convergence Validation
+
+on:
+  push:
+    branches:
+      - chatgpt/r8-cvg1-20261005
+  pull_request:
+    branches:
+      - chatgpt/r8-cvg1-20261005
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: >-
+    --remap-path-prefix=/home/runner=/rustc
+    --remap-path-prefix=/home=/rustc
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pytest -q
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: spe-core-rs tests
+        working-directory: portable/spe-core-rs
+        run: cargo test --all-targets
+      - name: spe-wasm tests
+        working-directory: portable/spe-wasm
+        run: cargo test --all-targets
+      - name: release wasm build
+        run: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: install
+        working-directory: apps/web
+        run: npm ci
+      - name: release wasm build
+        run: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
+      - name: engine tests
+        working-directory: apps/web
+        run: npm run test:engine
+      - name: unreceipted authority claims remain provisional
+        run: node apps/web/scripts/test-authority-evidence-truth.mjs
+      - name: universal shell truth contract
+        run: node apps/web/scripts/test-universal-shell.mjs
+      - name: visual screenshot truth contract
+        run: node apps/web/scripts/test-visual-screenshot-ui.mjs
+      - name: vision replay metamorphic regression
+        run: node apps/web/scripts/test-r8-vision-replay.mjs
+      - name: measured OCR font-fit regression
+        run: node apps/web/scripts/test-r8-vision-font-fit.mjs
+      - name: measured OCR IR wiring regression
+        run: node apps/web/scripts/test-r8-vision-font-wiring.mjs
+      - name: unicode and raw identity regression
+        working-directory: apps/web
+        run: node scripts/test-unicode-regression.mjs
+      - name: text volume and output-budget regression
+        working-directory: apps/web
+        run: node scripts/test-volume-budget-regression.mjs
+      - name: website product flow and free-text 3d compiler regression
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-website-product-flow.mjs
+      - name: static website compiler regression
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-static-website-compiler.mjs
+      - name: website studio v1.1 canonical model
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-website-studio-v2.mjs
+      - name: website studio v1.1 canonical model mutations
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-website-studio-v2-mutations.mjs
+      - name: website studio v1.1 intent compilers
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-website-studio-intent.mjs
+      - name: website studio v1.1 core contracts
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-website-studio-core-v11.mjs
+      - name: website studio v1.1 UI foundation
+        working-directory: apps/web
+        run: node scripts/test-website-studio-ui-foundation.mjs
+      - name: truth privacy and ssrf regression
+        working-directory: apps/web
+        run: node scripts/test-truth-privacy-closure.mjs
+      - name: screenshot fidelity frozen gate regression
+        working-directory: apps/web
+        run: node scripts/test-screenshot-fidelity.mjs
+      - name: build
+        working-directory: apps/web
+        run: npm run build

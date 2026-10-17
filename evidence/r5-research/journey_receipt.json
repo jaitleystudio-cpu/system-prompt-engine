@@ -1,0 +1,448 @@
+{
+  "SHELL_MOUNT": "NOT_DONE",
+  "allow_live": false,
+  "canonical_doi": "10.1038/nature00870",
+  "classified_query_urls_not_sent": {
+    "CROSSREF": "https://api.crossref.org/works/10.1038/nature00870",
+    "OPENALEX": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+    "PUBMED": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=%2210.1038%2Fnature00870%22&tool=spe_grounding"
+  },
+  "egress_classification": "STORED_RECEIPT_REUSE_NO_NEW_HTTP",
+  "executed_at_ist": "2026-10-04T13:04:47+05:30",
+  "graph": {
+    "authority": "ADVISORY_ONLY",
+    "contradictions": [
+      {
+        "claimId": "CLAIM-QUESTION",
+        "conflictingEvidence": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow (doi:10.1038/nature00870): RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+        "contradictionId": "CTRD-GRAPH-EDGE-CLAIM-QUESTION-SRC-OPENALEX-0",
+        "observedText": "10.1038/nature00870",
+        "severity": "FATAL"
+      },
+      {
+        "claimId": "CLAIM-QUESTION",
+        "conflictingEvidence": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow (doi:10.1038/nature00870): RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+        "contradictionId": "CTRD-GRAPH-EDGE-CLAIM-QUESTION-SRC-CROSSREF-1",
+        "observedText": "10.1038/nature00870",
+        "severity": "FATAL"
+      },
+      {
+        "claimId": "CLAIM-QUESTION",
+        "conflictingEvidence": "10.1038/nature00870 (doi:10.1038/nature00870): 10.1038/nature00870",
+        "contradictionId": "CTRD-GRAPH-EDGE-CLAIM-QUESTION-SRC-PUBMED-2",
+        "observedText": "10.1038/nature00870",
+        "severity": "FATAL"
+      },
+      {
+        "claimId": "CLAIM-QUESTION",
+        "conflictingEvidence": "10.1038/nature00870 (doi:10.1038/nature00870): 10.1038/nature00870",
+        "contradictionId": "CTRD-GRAPH-EDGE-CLAIM-QUESTION-SRC-PUBMED-3",
+        "observedText": "10.1038/nature00870",
+        "severity": "FATAL"
+      },
+      {
+        "claimId": "CLAIM-QUESTION",
+        "conflictingEvidence": "Pluripotency of mesenchymal stem cells derived from adult marrow. (doi:10.1038/nature00870): Pluripotency of mesenchymal stem cells derived from adult marrow.",
+        "contradictionId": "CTRD-GRAPH-EDGE-CLAIM-QUESTION-SRC-PUBMED-4",
+        "observedText": "10.1038/nature00870",
+        "severity": "FATAL"
+      }
+    ],
+    "edge_relations": [
+      "CONTRADICTS",
+      "CONTRADICTS",
+      "CONTRADICTS",
+      "CONTRADICTS",
+      "CONTRADICTS"
+    ],
+    "error": null,
+    "gaps": [
+      {
+        "claimId": "CLAIM-QUESTION",
+        "description": "Claim \"10.1038/nature00870...\" has no SUPPORTS edge; Gap Map must stay non-empty.",
+        "gapId": "GAP-NO-SUPPORT-CLAIM-QUESTION",
+        "missingProofType": "SPECIFICATION"
+      }
+    ],
+    "ok": true,
+    "verdict": "HOLD"
+  },
+  "grounding_reason_codes": [
+    "DUPLICATE_SOURCE_SPAM_SUPPRESSED",
+    "CAPSULES_VALIDATED"
+  ],
+  "identifier": {
+    "doi": "10.1038/nature00870",
+    "kind": "DOI",
+    "normalized": "10.1038/nature00870",
+    "raw": "10.1038/nature00870"
+  },
+  "identity_scope": {
+    "may_promote": false,
+    "product_LIVE_INDEX": "HOLD",
+    "product_LIVE_RETRACTION": "HOLD",
+    "scoped_LIVE_INDEX": "PASS_WITHIN_TESTED_SCOPE"
+  },
+  "journey_receipt": "PASS_WITHIN_TESTED_SCOPE",
+  "live_request_happened": false,
+  "may_promote": false,
+  "ncbi_counts_as_two_providers": false,
+  "ncbi_dropped_as_same_family": [],
+  "ncbi_family_count": 1,
+  "ncbi_family_count_if_archive_has_pubmed_and_pmc": 1,
+  "need": {
+    "context_types": [
+      "NONE"
+    ],
+    "domain_tags": [
+      "general"
+    ],
+    "freshness_required": false,
+    "is_consent": false,
+    "need_id": "need-general-c0184ca01696c0ed",
+    "network": "NONE",
+    "reason_codes": [
+      "NO_EXTERNAL_CONTEXT_REQUIRED"
+    ]
+  },
+  "need_is_consent": false,
+  "network_calls": 0,
+  "omitted_span_count": 0,
+  "outbound_urls_sent": [],
+  "privacy_reason_codes": [],
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "provenance": [
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "query": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+      "raw_status": null,
+      "record_kind": "identity",
+      "response_digest": "c3c48504f75e84ae0b71379321fde62730d2c2bf10d6559873887af3e3ec534a",
+      "timestamp": "2026-10-04T08:40:08+05:30",
+      "url": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+      "verification_status": "DOI_MATCH"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "query": "https://api.crossref.org/works/10.1038/nature00870",
+      "raw_status": null,
+      "record_kind": "identity",
+      "response_digest": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "timestamp": "2026-10-04T08:40:09+05:30",
+      "url": "https://api.crossref.org/works/10.1038/nature00870",
+      "verification_status": "DOI_MATCH"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=%2210.1038%2Fnature00870%22&tool=spe_grounding",
+      "raw_status": null,
+      "record_kind": "identity",
+      "response_digest": "6cc39093c826fb2ad8e33a014598138f47f862f86537412e4c2711d78a0adde5",
+      "timestamp": "2026-10-04T08:40:11+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=%2210.1038%2Fnature00870%22&tool=spe_grounding",
+      "verification_status": "ID_WITHOUT_DOI"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=10.1038%2Fnature00870%5Bdoi%5D&tool=spe_grounding",
+      "raw_status": null,
+      "record_kind": "identity",
+      "response_digest": "6554f96ca7c048a41b6837ee6d17ea9c61de9e1768f561418c646db804cffaf1",
+      "timestamp": "2026-10-04T08:40:12+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=3&term=10.1038%2Fnature00870%5Bdoi%5D&tool=spe_grounding",
+      "verification_status": "ID_WITHOUT_DOI"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=12077603&tool=spe_grounding",
+      "raw_status": null,
+      "record_kind": "identity",
+      "response_digest": "a89d6abd660223b36f8302fea056b15bb537f4c4a1106a3b23dd28ec97a8d7d5",
+      "timestamp": "2026-10-04T08:40:15+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=12077603&tool=spe_grounding",
+      "verification_status": "DOI_STATED_IN_SAME_NCBI_RECORD"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "query": "https://api.openalex.org/works/https://doi.org/10.1038%2Fnature00870?select=id,doi,ids,is_retracted,display_name,type",
+      "raw_status": {
+        "display_name": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+        "is_retracted": true,
+        "is_retracted_present": true,
+        "type": "article"
+      },
+      "record_kind": "retraction",
+      "response_digest": "81f2808bda3a0d7bad2a72c76537fe55b823803b153946ed3feb465b48782e59",
+      "timestamp": "2026-10-04T10:47:06+05:30",
+      "url": "https://api.openalex.org/works/https://doi.org/10.1038%2Fnature00870?select=id,doi,ids,is_retracted,display_name,type",
+      "verification_status": "OPENALEX_IS_RETRACTED"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "query": "https://api.crossref.org/works/10.1038/nature00870",
+      "raw_status": {
+        "relation": {
+          "has-review": [
+            {
+              "asserted-by": "object",
+              "id": "10.3410/f.1007596.128607",
+              "id-type": "doi"
+            },
+            {
+              "asserted-by": "object",
+              "id": "10.3410/f.1007596.95860",
+              "id-type": "doi"
+            }
+          ]
+        },
+        "relation_present": true,
+        "update-to": null,
+        "update-to_present": false,
+        "updated-by": [
+          {
+            "DOI": "10.1038/nature05812",
+            "label": "Correction",
+            "source": "retraction-watch",
+            "type": "correction"
+          },
+          {
+            "DOI": "10.1038/s41586-024-07653-0",
+            "label": "Retraction",
+            "source": "retraction-watch",
+            "type": "retraction"
+          },
+          {
+            "DOI": "10.1038/nature05812",
+            "label": "Erratum",
+            "source": "publisher",
+            "type": "erratum"
+          },
+          {
+            "DOI": "10.1038/s41586-024-07653-0",
+            "label": "Retraction",
+            "source": "publisher",
+            "type": "retraction"
+          }
+        ],
+        "updated-by_present": true
+      },
+      "record_kind": "retraction",
+      "response_digest": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "timestamp": "2026-10-04T10:47:24+05:30",
+      "url": "https://api.crossref.org/works/10.1038/nature00870",
+      "verification_status": "CROSSREF_UPDATE_RELATION"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=%2210.1038/nature00870%22&tool=spe_grounding",
+      "raw_status": {
+        "count": "1",
+        "idlist": [
+          "12077603"
+        ],
+        "note": "esearch idlist has no retraction field",
+        "pubtype": null,
+        "retraction_field_present": false
+      },
+      "record_kind": "retraction",
+      "response_digest": "6cc39093c826fb2ad8e33a014598138f47f862f86537412e4c2711d78a0adde5",
+      "timestamp": "2026-10-04T10:47:08+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=%2210.1038/nature00870%22&tool=spe_grounding",
+      "verification_status": "PMID_RESOLUTION"
+    },
+    {
+      "egress": "PRIOR_STORED_RECEIPT_NO_NEW_HTTP",
+      "http_status": 200,
+      "identifier": "10.1038/nature00870",
+      "identifier_kind": "DOI",
+      "live_verified": false,
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=12077603&retmode=json&tool=spe_grounding",
+      "raw_status": {
+        "article_doi": [
+          "10.1038/nature00870"
+        ],
+        "pubtype": [
+          "Journal Article",
+          "Research Support, Non-U.S. Gov't",
+          "Research Support, U.S. Gov't, P.H.S.",
+          "Retracted Publication"
+        ],
+        "pubtype_present": true
+      },
+      "record_kind": "retraction",
+      "response_digest": "a89d6abd660223b36f8302fea056b15bb537f4c4a1106a3b23dd28ec97a8d7d5",
+      "timestamp": "2026-10-04T10:47:27+05:30",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=12077603&retmode=json&tool=spe_grounding",
+      "verification_status": "PUBMED_ESUMMARY_PUBTYPE"
+    }
+  ],
+  "provider_families": [
+    "OPENALEX",
+    "CROSSREF",
+    "NCBI"
+  ],
+  "providers_selected": [
+    "OPENALEX",
+    "CROSSREF",
+    "PUBMED"
+  ],
+  "providers_sent": [],
+  "public_query": "10.1038/nature00870",
+  "pubmed_plus_pmc_not_two_families": true,
+  "question_sha256": "c0184ca01696c0ed5ef07360ff6340e0d83eace3088514beb7e777f0a00b2122",
+  "reasons": [
+    "REUSED_R4_TASK6_RECEIPTS",
+    "NO_NEW_HTTP",
+    "PRODUCT_LIVE_GATES_NOT_MOVED",
+    "PUBMED_PLUS_PMC_NOT_TWO_CONFIRMATIONS"
+  ],
+  "research_consent": true,
+  "research_grounded_prompt": "## Autonomous Continuation Task\nTarget Profile: GENERIC\nAuthority Level: ADVISORY_ONLY (Zero Autonomous Deployment Authority)\nBaseline Git SHA: `r5-journey-not-a-release`\nAdapter-only profile (not a kernel TargetModelId). Do not invent kernel ids such as cursor-ultimate.\n\nRole: Autonomous Verification & Coding Agent\nDirectives: Provide deterministic differential remediation and keep unknowns explicit.\n\n### ProtectedIntent (Immutable)\n\"10.1038/nature00870\"\n\n### Mission Objective\nProvide verifiable proof and resolve open unknowns for candidate r5-journey-not-a-release\n\n### Ordered Execution Plan\n1. 1. Run existing test suite under trusted executor and capture complete exit code and stdout/stderr locators.\n2. 2. Gather missing empirical benchmarks or crash recovery proofs identified in review.\n3. 3. Supply independent verification receipt without modifying production code.\n\n### MUST / MUST_NOT\n- [!] MUST_NOT deploy, merge, host, release, or spend without a separate human grant.\n- [!] MUST_NOT paste production credentials, .env secrets, or private keys into prompts.\n- [!] MUST_NOT invent Cursor model capabilities from the editor name.\n- [!] MUST_NOT downgrade evidence requirements from MUST to should.\n\n### Privacy Constraints\n- [!] Privacy: omit secrets from public research queries; minimize local absolute paths.\n- [!] Privacy: RAW_USER_DATA_EGRESS = 0 for scholarly fabric unless explicit consent and public hosts.\n\n### Rollback\n- [!] Rollback: revert the surgical patch and restore baseline SHA if gates fail.\n\n### Verified Evidence & Grounding\n- (No verified evidence currently attached)\n\n- [MUST] Evidence requirements are MUST: independent executor receipts bound to candidate SHA.\n\n### Active Contradictions to Resolve:\n[CONTRADICTION] 10.1038/nature00870 <=> RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow (doi:10.1038/nature00870): RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow\n[CONTRADICTION] 10.1038/nature00870 <=> RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow (doi:10.1038/nature00870): RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow\n[CONTRADICTION] 10.1038/nature00870 <=> 10.1038/nature00870 (doi:10.1038/nature00870): 10.1038/nature00870\n[CONTRADICTION] 10.1038/nature00870 <=> 10.1038/nature00870 (doi:10.1038/nature00870): 10.1038/nature00870\n[CONTRADICTION] 10.1038/nature00870 <=> Pluripotency of mesenchymal stem cells derived from adult marrow. (doi:10.1038/nature00870): Pluripotency of mesenchymal stem cells derived from adult marrow.\n\n### Open Unknowns to Verify\n[UNKNOWN] PRODUCT_LIVE_INDEX_HOLD\n[UNKNOWN] PRODUCT_LIVE_RETRACTION_HOLD\n[UNKNOWN] SHELL_MOUNT_NOT_DONE\n[UNKNOWN] STORED_RECEIPT_IS_NOT_A_NEW_LIVE_CALL\n[UNKNOWN] PUBMED_PLUS_PMC_ARE_ONE_NCBI_FAMILY\n\n### Mandatory Acceptance Test Gates\n- [ ] Obtain trusted executor test receipt confirming 100% assertions executed.\n\n### Strict Stop Conditions\n- [!] Stop immediately if any existing regression test fails (exit code != 0).\n- [!] Stop if unexpected schema changes or boundary type modifications are required.\n- [!] Stop and HOLD if external network egress is requested.",
+  "retraction_scope": {
+    "may_promote": false,
+    "pass": false,
+    "product_LIVE_INDEX": "HOLD",
+    "product_LIVE_RETRACTION": "HOLD",
+    "scoped_LIVE_RETRACTION": "RETRACTION_BOUND"
+  },
+  "source_records": [
+    {
+      "authors": [],
+      "catalogSource": "OPENALEX",
+      "contentTier": "METADATA",
+      "evidenceTier": "[RETRACTED_DANGER]",
+      "identifier": "doi:10.1038/nature00870",
+      "isRetracted": true,
+      "keyFinding": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "normativeApplicability": "UNKNOWN",
+      "retractionDetails": "STORED_RETRACTION_RECEIPT",
+      "sourceId": "SRC-OPENALEX-0",
+      "sourceSaysText": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "sourceType": "PEER_REVIEWED_PAPER",
+      "speInferenceText": "STORED_RECEIPT_METADATA_NOT_AUTHORITY",
+      "title": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "year": 0
+    },
+    {
+      "authors": [],
+      "catalogSource": null,
+      "contentTier": "METADATA",
+      "evidenceTier": "[RETRACTED_DANGER]",
+      "identifier": "doi:10.1038/nature00870",
+      "isRetracted": true,
+      "keyFinding": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "normativeApplicability": "UNKNOWN",
+      "retractionDetails": "STORED_RETRACTION_RECEIPT",
+      "sourceId": "SRC-CROSSREF-1",
+      "sourceSaysText": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "sourceType": "PEER_REVIEWED_PAPER",
+      "speInferenceText": "STORED_RECEIPT_METADATA_NOT_AUTHORITY",
+      "title": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "year": 0
+    },
+    {
+      "authors": [],
+      "catalogSource": "PMC",
+      "contentTier": "METADATA",
+      "evidenceTier": "[RETRACTED_DANGER]",
+      "identifier": "doi:10.1038/nature00870",
+      "isRetracted": true,
+      "keyFinding": "10.1038/nature00870",
+      "normativeApplicability": "UNKNOWN",
+      "retractionDetails": "STORED_RETRACTION_RECEIPT",
+      "sourceId": "SRC-PUBMED-2",
+      "sourceSaysText": "10.1038/nature00870",
+      "sourceType": "PEER_REVIEWED_PAPER",
+      "speInferenceText": "STORED_RECEIPT_METADATA_NOT_AUTHORITY",
+      "title": "10.1038/nature00870",
+      "year": 0
+    },
+    {
+      "authors": [],
+      "catalogSource": "PMC",
+      "contentTier": "METADATA",
+      "evidenceTier": "[RETRACTED_DANGER]",
+      "identifier": "doi:10.1038/nature00870",
+      "isRetracted": true,
+      "keyFinding": "10.1038/nature00870",
+      "normativeApplicability": "UNKNOWN",
+      "retractionDetails": "STORED_RETRACTION_RECEIPT",
+      "sourceId": "SRC-PUBMED-3",
+      "sourceSaysText": "10.1038/nature00870",
+      "sourceType": "PEER_REVIEWED_PAPER",
+      "speInferenceText": "STORED_RECEIPT_METADATA_NOT_AUTHORITY",
+      "title": "10.1038/nature00870",
+      "year": 0
+    },
+    {
+      "authors": [],
+      "catalogSource": "PMC",
+      "contentTier": "METADATA",
+      "evidenceTier": "[RETRACTED_DANGER]",
+      "identifier": "doi:10.1038/nature00870",
+      "isRetracted": true,
+      "keyFinding": "Pluripotency of mesenchymal stem cells derived from adult marrow.",
+      "normativeApplicability": "UNKNOWN",
+      "retractionDetails": "STORED_RETRACTION_RECEIPT",
+      "sourceId": "SRC-PUBMED-4",
+      "sourceSaysText": "Pluripotency of mesenchymal stem cells derived from adult marrow.",
+      "sourceType": "PEER_REVIEWED_PAPER",
+      "speInferenceText": "STORED_RECEIPT_METADATA_NOT_AUTHORITY",
+      "title": "Pluripotency of mesenchymal stem cells derived from adult marrow.",
+      "year": 0
+    }
+  ],
+  "status": "ACQUIRED_STORED_RECEIPT",
+  "tested_scope": "One consented DOI journey using stored OpenAlex, Crossref, and NCBI receipts already on disk. No new provider HTTP. Product LIVE gates remain HOLD. SHELL_MOUNT remains NOT_DONE."
+}

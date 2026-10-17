@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"/><style>
+    body{margin:0;background:#05070d;color:#d1d5db;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .shell{display:grid;grid-template-columns:72px 1fr;min-height:100vh}
+    .rail{background:#0b1220;border-right:1px solid #1f2937;display:flex;flex-direction:column;gap:.75rem;padding:.75rem;align-items:center}
+    .dot{width:36px;height:36px;border-radius:10px;background:#111827;border:1px solid #374151}
+    .main{padding:1rem 1.25rem}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .panel{display:grid;grid-template-columns:2fr 1fr;gap:1rem}
+    .chart,.side{background:linear-gradient(180deg,#0b1220,#0a0f1a);border:1px solid #1f2937;border-radius:14px;min-height:420px;padding:1rem;position:relative}
+    .bars{position:absolute;inset:4rem 1rem 1rem 1rem;display:flex;align-items:flex-end;gap:.45rem}
+    .bars i{flex:1;background:#22d3ee;opacity:.85;border-radius:4px 4px 0 0}
+    .side li{list-style:none;padding:.55rem 0;border-bottom:1px solid #1f2937;color:#9ca3af}
+    h1{font-size:1rem;letter-spacing:.08em;text-transform:uppercase;color:#67e8f9}
+    </style></head><body><div class="shell"><div class="rail"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="main"><div class="top"><h1>Night telemetry</h1><span>live · 42ms</span></div>
+    <div class="panel"><div class="chart"><div>Throughput</div><div class="bars"><i style="height:40%"></i><i style="height:65%"></i><i style="height:35%"></i><i style="height:80%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:48%"></i></div></div>
+    <ul class="side"><li>ingest ok</li><li>queue 12</li><li>retry 1</li><li>drop 0</li><li>cpu 31%</li></ul></div></div></div></body></html>

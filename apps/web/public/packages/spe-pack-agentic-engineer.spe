@@ -1,0 +1,20 @@
+{
+  "format": "spe-bundle-v1",
+  "id": "spe-pack-agentic-engineer",
+  "name": "Autonomous Agent & Swarm Engineering Pack",
+  "description": "Full-lifecycle autonomous coding, subagent swarm dispatch, capability auditing, and Antigravity SKILL.md compilation.",
+  "prompts": [
+    "spe-autonomous-code-reviewer",
+    "spe-agent-swarm-orchestrator",
+    "spe-antigravity-skill-builder"
+  ],
+  "totalInvariants": 6,
+  "license": "MIT OR Apache-2.0",
+  "manifest": {
+    "engine": "SPE Ω",
+    "engineRelease": "2026.10-omega",
+    "wasmCompatibility": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    "contentSha256": "a3bd2f8100705d5efb7949bdf6c169f9fb4782313b381bb8f100b1a4a6aa9411",
+    "generatedAt": "2026-10-17T00:00:00Z"
+  }
+}

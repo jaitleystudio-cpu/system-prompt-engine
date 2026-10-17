@@ -1,0 +1,24 @@
+{
+  "baseline": "ba11607694a4febc09012d3339dfd8c1be89e44b",
+  "method": "gzip of built dist .js and .css after vite build. Official npm run build stops at copy-wasm before vite.",
+  "before": {
+    "jsRaw": 1740284,
+    "jsGzip": 479355,
+    "cssRaw": 157643,
+    "cssGzip": 32280,
+    "note": "Baseline vite build included SpeIntelligence chunk."
+  },
+  "after": {
+    "jsRaw": 1731052,
+    "jsGzip": 475363,
+    "cssRaw": 160147,
+    "cssGzip": 32928,
+    "note": "SpeIntelligence chunk is not emitted because Home no longer mounts ScrollStory."
+  },
+  "delta": {
+    "jsRaw": -9232,
+    "jsGzip": -3992,
+    "cssRaw": 2504,
+    "cssGzip": 648
+  }
+}

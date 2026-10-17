@@ -1,0 +1,422 @@
+{
+  "ok": true,
+  "mode": "human-grounded-real-images",
+  "onnxRuntimeInvoked": true,
+  "onnxError": null,
+  "invalidPriorMetric": "DROPPED: MobileNet conf>=0.05 AND STANDARD chars > LITE+40 (counted nonsense as improved)",
+  "invalidHeuristicWouldHaveClaimedImproveCount": 8,
+  "summary": {
+    "fixtureCount": 8,
+    "standardMoreUseful": 4,
+    "standardHarmfulOrNoisy": 4,
+    "litePreferredOrEqual": 0,
+    "honestClaim": "STANDARD does not reliably beat LITE on human-grounded labels for this fixture set"
+  },
+  "rows": [
+    {
+      "id": "black_puppy",
+      "correctLabels": [
+        "Labrador retriever",
+        "flat-coated retriever"
+      ],
+      "missedImportant": [
+        "dog",
+        "puppy",
+        "black dog"
+      ],
+      "hallucinatedLabels": [
+        "Rottweiler",
+        "Staffordshire bullterrier",
+        "giant schnauzer"
+      ],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "Labrador retriever",
+        "topScore": 0.706,
+        "topIsCorrect": true,
+        "overconfidentWrong": false
+      },
+      "promptUseful": false,
+      "verdict": "STANDARD_HARMFUL_OR_NOISY",
+      "liteChars": 143,
+      "standardChars": 243,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "Labrador retriever",
+          "score": 0.706
+        },
+        {
+          "label": "flat-coated retriever",
+          "score": 0.088
+        },
+        {
+          "label": "Rottweiler",
+          "score": 0.046
+        },
+        {
+          "label": "Staffordshire bullterrier",
+          "score": 0.029
+        },
+        {
+          "label": "giant schnauzer",
+          "score": 0.024
+        }
+      ]
+    },
+    {
+      "id": "strawberries",
+      "correctLabels": [
+        "strawberry",
+        "custard apple",
+        "jackfruit"
+      ],
+      "missedImportant": [
+        "strawberries",
+        "berries"
+      ],
+      "hallucinatedLabels": [
+        "pineapple",
+        "grocery store"
+      ],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "strawberry",
+        "topScore": 0.943,
+        "topIsCorrect": true,
+        "overconfidentWrong": false
+      },
+      "promptUseful": true,
+      "verdict": "STANDARD_MORE_USEFUL",
+      "liteChars": 143,
+      "standardChars": 208,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "strawberry",
+          "score": 0.943
+        },
+        {
+          "label": "pineapple",
+          "score": 0.024
+        },
+        {
+          "label": "grocery store",
+          "score": 0.008
+        },
+        {
+          "label": "custard apple",
+          "score": 0.007
+        },
+        {
+          "label": "jackfruit",
+          "score": 0.004
+        }
+      ]
+    },
+    {
+      "id": "camera_piano",
+      "correctLabels": [
+        "reflex camera",
+        "Polaroid camera",
+        "lens cap"
+      ],
+      "missedImportant": [
+        "piano"
+      ],
+      "hallucinatedLabels": [
+        "projector",
+        "espresso maker"
+      ],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "reflex camera",
+        "topScore": 0.751,
+        "topIsCorrect": true,
+        "overconfidentWrong": false
+      },
+      "promptUseful": true,
+      "verdict": "STANDARD_MORE_USEFUL",
+      "liteChars": 143,
+      "standardChars": 209,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "reflex camera",
+          "score": 0.751
+        },
+        {
+          "label": "Polaroid camera",
+          "score": 0.209
+        },
+        {
+          "label": "lens cap",
+          "score": 0.019
+        },
+        {
+          "label": "projector",
+          "score": 0.019
+        },
+        {
+          "label": "espresso maker",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "id": "desk_laptop",
+      "correctLabels": [
+        "mousetrap",
+        "desk"
+      ],
+      "missedImportant": [
+        "laptop",
+        "glasses"
+      ],
+      "hallucinatedLabels": [
+        "sewing machine",
+        "file",
+        "dining table"
+      ],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "mousetrap",
+        "topScore": 0.373,
+        "topIsCorrect": true,
+        "overconfidentWrong": false
+      },
+      "promptUseful": false,
+      "verdict": "STANDARD_HARMFUL_OR_NOISY",
+      "liteChars": 144,
+      "standardChars": 197,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "mousetrap",
+          "score": 0.373
+        },
+        {
+          "label": "desk",
+          "score": 0.318
+        },
+        {
+          "label": "sewing machine",
+          "score": 0.055
+        },
+        {
+          "label": "file",
+          "score": 0.025
+        },
+        {
+          "label": "dining table",
+          "score": 0.021
+        }
+      ]
+    },
+    {
+      "id": "vintage_car",
+      "correctLabels": [
+        "grille",
+        "convertible",
+        "sports car"
+      ],
+      "missedImportant": [
+        "automobile",
+        "vehicle"
+      ],
+      "hallucinatedLabels": [
+        "Model T",
+        "pickup"
+      ],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "grille",
+        "topScore": 0.411,
+        "topIsCorrect": true,
+        "overconfidentWrong": false
+      },
+      "promptUseful": true,
+      "verdict": "STANDARD_MORE_USEFUL",
+      "liteChars": 144,
+      "standardChars": 194,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "grille",
+          "score": 0.411
+        },
+        {
+          "label": "Model T",
+          "score": 0.217
+        },
+        {
+          "label": "pickup",
+          "score": 0.114
+        },
+        {
+          "label": "convertible",
+          "score": 0.083
+        },
+        {
+          "label": "sports car",
+          "score": 0.037
+        }
+      ]
+    },
+    {
+      "id": "fjord_cliff_people",
+      "correctLabels": [
+        "promontory",
+        "alp",
+        "lakeside",
+        "seashore",
+        "valley"
+      ],
+      "missedImportant": [
+        "cliff",
+        "mountain",
+        "water",
+        "people",
+        "landscape"
+      ],
+      "hallucinatedLabels": [],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "promontory",
+        "topScore": 0.735,
+        "topIsCorrect": true,
+        "overconfidentWrong": false
+      },
+      "promptUseful": true,
+      "verdict": "STANDARD_MORE_USEFUL",
+      "liteChars": 144,
+      "standardChars": 189,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "promontory",
+          "score": 0.735
+        },
+        {
+          "label": "alp",
+          "score": 0.092
+        },
+        {
+          "label": "lakeside",
+          "score": 0.041
+        },
+        {
+          "label": "seashore",
+          "score": 0.041
+        },
+        {
+          "label": "valley",
+          "score": 0.041
+        }
+      ]
+    },
+    {
+      "id": "canyon_sunset",
+      "correctLabels": [
+        "cliff",
+        "valley"
+      ],
+      "missedImportant": [
+        "canyon",
+        "rock",
+        "landscape"
+      ],
+      "hallucinatedLabels": [
+        "volcano",
+        "castle",
+        "geyser"
+      ],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "volcano",
+        "topScore": 0.351,
+        "topIsCorrect": false,
+        "overconfidentWrong": true
+      },
+      "promptUseful": false,
+      "verdict": "STANDARD_HARMFUL_OR_NOISY",
+      "liteChars": 143,
+      "standardChars": 184,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "volcano",
+          "score": 0.351
+        },
+        {
+          "label": "cliff",
+          "score": 0.299
+        },
+        {
+          "label": "castle",
+          "score": 0.083
+        },
+        {
+          "label": "geyser",
+          "score": 0.071
+        },
+        {
+          "label": "valley",
+          "score": 0.071
+        }
+      ]
+    },
+    {
+      "id": "mountain_road",
+      "correctLabels": [
+        "valley",
+        "alp"
+      ],
+      "missedImportant": [
+        "road",
+        "mountain",
+        "hill",
+        "landscape"
+      ],
+      "hallucinatedLabels": [
+        "cliff",
+        "promontory",
+        "volcano"
+      ],
+      "forbiddenHits": [],
+      "confidenceCalibration": {
+        "topLabel": "cliff",
+        "topScore": 0.699,
+        "topIsCorrect": false,
+        "overconfidentWrong": true
+      },
+      "promptUseful": false,
+      "verdict": "STANDARD_HARMFUL_OR_NOISY",
+      "liteChars": 144,
+      "standardChars": 185,
+      "invalidLengthHeuristicWouldHaveClaimedImprove": true,
+      "standardSubjects": [
+        {
+          "label": "cliff",
+          "score": 0.699
+        },
+        {
+          "label": "promontory",
+          "score": 0.194
+        },
+        {
+          "label": "valley",
+          "score": 0.054
+        },
+        {
+          "label": "volcano",
+          "score": 0.039
+        },
+        {
+          "label": "alp",
+          "score": 0.005
+        }
+      ]
+    }
+  ]
+}

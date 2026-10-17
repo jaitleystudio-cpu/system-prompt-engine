@@ -1,0 +1,190 @@
+{
+  "ok": true,
+  "mode": "browser-onnx-bench",
+  "onnxRuntimeInvoked": true,
+  "onnxError": null,
+  "improvedCount": 10,
+  "noGainCount": 2,
+  "rows": [
+    {
+      "kind": "people",
+      "liteChars": 141,
+      "standardChars": 224,
+      "standardSubjects": [
+        "Band Aid",
+        "face powder",
+        "envelope",
+        "toilet tissue",
+        "toilet seat"
+      ],
+      "topScore": 0.093,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "product",
+      "liteChars": 142,
+      "standardChars": 211,
+      "standardSubjects": [
+        "envelope",
+        "binder",
+        "notebook",
+        "switch",
+        "wall clock"
+      ],
+      "topScore": 0.097,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "interior",
+      "liteChars": 142,
+      "standardChars": 217,
+      "standardSubjects": [
+        "dishwasher",
+        "envelope",
+        "table lamp",
+        "wardrobe",
+        "web site"
+      ],
+      "topScore": 0.028,
+      "improved": false,
+      "note": "STANDARD ran; low-confidence subjects — LITE still useful"
+    },
+    {
+      "kind": "nature",
+      "liteChars": 142,
+      "standardChars": 211,
+      "standardSubjects": [
+        "balloon",
+        "parachute",
+        "hay",
+        "tennis ball",
+        "web site"
+      ],
+      "topScore": 0.027,
+      "improved": false,
+      "note": "STANDARD ran; low-confidence subjects — LITE still useful"
+    },
+    {
+      "kind": "screenshot",
+      "liteChars": 142,
+      "standardChars": 220,
+      "standardSubjects": [
+        "envelope",
+        "web site",
+        "dishwasher",
+        "refrigerator",
+        "washbasin"
+      ],
+      "topScore": 0.102,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "diagram",
+      "liteChars": 142,
+      "standardChars": 211,
+      "standardSubjects": [
+        "wall clock",
+        "analog clock",
+        "chime",
+        "nail",
+        "syringe"
+      ],
+      "topScore": 0.402,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "text-heavy",
+      "liteChars": 142,
+      "standardChars": 222,
+      "standardSubjects": [
+        "window shade",
+        "window screen",
+        "radio",
+        "web site",
+        "space heater"
+      ],
+      "topScore": 0.898,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "complex",
+      "liteChars": 142,
+      "standardChars": 221,
+      "standardSubjects": [
+        "digital clock",
+        "oscilloscope",
+        "fire screen",
+        "monitor",
+        "fountain"
+      ],
+      "topScore": 0.35,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "dark",
+      "liteChars": 141,
+      "standardChars": 224,
+      "standardSubjects": [
+        "ping-pong ball",
+        "face powder",
+        "iPod",
+        "theater curtain",
+        "Band Aid"
+      ],
+      "topScore": 0.238,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "bright",
+      "liteChars": 142,
+      "standardChars": 208,
+      "standardSubjects": [
+        "envelope",
+        "switch",
+        "whistle",
+        "web site",
+        "cleaver"
+      ],
+      "topScore": 0.161,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "unusual",
+      "liteChars": 141,
+      "standardChars": 215,
+      "standardSubjects": [
+        "matchstick",
+        "rubber eraser",
+        "web site",
+        "rule",
+        "plunger"
+      ],
+      "topScore": 0.169,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    },
+    {
+      "kind": "ambiguous",
+      "liteChars": 142,
+      "standardChars": 219,
+      "standardSubjects": [
+        "shower curtain",
+        "bubble",
+        "lampshade",
+        "balloon",
+        "spider web"
+      ],
+      "topScore": 0.416,
+      "improved": true,
+      "note": "STANDARD subjects enrich final prompt"
+    }
+  ]
+}

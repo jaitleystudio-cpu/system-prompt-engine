@@ -10,7 +10,7 @@ function walk(dir) {
 }
 export function inventory() {
   const paths = walk(`${root}/apps/web/src`).filter(
-    (p) => /\.[jt]sx?$/.test(p) && !p.includes("/engine/"),
+    (p) => /\.[jt]sx?$/.test(p) && !p.includes("/engine/") && !p.includes("/server/"),
   );
   paths.push(`${root}/packages/human-perspective/src/copy.ts`);
   const entries = new Map();
@@ -71,7 +71,12 @@ export function inventory() {
       if (text && /\p{L}/u.test(text)) {
         let depth = "PRODUCT",
           p = node.parent;
-        if (/ui\/(TrustPanel|PrivacyIndicator)\.tsx$/.test(file))
+        if (
+          /ui\/(TrustPanel|PrivacyIndicator)\.tsx$/.test(file) ||
+          /landing\/(ConversionKernel|ValueComparisonMatrix|BeforeAfterDiffSlider)\.tsx$/.test(file) ||
+          /components\/(SubmitWorkflowModal)\.tsx$/.test(file) ||
+          /capabilities\/CapabilityFoundryStudio\.tsx$/.test(file)
+        )
           depth = "PROOF";
         while (p) {
           if (ts.isJsxElement(p) || ts.isJsxSelfClosingElement(p)) {

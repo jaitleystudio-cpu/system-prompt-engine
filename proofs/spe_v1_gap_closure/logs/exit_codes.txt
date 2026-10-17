@@ -1,0 +1,14 @@
+audit_deps:0
+audit_egress:0
+sw_regression:0
+theme_routes:0
+deployment_gate:2
+npm_audit:0
+a11y:1
+a11y:1
+a11y:1
+shots:0
+predeploy_qa:0
+a11y:0
+shots:0
+engine:0

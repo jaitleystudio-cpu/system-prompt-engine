@@ -1,0 +1,120 @@
+{
+  "scoped_live_fetch": "LIVE_FETCH_SCOPED",
+  "consent_blocked_first_attempt": true,
+  "provider": "OPENALEX",
+  "provider_family": "OPENALEX",
+  "identifier": "10.1038/nature00870",
+  "verification_status": "DOI_MATCH",
+  "response_digest": "c59f16e73081e6fedf4884c164a3fffa8ceab5d9798deb8930c8f00b95f83c4e",
+  "response_digest_algorithm": "sha256",
+  "response_body_path": "evidence/r6-live-research/bodies/openalex.body.json",
+  "response_bytes": 43308,
+  "timestamp_ist": "2026-10-04T18:20:49+05:30",
+  "url": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+  "http_status": 200,
+  "retraction_status": "RETRACTION_SIGNAL",
+  "retraction_provider": "CROSSREF",
+  "retraction_provider_family": "CROSSREF",
+  "retraction_notice_types": [
+    "correction",
+    "erratum",
+    "retraction"
+  ],
+  "retraction_notices": [
+    {
+      "type": "correction",
+      "label": "Correction",
+      "source": "retraction-watch",
+      "DOI": "10.1038/nature05812",
+      "role": "ERRATUM"
+    },
+    {
+      "type": "retraction",
+      "label": "Retraction",
+      "source": "retraction-watch",
+      "DOI": "10.1038/s41586-024-07653-0",
+      "role": "RETRACTION_NOTE"
+    },
+    {
+      "type": "erratum",
+      "label": "Erratum",
+      "source": "publisher",
+      "DOI": "10.1038/nature05812",
+      "role": "ERRATUM"
+    },
+    {
+      "type": "retraction",
+      "label": "Retraction",
+      "source": "publisher",
+      "DOI": "10.1038/s41586-024-07653-0",
+      "role": "RETRACTION_NOTE"
+    }
+  ],
+  "retraction_response_digest": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+  "retraction_body_path": "evidence/r6-live-research/bodies/crossref.body.json",
+  "retraction_bytes": 25539,
+  "retraction_url": "https://api.crossref.org/works/10.1038/nature00870",
+  "retraction_timestamp_ist": "2026-10-04T18:20:50+05:30",
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "may_promote": false,
+  "journey_receipt": "NOT_PASS",
+  "stored_receipt_reported_as_live": false,
+  "ncbi_counts_as_two_providers": false,
+  "parent": "a7284acb7750cfd2c2eb5bfb67e2131090eebc33",
+  "note": "Digests are sha256 of the saved raw bodies. A later API response is not this receipt.",
+  "doi_relationship": {
+    "10.1038/nature00870": {
+      "role": "ORIGINAL_ARTICLE",
+      "retracted": true,
+      "crossref_doi": "10.1038/nature00870",
+      "crossref_title": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "crossref_updated_by_retraction_doi": "10.1038/s41586-024-07653-0",
+      "openalex_doi": "https://doi.org/10.1038/nature00870",
+      "openalex_is_retracted": true,
+      "openalex_vs_crossref": "AGREE"
+    },
+    "10.1038/s41586-024-07653-0": {
+      "role": "RETRACTION_NOTE",
+      "crossref_updated_by_type": "retraction",
+      "crossref_updated_by_label": "Retraction",
+      "crossref_updated_by_sources": [
+        "retraction-watch",
+        "publisher"
+      ],
+      "publisher_assertion_change_type": "Correction",
+      "publisher_assertion_change_type_relabel": "REFUSED",
+      "publisher_assertion_details": "This article has been retracted. Please see the Retraction Notice for more detail:",
+      "publisher_assertion_url": "https://doi.org/10.1038/s41586-024-07653-0"
+    },
+    "10.1038/nature05812": {
+      "role": "ERRATUM",
+      "not_retraction_note": true,
+      "publisher_updated_by_type": "erratum",
+      "publisher_updated_by_label": "Erratum",
+      "publisher_assertion_change_type": "Erratum",
+      "publisher_assertion_url": "https://doi.org/10.1038/nature05812",
+      "retraction_watch_updated_by_type": "correction",
+      "retraction_watch_updated_by_label": "Correction",
+      "retraction_watch_type_relabel": "REFUSED"
+    },
+    "openalex_vs_crossref": "AGREE",
+    "status_not_openalex_boolean_only": true,
+    "refused_relabel": [
+      {
+        "doi": "10.1038/nature05812",
+        "field": "updated-by.type",
+        "source": "retraction-watch",
+        "source_value": "correction",
+        "reason": "SOURCE_FIELD_SAYS_CORRECTION_PUBLISHER_TYPE_SAYS_ERRATUM"
+      },
+      {
+        "doi": "10.1038/s41586-024-07653-0",
+        "field": "assertion.change_type",
+        "source": "publisher",
+        "source_value": "Correction",
+        "reason": "SOURCE_FIELD_SAYS_CORRECTION_UPDATED_BY_TYPE_AND_DETAILS_SAY_RETRACTION_NOTICE"
+      }
+    ]
+  }
+}

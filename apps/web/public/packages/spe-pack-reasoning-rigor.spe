@@ -1,0 +1,19 @@
+{
+  "format": "spe-bundle-v1",
+  "id": "spe-pack-reasoning-rigor",
+  "name": "Formal Verification & High-Assurance Reasoning Pack",
+  "description": "Zero-hallucination mathematical logic derivation and untrusted context RAG fencing.",
+  "prompts": [
+    "spe-zero-hallucination-reasoner",
+    "spe-hybrid-rag-synthesizer"
+  ],
+  "totalInvariants": 4,
+  "license": "MIT OR Apache-2.0",
+  "manifest": {
+    "engine": "SPE Ω",
+    "engineRelease": "2026.10-omega",
+    "wasmCompatibility": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    "contentSha256": "f3ccc5ae49c758930c0f19448316fa531c9213fa90baf65e43ee96d0c3c1118f",
+    "generatedAt": "2026-10-17T00:00:00Z"
+  }
+}

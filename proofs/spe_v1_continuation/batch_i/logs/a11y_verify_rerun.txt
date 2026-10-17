@@ -1,0 +1,15 @@
+PASS skip_link_present — skip link in DOM
+PASS skip_link_focus — skip link reachable via Tab
+PASS skip_link_target — skip focuses #main
+PASS landmarks — {"header":true,"nav":true,"main":true,"footer":true}
+PASS pipeline_aria — SPE transformation: messy human fragments to idea, meaning, semantic engine, structure, and perfect system prompt
+PASS theme_keyboard_focus — theme toggle focusable
+PASS theme_aria — Theme: Dark (resolved dark). Activate to switch.
+PASS nav_real_links — /, /create, /code, /daily-lab, /my-work, /capabilities, /privacy, /create
+PASS route_create_reload — create h1 present
+PASS route_privacy_reload — privacy main text
+PASS keyboard_no_obvious_trap — unique focus targets=10
+PASS reduced_motion_control — Reduced motion
+PASS zoom_200_usable — document roughly fits zoomed viewport heuristic
+PASS decorative_scene — {"canvases":0,"statics":1,"canvasOk":true,"staticOk":true}
+PASS mobile_burger_aria — burger aria-expanded + aria-controls

@@ -1,0 +1,43 @@
+{
+  "mission": "SPE Ω — Mission 8: Live Product Behavior & Served Artifact Integrity",
+  "timestamp": "2026-10-15T18:45:55.221Z",
+  "serverUrl": "http://127.0.0.1:5173",
+  "checks": {
+    "serverReachability": {
+      "url": "http://127.0.0.1:5173",
+      "status": 200,
+      "latencyMs": 44.29,
+      "htmlSizeBytes": 11920,
+      "htmlSha256": "6f50a5d0936c95d5c6b69567bc3b16b99114319a6c42d4a6ace291b4fe95f915"
+    },
+    "javascriptEntryPoint": {
+      "path": "/src/main.tsx",
+      "status": 200,
+      "sizeBytes": 2520,
+      "sha256": "eedd5504576f2ede6418c69e3845cddf4ca49b40961c968f22e435deebb59523"
+    },
+    "wasmIntegrity": {
+      "path": "/spe_wasm.wasm",
+      "status": 200,
+      "sizeBytes": 1339691,
+      "expectedSizeBytes": 1339691,
+      "sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+      "expectedSha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+      "importsCount": 0,
+      "zeroImportsVerified": true,
+      "compilesSuccessfully": true
+    }
+  },
+  "liveGenerationRecord": {
+    "brief": "Architect a resilient real-time sensor ingestion telemetry pipeline in Go with zero external dependencies and strict memory bounds.",
+    "generationLatencyMs": 260.37,
+    "outputLengthChars": 5555,
+    "outputSnippet": "# System Role & Persona\nYou are a senior software engineer and technical systems architect specializing in clean, robust, and maintainable software with strict verification and zero hallucinated dependencies.\n\n# Objective\n# System Role & Persona\nYou are a principal Data Engineering & Systems special...",
+    "consoleErrors": [],
+    "passed": true
+  },
+  "fallbackRecord": null,
+  "verdict": "LIVE_PRODUCT_BEHAVIOR_VERIFIED",
+  "passedCount": 18,
+  "failedCount": 0
+}

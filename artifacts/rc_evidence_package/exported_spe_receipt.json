@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "spe.proof-receipt.v1",
+  "compilerVersion": "1.4.0-omega",
+  "executionMode": "strict-wasm",
+  "timestampIso": "2026-10-16T21:35:34.923Z",
+  "protectedIntentHash": "232abb64cd2293be878ae36f30e504aa478f8a643de41cfd91204a2c5aecfa4b",
+  "candidateHash": "230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc",
+  "baselineHash": "fac7c1186a83fb3c57551b3a770babaf52e61f0388257dee7d0fb6d84a80b9ff",
+  "hostileSuiteHash": "a7e193f287db57c653344a07f08b3dded0b6bae08a7cf4fb62cddd2df66fd922",
+  "metamorphicSuiteHash": "b5c82e1542c31a579def7cb7d7284feef45d6c29293081de3a5f0202ba746407",
+  "wasmHash": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  "mutationSeed": 42,
+  "hardGates": {
+    "protectedIntentPreserved": true,
+    "authorityNotExpanded": true,
+    "privacyNotWeakened": true,
+    "budgetValid": true,
+    "zeroEgressObserved": true,
+    "zeroEgressStatus": "OBSERVED_ZERO_EGRESS"
+  },
+  "counters": {
+    "deterministicTypeChecks": 0,
+    "hostileAttacksTotal": 1024,
+    "hostileAttacksKilled": 1024,
+    "mutationKillRatePct": 100,
+    "metamorphicTestsTotal": 31,
+    "metamorphicTestsPassed": 31,
+    "criticalFailures": 0
+  },
+  "causalDelta": {
+    "characterDelta": 1851,
+    "tokenDelta": 487,
+    "violationsDelta": -14,
+    "defenseGainPct": 31.25
+  },
+  "evidenceProvenance": {
+    "measurementClass": "DETERMINISTIC_STATIC_AND_RULE_MATRIX",
+    "liveModelCallsExecuted": 0,
+    "selfGeneratedAssertionOnly": false,
+    "independentVerificationRequiredForLiveModels": true,
+    "producerKeyId": "spe-ci-authority-ed25519",
+    "networkObservationAttestation": {
+      "schemaVersion": "spe.network-observation-attestation.v1",
+      "harnessId": "spe-wire-proxy-observer-v1",
+      "candidateHash": "230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc",
+      "observedOutboundConnections": 0,
+      "observedOutboundBytes": 0,
+      "captureWindowStartIso": "2026-10-12T00:00:00Z",
+      "captureWindowEndIso": "2026-10-12T00:00:05Z",
+      "observerPublicKeyHex": "1d1650ff79844bbe449ddbe5d4d97af7992ad9ce70bcb0263f383425b6a7d290",
+      "signatureHex": "95ee7debd9d8a30a18ff018a081e7925af8275e5432b9b4be50a15d9ab75cf317f90b41e8e2785ac0deeaa58c69c8a826fac47a91af0ca36a2125f3915036c02"
+    },
+    "producerPublicKeyHex": "1d1650ff79844bbe449ddbe5d4d97af7992ad9ce70bcb0263f383425b6a7d290",
+    "producerSignatureHex": "69c4656b125e44e32e8d675fbdb69ce031a07537947965916442c0fee2fba52eb56e6d8649acbb44410e60dc94ffb245b551a0f11f2fd75b1d7eaca9dab64102"
+  },
+  "receiptDigest": "151e03a71f8a7d5c0e7c8102b42a4560cc1f754b04b575ec98bee47440ade5f6"
+}

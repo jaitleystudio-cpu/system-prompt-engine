@@ -1,0 +1,39 @@
+{
+  "policy_id": "spe.policy.enterprise-capability-firewall",
+  "version": "1.0.0",
+  "description": "Enterprise Capability Firewall policy governing out-of-band execution for tools, databases, MCP servers, and agent delegations.",
+  "enforcement_mode": "FAIL_CLOSED",
+  "global_invariants": [
+    "AI_MODEL_CANNOT_SELF_AUTHORIZE",
+    "DESTRUCTIVE_ACTIONS_REQUIRE_HUMAN_APPROVAL",
+    "CROSS_TENANT_DELEGATION_PROHIBITED"
+  ],
+  "capabilities": {
+    "READ_FILE": {
+      "default_decision": "ALLOW",
+      "allowed_scopes": ["./src/**", "./docs/**", "./public/**"],
+      "denied_scopes": ["**/.env*", "**/secrets/**", "~/.ssh/**"]
+    },
+    "WRITE_FILE": {
+      "default_decision": "REQUIRES_APPROVAL",
+      "max_file_size_bytes": 5242880
+    },
+    "DELETE_FILE": {
+      "default_decision": "DENY"
+    },
+    "NETWORK": {
+      "default_decision": "DENY",
+      "reason": "Air-gapped zero-egress enforcement (connect-src 'self')"
+    },
+    "DATABASE_READ": {
+      "default_decision": "ALLOW",
+      "max_rows_limit": 500
+    },
+    "DATABASE_WRITE": {
+      "default_decision": "REQUIRES_APPROVAL"
+    },
+    "PRODUCTION_DEPLOY": {
+      "default_decision": "DENY"
+    }
+  }
+}

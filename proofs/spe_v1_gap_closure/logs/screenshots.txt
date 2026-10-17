@@ -1,0 +1,1 @@
+{"ok":true,"outDir":"/workspace/system-prompt-engine/proofs/spe_v1_gap_closure/screenshots","shots":["home-dark.png","home-light.png","theme-control.png","route-create.png","route-daily-lab.png","mobile-home.png"]}

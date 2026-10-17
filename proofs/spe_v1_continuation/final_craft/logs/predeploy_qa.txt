@@ -1,0 +1,27 @@
+
+> spe-web@0.3.0 test:predeploy-qa
+> node scripts/test-predeploy-qa.mjs
+
+{
+  "ok": true,
+  "cases": [
+    "video_scene_quality",
+    "a11y_viewport_meta",
+    "a11y_focus_visible",
+    "a11y_reduced_motion",
+    "a11y_touch_targets",
+    "a11y_zoom_safe",
+    "a11y_landmarks",
+    "csp_headers",
+    "untrusted_boundary",
+    "clipboard_deny_message",
+    "spe_corrupt_reject",
+    "onnx_download_abortable",
+    "no_unexpected_third_party_connect",
+    "media_limits_fail_closed",
+    "stale_abort_cleanup",
+    "service_worker_present",
+    "speech_visitor_graceful_fallback_honest",
+    "visitor_no_infra_jargon"
+  ]
+}

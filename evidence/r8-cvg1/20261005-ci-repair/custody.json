@@ -1,0 +1,43 @@
+{
+  "branch": "chatgpt/r8-cvg1-20261005",
+  "baseline_sha": "7e09f68daf5a09905bf50abfc5f145bece9e5a55",
+  "donors": {
+    "base": {
+      "sha": "29a4d7139e5194a9b365a0b25b5d25df1e06c22e",
+      "ancestor_of_baseline": true
+    },
+    "ocr": {
+      "sha": "4add7350648cdb352730b8bb099b51d8b7c23e02",
+      "ancestor_of_baseline": true
+    },
+    "webrecon": {
+      "sha": "f2b2ee615b3fbbe3ce475ef9269bde4db543ae8b",
+      "ancestor_of_baseline": true
+    },
+    "webgl": {
+      "sha": "799a416dfe03c745934349411a6e699bc7b0634d",
+      "ancestor_of_baseline": true
+    },
+    "research": {
+      "sha": "a946320e1a95b9145ab3f77eaaa149e413df8112",
+      "ancestor_of_baseline": true
+    },
+    "ocr_pytest_repair": {
+      "sha": "caf416becbf3fc9f40718e452a4a7db1b3e5dafe",
+      "ancestor_of_baseline": true
+    },
+    "skiplink_repair": {
+      "sha": "7e09f68daf5a09905bf50abfc5f145bece9e5a55",
+      "ancestor_of_baseline": true
+    }
+  },
+  "archive_matches_baseline": true,
+  "archive_sha256": "de5953832548483d5ac48c40c07ae66abdb4765002ebea1e69e7a078c9d59714",
+  "human_ratings": "NO_RATINGS_YET",
+  "external_vendor_state": "UNKNOWN",
+  "external_pen_test_state": "UNKNOWN",
+  "external_payment_state": "UNKNOWN",
+  "r8_qualified": false,
+  "vision_donor_integration": "NOT_VERIFIED_IN_THIS_RUN",
+  "r7_complete_scope": "NOT_VERIFIED_IN_THIS_RUN"
+}

@@ -1,0 +1,45 @@
+{
+  "baseSha": "c337cc28783665d1ceb891f01b9da6022f0174bb",
+  "testedTipSha": "77cd1ceabab2dbd4cc5a6ecafbbd1831d2dda9d4",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_NUMBER_1": "NOT_PROVEN",
+  "tailwindIntroduced": false,
+  "shadcnIntroduced": false,
+  "captures": [
+    {
+      "name": "home-dark-bg.png",
+      "artifactName": "spe_bg_home_dark_reviewed.png",
+      "theme": "dark",
+      "route": "/"
+    },
+    {
+      "name": "home-light-bg.png",
+      "artifactName": "spe_bg_home_light_reviewed.png",
+      "theme": "light",
+      "route": "/"
+    },
+    {
+      "name": "create-dark-bg.png",
+      "artifactName": "spe_bg_create_dark_reviewed.png",
+      "theme": "dark",
+      "route": "/create"
+    },
+    {
+      "name": "create-light-bg.png",
+      "artifactName": "spe_bg_create_light_reviewed.png",
+      "theme": "light",
+      "route": "/create"
+    },
+    {
+      "name": "reduced-motion-bg.png",
+      "artifactName": "spe_bg_reduced_motion_reviewed.png",
+      "reducedMotion": true
+    },
+    {
+      "name": "mobile-bg.png",
+      "artifactName": "spe_bg_mobile_reviewed.png",
+      "viewport": "390x844",
+      "opacity": 0.38
+    }
+  ]
+}

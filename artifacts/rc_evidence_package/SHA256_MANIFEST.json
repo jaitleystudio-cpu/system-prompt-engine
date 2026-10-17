@@ -1,0 +1,67 @@
+{
+  "package": "SPE_OMEGA_RELEASE_CANDIDATE_EVIDENCE_PACKAGE",
+  "generatedAt": "2026-10-12T03:30:48.936Z",
+  "canonicalWasmSha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  "files": [
+    {
+      "path": "artifacts/rc_evidence_package/customer_exports/.cursorrules",
+      "bytes": 1275,
+      "sha256": "3f8efa22e14921ef640fb0b06795edfcb61bd03fc31d85e6d874803bff24baeb"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/customer_exports/.windsurfrules",
+      "bytes": 971,
+      "sha256": "39c978aef8145e0ec76b42637ec6284a4df76f9a805aefb184a875df05d47630"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/customer_exports/CLAUDE.md",
+      "bytes": 1335,
+      "sha256": "0093177056942e4dd6f5b33e7dec2fe3c2a10e3da3f672d82076c3c2e627d019"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/customer_exports/custom-gpt-instructions.txt",
+      "bytes": 879,
+      "sha256": "982b11cab95dd5846d7abcd94c3d9a7f06509ade6661af1d04eaae3a8b246b8b"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/customer_exports/promptfooconfig.yaml",
+      "bytes": 3332,
+      "sha256": "b370ef96ad5c146bcd0b460039ac6771a39841bb1bee1205191a51c95399e46b"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/customer_exports/system-prompt.md",
+      "bytes": 879,
+      "sha256": "982b11cab95dd5846d7abcd94c3d9a7f06509ade6661af1d04eaae3a8b246b8b"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/exported_eval_summary.md",
+      "bytes": 985,
+      "sha256": "c70e7e196a64b2b3f5c9f0cbbc9bad427ca15e7a1d1d35c9d136078087f9d4a5"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/exported_prompt_evals_workflow.yml",
+      "bytes": 2149,
+      "sha256": "89e60f44cebf74eb4ca7ad0440f377d232cd89751ac9d11ca39e82f29eea0b37"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/exported_promptfooconfig.yaml",
+      "bytes": 4383,
+      "sha256": "eae711b6207bffbdfce92020b14c213a47705ed4067bd93e1d51584ff402602a"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/exported_spe_receipt.json",
+      "bytes": 2626,
+      "sha256": "77c187e37a5e3b6ef846717a226ab9a9eaf56e4e88a55f6e139ca6ed9bfffc99"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/rc_complete_git.diff",
+      "bytes": 220418,
+      "sha256": "4824c8d7cdd7a3d1bb46ec718dc8f636a6c57e5b8fce021929e63977422128c7"
+    },
+    {
+      "path": "artifacts/rc_evidence_package/test_execution_logs.txt",
+      "bytes": 5543,
+      "sha256": "cf771f4d9b4b129f7e6015a737de3e400364310aeeaa66371689a4bf6737a094"
+    }
+  ]
+}

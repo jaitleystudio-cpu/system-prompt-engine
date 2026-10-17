@@ -1,0 +1,40 @@
+{
+  "baseSha": "9d5a37a913b5a30122d19734af106f5c85b085cb",
+  "testedTipSha": "b2447eb2d086a2d994da3060ad54a962723eb817",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_NUMBER_1": "NOT_PROVEN",
+  "captures": [
+    {
+      "name": "home-dark.png",
+      "artifactName": "spe_batch_a_home_dark_hold_repair.png",
+      "viewport": "1440x900",
+      "theme": "dark"
+    },
+    {
+      "name": "home-light.png",
+      "artifactName": "spe_batch_a_home_light_hold_repair.png",
+      "viewport": "1440x900",
+      "theme": "light"
+    },
+    {
+      "name": "mobile-home.png",
+      "artifactName": "spe_batch_a_mobile_home_hold_repair.png",
+      "viewport": "390x844",
+      "theme": "dark",
+      "order": [
+        "IDEA",
+        "MEANING",
+        "SPE",
+        "STRUCTURE",
+        "PROMPT"
+      ]
+    },
+    {
+      "name": "reduced-motion.png",
+      "artifactName": "spe_batch_a_reduced_motion_hold_repair.png",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "control": "Reduced motion"
+    }
+  ]
+}

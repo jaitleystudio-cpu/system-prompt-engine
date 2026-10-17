@@ -1,0 +1,386 @@
+"""R6 scoped live fetch. One DOI does not promote product LIVE gates.
+
+Consent starts false and must not touch the network. An explicit consent
+decision may then send one privacy-minimized query. A stored receipt is not
+this execution. PubMed and PMC stay one NCBI family.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+
+import urllib.request
+
+from spe_runtime.grounding.live_fabric import LIVE_INDEX, LIVE_RETRACTION
+from spe_runtime.grounding.research_journey import run_research_journey
+
+_SECRET = "PRIVATE_DOC_ZWY9_do_not_send_electrolyte_formula"
+_DOI = "10.1038/nature00870"
+_STORED_OPENALEX_DIGEST = "c3c48504f75e84ae0b71379321fde62730d2c2bf10d6559873887af3e3ec534a"
+_ROOT = Path(__file__).resolve().parents[2]
+_RECEIPT = _ROOT / "evidence" / "r6-live-research" / "scoped_live_fetch.json"
+
+
+def _assert_gates(result: dict) -> None:
+    assert result["product_LIVE_INDEX"] == "HOLD"
+    assert result["product_LIVE_RETRACTION"] == "HOLD"
+    assert result["client_live_index"] == "HOLD" or result.get("client_live_index") in {None, "HOLD"}
+    assert result["may_promote"] is False
+    assert result["journey_receipt"] == "NOT_PASS"
+    assert result["stored_receipt_reported_as_live"] is False
+    assert result["SHELL_MOUNT"] == "NOT_DONE"
+    assert LIVE_INDEX == "HOLD"
+    assert LIVE_RETRACTION == "HOLD"
+    assert _SECRET not in json.dumps(result)
+
+
+
+def _assert_doi_relationship(message: dict, relationship: dict) -> None:
+    """Roles come from Crossref update type, label, and assertion URL.
+
+    nature05812 is the erratum, not the retraction note. Retraction Watch's
+    updated-by type stays correction. The publisher assertion change_type on
+    the retraction note stays Correction. Those source fields are not relabeled.
+    """
+    updated = [item for item in message.get("updated-by") or [] if isinstance(item, dict)]
+    witnessed = {
+        (item.get("source"), item.get("type"), item.get("label"), item.get("DOI"))
+        for item in updated
+    }
+    assert ("publisher", "retraction", "Retraction", "10.1038/s41586-024-07653-0") in witnessed
+    assert ("retraction-watch", "retraction", "Retraction", "10.1038/s41586-024-07653-0") in witnessed
+    assert ("publisher", "erratum", "Erratum", "10.1038/nature05812") in witnessed
+    assert ("retraction-watch", "correction", "Correction", "10.1038/nature05812") in witnessed
+    assert not any(
+        item.get("DOI") == "10.1038/nature05812" and item.get("type") == "retraction"
+        for item in updated
+    )
+    paired: list[tuple[str, str]] = []
+    change_type = None
+    for item in message.get("assertion") or []:
+        if not isinstance(item, dict):
+            continue
+        if item.get("name") == "change_type":
+            change_type = str(item.get("value") or "")
+        elif item.get("name") == "change_details" and str(item.get("value") or "").startswith("https://doi.org/"):
+            paired.append((change_type or "", str(item.get("value"))))
+            change_type = None
+    assert ("Erratum", "https://doi.org/10.1038/nature05812") in paired
+    assert ("Correction", "https://doi.org/10.1038/s41586-024-07653-0") in paired
+    original = relationship["10.1038/nature00870"]
+    note = relationship["10.1038/s41586-024-07653-0"]
+    erratum = relationship["10.1038/nature05812"]
+    assert original["role"] == "ORIGINAL_ARTICLE"
+    assert original["retracted"] is True
+    assert original["openalex_is_retracted"] is True
+    assert original["openalex_vs_crossref"] == "AGREE"
+    assert note["role"] == "RETRACTION_NOTE"
+    assert note["crossref_updated_by_type"] == "retraction"
+    assert note["publisher_assertion_change_type"] == "Correction"
+    assert note["publisher_assertion_change_type_relabel"] == "REFUSED"
+    assert erratum["role"] == "ERRATUM"
+    assert erratum["not_retraction_note"] is True
+    assert erratum["publisher_updated_by_type"] == "erratum"
+    assert erratum["retraction_watch_updated_by_type"] == "correction"
+    assert erratum["retraction_watch_type_relabel"] == "REFUSED"
+    assert relationship["openalex_vs_crossref"] == "AGREE"
+    assert relationship["status_not_openalex_boolean_only"] is True
+    refused = {(row["doi"], row["field"], row["source_value"]) for row in relationship["refused_relabel"]}
+    assert ("10.1038/nature05812", "updated-by.type", "correction") in refused
+    assert ("10.1038/s41586-024-07653-0", "assertion.change_type", "Correction") in refused
+
+
+def test_missing_consent_blocks_even_if_live_was_requested(monkeypatch):
+    def boom(*_args, **_kwargs):
+        raise AssertionError("network was contacted without consent")
+
+    monkeypatch.setattr(urllib.request, "urlopen", boom)
+    result = run_research_journey(
+        f"research whether {_SECRET} {_DOI} is citable",
+        research_consent=False,
+        private_document=_SECRET,
+        providers=("OPENALEX", "CROSSREF"),
+        allow_live=True,
+    )
+    assert result["status"] == "HELD_NO_CONSENT"
+    assert result["network_calls"] == 0
+    assert result["live_request_happened"] is False
+    assert result["egress_classification"] == "NO_EGRESS_NO_CONSENT"
+    assert result["product_LIVE_INDEX"] == "HOLD"
+    assert result["product_LIVE_RETRACTION"] == "HOLD"
+    assert _SECRET not in json.dumps(result)
+
+
+def test_failed_live_source_is_degraded_not_fabricated(monkeypatch):
+    def boom(*_args, **_kwargs):
+        raise TimeoutError("down")
+
+    monkeypatch.setattr(urllib.request, "urlopen", boom)
+    result = run_research_journey(
+        _DOI,
+        research_consent=True,
+        providers=("OPENALEX", "CROSSREF"),
+        allow_live=True,
+    )
+    assert result["status"] == "DEGRADED"
+    assert result["scoped_live_fetch"] == "DEGRADED"
+    assert result["verification_status"] == "SOURCE_UNAVAILABLE"
+    assert result["response_digest"] is None
+    assert result["identifier"] is None
+    assert result["retraction_status"] == "SOURCE_UNAVAILABLE"
+    assert result["live_request_happened"] is True
+    assert result["network_calls"] == 2
+    _assert_gates(result)
+    for row in result["provenance"]:
+        assert row["verification_status"] != "DOI_MATCH"
+        assert row["stored_receipt"] is False
+
+
+def test_pubmed_and_pmc_are_not_two_live_families(monkeypatch):
+    seen = []
+
+    def boom(req, timeout=25):
+        seen.append(getattr(req, "full_url", str(req)))
+        raise TimeoutError("down")
+
+    monkeypatch.setattr(urllib.request, "urlopen", boom)
+    result = run_research_journey(
+        _DOI,
+        research_consent=True,
+        providers=("PUBMED", "PMC"),
+        allow_live=True,
+    )
+    assert result["providers_selected"] == ["PUBMED"]
+    assert result["ncbi_dropped_as_same_family"] == ["PMC"]
+    assert result["provider_families"] == ["NCBI"]
+    assert result["retraction_independent_of_identity"] is False
+    assert result["retraction_status"] == "UNKNOWN"
+    assert result["retraction_reason"] == "INDEPENDENT_FAMILY_NOT_QUERIED"
+    assert result["ncbi_counts_as_two_providers"] is False
+    assert len(seen) == 1
+    assert "pmc" not in seen[0].lower() or "db=pubmed" in seen[0].lower()
+    assert _SECRET not in seen[0]
+
+
+def test_saved_bodies_are_the_receipt():
+    """The committed proof is the saved bytes, not a later moving API response."""
+    receipt = json.loads(_RECEIPT.read_text(encoding="utf-8"))
+    before = _RECEIPT.read_bytes()
+    openalex = (_ROOT / receipt["response_body_path"]).read_bytes()
+    crossref = (_ROOT / receipt["retraction_body_path"]).read_bytes()
+    assert hashlib.sha256(openalex).hexdigest() == receipt["response_digest"]
+    assert hashlib.sha256(crossref).hexdigest() == receipt["retraction_response_digest"]
+    assert receipt["response_digest"] != _STORED_OPENALEX_DIGEST
+    assert receipt["provider"] == "OPENALEX"
+    assert receipt["identifier"] == _DOI
+    assert receipt["verification_status"] == "DOI_MATCH"
+    assert receipt["retraction_provider_family"] == "CROSSREF"
+    assert receipt["retraction_status"] == "RETRACTION_SIGNAL"
+    assert receipt["product_LIVE_INDEX"] == "HOLD"
+    assert receipt["product_LIVE_RETRACTION"] == "HOLD"
+    assert receipt["may_promote"] is False
+    assert receipt["ncbi_counts_as_two_providers"] is False
+    assert LIVE_INDEX == "HOLD" and LIVE_RETRACTION == "HOLD"
+    message = json.loads(crossref)["message"]
+    notices = [
+        (str(item.get("type")), str(item.get("DOI")))
+        for item in message.get("updated-by") or []
+        if isinstance(item, dict)
+    ]
+    assert ("retraction", "10.1038/s41586-024-07653-0") in notices
+    assert ("correction", "10.1038/nature05812") in notices
+    assert ("erratum", "10.1038/nature05812") in notices
+    assert ("retraction", "10.1038/nature05812") not in notices
+    _assert_doi_relationship(message, receipt["doi_relationship"])
+    stored_roles = {(item.get("role"), item.get("DOI")) for item in receipt["retraction_notices"]}
+    assert ("RETRACTION_NOTE", "10.1038/s41586-024-07653-0") in stored_roles
+    assert ("ERRATUM", "10.1038/nature05812") in stored_roles
+    assert ("RETRACTION_NOTE", "10.1038/nature05812") not in stored_roles
+    openalex_record = json.loads(openalex)
+    assert openalex_record["is_retracted"] is True
+    assert str(openalex_record["doi"]).lower().endswith("10.1038/nature00870")
+    assert receipt["doi_relationship"]["10.1038/nature00870"]["openalex_vs_crossref"] == "AGREE"
+    assert _SECRET.encode() not in openalex
+    assert _SECRET.encode() not in crossref
+    assert _RECEIPT.read_bytes() == before
+
+
+def test_one_real_scoped_live_fetch(monkeypatch, tmp_path):
+    calls = {"n": 0}
+    real_open = urllib.request.urlopen
+    receipt_before = _RECEIPT.read_bytes()
+
+    def blocked(*_args, **_kwargs):
+        calls["n"] += 1
+        raise AssertionError("consent false must not open a socket")
+
+    monkeypatch.setattr(urllib.request, "urlopen", blocked)
+    refused = run_research_journey(
+        f"{_SECRET} {_DOI}",
+        research_consent=False,
+        private_document=_SECRET,
+        providers=("OPENALEX", "CROSSREF"),
+        allow_live=True,
+        evidence_dir=str(tmp_path),
+    )
+    assert calls["n"] == 0
+    assert refused["status"] == "HELD_NO_CONSENT"
+    assert refused["network_calls"] == 0
+    assert list(tmp_path.iterdir()) == []
+
+    captured: list[tuple[str, bytes]] = []
+
+    def wrap(req, timeout=25):
+        response = real_open(req, timeout=timeout)
+
+        class _Cap:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return response.__exit__(exc_type, exc, tb)
+
+            def read(self):
+                data = response.read()
+                captured.append((req.full_url, data))
+                return data
+
+            @property
+            def status(self):
+                return response.status
+
+        return _Cap()
+
+    monkeypatch.setattr(urllib.request, "urlopen", wrap)
+    result = run_research_journey(
+        f"{_SECRET} {_DOI}",
+        research_consent=True,
+        private_document=_SECRET,
+        providers=("OPENALEX", "CROSSREF"),
+        allow_live=True,
+        evidence_dir=str(tmp_path),
+    )
+    assert result["status"] == "LIVE_FETCH_SCOPED"
+    assert result["public_query"] == _DOI
+    assert result["provider"] == "OPENALEX"
+    assert result["identifier"] == _DOI
+    assert result["verification_status"] == "DOI_MATCH"
+    assert result["retraction_provider_family"] == "CROSSREF"
+    assert result["retraction_independent_of_identity"] is True
+    assert result["retraction_status"] == "RETRACTION_SIGNAL"
+    assert result["product_LIVE_INDEX"] == "HOLD"
+    assert result["product_LIVE_RETRACTION"] == "HOLD"
+    assert result["may_promote"] is False
+    _assert_gates(result)
+    owner = result["owner_returns"]
+    assert owner["hits_to_capsules"]
+    assert "CAPSULES_VALIDATED" in owner["compile_context"]["reason_codes"]
+    assert owner["freshness_state"]
+    assert owner["freshness_state"][0]["freshness_state"] == "UNKNOWN"
+    assert owner["plan_refresh"][0]["reason"] == "FRESHNESS_UNKNOWN"
+    assert owner["research_capsules_to_c02_inputs"]["facts"]
+    assert owner["doi_dedup"] == "ABSENT"
+    assert owner["replication_class"] == "ABSENT"
+    assert owner["k3_binding"] == "ABSENT"
+    assert owner["k3_gap"]["compile_with_k3"] == {"called": False, "missing_input": "depth"}
+    assert owner["k3_gap"]["bind_prompt_effects"] == {"called": False, "missing_input": "selection"}
+    assert result["product_LIVE_INDEX"] == "HOLD"
+    assert result["product_LIVE_RETRACTION"] == "HOLD"
+    saved_openalex = Path(result["response_body_path"]).read_bytes()
+    saved_crossref = Path(result["retraction_body_path"]).read_bytes()
+    assert hashlib.sha256(saved_openalex).hexdigest() == result["response_digest"]
+    assert hashlib.sha256(saved_crossref).hexdigest() == result["retraction_response_digest"]
+    raw_openalex = next(body for url, body in captured if "api.openalex.org" in url)
+    raw_crossref = next(body for url, body in captured if "api.crossref.org" in url)
+    assert saved_openalex == raw_openalex
+    assert saved_crossref == raw_crossref
+    assert _SECRET.encode() not in saved_openalex
+    assert _SECRET.encode() not in saved_crossref
+    # A moving API may not match the committed receipt. That must not rewrite it.
+    committed = json.loads(receipt_before)
+    assert hashlib.sha256((_ROOT / committed["response_body_path"]).read_bytes()).hexdigest() == committed["response_digest"]
+    assert _RECEIPT.read_bytes() == receipt_before
+
+
+def test_fresh_timestamped_journey_does_not_touch_pinned_bodies():
+    """One consented fresh run is hashed from its own directory. Pinned files stay put."""
+    pinned_receipt = json.loads(_RECEIPT.read_text(encoding="utf-8"))
+    pinned_openalex = (_ROOT / pinned_receipt["response_body_path"]).read_bytes()
+    pinned_crossref = (_ROOT / pinned_receipt["retraction_body_path"]).read_bytes()
+    assert hashlib.sha256(pinned_openalex).hexdigest() == pinned_receipt["response_digest"]
+    assert hashlib.sha256(pinned_crossref).hexdigest() == pinned_receipt["retraction_response_digest"]
+    assert pinned_receipt["response_digest"] == "c59f16e73081e6fedf4884c164a3fffa8ceab5d9798deb8930c8f00b95f83c4e"
+    assert pinned_receipt["retraction_response_digest"] == "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac"
+    assert pinned_receipt["product_LIVE_INDEX"] == "HOLD"
+    assert pinned_receipt["product_LIVE_RETRACTION"] == "HOLD"
+
+    fresh_receipts = sorted((_ROOT / "evidence/r6-live-research/fresh").glob("*/fresh_receipt.json"))
+    assert len(fresh_receipts) == 1
+    fresh = json.loads(fresh_receipts[0].read_text(encoding="utf-8"))
+    assert fresh["product_pass"] is False
+    assert fresh["journey_receipt"] == "NOT_PASS"
+    assert fresh["product_LIVE_INDEX"] == "HOLD"
+    assert fresh["product_LIVE_RETRACTION"] == "HOLD"
+    assert fresh["may_promote"] is False
+    assert fresh["ncbi_counts_as_two_providers"] is False
+    assert fresh["consent_blocked_first_attempt"] is True
+    assert LIVE_INDEX == "HOLD" and LIVE_RETRACTION == "HOLD"
+    assert "chain" not in fresh
+    author_map = fresh["author_map"]
+    assert author_map["label"] == "author_map"
+    assert author_map["not_runtime_proof"] is True
+    assert author_map["ContextNeed"] == "EXECUTED"
+    assert author_map["privacy_minimized_query"] == "EXECUTED"
+    assert author_map["live_source"] == "EXECUTED"
+    assert author_map["metadata"] == "EXECUTED"
+    assert author_map["evidence_extraction_from_metadata"] == "EXECUTED"
+    assert author_map["provenance"] == "EXECUTED"
+    assert author_map["retraction_status"] == "EXECUTED"
+    assert author_map["contradiction"] == "EXECUTED"
+    assert author_map["ContextCapsule"] == "ABSENT"
+    assert author_map["DOI_dedup"] == "ABSENT"
+    assert author_map["freshness"] == "ABSENT"
+    assert author_map["replication_class"] == "ABSENT"
+    assert author_map["C02_K3"] == "ABSENT"
+    assert author_map["k3"]["compile_with_k3"]["called"] is False
+    assert author_map["k3"]["compile_with_k3"]["missing_input"] == "depth"
+    assert author_map["k3"]["bind_prompt_effects"]["called"] is False
+    assert author_map["k3"]["bind_prompt_effects"]["missing_input"] == "selection"
+    assert "no K3 function" not in fresh_receipts[0].read_text(encoding="utf-8")
+
+    by_provider = {row["provider"]: row for row in fresh["hosts"]}
+    assert set(by_provider) == {"OPENALEX", "CROSSREF"}
+    for row in by_provider.values():
+        body = (_ROOT / row["body_path"]).read_bytes()
+        assert row["body_path"].startswith("evidence/r6-live-research/fresh/")
+        assert not row["body_path"].startswith("evidence/r6-live-research/bodies/")
+        assert hashlib.sha256(body).hexdigest() == row["sha256"]
+        assert row["byte_count"] == len(body)
+        assert row["http_status"] == 200
+        assert row["copied_from_pinned"] is False
+        assert row["host"]
+    openalex = by_provider["OPENALEX"]
+    crossref = by_provider["CROSSREF"]
+    assert openalex["host"] == "api.openalex.org"
+    assert openalex["body_moved"] is True
+    assert openalex["host_status"] == "UNKNOWN"
+    assert openalex["sha256"] != pinned_receipt["response_digest"]
+    assert crossref["host"] == "api.crossref.org"
+    assert crossref["host_status"] == "FRESH_HTTP_200"
+    assert crossref["sha256"] == pinned_receipt["retraction_response_digest"]
+    assert crossref["retraction_doi_10.1038/s41586-024-07653-0"] is True
+    assert crossref["correction_10.1038/nature05812"] is True
+    assert crossref["erratum_10.1038/nature05812"] is True
+    message = json.loads((_ROOT / crossref["body_path"]).read_bytes())["message"]
+    notices = {(item.get("type"), item.get("DOI")) for item in message.get("updated-by") or []}
+    assert ("retraction", "10.1038/s41586-024-07653-0") in notices
+    assert ("correction", "10.1038/nature05812") in notices
+    assert ("erratum", "10.1038/nature05812") in notices
+    assert ("retraction", "10.1038/nature05812") not in notices
+    _assert_doi_relationship(message, fresh["doi_relationship"])
+    stored_roles = {(item.get("role"), item.get("DOI")) for item in crossref["notices"]}
+    assert ("RETRACTION_NOTE", "10.1038/s41586-024-07653-0") in stored_roles
+    assert ("ERRATUM", "10.1038/nature05812") in stored_roles
+    assert ("RETRACTION_NOTE", "10.1038/nature05812") not in stored_roles

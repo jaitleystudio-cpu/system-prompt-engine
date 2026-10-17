@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:artifact
+> node scripts/test-artifact-reconstruction.mjs
+
+PASS artifact round-trip + bounded reconstruction contract

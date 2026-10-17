@@ -1,0 +1,30 @@
+
+> spe-web@0.3.0 build
+> npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs
+
+
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 2188,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}
+
+> spe-web@0.3.0 copy-wasm
+> node scripts/copy-wasm.mjs
+
+file:///Users/prawinpalisetty/.codex/.chatgpt-projects/g-p-6aa32fc67f688191aae39cb61faa5250/spe-hero-review/apps/web/scripts/copy-wasm.mjs:32
+  throw new Error("WASM contains developer home paths. Rebuild with Rust --remap-path-prefix before packaging.");
+        ^
+
+Error: WASM contains developer home paths. Rebuild with Rust --remap-path-prefix before packaging.
+    at file:///Users/prawinpalisetty/.codex/.chatgpt-projects/g-p-6aa32fc67f688191aae39cb61faa5250/spe-hero-review/apps/web/scripts/copy-wasm.mjs:32:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.14.1

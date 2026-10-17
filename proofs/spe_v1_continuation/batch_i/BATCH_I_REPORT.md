@@ -1,0 +1,99 @@
+# SPE Ω — Batch I Report (cross-runtime / mutation / a11y / perf qualification)
+
+**Scope:** Qualification pass across continuation stack A–H — not a new product feature  
+**Base tip (Batch H PASS):** `9de22495414b530f74535423be5137d324dcce90`  
+**Final tip:** post-commit `git rev-parse HEAD` on this branch (message starts `test(batch-i):`). No self-hash in-blob — amend would drift.  
+**Branch:** `grok/spe-v1-full-product-continuation-20260925`  
+**PR:** #44 — https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/44  
+**HOSTING:** **FORBIDDEN**  
+**WORLD #1 / INDEPENDENTLY_REPLICATED:** **NOT_PROVEN**  
+**Recorded locally:** 2026-09-26 21:17 IST
+
+## Custody
+
+| Field | Value |
+|-------|-------|
+| Machine | Mac checkout `0d308a2c-330c-430b-85e3-74d647e69e59` |
+| Start HEAD verified | `9de22495414b530f74535423be5137d324dcce90` |
+| Safety tag | `local-pre-batch-i-20260926` |
+| Route | B — local Mac only; **no** Cursor Cloud Agent |
+| Workflows | **Not edited** |
+| Deploy / host / DNS | **Not done** |
+| Paid deps | **₹0** — none added |
+| Push | Allowed when Batch I green (this report) |
+
+## Matrix summary
+
+Full matrix: `proofs/spe_v1_continuation/batch_i/QUALIFICATION_MATRIX.md`.
+
+| Band | Post-I |
+|------|--------|
+| Cross-runtime (Python + web/TS + WASM + Rust CLI) | **PRESENT** (re-proven) |
+| Mutation / adversarial (XCAT, E/H, portability, security) | **PRESENT** |
+| a11y (verifier + theme + predeploy a11y_*) | **PRESENT** |
+| Perf (local asset budget only) | **PRESENT** within declared local scope |
+| `run_mutations.py` stub / Lighthouse ranking / hosting / WORLD#1 | **BLOCKED** |
+
+No product-code repairs required — suites green on tip; evidence + refreshed a11y/gate/budget artifacts only.
+
+## Tests executed (exits)
+
+| Check | Exit | Result |
+|---|---:|---|
+| Python core: XCAT + Batch E/H adversarial + provider + security adversarial + mutation/round-trip/merge-gate + spe round-trip | `0` | **168 passed** (`logs/python_core_mutation.txt`) |
+| Cross-runtime: WASM Node conformance + Rust negatives/determinism/reference | `0` | **198 passed** (`logs/python_cross_runtime.txt`) |
+| `cd apps/web && npx tsc --noEmit` | `0` | PASS |
+| `cd apps/web && npx vite build && node scripts/cache-shell.mjs` | `0` | Vite + cache shell PASS (shipped `public/spe_wasm.wasm`; no local WASM rebuild) |
+| `node tools/copy-check.mjs` | `0` | 0 unreviewed, 0 violations |
+| `npm run test:theme-routes` | `0` | PASS |
+| `npm run test:predeploy-qa` | `0` | 18 predeploy cases PASS |
+| `npm run test:execution-contract` | `0` | PASS |
+| `npm run test:artifact` | `0` | PASS |
+| `npm run test:hero-story` | `0` | PASS |
+| `npm run test:create-intent` | `0` | PASS |
+| `npm run test:lab-acquisition` | `0` | PASS |
+| `node proofs/spe_v1_gap_closure/a11y_verify.mjs` (Mac Chrome) | `0` | 15/15 PASS |
+| `node apps/web/scripts/measure-assets.mjs` | `0` | within_budget=true; wasm 671614 B; shell JS/CSS 471203 B |
+| `node tools/deployment-safety-gate.mjs` | **`2`** | expected fail-closed; `HOSTING=FORBIDDEN` |
+
+### Full `npm run build` note
+
+Same residual as F/G/H: local WASM target can embed `/Users/` paths; used shipped `public/spe_wasm.wasm` via `tsc` + `vite build` + `cache-shell`. Portable WASM artifact for Node conformance already present under `portable/spe-wasm/target/...` — not rebuilt for web shell.
+
+### Perf scope limits (honest)
+
+- Local Mac measurements only (asset sizes + predeploy static checks).
+- **Not** production RUM, Lighthouse CI ranking, or WORLD#1.
+- Lazy ORT + R3F chunks excluded from shell budget by design (documented in measure-assets).
+
+## Allowed claims
+
+| Claim | Status | Evidence |
+|-------|--------|----------|
+| `BATCH_I_QUALIFICATION_PRESENT` | **SUPPORTED** | Matrix + suites + logs under `batch_i/` |
+| `BATCH_I_TESTED_WITHIN_DECLARED_SCOPE` | **SUPPORTED** | Commands + exits above (local Mac checkout) |
+| `WORLD#1` | **NOT_PROVEN** | No ranking / independent replication claim |
+| `INDEPENDENTLY_REPLICATED` | **NOT_PROVEN** | Same |
+| `HOSTING` | **FORBIDDEN** | Deploy safety gate exit `2` |
+
+## Residuals / non-goals (explicit)
+
+- Engineering PASS ≠ hosting ready
+- `tools/run_mutations.py` remains stub (BLOCKED) — real mutation coverage is the portability/adversarial suites above
+- Full axe-core + screen-reader still residual beyond automated a11y_verify
+- Speech hardware qualification still separate / not claimed here
+- No merge, deploy, DNS, workflow edits, or hosting unlock
+- Batch J+ **not started**
+
+## Files added / refreshed
+
+| Path | Role |
+|------|------|
+| `proofs/spe_v1_continuation/batch_i/QUALIFICATION_MATRIX.md` | Inspect → status matrix |
+| `proofs/spe_v1_continuation/batch_i/BATCH_I_REPORT.md` | This evidence |
+| `proofs/spe_v1_continuation/batch_i/A11Y_CHECKLIST.md` | Snapshot of a11y verifier results |
+| `proofs/spe_v1_continuation/batch_i/logs/*` | Command transcripts + JSON |
+| `proofs/spe_v1_gap_closure/A11Y_CHECKLIST.md` | Regenerated by a11y_verify |
+| `proofs/spe_v1_gap_closure/logs/a11y_verify.json` | Regenerated |
+| `proofs/spe_v1_gap_closure/deployment_safety_gate.json` | Gate timestamp refresh |
+| `proofs/generated/sprint6_web_asset_budget.json` | Local measure-assets refresh (within budget) |

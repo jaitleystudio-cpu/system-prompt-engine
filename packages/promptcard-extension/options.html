@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptCard Settings · V1.4.0</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: rgba(24, 24, 28, 0.85);
+      --border: rgba(255, 255, 255, 0.12);
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --primary-orange: #ff6a00;
+      --accent-green: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .header-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff7a18, #ff4500);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(255, 106, 0, 0.4);
+    }
+
+    .header-title h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-title p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    select, input[type="text"], input[type="password"] {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    select:focus, input[type="text"]:focus, input[type="password"]:focus {
+      border-color: var(--primary-orange);
+    }
+
+    .input-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #27272a;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary-orange);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #09090b;
+    }
+
+    .btn-primary:hover {
+      background: #e4e4e7;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .status-msg {
+      margin-top: 10px;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .status-msg.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-msg.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      </div>
+      <div class="header-title">
+        <h1>PROMPTCARD · Settings</h1>
+        <p>V1.4.0 — High-Fidelity Multimodal Reverse-Engineering</p>
+      </div>
+    </div>
+
+    <!-- Provider & Engine Configuration -->
+    <div class="card">
+      <div class="card-title">VLM Inference Engine</div>
+
+      <div class="form-group">
+        <label for="provider-select">Inference Provider</label>
+        <select id="provider-select">
+          <option value="offline">SPE Offline Air-Gapped Engine ($0.00 Cloud Bill, 100% Private)</option>
+          <option value="gemini">Google Gemini (Gemini 2.5 Flash / Pro)</option>
+          <option value="openai">OpenAI (GPT-4o / GPT-4o-mini)</option>
+          <option value="openrouter">OpenRouter (Multi-Model Gateway)</option>
+          <option value="ollama">Local Ollama (Local LLM Server)</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="apikey-group">
+        <label for="api-key-input">API Key</label>
+        <div class="input-row">
+          <input type="password" id="api-key-input" placeholder="Enter provider API key...">
+          <button type="button" class="toggle-visibility" id="toggle-key-visibility">Show</button>
+        </div>
+      </div>
+
+      <div class="form-group" id="model-group">
+        <label for="model-name-input">Model Name</label>
+        <input type="text" id="model-name-input" value="gemini-2.5-flash" placeholder="e.g. gemini-2.5-flash or gpt-4o">
+      </div>
+
+      <div class="form-group toggle-row" id="offline-row">
+        <div>
+          <label style="margin-bottom: 2px;">Offline Air-Gap Mode</label>
+          <p style="font-size: 12px; color: var(--text-muted);">Force local deterministic engine with $0.00 cloud egress</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="offline-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="test-connection-btn">Test Connection</button>
+        <button class="btn btn-primary" id="save-settings-btn">Save Configuration</button>
+      </div>
+
+      <div id="connection-status" class="status-msg"></div>
+    </div>
+
+    <!-- Local History Storage -->
+    <div class="card">
+      <div class="card-title">
+        <span>Local History Buffer</span>
+        <span style="font-size: 12px; color: var(--text-muted);" id="history-counter-label">0/20 Items</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Stores the last 20 analyzed images and reverse-engineered prompt cards locally in chrome.storage.local.
+      </p>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="export-history-btn">Export History (JSON)</button>
+        <button class="btn btn-danger" id="clear-history-btn">Clear All History</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

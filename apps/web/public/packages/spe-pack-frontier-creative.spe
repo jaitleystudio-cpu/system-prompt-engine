@@ -1,0 +1,19 @@
+{
+  "format": "spe-bundle-v1",
+  "id": "spe-pack-frontier-creative",
+  "name": "Frontier 3D WebGL & Multimodal Experience Pack",
+  "description": "Production shaders, 60fps mobile WebGL graphics, and screenshot-to-React reverse engineering.",
+  "prompts": [
+    "spe-3d-webgl-storyteller",
+    "spe-vlm-ui-reverse-engineer"
+  ],
+  "totalInvariants": 4,
+  "license": "MIT OR Apache-2.0",
+  "manifest": {
+    "engine": "SPE Ω",
+    "engineRelease": "2026.10-omega",
+    "wasmCompatibility": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    "contentSha256": "c9200dc9ef4dd4ead20fa77a4d6d5aa0afca0090fe03e433c65c7b0cb4945ba6",
+    "generatedAt": "2026-10-17T00:00:00Z"
+  }
+}

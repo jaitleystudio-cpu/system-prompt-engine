@@ -1,0 +1,46 @@
+name: SPE Ω — AI Instruction Assurance & PR Regression Gate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  spe-assurance:
+    name: Verify AI Prompts & Block Regressions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run Official SPE Assurance Action
+        # Enterprise usage: uses: antigravity/spe-action@v1
+        uses: ./
+        with:
+          prompt-path: "apps/web/src/engine/prompts/default.md"
+          strict: "true"
+          output-receipt: "proof-receipt.json"
+
+      - name: Cryptographically Verify Proof Receipt & Gate Invariants
+        run: |
+          echo "Executing cryptographic verification of proof receipt via RFC 8785 canonical digest..."
+          test -f proof-receipt.json
+          node scripts/verify-receipt-signature.mjs proof-receipt.json
+          echo "✅ Receipt canonical integrity and hard-gate status independently verified."
+
+      - name: Archive Compliance & Proof Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: spe-assurance-artifacts
+          path: |
+            OWASP_LLM_COMPLIANCE_REPORT.md
+            proof-receipt.json

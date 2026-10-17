@@ -1,0 +1,81 @@
+name: SPE Ω Nightly Website & Intelligence Evolution Scheduler
+
+# NOTE ON GITHUB ACTIONS SCHEDULING BEHAVIOR:
+# In GitHub Actions, `schedule` (cron) events are registered and triggered EXCLUSIVELY
+# from the repository's default branch (main). On feature branches
+# (e.g. `feature/p0-b-user-confirmed-requirements`), scheduled cron runs will NOT trigger
+# automatically on GitHub until merged into default branch. To execute on a feature branch,
+# use manual `workflow_dispatch` trigger or local runner: `node apps/web/scripts/nightly-evolution-loop.mjs`.
+
+on:
+  schedule:
+    # 02:17 AM IST = 20:47 UTC every day (Runs on default branch)
+    - cron: '47 20 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run simulation mode without staging commits'
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: spe-nightly-evolution-scheduler
+  cancel-in-progress: false
+
+jobs:
+  nightly-evolution:
+    name: 02:17 AM IST Autonomous Evolution & Controlled Qualification
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'apps/web/package-lock.json'
+
+      - name: Setup Python Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          npm --prefix apps/web ci
+
+      - name: Check Global Fail-Closed STOP Sentinel
+        run: |
+          if [ -f .spe_emergency_stop ] || [ "$SPE_EMERGENCY_STOP" = "1" ]; then
+            echo "EMERGENCY STOP ACTIVE: Aborting nightly evolution."
+            exit 1
+          fi
+
+      - name: Execute 9-Phase Autonomous Evolution Loop
+        run: |
+          node apps/web/scripts/nightly-evolution-loop.mjs --ci
+
+      - name: Execute Nightly Intelligence Upgrade & Benchmark Holdouts
+        run: |
+          node tools/nightly_intelligence_upgrade.mjs
+
+      - name: Verify Web Application Integrity & Bit-for-Bit WASM
+        run: |
+          node apps/web/scripts/test-autonomous-release-safety.mjs
+
+      - name: Upload Nightly Execution Evidence Receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spe-nightly-evolution-receipts
+          path: |
+            proofs/generated/NIGHTLY_INTELLIGENCE_UPGRADE_REPORT.json
+            proofs/generated/NIGHTLY_EVOLUTION_RUN_RECEIPT.json
+          retention-days: 30

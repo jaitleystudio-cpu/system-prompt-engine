@@ -1,0 +1,67 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-10-08T12:38:47.933Z",
+  "provenance": {
+    "tested_subject_sha": "f9e01fdaa8817493415e52f07306ede27998eb60",
+    "attestation_mode": "DECOUPLED_INDEPENDENT_EVALUATION",
+    "manifest_generator": "scripts/generate-test-manifest.mjs",
+    "attestation_commit_sha": "f9e01fdaa8817493415e52f07306ede27998eb60",
+    "git_branch": "integration/spe-2026-10-26"
+  },
+  "environment": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "node_version": "v22.23.2",
+    "git_branch": "integration/spe-2026-10-26",
+    "commit_sha": "f9e01fdaa8817493415e52f07306ede27998eb60",
+    "tested_subject_sha": "f9e01fdaa8817493415e52f07306ede27998eb60"
+  },
+  "wasm_engine": {
+    "canonical_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    "bytes": 1339691,
+    "imports_count": 0
+  },
+  "suites": {
+    "python_unit": {
+      "suite": "pytest tests/unit",
+      "total": 751,
+      "passed": 751,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 34.301,
+      "timestamp": "2026-10-08T18:03:24.265240+05:30"
+    },
+    "cli_battery": {
+      "suite": "npm run test:cli-battery",
+      "commands_tested": 32,
+      "passed": 32,
+      "failed": 0,
+      "verdict": "PASS"
+    },
+    "copy_governance": {
+      "suite": "npm run spe:copy-check",
+      "candidate_strings_audited": 4147,
+      "unreviewed": 0,
+      "violations": 0,
+      "verdict": "PASS"
+    },
+    "capabilities_seo": {
+      "suite": "npm run test:capabilities-seo",
+      "verdict": "PASS"
+    },
+    "seven_journeys": {
+      "suite": "npm run test:seven-journeys",
+      "journeys_qualified": 7,
+      "total_journeys": 7,
+      "verdict": "PASS"
+    }
+  },
+  "totals": {
+    "python_tests_passed": 751,
+    "python_tests_total": 751,
+    "cli_commands_passed": 32,
+    "cli_commands_total": 32,
+    "all_gates_clean": true
+  }
+}

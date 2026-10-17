@@ -1,0 +1,701 @@
+/**
+ * SPE Ultra-Multimodal OmniStudio Styles
+ * Award-Winning Glassmorphism, Spatial Rhythm, and Fluid Micro-Interactions
+ */
+
+.spe-omni-studio {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Header & Banner */
+.spe-omni-header {
+  margin-bottom: 1.5rem;
+}
+
+.spe-omni-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.spe-omni-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.spe-omni-pill.airgap {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.spe-omni-pill.pro {
+  background: rgba(139, 92, 246, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.spe-omni-pill.speed {
+  background: rgba(6, 182, 212, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.spe-omni-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.spe-omni-subtitle {
+  font-size: 1rem;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 840px;
+  line-height: 1.5;
+}
+
+/* Master Mode Switcher Tabs */
+.spe-omni-modes {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 14px;
+  backdrop-filter: blur(16px);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.spe-omni-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.spe-omni-mode-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.spe-omni-mode-btn.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.35) 0%, rgba(6, 182, 212, 0.25) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+}
+
+/* Main Studio Container */
+.spe-omni-panel {
+  background: rgba(11, 15, 25, 0.75);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  border-radius: 18px;
+  backdrop-filter: blur(20px);
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Presets Bar */
+.spe-omni-presets {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.spe-omni-presets-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.spe-omni-preset-pill {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  background: rgba(15, 23, 42, 0.6);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-omni-preset-pill:hover {
+  background: rgba(30, 41, 59, 0.8);
+  color: #ffffff;
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.spe-omni-preset-pill.active {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c084fc;
+  border-color: #8b5cf6;
+}
+
+/* Dual Pane Layout */
+.spe-omni-dual-pane {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 980px) {
+  .spe-omni-dual-pane {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left Pane: Media Canvas / Visual Viewer */
+.spe-omni-canvas-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.spe-omni-canvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  background: rgba(11, 15, 25, 0.5);
+}
+
+.spe-omni-canvas-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spe-omni-viewport {
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #07090e;
+  overflow: hidden;
+}
+
+.spe-omni-img-preview {
+  max-width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Overlay Bounding Boxes */
+.spe-omni-bbox-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.spe-omni-bbox {
+  position: absolute;
+  border: 2px solid;
+  border-radius: 4px;
+  background: rgba(139, 92, 246, 0.1);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-omni-bbox:hover,
+.spe-omni-bbox.selected {
+  background: rgba(139, 92, 246, 0.25);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+}
+
+.spe-omni-bbox-badge {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  padding: 1px 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 3px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* Audio Waveform Canvas */
+.spe-omni-waveform-canvas {
+  width: 100%;
+  height: 240px;
+  background: #05070c;
+  display: block;
+}
+
+.spe-omni-mic-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.6);
+  border-top: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+.spe-omni-record-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spe-omni-record-btn.idle {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.spe-omni-record-btn.recording {
+  background: #1e293b;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  animation: spePulse 1.5s infinite;
+}
+
+@keyframes spePulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Right Pane: Workspace / Tabs */
+.spe-omni-tabs-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.spe-omni-tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: rgba(11, 15, 25, 0.7);
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.spe-omni-tab-buttons {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.spe-omni-tab-btn {
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-omni-tab-btn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.spe-omni-tab-btn.active {
+  color: #ffffff;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+/* Code & Output Viewer */
+.spe-omni-content-box {
+  padding: 1.25rem;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 560px;
+}
+
+.spe-omni-code-block {
+  margin: 0;
+  padding: 1rem;
+  background: #07090e;
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  border-radius: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Interactive Sandbox Preview */
+.spe-omni-sandbox-viewport {
+  padding: 1.5rem;
+  background: #090d16;
+  border-radius: 10px;
+  border: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+/* Action Footer Bar */
+.spe-omni-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: rgba(11, 15, 25, 0.9);
+  border-top: 1px solid rgba(30, 41, 59, 0.8);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.spe-omni-receipt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-family: ui-monospace, monospace;
+}
+
+.spe-omni-btn-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.spe-omni-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  background: rgba(15, 23, 42, 0.8);
+  color: #f1f5f9;
+}
+
+.spe-omni-btn:hover {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.spe-omni-btn.primary {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+}
+
+.spe-omni-btn.primary:hover {
+  opacity: 0.95;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+}
+
+/* Dropzone Styling */
+.spe-omni-dropzone {
+  border: 2px dashed rgba(51, 65, 85, 0.7);
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spe-omni-dropzone:hover {
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.spe-omni-dropzone-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.spe-omni-dropzone-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 0.25rem;
+}
+
+.spe-omni-dropzone-hint {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Indic Script Badges */
+.spe-omni-indic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Image to Prompt: Forensic Breakdown Grid */
+.spe-omni-forensic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.spe-omni-forensic-card {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.spe-omni-forensic-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+}
+
+.spe-omni-forensic-val {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+/* Model Prompt Box */
+.spe-omni-model-box {
+  border-radius: 10px;
+  background: #060910;
+  border: 1px solid #1e293b;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.spe-omni-model-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.85rem;
+  background: rgba(30, 41, 59, 0.5);
+  border-bottom: 1px solid #1e293b;
+}
+
+.spe-omni-model-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: monospace;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.spe-omni-model-badge.midjourney {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c084fc;
+}
+
+.spe-omni-model-badge.flux {
+  background: rgba(6, 182, 212, 0.2);
+  color: #38bdf8;
+}
+
+.spe-omni-model-badge.sdxl {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.spe-omni-model-badge.dalle {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+/* Screenshot to Code: Pinpoint Accuracy & Level Badges */
+.spe-omni-pinpoint-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.spe-omni-level-toggle {
+  display: flex;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  border-radius: 8px;
+  padding: 0.2rem;
+  gap: 0.25rem;
+}
+
+.spe-omni-level-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-omni-level-btn.active {
+  background: #8b5cf6;
+  color: #ffffff;
+}
+
+.spe-omni-level-btn.beginner.active {
+  background: #10b981;
+  color: #ffffff;
+}
+
+/* 3D Lighting Dial Controls */
+.spe-omni-dial-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 8px;
+}
+
+.spe-omni-dial-btn {
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-omni-dial-btn.active {
+  background: #8b5cf6;
+  border-color: #a855f7;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+/* X-Ray Caliper HUD */
+.spe-omni-caliper-hud {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(11, 15, 25, 0.9);
+  border-top: 1px solid rgba(30, 41, 59, 0.8);
+  font-size: 0.75rem;
+}
+
+.spe-omni-caliper-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.spe-omni-caliper-key {
+  color: #64748b;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.spe-omni-caliper-val {
+  color: #38bdf8;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+/* SQL & LaTeX Restorer Card */
+.spe-omni-sql-card {
+  padding: 1rem;
+  background: #07090e;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #34d399;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+

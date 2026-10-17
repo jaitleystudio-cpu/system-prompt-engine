@@ -1,0 +1,79 @@
+{
+  "note": "Cold local Chromium encoded resource bodies; excludes headers. Not field Core Web Vitals. Artifact PNG retained as unchanged reference; no deployment asset deletion.",
+  "bundle": {
+    "before": {
+      "raw": 1824445,
+      "gzip": 489849
+    },
+    "after": {
+      "raw": 1838180,
+      "gzip": 493267
+    },
+    "delta": {
+      "raw": 13735,
+      "gzip": 3418
+    }
+  },
+  "cases": [
+    {
+      "name": "dark-desktop",
+      "beforeNetworkBytes": 1697312,
+      "afterNetworkBytes": 430620,
+      "beforePNG": [
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        }
+      ],
+      "afterPNG": [],
+      "domNodesBefore": 331,
+      "domNodesAfter": 450,
+      "errors": []
+    },
+    {
+      "name": "light-desktop",
+      "beforeNetworkBytes": 1697312,
+      "afterNetworkBytes": 430620,
+      "beforePNG": [
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        }
+      ],
+      "afterPNG": [],
+      "domNodesBefore": 331,
+      "domNodesAfter": 450,
+      "errors": []
+    },
+    {
+      "name": "reduced-motion",
+      "beforeNetworkBytes": 1694793,
+      "afterNetworkBytes": 428103,
+      "beforePNG": [
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        }
+      ],
+      "afterPNG": [],
+      "domNodesBefore": 328,
+      "domNodesAfter": 447,
+      "errors": []
+    },
+    {
+      "name": "mobile",
+      "beforeNetworkBytes": 1694793,
+      "afterNetworkBytes": 428103,
+      "beforePNG": [
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        }
+      ],
+      "afterPNG": [],
+      "domNodesBefore": 328,
+      "domNodesAfter": 447,
+      "errors": []
+    }
+  ]
+}

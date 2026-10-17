@@ -1,0 +1,172 @@
+{
+  "kind": "FRESH_LIVE_JOURNEY",
+  "product_pass": false,
+  "journey_receipt": "NOT_PASS",
+  "scoped_live_fetch": "LIVE_FETCH_SCOPED",
+  "pinned_files": "NOT_OVERWRITTEN",
+  "pinned_receipt": "NOT_REWRITTEN",
+  "stored_body_digest_match_is_not_this_run": true,
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "may_promote": false,
+  "consent_blocked_first_attempt": true,
+  "network_calls": 2,
+  "public_query": "10.1038/nature00870",
+  "identifier": "10.1038/nature00870",
+  "verification_status": "DOI_MATCH",
+  "retraction_status": "RETRACTION_SIGNAL",
+  "retraction_provider_family": "CROSSREF",
+  "ncbi_counts_as_two_providers": false,
+  "hosts": [
+    {
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "host": "api.openalex.org",
+      "http_status": 200,
+      "byte_count": 43308,
+      "sha256": "a8c657bd1ca2af878085d0acacb0de813d5fa068e7d913d38d4899d8232e4ca5",
+      "body_path": "evidence/r6-live-research/fresh/20261004T182744+0530/openalex.body.json",
+      "pinned_sha256": "c59f16e73081e6fedf4884c164a3fffa8ceab5d9798deb8930c8f00b95f83c4e",
+      "body_moved": true,
+      "host_status": "UNKNOWN",
+      "copied_from_pinned": false
+    },
+    {
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "host": "api.crossref.org",
+      "http_status": 200,
+      "byte_count": 25539,
+      "sha256": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "body_path": "evidence/r6-live-research/fresh/20261004T182744+0530/crossref.body.json",
+      "pinned_sha256": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "body_moved": false,
+      "host_status": "FRESH_HTTP_200",
+      "copied_from_pinned": false,
+      "retraction_doi_10.1038/s41586-024-07653-0": true,
+      "correction_10.1038/nature05812": true,
+      "erratum_10.1038/nature05812": true,
+      "notices": [
+        {
+          "type": "correction",
+          "label": "Correction",
+          "source": "retraction-watch",
+          "DOI": "10.1038/nature05812",
+          "role": "ERRATUM"
+        },
+        {
+          "type": "retraction",
+          "label": "Retraction",
+          "source": "retraction-watch",
+          "DOI": "10.1038/s41586-024-07653-0",
+          "role": "RETRACTION_NOTE"
+        },
+        {
+          "type": "erratum",
+          "label": "Erratum",
+          "source": "publisher",
+          "DOI": "10.1038/nature05812",
+          "role": "ERRATUM"
+        },
+        {
+          "type": "retraction",
+          "label": "Retraction",
+          "source": "publisher",
+          "DOI": "10.1038/s41586-024-07653-0",
+          "role": "RETRACTION_NOTE"
+        }
+      ]
+    }
+  ],
+  "graph_ok": true,
+  "graph_edge_relations": [
+    "CONTRADICTS"
+  ],
+  "graph_contradiction_count": 1,
+  "need_id": "need-general-c0184ca01696c0ed",
+  "parent": "03f7f96053631a73a13b682fdb2a62e4e2c50ae7",
+  "note": "author_map classifies the already-saved fetch. It is not a runtime proof and not a pass. compile_with_k3 and bind_prompt_effects exist and were not called: this path has no protocol depth and no technique selection. Product LIVE gates stay HOLD.",
+  "author_map": {
+    "label": "author_map",
+    "not_runtime_proof": true,
+    "ContextNeed": "EXECUTED",
+    "privacy_minimized_query": "EXECUTED",
+    "live_source": "EXECUTED",
+    "metadata": "EXECUTED",
+    "evidence_extraction_from_metadata": "EXECUTED",
+    "provenance": "EXECUTED",
+    "retraction_status": "EXECUTED",
+    "contradiction": "EXECUTED",
+    "ContextCapsule": "ABSENT",
+    "DOI_dedup": "ABSENT",
+    "freshness": "ABSENT",
+    "replication_class": "ABSENT",
+    "C02_K3": "ABSENT",
+    "k3": {
+      "compile_with_k3": {
+        "called": false,
+        "function": "spe_runtime.k3.compile.compile_with_k3",
+        "missing_input": "depth"
+      },
+      "bind_prompt_effects": {
+        "called": false,
+        "function": "spe_runtime.k3.effect.bind_prompt_effects",
+        "missing_input": "selection"
+      }
+    }
+  },
+  "doi_relationship": {
+    "10.1038/nature00870": {
+      "role": "ORIGINAL_ARTICLE",
+      "retracted": true,
+      "crossref_doi": "10.1038/nature00870",
+      "crossref_title": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "crossref_updated_by_retraction_doi": "10.1038/s41586-024-07653-0",
+      "openalex_doi": "https://doi.org/10.1038/nature00870",
+      "openalex_is_retracted": true,
+      "openalex_vs_crossref": "AGREE"
+    },
+    "10.1038/s41586-024-07653-0": {
+      "role": "RETRACTION_NOTE",
+      "crossref_updated_by_type": "retraction",
+      "crossref_updated_by_label": "Retraction",
+      "crossref_updated_by_sources": [
+        "retraction-watch",
+        "publisher"
+      ],
+      "publisher_assertion_change_type": "Correction",
+      "publisher_assertion_change_type_relabel": "REFUSED",
+      "publisher_assertion_details": "This article has been retracted. Please see the Retraction Notice for more detail:",
+      "publisher_assertion_url": "https://doi.org/10.1038/s41586-024-07653-0"
+    },
+    "10.1038/nature05812": {
+      "role": "ERRATUM",
+      "not_retraction_note": true,
+      "publisher_updated_by_type": "erratum",
+      "publisher_updated_by_label": "Erratum",
+      "publisher_assertion_change_type": "Erratum",
+      "publisher_assertion_url": "https://doi.org/10.1038/nature05812",
+      "retraction_watch_updated_by_type": "correction",
+      "retraction_watch_updated_by_label": "Correction",
+      "retraction_watch_type_relabel": "REFUSED"
+    },
+    "openalex_vs_crossref": "AGREE",
+    "status_not_openalex_boolean_only": true,
+    "refused_relabel": [
+      {
+        "doi": "10.1038/nature05812",
+        "field": "updated-by.type",
+        "source": "retraction-watch",
+        "source_value": "correction",
+        "reason": "SOURCE_FIELD_SAYS_CORRECTION_PUBLISHER_TYPE_SAYS_ERRATUM"
+      },
+      {
+        "doi": "10.1038/s41586-024-07653-0",
+        "field": "assertion.change_type",
+        "source": "publisher",
+        "source_value": "Correction",
+        "reason": "SOURCE_FIELD_SAYS_CORRECTION_UPDATED_BY_TYPE_AND_DETAILS_SAY_RETRACTION_NOTICE"
+      }
+    ]
+  }
+}

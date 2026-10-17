@@ -1,0 +1,447 @@
+{
+  "overflow": [
+    {
+      "width": 320,
+      "route": "home",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "create",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "code",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "daily-lab",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "my-work",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "privacy",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "features",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "workspace",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 320,
+      "route": "home-zoom-200",
+      "scroll": 320,
+      "inner": 320,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "home",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "create",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "code",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "daily-lab",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "my-work",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "privacy",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "features",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "workspace",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 390,
+      "route": "home-zoom-200",
+      "scroll": 390,
+      "inner": 390,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "home",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "create",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "code",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "daily-lab",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "my-work",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "privacy",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "features",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "workspace",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 768,
+      "route": "home-zoom-200",
+      "scroll": 768,
+      "inner": 768,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "home",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "create",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "code",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "daily-lab",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "my-work",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "privacy",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "features",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "workspace",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1024,
+      "route": "home-zoom-200",
+      "scroll": 1024,
+      "inner": 1024,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "home",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "create",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "code",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "daily-lab",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "my-work",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "privacy",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "features",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "workspace",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1440,
+      "route": "home-zoom-200",
+      "scroll": 1440,
+      "inner": 1440,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "home",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "create",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "code",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "daily-lab",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "my-work",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "privacy",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "features",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "workspace",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    },
+    {
+      "width": 1920,
+      "route": "home-zoom-200",
+      "scroll": 1920,
+      "inner": 1920,
+      "ok": true
+    }
+  ],
+  "axe": [
+    {
+      "route": "home",
+      "violations": []
+    },
+    {
+      "route": "create",
+      "violations": []
+    },
+    {
+      "route": "code",
+      "violations": []
+    },
+    {
+      "route": "daily-lab",
+      "violations": []
+    },
+    {
+      "route": "my-work",
+      "violations": []
+    },
+    {
+      "route": "privacy",
+      "violations": []
+    },
+    {
+      "route": "features",
+      "violations": []
+    },
+    {
+      "route": "workspace",
+      "violations": []
+    }
+  ],
+  "flow": {
+    "steps": [
+      "typed idea and desired output",
+      {
+        "tabPersistence": true,
+        "beforeLen": 88,
+        "afterLen": 88
+      },
+      "compiled",
+      {
+        "simple": "WHAT SPE PREPARED\nYour goal is kept with this prompt.\nWHAT IS PROTECTED\nLimits you wrote stay attached to the prompt.\nPERMISSIONS\nNothing is allowed to run on your behalf.\nDID ANYTHING RUN?\nNothing has been executed.\nPROFILE\n— (run local dry-run to bind)\nCHECK STATUS\nNot checked yet. Unknown is not a pass."
+      },
+      "inspect visible",
+      {
+        "spe": "artifact-1790567384744.spe"
+      },
+      {
+        "dryRunNotice": [
+          "Local dry-run recorded. No target task or side effect was executed.\n×"
+        ]
+      },
+      {
+        "savedCards": 2
+      },
+      {
+        "reopened": "Write a four-week launch checklist. Budget must remain $2000. Do not invent extra spend."
+      }
+    ],
+    "budget": true,
+    "errors": []
+  }
+}

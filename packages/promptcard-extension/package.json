@@ -1,0 +1,20 @@
+{
+  "name": "@spe/promptcard-extension",
+  "version": "1.4.0",
+  "description": "PROMPTCARD · V1.4.0 — Multimodal Image to Prompt AI Chrome Extension (Manifest V3)",
+  "type": "module",
+  "main": "background.js",
+  "scripts": {
+    "test": "node test/promptcard.test.mjs"
+  },
+  "keywords": [
+    "promptcard",
+    "image-to-prompt",
+    "vlm",
+    "chrome-extension",
+    "manifest-v3",
+    "system-prompt-engine"
+  ],
+  "author": "SPE Team",
+  "license": "MIT"
+}

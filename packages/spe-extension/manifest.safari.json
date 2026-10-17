@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "SPE — System Prompt Engine (1-Click AI Power Prompts & QuillBot Killer)",
+  "short_name": "SPE AI",
+  "version": "1.0.0",
+  "description": "Universal AI prompt companion, QuillBot rephraser & Grammarly humanizer for ChatGPT, Claude, Gemini, Google Docs & any website.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SPE AI Companion",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "commands": {
+    "spe_quick_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Trigger SPE Auto-Action on selected text"
+    }
+  }
+}

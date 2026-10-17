@@ -1,0 +1,52 @@
+# SPE — System Prompt Engine
+
+> System Prompt Engine (SPE) is a free, privacy-first, client-side compiler and verification platform for AI assistants, autonomous agents, and system prompt engineering. Operates 100% offline via local WebAssembly with zero cloud compute and zero prompt telemetry.
+
+SPE converts user intents and software specifications into mathematically verified system prompts, enforcing hard invariants, privilege ceilings, and contextual isolation across 11 frontier model dialects.
+
+## Core Machine-Readable APIs (/api/v1)
+
+- [Public Discovery Root](https://systempromptengine.com/api/v1/index.json): Entry point for all programmatic discovery resources, schema contracts, and hateoas links.
+- [Verified Prompts Catalog](https://systempromptengine.com/api/v1/prompts/index.json): Curated, production-grade prompt assets across Cloud Architecture, Security, 3D WebGL, Reasoning, and Multi-Agent Swarms with AST schemas.
+- [Model Compatibility Matrix](https://systempromptengine.com/api/v1/model-formats/index.json): Syntax flavors, delimiters, token overhead factors, and feature flags for 11 frontier AI model dialects.
+- [Curated Prompt Packs](https://systempromptengine.com/api/v1/prompt-packs/index.json): Bundled prompt specifications for enterprise domains with .spe package references and verification checksums.
+
+## Model Context Protocol (MCP) Gateway
+
+SPE provides a stateless MCP server conforming to the July 28, 2026 Model Context Protocol core specification.
+
+- Endpoint (HTTP / JSON-RPC 2.0): `https://systempromptengine.com/api/v1/mcp`
+- Local CLI / Stdio Runner: `python3 tools/spe_mcp_server.py` or `node tools/spe_mcp_server.mjs`
+- Core MCP Tools:
+  - `search_spe_prompts`: Search verified prompt catalog by domain, keyword query, or target model.
+  - `get_prompt_asset`: Retrieve a complete prompt asset by ID, with optional dialect compilation and variable substitution.
+  - `compile_for_model`: Transcompile any canonical prompt text into one of 11 model-native dialects using AST block parsing.
+  - `validate_prompt_constraints`: Verify hard invariants, privilege bounds, context sandboxing, and token budget.
+
+## Supported Model Dialects (11 Runtimes)
+
+1. Anthropic Claude (`claude-xml`): Hierarchical XML tags (`<system_instructions>`, `<strict_invariants>`, `<context_policy>`).
+2. Anthropic Claude Code CLI (`claude-code`): Project-level governance matrix formatted as `CLAUDE.md`.
+3. OpenAI Developer Role (`openai-markdown`): Sectioned Markdown with bold invariant markers and untrusted context blocks.
+4. Google Gemini (`gemini-agent`): Bracketed directive blocks (`[GEMINI]`, `[INVARIANT]`, `[AUTHORITY]`) with grounding anchors.
+5. Cursor Rules (`cursor-rules`): Strict JSON agent configuration schema for `.cursorrules` and `.cursor/rules/*.mdc`.
+6. Codeium Windsurf (`windsurf-rules`): Markdown AST directive rules for `.windsurfrules`.
+7. Google DeepMind Antigravity (`antigravity-skills`): Portable YAML frontmatter with `<RULE>` enclosure blocks (`SKILL.md`).
+8. xAI Grok (`grok`): Truth-anchored mathematical directives with first-principles hallucination suppression (`[TRUTH-LAW]`).
+9. Moonshot Kimi (`kimi`): Bilingual bracketed anchor markers (`[ANCHOR: ...]`) optimized for 200k ultra-long context.
+10. Open-Weights Reasoner (`open-weights`): Meta Llama 4 & DeepSeek R1/V3 ChatML header framing (`<|start_header_id|>`).
+11. Ollama Modelfile (`ollama-modelfile`): Docker-like declarative `Modelfile` with multiline `SYSTEM` instruction blocks.
+
+## Agent Discovery & Interoperability Standards
+
+- Agent-to-Agent (A2A) Discovery Card: [https://systempromptengine.com/.well-known/agent.json](https://systempromptengine.com/.well-known/agent.json)
+- OpenAI / AI Plugin Manifest: [https://systempromptengine.com/.well-known/ai-plugin.json](https://systempromptengine.com/.well-known/ai-plugin.json)
+- OpenAPI 3.1 Specification: [https://systempromptengine.com/.well-known/openapi.yaml](https://systempromptengine.com/.well-known/openapi.yaml)
+- Full Technical Reference: [https://systempromptengine.com/llms-full.txt](https://systempromptengine.com/llms-full.txt)
+
+## Privacy & Architectural Guarantees
+
+- Zero Cloud Egress: Prompts are generated, compiled, and audited strictly in-browser or on-host via local WebAssembly.
+- Deterministic Verification: Rule verification powered by propositional Horn clauses and Kleene-3 logic.
+- Canonical Hash: `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`.
+- Free Core: System Prompt Engine provides up to 30,000 characters free to all (including AI bots, AI models, and human developers), with optional commercial enterprise licensing.

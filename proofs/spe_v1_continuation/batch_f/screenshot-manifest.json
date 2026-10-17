@@ -1,0 +1,32 @@
+{
+  "tip_at_capture_note": "Tip recorded at capture time; final report tip is post-commit HEAD.",
+  "tip": "2be1eaa46944b59319164ed2545b04e56c5f9147",
+  "route": "/capabilities",
+  "shots": [
+    {
+      "name": "capabilities-dark.png",
+      "width": 1440,
+      "height": 1000,
+      "colorScheme": "dark",
+      "sha256": "e066f97b0e92a92aa860a4ec5d14a66b13db5d05792a1466cb260e13f1e8959c",
+      "bytes": 314273
+    },
+    {
+      "name": "capabilities-light.png",
+      "width": 1440,
+      "height": 1000,
+      "colorScheme": "light",
+      "sha256": "3fca8b1175745d7742a2c105f27e974b4d2b2450b897cb8bebb4d527735a9a96",
+      "bytes": 320597
+    },
+    {
+      "name": "capabilities-mobile.png",
+      "width": 393,
+      "height": 852,
+      "colorScheme": "dark",
+      "sha256": "4b43b8f36ec86d702394cd29fa11982e8cc7bef801773da3f232baff8261f665",
+      "bytes": 280782
+    }
+  ],
+  "capturedAt": "2026-09-26T14:40:01.180Z"
+}

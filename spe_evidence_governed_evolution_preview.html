@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPE Ω — Evidence-Governed Evolution & Breakthrough Capabilities Preview</title>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --surface: #121824;
+      --surface-elevated: #1a2332;
+      --border: #263347;
+      --text: #e6edf3;
+      --text-muted: #8b9bb4;
+      --primary: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --accent: #8b5cf6;
+      --radius: 12px;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .badge-omega {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+      border: 1px solid var(--accent);
+      color: #c4b5fd;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-pill {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: var(--success);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-top: 6px;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: var(--surface);
+      padding: 6px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Tab Content Panes */
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card Panels */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p.desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--surface-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    /* Score meter */
+    .metric-bar-container {
+      background: var(--bg);
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+      margin: 12px 0;
+      border: 1px solid var(--border);
+    }
+
+    .metric-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+      transition: width 0.4s ease;
+    }
+
+    /* Tags & Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .chip-preserved { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid var(--success); }
+    .chip-dropped { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); }
+    .chip-weakened { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid var(--warning); }
+    .chip-contradicted { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid #ef4444; font-weight: 700; }
+
+    /* Alert Banner */
+    .alert-banner {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      color: #fca5a5;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .alert-banner.success {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--success);
+      color: #6ee7b7;
+    }
+
+    /* Tournament Table */
+    table.bracket-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    table.bracket-table th, table.bracket-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      text-align: left;
+      font-size: 13px;
+    }
+
+    table.bracket-table th {
+      background: var(--surface-elevated);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Pipeline Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+      margin-top: 20px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -28px;
+      top: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--surface-elevated);
+      border: 2px solid var(--primary);
+    }
+
+    .timeline-dot.done {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .timeline-content h4 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .timeline-content p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    pre code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #a5f3fc;
+      background: #05080f;
+      display: block;
+      padding: 14px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="badge-omega">⚡ SPE Ω BREAKTHROUGH ARCHITECTURE</div>
+        <h1>Evidence-Governed Evolution Platform</h1>
+        <p class="subtitle">100% Offline Air-Gapped WebAssembly Runtime · $0.00 Cloud Spend · Zero PII</p>
+      </div>
+      <div>
+        <span class="status-pill">● System Operational (02:17 AM IST Clock)</span>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-ild')">
+        🧠 Crown 1: Intent Loss Detector (ILD)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-irt')">
+        ⚔️ Crown 2: Independent Repair Tournament (IRT)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-pbe')">
+        🛡️ Crown 3: Privacy-Budgeted Evolution (PBE)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-nightly')">
+        🌙 SPE Ω Nightly Engine (02:17 AM IST)
+      </button>
+    </nav>
+
+    <!-- TAB 1: INTENT LOSS DETECTOR -->
+    <div id="tab-ild" class="tab-pane active">
+      <div class="card">
+        <h2>🧠 Crown Breakthrough #1: Intent Loss Detector (ILD)</h2>
+        <p class="desc">
+          Detects when critical negative constraints or mandatory user requirements are dropped, weakened, or contradicted during prompt synthesis or transcompilation. Grounded in ST-WebAgentBench (ICLR 2026).
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <label>Original User Intent & Requirements (Multi-Clause)</label>
+            <textarea id="ild-input-brief" rows="6">Must implement user authentication;
+Must not use external CDNs;
+Never call window.eval;
+Ensure 100% offline air-gap;
+Format must be valid JSON only</textarea>
+          </div>
+          <div>
+            <label>Synthesized Prompt (Simulating Subtle Intent Loss)</label>
+            <textarea id="ild-input-prompt" rows="6">You are an expert system. Generate a secure user authentication system with clean JavaScript. Format output as valid JSON.</textarea>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; display: flex; gap: 12px; align-items: center;">
+          <button class="btn" onclick="runIldAnalysis()">🔍 Run Intent Loss Detection</button>
+          <button class="btn btn-secondary" onclick="simulateRestoration()">⚡ Apply Restored Safeguards</button>
+        </div>
+
+        <div id="ild-results-area" style="margin-top: 24px; display: none;">
+          <div id="ild-alert"></div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+            <span style="font-weight: 600; font-size: 14px;">Intent Fidelity Score: <span id="ild-score-text">0%</span></span>
+            <span id="ild-stats-summary" style="font-size: 13px; color: var(--text-muted);"></span>
+          </div>
+
+          <div class="metric-bar-container">
+            <div id="ild-score-bar" class="metric-bar-fill" style="width: 0%;"></div>
+          </div>
+
+          <h3 style="font-size: 14px; margin: 16px 0 8px;">Atomic Requirement Status:</h3>
+          <div id="ild-chips-container"></div>
+
+          <div id="ild-restored-preview" style="display: none; margin-top: 16px;">
+            <label>Auto-Restored Output with &lt;restored_intent_safeguards&gt;</label>
+            <pre><code id="ild-restored-code"></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: INDEPENDENT REPAIR TOURNAMENT -->
+    <div id="tab-irt" class="tab-pane">
+      <div class="card">
+        <h2>⚔️ Crown Breakthrough #2: Independent Repair Tournament (IRT)</h2>
+        <p class="desc">
+          Pits competing repair candidates side-by-side against an independently frozen test oracle, anti-mutation kill battery, and oscillation brake. Grounded in Detect–Repair–Verify (2026).
+        </p>
+
+        <div style="margin-bottom: 16px;">
+          <span style="font-size: 13px; color: var(--text-muted);">Target Defect: </span>
+          <strong style="color: #60a5fa;">BROKEN_INTERNAL_LINK: Legacy /skills link resolves to 404</strong>
+          <br>
+          <span style="font-size: 13px; color: var(--text-muted);">Frozen Test Oracle SHA-256: </span>
+          <code style="font-size: 11px; color: #a5f3fc;">sha256:e8f9a2b13c77...frozen-immutable</code>
+        </div>
+
+        <button class="btn" onclick="runIrtTournament()">⚔️ Conduct Repair Tournament</button>
+
+        <div id="irt-results" style="margin-top: 20px; display: none;">
+          <table class="bracket-table">
+            <thead>
+              <tr>
+                <th>Candidate Patch</th>
+                <th>Author</th>
+                <th>Diff Size</th>
+                <th>Acceptance</th>
+                <th>Regression</th>
+                <th>Mutation Kill</th>
+                <th>Tampering</th>
+                <th>Overall</th>
+                <th>Tournament Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background: rgba(16, 185, 129, 0.08); font-weight: 600;">
+                <td>Patch Alpha (Minimal)</td>
+                <td>Agent-A</td>
+                <td>+2 lines</td>
+                <td><span style="color: var(--success);">PASS</span></td>
+                <td><span style="color: var(--success);">PASS</span></td>
+                <td><span style="color: var(--success);">100%</span></td>
+                <td><span style="color: var(--success);">CLEAN</span></td>
+                <td><strong>98.5</strong></td>
+                <td><span class="status-pill">🏆 WINNER</span></td>
+              </tr>
+              <tr>
+                <td>Patch Beta (Bloated)</td>
+                <td>Agent-B</td>
+                <td>+62 lines</td>
+                <td><span style="color: var(--success);">PASS</span></td>
+                <td><span style="color: var(--success);">PASS</span></td>
+                <td><span style="color: var(--warning);">80%</span></td>
+                <td><span style="color: var(--success);">CLEAN</span></td>
+                <td>78.0</td>
+                <td><span style="color: var(--text-muted);">ELIMINATED</span></td>
+              </tr>
+              <tr style="background: rgba(239, 68, 68, 0.08);">
+                <td>Patch Gamma (Tamper)</td>
+                <td>Agent-Rogue</td>
+                <td>+1 line</td>
+                <td><span style="color: var(--danger);">DISQUALIFIED</span></td>
+                <td>—</td>
+                <td>—</td>
+                <td><span style="color: var(--danger);">TAMPERED</span></td>
+                <td>0.0</td>
+                <td><span style="color: var(--danger);">DISQUALIFIED</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top: 16px;">
+            <label>Canonical RFC 8785 Proof-Carrying Receipt</label>
+            <pre><code>{
+  "tournamentId": "irt-20261015-alpha",
+  "disposition": "WINNER_QUALIFIED",
+  "winnerCandidateId": "patch-alpha-minimal",
+  "antiMutationKillRate": 1.0,
+  "oracleIntegrityPreserved": true,
+  "verificationDigest": "sha256:7f9b8c2d1e0a4f5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b"
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PRIVACY-BUDGETED EVOLUTION -->
+    <div id="tab-pbe" class="tab-pane">
+      <div class="card">
+        <h2>🛡️ Crown Breakthrough #3: Privacy-Budgeted Evolution (PBE)</h2>
+        <p class="desc">
+          Enforces differential privacy budgeting (epsilon, delta) and local on-device telemetry minimization so SPE learns from experiments without tracking users or storing profiles.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <label>Measurement Query Configuration</label>
+            <div style="margin-bottom: 12px;">
+              <span style="font-size: 13px;">Target Route: </span>
+              <strong>/create (Prompt Studio)</strong>
+            </div>
+            <div style="margin-bottom: 12px;">
+              <span style="font-size: 13px;">Requested Epsilon (&epsilon;): </span>
+              <strong id="pbe-eps-val">0.25</strong>
+              <input type="range" min="0.05" max="1.0" step="0.05" value="0.25" style="width: 100%; margin-top: 6px;" oninput="updateEpsSlider(this.value)">
+            </div>
+            <div style="margin-bottom: 16px;">
+              <label>User Consent State</label>
+              <select id="pbe-consent-select" style="width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px;">
+                <option value="GRANTED">GRANTED (Allow Minimized Telemetry)</option>
+                <option value="DENIED">DENIED (Strict Zero Egress - 0 Bytes)</option>
+                <option value="UNSET">UNSET (Default Zero Egress)</option>
+              </select>
+            </div>
+            <button class="btn" onclick="executePbeQuery()">Execute DP Query</button>
+          </div>
+
+          <div>
+            <label>Cumulative Privacy Budget (&epsilon; = 1.0 Max)</label>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+              <span>Consumed: <strong id="pbe-consumed-text">0.00</strong></span>
+              <span>Remaining: <strong id="pbe-remaining-text">1.00</strong></span>
+            </div>
+            <div class="metric-bar-container">
+              <div id="pbe-budget-bar" class="metric-bar-fill" style="width: 0%; background: var(--primary);"></div>
+            </div>
+
+            <div id="pbe-log" style="margin-top: 14px;">
+              <label>Audit Receipt & Zero-PII Minimization Record</label>
+              <pre><code id="pbe-code-output">// Awaiting query execution...</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: NIGHTLY EVOLUTION ENGINE -->
+    <div id="tab-nightly" class="tab-pane">
+      <div class="card">
+        <h2>🌙 SPE Ω Autonomous Website Evolution Engine</h2>
+        <p class="desc">
+          Scheduled daily at 02:17 AM IST (20:47 UTC). Coordinates 10-stage discovery, tournament repair, 3-view verification, and L0-L5 release authority.
+        </p>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+          <button class="btn" onclick="runNightlySimulation()">▶ Simulate 02:17 AM IST Nightly Run</button>
+          <span style="font-size: 13px; color: var(--text-muted); align-self: center;">Next scheduled execution: Tomorrow, 02:17:00 Asia/Kolkata</span>
+        </div>
+
+        <div class="timeline" id="nightly-timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-1"></div>
+            <div class="timeline-content">
+              <h4>Phase 1: Operational Readiness & LKG Health</h4>
+              <p>Verified scheduler locks, last-known-good commit, and air-gap integrity.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-2"></div>
+            <div class="timeline-content">
+              <h4>Phase 2: Technology Source & Standards Watch</h4>
+              <p>Inspecting W3C WCAG 2.2, Google Search Central, and WebMCP agent tools.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-3"></div>
+            <div class="timeline-content">
+              <h4>Phase 3: Route Inventory & Performance Audit</h4>
+              <p>24 audited routes checked for LCP &lt; 2.5s, CLS &lt; 0.1, and hydration parity.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-4"></div>
+            <div class="timeline-content">
+              <h4>Phase 4: Research Claim Dependency Tracking</h4>
+              <p>Cross-verifying published product claims against scientific citations.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-5"></div>
+            <div class="timeline-content">
+              <h4>Phase 5: Defect Reproduction & Failing Test Synthesis</h4>
+              <p>Reproducing discovered defect on isolated branch with failing test.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-6"></div>
+            <div class="timeline-content">
+              <h4>Phase 6: Independent Repair Tournament (IRT)</h4>
+              <p>Pitting competing candidate patches against frozen test oracle.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-7"></div>
+            <div class="timeline-content">
+              <h4>Phase 7: Multi-View Qualification & Anti-Mutation Battery</h4>
+              <p>3-View visual/DOM/contrast checks and &ge;80% mutation kill rate verification.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-8"></div>
+            <div class="timeline-content">
+              <h4>Phase 8: Differential Privacy Budget & Reversibility Score</h4>
+              <p>Confirming cumulative epsilon within budget; reversibility recipe verified.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-9"></div>
+            <div class="timeline-content">
+              <h4>Phase 9: Release Governance (L0 - L5)</h4>
+              <p>Promoted allowlisted mechanical fix; held high-risk copy changes for human review.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" id="dot-10"></div>
+            <div class="timeline-content">
+              <h4>Phase 10: Morning Evidence Attestation</h4>
+              <p>RFC 8785 Ed25519 digest published for morning review.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="nightly-summary-box" style="display: none; margin-top: 20px;">
+          <div class="alert-banner success">
+            <span>✅</span>
+            <div>
+              <strong>02:17 AM IST Nightly Evolution Cycle Completed Cleanly</strong><br>
+              <span style="font-size: 13px;">1 reproducible defect repaired · 1 candidate qualified in tournament · 0 unreviewed copy changes · $0.00 cloud compute spend.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // TAB 1: ILD
+    function runIldAnalysis() {
+      const brief = document.getElementById('ild-input-brief').value;
+      const prompt = document.getElementById('ild-input-prompt').value;
+
+      document.getElementById('ild-results-area').style.display = 'block';
+
+      // Parse requirements
+      const lines = brief.split('\n').map(l => l.trim()).filter(l => l.length > 2);
+      const chipsContainer = document.getElementById('ild-chips-container');
+      chipsContainer.innerHTML = '';
+
+      let droppedNegatives = 0;
+      let preserved = 0;
+      let dropped = 0;
+
+      lines.forEach(line => {
+        const lower = line.toLowerCase();
+        const isDoubleNeg = lower.includes('never fail to') || lower.includes('do not forget to') || lower.includes('must not omit');
+        const isNeg = !isDoubleNeg && (lower.includes('must not') || lower.includes('never') || lower.includes('avoid') || lower.includes('do not'));
+        const chip = document.createElement('div');
+
+        // Check if prompt includes target concepts
+        const targetWord = lower
+          .replace(/must not|never fail to|do not forget to|must not omit|never|must|ensure|format|using|without/g, '')
+          .trim().split(/\s+/).find(w => w.length >= 3) || '';
+        const isPresent = targetWord ? prompt.toLowerCase().includes(targetWord) : true;
+
+        if (isNeg) {
+          if (!isPresent || (!prompt.toLowerCase().includes('do not') && !prompt.toLowerCase().includes('never') && !prompt.toLowerCase().includes('must not'))) {
+            chip.className = 'chip chip-dropped';
+            chip.innerHTML = '🚫 DROPPED NEGATIVE: ' + line;
+            droppedNegatives++;
+            dropped++;
+          } else {
+            chip.className = 'chip chip-preserved';
+            chip.innerHTML = '✓ PRESERVED: ' + line;
+            preserved++;
+          }
+        } else {
+          if (isPresent) {
+            chip.className = 'chip chip-preserved';
+            chip.innerHTML = '✓ PRESERVED: ' + line;
+            preserved++;
+          } else {
+            chip.className = 'chip chip-dropped';
+            chip.innerHTML = '✗ DROPPED: ' + line;
+            dropped++;
+          }
+        }
+        chipsContainer.appendChild(chip);
+      });
+
+      const total = lines.length;
+      const fidelity = Math.max(0, Math.round(((preserved * 1.0 - dropped * 0.8) / total) * 100));
+
+      document.getElementById('ild-score-text').textContent = fidelity + '%';
+      document.getElementById('ild-score-bar').style.width = fidelity + '%';
+      document.getElementById('ild-stats-summary').textContent = `${preserved} preserved, ${dropped} lost (${droppedNegatives} negative constraints dropped)`;
+
+      const alert = document.getElementById('ild-alert');
+      if (droppedNegatives > 0) {
+        alert.className = 'alert-banner';
+        alert.innerHTML = `<span>⚠️</span><div><strong>CRITICAL INTENT LOSS DETECTED:</strong> ${droppedNegatives} negative constraint(s) were lost during synthesis. An AI assistant could violate your explicit security boundaries.</div>`;
+      } else {
+        alert.className = 'alert-banner success';
+        alert.innerHTML = `<span>✅</span><div><strong>INTENT PRESERVED:</strong> All critical requirements and negative constraints are preserved in the prompt.</div>`;
+      }
+    }
+
+    function simulateRestoration() {
+      const prompt = document.getElementById('ild-input-prompt').value;
+      const restored = prompt + `\n\n<restored_intent_safeguards>\n[CRITICAL_BOUNDARY] Must not use external CDNs\n[CRITICAL_BOUNDARY] Never call window.eval\n[CRITICAL_BOUNDARY] Ensure 100% offline air-gap\n</restored_intent_safeguards>`;
+
+      document.getElementById('ild-restored-preview').style.display = 'block';
+      document.getElementById('ild-restored-code').textContent = restored;
+      document.getElementById('ild-input-prompt').value = restored;
+      runIldAnalysis();
+    }
+
+    // TAB 2: IRT
+    function runIrtTournament() {
+      const res = document.getElementById('irt-results');
+      res.style.display = 'block';
+    }
+
+    // TAB 3: PBE
+    let cumulativeConsumed = 0.0;
+    function updateEpsSlider(val) {
+      document.getElementById('pbe-eps-val').textContent = parseFloat(val).toFixed(2);
+    }
+
+    function executePbeQuery() {
+      const eps = parseFloat(document.getElementById('pbe-eps-val').textContent);
+      const consent = document.getElementById('pbe-consent-select').value;
+      const pre = document.getElementById('pbe-code-output');
+
+      if (consent !== 'GRANTED') {
+        pre.textContent = JSON.stringify({
+          status: "ZERO_EGRESS_ENFORCED",
+          consentState: consent,
+          bytesEmitted: 0,
+          reason: "User consent withheld or unset. Telemetry completely disabled."
+        }, null, 2);
+        return;
+      }
+
+      if (cumulativeConsumed + eps > 1.0) {
+        pre.textContent = `❌ PRIVACY_BUDGET_EXHAUSTED: Requesting ${eps.toFixed(2)} exceeds remaining budget ${(1.0 - cumulativeConsumed).toFixed(2)}. Experiment halted.`;
+        return;
+      }
+
+      cumulativeConsumed += eps;
+      const remaining = Math.max(0, 1.0 - cumulativeConsumed);
+
+      document.getElementById('pbe-consumed-text').textContent = cumulativeConsumed.toFixed(2);
+      document.getElementById('pbe-remaining-text').textContent = remaining.toFixed(2);
+      document.getElementById('pbe-budget-bar').style.width = (cumulativeConsumed * 100) + '%';
+
+      const trueVal = 480;
+      const noise = (Math.random() - 0.5) * (1.0 / eps) * 2;
+      const perturbed = Math.round(trueVal + noise);
+
+      pre.textContent = JSON.stringify({
+        schemaVersion: "v1-minimized",
+        route: "/create",
+        coarseViewport: "MOBILE",
+        latencyBucket: "100_TO_500MS",
+        trueMetricObserved: trueVal,
+        differentiallyPrivateReported: perturbed,
+        epsilonConsumedThisQuery: eps,
+        cumulativeEpsilonConsumed: cumulativeConsumed.toFixed(2),
+        piiStripped: ["raw_ip", "session_cookie", "user_free_text"],
+        auditReceipt: "sha256:dp-audit-verified"
+      }, null, 2);
+    }
+
+    // TAB 4: NIGHTLY
+    function runNightlySimulation() {
+      let step = 1;
+      const timer = setInterval(() => {
+        const dot = document.getElementById('dot-' + step);
+        if (dot) dot.classList.add('done');
+        step++;
+        if (step > 10) {
+          clearInterval(timer);
+          document.getElementById('nightly-summary-box').style.display = 'block';
+        }
+      }, 150);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "qualification": "rebaseline-candidate",
+  "promoted": false,
+  "source_git_sha": "e0497f79898689a00a30abeab67652d5f6a9193c",
+  "source_note": "Rust and Python semantic sources match this frozen product tree. The candidate recipe is the toolchain file, rustc wrapper, and canonical build script added beside that tree. Proof markdown is not a build input.",
+  "cargo_lock_git_blob": "f26fd3d70b52645034b33b27bf5b95664d3a6103",
+  "cargo_lock_sha256": "f7d262321e41b5b9b2b495040663d92f98e03e2894b95238891bfe39ab3a56e3",
+  "rustc_version": "1.98.1",
+  "rustc_commit": "48a229ceaefd4985c50990b14116b6d856af0985",
+  "rustc_commit_date": "2026-09-01",
+  "cargo_version": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+  "host_triple": "x86_64-unknown-linux-gnu",
+  "llvm_version": "22.1.8",
+  "target_triple": "wasm32-unknown-unknown",
+  "profile": {
+    "name": "release",
+    "declared": {
+      "lto": true,
+      "opt-level": "s",
+      "panic": "abort"
+    },
+    "observed_rustc_codegen": [
+      "opt-level=s",
+      "panic=abort",
+      "strip=debuginfo"
+    ],
+    "observed_note": "Cargo 1.98.1 applied opt-level, panic, and its release strip default. The captured rustc command for spe_wasm did not include -C lto. The profile declaration was not modified."
+  },
+  "rustflags": "--remap-path-prefix=<repository-root>/=./ --remap-path-prefix=<cargo-home>=./.cargo",
+  "path_remaps": [
+    {"from": "repository root", "to": "./"},
+    {"from": "cargo registry source root", "to": "./.cargo"}
+  ],
+  "pinned_crate_metadata": {
+    "spe_core_rs": "spe-canonical-v1-spe_core_rs",
+    "spe_wasm": "spe-canonical-v1-spe_wasm"
+  },
+  "pinned_metadata_reason": "spe-core-rs is a path dependency outside the spe-wasm workspace, so Cargo hashes the absolute checkout path into -C metadata. The wrapper replaces that metadata for the two path crates only. Registry crates keep Cargo metadata.",
+  "build_command": "node tools/wasm_canonical_build.mjs",
+  "npm_script": "npm run wasm:build-canonical",
+  "build_environment": {
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_TARGET_DIR": "clean directory, default portable/spe-wasm/target-canonical",
+    "RUSTC_WRAPPER": "tools/spe_wasm_rustc_wrapper.mjs"
+  },
+  "artifact_size": 671621,
+  "artifact_sha256": "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6",
+  "build_a_sha256": "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6",
+  "build_b_sha256": "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6",
+  "build_a_size": 671621,
+  "build_b_size": 671621,
+  "legacy_sha256": "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830",
+  "legacy_size": 671614,
+  "byte_equal_to_legacy": false,
+  "forensic_candidate_sha256": "55d611717a7d42771ad1d524c45fb4b5966ac520c4febf75f3152fb50b28e0a6",
+  "forensic_candidate_confirmed": false,
+  "imports": 0,
+  "exports": ["memory", "spe_alloc", "spe_evaluate", "spe_free"],
+  "positive_vector_count": 55,
+  "negative_vector_count": 55,
+  "semantic_mismatches": 0,
+  "runtime_errors": 0,
+  "qualified_at": "2026-09-28T16:22:40Z"
+}

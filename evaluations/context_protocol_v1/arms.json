@@ -1,0 +1,112 @@
+{
+  "schema_version": "context_protocol_benchmark_arms.v1",
+  "description": "Independent context/protocol benchmark arms. Not G6-H.",
+  "arms": [
+    {
+      "id": "RAW",
+      "label": "Raw unaugmented prompt",
+      "uses_spe": false,
+      "uses_grounding": false,
+      "uses_protocol": false,
+      "adapter_id": "raw.passthrough.v1"
+    },
+    {
+      "id": "SPE_BASE",
+      "label": "SPE baseline without grounding or protocol",
+      "uses_spe": true,
+      "uses_grounding": false,
+      "uses_protocol": false,
+      "adapter_id": "spe.base.v1"
+    },
+    {
+      "id": "SPE_GROUNDING_ONLY",
+      "label": "SPE + grounding only",
+      "uses_spe": true,
+      "uses_grounding": true,
+      "uses_protocol": false,
+      "adapter_id": "spe.grounding.v1"
+    },
+    {
+      "id": "SPE_PROTOCOL_ONLY",
+      "label": "SPE + category protocol only",
+      "uses_spe": true,
+      "uses_grounding": false,
+      "uses_protocol": true,
+      "adapter_id": "spe.protocol.v1"
+    },
+    {
+      "id": "SPE_FULL",
+      "label": "SPE full stack (grounding + protocol)",
+      "uses_spe": true,
+      "uses_grounding": true,
+      "uses_protocol": true,
+      "adapter_id": "spe.full.v1"
+    }
+  ],
+  "ablation_matrix": [
+    {
+      "id": "full",
+      "label": "Full protocol stages retained",
+      "mode": "full",
+      "remove_merge_key_prefixes": [],
+      "compact": false,
+      "relevant_categories": ["research", "coding", "data_statistics", "health_information"]
+    },
+    {
+      "id": "compact",
+      "label": "Compact depth projection (QUICK/STANDARD only)",
+      "mode": "compact",
+      "remove_merge_key_prefixes": [],
+      "compact": true,
+      "compact_max_depth": "STANDARD",
+      "relevant_categories": ["research", "coding", "data_statistics", "health_information"]
+    },
+    {
+      "id": "no_contradiction",
+      "label": "Contradiction stage removed",
+      "mode": "remove_stages",
+      "remove_merge_key_prefixes": [
+        "research.contradictions",
+        "research.contradiction_map"
+      ],
+      "remove_title_substrings": ["Contradictory", "Contradiction"],
+      "compact": false,
+      "relevant_categories": ["research"]
+    },
+    {
+      "id": "no_verification",
+      "label": "Verification stage removed",
+      "mode": "remove_stages",
+      "remove_merge_key_prefixes": [
+        "research.method_verify",
+        "research.independent_check",
+        "research.replication_evidence",
+        "verify."
+      ],
+      "remove_title_substrings": ["Verification", "Independent Check", "Replication"],
+      "compact": false,
+      "relevant_categories": ["research", "coding", "data_statistics"]
+    },
+    {
+      "id": "no_hypothesis",
+      "label": "Hypothesis stage removed",
+      "mode": "remove_stages",
+      "remove_merge_key_prefixes": ["research.hypotheses"],
+      "remove_title_substrings": ["Hypothes"],
+      "compact": false,
+      "relevant_categories": ["research"]
+    }
+  ],
+  "routing_efficiency_policy": {
+    "claim_load_reduction_until_measured": false,
+    "required_slots": [
+      "base_model_tokens",
+      "total_tokens",
+      "tool_calls",
+      "latency_ms",
+      "correctness",
+      "unsupported_claims"
+    ]
+  },
+  "human_ratings_default": "NO_RATINGS_YET"
+}

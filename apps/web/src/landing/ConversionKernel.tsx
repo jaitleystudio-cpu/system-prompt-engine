@@ -1,0 +1,233 @@
+import { useState } from "react";
+import type { AppView } from "../routing";
+import { copyTextSafe } from "../engine/workflows/clipboard";
+import "./conversion-kernel.css";
+
+interface ConversionKernelProps {
+  onNavigate?: (view: AppView) => void;
+}
+
+export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
+  const [activeFormula, setActiveFormula] = useState<"A" | "B">("A");
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const copyToClipboard = async (text: string, key: string) => {
+    const success = await copyTextSafe(text);
+    if (success) {
+      setCopiedKey(key);
+      setTimeout(() => {
+        setCopiedKey((curr) => (curr === key ? null : curr));
+      }, 2000);
+    }
+  };
+
+  return (
+    <section
+      className="spe-conversion-kernel"
+      data-copy-depth="PROOF"
+      aria-labelledby="conversion-kernel-heading"
+    >
+      <div className="spe-conversion-box">
+        {/* Formula Switcher Tabs */}
+        <div className="spe-conversion-tabs" role="tablist" aria-label="Use Case Solutions">
+          <button
+            type="button"
+            id="tab-formula-a"
+            role="tab"
+            aria-selected={activeFormula === "A"}
+            aria-controls="panel-formula-a"
+            className={`spe-conversion-tab ${activeFormula === "A" ? "is-active" : ""}`}
+            onClick={() => setActiveFormula("A")}
+          >
+            Cut Wasted Subscriptions
+          </button>
+          <button
+            type="button"
+            id="tab-formula-b"
+            role="tab"
+            aria-selected={activeFormula === "B"}
+            aria-controls="panel-formula-b"
+            className={`spe-conversion-tab ${activeFormula === "B" ? "is-active" : ""}`}
+            onClick={() => setActiveFormula("B")}
+          >
+            Stop Broken Agent Drift
+          </button>
+        </div>
+
+        {/* Formula Showcase */}
+        {activeFormula === "A" ? (
+          <div
+            id="panel-formula-a"
+            role="tabpanel"
+            aria-labelledby="tab-formula-a"
+            className="spe-formula-card"
+          >
+            <div className="spe-formula-header">
+              <span className="spe-formula-tag">The $20 Subscription Killer</span>
+              <h2 id="conversion-kernel-heading" className="spe-formula-title">
+                Stop paying $20/month just to review AI agent error logs.
+              </h2>
+              <p className="spe-formula-subtitle">
+                SPE is the 100% free, client-side CLI and browser workspace that reviews agent reports, catches silent regressions, and compiles the next atomic task contract at $0 cost.
+              </p>
+            </div>
+
+            <div className="spe-conversion-actions">
+              <button
+                type="button"
+                className="spe-btn-cta-primary"
+                onClick={() =>
+                  copyToClipboard("npm install -g @systempromptengine/cli", "cta-formula-a")
+                }
+              >
+                {copiedKey === "cta-formula-a" ? (
+                  <span>Copied!</span>
+                ) : (
+                  <span>Install Free CLI: npm install -g @systempromptengine/cli</span>
+                )}
+              </button>
+              <button
+                type="button"
+                className="spe-btn-cta-secondary"
+                onClick={() => {
+                  if (onNavigate) {
+                    onNavigate("workflows");
+                    window.scrollTo(0, 0);
+                  }
+                }}
+              >
+                Explore 1-Click Business Workflows →
+              </button>
+              <a
+                href="#comparison-matrix"
+                className="spe-btn-cta-secondary"
+              >
+                Compare Alternatives Below ↓
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div
+            id="panel-formula-b"
+            role="tabpanel"
+            aria-labelledby="tab-formula-b"
+            className="spe-formula-card"
+          >
+            <div className="spe-formula-header">
+              <span className="spe-formula-tag">The Broken Agent &amp; Regression Stopper</span>
+              <h2 id="conversion-kernel-heading" className="spe-formula-title">
+                Tired of your AI coding agent running in circles and breaking working code?
+              </h2>
+              <p className="spe-formula-subtitle">
+                SPE locks your requirements with ProtectedIntent invariants. If an agent hallucinates, skips tests, or touches forbidden files, SPE blocks the regression before it merges.
+              </p>
+            </div>
+
+            <div className="spe-conversion-actions">
+              <button
+                type="button"
+                className="spe-btn-cta-primary"
+                onClick={() =>
+                  copyToClipboard("npx @systempromptengine/cli adopt .", "cta-formula-b")
+                }
+              >
+                {copiedKey === "cta-formula-b" ? (
+                  <span>Copied!</span>
+                ) : (
+                  <span>Adopt in Your Repo ($ npx @systempromptengine/cli adopt .)</span>
+                )}
+              </button>
+              <button
+                type="button"
+                className="spe-btn-cta-secondary"
+                onClick={() => copyToClipboard("spe continue -", "cta-continue-pipe")}
+              >
+                {copiedKey === "cta-continue-pipe" ? (
+                  <span>Copied!</span>
+                ) : (
+                  <span>Review Agent Logs via stdin: spe continue -</span>
+                )}
+              </button>
+              <a
+                href="#comparison-matrix"
+                className="spe-btn-cta-secondary"
+              >
+                Compare Alternatives Below ↓
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* Developer CLI Ribbon */}
+        <div className="spe-cli-ribbon">
+          <div className="spe-cli-pill">
+            <code>$ npm install -g @systempromptengine/cli</code>
+            <button
+              type="button"
+              className={`spe-cli-copy-btn ${copiedKey === "ribbon-install" ? "is-copied" : ""}`}
+              onClick={() =>
+                copyToClipboard("npm install -g @systempromptengine/cli", "ribbon-install")
+              }
+              aria-label="Copy install command"
+            >
+              {copiedKey === "ribbon-install" ? "Copied!" : "Copy command"}
+            </button>
+          </div>
+
+          <div className="spe-cli-pill">
+            <code>$ spe continue -</code>
+            <button
+              type="button"
+              className={`spe-cli-copy-btn ${copiedKey === "ribbon-continue" ? "is-copied" : ""}`}
+              onClick={() => copyToClipboard("spe continue -", "ribbon-continue")}
+              aria-label="Copy continue stdin command"
+            >
+              {copiedKey === "ribbon-continue" ? "Copied!" : "Copy command"}
+            </button>
+          </div>
+
+          <div className="spe-cli-pill">
+            <code>$ npx @systempromptengine/cli adopt .</code>
+            <button
+              type="button"
+              className={`spe-cli-copy-btn ${copiedKey === "ribbon-adopt" ? "is-copied" : ""}`}
+              onClick={() =>
+                copyToClipboard("npx @systempromptengine/cli adopt .", "ribbon-adopt")
+              }
+              aria-label="Copy adopt command"
+            >
+              {copiedKey === "ribbon-adopt" ? "Copied!" : "Copy command"}
+            </button>
+          </div>
+        </div>
+
+        {/* Economic Framing & Loss Aversion */}
+        <div className="spe-economic-bar">
+          <div className="spe-economic-metric">
+            <span className="spe-economic-label">95% Free · Public Beta Intro</span>
+            <span className="spe-economic-value is-green">$0 Core · Pro $1 first mo (then $9/mo)</span>
+            <span className="spe-economic-desc">Transparent renewal pricing · Team CI/CD Gate $9 first mo (then $99/mo)</span>
+          </div>
+
+          <div className="spe-economic-metric">
+            <span className="spe-economic-label">Projected Retry Savings &amp; 101 Skills</span>
+            <span className="spe-economic-value is-amber">Est. ~$45/mo saved on avoided retry loops</span>
+            <span className="spe-economic-desc">Projected estimate by catching missing scope rules pre-flight with 60+ research templates</span>
+          </div>
+
+          <div className="spe-economic-metric">
+            <span className="spe-economic-label">Pre-Commit Verification</span>
+            <span className="spe-economic-value is-cyan">Scope &amp; Test Receipt Checks</span>
+            <span className="spe-economic-desc">ProtectedIntent invariants check declared file bounds &amp; support 100,000+ (1 Lakh+) chars</span>
+          </div>
+
+          <div className="spe-economic-metric">
+            <span className="spe-economic-label">Local WASM Sandbox &amp; Companion Bridge</span>
+            <span className="spe-economic-value is-green">1.3 MB browser-local WASM compiler · Zero server GPU bills for local checks</span>
+            <span className="spe-economic-desc">Prompt compilation runs locally in-browser · Optional bridge to standalone AppleAGI macOS app</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

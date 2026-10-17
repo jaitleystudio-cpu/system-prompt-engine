@@ -47,6 +47,10 @@ _ENVELOPE_KEYS = frozenset(
         "taint_labels",
         "sensitivity_labels",
         "category_trace",
+        "taxonomy_version",
+        "active_category",
+        "category_payload",
+        "proof_obligation_proposals",
         "operation_id",
         "outcome",
     }
@@ -348,6 +352,16 @@ class ReferenceRuntime:
             taint_labels=tuple(data.get("taint_labels") or ()),
             sensitivity_labels=tuple(data.get("sensitivity_labels") or ()),
             category_trace=tuple(data.get("category_trace") or ()),
+            taxonomy_version=str(data.get("taxonomy_version") or "2"),
+            active_category=(
+                str(data["active_category"])
+                if data.get("active_category") is not None
+                else None
+            ),
+            category_payload=data.get("category_payload"),
+            proof_obligation_proposals=tuple(
+                data.get("proof_obligation_proposals") or ()
+            ),
         )
 
     def validate_handoff(

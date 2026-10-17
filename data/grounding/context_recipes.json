@@ -1,0 +1,116 @@
+{
+  "recipes": [
+    {
+      "recipe_id": "recipe.none.local_only",
+      "domain_id": "writing_communication",
+      "steps": [
+        "classify_none",
+        "skip_retrieval"
+      ],
+      "source_policies": [
+        "policy.writing.no_external"
+      ],
+      "freshness_rules": {
+        "required": false
+      },
+      "dedupe_key": "none",
+      "rerank_policy": "none",
+      "contradiction_queries": [],
+      "license_gate": "n/a",
+      "privacy_minimization": true,
+      "failure_behavior": "proceed_without_context"
+    },
+    {
+      "recipe_id": "recipe.personal.local_only",
+      "domain_id": "personal_planning",
+      "steps": [
+        "classify_none",
+        "skip_retrieval"
+      ],
+      "source_policies": [
+        "policy.personal.no_external"
+      ],
+      "freshness_rules": {
+        "required": false
+      },
+      "dedupe_key": "none",
+      "rerank_policy": "none",
+      "contradiction_queries": [],
+      "license_gate": "n/a",
+      "privacy_minimization": true,
+      "failure_behavior": "proceed_without_context"
+    },
+    {
+      "recipe_id": "recipe.coding.official_docs",
+      "domain_id": "coding",
+      "steps": [
+        "route_coding",
+        "prefer_official_docs",
+        "check_freshness",
+        "bound_sources"
+      ],
+      "source_policies": [
+        "policy.coding.official_first"
+      ],
+      "freshness_rules": {
+        "required": true,
+        "prefer": "current_major"
+      },
+      "dedupe_key": "canonical_url",
+      "rerank_policy": "official_first",
+      "contradiction_queries": [
+        "breaking changes",
+        "deprecated API"
+      ],
+      "license_gate": "respect_source_license",
+      "privacy_minimization": true,
+      "failure_behavior": "warn_if_stale"
+    },
+    {
+      "recipe_id": "recipe.research.scholarly",
+      "domain_id": "research",
+      "steps": [
+        "route_research",
+        "require_peer_reviewed",
+        "surface_contradictions",
+        "bound_sources"
+      ],
+      "source_policies": [
+        "policy.research.scholarly"
+      ],
+      "freshness_rules": {
+        "required": true,
+        "prefer": "latest_plus_foundational"
+      },
+      "dedupe_key": "doi_or_title",
+      "rerank_policy": "peer_reviewed_first",
+      "contradiction_queries": [
+        "contradictory findings",
+        "failed replication"
+      ],
+      "license_gate": "respect_source_license",
+      "privacy_minimization": true,
+      "failure_behavior": "abstain_if_insufficient"
+    },
+    {
+      "recipe_id": "recipe.general.default",
+      "domain_id": "general",
+      "steps": [
+        "route_general",
+        "optional_light_context"
+      ],
+      "source_policies": [
+        "policy.none.no_external"
+      ],
+      "freshness_rules": {
+        "required": false
+      },
+      "dedupe_key": "none",
+      "rerank_policy": "none",
+      "contradiction_queries": [],
+      "license_gate": "n/a",
+      "privacy_minimization": true,
+      "failure_behavior": "proceed_without_context"
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "nodes": {
+    "SRC-FIN-01": {
+      "node_id": "SRC-FIN-01",
+      "node_type": "HUMAN_SPAN",
+      "label": "PRD Sec 9.2: Mask cardholder primary account numbers and cap unapproved transfers",
+      "payload": {}
+    },
+    "INT-FIN-01": {
+      "node_id": "INT-FIN-01",
+      "node_type": "PROTECTED_INTENT",
+      "label": "PCI-DSS Cardholder Data & Transfer Protection Intent",
+      "payload": {}
+    },
+    "REQ-FIN-01": {
+      "node_id": "REQ-FIN-01",
+      "node_type": "REQUIREMENT",
+      "label": "Redact PAN numbers in payment assistant and reject unapproved transfers over $10,000",
+      "payload": {}
+    },
+    "CON-FIN-01": {
+      "node_id": "CON-FIN-01",
+      "node_type": "CONSTRAINT",
+      "label": "payload.pan.masked == true && transfer.limit <= $10,000",
+      "payload": {}
+    },
+    "XCAT-FIN-01": {
+      "node_id": "XCAT-FIN-01",
+      "node_type": "XCAT_NODE",
+      "label": "CATEGORY_C08_BUSINESS_FINANCE_GUARD",
+      "payload": {}
+    },
+    "K3-FIN-01": {
+      "node_id": "K3-FIN-01",
+      "node_type": "K3_TRANSFORM",
+      "label": "K3_PAN_MASK_AND_APPROVAL_RULE",
+      "payload": {}
+    },
+    "PLAN-OP-01": {
+      "node_id": "PLAN-OP-01",
+      "node_type": "EFFECT_PLAN_OP",
+      "label": "INJECT_PAN_MASKING_DIRECTIVE",
+      "payload": {}
+    },
+    "CLS-FIN-01": {
+      "node_id": "CLS-FIN-01",
+      "node_type": "PROMPT_CLAUSE",
+      "label": "You MUST mask all cardholder account numbers (PAN) with asterisks except the last 4 digits, and DENY any wire transfer exceeding $10,000 without dual-approval.",
+      "payload": {}
+    },
+    "TST-FIN-01": {
+      "node_id": "TST-FIN-01",
+      "node_type": "TEST_CASE",
+      "label": "test_pan_leakage_and_transfer_cap",
+      "payload": {}
+    },
+    "POL-FIN-01": {
+      "node_id": "POL-FIN-01",
+      "node_type": "RUNTIME_POLICY",
+      "label": "PAYMENT grant requires dual-sign approval token and cardholder masking",
+      "payload": {}
+    },
+    "FAIL-FG-01": {
+      "node_id": "FAIL-FG-01",
+      "node_type": "FAILURE_RECORD",
+      "label": "SPE-FG-2026-000412: Model unmasked card numbers when prompted with markdown table formatting",
+      "payload": {}
+    },
+    "REP-FIN-01": {
+      "node_id": "REP-FIN-01",
+      "node_type": "CANDIDATE_REPAIR",
+      "label": "DELIMITER_ENFORCEMENT: Enforce regex mask filter before output generation and deny raw payment emission",
+      "payload": {}
+    }
+  },
+  "edges": {
+    "E-01": {
+      "edge_id": "E-01",
+      "source_id": "SRC-FIN-01",
+      "target_id": "INT-FIN-01",
+      "edge_type": "DERIVES_FROM",
+      "metadata": {}
+    },
+    "E-02": {
+      "edge_id": "E-02",
+      "source_id": "INT-FIN-01",
+      "target_id": "REQ-FIN-01",
+      "edge_type": "DERIVES_FROM",
+      "metadata": {}
+    },
+    "E-03": {
+      "edge_id": "E-03",
+      "source_id": "REQ-FIN-01",
+      "target_id": "CON-FIN-01",
+      "edge_type": "ENFORCES",
+      "metadata": {}
+    },
+    "E-04": {
+      "edge_id": "E-04",
+      "source_id": "CON-FIN-01",
+      "target_id": "XCAT-FIN-01",
+      "edge_type": "TRANSFORMS",
+      "metadata": {}
+    },
+    "E-05": {
+      "edge_id": "E-05",
+      "source_id": "XCAT-FIN-01",
+      "target_id": "K3-FIN-01",
+      "edge_type": "TRANSFORMS",
+      "metadata": {}
+    },
+    "E-06": {
+      "edge_id": "E-06",
+      "source_id": "K3-FIN-01",
+      "target_id": "PLAN-OP-01",
+      "edge_type": "TRANSFORMS",
+      "metadata": {}
+    },
+    "E-07": {
+      "edge_id": "E-07",
+      "source_id": "PLAN-OP-01",
+      "target_id": "CLS-FIN-01",
+      "edge_type": "PRODUCES",
+      "metadata": {}
+    },
+    "E-08": {
+      "edge_id": "E-08",
+      "source_id": "REQ-FIN-01",
+      "target_id": "TST-FIN-01",
+      "edge_type": "VALIDATES_WITH",
+      "metadata": {}
+    },
+    "E-09": {
+      "edge_id": "E-09",
+      "source_id": "REQ-FIN-01",
+      "target_id": "POL-FIN-01",
+      "edge_type": "MONITORS",
+      "metadata": {}
+    },
+    "E-10": {
+      "edge_id": "E-10",
+      "source_id": "FAIL-FG-01",
+      "target_id": "TST-FIN-01",
+      "edge_type": "REGRESSED_BY",
+      "metadata": {}
+    },
+    "E-11": {
+      "edge_id": "E-11",
+      "source_id": "REP-FIN-01",
+      "target_id": "FAIL-FG-01",
+      "edge_type": "REPAIRS",
+      "metadata": {}
+    },
+    "E-12": {
+      "edge_id": "E-12",
+      "source_id": "REP-FIN-01",
+      "target_id": "CLS-FIN-01",
+      "edge_type": "PRODUCES",
+      "metadata": {}
+    }
+  },
+  "evidence": {
+    "TST-FIN-01": [
+      {
+        "evidence_id": "EV-PAN-01",
+        "evidence_class": "OBSERVED_LOCAL",
+        "metric": "masking_rejection_rate",
+        "value": 1.0,
+        "observed_at": "2026-10-08T12:00:00Z"
+      }
+    ]
+  }
+}

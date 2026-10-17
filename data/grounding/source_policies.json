@@ -1,0 +1,163 @@
+{
+  "policies": [
+    {
+      "policy_id": "policy.coding.official_first",
+      "domain_id": "coding",
+      "ranked_source_classes": [
+        "official_docs",
+        "official_repo",
+        "release_notes",
+        "standards",
+        "trusted_community"
+      ],
+      "required_source_classes": [
+        "official_docs"
+      ],
+      "optional_source_classes": [
+        "official_repo",
+        "release_notes",
+        "standards",
+        "trusted_community"
+      ],
+      "disallowed_source_classes": [
+        "unattributed_gist"
+      ],
+      "notes": "official docs > official repo/release notes > standards > trusted community"
+    },
+    {
+      "policy_id": "policy.research.scholarly",
+      "domain_id": "research",
+      "ranked_source_classes": [
+        "peer_reviewed",
+        "systematic_review",
+        "replication",
+        "preprint"
+      ],
+      "required_source_classes": [
+        "peer_reviewed"
+      ],
+      "optional_source_classes": [
+        "systematic_review",
+        "replication",
+        "preprint"
+      ],
+      "disallowed_source_classes": [
+        "social_rumor",
+        "anonymous_forum"
+      ],
+      "notes": "foundational + latest + contradictory + replication/benchmark"
+    },
+    {
+      "policy_id": "policy.health.guideline_first",
+      "domain_id": "health_information",
+      "ranked_source_classes": [
+        "guideline",
+        "regulator",
+        "systematic_review",
+        "primary_study",
+        "secondary_summary"
+      ],
+      "required_source_classes": [
+        "guideline"
+      ],
+      "optional_source_classes": [
+        "regulator",
+        "systematic_review",
+        "primary_study"
+      ],
+      "disallowed_source_classes": [
+        "anecdote",
+        "social_rumor"
+      ],
+      "notes": "guidelines/regulators/systematic reviews > primary studies > secondary summaries"
+    },
+    {
+      "policy_id": "policy.legal.primary_law",
+      "domain_id": "legal_information",
+      "ranked_source_classes": [
+        "statute",
+        "regulation",
+        "case_law",
+        "official_guidance",
+        "commentary"
+      ],
+      "required_source_classes": [
+        "statute"
+      ],
+      "optional_source_classes": [
+        "regulation",
+        "case_law",
+        "official_guidance"
+      ],
+      "disallowed_source_classes": [
+        "anonymous_forum"
+      ],
+      "notes": "statute/regulation/case/official guidance > commentary"
+    },
+    {
+      "policy_id": "policy.shopping.comparative",
+      "domain_id": "shopping",
+      "ranked_source_classes": [
+        "manufacturer_spec",
+        "live_price",
+        "warranty",
+        "independent_review"
+      ],
+      "required_source_classes": [
+        "manufacturer_spec"
+      ],
+      "optional_source_classes": [
+        "live_price",
+        "warranty",
+        "independent_review"
+      ],
+      "disallowed_source_classes": [],
+      "notes": "manufacturer specs + live prices + warranty/returns + independent reviews"
+    },
+    {
+      "policy_id": "policy.math.deterministic",
+      "domain_id": "math_engineering",
+      "ranked_source_classes": [
+        "deterministic_computation",
+        "standards",
+        "peer_reviewed"
+      ],
+      "required_source_classes": [
+        "deterministic_computation"
+      ],
+      "optional_source_classes": [
+        "standards",
+        "peer_reviewed"
+      ],
+      "disallowed_source_classes": [],
+      "notes": "deterministic computation preferred over language-only estimation"
+    },
+    {
+      "policy_id": "policy.none.no_external",
+      "domain_id": "general",
+      "ranked_source_classes": [],
+      "required_source_classes": [],
+      "optional_source_classes": [],
+      "disallowed_source_classes": [],
+      "notes": "no external sources required"
+    },
+    {
+      "policy_id": "policy.writing.no_external",
+      "domain_id": "writing_communication",
+      "ranked_source_classes": [],
+      "required_source_classes": [],
+      "optional_source_classes": [],
+      "disallowed_source_classes": [],
+      "notes": "creative/personal writing needs no external retrieval"
+    },
+    {
+      "policy_id": "policy.personal.no_external",
+      "domain_id": "personal_planning",
+      "ranked_source_classes": [],
+      "required_source_classes": [],
+      "optional_source_classes": [],
+      "disallowed_source_classes": [],
+      "notes": "personal planning greetings/notes need no external retrieval"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "api_version": "v1",
+  "name": "SPE — Global AI Gateway",
+  "spec_version": "2026.10-omega",
+  "description": "Deterministic, client-side system prompt compiler and multi-model dialect transcompiler for autonomous agents and AI assistants.",
+  "canonical_wasm_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  "offline_guarantee": "100% client-side WebAssembly execution, zero network telemetry, $0 cloud spend.",
+  "endpoints": {
+    "prompts": "/api/v1/prompts/index.json",
+    "model_formats": "/api/v1/model-formats/index.json",
+    "prompt_packs": "/api/v1/prompt-packs/index.json",
+    "mcp": "/api/v1/mcp",
+    "agent_card": "/.well-known/agent.json",
+    "openapi": "/.well-known/openapi.yaml",
+    "ai_plugin": "/.well-known/ai-plugin.json",
+    "llms_txt": "/llms.txt",
+    "llms_full_txt": "/llms-full.txt"
+  },
+  "protocols": {
+    "mcp": {
+      "version": "2026-07-28",
+      "transport": ["http-post", "stdio"],
+      "tools": [
+        "search_spe_prompts",
+        "get_prompt_asset",
+        "compile_for_model",
+        "validate_prompt_constraints"
+      ]
+    },
+    "rest": {
+      "version": "v1",
+      "format": "application/json"
+    }
+  },
+  "documentation": "https://systempromptengine.com/llms.txt"
+}

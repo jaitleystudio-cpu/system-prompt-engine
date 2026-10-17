@@ -1,0 +1,32 @@
+{
+  "base": "50b24fa1d8b89c0575f3f7c8c221076343569de6",
+  "commands": {
+    "test:dot-pattern": "PASS native layered DotPattern contract",
+    "test:hero-story": "62 hero checks passed",
+    "test:final-craft": "PASS final craft presentation contracts",
+    "test:theme-routes": "PASS theme+routes smoke",
+    "test:capabilities-seo": "PASS capabilities SEO/AEO smoke",
+    "copy-check": { "candidates": 2361, "unreviewed": 0, "violations": [] },
+    "tsc": "npx tsc --noEmit exit 0",
+    "vite-build": "exit 0",
+    "overflow": [
+      { "width": 320, "overflow": false },
+      { "width": 390, "overflow": false },
+      { "width": 768, "overflow": false },
+      { "width": 1024, "overflow": false },
+      { "width": 1440, "overflow": false },
+      { "width": 1920, "overflow": false }
+    ],
+    "zoom200": { "overflow": false },
+    "axe": {
+      "prompt-studio-light": [],
+      "seo-light": [],
+      "hero-light": [],
+      "home-dark-page": [],
+      "home-light-page-preexisting": [
+        "nav links at 0.72 opacity, contrast 4.22",
+        "footer SPE mark #e8eefc on white, contrast 1.16"
+      ]
+    }
+  }
+}
