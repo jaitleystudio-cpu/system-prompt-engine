@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { existsSync } from "node:fs";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -16,6 +16,7 @@ import {
   inspectRecoveryCheckpoint, startExclusiveRecovery, finishExclusiveRecovery,
   JOURNAL_FILENAME, JOURNAL_LOCK,
 } from "./spe-recovery-journal-custody.mjs";
+import { reconcileRecoveryReadOnly } from "./spe-recovery-reconciliation.mjs";
 
 const goal = "Build a functioning canvas app preserving the original design.";
 const prompt = "Compile this protected goal into a runnable HTML application.";
@@ -63,6 +64,25 @@ try {
   assert.equal(restored.disposition, "HOLD_RECONCILIATION_REQUIRED");
   assert.equal(restored.reason, "LOCK_PRESENT_OR_INTERRUPTED");
   assert.equal(restored.phaseStatus, "INITIAL_DISPATCHING");
+  const r3Locked = await reconcileRecoveryReadOnly({
+    evidenceDirectory: crashedDir, goal, originalPrompt: prompt,
+  });
+  assert.equal(r3Locked.status, "HOLD_RECONCILIATION_REQUIRED");
+  assert.equal(r3Locked.reason, "ACTIVE_OR_ORPHANED_LOCK");
+  assert.equal(r3Locked.nextModelCallAuthorized, false);
+
+  // The test copies evidence into an UNLOCKED directory; only the fixture
+  // does this. Product reconciliation must never delete a real run lock.
+  const readOnlyDir = join(root, "read-only-copy");
+  await mkdir(readOnlyDir);
+  await cp(join(crashedDir, JOURNAL_FILENAME), join(readOnlyDir, JOURNAL_FILENAME));
+  const r3Unknown = await reconcileRecoveryReadOnly({
+    evidenceDirectory: readOnlyDir, goal, originalPrompt: prompt,
+  });
+  assert.equal(r3Unknown.reason, "PROVIDER_OUTCOME_UNKNOWN_DO_NOT_RETRY");
+  assert.equal(r3Unknown.retryEligible, false);
+  assert.equal(r3Unknown.providerOutcomeProven, false);
+
 
   let calls = 0;
   await assert.rejects(
@@ -80,6 +100,10 @@ try {
   const edited = await inspectRecoveryCheckpoint(crashedDir, { goal, originalPrompt: prompt });
   assert.equal(edited.reason, "CHECKPOINT_INTEGRITY_MISMATCH");
   assert.equal(edited.disposition, "HOLD_RECONCILIATION_REQUIRED");
+  const r3Tampered = await reconcileRecoveryReadOnly({
+    evidenceDirectory: crashedDir, goal, originalPrompt: prompt,
+  });
+  assert.equal(r3Tampered.reason, "CHECKPOINT_INTEGRITY_MISMATCH");
 
   const concurrentDir = join(root, "concurrent");
   const lock = await startExclusiveRecovery(concurrentDir);
@@ -105,6 +129,7 @@ try {
   console.log("PASS R2: SIGKILL leaves durable dispatch checkpoint and orphaned lock");
   console.log("PASS R2: restart performs zero unapproved retries and rejects tampering");
   console.log("PASS R2: concurrent runs and provider-unknown outcomes fail closed");
+  console.log("PASS R3: locked, unlocked-unknown and tampered checkpoints remain HOLD");
   console.log("PROOF_SCOPE: FIXTURE_ONLY_NO_LIVE_PROVIDER");
 } finally {
   await rm(root, { recursive: true, force: true });
