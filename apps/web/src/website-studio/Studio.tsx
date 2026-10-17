@@ -8,6 +8,7 @@ import { BehaviorGraphEditor } from "./behavior/BehaviorGraphEditor.tsx";
 import { MotionBlockEditor } from "./motion/MotionBlockEditor.tsx";
 import { CameraDirectorPanel } from "./camera/CameraDirectorPanel.tsx";
 import { PerformanceDoctor } from "./performance/PerformanceDoctor.tsx";
+import { RecoveryEvidencePanel } from "./recovery/RecoveryEvidencePanel.tsx";
 import { DataBindingInspector } from "./data/DataBindingInspector.tsx";
 import { WebsiteRenderer } from "./render/WebsiteRenderer.tsx";
 import { StudioExplore } from "./explore/StudioExplore.tsx";
@@ -644,6 +645,8 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <PerformanceDoctor scene={spec.scene} />
+          {/* Review only: canonical .spe recovery evidence cannot mutate this site. */}
+          <RecoveryEvidencePanel />
 
           {/* Camera Director in Intelligence Sidebar */}
           <CameraDirectorPanel
