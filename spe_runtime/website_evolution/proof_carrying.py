@@ -56,7 +56,7 @@ class ProofCarryingEvolutionControllerPy:
             }
 
         # 1. Silent-Failure Watchdog: Failing test reproduction required
-        if not proposal.failing_test_before_fix.reproduced:
+        if not getattr(proposal.failing_test_before_fix, "reproduced", False):
             audit_log.append("REJECT: Problem was not reproduced with a failing test before fix.")
             return {
                 "status": ProposalStatus.REJECTED,
@@ -113,13 +113,15 @@ class ProofCarryingEvolutionControllerPy:
                 "audit_log": audit_log,
             }
 
-        # 6. Risk Level vs Autonomy Level Promotion
+        # 6. This staging controller sees caller-owned assertion flags, not
+        # independently verified execution receipts. No automated live release
+        # authority may be inferred from those flags.
         if proposal.risk_level == ChangeRiskLevel.LOW and proposal.defect_category in self.ALLOWED_AUTO_RELEASE:
-            audit_log.append("PROMOTED: LOW RISK mechanical repair allowlisted for L4 Auto-Release.")
+            audit_log.append("RELEASE_AUTHORITY_HOLD: candidate staged; independent execution verification required.")
             return {
-                "status": ProposalStatus.PROMOTED,
-                "authorized_autonomy": AutonomyLevel.L4_LIMITED_AUTO_RELEASE,
-                "authorized_for_live_deploy": True,
+                "status": ProposalStatus.PATCH_PREPARED,
+                "authorized_autonomy": AutonomyLevel.L3_QUALIFY,
+                "authorized_for_live_deploy": False,
                 "audit_log": audit_log,
             }
 
@@ -132,9 +134,11 @@ class ProofCarryingEvolutionControllerPy:
         }
 
     def execute_rollback(self, proposal: ProofCarryingChangeProposal) -> Dict[str, Any]:
+        # An authored rollback recipe is not a real execution receipt.
+        # Only the independent release executor may declare a restore complete.
         return {
-            "success": True,
-            "restored_commit": proposal.rollback_reference.snapshot_commit,
-            "receipt_id": f"rb-py-{int(time.time())}",
-            "details": f"Forward-only rollback cleanly executed; restored commit {proposal.rollback_reference.snapshot_commit}.",
+            "success": False,
+            "restored_commit": "",
+            "receipt_id": "",
+            "details": "NOT_EXECUTED: rollback executor was not invoked; no restore receipt exists.",
         }
