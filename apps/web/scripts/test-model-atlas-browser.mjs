@@ -49,16 +49,16 @@ async function run() {
 
     // Verify sub-page breadcrumb & header
     const breadcrumb = await page.textContent(".spe-arsenal-breadcrumbs");
-    assert.ok(breadcrumb?.includes("Universal Prompt Arsenal"), `Expected breadcrumb, got: ${breadcrumb}`);
+    assert.ok(breadcrumb?.includes("Universal Prompt Factory"), `Expected breadcrumb, got: ${breadcrumb}`);
     console.log(`  ✓ Sub-page breadcrumbs rendered: "${breadcrumb?.trim()}"`);
 
     const subpageTitle = await page.textContent(".spe-arsenal-hero-title");
-    assert.ok(subpageTitle?.includes("Universal Prompt Arsenal"), `Expected subpage title, got: ${subpageTitle}`);
+    assert.ok(subpageTitle?.includes("Universal Prompt Factory"), `Expected subpage title, got: ${subpageTitle}`);
     console.log(`  ✓ Dedicated sub-page hero title rendered: "${subpageTitle?.trim()}"`);
 
     // Verify Vault title & models
     const title = await page.textContent(".spe-vault-title");
-    assert.ok(title?.includes("Universal Prompt Arsenal"), `Expected title to contain Universal Prompt Arsenal, got: ${title}`);
+    assert.ok(title?.includes("Universal Prompt Factory"), `Expected title to contain Universal Prompt Factory, got: ${title}`);
     assert.ok(title?.includes("100% Free on the Web"), `Expected title to mention 100% Free on the Web, got: ${title}`);
     console.log(`  ✓ Prompt Vault rendered: "${title}"`);
 
@@ -155,7 +155,7 @@ async function run() {
     console.log(`[7/7] Verifying Home Page has clean FeaturedArsenalPreview...`);
     await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
     const featuredTitle = await page.textContent(".spe-featured-title");
-    assert.ok(featuredTitle?.includes("Universal Prompt Arsenal"), `Expected featured title on home page, got: ${featuredTitle}`);
+    assert.ok(featuredTitle?.includes("Universal Prompt Factory"), `Expected featured title on home page, got: ${featuredTitle}`);
     const domainChips = await page.locator(".spe-featured-domain-pill").all();
     assert.ok(domainChips.length === 13, `Expected 13 domain chips on home page, got: ${domainChips.length}`);
     const sampleCards = await page.locator(".spe-featured-sample-card").all();
@@ -168,7 +168,7 @@ async function run() {
     await featuredSection.screenshot({ path: "proofs/home_featured_arsenal_preview.png" });
     console.log(`  ✓ Saved clean home page proofs.`);
 
-    // Click "Browse Full 10,000+ Prompt Arsenal" button on home page -> navigates to /prompts
+    // Click "Browse Full 10,000+ Prompt Factory" button on home page -> navigates to /prompts
     const exploreBtn = page.locator(".spe-arsenal-explore-btn");
     await exploreBtn.click();
     await page.waitForTimeout(500);
@@ -183,7 +183,7 @@ async function run() {
     const deepUrl = page.url();
     assert.ok(deepUrl.includes("/prompts/SPE-ARSENAL-00042"), `Expected URL to include /prompts/SPE-ARSENAL-00042, got: ${deepUrl}`);
     const pageTitle = await page.title();
-    assert.ok(pageTitle.includes("SPE Universal Prompt Arsenal"), `Expected page title to include prompt info, got: ${pageTitle}`);
+    assert.ok(pageTitle.includes("SPE Universal Prompt Factory"), `Expected page title to include prompt info, got: ${pageTitle}`);
 
     // Check that Schema.org JSON-LD contains HowTo schema
     const schemaScript = await page.locator('script[type="application/ld+json"]').last().textContent();

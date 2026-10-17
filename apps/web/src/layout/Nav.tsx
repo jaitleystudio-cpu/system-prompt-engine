@@ -49,7 +49,7 @@ const NAV_GROUPS: NavGroup[] = [
       },
       {
         id: "prompts",
-        label: "Prompt Arsenal",
+        label: "Prompt Factory",
         desc: "10,000+ task-specific prompts for all AI models",
       },
       {

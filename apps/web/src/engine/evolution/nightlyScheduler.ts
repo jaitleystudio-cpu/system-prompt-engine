@@ -248,7 +248,7 @@ export interface GscRetrievalBoundaryProof {
   serviceAccountOrClientId: string;
   retrievalTimestamp: string;
   apiEndpoint: string;
-  oauthTokenDigestSha256: string;
+  apiTokenDigestSha256: string;
   verifiedAuthorized: boolean;
 }
 
@@ -291,17 +291,17 @@ export function verifyGscRetrievalBoundary(proof: unknown): { verified: boolean;
     };
   }
 
-  // 3. Recognized Google Service Account or Google OAuth Client ID
+  // 3. Recognized Google Service Account or Google Auth Client ID
   const isGoogleServiceAccount =
     typeof p.serviceAccountOrClientId === "string" &&
     /^[a-z0-9._-]+@[a-z0-9-]+\.(?:iam\.)?gserviceaccount\.com$/i.test(p.serviceAccountOrClientId);
-  const isGoogleOAuthClient =
+  const isGoogleAuthClient =
     typeof p.serviceAccountOrClientId === "string" &&
     /^[0-9]+-[a-z0-9_]+\.apps\.googleusercontent\.com$/i.test(p.serviceAccountOrClientId);
-  if (!isGoogleServiceAccount && !isGoogleOAuthClient) {
+  if (!isGoogleServiceAccount && !isGoogleAuthClient) {
     return {
       verified: false,
-      reason: `serviceAccountOrClientId '${p.serviceAccountOrClientId}' is not a recognized Google service account (*.gserviceaccount.com) or Google OAuth Client ID (*.apps.googleusercontent.com)`,
+      reason: `serviceAccountOrClientId '${p.serviceAccountOrClientId}' is not a recognized Google service account (*.gserviceaccount.com) or Google Auth Client ID (*.apps.googleusercontent.com)`,
     };
   }
 
@@ -318,9 +318,9 @@ export function verifyGscRetrievalBoundary(proof: unknown): { verified: boolean;
     return { verified: false, reason: `retrievalTimestamp '${p.retrievalTimestamp}' is stale (> 24 hours old)` };
   }
 
-  // 5. OAuth Token Digest (SHA-256)
-  if (!p.oauthTokenDigestSha256 || !/^[0-9a-f]{64}$/i.test(p.oauthTokenDigestSha256)) {
-    return { verified: false, reason: "Missing or invalid oauthTokenDigestSha256 (64-char hex SHA-256 required)" };
+  // 5. API Token Digest (SHA-256)
+  if (!p.apiTokenDigestSha256 || !/^[0-9a-f]{64}$/i.test(p.apiTokenDigestSha256)) {
+    return { verified: false, reason: "Missing or invalid apiTokenDigestSha256 (64-char hex SHA-256 required)" };
   }
 
   return { verified: true };

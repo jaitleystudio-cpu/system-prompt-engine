@@ -20,14 +20,14 @@ export function getRoutePromptAsset(): ArsenalPromptAsset | undefined {
 
 export function applyPromptAssetMetadata(asset?: ArsenalPromptAsset): void {
   if (typeof document === "undefined" || !asset) return;
-  document.title = `${asset.title} — SPE Universal Prompt Arsenal`;
+  document.title = `${asset.title} — SPE Universal Prompt Factory`;
   const desc = `${asset.tagline} Production-grade AI prompt adapted for Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, OpenAI GPT-6 Astra, Meta Muse Code 1.3, and Gemini 3 Pro. 100% free online.`;
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.setAttribute("content", desc);
   const ogDesc = document.querySelector('meta[property="og:description"]');
   if (ogDesc) ogDesc.setAttribute("content", desc);
   const ogTitle = document.querySelector('meta[property="og:title"]');
-  if (ogTitle) ogTitle.setAttribute("content", `${asset.title} — SPE Universal Prompt Arsenal`);
+  if (ogTitle) ogTitle.setAttribute("content", `${asset.title} — SPE Universal Prompt Factory`);
 }
 
 export function buildArsenalSchemaOrgJson(asset?: ArsenalPromptAsset): string {
@@ -84,7 +84,7 @@ export function buildArsenalSchemaOrgJson(asset?: ArsenalPromptAsset): string {
     "@graph": [
       {
         "@type": "SoftwareApplication",
-        name: "SPE Universal Prompt Arsenal",
+        name: "SPE Universal Prompt Factory",
         operatingSystem: "All modern web browsers",
         applicationCategory: "DeveloperApplication",
         offers: {
@@ -105,7 +105,7 @@ export function buildArsenalSchemaOrgJson(asset?: ArsenalPromptAsset): string {
         mainEntity: [
           {
             "@type": "Question",
-            name: "Are the 10,000+ prompt assets in the SPE Universal Arsenal 100% free to access?",
+            name: "Are the 10,000+ prompt assets in the SPE Universal Factory 100% free to access?",
             acceptedAnswer: {
               "@type": "Answer",
               text: "Yes. All 10,000+ prompts across all 13 professional domains are 100% free to search, customize, transcompile, and copy online on the website, supported by non-intrusive compute sponsorships.",

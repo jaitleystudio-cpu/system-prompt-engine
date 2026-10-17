@@ -450,7 +450,7 @@ const DOMAIN_ALLOCATIONS: Array<{
             title: "Amazon-Style 6-Page Narrative Strategy Memo",
             tagline: "Draft an executive narrative memo analyzing strategic expansion opportunities with data-backed counterfactuals.",
             vars: [
-              ["initiative_name", "Initiative", "Universal Prompt Arsenal", "Project codename"],
+              ["initiative_name", "Initiative", "Universal Prompt Factory", "Project codename"],
               ["target_roi", "Expected ROI", "4.5x in 12 months", "Target investment return"],
             ],
             invariants: [

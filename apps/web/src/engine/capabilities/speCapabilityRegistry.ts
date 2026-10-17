@@ -19,6 +19,7 @@ export type SpeCapabilityCategory =
   | "UI_EXTRACTION"
   | "AGENT_SKILLS"
   | "WORKFLOW_AUTOMATION"
+  | "PROMPT_FACTORY"
   | "PROMPT_ARSENAL"
   | "DAILY_LAB"
   | "WORKSPACE"
@@ -154,13 +155,14 @@ export const SPE_CAPABILITIES: readonly SpeCapability[] = [
   },
   {
     id: "prompt_arsenal",
-    name: "Verified Prompt Arsenal",
+    name: "Verified Prompt Factory",
     path: "/prompts",
     status: "FREE",
-    category: "PROMPT_ARSENAL",
+    category: "PROMPT_FACTORY",
     description: "Search and download verified system prompt specifications across 13 engineering domains with AST schemas and invariant guarantees.",
     userIntentTriggers: [
       "give me reusable AI instructions",
+      "prompt factory",
       "prompt library",
       "verified prompt templates",
       "developer system prompts",

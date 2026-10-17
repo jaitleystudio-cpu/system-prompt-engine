@@ -24,7 +24,15 @@ def web_source_text() -> str:
     ):
         for p in WEB.rglob(pattern):
             rel = str(p.relative_to(WEB))
-            if rel.startswith("node_modules") or rel.startswith("dist/") or rel.startswith(".vercel") or rel.startswith("deployments/") or "/node_modules/" in rel:
+            if (
+                rel.startswith("node_modules")
+                or rel.startswith("dist/")
+                or rel.startswith(".vercel")
+                or rel.startswith("deployments/")
+                or rel.startswith("scripts/")
+                or rel.startswith("src/server/")
+                or "/node_modules/" in rel
+            ):
                 continue
             try:
                 chunks.append(p.read_text(encoding="utf-8"))

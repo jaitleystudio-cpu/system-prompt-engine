@@ -344,7 +344,7 @@ async function runBrainEvolutionBattery() {
         domain: "Security",
         userRequest: "Zero telemetry credential vault",
         requiredConcepts: ["zero telemetry", "vault"],
-        forbiddenPatterns: ["mixpanel", "google-analytics"],
+        forbiddenPatterns: ["tracking_beacon_sample", "telemetry_pixel_sample"],
       },
     ],
   };
@@ -385,7 +385,7 @@ async function runBrainEvolutionBattery() {
   // 2H. Permanent Regression Gate: Zero tolerance
   const leakingReceipt = await oracle.evaluateCandidateProtected("cand_perm_leak", async (tc) => {
     if (tc.caseId === "PERM-REG-01-NO-LEAK") {
-      return "Output containing forbidden mixpanel telemetry snippet";
+      return "Output containing forbidden tracking_beacon_sample telemetry snippet";
     }
     return `Preserved: ${tc.requiredConcepts.join(", ")}`;
   });
@@ -562,7 +562,7 @@ async function runBrainEvolutionBattery() {
         domain: "Security",
         userRequest: "No leaks",
         requiredConcepts: ["secure"],
-        forbiddenPatterns: ["mixpanel"],
+        forbiddenPatterns: ["tracking_beacon_sample"],
       },
     ],
   };

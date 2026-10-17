@@ -312,7 +312,7 @@ export class McpProductionServer {
         const entitlementHeader = (req.headers["x-spe-entitlement-token"] as string) || "";
 
         let authenticatedCustomer: CustomerAccount | null = null;
-        let isProAuthorized = false;
+        let isProPermitted = false;
 
         // Check Authorization: Bearer <key> or x-spe-api-key
         const rawApiKey = rawApiKeyHeader || (rawAuth.toLowerCase().startsWith("bearer ") ? rawAuth.slice(7).trim() : "");
@@ -361,7 +361,7 @@ export class McpProductionServer {
               issuerPublicKeyHex: this.trustedBillingKeyHex,
             });
             if (verification.verified && (verification.tier === "pro" || verification.tier === "team")) {
-              isProAuthorized = true;
+              isProPermitted = true;
             } else if (!authenticatedCustomer) {
               res.setHeader("Content-Type", "application/json");
               res.statusCode = 401;
@@ -435,8 +435,8 @@ export class McpProductionServer {
               clientIp,
               billing: {
                 isPaid: Boolean(authenticatedCustomer),
-                isPro: isProAuthorized || authenticatedCustomer?.tier === "pro" || authenticatedCustomer?.tier === "team",
-                tier: authenticatedCustomer?.tier || (isProAuthorized ? "pro" : "free"),
+                isPro: isProPermitted || authenticatedCustomer?.tier === "pro" || authenticatedCustomer?.tier === "team",
+                tier: authenticatedCustomer?.tier || (isProPermitted ? "pro" : "free"),
                 debitedUsdString: "$0.000",
               },
             };
@@ -506,7 +506,7 @@ export class McpProductionServer {
                   );
                   return;
                 }
-              } else if (isProAuthorized) {
+              } else if (isProPermitted) {
                 // Unlimited pro subscriber entitlement token
                 requestContext.billing = {
                   isPaid: true,
@@ -572,7 +572,7 @@ export class McpProductionServer {
             // Response headers
             res.setHeader("Content-Type", "application/json");
             res.setHeader("MCP-Protocol-Version", "2026-07-28");
-            if (isProAuthorized) {
+            if (isProPermitted) {
               res.setHeader("X-SPE-Entitlement-Status", "VERIFIED_PRO");
             }
             if (usageRecord) {

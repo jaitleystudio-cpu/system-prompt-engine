@@ -224,7 +224,7 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
   },
   prompts: {
     path: "/prompts",
-    title: "Universal Prompt Arsenal (10,000+ Free Production Prompts) | SPE",
+    title: "Universal Prompt Factory (10,000+ Free Production Prompts) | SPE",
     description:
       "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude Sonnet 5.5, OpenAI GPT-6.1-Sol / Astra, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. 100% free online.",
   },

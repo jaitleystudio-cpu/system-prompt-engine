@@ -453,7 +453,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
               className={`spe-vault-tab-btn ${panelTab === "vault" ? "active" : ""}`}
               onClick={() => setPanelTab("vault")}
             >
-              ⚡ Universal Prompt Arsenal (10,000+)
+              ⚡ Universal Prompt Factory (10,000+)
             </button>
             <button
               type="button"
@@ -503,7 +503,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
 
         {panelTab === "vault" ? (
           <>
-            <h2 className="spe-vault-title">Universal Prompt Arsenal — 10,000+ Production Prompts (100% Free on the Web)</h2>
+            <h2 className="spe-vault-title">Universal Prompt Factory — 10,000+ Production Prompts (100% Free on the Web)</h2>
             <p className="spe-vault-subtitle">
               All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, OpenAI GPT-6 Astra, Meta Muse Code 1.3, Gemini 3 Pro, and DeepSeek Frontier.
             </p>

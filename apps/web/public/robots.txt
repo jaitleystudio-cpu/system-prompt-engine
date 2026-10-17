@@ -1,8 +1,8 @@
 # robots.txt for SPE Ω — Global AI Gateway (October 2026 Policy)
-# Three-tier crawler governance: Search Discovery, Agent Integration, and Training Bots
+# Four-tier crawler governance: Search Discovery, User-Directed Assistants, Training Bots, and General Clients
 
 # -----------------------------------------------------------------------------
-# Tier 1: Search Discovery Crawlers (Organic Search & Assistant Retrieval)
+# Tier 1: Search Discovery Crawlers (Organic Search & Citation Indexing)
 # -----------------------------------------------------------------------------
 User-agent: Googlebot
 User-agent: Googlebot-Image
@@ -10,7 +10,7 @@ User-agent: Googlebot-News
 User-agent: Googlebot-Video
 User-agent: Bingbot
 User-agent: OAI-SearchBot
-User-agent: Claude-Web
+User-agent: Claude-SearchBot
 User-agent: PerplexityBot
 User-agent: Applebot
 Allow: /
@@ -45,7 +45,44 @@ Disallow: /studio
 Disallow: /private/
 
 # -----------------------------------------------------------------------------
-# Tier 2: Model Training Crawlers & Unverified Bulk Scrapers (Controlled Access)
+# Tier 2: User-Directed AI Assistants (User-Initiated Browsing & Tool Retrieval)
+# Allows interactive assistants acting directly on behalf of an active end user
+# -----------------------------------------------------------------------------
+User-agent: Claude-User
+User-agent: ChatGPT-User
+Allow: /
+Allow: /prompts
+Allow: /create
+Allow: /code
+Allow: /daily-lab
+Allow: /capabilities
+Allow: /privacy
+Allow: /evidence-pages/
+Allow: /models/
+Allow: /failure-genome/
+Allow: /tools/
+Allow: /workflows/
+Allow: /build-skill
+Allow: /incidents/
+Allow: /integrations/
+Allow: /compare/
+Allow: /migrate/
+Allow: /eval-studio
+Allow: /api/v1/
+Allow: /.well-known/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /workspace
+Disallow: /my-work
+Disallow: /website
+Disallow: /media
+Disallow: /ocr
+Disallow: /research
+Disallow: /studio
+Disallow: /private/
+
+# -----------------------------------------------------------------------------
+# Tier 3: Model Training Crawlers & Unverified Bulk Scrapers (Controlled Access)
 # Training requires explicit commercial data licensing. Public discovery allowed.
 # -----------------------------------------------------------------------------
 User-agent: GPTBot
@@ -71,7 +108,7 @@ Disallow: /private/
 Disallow: /
 
 # -----------------------------------------------------------------------------
-# Tier 3: Default User-Agents & Integrated AI Assistants
+# Tier 4: Default User-Agents & General Web Browsers
 # -----------------------------------------------------------------------------
 User-agent: *
 Allow: /

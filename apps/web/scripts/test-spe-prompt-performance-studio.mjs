@@ -1,5 +1,5 @@
 /**
- * Test Battery: SPE Prompt Performance Studio & Multimodal Prompt Arsenal
+ * Test Battery: SPE Prompt Performance Studio & Multimodal Prompt Factory
  * Verifies the 4 new multimodal prompt assets (Photography, 3D WebGL, SaaS Bento Grid, Video Motion),
  * multi-model transcompilation, variable substitution, and deterministic social proof telemetry.
  */

@@ -98,7 +98,7 @@ class WebsiteInventoryAuditorPy:
         "/prompts": {
             "view": "prompts",
             "indexable": True,
-            "title": "Universal Prompt Arsenal | SPE",
+            "title": "Universal Prompt Factory | SPE",
             "description": "Explore 10,000+ production-tested AI prompts.",
             "task": "Search 10,000+ pre-tested production prompts",
             "owner": "catalog-squad",

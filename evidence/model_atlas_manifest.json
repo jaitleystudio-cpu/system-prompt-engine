@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-10-17T02:15:25.201038+00:00",
-  "checksumSha256": "7404e140652acd32e3eca5b272e36c8f68cc90b113336f4566b6f825278ba6c5",
-  "canonicalJcsHash": "7404e140652acd32e3eca5b272e36c8f68cc90b113336f4566b6f825278ba6c5",
-  "totalModels": 44,
-  "frontierActiveModels": 18,
-  "proTierCount": 27,
-  "freeTierCount": 17,
-  "reasoningModelsCount": 20
+  "timestamp": "2026-10-17T20:24:28.394532+00:00",
+  "checksumSha256": "3408237a0bc12973b7993362fcd50b8d92b5d12af11ba3dcc61bd9e49a99b80f",
+  "canonicalJcsHash": "3408237a0bc12973b7993362fcd50b8d92b5d12af11ba3dcc61bd9e49a99b80f",
+  "totalModels": 47,
+  "frontierActiveModels": 21,
+  "proTierCount": 28,
+  "freeTierCount": 19,
+  "reasoningModelsCount": 22
 }

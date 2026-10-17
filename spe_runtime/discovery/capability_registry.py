@@ -120,13 +120,14 @@ SPE_CAPABILITIES: List[SpeCapability] = [
     ),
     SpeCapability(
         id="prompt_arsenal",
-        name="Verified Prompt Arsenal",
+        name="Verified Prompt Factory",
         path="/prompts",
         status="FREE",
-        category="PROMPT_ARSENAL",
+        category="PROMPT_FACTORY",
         description="Search and download verified system prompt specifications across 13 engineering domains with AST schemas and invariant guarantees.",
         user_intent_triggers=[
             "give me reusable AI instructions",
+            "prompt factory",
             "prompt library",
             "verified prompt templates",
             "developer system prompts",

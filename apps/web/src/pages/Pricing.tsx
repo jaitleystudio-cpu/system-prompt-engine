@@ -27,13 +27,13 @@ export interface StripeCheckoutLinks {
 export const DEFAULT_STRIPE_LINKS: StripeCheckoutLinks = {
   proIntroUrl:
     (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_STRIPE_PRO_INTRO_URL) ||
-    "https://buy.stripe.com/test_spe_pro_intro_1",
+    "https://checkout.systempromptengine.com/pro_intro",
   lifetimeUrl:
     (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_STRIPE_LIFETIME_URL) ||
-    "https://buy.stripe.com/test_spe_lifetime_69",
+    "https://checkout.systempromptengine.com/lifetime",
   companyIntroUrl:
     (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_STRIPE_COMPANY_INTRO_URL) ||
-    "https://buy.stripe.com/test_spe_company_intro_9",
+    "https://checkout.systempromptengine.com/company_intro",
 };
 
 

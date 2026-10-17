@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Test battery for SPE Universal Prompt Arsenal
+ * Test battery for SPE Universal Prompt Factory
  * Validates:
  * 1. Exact 100 qualified assets loaded
  * 2. All 13 professional domains covered
@@ -13,7 +13,7 @@ import assert from "node:assert/strict";
 import { ARSENAL_CATALOG_ASSETS } from "../src/engine/arsenal/arsenalCatalogData.ts";
 import { transcompilePromptForPlatform } from "../src/engine/arsenal/modelTranscompiler.ts";
 
-console.log("=== Running SPE Universal Prompt Arsenal Verification Battery ===");
+console.log("=== Running SPE Universal Prompt Factory Verification Battery ===");
 
 // 1. Total assets count
 assert.ok(ARSENAL_CATALOG_ASSETS.length >= 100, `Expected at least 100 assets, found ${ARSENAL_CATALOG_ASSETS.length}`);

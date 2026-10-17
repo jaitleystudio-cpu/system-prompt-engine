@@ -2,7 +2,7 @@
   "schemaVersion": "spe.proof-receipt.v1",
   "compilerVersion": "1.4.0-omega",
   "executionMode": "strict-wasm",
-  "timestampIso": "2026-10-17T18:14:37.091Z",
+  "timestampIso": "2026-10-17T20:31:32.601Z",
   "protectedIntentHash": "232abb64cd2293be878ae36f30e504aa478f8a643de41cfd91204a2c5aecfa4b",
   "candidateHash": "230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc",
   "baselineHash": "fac7c1186a83fb3c57551b3a770babaf52e61f0388257dee7d0fb6d84a80b9ff",
@@ -47,11 +47,11 @@
       "observedOutboundBytes": 0,
       "captureWindowStartIso": "2026-10-12T00:00:00Z",
       "captureWindowEndIso": "2026-10-12T00:00:05Z",
-      "observerPublicKeyHex": "b59bb3b080d7f88bcf10ec5792f5caa32b6d2c01f7f9d3aad0b28e3a7793b839",
-      "signatureHex": "dbd0e89fa8aae1116a885c68ecc47b04215d71bec87b43f9b0a4cab28afcd9f397ec639638a282b670df7f7569fa6e8565d7a21d6db7b6ad4f2d9496adde7f0f"
+      "observerPublicKeyHex": "292e5f62082c6620d9e4edf56a7827be74e3c1119432ab16d5727fcae29617c6",
+      "signatureHex": "add098f0d7e06b0601269ecdcd89277605c2ab0677c15034c9fae7cc383c35b73cbd607df19637aba1dc0e7a4aacc58a34a9dbefeec9950868c6305f9a65f001"
     },
-    "producerPublicKeyHex": "b59bb3b080d7f88bcf10ec5792f5caa32b6d2c01f7f9d3aad0b28e3a7793b839",
-    "producerSignatureHex": "1326348909bb25ae916ea4eeb99054b69f73af7a4518e9e8546b9392ab47a421482f0e344b1d75297baff62d3c3233c871ecec146553323e90838acd7ca97a0f"
+    "producerPublicKeyHex": "292e5f62082c6620d9e4edf56a7827be74e3c1119432ab16d5727fcae29617c6",
+    "producerSignatureHex": "4fba20917074ea9e2cd7042e42c87f77277e296e7a79f26f7dbff42b9c3f542f461d2fbba8f6c799b7920ff6a4e5fd90276c7dc623ce8a1242c7526b1cd50006"
   },
-  "receiptDigest": "5fb90b0359eeab6bd29b936928fc30bb5ce5d015da97c399a6d82227d8924bba"
+  "receiptDigest": "da2e16064010ed3652557448ea10c458412df6230d5543071daf3de38d859524"
 }

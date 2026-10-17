@@ -53,14 +53,14 @@ export function FeaturedArsenalPreview({ onNavigate, onSelectPrompt }: Props) {
   };
 
   return (
-    <section className="spe-featured-arsenal-section" aria-label="Universal Prompt Arsenal Overview" data-copy-depth="PRODUCT">
+    <section className="spe-featured-arsenal-section" aria-label="Universal Prompt Factory Overview" data-copy-depth="PRODUCT">
       <div className="spe-featured-arsenal-card">
         <header className="spe-featured-arsenal-header">
           <div className="spe-featured-kicker">
             <span aria-hidden="true">⚡</span>
             10,000+ Production Prompts • 100% Free on the Web
           </div>
-          <h2 className="spe-featured-title">Universal Prompt Arsenal</h2>
+          <h2 className="spe-featured-title">Universal Prompt Factory</h2>
           <p className="spe-featured-desc">
             Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, OpenAI GPT-6 Astra, Meta Muse Code 1.3, Gemini 3 Pro, and DeepSeek Frontier.
           </p>
@@ -117,7 +117,7 @@ export function FeaturedArsenalPreview({ onNavigate, onSelectPrompt }: Props) {
                     window.scrollTo(0, 0);
                   }}
                 >
-                  View in Arsenal ↗
+                  View in Factory ↗
                 </button>
               </div>
             </div>
@@ -135,7 +135,7 @@ export function FeaturedArsenalPreview({ onNavigate, onSelectPrompt }: Props) {
               window.scrollTo(0, 0);
             }}
           >
-            <span>⚡ Browse Full 10,000+ Prompt Arsenal</span>
+            <span>⚡ Browse Full 10,000+ Prompt Factory</span>
             <span aria-hidden="true">&rarr;</span>
           </a>
           <div className="spe-arsenal-cta-subtext">

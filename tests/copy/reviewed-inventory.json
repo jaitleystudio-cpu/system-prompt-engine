@@ -10387,6 +10387,12 @@
       "text": "Audio, Speech & Music"
     },
     {
+      "id": "0ded11f2c3e1ab6e294c",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ Browse Full 10,000+ Prompt Factory"
+    },
+    {
       "id": "12f7be6fede3d72a7bb1",
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
@@ -10423,6 +10429,12 @@
       "text": "prompts in catalog"
     },
     {
+      "id": "58637f47c900dbfaa900",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal Prompt Factory Overview"
+    },
+    {
       "id": "66ce046f3e7e6ad8b01b",
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
@@ -10435,10 +10447,16 @@
       "text": "Sales & CRM"
     },
     {
-      "id": "7611c492ecce4288e41e",
+      "id": "6f9d3b84fe9429b6c9b2",
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
-      "text": "⚡ Browse Full 10,000+ Prompt Arsenal"
+      "text": "Universal Prompt Factory"
+    },
+    {
+      "id": "738d4bdb6fed11145adb",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "View in Factory ↗"
     },
     {
       "id": "82afc0886b5a9428c4d0",
@@ -10451,12 +10469,6 @@
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
       "text": "Research & Education"
-    },
-    {
-      "id": "a2edd65254ef4ff2e026",
-      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
-      "depth": "PRODUCT",
-      "text": "Universal Prompt Arsenal"
     },
     {
       "id": "a7a7e463885e583941a4",
@@ -10489,12 +10501,6 @@
       "text": "start"
     },
     {
-      "id": "c32a8e02ee2b739b6cee",
-      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
-      "depth": "PRODUCT",
-      "text": "View in Arsenal ↗"
-    },
-    {
       "id": "c3c2e6be0732e25b8b97",
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
@@ -10505,12 +10511,6 @@
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
       "text": "Business & Operations"
-    },
-    {
-      "id": "ceff7e522fa285b39f96",
-      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
-      "depth": "PRODUCT",
-      "text": "Universal Prompt Arsenal Overview"
     },
     {
       "id": "d17007387962600c410d",
@@ -13633,12 +13633,6 @@
       "text": "Deploy these SPE .cursorrules and system prompts directly into your IDE agent with one click."
     },
     {
-      "id": "3e245b37a7b402955091",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Universal Prompt Arsenal — 10,000+ Production Prompts (100% Free on the Web)"
-    },
-    {
       "id": "3e52e74348234b1a2038",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13879,12 +13873,6 @@
       "text": "Codeium Windsurf cascading AST execution rules and system boundaries"
     },
     {
-      "id": "5652f4ebbf25e49ccda5",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "⚡ Universal Prompt Arsenal (10,000+)"
-    },
-    {
       "id": "56b5d2f2498ac9dc07dd",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -13913,6 +13901,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
       "text": "Architecture Benchmarks:"
+    },
+    {
+      "id": "57a4bd4453e67488e02f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Universal Prompt Factory — 10,000+ Production Prompts (100% Free on the Web)"
     },
     {
       "id": "57bf84d772023a1a5d5b",
@@ -14375,6 +14369,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Business"
+    },
+    {
+      "id": "93a6a6d49c7103ac03ae",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "⚡ Universal Prompt Factory (10,000+)"
     },
     {
       "id": "944eee78af8023c6874d",
@@ -18379,6 +18379,12 @@
       "text": "tools"
     },
     {
+      "id": "080c0ad6a6c02df0575c",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt Factory"
+    },
+    {
       "id": "20681d549e901b0e7d21",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -18641,12 +18647,6 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Head-to-head prompt tests with real accuracy proof"
-    },
-    {
-      "id": "7d7d630d86daefd1471d",
-      "file": "apps/web/src/layout/Nav.tsx",
-      "depth": "PRODUCT",
-      "text": "Prompt Arsenal"
     },
     {
       "id": "7fee6bb470fc24bc1333",
@@ -26707,6 +26707,12 @@
       "text": "Test-Drive Developer Pro or Team Free for 7 Days"
     },
     {
+      "id": "530d8578c70870e9f671",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "https://checkout.systempromptengine.com/lifetime"
+    },
+    {
       "id": "53fc53b965b1f24979af",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PRODUCT",
@@ -26953,12 +26959,6 @@
       "text": "Shared team prompt contracts and receipt-gated Promptfoo export bundles"
     },
     {
-      "id": "801becbfb212e15ce89d",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "https://buy.stripe.com/test_spe_pro_intro_1"
-    },
-    {
       "id": "805d9c4d1ed1fda29b75",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -27023,12 +27023,6 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Developer Pro is $1 for the first month and renews at $9/month"
-    },
-    {
-      "id": "8f1eb946ab1dbf1e067f",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "https://buy.stripe.com/test_spe_company_intro_9"
     },
     {
       "id": "8f6f4c5cb42415b9c5ab",
@@ -27179,6 +27173,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "7-Day Instant Free Trial (Zero Card Required)"
+    },
+    {
+      "id": "b0b590ed7cbc8e453877",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "https://checkout.systempromptengine.com/pro_intro"
     },
     {
       "id": "b2e0f0e5fa9b4345812d",
@@ -27385,16 +27385,16 @@
       "text": "Connecting to `127.0.0.1:4319` (local continuation daemon) or running live model calls through your own OpenAI/Anthropic API keys sends traffic only to the endpoints you explicitly configure."
     },
     {
-      "id": "e18e08fdd54110d12ada",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "https://buy.stripe.com/test_spe_lifetime_69"
-    },
-    {
       "id": "e4624f4299651cbb271b",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "including future 2026/2027 packs"
+    },
+    {
+      "id": "e4923a53a0e85fd9faef",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "https://checkout.systempromptengine.com/company_intro"
     },
     {
       "id": "e5075974466ae7ac7c33",
@@ -27733,10 +27733,10 @@
       "text": "Image, screenshot, and video notes are computed here with simple pixel checks. Optional same-origin model packs may load from this site when you use image helpers — no paid vision service is required for this preview."
     },
     {
-      "id": "10025ddcfba59d010610",
+      "id": "13968a62af52b360ffd1",
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
-      "text": "Prompt Arsenal"
+      "text": "Prompt Factory"
     },
     {
       "id": "2a5b1689092eeb10a63b",
@@ -27769,12 +27769,6 @@
       "text": "44 Verified Real AI Models"
     },
     {
-      "id": "50a4f5f35c4c92f991aa",
-      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
-      "depth": "PRODUCT",
-      "text": "Universal Prompt Arsenal"
-    },
-    {
       "id": "6d1b53f0af98af64465f",
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
@@ -27797,6 +27791,12 @@
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
       "text": "&rsaquo;"
+    },
+    {
+      "id": "9d5022d849e14b53e7bc",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal Prompt Factory"
     },
     {
       "id": "b52292f00f318758cdca",
@@ -29191,12 +29191,6 @@
       "text": "Continue"
     },
     {
-      "id": "09ba1c7eceaa0c46d322",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "Universal Prompt Arsenal (10,000+ Free Production Prompts) | SPE"
-    },
-    {
       "id": "0b18cde43a373bead6c8",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -29603,6 +29597,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "AI Incident Radar & Failure Post-Mortem Wire | SPE Ω"
+    },
+    {
+      "id": "bd296fa6a5a63470b6d9",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Universal Prompt Factory (10,000+ Free Production Prompts) | SPE"
     },
     {
       "id": "be9be8adf5f83326d168",

@@ -815,7 +815,7 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
       serviceAccountOrClientId: "invented-client",
       retrievalTimestamp: new Date().toISOString(),
       apiEndpoint: "https://example.invalid/not-google",
-      oauthTokenDigestSha256: "b".repeat(64),
+      apiTokenDigestSha256: "b".repeat(64),
       verifiedAuthorized: true,
     },
   });
@@ -845,7 +845,7 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
       serviceAccountOrClientId: "spe-gsc-auditor@spe-production.iam.gserviceaccount.com",
       retrievalTimestamp: new Date().toISOString(),
       apiEndpoint: "https://www.googleapis.com/webmaster/v1/sites/https%3A%2F%2Fsystempromptengine.com%2F/searchAnalytics/query",
-      oauthTokenDigestSha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      apiTokenDigestSha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       verifiedAuthorized: true,
     },
   });

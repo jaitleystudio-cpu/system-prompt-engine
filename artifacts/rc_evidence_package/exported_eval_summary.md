@@ -3,7 +3,7 @@
 ### Export Overview
 - **Project**: `spe-unit-test-eval`
 - **Prompt Content Hash**: `230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc`
-- **RFC 8785 JCS Receipt Digest**: `5fb90b0359eeab6bd29b936928fc30bb5ce5d015da97c399a6d82227d8924bba`
+- **RFC 8785 JCS Receipt Digest**: `da2e16064010ed3652557448ea10c458412df6230d5543071daf3de38d859524`
 - **Downstream Providers**: `openai:gpt-6-1-sol, anthropic:claude-5-5-sonnet`
 - **Static Schema**: Enforced (JSON)
 - **Max Latency Threshold**: `2000ms`
@@ -13,4 +13,4 @@
 Before spending token credits in Promptfoo:
 1. **Zero-Token Pre-Flight Check**: Static type analysis measured **0 fatal boundary errors** and **0 warnings** (Status: `PASSED`).
 2. **1024 Hostile Gym Probes**: Measured **1024 / 1024 killed (100.0% Mutation Kill Rate)** and **31 / 31** metamorphic relations satisfied.
-3. **Deterministic Seed Replay**: Re-run with frozen PRNG seed (`42`) and cryptographic receipt `5fb90b0359eeab6b...`.
+3. **Deterministic Seed Replay**: Re-run with frozen PRNG seed (`42`) and cryptographic receipt `da2e16064010ed36...`.

@@ -25,8 +25,8 @@ MANIFEST_PATH = REPO_ROOT / "evidence/model_atlas_manifest.json"
 
 VERIFIED_MODELS = [
     {
-        "id": "claude-4-5-haiku",
-        "name": "Claude 4.5 Haiku",
+        "id": "claude-5-5-haiku",
+        "name": "Claude Haiku 5.5",
         "provider": "Anthropic",
         "category": "general-intelligence",
         "contextWindow": 262144,
@@ -50,8 +50,8 @@ VERIFIED_MODELS = [
         "generation": "2026-frontier"
     },
     {
-        "id": "claude-4-5-opus",
-        "name": "Claude 4.5 Opus (Ultra Reasoning)",
+        "id": "claude-5-5-opus",
+        "name": "Claude Opus 5.5 (Ultra Reasoning)",
         "provider": "Anthropic",
         "category": "frontier-reasoning",
         "contextWindow": 524288,
@@ -75,8 +75,8 @@ VERIFIED_MODELS = [
         "generation": "2026-frontier"
     },
     {
-        "id": "claude-4-5-sonnet",
-        "name": "Claude 4.5 Sonnet (Hybrid Frontier)",
+        "id": "claude-5-5-sonnet",
+        "name": "Claude Sonnet 5.5 (Hybrid Frontier)",
         "provider": "Anthropic",
         "category": "frontier-reasoning",
         "contextWindow": 262144,
@@ -497,7 +497,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "cursor",
         "description": "Specialized open-source code generation model powering Cursor and offline IDEs.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-sonnet",
+        "deprecatedInFavorOf": "claude-5-5-sonnet",
         "generation": "legacy-2024"
     },
     {
@@ -523,7 +523,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "claude",
         "description": "Anthropic's powerhouse for deep textual comprehension and literary nuance.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-sonnet",
+        "deprecatedInFavorOf": "claude-5-5-sonnet",
         "generation": "legacy-2024"
     },
     {
@@ -549,7 +549,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "claude",
         "description": "High-velocity Anthropic intelligence with blazing sub-second response times.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-haiku",
+        "deprecatedInFavorOf": "claude-5-5-haiku",
         "generation": "legacy-2024"
     },
     {
@@ -575,7 +575,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "claude",
         "description": "Standard-setting intelligence and coding precision with 200K token context.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-sonnet",
+        "deprecatedInFavorOf": "claude-5-5-sonnet",
         "generation": "legacy-2024"
     },
     {
@@ -601,7 +601,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "claude",
         "description": "Anthropic's hybrid model with controllable extended thinking and premier code synthesis.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-sonnet",
+        "deprecatedInFavorOf": "claude-5-5-sonnet",
         "generation": "legacy-2025"
     },
     {
@@ -887,7 +887,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "chatgpt",
         "description": "Top-tier European frontier model with unmatched multilingual reasoning.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-sonnet",
+        "deprecatedInFavorOf": "claude-5-5-sonnet",
         "generation": "legacy-2024"
     },
     {
@@ -1043,7 +1043,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "runway",
         "description": "High-fidelity video generation with controlled camera kinematics and physical realism.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-sonnet",
+        "deprecatedInFavorOf": "claude-5-5-sonnet",
         "generation": "legacy-2024"
     },
     {
@@ -1069,7 +1069,7 @@ VERIFIED_MODELS = [
         "dialectTemplateKey": "suno",
         "description": "State-of-the-art musical arrangement, vocal timbre, and multi-track audio generation.",
         "isLegacy": True,
-        "deprecatedInFavorOf": "claude-4-5-sonnet",
+        "deprecatedInFavorOf": "claude-5-5-sonnet",
         "generation": "legacy-2024"
     },
     {
