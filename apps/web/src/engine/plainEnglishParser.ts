@@ -121,6 +121,15 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
 
   if (goalClauseMatch && goalClauseMatch[1]) {
     goalPhrase = goalClauseMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
+    // Keep coordinated tasks, but stop before phrases already classified as rules or output.
+    // Reuse the actual extracted boundaries so language and identifier directives stay separate.
+    let taskEnd = goalPhrase.length;
+    for (const boundary of [...collectedConstraints, outputPhrase]) {
+      if (!boundary) continue;
+      const index = goalPhrase.toLowerCase().indexOf(boundary.toLowerCase());
+      if (index > 0) taskEnd = Math.min(taskEnd, index);
+    }
+    goalPhrase = goalPhrase.slice(0, taskEnd).replace(/\s+(?:and|with)\s*$/i, "").trim();
     goal = goalPhrase.charAt(0).toUpperCase() + goalPhrase.slice(1);
   } else {
     // Check infinitive "to <verb>" or imperative start
