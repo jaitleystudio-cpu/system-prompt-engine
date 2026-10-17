@@ -161,7 +161,7 @@ class ReferenceAnswerOracle(TaskOracle):
 class LlmJudgeOracle(TaskOracle):
     """LLM Judge Oracle with explicit evidence status: NEVER claimed as objective truth."""
 
-    def __init__(self, oracle_id: str, rubric: str, judge_model: str = "claude-3-5-sonnet") -> None:
+    def __init__(self, oracle_id: str, rubric: str, judge_model: str = "claude-5-5-sonnet") -> None:
         self.oracle_id = oracle_id
         self.method = f"LLM_JUDGE_RUBRIC_{judge_model}"
         self.known_limitations = "Subject to evaluator model bias, verbosity bias, and positional variance"

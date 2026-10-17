@@ -141,7 +141,7 @@ async function main() {
   await page.waitForTimeout(400);
   const matrixContent = await radar.textContent();
   assert.ok(matrixContent.includes("Claude XML"), "Model Matrix must feature Claude XML");
-  assert.ok(matrixContent.includes("ChatGPT / GPT-4o"), "Model Matrix must feature ChatGPT / GPT-4o");
+  assert.ok(matrixContent.includes("ChatGPT / GPT-6.1"), "Model Matrix must feature ChatGPT / GPT-6.1");
   assert.ok(matrixContent.includes("Google Gemini"), "Model Matrix must feature Google Gemini");
   assert.ok(matrixContent.includes("Local Llama"), "Model Matrix must feature Local Llama");
   await page.screenshot({

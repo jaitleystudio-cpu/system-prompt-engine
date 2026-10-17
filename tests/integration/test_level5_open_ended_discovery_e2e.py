@@ -30,8 +30,8 @@ def test_open_ended_discovery_epoch_e2e():
     cap = engine.compiled_capsules[0]
     assert cap.admission_state == AdmissionState.DEPLOYMENT_ELIGIBLE
     assert cap.interventions.lcb_95_delta > 0.0
-    assert "claude-3-7-sonnet" in cap.transfer.qualified_models
-    assert "openai-o3" in cap.transfer.qualified_models
+    assert "claude-5-5-sonnet" in cap.transfer.qualified_models
+    assert "gpt-6-1-sol" in cap.transfer.qualified_models
 
     # Run Epoch 2 (Continues open-ended curriculum)
     summary2 = engine.run_discovery_epoch(iterations=2)

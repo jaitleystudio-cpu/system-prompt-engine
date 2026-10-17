@@ -305,7 +305,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
                   >
                     <option value="anthropic">Anthropic (Claude Sonnet 5.5 / Claude Code 2.1)</option>
                     <option value="openai">OpenAI (GPT-6.1-Sol Codex / Astra)</option>
-                    <option value="gemini">Google (Gemini 3 Pro / Flash)</option>
+                    <option value="gemini">Google (Gemini 3.8 Flash / Pro)</option>
                     <option value="ollama">Local Ollama (Meta Muse Code 1.3 / DeepSeek)</option>
                   </select>
                 </div>

@@ -643,7 +643,7 @@ try {
       console.log(cyan(`📊 Exporting OpenTelemetry GenAI Spans & Prometheus Metrics for '${fileTarget}'...`));
 
       const telemetry = await exportTelemetryPackage(rawPrompt, {
-        modelTarget: flags.target || 'claude-3-7-sonnet'
+        modelTarget: flags.target || 'claude-5-5-sonnet'
       });
 
       const outPath = flags.out || 'spe_otel_span.json';
@@ -1110,7 +1110,7 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
       
       if (globalApmStore.getTraces().length === 0) {
         await globalApmStore.createExecutionTrace({
-          model: flags.model || 'claude-3-7-sonnet',
+          model: flags.model || 'claude-5-5-sonnet',
           promptText: fileTarget && existsSync(fileTarget) ? readFileSync(fileTarget, 'utf8') : 'System prompt execution with invariant bounds',
           inputTokens: 185,
           outputTokens: 420,

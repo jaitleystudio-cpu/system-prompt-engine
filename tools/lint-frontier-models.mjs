@@ -15,12 +15,11 @@ const root = resolve(new URL('..', import.meta.url).pathname);
 
 // Forbidden legacy models
 const FORBIDDEN_RULES = [
-  { pattern: 'Claude 3\\.[57]', name: 'Claude 3.5 / 3.7 (Retired 2024-2025)' },
+  { pattern: 'claude[- ]*(3[.-][57]|4[.-]5)', name: 'Claude 3.5 / 3.7 / 4.5 (Retired pre-2026 models)' },
   { pattern: '\\bo3-mini\\b', name: 'OpenAI o3-mini (Outdated 2025 model)' },
-  { pattern: '\\bgpt-4o\\b', name: 'OpenAI GPT-4o (Outdated 2024 model)' },
-  { pattern: '\\bo1-mini\\b', name: 'OpenAI o1-mini (Outdated 2024 model)' },
-  { pattern: '[Cc]laude[- ]4\\.5', name: 'Claude 4.5 (Superseded by Claude 5.5 / Claude Code 2.1)' },
-  { pattern: '\\b[Gg][Pp][Tt]-5\\b', name: 'Fictional GPT-5 tag (Superseded by OpenAI GPT-6.1-Sol Codex)' },
+  { pattern: '\\bgpt-4o(-mini)?\\b', name: 'OpenAI GPT-4o / GPT-4o-mini (Outdated 2024 model)' },
+  { pattern: '\\bo1-(mini|preview)\\b|\\bopenai[-/:]o1\\b', name: 'OpenAI o1 / o1-mini (Outdated 2024 model)' },
+  { pattern: '\\b(?:gpt-5|gpt5)\\b', name: 'Fictional GPT-5 tag (Superseded by OpenAI GPT-6.1-Sol Codex)' },
 ];
 
 // Folders/files where legacy names appear solely for historical incident reproduction,
@@ -33,10 +32,9 @@ const EXCLUDED_PATHS = [
   ':(exclude)apps/web/src/engine/incidents/aiIncidentsRegistry.ts',
   ':(exclude)spe_runtime/failure_genome/*',
   ':(exclude)tools/sync_model_atlas.py',
-  ':(exclude)apps/web/src/engine/costCarbonOptimizer.ts',
-  ':(exclude)apps/web/src/engine/eval/liveModelRunner.ts',
   ':(exclude)apps/web/public/evidence-pages/*',
   ':(exclude)apps/web/scripts/test-model-currency.mjs',
+  ':(exclude)apps/web/scripts/test-chatgpt-counter-review-remediation.mjs',
   ':(exclude)apps/web/scripts/test-webmcp-imperative-spec.mjs',
   ':(exclude)apps/web/scripts/test-volume-budget-regression.mjs',
   ':(exclude)tests/copy/reviewed-inventory.json',
@@ -62,7 +60,7 @@ let allViolations = [];
 
 for (const rule of FORBIDDEN_RULES) {
   try {
-    const cmd = `git grep -n -P "${rule.pattern}" -- apps packages spe_runtime tools ${EXCLUDED_PATHS.map(p => `"${p}"`).join(' ')}`;
+    const cmd = `git grep -n -i -I -P "${rule.pattern}" -- apps packages spe_runtime tools ${EXCLUDED_PATHS.map(p => `"${p}"`).join(' ')}`;
     const output = execSync(cmd, { cwd: root, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
     const lines = output.trim().split('\n').filter(Boolean);
     for (const line of lines) {

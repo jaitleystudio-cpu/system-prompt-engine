@@ -3032,14 +3032,14 @@ class REC2EQualificationMatrixRunner:
             schema_version="rec2-0.2",
             skill_instructions="Generate accessible 3D scroll layout with reduced-motion fallback.",
             deterministic_schemas=det_schemas,
-            origin_model_id="claude-3-7-sonnet",
+            origin_model_id="claude-5-5-sonnet",
             origin_environment="macOS-15-AppleSilicon-WebKit",
             obligation_claims=(
                 ObligationEvidenceClaim(
                     obligation_id="ob_json_schema",
                     scope_type=ObligationScopeType.DETERMINISTIC_CONTRACT,
                     description="Deterministic JSON schema validation",
-                    source_model_id="claude-3-7-sonnet",
+                    source_model_id="claude-5-5-sonnet",
                     source_environment="macOS-15-AppleSilicon-WebKit",
                     trials_n=100,
                     successes_k=100,
@@ -3049,7 +3049,7 @@ class REC2EQualificationMatrixRunner:
                     obligation_id="ob_provider_tool_use",
                     scope_type=ObligationScopeType.PROVIDER_API_TOOL,
                     description="Model-bound tool call formatting",
-                    source_model_id="claude-3-7-sonnet",
+                    source_model_id="claude-5-5-sonnet",
                     source_environment="macOS-15-AppleSilicon-WebKit",
                     trials_n=150,
                     successes_k=145,
@@ -3058,7 +3058,7 @@ class REC2EQualificationMatrixRunner:
                     obligation_id="ob_host_privacy",
                     scope_type=ObligationScopeType.DATA_PRIVACY_BOUNDARY,
                     description="Host-enforced zero network egress boundary",
-                    source_model_id="claude-3-7-sonnet",
+                    source_model_id="claude-5-5-sonnet",
                     source_environment="macOS-15-AppleSilicon-WebKit",
                     trials_n=100,
                     successes_k=100,
@@ -3158,7 +3158,7 @@ class REC2EQualificationMatrixRunner:
 
         # Experiment 4: Evidence revocation (revoked oracle or evidence hash immediately blocks reuse)
         ctx_revoked_oracle = RecipientEnvironmentContext(
-            recipient_model_id="claude-3-7-sonnet",
+            recipient_model_id="claude-5-5-sonnet",
             recipient_host="macOS-15-AppleSilicon-WebKit",
             allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
             trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
@@ -3171,7 +3171,7 @@ class REC2EQualificationMatrixRunner:
 
         # Experiment 5: Distribution shift (exceeding tolerance invalidates empirical reuse)
         ctx_shifted = RecipientEnvironmentContext(
-            recipient_model_id="claude-3-7-sonnet",
+            recipient_model_id="claude-5-5-sonnet",
             recipient_host="macOS-15-AppleSilicon-WebKit",
             allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
             trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),

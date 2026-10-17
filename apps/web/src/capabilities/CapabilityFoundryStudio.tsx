@@ -95,10 +95,10 @@ const SAMPLE_CAPSULES: CapabilityCapsule[] = [
     },
     transfer: {
       qualified_models: [
-        "claude-3-7-sonnet",
-        "openai-o3",
+        "claude-5-5-sonnet",
+        "gpt-6-1-sol",
         "deepseek-r1",
-        "gemini-2-0-flash",
+        "gemini-3.8-flash",
       ],
       rejected_models: [],
     },

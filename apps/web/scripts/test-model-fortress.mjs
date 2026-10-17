@@ -130,7 +130,7 @@ assert.equal(ledger.getHeadHash(), GENESIS_LEDGER_HASH);
 const e1 = ledger.appendTransition({
   timestampIso: "2026-10-15T02:00:00Z",
   effectiveDateIso: "2026-06-18",
-  modelId: "claude-4-5-sonnet",
+  modelId: "claude-5-5-sonnet",
   newState: "DISCOVERED",
   transitionType: "DISCOVERY",
   sourceEvidenceHash: "src_hash_1",
@@ -140,7 +140,7 @@ const e1 = ledger.appendTransition({
 const e2 = ledger.appendTransition({
   timestampIso: "2026-10-15T02:05:00Z",
   effectiveDateIso: "2026-06-18",
-  modelId: "claude-4-5-sonnet",
+  modelId: "claude-5-5-sonnet",
   newState: "CALLABLE",
   transitionType: "CALLABLE_PROBE",
   sourceEvidenceHash: "src_hash_2",
@@ -150,7 +150,7 @@ const e2 = ledger.appendTransition({
 const e3 = ledger.appendTransition({
   timestampIso: "2026-10-15T02:10:00Z",
   effectiveDateIso: "2026-06-18",
-  modelId: "claude-4-5-sonnet",
+  modelId: "claude-5-5-sonnet",
   newState: "QUALIFIED",
   transitionType: "QUALIFICATION",
   sourceEvidenceHash: "src_hash_3",
@@ -166,7 +166,7 @@ console.log("  ✓ Monotonic hash-chain verification passed for 3 transitions.")
 // Rollback test: ROLLBACK ≠ HISTORY REWRITE
 const rollbackEntry = ledger.appendRollback({
   timestampIso: "2026-10-15T03:00:00Z",
-  modelId: "claude-4-5-sonnet",
+  modelId: "claude-5-5-sonnet",
   targetPriorEntryHash: e2.entryHash, // Rollback to CALLABLE
   rationale: "Temporary qualification defect detected during metamorphic stress test.",
   sourceEvidenceHash: "rollback_evidence_hash",
@@ -176,7 +176,7 @@ assert.equal(ledger.getEntries().length, 4);
 assert.equal(rollbackEntry.entryIndex, 3);
 assert.equal(rollbackEntry.newState, "CALLABLE");
 assert.equal(rollbackEntry.referencedPriorEntryHash, e2.entryHash);
-assert.equal(ledger.getLatestEntryForModel("claude-4-5-sonnet")?.newState, "CALLABLE");
+assert.equal(ledger.getLatestEntryForModel("claude-5-5-sonnet")?.newState, "CALLABLE");
 
 // History must NOT be rewritten: e1, e2, e3 still exist in full!
 assert.equal(ledger.getEntries()[2].entryHash, e3.entryHash);
@@ -241,7 +241,7 @@ console.log("\nGate 5: Verifying Model Atlas Integration & Live Currency...");
 const allPassports = getAllModelIdentityPassports();
 assert.ok(allPassports.length >= 40);
 
-const sonnetPassport = getModelIdentityPassport("claude-4-5-sonnet");
+const sonnetPassport = getModelIdentityPassport("claude-4-5-sonnet"); // historical model lookup
 assert.ok(sonnetPassport);
 assert.equal(sonnetPassport.lifecycleState, "QUALIFIED");
 assert.equal(sonnetPassport.isEligibleForAutonomousSelection, true);

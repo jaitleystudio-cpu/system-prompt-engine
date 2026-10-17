@@ -148,8 +148,8 @@ export const PROVIDER_REGISTRY: Record<string, ProviderProfile> = {
     supportsStreaming: true,
     notes: "Moonshot Kimi 3.5 output token limit: 32,768 tokens (~24,600 words).",
   },
-  "o1-preview": {
-    id: "o1-preview",
+  "o1-preview": { // LEGACY
+    id: "o1-preview", // LEGACY
     name: "OpenAI o3-Pro",
     maxInputTokens: 200_000,
     maxOutputTokens: 64_000,

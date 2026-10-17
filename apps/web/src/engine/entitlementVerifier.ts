@@ -83,6 +83,7 @@ export interface ReceiptStatusAttestationVerificationOptions {
   ) => boolean;
   currentEpochMs?: number;
   maxAttestationAgeMs?: number;
+  allowInactiveStatus?: boolean;
 }
 
 export interface EntitlementVerificationOptions {
@@ -281,13 +282,15 @@ export function verifySignedReceiptStatusAttestation(
   }
 
   // Explicit revocation / refund / dispute boundary check:
-  // An attestation marked revoked, refunded, or disputed MUST fail immediately, even for lifetime
+  // An attestation marked revoked, refunded, or disputed MUST fail immediately, even for lifetime,
+  // unless the caller explicitly requested inactive status inspection (e.g. verifySignedEntitlementToken).
   if (
-    parsed.revoked === true ||
-    parsed.paymentStatus === "REFUNDED" ||
-    parsed.paymentStatus === "DISPUTED" ||
-    parsed.subscriptionStatus === "REVOKED" ||
-    parsed.subscriptionStatus === "CANCELED"
+    !options.allowInactiveStatus &&
+    (parsed.revoked === true ||
+      parsed.paymentStatus === "REFUNDED" ||
+      parsed.paymentStatus === "DISPUTED" ||
+      parsed.subscriptionStatus === "REVOKED" ||
+      parsed.subscriptionStatus === "CANCELED")
   ) {
     return null;
   }
@@ -461,6 +464,7 @@ export function verifySignedEntitlementToken(
             verifySignatureFn: options.verifySignatureFn,
             currentEpochMs: nowMs,
             maxAttestationAgeMs: options.maxAttestationAgeMs,
+            allowInactiveStatus: true,
           });
           if (
             !verifiedAtt ||
@@ -490,6 +494,7 @@ export function verifySignedEntitlementToken(
           verifySignatureFn: options.verifySignatureFn,
           currentEpochMs: nowMs,
           maxAttestationAgeMs: Number.MAX_SAFE_INTEGER,
+          allowInactiveStatus: true,
         });
         if (withoutFreshnessLimit) {
           return reject("STALE_RECEIPT_ATTESTATION: Signed receipt attestation exceeds maximum freshness window (maxAttestationAgeMs). Offline attestation expired.");

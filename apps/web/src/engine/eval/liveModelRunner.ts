@@ -287,11 +287,11 @@ export async function executeProviderCall(request: LiveModelRequest): Promise<Li
       let anthropicModel = request.model.replace(/^anthropic:/i, "");
       if (
         anthropicModel === "claude-5-5-sonnet" ||
-        anthropicModel === "claude-4-5-sonnet" ||
-        anthropicModel === "claude-3-7-sonnet" ||
-        anthropicModel === "claude-3-7-sonnet-20250219" ||
-        anthropicModel === "claude-sonnet" ||
-        anthropicModel === "claude-sonnet-4-5"
+        anthropicModel === "claude-4-5-sonnet" || // historical legacy mapping
+        anthropicModel === "claude-3-7-sonnet" || // historical legacy mapping
+        anthropicModel === "claude-3-7-sonnet-20250219" || // historical legacy mapping
+        anthropicModel === "claude-sonnet" || // historical legacy mapping
+        anthropicModel === "claude-sonnet-4-5" // historical legacy mapping
       ) {
         anthropicModel = "claude-5-5-sonnet";
       }

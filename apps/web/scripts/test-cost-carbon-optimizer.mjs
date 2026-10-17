@@ -35,8 +35,8 @@ console.log(`Raw Tokens:       ${costResult.rawTokenCount}`);
 console.log(`Pruned Tokens:    ${costResult.prunedTokenCount}`);
 console.log(`Reduction:        ${costResult.tokenReductionPercent}%`);
 console.log(`Annual Savings (10M req):`);
-console.log(`  GPT-6.1-Sol:    $${costResult.annualSavingsUsdAt10mCalls.gpt5}`);
-console.log(`  Claude 5.5:     $${costResult.annualSavingsUsdAt10mCalls.claude45Sonnet}`);
+console.log(`  GPT-6.1-Sol:    $${costResult.annualSavingsUsdAt10mCalls.gpt61Sol}`);
+console.log(`  Claude 5.5:     $${costResult.annualSavingsUsdAt10mCalls.claude55Sonnet}`);
 
 if (costResult.tokenReductionPercent < 15) {
   throw new Error(`Expected significant token reduction on verbose prompt, got ${costResult.tokenReductionPercent}%`);

@@ -174,7 +174,7 @@ const liveAttestation = issueLiveEvaluationAttestation(
       },
       {
         caseId: "case-02",
-        providerId: "anthropic:claude-3-7-sonnet",
+        providerId: "anthropic:claude-5-5-sonnet",
         promptSha256: receipt.candidateHash,
         responseSha256: "b".repeat(64),
         latencyMs: 138,

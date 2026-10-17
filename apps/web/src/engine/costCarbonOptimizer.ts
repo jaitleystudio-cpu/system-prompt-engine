@@ -32,8 +32,10 @@ export interface CostOptimizationResult {
   prunedTokenCount: number;
   tokenReductionPercent: number; // e.g. 32%
   annualSavingsUsdAt10mCalls: {
-    gpt5: number;
-    claude45Sonnet: number;
+    gpt61Sol?: number;
+    claude55Sonnet?: number;
+    gpt5: number; // historical
+    claude45Sonnet: number; // historical
     deepseekR2: number;
     // Backwards-compatible aliases
     gpt4o: number; // historical
@@ -264,13 +266,15 @@ export function simulateCostAndCarbon(prompt: string): CostOptimizationResult {
   const deepseekSavings = Math.round(deepseekModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
 
   const annualSavingsUsdAt10mCalls = {
-    gpt5: gpt6Savings,
-    claude45Sonnet: claudeSavings,
+    gpt61Sol: gpt6Savings,
+    claude55Sonnet: claudeSavings,
+    gpt5: gpt6Savings, // historical
+    claude45Sonnet: claudeSavings, // historical
     deepseekR2: deepseekSavings,
     // Backwards-compatible aliases
-    gpt4o: gpt6Savings,
-    claude37Sonnet: claudeSavings,
-    deepseekR1: deepseekSavings,
+    gpt4o: gpt6Savings, // historical
+    claude37Sonnet: claudeSavings, // historical
+    deepseekR1: deepseekSavings, // historical
   };
 
   return {

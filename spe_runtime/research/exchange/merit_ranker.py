@@ -139,7 +139,7 @@ class SecurityAudit:
 @dataclass
 class TestedEnvironment:
     host_runtime: str = "Claude Code"  # Claude Code / Cursor / Gilden / Codex
-    model_tested: str = "claude-3-7-sonnet"
+    model_tested: str = "claude-5-5-sonnet"
     os: str = "macOS / Linux"
     trials_n: int = 150
 
@@ -251,7 +251,7 @@ class MeritRanker:
         trials_n: int,
         successes: int,
         host_runtime: str = "Claude Code / Cursor / Gilden",
-        model_tested: str = "claude-3-7-sonnet",
+        model_tested: str = "claude-5-5-sonnet",
         os_name: str = "macOS / Linux",
         average_token_overhead: int = 150,
         permission_footprint: Optional[List[str]] = None,
@@ -403,7 +403,7 @@ class MeritRanker:
                     trials_n=trials_n,
                     successes=successes,
                     host_runtime=env_dict.get("host_runtime", "Claude Code"),
-                    model_tested=env_dict.get("model_tested", "claude-3-7-sonnet"),
+                    model_tested=env_dict.get("model_tested", "claude-5-5-sonnet"),
                     os_name=env_dict.get("os", "macOS / Linux"),
                     average_token_overhead=perf_dict.get("average_token_overhead", c.get("average_token_overhead", 150)),
                     security_audit=sec,

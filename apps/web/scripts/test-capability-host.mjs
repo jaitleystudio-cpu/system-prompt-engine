@@ -49,7 +49,7 @@ const admittedCapsule = {
     lcb_95_delta: 0.85,
   },
   transfer: {
-    qualified_models: ["claude-3-7-sonnet", "openai-o3"],
+    qualified_models: ["claude-5-5-sonnet", "gpt-6-1-sol"],
     rejected_models: [],
   },
   revocation_rules: {

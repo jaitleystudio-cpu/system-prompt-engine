@@ -16,7 +16,7 @@ Validate all incoming JSON orders for inventory availability.
 `.trim();
 
 const telemetry = await exportTelemetryPackage(samplePrompt, {
-  modelTarget: 'claude-3-7-sonnet',
+  modelTarget: 'claude-5-5-sonnet',
   receiptDigest: 'receipt_sha256_canonical_test_hash_42',
   securityScore: 99,
   folSoundness: true,
@@ -29,7 +29,7 @@ const span = telemetry.otelSpan;
 if (span.attributes['gen_ai.system'] !== 'spe-assured-runtime') {
   throw new Error('Missing gen_ai.system attribute');
 }
-if (span.attributes['gen_ai.request.model'] !== 'claude-3-7-sonnet') {
+if (span.attributes['gen_ai.request.model'] !== 'claude-5-5-sonnet') {
   throw new Error('Model target mismatch in span');
 }
 if (span.attributes['spe.assurance.receipt_digest'] !== 'receipt_sha256_canonical_test_hash_42') {

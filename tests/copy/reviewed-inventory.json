@@ -3103,12 +3103,6 @@
       "text": "Active Epoch"
     },
     {
-      "id": "7c982ea0546a4ca2f7ed",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "openai-o3"
-    },
-    {
       "id": "7daba486672450251b56",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3209,6 +3203,12 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "prod-node-1"
+    },
+    {
+      "id": "8b051dcfa4f311bcfb26",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "gpt-6-1-sol"
     },
     {
       "id": "8b7cb70ba8fb25dd92f0",
@@ -3329,12 +3329,6 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "gossiped to 7 peers"
-    },
-    {
-      "id": "a371140a0e1727256de0",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "gemini-2-0-flash"
     },
     {
       "id": "a55b740ced0994ddcc28",
@@ -3559,12 +3553,6 @@
       "text": "Autonomous Open-Ended Discovery and Ontology Base"
     },
     {
-      "id": "d6b3a0d525afc4254cd6",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "claude-3-7-sonnet"
-    },
-    {
       "id": "d9401469775d20c72154",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3575,6 +3563,12 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "pick"
+    },
+    {
+      "id": "dbb6b6b56fd765839416",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "gemini-3.8-flash"
     },
     {
       "id": "dcb3cd0b01afa484893e",
@@ -3611,6 +3605,12 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "· Stake:"
+    },
+    {
+      "id": "df5dbcd8dd2d0de0b36f",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "claude-5-5-sonnet"
     },
     {
       "id": "dfce848a932652c01901",
@@ -4249,6 +4249,12 @@
       "text": "sk-..."
     },
     {
+      "id": "0d0e10d8b33eb19bca88",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-5-5-sonnet"
+    },
+    {
       "id": "0d5352000979173bceda",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4277,12 +4283,6 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "ollama"
-    },
-    {
-      "id": "0d0e10d8b33eb19bca88",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "claude-5-5-sonnet"
     },
     {
       "id": "149e0dde17a9ce47d642",
@@ -4441,12 +4441,6 @@
       "text": "Enforces scope boundary refusal — denies modification outside assigned task files."
     },
     {
-      "id": "95c77cfbfe54a7142153",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Google (Gemini 3 Pro / Flash)"
-    },
-    {
       "id": "5851a77247a656bc3801",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4457,6 +4451,12 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "🔒 Direct Browser Egress: Dispatched directly from your browser sandbox to official"
+    },
+    {
+      "id": "597529baaeda9df59c9f",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic (Claude Sonnet 5.5 / Claude Code 2.1)"
     },
     {
       "id": "59874b4534fc48c8935c",
@@ -4517,12 +4517,6 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "⚠️ Provider Security Notice (OpenAI Best Practices):"
-    },
-    {
-      "id": "b1733f17ffd779868e5b",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "OpenAI (GPT-6.1-Sol Codex / Astra)"
     },
     {
       "id": "7d20b264700e6c809b6f",
@@ -4657,6 +4651,12 @@
       "text": "[LIVE MODEL TEST FLIGHT ·"
     },
     {
+      "id": "b1733f17ffd779868e5b",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI (GPT-6.1-Sol Codex / Astra)"
+    },
+    {
       "id": "b439d341bac0b543788a",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4723,16 +4723,16 @@
       "text": "test-injection"
     },
     {
-      "id": "def8f0faff012a21ab25",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "gpt-6-1-sol"
-    },
-    {
       "id": "c665729437c6a3a14d1b",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "🔒 [CREDENTIAL SHIELD ACTIVE · NETWORK BLOCKED]\n\nSecurity violation: Attempted secret access on .env and external egress blocked.\n\nEgress Policy: Local-first air-gapped sandbox.\nViolations Prevented: Credential exfiltration & unauthorized network communication."
+    },
+    {
+      "id": "c7add57678fcfb75ef5b",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local Ollama (Meta Muse Code 1.3 / DeepSeek)"
     },
     {
       "id": "cd42cbabc341da9cd556",
@@ -4771,6 +4771,12 @@
       "text": "🛡️ [GUARDRAIL ENFORCED · ATTACK REFUSED]\n\nI cannot comply with requests to override declared directives, disclose internal system constraints, or bypass operational guardrails.\n\nOperating strictly within declared scope boundaries for category:"
     },
     {
+      "id": "d9db82b2e81a620c14d6",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
+    },
+    {
       "id": "da4f772ac6f46a8d0413",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4789,22 +4795,16 @@
       "text": "Jailbreak: Prompt Disclosure Attack"
     },
     {
-      "id": "597529baaeda9df59c9f",
+      "id": "def8f0faff012a21ab25",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Anthropic (Claude Sonnet 5.5 / Claude Code 2.1)"
+      "text": "gpt-6-1-sol"
     },
     {
       "id": "e33d48c0ac69d0c83d8e",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "AIzaSy..."
-    },
-    {
-      "id": "c7add57678fcfb75ef5b",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Local Ollama (Meta Muse Code 1.3 / DeepSeek)"
     },
     {
       "id": "e9fa253586ca3f90c42e",
@@ -4849,10 +4849,10 @@
       "text": "🚫 [SCOPE BOUNDARY ENFORCED · TASK HALTED]\n\nTask aborted: The requested action targets files outside the authorized project boundary (LOCAL_FILESYSTEM_READ / scope constraint).\n\nDeclared Scope: Current task files only.\nViolations Prevented: Destructive filesystem deletion & credential tampering."
     },
     {
-      "id": "d9db82b2e81a620c14d6",
+      "id": "f573ecd72a06c21b1b69",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
+      "text": "Google (Gemini 3.8 Flash / Pro)"
     },
     {
       "id": "f736efd5030a6d420206",
@@ -18919,12 +18919,6 @@
       "text": "2026-09-30T10:25:00Z"
     },
     {
-      "id": "8470b88e1a83b0b6f168",
-      "file": "apps/web/src/library/projectLibraryModel.ts",
-      "depth": "PRODUCT",
-      "text": "openai:gpt-6-1-sol"
-    },
-    {
       "id": "33f2fdf4470bdd3a6509",
       "file": "apps/web/src/library/projectLibraryModel.ts",
       "depth": "PRODUCT",
@@ -19021,6 +19015,12 @@
       "text": "artifacts must be an array"
     },
     {
+      "id": "8470b88e1a83b0b6f168",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "openai:gpt-6-1-sol"
+    },
+    {
       "id": "87c565c3a057c76b467b",
       "file": "apps/web/src/library/projectLibraryModel.ts",
       "depth": "PRODUCT",
@@ -19043,6 +19043,12 @@
       "file": "apps/web/src/library/projectLibraryModel.ts",
       "depth": "PRODUCT",
       "text": "HEAD_MOVE"
+    },
+    {
+      "id": "a07bfd7918a48c2a69da",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "anthropic:claude-5-5-sonnet"
     },
     {
       "id": "a65103b1842878c3e4fe",
@@ -19121,12 +19127,6 @@
       "file": "apps/web/src/library/projectLibraryModel.ts",
       "depth": "PRODUCT",
       "text": "Invalid spe_contract: expected \"NOT_YET_BOUND\", got \""
-    },
-    {
-      "id": "a07bfd7918a48c2a69da",
-      "file": "apps/web/src/library/projectLibraryModel.ts",
-      "depth": "PRODUCT",
-      "text": "anthropic:claude-5-5-sonnet"
     },
     {
       "id": "ce785ff8e4873ca1e12e",
@@ -25195,12 +25195,6 @@
       "text": "Updated Daily · Continuous Model Drift Sentinel"
     },
     {
-      "id": "b79b506d1dfe1d52ed65",
-      "file": "apps/web/src/pages/AiIncidentWire.tsx",
-      "depth": "PRODUCT",
-      "text": "e.g. OpenAI GPT-6.1-Sol / Astra, Claude Sonnet 5.5, Meta Muse Code 1.3"
-    },
-    {
       "id": "14591a59e889664a143c",
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
@@ -25511,6 +25505,12 @@
       "file": "apps/web/src/pages/AiIncidentWire.tsx",
       "depth": "PRODUCT",
       "text": "Copy"
+    },
+    {
+      "id": "b79b506d1dfe1d52ed65",
+      "file": "apps/web/src/pages/AiIncidentWire.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. OpenAI GPT-6.1-Sol / Astra, Claude Sonnet 5.5, Meta Muse Code 1.3"
     },
     {
       "id": "c203846cfbbceb329cfc",
@@ -27775,16 +27775,16 @@
       "text": "Universal Prompt Arsenal"
     },
     {
-      "id": "80b955b086dc08647fcb",
-      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
-      "depth": "PRODUCT",
-      "text": "100% Free Online Access"
-    },
-    {
       "id": "6d1b53f0af98af64465f",
       "file": "apps/web/src/pages/PromptArsenalPage.tsx",
       "depth": "PRODUCT",
       "text": "Production-grade, task-specific prompt assets adapted for Claude Sonnet 5.5, OpenAI GPT-6.1-Sol / Astra, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. Browse across 13 professional domains with real-time model transcompilation."
+    },
+    {
+      "id": "80b955b086dc08647fcb",
+      "file": "apps/web/src/pages/PromptArsenalPage.tsx",
+      "depth": "PRODUCT",
+      "text": "100% Free Online Access"
     },
     {
       "id": "86d3d156ed0a19452f13",
@@ -29299,6 +29299,12 @@
       "text": "/privacy"
     },
     {
+      "id": "2896273e94c0898d0a62",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude Sonnet 5.5, OpenAI GPT-6.1-Sol / Astra, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. 100% free online."
+    },
+    {
       "id": "2ab69cc3863813bae524",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -29597,12 +29603,6 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "AI Incident Radar & Failure Post-Mortem Wire | SPE Ω"
-    },
-    {
-      "id": "2896273e94c0898d0a62",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "Explore 10,000+ production-tested AI prompts across 13 domains. Optimized for Claude Sonnet 5.5, OpenAI GPT-6.1-Sol / Astra, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. 100% free online."
     },
     {
       "id": "be9be8adf5f83326d168",

@@ -101,7 +101,7 @@ const TEST_MATRIX = [
   { id: 69, category: "indirect", utterance: "Generate CLAUDE.md guidelines for an open source repository", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 70, category: "indirect", utterance: "Compile a prompt for a customer support agent based on these FAQs", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 71, category: "indirect", utterance: "Scaffold a prompt for an automated customer onboarding agent", expectedRelevant: true, expectedTool: "compile_system_prompt" },
-  { id: 72, category: "indirect", utterance: "Optimize this prompt for GPT-4o token efficiency", expectedRelevant: true, expectedTool: "compile_system_prompt" },
+  { id: 72, category: "indirect", utterance: "Optimize this prompt for GPT-6.1-Sol token efficiency", expectedRelevant: true, expectedTool: "compile_system_prompt" },
   { id: 73, category: "indirect", utterance: "Native prompt vs English prompt token cost comparison for Indian languages", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
   { id: 74, category: "indirect", utterance: "Crée un prompt système pour un assistant financier", expectedRelevant: true, expectedTool: "compare_prompt_languages" },
   { id: 75, category: "indirect", utterance: "Erstelle einen System-Prompt für einen Programmierassistenten", expectedRelevant: true, expectedTool: "compare_prompt_languages" },

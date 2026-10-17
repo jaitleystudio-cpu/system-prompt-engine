@@ -870,7 +870,7 @@ class ExchangeMeritRankerAdapter:
         trials_n: int,
         successes: int,
         host_runtime: str = "Claude Code / Cursor / Gilden",
-        model_tested: str = "claude-3-7-sonnet",
+        model_tested: str = "claude-5-5-sonnet",
         os_name: str = "macOS / Linux",
         average_token_overhead: int = 150,
         permission_footprint: Optional[List[str]] = None,
