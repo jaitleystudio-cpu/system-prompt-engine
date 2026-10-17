@@ -1,0 +1,1438 @@
+{
+  "schema": "spe.real-evolution-verification.v1",
+  "testedEngineCommit": "b3b3d58ae75515d80d231cd006a271f9f779df0c",
+  "scope": "FINITE_PUBLIC_PARSER_CORPUS",
+  "localTests": {
+    "node24": {
+      "tests": 61,
+      "passed": 61,
+      "failed": 0,
+      "skipped": 0
+    },
+    "node22": {
+      "tests": 61,
+      "passed": 61,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "actualAcceptance": {
+    "schema": "spe.real-parser-evolution.v1",
+    "status": "ACCEPTED_ON_FEATURE_BRANCH",
+    "baselineCommit": "46e4fc29fc4a9196bc30df7266e052c502e6950b",
+    "baseline": {
+      "scope": "FINITE_PUBLIC_PARSER_CORPUS",
+      "total": 15,
+      "passed": 12,
+      "cases": [
+        {
+          "id": "t1",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "8a0c68ec8abcdda9b9de194d72f0491bc1ffc960d14361f845beead7c4c56451"
+        },
+        {
+          "id": "t2",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "ccafbd716400e1c83bcdf2f9ac92fb039e94216c68b08cfe96b9a938909de747"
+        },
+        {
+          "id": "t3",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "60230608e0e6d10bac0f8c183814c716187f70fa2014434be10f82051e0f0d85"
+        },
+        {
+          "id": "t4",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "9bf90cb1bbd92499001052ab11b9dd29055bfd4e98950def03748ddde738d2e3"
+        },
+        {
+          "id": "v1",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "b45a811147531c0cd0e7a1db8805fc501a9f1fe26220eff78d536e11909b3a63"
+        },
+        {
+          "id": "v2",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "5d28ca3424064ef64aad86a2f17ac9b5218e380670fc0a0d294b53d7842e428e"
+        },
+        {
+          "id": "v3",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "10102d8806c017a0ad5bf7ed0ba3f2069dc6c1f297618c91f21c5222c2f37bc6"
+        },
+        {
+          "id": "v4",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "942790ddebfdba86979f1aaa472fc1165d34dfa8b5db0373b9c989797422e15f"
+        },
+        {
+          "id": "a1",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "2d453a4b29bee840124c683f3311bcd4174b0a535ee47887730676cf1d7c4f2d"
+        },
+        {
+          "id": "a2",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "9c6f1ac38eeeeeda9bad60c2822548ca16ab7dffe7d10fa180056b266080cee3"
+        },
+        {
+          "id": "a3",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "8b45e8139b29660aa1cacf94c864b64c1eee8b54894118243d79c0a59374e2f2"
+        },
+        {
+          "id": "a4",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "a77fd8382b6a67e48cad7cfd2dfc1d82afa7e6a1334426f4eb0256f2698fb40f"
+        },
+        {
+          "id": "t5-language-boundary",
+          "split": "train",
+          "passed": false,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [
+            "respond in Telugu"
+          ],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "2432218d3c79ba01f35d7700c26c6f568712cfedd00812ba9d315f9f773abf5d"
+        },
+        {
+          "id": "v5-preservation-boundary",
+          "split": "validation",
+          "passed": false,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [
+            "preserve account_id unchanged"
+          ],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "2c12e1fec05273262df9882120bc83d18284ebdac1716eb8f58145ff5a8c69e4"
+        },
+        {
+          "id": "a5-output-boundary",
+          "split": "audit",
+          "passed": false,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [
+            "include a chart"
+          ],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "36a4867b6260cab0ceac542f817751a9d5c4e39314d17aa766b5d663f20bb582"
+        }
+      ]
+    },
+    "candidate": {
+      "scope": "FINITE_PUBLIC_PARSER_CORPUS",
+      "total": 15,
+      "passed": 15,
+      "cases": [
+        {
+          "id": "t1",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "8a0c68ec8abcdda9b9de194d72f0491bc1ffc960d14361f845beead7c4c56451"
+        },
+        {
+          "id": "t2",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "ccafbd716400e1c83bcdf2f9ac92fb039e94216c68b08cfe96b9a938909de747"
+        },
+        {
+          "id": "t3",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "60230608e0e6d10bac0f8c183814c716187f70fa2014434be10f82051e0f0d85"
+        },
+        {
+          "id": "t4",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "9bf90cb1bbd92499001052ab11b9dd29055bfd4e98950def03748ddde738d2e3"
+        },
+        {
+          "id": "v1",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "b45a811147531c0cd0e7a1db8805fc501a9f1fe26220eff78d536e11909b3a63"
+        },
+        {
+          "id": "v2",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "5d28ca3424064ef64aad86a2f17ac9b5218e380670fc0a0d294b53d7842e428e"
+        },
+        {
+          "id": "v3",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "10102d8806c017a0ad5bf7ed0ba3f2069dc6c1f297618c91f21c5222c2f37bc6"
+        },
+        {
+          "id": "v4",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "942790ddebfdba86979f1aaa472fc1165d34dfa8b5db0373b9c989797422e15f"
+        },
+        {
+          "id": "a1",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "2d453a4b29bee840124c683f3311bcd4174b0a535ee47887730676cf1d7c4f2d"
+        },
+        {
+          "id": "a2",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "9c6f1ac38eeeeeda9bad60c2822548ca16ab7dffe7d10fa180056b266080cee3"
+        },
+        {
+          "id": "a3",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "8b45e8139b29660aa1cacf94c864b64c1eee8b54894118243d79c0a59374e2f2"
+        },
+        {
+          "id": "a4",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "a77fd8382b6a67e48cad7cfd2dfc1d82afa7e6a1334426f4eb0256f2698fb40f"
+        },
+        {
+          "id": "t5-language-boundary",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "ee3c34ee5dbbd9eeb3757fac9c724c031780371d5a8d38c90f03ae349bac4be0"
+        },
+        {
+          "id": "v5-preservation-boundary",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "7581e257d0f37ebd740a46137226c342a15c5cc82e93c215325e35d8e0f1adf8"
+        },
+        {
+          "id": "a5-output-boundary",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "26457f49f9d3aba0f5274cb8eb53043cbf9528d5601eeea5ab70313e244cb680"
+        }
+      ]
+    },
+    "comparison": {
+      "accepted": true,
+      "regressions": [],
+      "splitGains": {
+        "train": 1,
+        "validation": 1,
+        "audit": 1
+      }
+    },
+    "gates": [
+      {
+        "id": "brain-bundle-recovery",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "984eada6e64e5712c325d3f6987544a2c498f02f42537b1a33c3a03f773b860e",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-policy-inputs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "390438f5746f5aa098e849b42571de6aa07dc4b93cf1f23077962d37ab7e7f0e",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-cli",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "7dc041e91cb129f1ccf87980dd3d783ac4042afb4448f0c67235c3b637baaca3",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-distribution",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "ef2030f5a3667aeb5650ca5eac4de3a5fc16cb90c9619245273097d313ebf4c5",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "real-evolution-evaluator",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "8bd4f38e61122a67ce0a0f07a7e4572e405d237c7a5380e0afb98ce9b0cc5238",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "goal-preservation",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "6d3b0e7c7787a9819b44f2688a4f3d408f03051ce1bda2cf8f9bfd60758677a5",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "instruction-contracts",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "ceb3d3984e5e9f9c18fb4f3459a3a12e79a3c89f4d5a44dc181ef9bcc39e4421",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "plain-english-showcase",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "9be0480a9c37006b93ad6ee59b0c0f56bc1ec8a4a58f114ff23524950db6d7ab",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "assertion-engine",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "stdoutDigest": "5a100bedf993c44536fc01c2b5d6dc6812591b45b9aefb62c151569f7eade58a",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "candidateDigest": "76daddcc2b6d35a0e19a866774a2acf91c2f29e7c4dd49c37d21505d3121ba95",
+    "observedAt": "2026-10-17T11:47:21.205Z",
+    "modelTrainingPerformed": false,
+    "productionDeployed": false,
+    "scope": "FINITE_PUBLIC_PARSER_CORPUS",
+    "acceptedCommit": "b3b3d58ae75515d80d231cd006a271f9f779df0c"
+  },
+  "retrospective": {
+    "scope": "FINITE_PUBLIC_PARSER_CORPUS_RETROSPECTIVE",
+    "baselineCommit": "0bc3e734fb9c2963b5a862842c9a788322ee890b",
+    "candidateCommit": "b3b3d58ae75515d80d231cd006a271f9f779df0c",
+    "baseline": {
+      "scope": "FINITE_PUBLIC_PARSER_CORPUS",
+      "total": 15,
+      "passed": 3,
+      "cases": [
+        {
+          "id": "t1",
+          "split": "train",
+          "passed": false,
+          "missingGoals": [
+            "explains stack frames"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "85c4d172b195e096c76d00e97f6d9f381f3f905a0f686a2a4a1fda2f7ebac6b1"
+        },
+        {
+          "id": "t2",
+          "split": "train",
+          "passed": false,
+          "missingGoals": [
+            "identifies repeated incidents"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "ce8ae794d393f3ab16134bd670e79ea33969ee3ce9868079e403c5a32b54ff17"
+        },
+        {
+          "id": "t3",
+          "split": "train",
+          "passed": false,
+          "missingGoals": [
+            "calculates margins",
+            "flags missing records"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "be4a3af7c39ba8c3490c3914f17d3f82a7155dc3d46b4341f79d70a4db025594"
+        },
+        {
+          "id": "t4",
+          "split": "train",
+          "passed": false,
+          "missingGoals": [
+            "preserves quotations"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "0b309ee81de26e6774fbeec66777376401ca73d7b39868d8bf13eb5fa5ca4add"
+        },
+        {
+          "id": "v1",
+          "split": "validation",
+          "passed": false,
+          "missingGoals": [
+            "estimates downtime"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "7391700f3afced564d905605d7da1fd3ee3f63e7bab4695895cf46552e4b96c5"
+        },
+        {
+          "id": "v2",
+          "split": "validation",
+          "passed": false,
+          "missingGoals": [
+            "locates English translations"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "9321b177df6c5689f4b6522155cd268b5ce9f5551e9692d2c923c8a0eba3c0d6"
+        },
+        {
+          "id": "v3",
+          "split": "validation",
+          "passed": false,
+          "missingGoals": [
+            "suggests recovery sessions",
+            "tracks workload"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "c5dfcc9ea0501b3bc8748898b361c6d95ced7047b918b731e4b355ac62f14357"
+        },
+        {
+          "id": "v4",
+          "split": "validation",
+          "passed": false,
+          "missingGoals": [
+            "balances driver workloads",
+            "keeps depot coverage"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "65435f73b96f46125079b6835531dd47f579af34c03ca2a7b9e604a871926b1c"
+        },
+        {
+          "id": "a1",
+          "split": "audit",
+          "passed": false,
+          "missingGoals": [
+            "maps duplicate identifiers"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "0d940345921cfbce07c69a0e5a02817eac91029ef6d17e8069c7865151e0910a"
+        },
+        {
+          "id": "a2",
+          "split": "audit",
+          "passed": false,
+          "missingGoals": [
+            "lists open questions",
+            "estimates effort"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "dfb36692efea1be55f281120536ac4dce899eb5574058488bd235b933f2982df"
+        },
+        {
+          "id": "a3",
+          "split": "audit",
+          "passed": false,
+          "missingGoals": [
+            "counts missing attachments"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "70c81ec337fbe5c0a92de7484e39fdb60c2cbce0652448276187ee33e458b7d6"
+        },
+        {
+          "id": "a4",
+          "split": "audit",
+          "passed": false,
+          "missingGoals": [
+            "compares access routes",
+            "explains local customs"
+          ],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "5ba86dc847ced7ea3cdbcf74ac20101bc12b07ba1f56377e127c06081c3e81ae"
+        },
+        {
+          "id": "t5-language-boundary",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "ee3c34ee5dbbd9eeb3757fac9c724c031780371d5a8d38c90f03ae349bac4be0"
+        },
+        {
+          "id": "v5-preservation-boundary",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "7581e257d0f37ebd740a46137226c342a15c5cc82e93c215325e35d8e0f1adf8"
+        },
+        {
+          "id": "a5-output-boundary",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "26457f49f9d3aba0f5274cb8eb53043cbf9528d5601eeea5ab70313e244cb680"
+        }
+      ]
+    },
+    "candidate": {
+      "scope": "FINITE_PUBLIC_PARSER_CORPUS",
+      "total": 15,
+      "passed": 15,
+      "cases": [
+        {
+          "id": "t1",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "8a0c68ec8abcdda9b9de194d72f0491bc1ffc960d14361f845beead7c4c56451"
+        },
+        {
+          "id": "t2",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "ccafbd716400e1c83bcdf2f9ac92fb039e94216c68b08cfe96b9a938909de747"
+        },
+        {
+          "id": "t3",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "60230608e0e6d10bac0f8c183814c716187f70fa2014434be10f82051e0f0d85"
+        },
+        {
+          "id": "t4",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "9bf90cb1bbd92499001052ab11b9dd29055bfd4e98950def03748ddde738d2e3"
+        },
+        {
+          "id": "v1",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "b45a811147531c0cd0e7a1db8805fc501a9f1fe26220eff78d536e11909b3a63"
+        },
+        {
+          "id": "v2",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "5d28ca3424064ef64aad86a2f17ac9b5218e380670fc0a0d294b53d7842e428e"
+        },
+        {
+          "id": "v3",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "10102d8806c017a0ad5bf7ed0ba3f2069dc6c1f297618c91f21c5222c2f37bc6"
+        },
+        {
+          "id": "v4",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "942790ddebfdba86979f1aaa472fc1165d34dfa8b5db0373b9c989797422e15f"
+        },
+        {
+          "id": "a1",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "2d453a4b29bee840124c683f3311bcd4174b0a535ee47887730676cf1d7c4f2d"
+        },
+        {
+          "id": "a2",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "9c6f1ac38eeeeeda9bad60c2822548ca16ab7dffe7d10fa180056b266080cee3"
+        },
+        {
+          "id": "a3",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "8b45e8139b29660aa1cacf94c864b64c1eee8b54894118243d79c0a59374e2f2"
+        },
+        {
+          "id": "a4",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "a77fd8382b6a67e48cad7cfd2dfc1d82afa7e6a1334426f4eb0256f2698fb40f"
+        },
+        {
+          "id": "t5-language-boundary",
+          "split": "train",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "ee3c34ee5dbbd9eeb3757fac9c724c031780371d5a8d38c90f03ae349bac4be0"
+        },
+        {
+          "id": "v5-preservation-boundary",
+          "split": "validation",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "7581e257d0f37ebd740a46137226c342a15c5cc82e93c215325e35d8e0f1adf8"
+        },
+        {
+          "id": "a5-output-boundary",
+          "split": "audit",
+          "passed": true,
+          "missingGoals": [],
+          "missingConstraints": [],
+          "constraintLeaks": [],
+          "goalLeaks": [],
+          "missingOutput": [],
+          "wellFormed": true,
+          "outputDigest": "26457f49f9d3aba0f5274cb8eb53043cbf9528d5601eeea5ab70313e244cb680"
+        }
+      ]
+    },
+    "productionDeployed": false,
+    "modelTrainingPerformed": false
+  },
+  "bundleUpdate": {
+    "schema": "spe.brain-run.v1",
+    "scope": "SOURCE_BUNDLE_REGRESSION_CHECKS",
+    "runId": "4604ef1b-a819-4ce4-9930-8d6192b209f3",
+    "observedAt": "2026-10-17T20:45:33.391Z",
+    "status": "UPDATED",
+    "sourceCommit": "b3b3d58ae75515d80d231cd006a271f9f779df0c",
+    "productionDeployed": false,
+    "modelTrainingPerformed": false,
+    "previousVersion": "0.1.1",
+    "historyDetected": true,
+    "gates": [
+      {
+        "id": "brain-bundle-recovery",
+        "path": "tests/brain-updates/bundles.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 2326,
+        "stdoutDigest": "d7bf57adaba82ee43e6cb213fd20f5be27cb0d32f5c05a49a7e4513d285ae36f",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-policy-inputs",
+        "path": "tests/brain-updates/policy.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 243,
+        "stdoutDigest": "d8ad88af25a12abfb407f8c73bc6957417dd97414f3dddd036b6a8da466e650f",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-cli",
+        "path": "tests/brain-updates/runner.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 114,
+        "stdoutDigest": "12d3066ce8c920bc9b64aa079048b18616fb010f530a46ba91076716b67929c7",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-distribution",
+        "path": "tests/brain-updates/github-state.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 448,
+        "stdoutDigest": "10117cc592c3aa12860575203ae98eb17d91bbf4d458c416b437ea5539965606",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "real-evolution-evaluator",
+        "path": "tests/brain-updates/evolution.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 256,
+        "stdoutDigest": "6d516f83a17a50ab571bae26a1158c8195ab97d092cd00bf095982c3aad5d099",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "goal-preservation",
+        "path": "tests/brain-updates/goal-preservation.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 77,
+        "stdoutDigest": "b8754ba5669395419a6b2beb025e620de5bad8af9b8e2efdd4f6e2aaea6e128d",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "instruction-contracts",
+        "path": "tests/brain-updates/contract.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 93,
+        "stdoutDigest": "6de78b0b5d88303e8c7bafa927f35d63b1281cb36978e0a1a547f0603b5d443c",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "plain-english-showcase",
+        "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 62,
+        "stdoutDigest": "9be0480a9c37006b93ad6ee59b0c0f56bc1ec8a4a58f114ff23524950db6d7ab",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "assertion-engine",
+        "path": "apps/web/scripts/test-assertion-engine.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 60,
+        "stdoutDigest": "5a100bedf993c44536fc01c2b5d6dc6812591b45b9aefb62c151569f7eade58a",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "businessDateIst": "2026-10-18",
+    "fingerprint": "f667e112e38ef382a1b3af8ce5659414395a4bfe0c9e0644a25d55f3d100a5fd",
+    "observedSourceDigests": [
+      {
+        "path": "apps/web/scripts/test-assertion-engine.mjs",
+        "sha256": "5243eb8089b8e3aafc04722fe268ff8a762659c33ecc7f895c910dc261dc5a37"
+      },
+      {
+        "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+        "sha256": "42e2111cbe53ec89a4f5011fa9769f395ca921691a69a6b825af5cb5061366d0"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "1921d5a8f2a4ef7d5e5e94a190fbb06745b5768aaf86f78852518fe6671589fb"
+      },
+      {
+        "path": "apps/web/src/engine/ed25519Verifier.ts",
+        "sha256": "ed3b7db96132b1d74b7f739265cc07d67ed04b875df797c0f7a8ae01252a1b43"
+      },
+      {
+        "path": "apps/web/src/engine/entitlementVerifier.ts",
+        "sha256": "84017395d7760a99d7288e69c986189d9cba202a0def36848afa92e428a22248"
+      },
+      {
+        "path": "apps/web/src/engine/eval/assertionEngine.ts",
+        "sha256": "5f664e1e10ffeed2be10d5fe1a5d67e9f99979c41abcb2eb346e5bfa9cc8a441"
+      },
+      {
+        "path": "apps/web/src/engine/hashUtils.ts",
+        "sha256": "328252d7f9843575cf194db482afaaefb979e91c270e998e04f213604df9c756"
+      },
+      {
+        "path": "apps/web/src/engine/markdownExportCore.ts",
+        "sha256": "97577a1587e9f9deba810e9ef190c4fad942a5f123fe9e480c8e14664901ea74"
+      },
+      {
+        "path": "apps/web/src/engine/modelAtlas/modelAtlasRegistry.json",
+        "sha256": "0b02ad1b2d10a424baf7146713b7f6c2b2d4f6d0d2c445021baeb11777f720a3"
+      },
+      {
+        "path": "apps/web/src/engine/modelTranscompiler.ts",
+        "sha256": "19f59b11cb8d86ea6668914440197280efc4cde2fbf7c030ece81c945f108be8"
+      },
+      {
+        "path": "apps/web/src/engine/multilingualDualPrompt.ts",
+        "sha256": "ad4d47bed4a3a4885877505d8e42135fe72d0be13da14a5007f3e488c9dd66b9"
+      },
+      {
+        "path": "apps/web/src/engine/plain-english-showcase.css",
+        "sha256": "6b5b51ea8e5dc406eebee636687e970d39ad0482c5c50e2325fa5fe078ce0ae3"
+      },
+      {
+        "path": "apps/web/src/engine/plainEnglishParser.ts",
+        "sha256": "76daddcc2b6d35a0e19a866774a2acf91c2f29e7c4dd49c37d21505d3121ba95"
+      },
+      {
+        "path": "apps/web/src/engine/PlainEnglishShowcase.tsx",
+        "sha256": "e67657c863973e8a2c74b4ef8c1ad821d7f88a67c730bf6106f28bde4cf62f10"
+      },
+      {
+        "path": "apps/web/src/engine/promptSynthesizer.mjs",
+        "sha256": "855c2e665ec9d9b2f748350b0849302dceda20e46f8f94e96ece4749cd83e767"
+      },
+      {
+        "path": "apps/web/src/engine/promptSynthesizer.ts",
+        "sha256": "01246a5e2aac5d60d14dc5d248ac1d0b996512ec8aa52a93e8b59a4832cf2cbe"
+      },
+      {
+        "path": "apps/web/src/engine/proofReceipt.ts",
+        "sha256": "c027e902ffad600346ade9256b91e6d15f90e159ce4434ba4414ac4ac6c9c10f"
+      },
+      {
+        "path": "packages/spe-plugin/src/tools.ts",
+        "sha256": "218ae2c5cb8f902edfed120aa42ece44a4febda6eecefd4329f299e95f727d3c"
+      },
+      {
+        "path": "tests/brain-updates/bundles.test.mjs",
+        "sha256": "2834a0e7aee57038bdd544b6859d366bf4f7d3e512e2b119d076125e10912d1c"
+      },
+      {
+        "path": "tests/brain-updates/cases/goal-preservation.json",
+        "sha256": "62106eca5ca2b797a130e485a7b3aea8d32033efa57f450ecd4eae7f4ab64a9e"
+      },
+      {
+        "path": "tests/brain-updates/contract.test.mjs",
+        "sha256": "641dee9f6093d161149d570d402275f3a67d9086c03486c883e279feef1cd65c"
+      },
+      {
+        "path": "tests/brain-updates/evolution.test.mjs",
+        "sha256": "e1018c9a19a0c41fc8bf404d17eb8e65129c222dd635e0f48de2a8be429e2f52"
+      },
+      {
+        "path": "tests/brain-updates/github-state.test.mjs",
+        "sha256": "372ab8ef5a33f8338c10a4627d35a4dc4729d06225b23f75f83629c8bbea8654"
+      },
+      {
+        "path": "tests/brain-updates/goal-preservation.test.mjs",
+        "sha256": "25ba5d65273c7977571b5f1603bd12dcd24c85f3b11e4722c537a00e3a88bbb0"
+      },
+      {
+        "path": "tests/brain-updates/policy.test.mjs",
+        "sha256": "a8b0ccda6a5491938bd67b396c061c827e3c931a4c7d85cc73b278f4a1155184"
+      },
+      {
+        "path": "tests/brain-updates/runner.test.mjs",
+        "sha256": "20526c57cfcf57f280ce479b260cd09a5ac158e88a10cff9a457634f80f80f2d"
+      },
+      {
+        "path": "tools/brain-updates/bundles.mjs",
+        "sha256": "ab26ab656adffc53296c64af020116fd18ee913b05f4ce130294afac1b327962"
+      },
+      {
+        "path": "tools/brain-updates/evaluate-worker.mjs",
+        "sha256": "729389fa578b83bb75b48a51485678d05bc54cd944bb5a520f4391973f515e99"
+      },
+      {
+        "path": "tools/brain-updates/evolve.mjs",
+        "sha256": "52e04b176e3b7220bd3d4f838235e0431a4f5ec755653536739aea9dee67b5a7"
+      },
+      {
+        "path": "tools/brain-updates/github-state.mjs",
+        "sha256": "242a7864261e00f437c72ffa0e6127748977760aa8673af2e7da3d358770a356"
+      },
+      {
+        "path": "tools/brain-updates/policy.mjs",
+        "sha256": "757c22e8c5143ec71300ea691cc406985175303ff8cc8452d53e575d619b26e3"
+      },
+      {
+        "path": "tools/brain-updates/run.mjs",
+        "sha256": "7fa4a86ef0fd13afe84354185a12cf20dd2fec19d2436f28f7434706e7f9e070"
+      }
+    ],
+    "version": "0.1.2",
+    "bundleDigest": "c49d9fad4c849a64f3c4e87c9f3b80a904463e2bbde6fae9db6c5e28cd41bfbc"
+  },
+  "bundleRepeat": {
+    "schema": "spe.brain-run.v1",
+    "scope": "SOURCE_BUNDLE_REGRESSION_CHECKS",
+    "runId": "9cc7e05b-1e0a-43d0-9e13-b49a56dcd869",
+    "observedAt": "2026-10-17T20:46:34.624Z",
+    "status": "UNCHANGED",
+    "sourceCommit": "b3b3d58ae75515d80d231cd006a271f9f779df0c",
+    "productionDeployed": false,
+    "modelTrainingPerformed": false,
+    "previousVersion": "0.1.2",
+    "historyDetected": true,
+    "gates": [
+      {
+        "id": "brain-bundle-recovery",
+        "path": "tests/brain-updates/bundles.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 1166,
+        "stdoutDigest": "2203012cd7205222bb56055b11186e9401d5ba819a81d377b474fe15decf1f2f",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-policy-inputs",
+        "path": "tests/brain-updates/policy.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 154,
+        "stdoutDigest": "9e0c54397d6c501132dd3f5a32e78584f26490f194b86439a76104ca80e3cc0a",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-cli",
+        "path": "tests/brain-updates/runner.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 112,
+        "stdoutDigest": "5ffd5fddd50813437b1f1367eb6536bbf7fa9620de77b3d920032ef3cfc563fa",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "brain-distribution",
+        "path": "tests/brain-updates/github-state.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 441,
+        "stdoutDigest": "f54ba9f6440c15d567614274b7d851b8ad918ba85280d79273c2dbe1d43db130",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "real-evolution-evaluator",
+        "path": "tests/brain-updates/evolution.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 248,
+        "stdoutDigest": "7d821139429ac6baf10c9b4ed6377cb281e1c721b92864bf482485da6a450d9a",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "goal-preservation",
+        "path": "tests/brain-updates/goal-preservation.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 87,
+        "stdoutDigest": "93bb11a830f9addba9b7e4f3a91bdca3c2abc5d394ef9dde6a29bd999e525e37",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "instruction-contracts",
+        "path": "tests/brain-updates/contract.test.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 84,
+        "stdoutDigest": "50344efe7012c56d8a9a45f06cbce3320b7780020e4bede34e9202048ca1836d",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "plain-english-showcase",
+        "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 59,
+        "stdoutDigest": "9be0480a9c37006b93ad6ee59b0c0f56bc1ec8a4a58f114ff23524950db6d7ab",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "assertion-engine",
+        "path": "apps/web/scripts/test-assertion-engine.mjs",
+        "passed": true,
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "durationMs": 52,
+        "stdoutDigest": "5a100bedf993c44536fc01c2b5d6dc6812591b45b9aefb62c151569f7eade58a",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "businessDateIst": "2026-10-18",
+    "fingerprint": "f667e112e38ef382a1b3af8ce5659414395a4bfe0c9e0644a25d55f3d100a5fd",
+    "observedSourceDigests": [
+      {
+        "path": "apps/web/scripts/test-assertion-engine.mjs",
+        "sha256": "5243eb8089b8e3aafc04722fe268ff8a762659c33ecc7f895c910dc261dc5a37"
+      },
+      {
+        "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+        "sha256": "42e2111cbe53ec89a4f5011fa9769f395ca921691a69a6b825af5cb5061366d0"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "1921d5a8f2a4ef7d5e5e94a190fbb06745b5768aaf86f78852518fe6671589fb"
+      },
+      {
+        "path": "apps/web/src/engine/ed25519Verifier.ts",
+        "sha256": "ed3b7db96132b1d74b7f739265cc07d67ed04b875df797c0f7a8ae01252a1b43"
+      },
+      {
+        "path": "apps/web/src/engine/entitlementVerifier.ts",
+        "sha256": "84017395d7760a99d7288e69c986189d9cba202a0def36848afa92e428a22248"
+      },
+      {
+        "path": "apps/web/src/engine/eval/assertionEngine.ts",
+        "sha256": "5f664e1e10ffeed2be10d5fe1a5d67e9f99979c41abcb2eb346e5bfa9cc8a441"
+      },
+      {
+        "path": "apps/web/src/engine/hashUtils.ts",
+        "sha256": "328252d7f9843575cf194db482afaaefb979e91c270e998e04f213604df9c756"
+      },
+      {
+        "path": "apps/web/src/engine/markdownExportCore.ts",
+        "sha256": "97577a1587e9f9deba810e9ef190c4fad942a5f123fe9e480c8e14664901ea74"
+      },
+      {
+        "path": "apps/web/src/engine/modelAtlas/modelAtlasRegistry.json",
+        "sha256": "0b02ad1b2d10a424baf7146713b7f6c2b2d4f6d0d2c445021baeb11777f720a3"
+      },
+      {
+        "path": "apps/web/src/engine/modelTranscompiler.ts",
+        "sha256": "19f59b11cb8d86ea6668914440197280efc4cde2fbf7c030ece81c945f108be8"
+      },
+      {
+        "path": "apps/web/src/engine/multilingualDualPrompt.ts",
+        "sha256": "ad4d47bed4a3a4885877505d8e42135fe72d0be13da14a5007f3e488c9dd66b9"
+      },
+      {
+        "path": "apps/web/src/engine/plain-english-showcase.css",
+        "sha256": "6b5b51ea8e5dc406eebee636687e970d39ad0482c5c50e2325fa5fe078ce0ae3"
+      },
+      {
+        "path": "apps/web/src/engine/plainEnglishParser.ts",
+        "sha256": "76daddcc2b6d35a0e19a866774a2acf91c2f29e7c4dd49c37d21505d3121ba95"
+      },
+      {
+        "path": "apps/web/src/engine/PlainEnglishShowcase.tsx",
+        "sha256": "e67657c863973e8a2c74b4ef8c1ad821d7f88a67c730bf6106f28bde4cf62f10"
+      },
+      {
+        "path": "apps/web/src/engine/promptSynthesizer.mjs",
+        "sha256": "855c2e665ec9d9b2f748350b0849302dceda20e46f8f94e96ece4749cd83e767"
+      },
+      {
+        "path": "apps/web/src/engine/promptSynthesizer.ts",
+        "sha256": "01246a5e2aac5d60d14dc5d248ac1d0b996512ec8aa52a93e8b59a4832cf2cbe"
+      },
+      {
+        "path": "apps/web/src/engine/proofReceipt.ts",
+        "sha256": "c027e902ffad600346ade9256b91e6d15f90e159ce4434ba4414ac4ac6c9c10f"
+      },
+      {
+        "path": "packages/spe-plugin/src/tools.ts",
+        "sha256": "218ae2c5cb8f902edfed120aa42ece44a4febda6eecefd4329f299e95f727d3c"
+      },
+      {
+        "path": "tests/brain-updates/bundles.test.mjs",
+        "sha256": "2834a0e7aee57038bdd544b6859d366bf4f7d3e512e2b119d076125e10912d1c"
+      },
+      {
+        "path": "tests/brain-updates/cases/goal-preservation.json",
+        "sha256": "62106eca5ca2b797a130e485a7b3aea8d32033efa57f450ecd4eae7f4ab64a9e"
+      },
+      {
+        "path": "tests/brain-updates/contract.test.mjs",
+        "sha256": "641dee9f6093d161149d570d402275f3a67d9086c03486c883e279feef1cd65c"
+      },
+      {
+        "path": "tests/brain-updates/evolution.test.mjs",
+        "sha256": "e1018c9a19a0c41fc8bf404d17eb8e65129c222dd635e0f48de2a8be429e2f52"
+      },
+      {
+        "path": "tests/brain-updates/github-state.test.mjs",
+        "sha256": "372ab8ef5a33f8338c10a4627d35a4dc4729d06225b23f75f83629c8bbea8654"
+      },
+      {
+        "path": "tests/brain-updates/goal-preservation.test.mjs",
+        "sha256": "25ba5d65273c7977571b5f1603bd12dcd24c85f3b11e4722c537a00e3a88bbb0"
+      },
+      {
+        "path": "tests/brain-updates/policy.test.mjs",
+        "sha256": "a8b0ccda6a5491938bd67b396c061c827e3c931a4c7d85cc73b278f4a1155184"
+      },
+      {
+        "path": "tests/brain-updates/runner.test.mjs",
+        "sha256": "20526c57cfcf57f280ce479b260cd09a5ac158e88a10cff9a457634f80f80f2d"
+      },
+      {
+        "path": "tools/brain-updates/bundles.mjs",
+        "sha256": "ab26ab656adffc53296c64af020116fd18ee913b05f4ce130294afac1b327962"
+      },
+      {
+        "path": "tools/brain-updates/evaluate-worker.mjs",
+        "sha256": "729389fa578b83bb75b48a51485678d05bc54cd944bb5a520f4391973f515e99"
+      },
+      {
+        "path": "tools/brain-updates/evolve.mjs",
+        "sha256": "52e04b176e3b7220bd3d4f838235e0431a4f5ec755653536739aea9dee67b5a7"
+      },
+      {
+        "path": "tools/brain-updates/github-state.mjs",
+        "sha256": "242a7864261e00f437c72ffa0e6127748977760aa8673af2e7da3d358770a356"
+      },
+      {
+        "path": "tools/brain-updates/policy.mjs",
+        "sha256": "757c22e8c5143ec71300ea691cc406985175303ff8cc8452d53e575d619b26e3"
+      },
+      {
+        "path": "tools/brain-updates/run.mjs",
+        "sha256": "7fa4a86ef0fd13afe84354185a12cf20dd2fec19d2436f28f7434706e7f9e070"
+      }
+    ],
+    "version": "0.1.2",
+    "bundleDigest": "c49d9fad4c849a64f3c4e87c9f3b80a904463e2bbde6fae9db6c5e28cd41bfbc"
+  },
+  "independentReview": {
+    "reviewedCommit": "f683fb91dfe823f9d2f5728cf83581d8d41d6d13",
+    "importantFindings": 5,
+    "disposition": "All five fixed; focused independent recheck passed at b3b3d58a; 24 focused tests; no general-release qualification"
+  },
+  "scheduledWake": {
+    "automationId": "spe-nightly-brain-improvements",
+    "receivedAt": "2026-10-17T20:44:15.914Z",
+    "observed": true,
+    "scope": "Resumed pending handoff of an already accepted repair; not a fresh unattended discovery/promotion experiment"
+  },
+  "automationConfiguration": {
+    "status": "ACTIVE",
+    "localTime": "02:17",
+    "timeZone": "Asia/Kolkata",
+    "requires": "Connected Codex host/app and available account allowance; not an always-on cloud SLA"
+  },
+  "worldwideAvailability": {
+    "backgroundOnly": true,
+    "productionWritesAllowed": false,
+    "stopServingAllowed": false,
+    "productionRolloutQualified": false
+  },
+  "earlierCandidate": {
+    "commit": "f683fb91dfe823f9d2f5728cf83581d8d41d6d13",
+    "version": "0.1.1",
+    "status": "SUPERSEDED_AFTER_REVIEW_BEFORE_PRODUCTION"
+  },
+  "foundationModelTraining": false,
+  "productionDeployed": false,
+  "liveSiteRelease": false,
+  "paidModelApiCalls": false
+}

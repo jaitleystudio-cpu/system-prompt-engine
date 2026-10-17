@@ -4,7 +4,7 @@ This adds an automatically versioned **source-bundle distribution channel**, ext
 
 ## What runs
 
-`node tools/brain-updates/run.mjs --check` fingerprints the committed allowlist and executes seven actual regression commands. `--update` also writes a bundle and atomically advances the local pointer after successful checks. Default state is the git-ignored `.spe/brain-updates` directory. Use `--state /absolute/directory` for an isolated rehearsal.
+`node tools/brain-updates/run.mjs --check` fingerprints the committed allowlist and executes nine actual regression commands. `--update` also writes a bundle and atomically advances the local pointer after successful checks. Default state is the git-ignored `.spe/brain-updates` directory. Use `--state /absolute/directory` for an isolated rehearsal.
 
 The workflow runs tests on Node 22/24. On default-branch changes, manual dispatch or the desired 02:17/06:17 IST schedules, it restores data state, executes checks and publishes to `spe-brain-state`. GitHub cron is best-effort, not a precise timing/availability guarantee. The 06:17 run supplies another recovery opportunity. It does not declare the previous run successful.
 
@@ -39,3 +39,5 @@ The workflow must first be reviewed and reach main; a branch-local workflow is n
 Check the exact workflow run, `last-run.json` and the `spe-brain-state` Git commit. Distinguish UPDATED, UNCHANGED and HELD. Do not label a `workflow_dispatch` run as an observed scheduled run. Check that a second identical run preserves the version. To stop publication, set repository variable `SPE_EMERGENCY_STOP=1` or commit the existing stop sentinel.
 
 Tests: `node --test tests/brain-updates/*.test.mjs`. End-to-end local rehearsal: choose an empty external state directory; run `--update` twice; expect UPDATED then UNCHANGED with the same version. Only committed allowlisted sources/gates qualify. No model optimization experiment or production release is certified by this rehearsal.
+
+The real candidate-discovery/repair loop now uses the nightly Codex agent plus `evolve.mjs`; see `brain-evolution.md` and `brain-evolution-verification.json`. Historical 36-test receipts remain scoped to their earlier source commit. The current 61-test/15-case evidence does not certify production rollout or general reasoning improvement.
