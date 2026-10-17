@@ -9,7 +9,8 @@ const subtle = () => globalThis.crypto.subtle;
 export const toHex = (b: ArrayBuffer | Uint8Array) => [...new Uint8Array(b as ArrayBuffer)].map((x) => x.toString(16).padStart(2, "0")).join("");
 export const toB64 = (b: ArrayBuffer | Uint8Array) => { let s = ""; for (const x of new Uint8Array(b as ArrayBuffer)) s += String.fromCharCode(x); return btoa(s); };
 export const fromB64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
-export const SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-[0-9A-Za-z.-]+)?$/;
+import { SEMVER } from "../shared/constants.ts";
+export { SEMVER } from "../shared/constants.ts";
 
 /** Canonical bytes: fixed key order, so the same release always hashes the same way. */
 export function canonical(r: ReleaseInput & { format?: string }): string {

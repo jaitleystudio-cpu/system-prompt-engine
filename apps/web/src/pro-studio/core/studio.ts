@@ -1,33 +1,8 @@
+import { LABEL, MAX_TEXT, plain, type Kind, type PlainBlock, type Version, type Mode } from "../shared/constants.ts";
+export { KINDS, LABEL, HINT, uid, reqText, plain, withIds, QTYPE_LABEL, MAX_FILE, MAX_TEXT, EXAMPLE, STARTER } from "../shared/constants.ts";
+export type { Kind, Block, PlainBlock, Version, Mode, SpeFile, QType, Level, Q } from "../shared/constants.ts";
+import type { SpeFile, Q } from "../shared/constants.ts";
 // Prompt Studio pure logic (ported from grok/pro-studio-r1 pro-studio/pro/studio/main.ts). No DOM, no network.
-export type Kind = "role" | "rules" | "tone" | "output" | "examples" | "requirements" | "custom";
-export interface Block { id: string; kind: Kind; title: string; text: string; must?: string[]; mustNot?: string[] }
-export type PlainBlock = Omit<Block, "id">;
-export interface Version { id: string; note: string; at: string; blocks: PlainBlock[]; variables?: Record<string, string> }
-export type Mode = "template" | "filled";
-export interface SpeFile { format: "spe.prompt"; version: 1; name: string; createdAt: string; blocks: PlainBlock[]; versions?: Version[]; variables?: Record<string, string>; mode?: Mode; rendered?: string }
-
-export const KINDS: Kind[] = ["role", "rules", "tone", "output", "examples", "requirements", "custom"];
-export const LABEL: Record<Kind, string> = { role: "Role", rules: "Rules", tone: "Tone", output: "Output format", examples: "Examples", requirements: "Requirements", custom: "Custom" };
-export const HINT: Record<Kind, string> = {
-  role: "Who the assistant is and who it serves, e.g. You are a support agent for…",
-  rules: "One rule per line. Prefer concrete, testable rules.",
-  tone: "Voice and register, e.g. Warm, concise, plain English.",
-  output: "Exact shape of the answer: sections, JSON keys, length limits.",
-  examples: "Input → ideal output pairs.",
-  requirements: "Your requirements: what the prompt must follow and must not do.",
-  custom: "Anything else the model needs.",
-};
-
-export const uid = () => Math.random().toString(36).slice(2, 10);
-
-export function reqText(must: string[] = [], mustNot: string[] = []): string {
-  const m = must.map((x) => x.trim()).filter(Boolean), n = mustNot.map((x) => x.trim()).filter(Boolean);
-  return [m.length ? "Must:\n" + m.map((x) => `- ${x}`).join("\n") : "", n.length ? "Must not:\n" + n.map((x) => `- Do not: ${x}`).join("\n") : ""].filter(Boolean).join("\n");
-}
-export const plain = (b: PlainBlock): PlainBlock => b.kind === "requirements"
-  ? { kind: b.kind, title: b.title, text: reqText(b.must, b.mustNot), must: [...(b.must || [])], mustNot: [...(b.mustNot || [])] }
-  : { kind: b.kind, title: b.title, text: b.text };
-export const withIds = (bs: PlainBlock[]): Block[] => bs.map((b) => ({ ...plain(b), id: uid() }));
 
 export const VAR_RE = /\{\{([a-zA-Z0-9_]+)\}\}/g;
 export function findVars(text: string): [string, number][] { const m = new Map<string, number>(); for (const x of text.matchAll(VAR_RE)) m.set(x[1], (m.get(x[1]) || 0) + 1); return [...m]; }
@@ -48,10 +23,6 @@ export function assemble(bs: PlainBlock[]): string {
 }
 export const tokens = (s: string) => Math.ceil(s.length / 4);
 
-export type QType = "deterministic" | "heuristic" | "tokens" | "model";
-export type Level = "ok" | "warn" | "bad" | "na";
-export interface Q { level: Level; type: QType; title: string; detail: string }
-export const QTYPE_LABEL: Record<QType, string> = { deterministic: "Deterministic check", heuristic: "Heuristic warning", tokens: "Token estimate (approximate)", model: "Model evaluation" };
 const VAGUE = ["appropriate", "appropriately", "good", "nice", "properly", "relevant", "some", "various", "etc", "as needed", "if possible", "maybe", "try to", "stuff", "things", "best", "high quality", "engaging"];
 export const MIN_T = 40, MAX_T = 3000;
 
@@ -132,7 +103,6 @@ export function lineDiff(a: string, b: string): Op[] {
   return out;
 }
 
-export const MAX_FILE = 5 * 1024 * 1024, MAX_TEXT = 200_000;
 export function parseSpeJson(raw: string, name = "This file"): unknown {
   try { return JSON.parse(raw); } catch { throw new Error(`“${name}” is not valid JSON, so it can't be a .spe file.`); }
 }
@@ -160,10 +130,3 @@ export function toSpe(name: string, bs: PlainBlock[], versions: Version[], vars:
   return { format: "spe.prompt", version: 1, name: name || "Untitled prompt", createdAt: now.toISOString(), blocks: bs.map(plain), versions, variables: { ...vars }, mode, rendered };
 }
 
-export const EXAMPLE: PlainBlock[] = [
-  { kind: "role", title: "Role", text: "You are Ledger, a billing support assistant for Northwind Cloud. You help small-business customers understand invoices, refunds and plan changes." },
-  { kind: "rules", title: "Rules", text: "Only answer questions about Northwind billing; politely redirect anything else.\nNever ask for full card numbers or passwords.\nIf a refund is over $500, hand off to a human agent.\nCite the invoice ID whenever you reference a charge." },
-  { kind: "tone", title: "Tone", text: "Calm, friendly and concise. Plain English, no jargon. Acknowledge frustration in one sentence, then solve." },
-  { kind: "output", title: "Output format", text: "Reply in at most 120 words.\nStart with a one-line answer, then up to 3 bullet steps.\nEnd with: \"Anything else on your bill?\"" },
-];
-export const STARTER: PlainBlock[] = (["role", "rules", "tone", "output"] as Kind[]).map((k) => ({ kind: k, title: LABEL[k], text: "" }));
