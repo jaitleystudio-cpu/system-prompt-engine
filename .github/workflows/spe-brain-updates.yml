@@ -1,0 +1,101 @@
+name: SPE nightly brain bundles
+
+on:
+  schedule:
+    - cron: '47 20 * * *' # Desired start: 02:17 IST, next local calendar day.
+    - cron: '47 0 * * *' # Recovery/requalification at 06:17 IST; never bumps unchanged content.
+  workflow_dispatch:
+    inputs:
+      initialize:
+        description: 'One-time creation of the data-state branch; never use to conceal lost history'
+        type: boolean
+        required: false
+        default: false
+  pull_request:
+    paths:
+      - 'tools/brain-updates/**'
+      - 'tests/brain-updates/**'
+      - '.github/workflows/spe-brain-updates.yml'
+      - 'apps/web/src/engine/**'
+      - 'apps/web/src/App.tsx'
+      - 'apps/web/scripts/test-plain-english-showcase.mjs'
+      - 'apps/web/scripts/test-assertion-engine.mjs'
+      - 'packages/spe-plugin/src/**'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/brain-updates/**'
+      - 'tests/brain-updates/**'
+      - '.github/workflows/spe-brain-updates.yml'
+      - 'apps/web/src/engine/**'
+      - 'apps/web/src/App.tsx'
+      - 'apps/web/scripts/test-plain-english-showcase.mjs'
+      - 'apps/web/scripts/test-assertion-engine.mjs'
+      - 'packages/spe-plugin/src/**'
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: node --test tests/brain-updates/*.test.mjs
+
+  update:
+    needs: tests
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Serializes cloud writers. API fast-forward checks also reject external concurrent writers.
+    concurrency:
+      group: spe-brain-state
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    env:
+      SPE_BRAIN_STATE: .spe/brain-updates
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Respect emergency stop
+        env:
+          SPE_EMERGENCY_STOP: ${{ vars.SPE_EMERGENCY_STOP }}
+        run: |
+          test ! -f .spe_emergency_stop
+          test "$SPE_EMERGENCY_STOP" != "1"
+      - name: Restore authenticated data state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SPE_BRAIN_INITIALIZE: ${{ github.event_name == 'workflow_dispatch' && inputs.initialize && '1' || '0' }}
+        run: node tools/brain-updates/github-state.mjs load "$SPE_BRAIN_STATE"
+      - name: Qualify and update changed source bundle
+        run: node tools/brain-updates/run.mjs --update --state "$SPE_BRAIN_STATE"
+      - name: Publish data branch with non-forced update
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/brain-updates/github-state.mjs publish "$SPE_BRAIN_STATE"
+      - name: Preserve exact execution receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spe-brain-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.SPE_BRAIN_STATE }}/current.json
+            ${{ env.SPE_BRAIN_STATE }}/last-run.json
+          if-no-files-found: warn
+          retention-days: 30

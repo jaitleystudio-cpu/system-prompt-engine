@@ -116,11 +116,20 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
   }
 
   // 4. Goal extraction
-  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*(?:[;,]|\s+and\s+|\s+with\s+)?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\band\b|[.;]|$))/i;
+  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*(?:[;,]|\s+and\s+|\s+with\s+)?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|[.;]|$))/i;
   const goalClauseMatch = text.match(goalClausePattern);
 
   if (goalClauseMatch && goalClauseMatch[1]) {
     goalPhrase = goalClauseMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
+    // Keep coordinated tasks, but stop before phrases already classified as rules or output.
+    // Reuse the actual extracted boundaries so language and identifier directives stay separate.
+    let taskEnd = goalPhrase.length;
+    for (const boundary of [...collectedConstraints, outputPhrase]) {
+      if (!boundary) continue;
+      const index = goalPhrase.toLowerCase().indexOf(boundary.toLowerCase());
+      if (index > 0) taskEnd = Math.min(taskEnd, index);
+    }
+    goalPhrase = goalPhrase.slice(0, taskEnd).replace(/\s+(?:and|with)\s*$/i, "").trim();
     goal = goalPhrase.charAt(0).toUpperCase() + goalPhrase.slice(1);
   } else {
     // Check infinitive "to <verb>" or imperative start
