@@ -642,12 +642,8 @@ def sync_atlas() -> None:
     if OUTPUT_REGISTRY_PATH.exists():
         existing_data = json.loads(OUTPUT_REGISTRY_PATH.read_text(encoding="utf-8"))
         models_to_use = existing_data.get("models", VERIFIED_MODELS)
-    else:
-        models_to_use = VERIFIED_MODELS
-
     frontier_active = sum(1 for m in models_to_use if not m.get("isLegacy", False))
     print(f"[*] Synchronizing SPE Model Atlas with {len(models_to_use)} verified models ({frontier_active} active 2026 frontier models)...")
-    now_iso = datetime.now(timezone.utc).isoformat()
 
     # Sort deterministically: active models first, then by provider and name
     sorted_models = sorted(
@@ -658,6 +654,17 @@ def sync_atlas() -> None:
     # Serialize raw model data to calculate RFC 8785 canonical SHA-256
     raw_models_json = json.dumps(sorted_models, sort_keys=True, separators=(",", ":"))
     digest = hashlib.sha256(raw_models_json.encode("utf-8")).hexdigest()
+
+    existing_last_updated = None
+    if OUTPUT_REGISTRY_PATH.exists():
+        try:
+            old_data = json.loads(OUTPUT_REGISTRY_PATH.read_text(encoding="utf-8"))
+            if old_data.get("checksumSha256") == digest:
+                existing_last_updated = old_data.get("lastUpdated")
+        except Exception:
+            pass
+
+    now_iso = existing_last_updated or datetime.now(timezone.utc).isoformat()
 
     registry_payload = {
         "version": "3.0.0",
@@ -670,7 +677,7 @@ def sync_atlas() -> None:
     }
 
     OUTPUT_REGISTRY_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_REGISTRY_PATH.write_text(json.dumps(registry_payload, indent=2), encoding="utf-8")
+    OUTPUT_REGISTRY_PATH.write_text(json.dumps(registry_payload, indent=2) + "\n", encoding="utf-8")
     print(f"[+] Wrote verified Model Atlas Registry to: {OUTPUT_REGISTRY_PATH}")
 
     # Also record audit manifest
@@ -685,7 +692,7 @@ def sync_atlas() -> None:
         "freeTierCount": sum(1 for m in sorted_models if m["requiredTier"] == "free"),
         "reasoningModelsCount": sum(1 for m in sorted_models if m.get("capabilities", {}).get("supportsThinking", False)),
     }
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"[+] Wrote audit manifest to: {MANIFEST_PATH}")
     print(f"[+] Summary: {manifest['totalModels']} models ({manifest['freeTierCount']} Free, {manifest['proTierCount']} Pro, {manifest['reasoningModelsCount']} Frontier Reasoning)")
 

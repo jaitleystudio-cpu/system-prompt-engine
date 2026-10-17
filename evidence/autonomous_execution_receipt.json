@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-17T02:15:24.886Z",
+  "timestamp": "2026-10-17T02:48:49.154Z",
   "steps": {
     "modelAtlas": {
       "status": "PASS",
@@ -72,8 +72,8 @@
     }
   },
   "success": true,
-  "durationMs": 39890,
-  "contentDigestSha256": "24c6a990377065d3e6a471405a85a3d2739da69b5010cee0d526decae58987e9",
+  "durationMs": 28311,
+  "contentDigestSha256": "ecafe1307081e840ec5667cf042424990d272382f91dae9f80dd0585716697e5",
   "digestAlgorithm": "SHA-256",
   "canonicalization": "RFC_8785_CANONICAL_JSON",
   "attestationType": "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",

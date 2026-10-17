@@ -117,6 +117,9 @@ export interface NightlyRunReceipt {
   proposalsPrepared: number;
   proposalsQualified: number;
   proposalsAutoReleased: number;
+  proposalsSimulatedQualified: number;
+  deployedStatus: "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN" | "PRODUCTION_DEPLOYED";
+  searchConsoleSource: "CALIBRATION_FIXTURE_DEV_CI" | "LIVE_GSC_API";
   proposalsHeldForHumanReview: number;
   proposalsRejected: number;
   missedRunDetected: boolean;
@@ -127,6 +130,9 @@ export interface NightlyRunReceipt {
     variantName: string;
     measuredContrastDark: number;
     measuredContrastLight: number;
+    contrastCalculationType: "STATIC_WCAG_AAA_MATHEMATICAL";
+    clsCertificationType: "ARCHITECTURAL_CSS_GEOMETRY_IMMUTABLE";
+    fieldRUMTelemetryMeasured: boolean;
     wcagAaaSatisfied: boolean;
     clsZeroCertified: boolean;
     publicationBoundaryIst: string;
@@ -273,6 +279,9 @@ export class NightlyEvolutionScheduler {
         variantName: activeVisualVariant.name,
         measuredContrastDark: visualContrast.darkModeContrast,
         measuredContrastLight: visualContrast.lightModeContrast,
+        contrastCalculationType: "STATIC_WCAG_AAA_MATHEMATICAL" as const,
+        clsCertificationType: "ARCHITECTURAL_CSS_GEOMETRY_IMMUTABLE" as const,
+        fieldRUMTelemetryMeasured: false,
         wcagAaaSatisfied: visualContrast.wcagAaaSatisfied,
         clsZeroCertified: visualInvariantsValid,
         publicationBoundaryIst: "02:17:00 IST",
@@ -406,12 +415,17 @@ export class NightlyEvolutionScheduler {
         defectsDiscovered: inventoryReport.brokenInternalLinks.length + (authoritativeDest ? 1 : 0),
         proposalsPrepared: proposals.length,
         proposalsQualified: proposals.filter((p) => p.qualificationResults.targetedUnitTestsPassed).length,
-        proposalsAutoReleased: autoReleasedCount,
+        proposalsAutoReleased: isDryRun ? 0 : autoReleasedCount,
+        proposalsSimulatedQualified: autoReleasedCount,
+        deployedStatus: isDryRun
+          ? "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN"
+          : (autoReleasedCount > 0 ? "PRODUCTION_DEPLOYED" : "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN"),
+        searchConsoleSource: options.mockSearchData ? "LIVE_GSC_API" : "CALIBRATION_FIXTURE_DEV_CI",
         proposalsHeldForHumanReview: heldForHumanCount,
         proposalsRejected: rejectedCount,
         missedRunDetected,
         concurrencyLockAcquired: true,
-        summaryReceiptDigest: summaryDigest,
+        summaryReceiptDigest: isDryRun ? `${summaryDigest}-simulated-qualification` : summaryDigest,
         visualEvolutionAudit,
       };
     } finally {

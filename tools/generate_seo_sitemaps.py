@@ -70,7 +70,20 @@ CORE_PAGES = [
 
 def generate_sitemaps():
     print("[*] Generating Programmatic SEO Sitemaps for Google #1 Dominance...")
-    today_iso = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    import re
+    sitemap_prompts_path = PUBLIC_DIR / "sitemap-prompts.xml"
+    existing_lastmod = None
+    if sitemap_prompts_path.exists():
+        try:
+            sample = sitemap_prompts_path.read_text(encoding="utf-8")[:1000]
+            m = re.search(r"<lastmod>(\d{4}-\d{2}-\d{2})</lastmod>", sample)
+            if m:
+                existing_lastmod = m.group(1)
+        except Exception:
+            pass
+
+    today_iso = existing_lastmod or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
 
     # 1. Load the 10,000 prompt catalog index
     if not INDEX_FILE.exists():

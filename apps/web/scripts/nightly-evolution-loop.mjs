@@ -76,16 +76,17 @@ async function runOnce() {
   console.log(`🔍 Defects Discovered:   ${receipt.defectsDiscovered}`);
   console.log(`🛠️ Proposals Prepared:   ${receipt.proposalsPrepared}`);
   console.log(`🧪 Proposals Qualified:  ${receipt.proposalsQualified}`);
-  console.log(`🚀 Low-Risk Auto-Deploy: ${receipt.proposalsAutoReleased}`);
+  console.log(`🚀 Production Deployed:  ${receipt.proposalsAutoReleased} (${receipt.deployedStatus})`);
+  console.log(`🧪 Simulated Qualified:  ${receipt.proposalsSimulatedQualified}`);
+  console.log(`📡 Search Console Data:  ${receipt.searchConsoleSource === "CALIBRATION_FIXTURE_DEV_CI" ? "Synthetic calibration fixture (offline/CI mode)" : "Live GSC API"}`);
   console.log(`👥 Gated for Human PR:   ${receipt.proposalsHeldForHumanReview}`);
   console.log(`❌ Proposals Rejected:   ${receipt.proposalsRejected}`);
   console.log(`📜 Summary Digest:       ${receipt.summaryReceiptDigest}`);
   if (receipt.visualEvolutionAudit) {
     console.log(`🎨 Visual Variant:       ${receipt.visualEvolutionAudit.variantName} (${receipt.visualEvolutionAudit.variantId})`);
-    console.log(`👁️ Measured Contrast:   Dark: ${receipt.visualEvolutionAudit.measuredContrastDark}:1 · Light: ${receipt.visualEvolutionAudit.measuredContrastLight}:1 (WCAG AAA: ${receipt.visualEvolutionAudit.wcagAaaSatisfied ? "PASS" : "FAIL"})`);
-    console.log(`📐 Layout Shift CLS:     0.000 (Architecturally constrained CSS color modulation · Geometry immutable)`);
+    console.log(`👁️ Measured Contrast:   Dark: ${receipt.visualEvolutionAudit.measuredContrastDark}:1 · Light: ${receipt.visualEvolutionAudit.measuredContrastLight}:1 (Static WCAG AAA Calculation: ${receipt.visualEvolutionAudit.wcagAaaSatisfied ? "PASS" : "FAIL"})`);
+    console.log(`📐 Layout Shift CLS:     0.000 (Architecturally constrained CSS color modulation · Geometry immutable · Not field RUM)`);
     console.log(`🕒 Publication Clock:    ${receipt.visualEvolutionAudit.publicationBoundaryIst}`);
-
   }
   console.log("──────────────────────────────────────────────────────────────────────────\n");
   console.log("🎉 NIGHTLY EVOLUTION CYCLE COMPLETED SUCCESSFULLY.");

@@ -202,19 +202,32 @@ async function runNightlySync() {
 
   const nowIso = new Date().toISOString();
 
-  // Create Ed25519-compatible Currency Attestation Payload
+  // Reuse existing timestamps and signature if checksum is identical (deterministic idempotency)
+  const existingAttestation = existsSync(ATTESTATION_PATH) ? JSON.parse(readFileSync(ATTESTATION_PATH, "utf-8")) : null;
+  const attestationTimestamp = (existingAttestation && existingAttestation.checksumSha256 === canonicalJcsHash && existingAttestation.timestamp)
+    ? existingAttestation.timestamp
+    : nowIso;
+  const attestationSig = (existingAttestation && existingAttestation.checksumSha256 === canonicalJcsHash && existingAttestation.attestationSignature)
+    ? existingAttestation.attestationSignature
+    : `sig_spe_fmcg_${canonicalJcsHash.slice(0, 32)}_${Date.now().toString(16)}`;
+
+  // Create RFC 8785 Canonical SHA-256 Currency Integrity Attestation Payload
   const attestation = {
     schemaVersion: "spe.model-currency.attestation.v1",
-    timestamp: nowIso,
+    timestamp: attestationTimestamp,
     activeYear: FRONTIER_ACTIVE_YEAR,
     frontierModelsCount: activeModels.length,
     totalAuditModelsCount: models.length,
     checksumSha256: canonicalJcsHash,
     canonicalJcsHash: canonicalJcsHash,
+    contentDigestSha256: canonicalJcsHash,
+    attestationType: "RFC8785_CANONICAL_SHA256_INTEGRITY_DIGEST",
+    signatureType: "UNSIGNED_SHA256_INTEGRITY_DIGEST",
+    signatureNotice: "Content-addressed SHA-256 integrity digest over deterministic canonical model records. Not an asymmetric private-key signature.",
     providers: MANDATORY_PROVIDERS,
     staleModelsDetected: auditViolations,
     governorVerdict: "FRONTIER_CURRENCY_QUALIFIED",
-    attestationSignature: `sig_spe_fmcg_${canonicalJcsHash.slice(0, 32)}_${Date.now().toString(16)}`,
+    attestationSignature: attestationSig,
     nightWatchEngine: {
       version: "3.0.0",
       cadence: "NIGHTLY_AT_0200_UTC",
@@ -236,9 +249,14 @@ async function runNightlySync() {
   // [5/5] Apply Updates & Emit Attestation Receipt
   console.log("\n[5/5] Applying Updates & Emitting Signed Currency Attestation...");
 
+  const existingRegistry = JSON.parse(rawJson);
+  const registryLastUpdated = (existingRegistry.checksumSha256 === canonicalJcsHash && existingRegistry.lastUpdated)
+    ? existingRegistry.lastUpdated
+    : nowIso;
+
   const updatedRegistry = {
     version: "3.0.0",
-    lastUpdated: nowIso,
+    lastUpdated: registryLastUpdated,
     checksumSha256: canonicalJcsHash,
     canonicalJcsHash: canonicalJcsHash,
     totalModels: modelsSorted.length,
@@ -249,8 +267,13 @@ async function runNightlySync() {
   writeFileSync(REGISTRY_PATH, JSON.stringify(updatedRegistry, null, 2) + "\n", "utf-8");
   console.log(`  ✓ Updated Model Atlas Registry: ${REGISTRY_PATH}`);
 
+  const existingManifest = existsSync(MANIFEST_PATH) ? JSON.parse(readFileSync(MANIFEST_PATH, "utf-8")) : null;
+  const manifestTimestamp = (existingManifest && existingManifest.checksumSha256 === canonicalJcsHash && existingManifest.timestamp)
+    ? existingManifest.timestamp
+    : nowIso;
+
   const manifest = {
-    timestamp: nowIso,
+    timestamp: manifestTimestamp,
     checksumSha256: canonicalJcsHash,
     canonicalJcsHash: canonicalJcsHash,
     totalModels: modelsSorted.length,

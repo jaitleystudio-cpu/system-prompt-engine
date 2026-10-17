@@ -604,7 +604,26 @@ console.log("\n[8/8] Verifying Adjudication Closure: Crash Defense, Automation C
     "Automation proof must accurately describe CLS as architecturally constrained, not live Chrome Performance API"
   );
 
-  console.log("  ✓ Adjudication Gate 8 verified: Crash defenses guarded, Stripe links configurable, trials strictly isolated from cryptographic verification.");
+  // 5. Dry-Run Isolation & Honest Telemetry Verification
+  const receiptPath = resolve(__dirname, "../../../proofs/generated/NIGHTLY_EVOLUTION_RUN_RECEIPT.json");
+  const receipt = JSON.parse(readFileSync(receiptPath, "utf8"));
+  assert.equal(receipt.isDryRun, true, "Nightly receipt isDryRun must be true in CI/dev mode");
+  assert.equal(receipt.proposalsAutoReleased, 0, "Dry run must never record non-zero production deployments");
+  assert.equal(receipt.proposalsSimulatedQualified, 1, "Simulated qualified proposals must be recorded separately");
+  assert.equal(receipt.deployedStatus, "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN", "Status must explicitly reflect no production deployment");
+  assert.equal(receipt.searchConsoleSource, "CALIBRATION_FIXTURE_DEV_CI", "Search Console data source must be explicitly marked as calibration fixture");
+  assert.equal(receipt.visualEvolutionAudit.contrastCalculationType, "STATIC_WCAG_AAA_MATHEMATICAL", "Contrast must be labeled as static mathematical calculation");
+  assert.equal(receipt.visualEvolutionAudit.clsCertificationType, "ARCHITECTURAL_CSS_GEOMETRY_IMMUTABLE", "CLS must be labeled as architectural design invariant");
+  assert.equal(receipt.visualEvolutionAudit.fieldRUMTelemetryMeasured, false, "fieldRUMTelemetryMeasured must be false");
+
+  // 6. Cryptographic Signature Transparency Verification
+  const attestationPath = resolve(__dirname, "../../../evidence/model-currency-attestation.json");
+  const attestation = JSON.parse(readFileSync(attestationPath, "utf8"));
+  assert.equal(attestation.signatureType, "UNSIGNED_SHA256_INTEGRITY_DIGEST", "Attestation signatureType must be UNSIGNED_SHA256_INTEGRITY_DIGEST");
+  assert.equal(attestation.contentDigestSha256, attestation.checksumSha256, "contentDigestSha256 must match checksumSha256");
+  assert.ok(attestation.signatureNotice.includes("Not an asymmetric private-key signature"), "Must include disclaimer that it is not an asymmetric signature");
+
+  console.log("  ✓ Adjudication Gate 8 verified: Crash defenses guarded, Stripe links configurable, trials strictly isolated from cryptographic verification, dry-run simulations isolated from production releases, and cryptographic signatures honestly labeled.");
 }
 
 console.log("\n==================================================================");

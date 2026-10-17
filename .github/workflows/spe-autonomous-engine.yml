@@ -43,10 +43,12 @@ jobs:
       - name: Execute Autonomous A-to-Z Master Pipeline
         run: node tools/autonomous_pipeline.mjs
 
-      - name: Verify Clean Working Tree for Model Atlas & Sitemaps
+      - name: Verify Clean Working Tree for Model Atlas & Sitemaps (Fail-Closed)
         run: |
           git status --short
-          git diff --exit-code apps/web/src/engine/modelAtlas/modelAtlasRegistry.json || echo "Model atlas updated."
+          git diff --exit-code apps/web/src/engine/modelAtlas/modelAtlasRegistry.json
+          git diff --exit-code apps/web/public/sitemap-prompts.xml
+
 
       - name: Upload Cryptographic Audit Receipt
         if: always()
