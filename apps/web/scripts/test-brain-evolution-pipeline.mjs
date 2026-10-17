@@ -794,6 +794,40 @@ async function runBrainEvolutionBattery() {
   assert(rejectedPromotion.isValid === false, "Promotion strictly rejected when requireLiveProvider=true and witness has SIMULATED_TEST provenance");
   assert(rejectedPromotion.errors.some((e) => e.includes("SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED")), "Promotion error cites SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED");
 
+  // Rejection when requireLiveProvider=true and witnesses is empty
+  const rejectedEmptyPromotion = promoteModelWithValidation(
+    sampleModel,
+    "claude-3-5-sonnet-20241022",
+    "QUALIFIED",
+    [],
+    ledger,
+    "CALLABLE",
+    { requireLiveProvider: true }
+  );
+  assert(rejectedEmptyPromotion.isValid === false, "Promotion strictly rejected when requireLiveProvider=true and witnesses is empty");
+  assert(rejectedEmptyPromotion.errors.some((e) => e.includes("SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED")), "Empty witness rejection cites SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED");
+
+  // Acceptance when requireLiveProvider=true and witness has LIVE_PROVIDER_VERIFIED provenance
+  const acceptedLivePromotion = promoteModelWithValidation(
+    sampleModel,
+    "claude-3-5-sonnet-20241022",
+    "QUALIFIED",
+    [
+      {
+        capability: "tool_calling",
+        passed: true,
+        probeTimestampIso: new Date().toISOString(),
+        latencyMs: 45,
+        witnessReceiptHash: "live_witness_receipt_hash_001",
+        provenance: "LIVE_PROVIDER_VERIFIED",
+      },
+    ],
+    ledger,
+    "CALLABLE",
+    { requireLiveProvider: true }
+  );
+  assert(acceptedLivePromotion.isValid === true, "Promotion accepted when requireLiveProvider=true and witness is LIVE_PROVIDER_VERIFIED");
+
   // Legacy Model Promotion Invariant: Legacy model must NOT be marked eligible for autonomous routing
   const legacyModel = {
     ...sampleModel,

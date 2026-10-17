@@ -91,7 +91,7 @@ export class StripeProcessorAdapter {
   }
 
   public hasProcessedEvent(eventId: string): boolean {
-    return this.#processedEventIds.has(eventId);
+    return this.#processedEventIds.has(eventId) || this.#usageEngine.hasProcessedWebhookEvent(eventId);
   }
 
   /**
@@ -195,8 +195,8 @@ export class StripeProcessorAdapter {
       throw new Error("MALFORMED_STRIPE_EVENT: Missing id or type");
     }
 
-    // Webhook Replay Protection (BILL-P0-05): Check if event ID was already processed
-    if (this.#processedEventIds.has(eventId)) {
+    // Webhook Replay Protection (BILL-P0-05): Check if event ID was already processed (in-memory or durable)
+    if (this.hasProcessedEvent(eventId)) {
       return {
         verified: true,
         eventId,
@@ -231,6 +231,7 @@ export class StripeProcessorAdapter {
           }
 
           this.#processedEventIds.add(eventId);
+          this.#usageEngine.recordProcessedWebhookEvent(eventId);
 
           return {
             verified: true,
@@ -267,6 +268,7 @@ export class StripeProcessorAdapter {
 
           const token = this.#billingAuthority.issueSignedEntitlementTokenForPaidReceipt(paymentReceiptId);
           this.#processedEventIds.add(eventId);
+          this.#usageEngine.recordProcessedWebhookEvent(eventId);
 
           return {
             verified: true,
@@ -285,6 +287,7 @@ export class StripeProcessorAdapter {
       case "customer.subscription.deleted": {
         const subscriptionId = dataObject.id;
         this.#processedEventIds.add(eventId);
+        this.#usageEngine.recordProcessedWebhookEvent(eventId);
         // Mark subscription canceled in billing authority
         return {
           verified: true,
@@ -298,6 +301,7 @@ export class StripeProcessorAdapter {
       case "charge.refunded": {
         const paymentIntentId = dataObject.payment_intent;
         this.#processedEventIds.add(eventId);
+        this.#usageEngine.recordProcessedWebhookEvent(eventId);
         return {
           verified: true,
           eventId,
@@ -331,6 +335,13 @@ export class StripeProcessorAdapter {
         : params.tier === "team"
         ? 9900
         : 2900;
+
+    // In production mode, require STRIPE_SECRET_KEY to prevent issuing fake simulated checkout sessions to real users
+    if (process.env.NODE_ENV === "production" && !this.#stripeSecretKey) {
+      throw new Error(
+        "PRODUCTION_SECURITY_ERROR: STRIPE_SECRET_KEY must be configured in production to create live checkout sessions."
+      );
+    }
 
     // Live Stripe API execution when valid secret key is provided
     if (this.#stripeSecretKey && !this.#stripeSecretKey.includes("test_spe_mock")) {
@@ -374,9 +385,17 @@ export class StripeProcessorAdapter {
             clientReferenceId: params.customerId,
             provenance: "LIVE_STRIPE_API",
           };
+        } else {
+          const errMsg = stripeData?.error?.message || `Stripe API error HTTP ${stripeRes.status}`;
+          if (process.env.NODE_ENV === "production") {
+            throw new Error(`STRIPE_API_ERROR: ${errMsg}`);
+          }
         }
-      } catch {
-        // Fall back to sandbox if offline/air-gapped
+      } catch (err: any) {
+        if (process.env.NODE_ENV === "production" || err.message?.startsWith("STRIPE_API_ERROR")) {
+          throw err;
+        }
+        // Fall back to sandbox if offline/air-gapped in test environment
       }
     }
 

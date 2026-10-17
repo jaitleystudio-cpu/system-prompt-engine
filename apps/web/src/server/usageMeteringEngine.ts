@@ -84,6 +84,7 @@ export interface UsageLedgerState {
   apiKeyToCustomerId: Record<string, string>;
   records: Record<string, MeteredUsageRecord>;
   idempotencyIndex: Record<string, string>; // idempotencyKey -> eventId
+  processedWebhookEvents?: Record<string, number>; // eventId -> processedAtMs
 }
 
 export interface UsageStorageAdapter {
@@ -97,6 +98,7 @@ export class InMemoryUsageStorageAdapter implements UsageStorageAdapter {
     apiKeyToCustomerId: {},
     records: {},
     idempotencyIndex: {},
+    processedWebhookEvents: {},
   };
 
   load(): UsageLedgerState {
@@ -105,6 +107,7 @@ export class InMemoryUsageStorageAdapter implements UsageStorageAdapter {
       apiKeyToCustomerId: { ...this.#state.apiKeyToCustomerId },
       records: { ...this.#state.records },
       idempotencyIndex: { ...this.#state.idempotencyIndex },
+      processedWebhookEvents: { ...(this.#state.processedWebhookEvents || {}) },
     };
   }
 
@@ -114,6 +117,7 @@ export class InMemoryUsageStorageAdapter implements UsageStorageAdapter {
       apiKeyToCustomerId: { ...state.apiKeyToCustomerId },
       records: { ...state.records },
       idempotencyIndex: { ...state.idempotencyIndex },
+      processedWebhookEvents: { ...(state.processedWebhookEvents || {}) },
     };
   }
 }
@@ -127,12 +131,12 @@ export class FileUsageStorageAdapter implements UsageStorageAdapter {
 
   load(): UsageLedgerState {
     if (!existsSync(this.filePath)) {
-      return { accounts: {}, apiKeyToCustomerId: {}, records: {}, idempotencyIndex: {} };
+      return { accounts: {}, apiKeyToCustomerId: {}, records: {}, idempotencyIndex: {}, processedWebhookEvents: {} };
     }
     try {
       const raw = readFileSync(this.filePath, "utf8");
       if (!raw || !raw.trim()) {
-        return { accounts: {}, apiKeyToCustomerId: {}, records: {}, idempotencyIndex: {} };
+        return { accounts: {}, apiKeyToCustomerId: {}, records: {}, idempotencyIndex: {}, processedWebhookEvents: {} };
       }
       const parsed = JSON.parse(raw);
       return {
@@ -140,6 +144,7 @@ export class FileUsageStorageAdapter implements UsageStorageAdapter {
         apiKeyToCustomerId: parsed.apiKeyToCustomerId || {},
         records: parsed.records || {},
         idempotencyIndex: parsed.idempotencyIndex || {},
+        processedWebhookEvents: parsed.processedWebhookEvents || {},
       };
     } catch (err: any) {
       throw new Error(`FAILED_TO_LOAD_USAGE_LEDGER from ${this.filePath}: ${err.message}`);
@@ -167,6 +172,7 @@ export class UsageMeteringEngine {
   readonly #apiKeyToCustomerId = new Map<string, string>();
   readonly #records = new Map<string, MeteredUsageRecord>();
   readonly #idempotencyIndex = new Map<string, string>();
+  readonly #processedWebhookEvents = new Map<string, number>();
 
   // In-memory free tier tracking by IP/identifier
   readonly #freeAllowanceBuckets = new Map<string, { count: number; resetAtMs: number }>();
@@ -203,6 +209,10 @@ export class UsageMeteringEngine {
     for (const [key, evtId] of Object.entries(state.idempotencyIndex || {})) {
       this.#idempotencyIndex.set(key, evtId);
     }
+    this.#processedWebhookEvents.clear();
+    for (const [evtId, ts] of Object.entries(state.processedWebhookEvents || {})) {
+      this.#processedWebhookEvents.set(evtId, ts);
+    }
   }
 
   flush(): void {
@@ -222,12 +232,32 @@ export class UsageMeteringEngine {
     for (const [key, id] of this.#idempotencyIndex.entries()) {
       idempotencyIndex[key] = id;
     }
+    const processedWebhookEvents: Record<string, number> = {};
+    for (const [id, ts] of this.#processedWebhookEvents.entries()) {
+      processedWebhookEvents[id] = ts;
+    }
     this.#storage.save({
       accounts,
       apiKeyToCustomerId,
       records,
       idempotencyIndex,
+      processedWebhookEvents,
     });
+  }
+
+  /**
+   * Checks whether a Stripe webhook event ID was already processed and persisted durably.
+   */
+  hasProcessedWebhookEvent(eventId: string): boolean {
+    return this.#processedWebhookEvents.has(eventId);
+  }
+
+  /**
+   * Durably records a processed webhook event ID to prevent replay after restarts.
+   */
+  recordProcessedWebhookEvent(eventId: string): void {
+    this.#processedWebhookEvents.set(eventId, Date.now());
+    this.flush();
   }
 
   /**
@@ -409,7 +439,17 @@ export class UsageMeteringEngine {
   findIdempotentRecord(idempotencyKey?: string, customerId?: string): MeteredUsageRecord | null {
     if (!idempotencyKey) return null;
     const keyToLookup = customerId ? `${customerId}:${idempotencyKey}` : idempotencyKey;
-    const existingEvtId = this.#idempotencyIndex.get(keyToLookup);
+    let existingEvtId = this.#idempotencyIndex.get(keyToLookup);
+    if (!existingEvtId && customerId) {
+      // Fallback check if recorded under unscoped key in legacy ledger format
+      const legacyEvtId = this.#idempotencyIndex.get(idempotencyKey);
+      if (legacyEvtId) {
+        const legacyRec = this.#records.get(legacyEvtId);
+        if (legacyRec && legacyRec.customerId === customerId) {
+          existingEvtId = legacyEvtId;
+        }
+      }
+    }
     if (!existingEvtId) return null;
     const record = this.#records.get(existingEvtId);
     return record ? { ...record } : null;

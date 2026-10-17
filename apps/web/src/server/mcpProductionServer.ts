@@ -22,6 +22,7 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { SpeMcpServer, type McpRequestContext } from "../engine/mcp/speMcpServer.ts";
 import { verifySignedEntitlementToken } from "../engine/entitlementVerifier.ts";
@@ -92,11 +93,19 @@ export class McpProductionServer {
     this.trustedBillingKeyHex =
       config?.trustedBillingAuthorityPublicKeyHex || this.billingAuthority.publicKeyHex;
 
-    this.adminSecret =
+    const configuredAdminSecret =
       config?.adminSecret ||
       process.env.SPE_ADMIN_SECRET ||
-      process.env.SPE_BILLING_ADMIN_SECRET ||
-      "spe_admin_secret_auth_token_prod_v1";
+      process.env.SPE_BILLING_ADMIN_SECRET;
+
+    // Fail closed in production when admin secret is unconfigured (BILL-P0-02/04)
+    if (process.env.NODE_ENV === "production" && !configuredAdminSecret) {
+      throw new Error(
+        "PRODUCTION_SECURITY_ERROR: SPE_ADMIN_SECRET must be explicitly configured in production. Refusing to start with mock admin secret fallback."
+      );
+    }
+
+    this.adminSecret = configuredAdminSecret || "spe_admin_secret_auth_token_prod_v1";
   }
 
   private isRateLimited(ip: string): boolean {
@@ -153,7 +162,11 @@ export class McpProductionServer {
         const rawAdminKey = (req.headers["x-spe-admin-key"] as string) || "";
         const bearer = rawAuth.toLowerCase().startsWith("bearer ") ? rawAuth.slice(7).trim() : "";
         const token = bearer || rawAdminKey;
-        return Boolean(token && token === this.adminSecret);
+        if (!token || !this.adminSecret) return false;
+        const tokenBuf = Buffer.from(token, "utf8");
+        const secretBuf = Buffer.from(this.adminSecret, "utf8");
+        if (tokenBuf.length !== secretBuf.length) return false;
+        return crypto.timingSafeEqual(tokenBuf, secretBuf);
       };
 
       // 1.2 Stripe Checkout Session Creator (POST /api/v1/billing/checkout)
@@ -525,7 +538,15 @@ export class McpProductionServer {
             }
 
             // Dispatch to MCP server with authenticated context
-            const response = await this.mcpServer.handleJsonRpcRequest(parsed, requestContext);
+            let response: any;
+            try {
+              response = await this.mcpServer.handleJsonRpcRequest(parsed, requestContext);
+            } catch (execErr: any) {
+              if (usageRecord) {
+                this.usageEngine.refundDebit(usageRecord.eventId, execErr.message);
+              }
+              throw execErr;
+            }
 
             // If downstream execution failed, refund any debited amount (fail-closed zero charge policy)
             if (response && !Array.isArray(response) && response.error && usageRecord) {
@@ -583,6 +604,13 @@ export class McpProductionServer {
             zeroDowntimeGuaranteed: true,
             availability: "24/7/365_WORLDWIDE_NON_BLOCKING",
             servingArchitecture: "READ_COPY_UPDATE_ATOMIC_HOT_SWAP",
+            timezoneIsolation: {
+              principle: "Non-blocking out-of-band background maintenance with RCU pointer hot-swap",
+              usBusinessHoursProtected: true,
+              indiaNightScheduledUtc: "20:47 UTC (02:17 IST)",
+              usPeakHoursUtc: "16:00-23:00 UTC (09:00-16:00 PT / 12:00-19:00 ET)",
+              servingInterruptionDuringMaintenance: false,
+            },
             billing: {
               activeMeterRates: {
                 standardCompile: "$0.001",

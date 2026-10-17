@@ -303,9 +303,12 @@ export function promoteModelWithValidation(
 
   // Enforce BRAIN-P0-02: Simulated tests cannot qualify a live production model when requireLiveProvider is requested
   if (options?.requireLiveProvider && targetState === "QUALIFIED") {
+    const hasLiveWitness = witnesses.some((w: any) => w.provenance === "LIVE_PROVIDER_VERIFIED");
     const hasSimulatedWitness = witnesses.some((w: any) => w.provenance === "SIMULATED_TEST");
-    if (hasSimulatedWitness) {
-      errors.push("SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED: Simulated witness cannot qualify a model for live production routing.");
+    if (!hasLiveWitness || hasSimulatedWitness || witnesses.length === 0) {
+      errors.push(
+        "SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED: Model requires at least one verified LIVE_PROVIDER_VERIFIED witness and zero simulated witnesses to qualify for live production routing."
+      );
     }
   }
 

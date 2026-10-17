@@ -31,6 +31,7 @@
     "test:trial": "node --experimental-strip-types scripts/test-universal-free-trial.mjs",
     "test:metering-stripe": "node scripts/test-per-call-metering-and-stripe.mjs",
     "test:maintenance": "node scripts/test-autonomous-maintenance-controller.mjs",
+    "test:hot-swap": "node scripts/test-zero-downtime-hot-swap.mjs",
     "maintenance": "node scripts/spe-autonomous-maintenance.mjs",
     "test:workflows-audit": "node --experimental-strip-types scripts/test-client-workflows-audit.mjs",
     "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",

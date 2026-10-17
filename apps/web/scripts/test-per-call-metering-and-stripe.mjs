@@ -11,6 +11,8 @@
  */
 
 import { EventEmitter } from "node:events";
+import { existsSync, unlinkSync } from "node:fs";
+import { resolve } from "node:path";
 import { McpProductionServer } from "../src/server/mcpProductionServer.ts";
 import {
   AuthoritativeBillingAuthority,
@@ -568,6 +570,122 @@ try {
 }
 assert(prodSecretFailedClosed === true, "StripeProcessorAdapter strictly fails closed in production when webhook secret is missing");
 
+// 4.7 Durable Webhook Deduplication Across Instance Restarts (BILL-P0-05)
+const tmpLedgerPath = resolve(process.cwd(), `proofs/generated/test_durable_ledger_${Date.now()}.json`);
+try {
+  const durableUsageEngine = new UsageMeteringEngine({ storageFilePath: tmpLedgerPath });
+  const durableAdapter1 = new StripeProcessorAdapter({
+    webhookSecret: "whsec_test_secret_for_verification_suite",
+    billingAuthority,
+    usageEngine: durableUsageEngine,
+  });
+  const durableEvtPayload = JSON.stringify({
+    id: "evt_stripe_durable_dedup_001",
+    object: "event",
+    type: "checkout.session.completed",
+    data: {
+      object: {
+        id: "cs_stripe_durable_001",
+        client_reference_id: "cust_durable_test",
+        mode: "payment",
+        amount_total: 1000,
+        customer_details: { email: "durable@spe.dev" },
+      },
+    },
+  });
+  const durableSig = durableAdapter1.signPayload(durableEvtPayload);
+  const res1 = durableAdapter1.handleVerifiedStripeWebhook(durableEvtPayload, durableSig);
+  assert(res1.accountUpdated === true, "Durable webhook initially processed and account updated");
+
+  // Simulate server restart: create fresh UsageMeteringEngine and StripeProcessorAdapter from disk
+  const reloadedUsageEngine = new UsageMeteringEngine({ storageFilePath: tmpLedgerPath });
+  const durableAdapter2 = new StripeProcessorAdapter({
+    webhookSecret: "whsec_test_secret_for_verification_suite",
+    billingAuthority,
+    usageEngine: reloadedUsageEngine,
+  });
+  assert(durableAdapter2.hasProcessedEvent("evt_stripe_durable_dedup_001") === true, "Reloaded adapter recognizes processed webhook event from durable storage");
+  const res2 = durableAdapter2.handleVerifiedStripeWebhook(durableEvtPayload, durableSig);
+  assert(res2.accountUpdated === false, "Replayed webhook after server restart strictly rejected with accountUpdated=false");
+  assert(res2.actionTaken.includes("IDEMPOTENT_IGNORED_DUPLICATE_EVENT"), "Action confirms idempotent duplicate event ignored across restart");
+} finally {
+  if (existsSync(tmpLedgerPath)) unlinkSync(tmpLedgerPath);
+}
+
+// 4.8 Fail-Closed Production Checks (BILL-P0-02/BILL-P0-04/BILL-P0-01)
+const prevNodeEnv2 = process.env.NODE_ENV;
+const prevAdminSec = process.env.SPE_ADMIN_SECRET;
+const prevBillingSec = process.env.SPE_BILLING_ADMIN_SECRET;
+process.env.NODE_ENV = "production";
+delete process.env.SPE_ADMIN_SECRET;
+delete process.env.SPE_BILLING_ADMIN_SECRET;
+let adminSecretFailedClosed = false;
+try {
+  new McpProductionServer({ stripeWebhookSecret: "whsec_test_secret" });
+} catch (err) {
+  if (err.message?.includes("PRODUCTION_SECURITY_ERROR: SPE_ADMIN_SECRET")) {
+    adminSecretFailedClosed = true;
+  }
+}
+assert(adminSecretFailedClosed === true, "McpProductionServer fails closed in production when SPE_ADMIN_SECRET is missing");
+
+const prevStripeKey = process.env.STRIPE_SECRET_KEY;
+delete process.env.STRIPE_SECRET_KEY;
+let checkoutSecretFailedClosed = false;
+try {
+  const prodStripeProcessor = new StripeProcessorAdapter({
+    webhookSecret: "whsec_prod_secret",
+    billingAuthority,
+    usageEngine,
+  });
+  await prodStripeProcessor.createCheckoutSession({
+    customerId: "cust_test_prod",
+    customerEmail: "prod@spe.dev",
+    mode: "payment",
+    successUrl: "https://systempromptengine.com/success",
+    cancelUrl: "https://systempromptengine.com/cancel",
+  });
+} catch (err) {
+  if (err.message?.includes("PRODUCTION_SECURITY_ERROR: STRIPE_SECRET_KEY")) {
+    checkoutSecretFailedClosed = true;
+  }
+} finally {
+  process.env.NODE_ENV = prevNodeEnv2;
+  if (prevAdminSec) process.env.SPE_ADMIN_SECRET = prevAdminSec;
+  if (prevBillingSec) process.env.SPE_BILLING_ADMIN_SECRET = prevBillingSec;
+  if (prevStripeKey) process.env.STRIPE_SECRET_KEY = prevStripeKey;
+}
+assert(checkoutSecretFailedClosed === true, "StripeProcessorAdapter fails closed in production when creating checkout session without STRIPE_SECRET_KEY");
+
+// 4.9 Live Stripe API Checkout Session creation with mocked fetch (BILL-P0-01)
+const originalFetch = globalThis.fetch;
+try {
+  globalThis.fetch = async () => {
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ id: "cs_live_stripe_mock_001", url: "https://checkout.stripe.com/c/pay/cs_live_stripe_mock_001" }),
+    };
+  };
+  const liveStripeProcessor = new StripeProcessorAdapter({
+    webhookSecret: "whsec_test_secret",
+    stripeSecretKey: "sk_live_spe_real_key_simulated",
+    billingAuthority,
+    usageEngine,
+  });
+  const liveSession = await liveStripeProcessor.createCheckoutSession({
+    customerId: "cust_live_test",
+    customerEmail: "live@spe.dev",
+    mode: "payment",
+    successUrl: "https://systempromptengine.com/success",
+    cancelUrl: "https://systempromptengine.com/cancel",
+  });
+  assert(liveSession.provenance === "LIVE_STRIPE_API", "Checkout session reports provenance LIVE_STRIPE_API when secret key is provided");
+  assert(liveSession.id === "cs_live_stripe_mock_001", "Live session ID matches Stripe API response");
+} finally {
+  globalThis.fetch = originalFetch;
+}
+
 // ────────────────────────────────────────────────────────────────
 // GATE 5: STRIPE USAGE METER EVENT EXPORT & RECONCILIATION
 // ────────────────────────────────────────────────────────────────
@@ -600,6 +718,8 @@ assert(healthRes.body.billing?.universalWebFreeCeilingChars === 30000, "Health e
 assert(healthRes.body.zeroDowntimeGuaranteed === true, "Health endpoint confirms zero-downtime serving guarantee");
 assert(healthRes.body.availability === "24/7/365_WORLDWIDE_NON_BLOCKING", "Health endpoint publishes 24/7 worldwide non-blocking availability");
 assert(healthRes.body.servingArchitecture === "READ_COPY_UPDATE_ATOMIC_HOT_SWAP", "Health endpoint confirms RCU atomic hot-swap serving architecture");
+assert(healthRes.body.timezoneIsolation?.usBusinessHoursProtected === true, "Health endpoint confirms US business hours protected against maintenance downtime");
+assert(healthRes.body.timezoneIsolation?.servingInterruptionDuringMaintenance === false, "Health endpoint confirms zero serving interruption during background maintenance");
 
 // 5.4 Protected Billing Endpoints Authorization Check (BILL-P0-04)
 const unauthMeterRes = await simulateHttpRequest(
@@ -634,6 +754,56 @@ const authCustReconcile = await simulateHttpRequest(
   ""
 );
 assert(authCustReconcile.statusCode === 200, "Customer accessing their own reconciliation with valid API key returns HTTP 200");
+
+// 5.5 Fail-Closed Execution Exception Debit Refund Policy
+const balanceBeforeCrash = usageEngine.getCustomerAccount(customer.customerId).balanceMicroCents;
+const crashMcpServer = new McpProductionServer({
+  usageEngine,
+  billingAuthority,
+  stripeProcessor,
+  adminSecret: "spe_admin_secret_auth_token_prod_v1",
+});
+// Override handleJsonRpcRequest to simulate an unexpected crash/throw during execution
+crashMcpServer["mcpServer"].handleJsonRpcRequest = async () => {
+  throw new Error("SIMULATED_DOWNSTREAM_CRASH");
+};
+const crashHttpServer = crashMcpServer.createHttpServer();
+const crashRes = await new Promise((resResolve) => {
+  const req = new EventEmitter();
+  Object.assign(req, {
+    url: "/api/v1/mcp",
+    method: "POST",
+    socket: { remoteAddress: "127.0.0.1" },
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${apiKey}`,
+    },
+  });
+  const crashPayload = JSON.stringify({
+    jsonrpc: "2.0",
+    id: "req_crash_test",
+    method: "tools/call",
+    params: {
+      name: "compile_for_model",
+      arguments: { promptText: "Test crash refund", targetDialect: "claude-xml" },
+    },
+  });
+  let bodyStr = "";
+  const res = {
+    setHeader: () => {},
+    statusCode: 200,
+    end: (chunk) => {
+      if (chunk) bodyStr += chunk;
+      resResolve({ statusCode: res.statusCode, body: bodyStr ? JSON.parse(bodyStr) : null });
+    },
+  };
+  crashHttpServer.emit("request", req, res);
+  req.emit("data", Buffer.from(crashPayload));
+  req.emit("end");
+});
+assert(crashRes.statusCode === 400, "Crashed tool execution returns HTTP 400");
+const balanceAfterCrash = usageEngine.getCustomerAccount(customer.customerId).balanceMicroCents;
+assert(balanceAfterCrash === balanceBeforeCrash, "Customer balance is strictly refunded and unchanged on downstream execution crash");
 
 console.log("\n==================================================================");
 console.log(`🎉 ALL ${passedTests}/${totalTests} PER-CALL METERING & STRIPE TESTS PASSED CLEANLY (100%)!`);
