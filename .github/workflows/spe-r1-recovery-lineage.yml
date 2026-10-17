@@ -1,0 +1,56 @@
+name: SPE R1 — Canonical Recovery Lineage
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r1-canonical-recovery-lineage-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-live-crash-recovery-r0-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r1-recovery-lineage.yml"
+      - "apps/web/scripts/test-spe-crash-recovery-browser.mjs"
+      - "spe_runtime/portability/browser_recovery_lineage.py"
+      - "tests/portability/test_browser_recovery_lineage.py"
+      - "tools/attach_spe_crash_recovery.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-recovery:
+    name: Real Chromium → Review-only canonical .spe import
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test dependencies
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --disable-pip-version-check pytest
+      - name: Install isolated Chromium fixture runner
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Run real browser crash-repair fixture and export private observation
+        working-directory: apps/web
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r0-positive"
+          node scripts/test-spe-crash-recovery-browser.mjs
+      - name: Challenge and import Chromium recovery into canonical .spe
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r0-positive"
+          python -m pytest tests/portability/test_browser_recovery_lineage.py -q
+      - name: Verify no live model is run in CI
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"
