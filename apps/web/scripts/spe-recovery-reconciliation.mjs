@@ -112,6 +112,26 @@ export async function reconcileRecoveryReadOnly({
     return hold("PROTECTED_IDENTITY_MISMATCH");
   if (!validateAttemptStructure(record))
     return hold("INCONSISTENT_ATTEMPT_LINEAGE");
+  if (record.schema !== "spe.live_crash_recovery.acceptance.v0"
+      || JSON.stringify(record.acceptance) !== JSON.stringify(TEST_SCOPE))
+    return hold("FROZEN_ACCEPTANCE_CONTRACT_MISMATCH");
+  const expectedQualifications = record.provenance === "FIXTURE"
+    ? new Set(["UNQUALIFIED", "FIXTURE_PASS_NOT_LIVE", "FIXTURE_REPAIRED_NOT_LIVE", "FAILED_BOUNDED_REPAIR", "INCONCLUSIVE_EXCEPTION"])
+    : record.provenance === "EXTERNAL_COMMAND_UNATTESTED"
+      ? new Set(["UNQUALIFIED", "BROWSER_PASS_PROVIDER_UNATTESTED", "BROWSER_REPAIRED_PROVIDER_UNATTESTED", "FAILED_BOUNDED_REPAIR", "INCONCLUSIVE_EXCEPTION"])
+      : null;
+  if (!expectedQualifications || !expectedQualifications.has(record.qualification))
+    return hold("INVALID_PROVENANCE_OR_QUALIFICATION");
+  if (record.phaseStatus === "FINISHED") {
+    const count = record.attempts.length;
+    const lastPassed = record.attempts.at(-1)?.observation.passed === true;
+    const success = record.provenance === "FIXTURE"
+      ? (count === 1 ? "FIXTURE_PASS_NOT_LIVE" : "FIXTURE_REPAIRED_NOT_LIVE")
+      : (count === 1 ? "BROWSER_PASS_PROVIDER_UNATTESTED" : "BROWSER_REPAIRED_PROVIDER_UNATTESTED");
+    const expected = lastPassed ? success : "FAILED_BOUNDED_REPAIR";
+    if (count < 1 || record.qualification !== expected)
+      return hold("QUALIFICATION_CONTRADICTS_OBSERVED_ATTEMPTS");
+  }
   const lockPath = join(evidenceDirectory, JOURNAL_LOCK);
   let lockPresent = false;
   try { await lstat(lockPath); lockPresent = true; }
