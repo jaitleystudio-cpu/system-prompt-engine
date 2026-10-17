@@ -130,7 +130,7 @@ const bareSpoofReceipt = generateProofReceipt(
   {
     zeroEgressNetworkObserved: true,
     liveModelCallsExecuted: 10,
-    liveProvidersEvaluated: ["openai:gpt-4o"],
+    liveProvidersEvaluated: ["openai:gpt-6-1-sol"],
   },
 );
 assert.strictEqual(bareSpoofReceipt.hardGates.zeroEgressObserved, false, "Bare boolean zeroEgressNetworkObserved must NOT set zeroEgressObserved without signed NetworkObservationAttestation");
@@ -167,7 +167,7 @@ const liveAttestation = issueLiveEvaluationAttestation(
     transcriptEntries: [
       {
         caseId: "case-01",
-        providerId: "openai:gpt-4o",
+        providerId: "openai:gpt-6-1-sol",
         promptSha256: receipt.candidateHash,
         responseSha256: "a".repeat(64),
         latencyMs: 112,

@@ -28,10 +28,21 @@ class CostSource(str, Enum):
 PINNED_LOCAL_PRICE_TABLE: Dict[str, Dict[str, float]] = {
     "default": {"prompt": 2.50, "completion": 10.00},
     "spe-omega-supercompiler": {"prompt": 0.00, "completion": 0.00},
-    "gpt-4o": {"prompt": 2.50, "completion": 10.00},
-    "gpt-4o-mini": {"prompt": 0.15, "completion": 0.60},
-    "claude-3-5-sonnet": {"prompt": 3.00, "completion": 15.00},
-    "claude-3-5-haiku": {"prompt": 0.25, "completion": 1.25},
+    # Late 2026 Frontier Models
+    "claude-5-5-sonnet": {"prompt": 3.00, "completion": 15.00},
+    "claude-5-5-haiku": {"prompt": 0.80, "completion": 4.00},
+    "claude-5-5-opus": {"prompt": 15.00, "completion": 75.00},
+    "claude-code-2-1": {"prompt": 3.00, "completion": 15.00},
+    "gpt-6-1-sol": {"prompt": 2.50, "completion": 10.00},
+    "gpt-6-astra": {"prompt": 3.00, "completion": 12.00},
+    "gemini-3-8-pro": {"prompt": 1.25, "completion": 5.00},
+    "gemini-3-8-flash": {"prompt": 0.10, "completion": 0.40},
+    "aragon-4": {"prompt": 0.85, "completion": 3.40},
+    # LEGACY historical compatibility fallback entries
+    "gpt-4o": {"prompt": 2.50, "completion": 10.00},  # historical
+    "gpt-4o-mini": {"prompt": 0.15, "completion": 0.60},  # historical
+    "claude-3-5-sonnet": {"prompt": 3.00, "completion": 15.00},  # historical
+    "claude-3-5-haiku": {"prompt": 0.25, "completion": 1.25},  # historical
 }
 
 

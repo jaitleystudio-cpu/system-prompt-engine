@@ -15,8 +15,8 @@ async function main() {
   if (parsedOllama.provider !== "ollama" || parsedOllama.model !== "llama3:latest") {
     throw new Error(`Failed to parse ollama target: ${JSON.stringify(parsedOllama)}`);
   }
-  const parsedAnthropic = parseProviderModelString("anthropic:claude-3-7-sonnet-20250219");
-  if (parsedAnthropic.provider !== "anthropic" || parsedAnthropic.model !== "claude-3-7-sonnet-20250219") {
+  const parsedAnthropic = parseProviderModelString("anthropic:claude-5-5-sonnet");
+  if (parsedAnthropic.provider !== "anthropic" || parsedAnthropic.model !== "claude-5-5-sonnet") {
     throw new Error(`Failed to parse anthropic target: ${JSON.stringify(parsedAnthropic)}`);
   }
   console.log("  ✓ Provider/Model target string parsing verified.");
@@ -63,7 +63,7 @@ async function main() {
   // 4. Missing API Key error reporting
   const unauthRes = await executeProviderCall({
     provider: "openai",
-    model: "gpt-4o",
+    model: "gpt-6-1-sol",
     systemPrompt: "System",
     userInput: "User",
     apiKey: "", // explicit empty key

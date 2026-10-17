@@ -11,7 +11,7 @@ async function main() {
 
   const baseResponse = {
     provider: "openai",
-    model: "gpt-4o",
+    model: "gpt-6-1-sol",
     output: `{"status": "ok", "message": "Enterprise authentication successful", "userId": 42}`,
     latencyMs: 850,
     promptTokens: 120,

@@ -1315,7 +1315,7 @@ from azure.identity.aio import DefaultAzureCredential
 async with connect(
     endpoint=os.environ["AZURE_COGNITIVE_SERVICES_ENDPOINT"],
     credential=DefaultAzureCredential(),
-    model="gpt-4o-realtime-preview",
+    model="gpt-6-astra",
 ) as conn:
     await conn.session.update(session={
         "modalities": ["text", "audio"],

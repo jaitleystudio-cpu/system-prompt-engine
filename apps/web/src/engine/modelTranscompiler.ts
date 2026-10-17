@@ -3,9 +3,9 @@
  *
  * Compiles a single canonical ProtectedIntent IR into model-native, mathematically
  * hardened instruction dialects:
- * 1. Anthropic Claude (Sonnet 5.5 / 3.7 / 3.5 & Claude 6 XML Tags / CLAUDE.md)
+ * 1. Anthropic Claude (Claude Sonnet 5.5 / Opus 5.5 / Haiku 5.5 / Claude Code 2.1)
  * 2. OpenAI GPT-6.1-sol / gpt-6-astra / o3 / o4 (Developer Role Markdown)
- * 3. Google Gemini (gemini-3.8-flash / 3.1-pro-preview / 2.5 Directives)
+ * 3. Google Gemini (gemini-3.8-flash / gemini-3.8-pro Directives)
  * 4. Cursor Rules (.cursor/rules/*.mdc & .cursorrules) & Windsurf
  * 5. Open-Weights Meta Llama 4 / 3.3 & DeepSeek R1/V3 Reasoner
  * 6. xAI Grok (grok-4.7 / grok-3) & Moonshot Kimi 3.5
@@ -765,7 +765,7 @@ ${ir.authorityBoundaries.map((auth) => `    <boundary scope="enforced">${auth}</
 
   return {
     dialect: "claude-xml",
-    modelTarget: "Anthropic Claude (Sonnet 5.5 / 3.7 / 3.5 & Claude 6)",
+    modelTarget: "Anthropic Claude (Claude Sonnet 5.5 / Opus 5.5 / Haiku 5.5 / Claude Code 2.1)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Hierarchical XML Strict Tags",
@@ -871,7 +871,7 @@ ${ir.outputContract}`;
 
   return {
     dialect: "gemini-agent",
-    modelTarget: "Google Gemini (gemini-3.8-flash / 3.1-pro-preview / 2.5)",
+    modelTarget: "Google Gemini (gemini-3.8-flash / gemini-3.8-pro)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Bracketed Directive Blocks with Grounding Tags",

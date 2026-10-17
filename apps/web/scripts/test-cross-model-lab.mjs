@@ -30,7 +30,7 @@ if (atlas.evaluatedModels.length !== 5) {
 // 2. Verify model coverage
 console.log('\n[2/3] Verifying individual model profiles (Claude, GPT, Gemini, DeepSeek, Llama)...');
 const modelIds = atlas.evaluatedModels.map(m => m.modelId);
-if (!modelIds.includes('claude-3-7-sonnet') || !modelIds.includes('gpt-4o') || !modelIds.includes('deepseek-r1')) {
+if (!modelIds.includes('claude-5-5-sonnet') || !modelIds.includes('gpt-6-1-sol') || !modelIds.includes('deepseek-v4')) {
   throw new Error('Missing core frontier models in evaluation atlas');
 }
 

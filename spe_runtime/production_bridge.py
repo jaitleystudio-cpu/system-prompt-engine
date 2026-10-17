@@ -1507,8 +1507,8 @@ class FailureGenomeAdapter:
             {
                 "id": "SPE-INC-2026-002",
                 "slug": "openai-o3-negation-collapse",
-                "title": "OpenAI o3-mini Negated Bound Polarity Inversion under Speculative Reasoning",
-                "model": "OpenAI o3-mini",
+                "title": "OpenAI o3-mini (Historical CVE-2025) Negated Bound Polarity Inversion under Speculative Reasoning",
+                "model": "OpenAI o3-mini (historical)",
                 "severity": "CRITICAL",
                 "failure_class": "POLARITY_INVERSION",
                 "verified": True,

@@ -36,9 +36,9 @@ export interface CostOptimizationResult {
     claude45Sonnet: number;
     deepseekR2: number;
     // Backwards-compatible aliases
-    gpt4o: number;
-    claude37Sonnet: number;
-    deepseekR1: number;
+    gpt4o: number; // historical
+    claude37Sonnet: number; // historical
+    deepseekR1: number; // historical
   };
   modelEstimates: ModelCostEstimate[];
   prunedPrompt: string;

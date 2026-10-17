@@ -80,76 +80,6 @@ FRONTIER_MODELS_2026: Dict[str, Dict[str, Any]] = {
         "release_date": "2026-10-01",
         "generation": "2026-frontier",
     },
-    "claude-4-5-sonnet": {
-        "id": "claude-4-5-sonnet",
-        "name": "Claude 4.5 Sonnet (Hybrid Frontier)",
-        "provider": "Anthropic",
-        "category": "frontier-reasoning",
-        "context_window": 262144,
-        "max_output_tokens": 65536,
-        "release_date": "2026-06-18",
-        "generation": "2026-frontier",
-    },
-    "claude-4-5-opus": {
-        "id": "claude-4-5-opus",
-        "name": "Claude 4.5 Opus (Ultra Reasoning)",
-        "provider": "Anthropic",
-        "category": "frontier-reasoning",
-        "context_window": 524288,
-        "max_output_tokens": 131072,
-        "release_date": "2026-08-12",
-        "generation": "2026-frontier",
-    },
-    "claude-4-5-haiku": {
-        "id": "claude-4-5-haiku",
-        "name": "Claude 4.5 Haiku",
-        "provider": "Anthropic",
-        "category": "general-intelligence",
-        "context_window": 262144,
-        "max_output_tokens": 16384,
-        "release_date": "2026-07-02",
-        "generation": "2026-frontier",
-    },
-    "gpt-5": {
-        "id": "gpt-5",
-        "name": "OpenAI GPT-5 (Omni Flagship 2026)",
-        "provider": "OpenAI",
-        "category": "frontier-reasoning",
-        "context_window": 262144,
-        "max_output_tokens": 32768,
-        "release_date": "2026-05-14",
-        "generation": "2026-frontier",
-    },
-    "gpt-5-codex": {
-        "id": "gpt-5-codex",
-        "name": "OpenAI GPT-5 Codex (Agentic Engineer)",
-        "provider": "OpenAI",
-        "category": "coding-specialist",
-        "context_window": 262144,
-        "max_output_tokens": 65536,
-        "release_date": "2026-07-22",
-        "generation": "2026-frontier",
-    },
-    "o4-mini": {
-        "id": "o4-mini",
-        "name": "OpenAI o4-mini (High-Speed Reasoning)",
-        "provider": "OpenAI",
-        "category": "frontier-reasoning",
-        "context_window": 262144,
-        "max_output_tokens": 65536,
-        "release_date": "2026-04-08",
-        "generation": "2026-frontier",
-    },
-    "o3-pro": {
-        "id": "o3-pro",
-        "name": "OpenAI o3-pro (Extended Deliberation)",
-        "provider": "OpenAI",
-        "category": "frontier-reasoning",
-        "context_window": 262144,
-        "max_output_tokens": 100000,
-        "release_date": "2026-06-25",
-        "generation": "2026-frontier",
-    },
     "gemini-3-8-pro": {
         "id": "gemini-3-8-pro",
         "name": "Google Gemini 3.8 Pro (4M Multimodal)",
@@ -381,7 +311,7 @@ def auto_upgrade_legacy_model(model_id: str) -> Dict[str, Any]:
             "notice": f"Upgraded obsolete model '{clean_id}' to 2026 frontier model '{model['name']}' ({mapped_id}).",
         }
 
-    default_model = FRONTIER_MODELS_2026["claude-4-5-sonnet"]
+    default_model = FRONTIER_MODELS_2026["claude-5-5-sonnet"]
     return {
         "upgraded_id": default_model["id"],
         "was_legacy": True,
@@ -406,7 +336,7 @@ def assert_model_currency(model_id: str, context: str = "execution") -> None:
 
 def get_default_frontier_model() -> Dict[str, Any]:
     """Returns the default 2026 frontier flagship."""
-    return FRONTIER_MODELS_2026["claude-4-5-sonnet"]
+    return FRONTIER_MODELS_2026["claude-5-5-sonnet"]
 
 
 def get_active_frontier_models() -> List[Dict[str, Any]]:

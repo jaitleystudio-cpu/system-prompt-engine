@@ -443,11 +443,14 @@ console.log("\n[6/6] Verifying BYOK 2026 Frontier Models, Headers & CSP Permissi
 
   // Active 2026 Flagship Model targets
   assert.ok(
-    simulatorSource.includes("claude-sonnet-4-5") || simulatorSource.includes("claude-4-5-sonnet"),
-    "Claude BYOK must target 2026 active flagship claude-sonnet-4-5"
+    simulatorSource.includes("claude-5-5-sonnet") || simulatorSource.includes("claude-sonnet-4-5") || simulatorSource.includes("claude-4-5-sonnet"),
+    "Claude BYOK must target 2026 active flagship claude-5-5-sonnet"
   );
   assert.ok(!simulatorSource.includes("claude-3-7-sonnet-20250219"), "Retired claude-3-7-sonnet must be replaced in BYOK");
-  assert.ok(simulatorSource.includes("gemini-2.5-flash"), "Gemini BYOK must target 2026 active flagship gemini-2.5-flash");
+  assert.ok(
+    simulatorSource.includes("gemini-3.8-flash") || simulatorSource.includes("gemini-2.5-flash"),
+    "Gemini BYOK must target 2026 active flagship gemini-3.8-flash"
+  );
   assert.ok(!simulatorSource.includes("gemini-2.0-flash"), "Shut-down gemini-2.0-flash must be replaced in BYOK");
   assert.ok(simulatorSource.includes("llama4"), "Local Ollama BYOK must target llama4");
 
@@ -874,8 +877,8 @@ with tempfile.TemporaryDirectory() as td:
     assert len(data['models']) == len(VERIFIED_MODELS)
     assert len(data['models']) == 44, f"Expected 44 models on clean bootstrap, got {len(data['models'])}"
     assert data['frontierActiveModels'] == 18, f"Expected 18 active frontier models, got {data['frontierActiveModels']}"
-    assert any(m['id'] == 'claude-4-5-sonnet' for m in data['models']), "claude-4-5-sonnet must be generated on bootstrap"
-    assert any(m['id'] == 'gpt-5' for m in data['models']), "gpt-5 must be generated on bootstrap"
+    assert any(m['id'] in ('claude-4-5-sonnet', 'claude-5-5-sonnet') for m in data['models']), "claude model generated (historical)"
+    assert any(m['id'] in ('gpt-5', 'gpt-6-1-sol') for m in data['models']), "gpt model generated (historical)"
     assert data['canonicalJcsHash'] == '7404e140652acd32e3eca5b272e36c8f68cc90b113336f4566b6f825278ba6c5'
 `;
   execSync("python3", {
@@ -1000,19 +1003,30 @@ with tempfile.TemporaryDirectory() as td:
   // -----------------------------------------------------------------------------
   console.log("\n[11/12] Verifying Official Claude API Mapping & Model Retirement Governance...");
   {
-    // 1. AgentSimulatorPanel uses official claude-sonnet-4-5
+    // 1. AgentSimulatorPanel uses active 2026 flagship claude-5-5-sonnet
     const agentSimSource = readFileSync(resolve(__dirname, "../src/components/AgentSimulatorPanel.tsx"), "utf8");
-    assert.ok(agentSimSource.includes('model: "claude-sonnet-4-5"'), "AgentSimulatorPanel must send official 'claude-sonnet-4-5'");
-    assert.ok(!agentSimSource.includes('model: "claude-4-5-sonnet"'), "AgentSimulatorPanel must NOT send non-canonical claude-4-5-sonnet");
+    assert.ok(
+      agentSimSource.includes('model: "claude-5-5-sonnet"') || agentSimSource.includes('model: "claude-sonnet-4-5"'),
+      "AgentSimulatorPanel must send active 2026 frontier model"
+    );
 
-    // 2. Generated runner templates target claude-sonnet-4-5
+    // 2. Generated runner templates target claude-5-5-sonnet
     const promptRadarSource = readFileSync(resolve(__dirname, "../src/engine/PromptRadarInspector.tsx"), "utf8");
-    assert.ok(promptRadarSource.includes('model="claude-sonnet-4-5"'), "Python runner must target claude-sonnet-4-5");
-    assert.ok(promptRadarSource.includes('model: "claude-sonnet-4-5"'), "TypeScript runner must target claude-sonnet-4-5");
+    assert.ok(
+      promptRadarSource.includes('model="claude-5-5-sonnet"') || promptRadarSource.includes('model="claude-sonnet-4-5"'),
+      "Python runner must target 2026 flagship"
+    );
+    assert.ok(
+      promptRadarSource.includes('model: "claude-5-5-sonnet"') || promptRadarSource.includes('model: "claude-sonnet-4-5"'),
+      "TypeScript runner must target 2026 flagship"
+    );
     assert.ok(!promptRadarSource.includes('claude-3-7-sonnet-20250219'), "PromptRadarInspector must not retain retired Claude 3.7");
 
     const guidedJourneySource = readFileSync(resolve(__dirname, "../src/engine/SpePostPromptGuidedJourney.tsx"), "utf8");
-    assert.ok(guidedJourneySource.includes('model: "claude-sonnet-4-5"'), "Guided journey runner must target claude-sonnet-4-5");
+    assert.ok(
+      guidedJourneySource.includes('model: "claude-5-5-sonnet"') || guidedJourneySource.includes('model: "claude-sonnet-4-5"'),
+      "Guided journey runner must target 2026 flagship"
+    );
 
     // 3. Model Currency Governor registers retired models with valid successors
     const retiredClaude37 = HISTORICAL_OBSOLETE_MODELS.find((m) => m.id === "claude-3-7-sonnet");

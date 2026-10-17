@@ -241,8 +241,8 @@ console.log("  ✓ bench verified");
 
 // 24. Model Passport & Atlas (spe passport)
 console.log("\n[24/28] Testing passport");
-const passportOut = runCli(`passport gpt-4o`);
-assert(passportOut.includes("MODEL PASSPORT & ATLAS: gpt-4o"), "Passport output missing header");
+const passportOut = runCli(`passport claude-5-5-sonnet`);
+assert(passportOut.includes("MODEL PASSPORT & ATLAS: claude-5-5-sonnet"), "Passport output missing header");
 console.log("  ✓ passport verified");
 
 // 25. Failure Genome Ω (spe failures)

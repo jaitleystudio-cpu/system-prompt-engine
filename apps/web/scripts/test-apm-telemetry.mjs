@@ -9,7 +9,7 @@ const store = new SovereignApmStore(50);
 
 console.log("\n[1] Ingesting execution traces across multiple models...");
 const t1 = await store.createExecutionTrace({
-  model: 'claude-3-7-sonnet',
+  model: 'claude-5-5-sonnet',
   promptText: 'System prompt with strict type checking and negative bounds',
   inputTokens: 145,
   outputTokens: 420,
@@ -18,7 +18,7 @@ const t1 = await store.createExecutionTrace({
 });
 
 const t2 = await store.createExecutionTrace({
-  model: 'gpt-4o',
+  model: 'gpt-6-1-sol',
   promptText: 'System prompt with adversarial probe injection attempt',
   inputTokens: 210,
   outputTokens: 0,
@@ -28,7 +28,7 @@ const t2 = await store.createExecutionTrace({
 });
 
 const t3 = await store.createExecutionTrace({
-  model: 'deepseek-r1',
+  model: 'deepseek-v4',
   promptText: 'Formal mathematical theorem proof prompt',
   inputTokens: 380,
   outputTokens: 890,

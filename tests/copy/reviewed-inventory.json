@@ -4279,10 +4279,10 @@
       "text": "ollama"
     },
     {
-      "id": "112e08933e3a4a4c9e4b",
+      "id": "0d0e10d8b33eb19bca88",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "claude-sonnet-4-5"
+      "text": "claude-5-5-sonnet"
     },
     {
       "id": "149e0dde17a9ce47d642",
@@ -4723,10 +4723,10 @@
       "text": "test-injection"
     },
     {
-      "id": "c5badeb40f2d3ec1880f",
+      "id": "def8f0faff012a21ab25",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "gpt-4o"
+      "text": "gpt-6-1-sol"
     },
     {
       "id": "c665729437c6a3a14d1b",
@@ -4849,10 +4849,10 @@
       "text": "🚫 [SCOPE BOUNDARY ENFORCED · TASK HALTED]\n\nTask aborted: The requested action targets files outside the authorized project boundary (LOCAL_FILESYSTEM_READ / scope constraint).\n\nDeclared Scope: Current task files only.\nViolations Prevented: Destructive filesystem deletion & credential tampering."
     },
     {
-      "id": "f5158c631464e1c76e85",
+      "id": "d9db82b2e81a620c14d6",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
     },
     {
       "id": "f736efd5030a6d420206",

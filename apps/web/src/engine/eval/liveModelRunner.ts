@@ -61,15 +61,21 @@ const MODEL_COSTS_PER_M: Record<string, { input: number; output: number }> = {
   "claude-code-2-1": { input: 3.0, output: 15.0 },
   "gpt-6-1-sol": { input: 2.5, output: 10.0 },
   "gpt-6-astra": { input: 3.0, output: 12.0 },
+  "gemini-3-8-flash": { input: 0.10, output: 0.40 },
+  "gemini-3.8-flash": { input: 0.10, output: 0.40 },
+  "gemini-3-8-pro": { input: 1.25, output: 5.0 },
+  "gemini-3.8-pro": { input: 1.25, output: 5.0 },
+  "aragon-4": { input: 0.85, output: 3.4 },
+  "aragon-4-pro": { input: 0.85, output: 3.4 },
   "meta-muse-code": { input: 0, output: 0 },
   // Historical snapshots
-  "gpt-4o": { input: 2.5, output: 10.0 },
-  "gpt-4o-mini": { input: 0.15, output: 0.6 },
-  "o3-mini": { input: 1.1, output: 4.4 },
-  "o1": { input: 15.0, output: 60.0 },
-  "claude-3-7-sonnet-20250219": { input: 3.0, output: 15.0 },
-  "claude-3-5-sonnet-20241022": { input: 3.0, output: 15.0 },
-  "claude-3-5-haiku-20241022": { input: 0.8, output: 4.0 },
+  "gpt-4o": { input: 2.5, output: 10.0 }, // historical
+  "gpt-4o-mini": { input: 0.15, output: 0.6 }, // historical
+  "o3-mini": { input: 1.1, output: 4.4 }, // historical
+  "o1": { input: 15.0, output: 60.0 }, // historical
+  "claude-3-7-sonnet-20250219": { input: 3.0, output: 15.0 }, // historical
+  "claude-3-5-sonnet-20241022": { input: 3.0, output: 15.0 }, // historical
+  "claude-3-5-haiku-20241022": { input: 0.8, output: 4.0 }, // historical
   "llama-3.3-70b-versatile": { input: 0.59, output: 0.79 },
   "deepseek-r1-distill-llama-70b": { input: 0.75, output: 0.99 },
   "llama3": { input: 0, output: 0 },
@@ -280,12 +286,14 @@ export async function executeProviderCall(request: LiveModelRequest): Promise<Li
 
       let anthropicModel = request.model.replace(/^anthropic:/i, "");
       if (
+        anthropicModel === "claude-5-5-sonnet" ||
         anthropicModel === "claude-4-5-sonnet" ||
         anthropicModel === "claude-3-7-sonnet" ||
         anthropicModel === "claude-3-7-sonnet-20250219" ||
-        anthropicModel === "claude-sonnet"
+        anthropicModel === "claude-sonnet" ||
+        anthropicModel === "claude-sonnet-4-5"
       ) {
-        anthropicModel = "claude-sonnet-4-5";
+        anthropicModel = "claude-5-5-sonnet";
       }
 
       const body = {

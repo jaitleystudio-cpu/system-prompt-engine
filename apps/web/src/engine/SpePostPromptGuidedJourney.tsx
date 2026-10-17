@@ -246,7 +246,7 @@ export const SpePostPromptGuidedJourney: React.FC<SpePostPromptGuidedJourneyProp
 client = OpenAI()
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-6-1-sol",
     messages=[
         {
             "role": "system",
@@ -271,7 +271,7 @@ const anthropic = new Anthropic();
 
 async function run() {
   const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-5",
+    model: "claude-5-5-sonnet",
     max_tokens: 4096,
     temperature: 0.2,
     system: \`${escaped}\`,

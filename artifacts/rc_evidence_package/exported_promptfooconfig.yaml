@@ -3,7 +3,7 @@
 # Spec: https://www.promptfoo.dev/docs/configuration/guide/
 # Zero-Egress Upstream Compiler: System Prompt Engine (SPE)
 # spe_prompt_sha256: "230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc"
-# spe_receipt_digest: "151e03a71f8a7d5c0e7c8102b42a4560cc1f754b04b575ec98bee47440ade5f6"
+# spe_receipt_digest: "3340e8c1fce63a636648312d309a4043af86ac35bab4171ad78ba9c5e364b8d2"
 # spe_receipt_authenticity: "PRODUCER_SIGNED_AUTHENTICATED"
 # spe_type_check_passed: true
 # spe_measured_errors: 0
@@ -54,8 +54,8 @@ prompts:
     {{user_input}}
 
 providers:
-  - id: "openai:gpt-4o"
-  - id: "anthropic:claude-3-5-sonnet"
+  - id: "openai:gpt-6-1-sol"
+  - id: "anthropic:claude-5-5-sonnet"
 
 defaultTest:
   options:

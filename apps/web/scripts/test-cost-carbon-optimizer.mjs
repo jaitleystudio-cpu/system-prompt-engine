@@ -14,7 +14,7 @@ if (FRONTIER_MODELS.length < 8) {
   throw new Error(`Expected at least 8 frontier models, found ${FRONTIER_MODELS.length}`);
 }
 const modelIds = FRONTIER_MODELS.map(m => m.modelId);
-if (!modelIds.includes('claude-3-7-sonnet') || !modelIds.includes('gpt-4o') || !modelIds.includes('deepseek-r1')) {
+if (!modelIds.includes('claude-5-5-sonnet') || !modelIds.includes('gpt-6-1-sol') || !modelIds.includes('deepseek-r2')) {
   throw new Error('Missing core frontier models in pricing catalog');
 }
 console.log(`✓ Model catalog verified across ${FRONTIER_MODELS.length} frontier models.`);
@@ -35,8 +35,8 @@ console.log(`Raw Tokens:       ${costResult.rawTokenCount}`);
 console.log(`Pruned Tokens:    ${costResult.prunedTokenCount}`);
 console.log(`Reduction:        ${costResult.tokenReductionPercent}%`);
 console.log(`Annual Savings (10M req):`);
-console.log(`  GPT-6.1:        $${costResult.annualSavingsUsdAt10mCalls.gpt4o}`);
-console.log(`  Claude 5.5:     $${costResult.annualSavingsUsdAt10mCalls.claude37Sonnet}`);
+console.log(`  GPT-6.1-Sol:    $${costResult.annualSavingsUsdAt10mCalls.gpt5}`);
+console.log(`  Claude 5.5:     $${costResult.annualSavingsUsdAt10mCalls.claude45Sonnet}`);
 
 if (costResult.tokenReductionPercent < 15) {
   throw new Error(`Expected significant token reduction on verbose prompt, got ${costResult.tokenReductionPercent}%`);
@@ -55,11 +55,11 @@ console.log('✓ Invariants preserved 100% while rhetorical fluff stripped.');
 
 // 4. Test carbon and energy calculations
 console.log('\n[4/4] Verifying energy and carbon metrics...');
-const gpt4oEstimate = costResult.modelEstimates.find(m => m.modelId === 'gpt-4o');
-if (!gpt4oEstimate || gpt4oEstimate.estimatedEnergyKwhPerMillion <= 0 || gpt4oEstimate.carbonGramsCo2ePerMillion <= 0) {
+const gptEstimate = costResult.modelEstimates.find(m => m.modelId === 'gpt-6-1-sol');
+if (!gptEstimate || gptEstimate.estimatedEnergyKwhPerMillion <= 0 || gptEstimate.carbonGramsCo2ePerMillion <= 0) {
   throw new Error('Invalid energy or carbon metrics calculated');
 }
-console.log(`GPT-4o Energy: ${gpt4oEstimate.estimatedEnergyKwhPerMillion} kWh/M, Carbon: ${gpt4oEstimate.carbonGramsCo2ePerMillion}g CO2e/M`);
+console.log(`GPT-6.1-Sol Energy: ${gptEstimate.estimatedEnergyKwhPerMillion} kWh/M, Carbon: ${gptEstimate.carbonGramsCo2ePerMillion}g CO2e/M`);
 
 console.log('\n==================================================================');
 console.log('🎉 ALL COST & CARBON OPTIMIZER TESTS PASSED!');

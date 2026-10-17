@@ -524,16 +524,16 @@ export class SpeMaintenanceController {
   #runModelLifecycleWatcher(): SpecialistJobSummary {
     // Verifies active pinned models vs retired ones
     const activeFrontierModels = [
-      "claude-sonnet-4-5",
-      "gpt-5",
-      "gpt-4o-2024-08-06",
-      "gemini-2.5-pro",
-      "gemini-2.5-flash",
-      "deepseek-v3",
+      "claude-5-5-sonnet",
+      "gpt-6-1-sol",
+      "gpt-6-astra",
+      "gemini-3.8-pro",
+      "gemini-3.8-flash",
+      "aragon-4",
     ];
     const retiredModels = [
-      "claude-3-7-sonnet-20250219", // Retired Feb 2026
-      "gemini-2.0-flash",           // Retired June 2026
+      "claude-3-7-sonnet-20250219", // Retired Feb 2026 (historical)
+      "gemini-2.0-flash",           // Retired June 2026 (historical)
     ];
 
     return {

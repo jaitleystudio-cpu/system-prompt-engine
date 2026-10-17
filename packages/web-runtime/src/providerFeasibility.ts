@@ -21,6 +21,33 @@ export type ProviderProfile = {
 };
 
 export const PROVIDER_REGISTRY: Record<string, ProviderProfile> = {
+  "claude-5-5-sonnet": {
+    id: "claude-5-5-sonnet",
+    name: "Anthropic Claude Sonnet 5.5",
+    maxInputTokens: 524_288,
+    maxOutputTokens: 131_072,
+    tokensPerWordEstimate: 1.33,
+    supportsStreaming: true,
+    notes: "Anthropic Claude Sonnet 5.5 output token limit: 131,072 tokens (~98,000 words).",
+  },
+  "claude-5-5-opus": {
+    id: "claude-5-5-opus",
+    name: "Anthropic Claude Opus 5.5",
+    maxInputTokens: 1_048_576,
+    maxOutputTokens: 262_144,
+    tokensPerWordEstimate: 1.33,
+    supportsStreaming: true,
+    notes: "Anthropic Claude Opus 5.5 output token limit: 262,144 tokens (~196,000 words).",
+  },
+  "claude-5-5-haiku": {
+    id: "claude-5-5-haiku",
+    name: "Anthropic Claude Haiku 5.5",
+    maxInputTokens: 262_144,
+    maxOutputTokens: 32_768,
+    tokensPerWordEstimate: 1.33,
+    supportsStreaming: true,
+    notes: "Anthropic Claude Haiku 5.5 output token limit: 32,768 tokens (~24,600 words).",
+  },
   "claude-6-2-sonnet": {
     id: "claude-6-2-sonnet",
     name: "Anthropic Claude 6.2 Sonnet",
@@ -30,23 +57,23 @@ export const PROVIDER_REGISTRY: Record<string, ProviderProfile> = {
     supportsStreaming: true,
     notes: "Anthropic Claude 6.2 Sonnet output token limit: 64,000 tokens (~48,000 words).",
   },
-  "claude-3-5-sonnet": {
-    id: "claude-3-5-sonnet",
-    name: "Anthropic Claude 6.2 Sonnet",
+  "claude-3-5-sonnet": { // LEGACY
+    id: "claude-3-5-sonnet", // LEGACY
+    name: "Anthropic Claude Sonnet 5.5 (Upgraded)", // LEGACY
     maxInputTokens: 500_000,
     maxOutputTokens: 64_000,
     tokensPerWordEstimate: 1.33,
     supportsStreaming: true,
-    notes: "Anthropic Claude 6.2 Sonnet output token limit: 64,000 tokens (~48,000 words).",
+    notes: "Anthropic Claude Sonnet 5.5 output token limit: 64,000 tokens (~48,000 words).",
   },
-  "claude-3-opus": {
-    id: "claude-3-opus",
-    name: "Anthropic Claude 6.2 Opus",
+  "claude-3-opus": { // LEGACY
+    id: "claude-3-opus", // LEGACY
+    name: "Anthropic Claude Opus 5.5 (Upgraded)", // LEGACY
     maxInputTokens: 500_000,
     maxOutputTokens: 32_768,
     tokensPerWordEstimate: 1.33,
     supportsStreaming: true,
-    notes: "Anthropic Claude 6.2 Opus output token limit: 32,768 tokens (~24,600 words).",
+    notes: "Anthropic Claude Opus 5.5 output token limit: 32,768 tokens (~24,600 words).",
   },
   "gpt-6-1-sol": {
     id: "gpt-6-1-sol",
@@ -76,8 +103,8 @@ export const PROVIDER_REGISTRY: Record<string, ProviderProfile> = {
     notes: "OpenAI GPT-6.1 maximum output tokens: 64,000 tokens (~48,000 words).",
   },
   // LEGACY compatibility alias for pre-2026 requests
-  "gpt-4o": {
-    id: "gpt-4o",
+  "gpt-4o": { // LEGACY
+    id: "gpt-4o", // LEGACY
     name: "OpenAI GPT-6.1-Sol Codex (Upgraded)",
     maxInputTokens: 500_000,
     maxOutputTokens: 64_000,

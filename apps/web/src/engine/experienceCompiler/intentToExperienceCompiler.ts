@@ -180,7 +180,7 @@ export const STANDARD_CAPABILITIES: Record<string, VerifiedCapabilityContract> =
       {
         name: "modelId",
         type: "string",
-        description: "Provider model string to test (e.g. claude-3-7-sonnet-20250219, gpt-4o, gemini-2.0-flash).",
+        description: "Provider model string to test (e.g. claude-5-5-sonnet, gpt-6-1-sol, gemini-3.8-flash).",
         required: true,
         humanLabel: "Model Identifier",
       },

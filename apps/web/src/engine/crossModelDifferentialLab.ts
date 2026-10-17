@@ -53,7 +53,7 @@ const BENCHMARK_MODELS: Array<{
   xml: 'PEDANTIC' | 'RELAXED' | 'UNSUPPORTED';
 }> = [
   {
-    modelId: 'claude-6-2-sonnet',
+    modelId: 'claude-5-5-sonnet',
     provider: 'Anthropic',
     dialectTarget: 'claude-xml',
     baseTtft: 380,
@@ -63,7 +63,7 @@ const BENCHMARK_MODELS: Array<{
     xml: 'PEDANTIC'
   },
   {
-    modelId: 'gpt-6.1',
+    modelId: 'gpt-6-1-sol',
     provider: 'OpenAI',
     dialectTarget: 'openai-markdown',
     baseTtft: 290,
@@ -73,7 +73,7 @@ const BENCHMARK_MODELS: Array<{
     xml: 'RELAXED'
   },
   {
-    modelId: 'gemini-3.9-pro',
+    modelId: 'gemini-3.8-pro',
     provider: 'Google',
     dialectTarget: 'gemini-agent',
     baseTtft: 320,
@@ -83,7 +83,7 @@ const BENCHMARK_MODELS: Array<{
     xml: 'RELAXED'
   },
   {
-    modelId: 'deepseek-4.5',
+    modelId: 'deepseek-v4',
     provider: 'DeepSeek',
     dialectTarget: 'open-weights',
     baseTtft: 460,
@@ -124,27 +124,27 @@ export async function evaluateCrossModelDifferential(
     let safetyScore = 91;
     const divergenceNotes: string[] = [];
 
-    if (m.modelId === 'claude-3-7-sonnet') {
+    if (m.modelId === 'claude-5-5-sonnet') {
       intentScore = 99;
       formatScore = hasStrictXml ? 99 : 93;
       safetyScore = hasStrictRules ? 98 : 92;
       if (!hasStrictXml) divergenceNotes.push('Optimal execution requires Claude XML tagging');
-    } else if (m.modelId === 'gpt-4o') {
+    } else if (m.modelId === 'gpt-6-1-sol') {
       intentScore = 97;
       formatScore = hasJsonFormat ? 98 : 91;
       safetyScore = hasStrictRules ? 95 : 88;
       if (hasStrictXml) divergenceNotes.push('Transcompiles XML into Markdown headings smoothly');
-    } else if (m.modelId === 'gemini-2.5-pro') {
+    } else if (m.modelId === 'gemini-3.8-pro') {
       intentScore = 95;
       formatScore = 94;
       safetyScore = 92;
       divergenceNotes.push('Strong tool-declaration integration, slight tendency to elaborate');
-    } else if (m.modelId === 'deepseek-r1') {
+    } else if (m.modelId === 'deepseek-v4') {
       intentScore = 96;
       formatScore = 89;
       safetyScore = 97;
       divergenceNotes.push('Emits <think> reasoning tokens before executing prompt instructions');
-    } else if (m.modelId === 'llama-3.3-70b-instruct') {
+    } else if (m.modelId === 'llama-4-70b-instruct') {
       intentScore = 92;
       formatScore = 88;
       safetyScore = 89;

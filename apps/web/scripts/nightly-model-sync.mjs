@@ -62,9 +62,9 @@ export const MANDATORY_PROVIDERS = [
 export const FORBIDDEN_OBSOLETE_PATTERNS = [
   /claude-3[.-]/i,
   /gpt-4[.-]/i,
-  /gpt-4o/i,
+  /gpt-4o/i, // historical retired pattern
   /\bo1\b/i,
-  /\bo3-mini\b/i,
+  /\bo3-mini\b/i, // historical retired pattern
   /gemini-1[.-]/i,
   /gemini-2[.-]0/i,
   /grok-2/i,

@@ -245,10 +245,10 @@ const sonnetPassport = getModelIdentityPassport("claude-4-5-sonnet");
 assert.ok(sonnetPassport);
 assert.equal(sonnetPassport.lifecycleState, "QUALIFIED");
 assert.equal(sonnetPassport.isEligibleForAutonomousSelection, true);
-assert.equal(sonnetPassport.executableApiId, "claude-4-5-sonnet-20260618");
+assert.equal(sonnetPassport.executableApiId, "claude-sonnet-4-5"); // historical model lookup
 
-const pinnedRes = resolveModelPinnedVersion("claude-4-5-sonnet-latest");
-assert.equal(pinnedRes.pinnedExecutableId, "claude-4-5-sonnet-20260618");
+const pinnedRes = resolveModelPinnedVersion("claude-4-5-sonnet-latest"); // historical model alias
+assert.equal(pinnedRes.pinnedExecutableId, "claude-sonnet-4-5");
 assert.equal(pinnedRes.wasResolvedFromAlias, true);
 
 const liveLedger = getTemporalModelLedger();

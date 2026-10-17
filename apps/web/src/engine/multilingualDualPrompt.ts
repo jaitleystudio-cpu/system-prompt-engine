@@ -1353,7 +1353,7 @@ export function evaluateIntentFidelity(
 export function computePromptMetrics(
   prompt: string,
   lang: SupportedLanguageMeta,
-  modelId = "claude-sonnet",
+  modelId = "claude-5-5-sonnet",
   sourceInput = ""
 ): PromptLanguageMetrics {
   const charCount = prompt.length;
@@ -1389,7 +1389,7 @@ export function computePromptMetrics(
 export function synthesizeDualPrompts(
   userInput: string,
   _category = "Business",
-  selectedModelId = "claude-sonnet",
+  selectedModelId = "claude-5-5-sonnet",
 ): DualPromptBundle {
   const lang = detectLanguage(userInput);
   const cleanInput = userInput.trim() || "Create a comprehensive strategy.";

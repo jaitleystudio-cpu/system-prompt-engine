@@ -98,11 +98,11 @@ assert(SUPPORTED_LANGUAGES.hi.tokensPerChar === 0.62, "Hindi density calibrated 
 assert(SUPPORTED_LANGUAGES.en.tokensPerChar === 0.25, "English density calibrated at 0.25 tokens/char (~4 chars/token)");
 
 // Model pricing catalog
-const requiredModels = ["claude-sonnet", "gpt-4o", "o3-mini", "gemini-flash", "deepseek-r1", "local-llama"];
+const requiredModels = ["claude-5-5-sonnet", "gpt-6-1-sol", "gpt-6-astra", "gemini-3-8-flash", "deepseek-r2", "local-muse"];
 for (const mId of requiredModels) {
   assert(Boolean(MODEL_PRICING_CATALOG[mId]), `Model pricing tier registered: ${mId}`);
 }
-assert(MODEL_PRICING_CATALOG["local-llama"].inputCostPer1M === 0.0, "Local on-device inference has $0.00 provider API cost");
+assert(MODEL_PRICING_CATALOG["local-muse"].inputCostPer1M === 0.0, "Local on-device inference has $0.00 provider API cost");
 
 // ==============================================================================
 // 3. Dual-Prompt Synthesis & Savings Matrix
@@ -110,7 +110,7 @@ assert(MODEL_PRICING_CATALOG["local-llama"].inputCostPer1M === 0.0, "Local on-de
 console.log("\n[3/5] Testing Dual-Prompt Synthesis (Telugu Clothing Store Example)...");
 
 const teluguInput = "నాకు మహిళల దుస్తుల వ్యాపారం ప్రారంభించాలని ఉంది. నాకు మంచి బిజినెస్ ప్లాన్ కావాలి.";
-const bundle = synthesizeDualPrompts(teluguInput, "Business", "claude-sonnet");
+const bundle = synthesizeDualPrompts(teluguInput, "Business", "claude-5-5-sonnet");
 
 assert(bundle.detectedLanguage.code === "te", "Telugu language correctly tagged in bundle");
 assert(bundle.nativePrompt.length > 500, `Native Telugu prompt generated (${bundle.nativePrompt.length} chars)`);
@@ -146,7 +146,7 @@ assert(bundle.recommendationReason.includes("saves ~") || bundle.recommendationR
 
 // Test arbitrary non-boutique Telugu request (Hotel business)
 const hotelInput = "నాకు హోటల్ వ్యాపారం ప్రారంభించాలని ఉంది. నాకు మంచి బిజినెస్ ప్లాన్ కావాలి.";
-const hotelBundle = synthesizeDualPrompts(hotelInput, "Business", "claude-sonnet");
+const hotelBundle = synthesizeDualPrompts(hotelInput, "Business", "claude-5-5-sonnet");
 assert(hotelBundle.nativePrompt.includes("హోటల్"), "Hotel prompt dynamically includes hotel objective");
 assert(!hotelBundle.nativePrompt.includes("సూరత్"), "Hotel prompt does not leak boutique saree/lehenga text");
 assert(hotelBundle.englishPrompt.includes(hotelInput), "English prompt preserves exact user objective reference");
@@ -156,13 +156,13 @@ assert(hotelBundle.englishPrompt.includes(hotelInput), "English prompt preserves
 // ==============================================================================
 console.log("\n[4/5] Testing Cost Variations across Frontier Models...");
 
-const bundleGpt = synthesizeDualPrompts(teluguInput, "Business", "gpt-4o");
-const bundleGemini = synthesizeDualPrompts(teluguInput, "Business", "gemini-flash");
-const bundleLocal = synthesizeDualPrompts(teluguInput, "Business", "local-llama");
+const bundleGpt = synthesizeDualPrompts(teluguInput, "Business", "gpt-6-1-sol");
+const bundleGemini = synthesizeDualPrompts(teluguInput, "Business", "gemini-3-8-flash");
+const bundleLocal = synthesizeDualPrompts(teluguInput, "Business", "local-muse");
 
-assert(bundleGpt.nativeMetrics.costPer1kRuns > 0, "GPT-4o calculates non-zero cost per 1k runs");
-assert(bundleGemini.nativeMetrics.costPer1kRuns < bundleGpt.nativeMetrics.costPer1kRuns, "Gemini Flash is cheaper than GPT-4o");
-assert(bundleLocal.nativeMetrics.costPer1kRuns === 0, "Local Llama model calculates exactly $0.00 cost");
+assert(bundleGpt.nativeMetrics.costPer1kRuns > 0, "GPT-6.1-Sol calculates non-zero cost per 1k runs");
+assert(bundleGemini.nativeMetrics.costPer1kRuns < bundleGpt.nativeMetrics.costPer1kRuns, "Gemini 3.8 Flash is cheaper than GPT-6.1-Sol");
+assert(bundleLocal.nativeMetrics.costPer1kRuns === 0, "Local Muse model calculates exactly $0.00 cost");
 
 // ==============================================================================
 // 5. UI Integration & Component Wiring Verification

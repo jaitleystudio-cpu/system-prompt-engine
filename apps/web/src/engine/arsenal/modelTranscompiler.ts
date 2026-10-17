@@ -100,7 +100,7 @@ ${asset.verificationCriteria.map((v) => `- [ ] ${v}`).join("\n")}`;
     }
 
     case "gemini": {
-      const modelLabel = model ? model.name : "Gemini 2.0 Flash / Pro";
+      const modelLabel = model ? model.name : "Gemini 3.8 Flash / Pro";
       const thinkingBlock = model?.capabilities.supportsThinking
         ? `// REASONING TRACE: Expose and verify causal steps prior to final synthesis.\n`
         : "";

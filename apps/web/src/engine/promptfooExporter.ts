@@ -343,7 +343,7 @@ export function generatePromptfooConfig(
   const projectName = options.projectName || "spe-fortified-eval";
   const providers = options.providers && options.providers.length > 0
     ? options.providers
-    : ["openai:gpt-5", "anthropic:claude-4-5-sonnet", "google:gemini-3-pro", "ollama:llama4:latest"];
+    : ["openai:gpt-6-1-sol", "anthropic:claude-5-5-sonnet", "google:gemini-3-8-pro", "ollama:llama4:latest"];
   const maxLatency = options.maxLatencyMs || 2500;
   const includeRedteam = options.includeRedteam ?? true;
   const baselinePrompt = options.baselinePrompt || DEFAULT_NAIVE_BASELINE;

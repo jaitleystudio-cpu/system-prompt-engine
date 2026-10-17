@@ -44,8 +44,8 @@ async function runBattery() {
   // [1/5] Live Multi-Provider Execution Engine
   console.log("\n[1/5] Validating Universal Live Model Runner...");
   const modelSpecs = [
-    { target: "openai:gpt-4o", provider: "openai", model: "gpt-4o" },
-    { target: "anthropic:claude-3-7-sonnet-20250219", provider: "anthropic", model: "claude-3-7-sonnet-20250219" },
+    { target: "openai:gpt-6-1-sol", provider: "openai", model: "gpt-6-1-sol" },
+    { target: "anthropic:claude-5-5-sonnet", provider: "anthropic", model: "claude-5-5-sonnet" },
     { target: "groq:llama-3.3-70b-versatile", provider: "groq", model: "llama-3.3-70b-versatile" },
     { target: "ollama:llama3", provider: "ollama", model: "llama3" },
     { target: "mock:fast-runner", provider: "mock", model: "fast-runner" },
@@ -72,7 +72,7 @@ async function runBattery() {
   console.log("\n[2/5] Validating Assertion Suite (equals, contains, regex, is-json, anti-leak)...");
   const testSampleRes = {
     provider: "openai",
-    model: "gpt-4o",
+    model: "gpt-6-1-sol",
     output: `{"status": "SUCCESS", "records": [1, 2, 3]}`,
     latencyMs: 320,
     promptTokens: 100,

@@ -207,7 +207,7 @@ print(response.content[0].text)
 from openai import OpenAI
 openai_client = OpenAI()
 completion = openai_client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-6-1-sol",
     messages=[
         {"role": "system", "content": ${JSON.stringify(gptPrompt)}},
         {"role": "user", "content": "Execute according to policy."}
@@ -223,7 +223,7 @@ import OpenAI from "openai";
 
 const anthropic = new Anthropic();
 const anthropicRes = await anthropic.messages.create({
-  model: "claude-sonnet-4-5",
+  model: "claude-5-5-sonnet",
   max_tokens: 4096,
   system: ${JSON.stringify(claudePrompt)},
   messages: [{ role: "user", content: "Begin task." }]
@@ -231,7 +231,7 @@ const anthropicRes = await anthropic.messages.create({
 
 const openai = new OpenAI();
 const openaiRes = await openai.chat.completions.create({
-  model: "gpt-4o",
+  model: "gpt-6-1-sol",
   messages: [
     { role: "system", content: ${JSON.stringify(gptPrompt)} },
     { role: "user", content: "Begin task." }
@@ -248,7 +248,7 @@ ${promptText}
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer $OPENAI_API_KEY" \\
   -d '{
-    "model": "gpt-4o",
+    "model": "gpt-6-1-sol",
     "messages": [
       {
         "role": "system",

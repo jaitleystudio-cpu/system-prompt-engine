@@ -63,7 +63,7 @@ const fortifiedPrompt = immunizeAgainstHostileGrammar(rawSamplePrompt);
 console.log("\n[1/7] Generating Promptfoo evaluation bundle with measured SPE proofs...");
 const bundle = generatePromptfooConfig(fortifiedPrompt, {
   projectName: "spe-unit-test-eval",
-  providers: ["openai:gpt-4o", "anthropic:claude-3-5-sonnet"],
+  providers: ["openai:gpt-6-1-sol", "anthropic:claude-5-5-sonnet"],
   maxLatencyMs: 2000,
   includeRedteam: true,
 });
@@ -71,8 +71,8 @@ const bundle = generatePromptfooConfig(fortifiedPrompt, {
 // Verify YAML Config
 console.log("\n[2/7] Validating promptfooconfig.yaml structure, {{user_input}} binding, and SHA-256 digests...");
 assert(bundle.yamlConfig.includes("spe-unit-test-eval"), "YAML must include project name");
-assert(bundle.yamlConfig.includes("openai:gpt-4o"), "YAML must include specified OpenAI provider");
-assert(bundle.yamlConfig.includes("anthropic:claude-3-5-sonnet"), "YAML must include Anthropic provider");
+assert(bundle.yamlConfig.includes("openai:gpt-6-1-sol"), "YAML must include specified OpenAI provider");
+assert(bundle.yamlConfig.includes("anthropic:claude-5-5-sonnet"), "YAML must include Anthropic provider");
 assert(bundle.yamlConfig.includes("type: is-json"), "YAML must include is-json assertion for JSON schemas");
 assert(bundle.yamlConfig.includes("threshold: 2000"), "YAML must enforce 2000ms latency ceiling");
 assert(bundle.yamlConfig.includes("redteam:"), "YAML must include red-team section");
@@ -210,7 +210,7 @@ const netAttestation = issueNetworkObservationAttestation(
 
 const signedExportBundle = generatePromptfooConfig(fortifiedPrompt, {
   projectName: "spe-unit-test-eval",
-  providers: ["openai:gpt-4o", "anthropic:claude-3-5-sonnet"],
+  providers: ["openai:gpt-6-1-sol", "anthropic:claude-5-5-sonnet"],
   maxLatencyMs: 2000,
   includeRedteam: true,
   networkObservationAttestation: netAttestation,

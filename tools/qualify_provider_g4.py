@@ -194,7 +194,7 @@ def main(argv=None):
             # Prevent user-controlled manifest fields from copying the credential into receipts.
             if key in json.dumps(provider) or any(key in a for a in args):
                 raise QualificationError('SECRET_IN_INPUT', 'credential must appear only in the environment')
-            result = probe_live(args[2], key, args[3] if len(args)==4 else provider.get('model','gpt-4o-mini'))
+            result = probe_live(args[2], key, args[3] if len(args)==4 else provider.get('model','gpt-6-astra'))
         import uuid
         write_receipt(ROOT/'qualification'/f'{uuid.uuid4().hex}_{phase}_receipt.json',provider,phase,result)
         print(json.dumps(result, sort_keys=True))

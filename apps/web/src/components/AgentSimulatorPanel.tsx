@@ -81,7 +81,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
             Authorization: `Bearer ${activeKey.trim()}`,
           },
           body: JSON.stringify({
-            model: "gpt-4o",
+            model: "gpt-6-1-sol",
             messages: [
               { role: "system", content: promptText },
               { role: "user", content: userQuery },
@@ -101,7 +101,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
             "anthropic-dangerous-direct-browser-access": "true",
           },
           body: JSON.stringify({
-            model: "claude-sonnet-4-5",
+            model: "claude-5-5-sonnet",
             max_tokens: 4096,
             system: promptText,
             messages: [{ role: "user", content: userQuery }],
@@ -112,7 +112,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
         responseText = data.content?.[0]?.text || "(Empty response)";
       } else if (byokProvider === "gemini") {
         const res = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
           {
             method: "POST",
             headers: {

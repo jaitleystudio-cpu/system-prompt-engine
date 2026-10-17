@@ -623,8 +623,8 @@ async function runBrainEvolutionBattery() {
   assert(isPinnedApiIdentifier("claude-3-5-sonnet:v1.0.0") === true, "Recognizes :v1.0.0 pinned identifier");
   assert(isPinnedApiIdentifier("claude-3-haiku-20240307-002") === true, "Recognizes release revision suffix -002");
   assert(isPinnedApiIdentifier("claude-3-5-sonnet-latest") === false, "Rejects floating alias '-latest'");
-  assert(isPinnedApiIdentifier("gpt-4o") === false, "Rejects floating unpinned alias 'gpt-4o'");
-  assert(isPinnedApiIdentifier("gpt-4o-2024-08-06") === true, "Recognizes pinned version 'gpt-4o-2024-08-06'");
+  assert(isPinnedApiIdentifier("gpt-6-1-sol") === false, "Rejects floating unpinned alias 'gpt-6-1-sol'");
+  assert(isPinnedApiIdentifier("gpt-6-1-sol-2026-10-01") === true, "Recognizes pinned version 'gpt-6-1-sol-2026-10-01'");
 
   const floatingIdCheck = validateModelIdentifier(sampleModel, "claude-3-5-sonnet-latest");
   assert(floatingIdCheck.valid === false, "validateModelIdentifier rejects floating alias");

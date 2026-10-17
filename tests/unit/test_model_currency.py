@@ -26,13 +26,13 @@ def test_active_frontier_year():
 def test_active_models_current():
     """Verify 2026 frontier models pass currency check."""
     frontier_sample = [
-        "claude-4-5-sonnet",
-        "claude-4-5-opus",
-        "claude-4-5-haiku",
-        "gpt-5",
-        "gpt-5-codex",
-        "o4-mini",
-        "o3-pro",
+        "claude-5-5-sonnet",
+        "claude-5-5-opus",
+        "claude-5-5-haiku",
+        "claude-code-2-1",
+        "gpt-6-1-sol",
+        "gpt-6-astra",
+        "meta-muse-code",
         "gemini-3-8-pro",
         "gemini-3-8-flash",
         "aragon-4",
@@ -52,16 +52,23 @@ def test_legacy_models_rejected_as_current():
         "claude-3-opus",
         "claude-3-5-sonnet",
         "claude-3-7-sonnet",
+        "claude-4-5-sonnet",
+        "claude-4-5-opus",
+        "claude-4-5-haiku",
         "gpt-4",
         "gpt-4o",
         "gpt-4-turbo",
         "gpt-4.5-preview",
+        "gpt-5",
+        "gpt-5-codex",
         "o1",
         "o1-preview",
         "o3-mini",
         "gemini-1-5-flash",
         "gemini-1-5-pro",
         "gemini-2-0-flash",
+        "gemini-3-pro",
+        "gemini-3-flash",
         "grok-2",
         "grok-3",
         "deepseek-r1",
@@ -79,8 +86,13 @@ def test_auto_upgrade_mappings():
         ("claude-3-5-sonnet", "claude-5-5-sonnet"),
         ("claude-3-opus", "claude-5-5-opus"),
         ("claude-3-5-haiku", "claude-5-5-haiku"),
+        ("claude-4-5-sonnet", "claude-5-5-sonnet"),
+        ("claude-4-5-opus", "claude-5-5-opus"),
+        ("claude-4-5-haiku", "claude-5-5-haiku"),
         ("gpt-4.5-preview", "gpt-6-1-sol"),
         ("gpt-4o", "gpt-6-1-sol"),
+        ("gpt-5", "gpt-6-1-sol"),
+        ("gpt-5-codex", "gpt-6-1-sol"),
         ("o3-mini", "gpt-6-astra"),
         ("gemini-1-5-pro", "gemini-3-8-pro"),
         ("gemini-2-0-flash", "gemini-3-8-flash"),
@@ -100,8 +112,8 @@ def test_auto_upgrade_mappings():
 def test_assert_model_currency_gate():
     """Verify strict assertion throws ValueError for stale models and passes for 2026 models."""
     # 2026 model passes
-    assert_model_currency("claude-4-5-sonnet")
-    assert_model_currency("gpt-5")
+    assert_model_currency("claude-5-5-sonnet")
+    assert_model_currency("gpt-6-1-sol")
     assert_model_currency("gemini-3-8-pro")
     assert_model_currency("gemini-3-8-flash")
     assert_model_currency("aragon-4")
@@ -110,12 +122,18 @@ def test_assert_model_currency_gate():
     with pytest.raises(ValueError, match="Obsolete model 'claude-3-7-sonnet' rejected"):
         assert_model_currency("claude-3-7-sonnet")
 
+    with pytest.raises(ValueError, match="Obsolete model 'claude-4-5-sonnet' rejected"):
+        assert_model_currency("claude-4-5-sonnet")
+
+    with pytest.raises(ValueError, match="Obsolete model 'gpt-5' rejected"):
+        assert_model_currency("gpt-5")
+
     with pytest.raises(ValueError, match="Obsolete model 'gpt-4.5-preview' rejected"):
         assert_model_currency("gpt-4.5-preview")
 
 
 def test_default_frontier_model():
-    """Verify default flagship model is Claude 4.5 Sonnet."""
+    """Verify default flagship model is Claude 5.5 Sonnet."""
     default_m = get_default_frontier_model()
-    assert default_m["id"] == "claude-4-5-sonnet"
+    assert default_m["id"] == "claude-5-5-sonnet"
     assert default_m["release_date"].startswith("2026")
