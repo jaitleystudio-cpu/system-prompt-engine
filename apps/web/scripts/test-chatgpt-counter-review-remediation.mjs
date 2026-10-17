@@ -24,7 +24,12 @@ import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
 import { getModelById, getAllModels } from "../src/engine/modelAtlas/modelAtlasService.ts";
-import { NightlyEvolutionScheduler } from "../src/engine/evolution/nightlyScheduler.ts";
+import {
+  NightlyEvolutionScheduler,
+  computeDeploymentReceiptSignature,
+  verifyAuthoritativeDeploymentReceipt,
+  SPE_DEPLOYMENT_SECRET_DEFAULT,
+} from "../src/engine/evolution/nightlyScheduler.ts";
 import { compileSystemPrompt } from "../../../packages/spe-plugin/src/tools.ts";
 import {
   verifySignedReceiptStatusAttestation,
@@ -640,32 +645,87 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
   // Test 1: In non-dry-run mode WITHOUT verified deployment receipt, it must report PROMOTED_PENDING_DEPLOYMENT_RECEIPT and proposalsAutoReleased = 0.
   const unverifiedNonDryRun = await scheduler.executeNightlyRun({
     dryRun: false,
-    baseCommit: "test-commit-aud-01",
+    baseCommit: "9275039a48d88b0e7740b25e243fc4627d2c3df4",
     simulateMilestoneSlice: true,
   });
   assert.equal(unverifiedNonDryRun.isDryRun, false, "Must run in non-dry-run mode");
   assert.equal(unverifiedNonDryRun.proposalsAutoReleased, 0, "AUD-01: Must report 0 auto released without verified deployment receipt");
   assert.equal(unverifiedNonDryRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Must report PROMOTED_PENDING_DEPLOYMENT_RECEIPT when authorized without deployment execution");
 
-  // Test 2: In non-dry-run mode WITH authoritative verified deployment receipt, it reports PRODUCTION_DEPLOYED and proposalsAutoReleased = 1.
-  const verifiedNonDryRun = await scheduler.executeNightlyRun({
+  // Test 2 (Adversarial): Unsigned object with verified:true, invalid timestamp, non-hex SHA MUST FAIL CLOSED
+  const adversarialRun = await scheduler.executeNightlyRun({
     dryRun: false,
-    baseCommit: "test-commit-aud-01-verified",
+    baseCommit: "9275039a48d88b0e7740b25e243fc4627d2c3df4",
     simulateMilestoneSlice: true,
     verifiedDeploymentReceipt: {
-      receiptId: "receipt-prod-deploy-aud01",
-      deploymentSha: "commit-abc12345",
+      receiptId: "receipt-fake-deploy",
+      deploymentSha: "unrelated non-SHA string",
       targetEnvironment: "production",
-      executedAt: new Date().toISOString(),
+      executedAt: "invalid timestamp",
+      artifactDigestSha256: "not-a-valid-sha",
+      deploymentProvider: "github-actions",
+      signatureScheme: "DEV_LOCAL_UNAUTHENTICATED",
+      signature: "0000000000000000000000000000000000000000000000000000000000000000",
       verified: true,
     },
   });
-  assert.equal(verifiedNonDryRun.deployedStatus, "PRODUCTION_DEPLOYED", "AUD-01: Must report PRODUCTION_DEPLOYED only when authoritative deployment receipt is verified");
-  assert.equal(verifiedNonDryRun.proposalsAutoReleased, 1, "AUD-01: proposalsAutoReleased must match qualified proposals when deployed");
-  console.log("  ✓ AUD-01 verified: Controller promotion is authorization, not execution; PRODUCTION_DEPLOYED requires verified deployment receipt.");
+  assert.equal(adversarialRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Adversarial fake receipt must not produce PRODUCTION_DEPLOYED");
+  assert.equal(adversarialRun.proposalsAutoReleased, 0, "AUD-01: proposalsAutoReleased must remain 0 on unauthenticated receipt");
+  assert.equal(adversarialRun.deploymentVerificationResult?.valid, false, "AUD-01: deploymentVerificationResult must be invalid");
 
-  // AUD-05 (Medium): searchConsoleSource becomes LIVE_GSC_API whenever mockSearchData is supplied.
-  // Test 1: Injected mock search data must NEVER be labeled LIVE_GSC_API
+  // Test 3 (Adversarial): Commit mismatch (valid hex SHA, but does not match expected target commit) MUST FAIL CLOSED
+  const mismatchedCommitRun = await scheduler.executeNightlyRun({
+    dryRun: false,
+    baseCommit: "9275039a48d88b0e7740b25e243fc4627d2c3df4",
+    simulateMilestoneSlice: true,
+    verifiedDeploymentReceipt: {
+      receiptId: "receipt-mismatch",
+      deploymentSha: "1111111111111111111111111111111111111111",
+      targetEnvironment: "production",
+      executedAt: new Date().toISOString(),
+      artifactDigestSha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      deploymentProvider: "github-actions",
+      signatureScheme: "HMAC_SHA256_AUTHORITATIVE_KEY",
+      signature: "0000000000000000000000000000000000000000000000000000000000000000",
+      verified: true,
+    },
+  });
+  assert.equal(mismatchedCommitRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Commit mismatch must not produce PRODUCTION_DEPLOYED");
+  assert.equal(mismatchedCommitRun.proposalsAutoReleased, 0, "AUD-01: proposalsAutoReleased must remain 0 on commit mismatch");
+  assert.equal(mismatchedCommitRun.deploymentVerificationResult?.valid, false, "AUD-01: deploymentVerificationResult must be invalid on commit mismatch");
+
+  // Test 4 (Authentic): Cryptographically signed receipt bound to exact commit, timestamp, environment, and artifact digest MUST SUCCEED
+  const validTargetCommit = "9275039a48d88b0e7740b25e243fc4627d2c3df4";
+  const validExecutedAt = new Date().toISOString();
+  const validArtifactDigest = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+  const validReceiptUnsigned = {
+    receiptId: "receipt-prod-deploy-aud01",
+    deploymentSha: validTargetCommit,
+    targetEnvironment: "production",
+    executedAt: validExecutedAt,
+    artifactDigestSha256: validArtifactDigest,
+    deploymentProvider: "github-actions",
+    signatureScheme: "HMAC_SHA256_AUTHORITATIVE_KEY",
+  };
+  const validSignature = computeDeploymentReceiptSignature(validReceiptUnsigned, SPE_DEPLOYMENT_SECRET_DEFAULT);
+
+  const verifiedNonDryRun = await scheduler.executeNightlyRun({
+    dryRun: false,
+    baseCommit: validTargetCommit,
+    simulateMilestoneSlice: true,
+    verifiedDeploymentReceipt: {
+      ...validReceiptUnsigned,
+      signature: validSignature,
+      verified: true,
+    },
+  });
+  assert.equal(verifiedNonDryRun.deployedStatus, "PRODUCTION_DEPLOYED", "AUD-01: Must report PRODUCTION_DEPLOYED only when authoritative deployment receipt is cryptographically verified and bound");
+  assert.equal(verifiedNonDryRun.proposalsAutoReleased, 1, "AUD-01: proposalsAutoReleased must match qualified proposals when deployed");
+  assert.equal(verifiedNonDryRun.deploymentVerificationResult?.valid, true, "AUD-01: deployment verification must succeed for authentic signed receipt");
+  console.log("  ✓ AUD-01 verified: Deployment proof is cryptographically authenticated and bound to exact commit SHA, artifact digest, and production environment; caller-asserted verified:true is rejected.");
+
+  // AUD-05 (Medium): searchConsoleSource provenance validation
+  // Test 1: Injected mock search data must be labeled CALLER_SUPPLIED_UNAUTHENTICATED (never LIVE_AUTHENTICATED_GSC_API)
   const mockGscRun = await scheduler.executeNightlyRun({
     dryRun: true,
     mockSearchData: [
@@ -684,10 +744,32 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
       },
     ],
   });
-  assert.equal(mockGscRun.searchConsoleSource, "CALIBRATION_FIXTURE_DEV_CI", "AUD-05: Injected mockSearchData must be labeled CALIBRATION_FIXTURE_DEV_CI, never LIVE_GSC_API");
+  assert.equal(mockGscRun.searchConsoleSource, "CALLER_SUPPLIED_UNAUTHENTICATED", "AUD-05: Injected mockSearchData must be labeled CALLER_SUPPLIED_UNAUTHENTICATED");
 
-  // Test 2: Authenticated liveSearchData must be labeled LIVE_GSC_API
-  const liveGscRun = await scheduler.executeNightlyRun({
+  // Test 2: Unauthenticated liveSearchData without GSC credentials MUST NOT be labeled LIVE_AUTHENTICATED_GSC_API
+  const unauthLiveGscRun = await scheduler.executeNightlyRun({
+    dryRun: true,
+    liveSearchData: [
+      {
+        query: "live unauthenticated query",
+        page: "/prompts",
+        country: "USA",
+        device: "DESKTOP",
+        date: "2026-10-17",
+        searchAppearance: "STANDARD",
+        impressions: 500,
+        clicks: 50,
+        ctr: 0.1,
+        position: 1.0,
+        isFinalized: true,
+      },
+    ],
+  });
+  assert.equal(unauthLiveGscRun.searchConsoleSource, "CALLER_SUPPLIED_UNAUTHENTICATED", "AUD-05: Invented rows without OAuth2 credentials must be labeled CALLER_SUPPLIED_UNAUTHENTICATED, never LIVE_AUTHENTICATED_GSC_API");
+  assert.equal(unauthLiveGscRun.gscRetrievalBoundaryVerification?.verified, false, "AUD-05: GSC retrieval boundary must fail when credentials are absent");
+
+  // Test 3: Authenticated liveSearchData with valid GscRetrievalBoundaryProof MUST be labeled LIVE_AUTHENTICATED_GSC_API
+  const authLiveGscRun = await scheduler.executeNightlyRun({
     dryRun: true,
     liveSearchData: [
       {
@@ -704,14 +786,25 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
         isFinalized: true,
       },
     ],
+    gscRetrievalBoundaryProof: {
+      siteUrl: "https://systempromptengine.com/",
+      serviceAccountOrClientId: "spe-gsc-auditor@spe-production.iam.gserviceaccount.com",
+      retrievalTimestamp: new Date().toISOString(),
+      apiEndpoint: "https://www.googleapis.com/webmaster/v1/sites/https%3A%2F%2Fsystempromptengine.com%2F/searchAnalytics/query",
+      oauthTokenDigestSha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      verifiedAuthorized: true,
+    },
   });
-  // Test 3: Empty mockSearchData array must fall back safely to default calibration fixture
+  assert.equal(authLiveGscRun.searchConsoleSource, "LIVE_AUTHENTICATED_GSC_API", "AUD-05: Valid GSC retrieval boundary proof qualifies as LIVE_AUTHENTICATED_GSC_API");
+  assert.equal(authLiveGscRun.gscRetrievalBoundaryVerification?.verified, true, "AUD-05: GSC retrieval boundary verification must succeed");
+
+  // Test 4: Empty mockSearchData array must fall back safely to default calibration fixture
   const emptyMockRun = await scheduler.executeNightlyRun({
     dryRun: true,
     mockSearchData: [],
   });
   assert.equal(emptyMockRun.searchConsoleSource, "CALIBRATION_FIXTURE_DEV_CI", "AUD-05: Empty mockSearchData array must fall back to CALIBRATION_FIXTURE_DEV_CI");
-  console.log("  ✓ AUD-05 verified: Injected test fixtures strictly labeled CALIBRATION_FIXTURE_DEV_CI, authenticated live data labeled LIVE_GSC_API.");
+  console.log("  ✓ AUD-05 verified: Search data provenance enforced through trusted retrieval boundary; caller-supplied unauthenticated rows strictly separated from LIVE_AUTHENTICATED_GSC_API.");
 
   // AUD-02 (Medium): sync_model_atlas.py has fallback assignment for models_to_use when registry file is absent.
   const testBootstrapScript = `import tempfile, pathlib, json

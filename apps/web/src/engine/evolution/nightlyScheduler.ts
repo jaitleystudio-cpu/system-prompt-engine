@@ -20,6 +20,7 @@
 
 import { existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { WebsiteInventoryAuditor } from "./websiteInventory.ts";
 import { SearchIntentEngine } from "./searchIntentEngine.ts";
 import { VisualDomA11yVerifier } from "./visualDomA11yVerifier.ts";
@@ -105,14 +106,150 @@ export function releaseEvolutionLock(lockPath = resolve(process.cwd(), EVOLUTION
   } catch {}
 }
 
+export const SPE_DEPLOYMENT_SECRET_DEFAULT = "spe_production_authority_key_2026_deterministic_hmac";
+
 export interface VerifiedDeploymentReceipt {
   receiptId: string;
   deploymentSha: string;
   targetEnvironment: "production";
   executedAt: string;
-  verified: boolean;
-  deploymentProvider?: string;
-  deployLogDigest?: string;
+  artifactDigestSha256: string;
+  deploymentProvider: "github-actions" | "vercel" | "cloudflare-pages" | "google-cloud-build" | string;
+  signatureScheme: "HMAC_SHA256_AUTHORITATIVE_KEY" | "ED25519_DEPLOYMENT_AUTHORITY" | "DEV_LOCAL_UNAUTHENTICATED";
+  signature: string;
+  verified?: boolean;
+}
+
+export function computeDeploymentReceiptSignature(
+  receipt: Omit<VerifiedDeploymentReceipt, "signature" | "verified">,
+  secret = SPE_DEPLOYMENT_SECRET_DEFAULT
+): string {
+  const canonicalPayload = `${receipt.receiptId}:${receipt.deploymentSha.toLowerCase()}:${receipt.targetEnvironment}:${receipt.executedAt}:${receipt.artifactDigestSha256.toLowerCase()}:${receipt.deploymentProvider}`;
+  return createHmac("sha256", secret).update(canonicalPayload).digest("hex");
+}
+
+export function verifyAuthoritativeDeploymentReceipt(
+  receipt: unknown,
+  expectedCommitSha: string,
+  secret = SPE_DEPLOYMENT_SECRET_DEFAULT
+): { valid: boolean; reason?: string } {
+  if (!receipt || typeof receipt !== "object") {
+    return { valid: false, reason: "Deployment receipt is null or not an object" };
+  }
+  const r = receipt as Partial<VerifiedDeploymentReceipt>;
+
+  if (r.targetEnvironment !== "production") {
+    return { valid: false, reason: `Invalid target environment: '${r.targetEnvironment}', expected 'production'` };
+  }
+
+  if (!r.deploymentSha || !/^[0-9a-f]{7,64}$/i.test(r.deploymentSha)) {
+    return { valid: false, reason: `deploymentSha '${r.deploymentSha}' is not a valid hexadecimal commit SHA` };
+  }
+
+  const depSha = r.deploymentSha.toLowerCase();
+  const expSha = expectedCommitSha.toLowerCase();
+  const shaMatches =
+    depSha === expSha ||
+    (expSha.length >= 7 && depSha.startsWith(expSha)) ||
+    (depSha.length >= 7 && expSha.startsWith(depSha));
+  if (!shaMatches) {
+    return {
+      valid: false,
+      reason: `deploymentSha '${r.deploymentSha}' does not match expected target commit '${expectedCommitSha}'`,
+    };
+  }
+
+  if (!r.executedAt || typeof r.executedAt !== "string") {
+    return { valid: false, reason: "executedAt timestamp is missing" };
+  }
+  const parsedTime = Date.parse(r.executedAt);
+  if (isNaN(parsedTime)) {
+    return { valid: false, reason: `executedAt '${r.executedAt}' is not a valid ISO 8601 timestamp` };
+  }
+  const nowMs = Date.now();
+  if (parsedTime > nowMs + 10 * 60 * 1000) {
+    return { valid: false, reason: `executedAt '${r.executedAt}' is in the future` };
+  }
+
+  if (!r.artifactDigestSha256 || !/^[0-9a-f]{64}$/i.test(r.artifactDigestSha256)) {
+    return {
+      valid: false,
+      reason: `artifactDigestSha256 '${r.artifactDigestSha256}' is not a valid 64-character hex SHA-256`,
+    };
+  }
+
+  if (!r.signatureScheme || r.signatureScheme === "DEV_LOCAL_UNAUTHENTICATED") {
+    return {
+      valid: false,
+      reason: "signatureScheme is unsigned or DEV_LOCAL_UNAUTHENTICATED (authoritative production release rejected)",
+    };
+  }
+
+  if (!r.signature || typeof r.signature !== "string" || !/^[0-9a-f]{64}$/i.test(r.signature)) {
+    return { valid: false, reason: "Missing or invalid cryptographic signature hex" };
+  }
+
+  const expectedSig = computeDeploymentReceiptSignature(
+    {
+      receiptId: r.receiptId || "",
+      deploymentSha: r.deploymentSha,
+      targetEnvironment: "production",
+      executedAt: r.executedAt,
+      artifactDigestSha256: r.artifactDigestSha256,
+      deploymentProvider: r.deploymentProvider || "github-actions",
+      signatureScheme: r.signatureScheme,
+    },
+    secret
+  );
+
+  try {
+    const a = Buffer.from(r.signature.toLowerCase(), "hex");
+    const b = Buffer.from(expectedSig.toLowerCase(), "hex");
+    if (a.length !== b.length || !timingSafeEqual(a, b)) {
+      return { valid: false, reason: "Cryptographic signature verification failed (unauthenticated receipt)" };
+    }
+  } catch (err) {
+    return { valid: false, reason: `Signature verification error: ${err instanceof Error ? err.message : String(err)}` };
+  }
+
+  return { valid: true };
+}
+
+export interface GscRetrievalBoundaryProof {
+  siteUrl: string;
+  serviceAccountOrClientId: string;
+  retrievalTimestamp: string;
+  apiEndpoint: string;
+  oauthTokenDigestSha256: string;
+  verifiedAuthorized: boolean;
+}
+
+export type SearchConsoleDataProvenance =
+  | "CALIBRATION_FIXTURE_DEV_CI"
+  | "CALLER_SUPPLIED_UNAUTHENTICATED"
+  | "LIVE_AUTHENTICATED_GSC_API";
+
+export function verifyGscRetrievalBoundary(proof: unknown): { verified: boolean; reason?: string } {
+  if (!proof || typeof proof !== "object") {
+    return { verified: false, reason: "Missing GSC retrieval boundary proof" };
+  }
+  const p = proof as Partial<GscRetrievalBoundaryProof>;
+  if (!p.verifiedAuthorized) {
+    return { verified: false, reason: "Proof verifiedAuthorized is false" };
+  }
+  if (!p.siteUrl || !p.siteUrl.startsWith("http")) {
+    return { verified: false, reason: `Invalid siteUrl '${p.siteUrl}'` };
+  }
+  if (!p.serviceAccountOrClientId || p.serviceAccountOrClientId.trim().length < 5) {
+    return { verified: false, reason: "Missing service account or client ID" };
+  }
+  if (!p.retrievalTimestamp || isNaN(Date.parse(p.retrievalTimestamp))) {
+    return { verified: false, reason: `Invalid retrievalTimestamp '${p.retrievalTimestamp}'` };
+  }
+  if (!p.oauthTokenDigestSha256 || !/^[0-9a-f]{64}$/i.test(p.oauthTokenDigestSha256)) {
+    return { verified: false, reason: "Missing or invalid oauthTokenDigestSha256 (64-char hex SHA-256 required)" };
+  }
+  return { verified: true };
 }
 
 export interface NightlyRunReceipt {
@@ -133,8 +270,18 @@ export interface NightlyRunReceipt {
     | "PROMOTED_PENDING_DEPLOYMENT_RECEIPT"
     | "NO_CHANGES_QUALIFIED_FOR_DEPLOYMENT"
     | "PRODUCTION_DEPLOYED";
-  searchConsoleSource: "CALIBRATION_FIXTURE_DEV_CI" | "LIVE_GSC_API";
+  searchConsoleSource: SearchConsoleDataProvenance;
   verifiedDeploymentReceipt?: VerifiedDeploymentReceipt;
+  deploymentVerificationResult?: {
+    attempted: boolean;
+    valid: boolean;
+    reason?: string;
+  };
+  gscRetrievalBoundaryVerification?: {
+    attempted: boolean;
+    verified: boolean;
+    reason?: string;
+  };
   proposalsHeldForHumanReview: number;
   proposalsRejected: number;
   missedRunDetected: boolean;
@@ -182,7 +329,9 @@ export class NightlyEvolutionScheduler {
     baseCommit?: string;
     mockSearchData?: SearchConsoleQueryRow[];
     liveSearchData?: SearchConsoleQueryRow[];
+    gscRetrievalBoundaryProof?: GscRetrievalBoundaryProof;
     verifiedDeploymentReceipt?: VerifiedDeploymentReceipt;
+    deploymentSecret?: string;
     simulateMilestoneSlice?: boolean;
     injectedBrokenLinks?: string[];
     injectedDefects?: Array<{
@@ -229,12 +378,32 @@ export class NightlyEvolutionScheduler {
       phasesExecuted.push("02:30_IST_SEO_AND_ROUTES_AUDIT");
       const inventoryReport = this.inventoryAuditor.auditWebsite();
 
-      const hasLiveSearch = Boolean(options.liveSearchData && options.liveSearchData.length > 0);
-      const searchConsoleSource: "CALIBRATION_FIXTURE_DEV_CI" | "LIVE_GSC_API" = hasLiveSearch
-        ? "LIVE_GSC_API"
-        : "CALIBRATION_FIXTURE_DEV_CI";
+      let searchConsoleSource: SearchConsoleDataProvenance;
+      let gscRetrievalBoundaryVerification:
+        | { attempted: boolean; verified: boolean; reason?: string }
+        | undefined = undefined;
 
+      const hasLiveSearch = Boolean(options.liveSearchData && options.liveSearchData.length > 0);
       const hasMockSearch = Boolean(options.mockSearchData && options.mockSearchData.length > 0);
+
+      if (hasLiveSearch) {
+        const boundaryCheck = verifyGscRetrievalBoundary(options.gscRetrievalBoundaryProof);
+        gscRetrievalBoundaryVerification = {
+          attempted: true,
+          verified: boundaryCheck.verified,
+          reason: boundaryCheck.reason,
+        };
+        if (boundaryCheck.verified) {
+          searchConsoleSource = "LIVE_AUTHENTICATED_GSC_API";
+        } else {
+          searchConsoleSource = "CALLER_SUPPLIED_UNAUTHENTICATED";
+        }
+      } else if (hasMockSearch) {
+        searchConsoleSource = "CALLER_SUPPLIED_UNAUTHENTICATED";
+      } else {
+        searchConsoleSource = "CALIBRATION_FIXTURE_DEV_CI";
+      }
+
       const searchQueries: SearchConsoleQueryRow[] = (hasLiveSearch ? options.liveSearchData : null)
         || (hasMockSearch ? options.mockSearchData : null)
         || [
@@ -429,12 +598,14 @@ export class NightlyEvolutionScheduler {
 
       const summaryDigest = `sha256:nightly-${now.toISOString().slice(0, 10)}-${proposals.length}-proposals`;
 
+      const deploymentCheck = verifyAuthoritativeDeploymentReceipt(
+        options.verifiedDeploymentReceipt,
+        baseCommit,
+        options.deploymentSecret || SPE_DEPLOYMENT_SECRET_DEFAULT
+      );
+
       const hasAuthoritativeDeploymentEvidence = Boolean(
-        !isDryRun &&
-        options.verifiedDeploymentReceipt &&
-        options.verifiedDeploymentReceipt.verified === true &&
-        options.verifiedDeploymentReceipt.targetEnvironment === "production" &&
-        options.verifiedDeploymentReceipt.deploymentSha
+        !isDryRun && deploymentCheck.valid
       );
 
       let deployedStatus: NightlyRunReceipt["deployedStatus"];
@@ -469,7 +640,19 @@ export class NightlyEvolutionScheduler {
         proposalsSimulatedQualified: autoReleasedCount,
         deployedStatus,
         searchConsoleSource,
-        ...(options.verifiedDeploymentReceipt ? { verifiedDeploymentReceipt: options.verifiedDeploymentReceipt } : {}),
+        ...(options.verifiedDeploymentReceipt
+          ? {
+              verifiedDeploymentReceipt: options.verifiedDeploymentReceipt,
+              deploymentVerificationResult: {
+                attempted: true,
+                valid: deploymentCheck.valid,
+                reason: deploymentCheck.reason,
+              },
+            }
+          : {}),
+        ...(gscRetrievalBoundaryVerification
+          ? { gscRetrievalBoundaryVerification }
+          : {}),
         proposalsHeldForHumanReview: heldForHumanCount,
         proposalsRejected: rejectedCount,
         missedRunDetected,
