@@ -40,6 +40,14 @@ jobs:
         working-directory: apps/web
         run: npm ci
 
+      - name: Verify Autonomous Production Core Batteries (Zero-Downtime, Billing, Maintenance, Brain Evolution)
+        working-directory: apps/web
+        run: |
+          npm run test:hot-swap
+          npm run test:metering-stripe
+          npm run test:maintenance
+          npm run test:brain-evolution
+
       - name: Execute Autonomous A-to-Z Master Pipeline
         run: node tools/autonomous_pipeline.mjs
 

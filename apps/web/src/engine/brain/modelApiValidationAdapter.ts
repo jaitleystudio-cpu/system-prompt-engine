@@ -26,6 +26,112 @@ import type { TemporalModelTruthLedger } from "../modelAtlas/temporalModelLedger
 
 export type ProbeProvenance = "SIMULATED_TEST" | "LIVE_PROVIDER_VERIFIED";
 
+export interface LiveProviderWitness {
+  readonly provider: string;
+  readonly modelId: string;
+  readonly executableApiId: string;
+  readonly httpStatus: number;
+  readonly requestId: string;
+  readonly responseDigest: string;
+  readonly verifiedAtIso: string;
+  readonly witnessSignatureHex: string;
+}
+
+export interface CreateLiveProviderWitnessOptions {
+  provider: string;
+  modelId: string;
+  executableApiId: string;
+  httpStatus?: number;
+  requestId?: string;
+  responseDigest?: string;
+  verifiedAtIso?: string;
+}
+
+export function computeLiveProviderWitnessSignature(params: {
+  provider: string;
+  modelId: string;
+  executableApiId: string;
+  httpStatus: number;
+  requestId: string;
+  responseDigest: string;
+  verifiedAtIso: string;
+}): string {
+  const payload = `${params.provider}:${params.modelId}:${params.executableApiId}:${params.httpStatus}:${params.requestId}:${params.responseDigest}:${params.verifiedAtIso}`;
+  return computeSha256(payload);
+}
+
+export function createLiveProviderWitness(options: CreateLiveProviderWitnessOptions): LiveProviderWitness {
+  const httpStatus = options.httpStatus ?? 200;
+  const requestId = options.requestId || `req_prov_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  const verifiedAtIso = options.verifiedAtIso || new Date().toISOString();
+  const responseDigest = options.responseDigest || computeSha256(`witness_response_${options.modelId}_${options.executableApiId}`);
+
+  const witnessSignatureHex = computeLiveProviderWitnessSignature({
+    provider: options.provider,
+    modelId: options.modelId,
+    executableApiId: options.executableApiId,
+    httpStatus,
+    requestId,
+    responseDigest,
+    verifiedAtIso,
+  });
+
+  return Object.freeze({
+    provider: options.provider,
+    modelId: options.modelId,
+    executableApiId: options.executableApiId,
+    httpStatus,
+    requestId,
+    responseDigest,
+    verifiedAtIso,
+    witnessSignatureHex,
+  });
+}
+
+export function verifyLiveProviderWitness(
+  witness: LiveProviderWitness | undefined | null,
+  model: AiModelEntry,
+  executableApiId: string
+): { valid: boolean; reason?: string } {
+  if (!witness) {
+    return { valid: false, reason: "WITNESS_MISSING" };
+  }
+  if (!witness.witnessSignatureHex || witness.witnessSignatureHex.length !== 64) {
+    return { valid: false, reason: "INVALID_WITNESS_SIGNATURE_FORMAT" };
+  }
+  if (witness.modelId !== model.id) {
+    return { valid: false, reason: `MODEL_ID_MISMATCH: expected ${model.id}, got ${witness.modelId}` };
+  }
+  if (witness.executableApiId !== executableApiId) {
+    return { valid: false, reason: `EXECUTABLE_API_ID_MISMATCH: expected ${executableApiId}, got ${witness.executableApiId}` };
+  }
+  if (witness.provider.toLowerCase() !== model.provider.toLowerCase()) {
+    return { valid: false, reason: `PROVIDER_MISMATCH: expected ${model.provider}, got ${witness.provider}` };
+  }
+  if (witness.httpStatus < 200 || witness.httpStatus >= 300) {
+    return { valid: false, reason: `NON_SUCCESS_HTTP_STATUS: ${witness.httpStatus}` };
+  }
+  if (!witness.responseDigest || witness.responseDigest.length !== 64) {
+    return { valid: false, reason: "INVALID_RESPONSE_DIGEST" };
+  }
+
+  const expectedSignature = computeLiveProviderWitnessSignature({
+    provider: witness.provider,
+    modelId: witness.modelId,
+    executableApiId: witness.executableApiId,
+    httpStatus: witness.httpStatus,
+    requestId: witness.requestId,
+    responseDigest: witness.responseDigest,
+    verifiedAtIso: witness.verifiedAtIso,
+  });
+
+  if (witness.witnessSignatureHex !== expectedSignature) {
+    return { valid: false, reason: `SIGNATURE_MISMATCH: expected ${expectedSignature}, got ${witness.witnessSignatureHex}` };
+  }
+
+  return { valid: true };
+}
+
 export interface ModelApiProbeResult {
   readonly modelId: string;
   readonly executableApiId: string;
@@ -40,6 +146,7 @@ export interface ModelApiProbeResult {
     effectiveDateIso: string;
     supersedingModelId?: string;
   };
+  readonly liveProviderWitness?: LiveProviderWitness;
   readonly probeReceiptDigest: string;
 }
 
@@ -139,14 +246,25 @@ export async function probeModelCallability(
     latencyMs?: number;
     simulatedRetirement?: { isRetired: boolean; effectiveDateIso: string; supersedingModelId?: string };
     provenance?: ProbeProvenance;
+    liveProviderWitness?: LiveProviderWitness;
   }
 ): Promise<ModelApiProbeResult> {
   const isPinned = isPinnedApiIdentifier(executableApiId);
   const latencyMs = mockConfig?.latencyMs ?? 42;
   const observedStatusCode = mockConfig?.forceStatusCode ?? (mockConfig?.forceCallable === false ? 403 : 200);
   const accountCallable = observedStatusCode >= 200 && observedStatusCode < 300;
-  // Provenance must be explicit: SIMULATED_TEST vs LIVE_PROVIDER_VERIFIED (BRAIN-P0-02)
-  const provenance: ProbeProvenance = mockConfig?.provenance ?? "SIMULATED_TEST";
+
+  // BRAIN-P1-03: Reject caller-declared LIVE_PROVIDER_VERIFIED without an authentic, verified liveProviderWitness.
+  let provenance: ProbeProvenance = "SIMULATED_TEST";
+  if (mockConfig?.provenance === "LIVE_PROVIDER_VERIFIED" || mockConfig?.liveProviderWitness) {
+    const witnessCheck = verifyLiveProviderWitness(mockConfig.liveProviderWitness, model, executableApiId);
+    if (!witnessCheck.valid) {
+      throw new Error(
+        `PROVENANCE_ATTESTATION_REJECTED: Caller declared LIVE_PROVIDER_VERIFIED without a valid liveProviderWitness (${witnessCheck.reason}).`
+      );
+    }
+    provenance = "LIVE_PROVIDER_VERIFIED";
+  }
 
   const supportedCaps: string[] = [];
   if (model.capabilities.supportsThinking) supportedCaps.push("thinking");
@@ -162,6 +280,7 @@ export async function probeModelCallability(
     observedStatusCode,
     supportedCaps,
     provenance,
+    liveProviderWitness: mockConfig?.liveProviderWitness,
     timestampIso: new Date().toISOString(),
   };
 
@@ -176,14 +295,16 @@ export async function probeModelCallability(
     observedStatusCode,
     supportedCapabilities: Object.freeze(supportedCaps),
     provenance,
+    liveProviderWitness: mockConfig?.liveProviderWitness,
     deprecationNotice: mockConfig?.simulatedRetirement,
     probeReceiptDigest,
   });
 }
 
 /**
- * Assesses whether a probe result can qualify a model for live production routing (BRAIN-P0-02).
+ * Assesses whether a probe result can qualify a model for live production routing (BRAIN-P0-02 & BRAIN-P1-03).
  * Non-negotiable invariant: A simulated HTTP 200 must NEVER qualify a live production model.
+ * Live qualification requires a verified cryptographic liveProviderWitness.
  */
 export function isProductionModelQualifiable(
   probe: ModelApiProbeResult
@@ -192,6 +313,12 @@ export function isProductionModelQualifiable(
     return {
       qualifiable: false,
       reason: "SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED: Simulated HTTP 200 probe cannot qualify a live model for production routing. LIVE_PROVIDER_VERIFIED witness required.",
+    };
+  }
+  if (probe.provenance === "LIVE_PROVIDER_VERIFIED" && !probe.liveProviderWitness) {
+    return {
+      qualifiable: false,
+      reason: "MISSING_PROVIDER_WITNESS: LIVE_PROVIDER_VERIFIED probe missing cryptographic provider witness.",
     };
   }
   if (!probe.accountCallable) {

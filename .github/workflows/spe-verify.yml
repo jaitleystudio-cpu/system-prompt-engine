@@ -22,6 +22,17 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install Web Dependencies
+        working-directory: apps/web
+        run: npm ci
+
+      - name: Verify Autonomous Production Core Batteries (Zero-Downtime, Billing, Maintenance, Brain Evolution)
+        run: |
+          npm --prefix apps/web run test:hot-swap
+          npm --prefix apps/web run test:metering-stripe
+          npm --prefix apps/web run test:maintenance
+          npm --prefix apps/web run test:brain-evolution
+
       - name: Run Official SPE Assurance Action
         # Enterprise usage: uses: antigravity/spe-action@v1
         uses: ./

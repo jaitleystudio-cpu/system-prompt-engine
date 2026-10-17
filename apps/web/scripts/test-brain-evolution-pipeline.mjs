@@ -50,6 +50,8 @@ import {
   resolveQualifiedFallback,
   promoteModelWithValidation,
   sealRegistryUpdate,
+  createLiveProviderWitness,
+  verifyLiveProviderWitness,
 } from "../src/engine/brain/modelApiValidationAdapter.ts";
 import {
   StagedBrainPipelineCoordinator,
@@ -650,11 +652,33 @@ async function runBrainEvolutionBattery() {
   assert(unqualifiableCheck.qualifiable === false, "Simulated test probe is strictly unqualifiable for live production");
   assert(unqualifiableCheck.reason.includes("SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED"), "Unqualifiable check cites SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED");
 
+  // BRAIN-P1-03: Caller-declared LIVE_PROVIDER_VERIFIED without verified liveProviderWitness must be rejected
+  let forgedWitnessThrew = false;
+  try {
+    await probeModelCallability(sampleModel, "claude-3-5-sonnet-20241022", {
+      forceCallable: true,
+      provenance: "LIVE_PROVIDER_VERIFIED",
+    });
+  } catch (err) {
+    forgedWitnessThrew = err.message.includes("PROVENANCE_ATTESTATION_REJECTED");
+  }
+  assert(forgedWitnessThrew === true, "BRAIN-P1-03: Strictly rejects caller-declared LIVE_PROVIDER_VERIFIED without valid liveProviderWitness");
+
+  // BRAIN-P1-03: Authentic cryptographic liveProviderWitness is accepted and qualifies for production
+  const authenticWitness = createLiveProviderWitness({
+    provider: sampleModel.provider,
+    modelId: sampleModel.id,
+    executableApiId: "claude-3-5-sonnet-20241022",
+    httpStatus: 200,
+  });
+
   const liveProbe = await probeModelCallability(sampleModel, "claude-3-5-sonnet-20241022", {
     forceCallable: true,
-    provenance: "LIVE_PROVIDER_VERIFIED",
+    liveProviderWitness: authenticWitness,
   });
-  assert(isProductionModelQualifiable(liveProbe).qualifiable === true, "LIVE_PROVIDER_VERIFIED probe qualifies for production");
+  assert(liveProbe.provenance === "LIVE_PROVIDER_VERIFIED", "Probe with authentic witness receives LIVE_PROVIDER_VERIFIED provenance");
+  assert(liveProbe.liveProviderWitness !== undefined, "Probe binds cryptographic liveProviderWitness");
+  assert(isProductionModelQualifiable(liveProbe).qualifiable === true, "LIVE_PROVIDER_VERIFIED probe with authentic witness qualifies for production");
 
   // 4D. Invariant: ABSENCE ≠ RETIREMENT
   const transientAbsenceProbe = await probeModelCallability(sampleModel, "claude-3-5-sonnet-20241022", {

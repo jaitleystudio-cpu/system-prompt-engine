@@ -262,4 +262,7 @@ qualification/*_receipt.json
 .agents/
 .local-bin/
 .xocor/
+proofs/generated/ACTIVE_BRAIN_POINTER.json
+proofs/generated/SPE_PRODUCTION_USAGE_LEDGER.json
+
 

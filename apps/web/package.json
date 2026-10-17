@@ -32,6 +32,7 @@
     "test:metering-stripe": "node scripts/test-per-call-metering-and-stripe.mjs",
     "test:maintenance": "node scripts/test-autonomous-maintenance-controller.mjs",
     "test:hot-swap": "node scripts/test-zero-downtime-hot-swap.mjs",
+    "test:brain-evolution": "node scripts/test-brain-evolution-pipeline.mjs",
     "maintenance": "node scripts/spe-autonomous-maintenance.mjs",
     "test:workflows-audit": "node --experimental-strip-types scripts/test-client-workflows-audit.mjs",
     "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",

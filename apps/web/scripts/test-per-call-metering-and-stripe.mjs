@@ -805,6 +805,159 @@ assert(crashRes.statusCode === 400, "Crashed tool execution returns HTTP 400");
 const balanceAfterCrash = usageEngine.getCustomerAccount(customer.customerId).balanceMicroCents;
 assert(balanceAfterCrash === balanceBeforeCrash, "Customer balance is strictly refunded and unchanged on downstream execution crash");
 
+// ────────────────────────────────────────────────────────────────
+// GATE 6: ADVANCED BILLING REPAIR VERIFICATIONS (BILL-P0-07, 08, 09)
+// ────────────────────────────────────────────────────────────────
+console.log("\n[GATE 6] Verifying Subscription Cancellation, Refund Entitlement Revocation, and Atomic Transactions...");
+
+// 6.1 BILL-P0-07: Subscription Cancellation revokes entitlement and downgrades to free
+const subCustId = "cust_sub_test_revocation";
+usageEngine.createCustomerAccount({
+  customerId: subCustId,
+  email: "sub_test@spe.dev",
+  tier: "pro",
+  initialBalanceCents: 1000,
+});
+const subAccountBefore = usageEngine.getCustomerAccount(subCustId);
+assert(subAccountBefore.tier === "pro", "Subscription customer starts at Pro tier");
+
+const cancelWebhookPayload = JSON.stringify({
+  id: "evt_sub_del_test_001",
+  object: "event",
+  type: "customer.subscription.deleted",
+  data: {
+    object: {
+      id: "sub_del_test_001",
+      customer: subCustId,
+      client_reference_id: subCustId,
+    },
+  },
+});
+const cancelSig = stripeProcessor.signPayload(cancelWebhookPayload);
+const cancelRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": cancelSig },
+  },
+  cancelWebhookPayload
+);
+assert(cancelRes.statusCode === 200, "Subscription deleted webhook returns HTTP 200");
+const subAccountAfter = usageEngine.getCustomerAccount(subCustId);
+assert(subAccountAfter.tier === "free", "Subscription cancellation revokes Pro tier and downgrades to free");
+assert(subAccountAfter.subscriptionStatus === "CANCELED", "Account subscription status is CANCELED");
+
+// 6.2 BILL-P0-07: Charge Refund reverses balance and revokes entitlement when balance reaches zero
+const refundCustId = "cust_refund_test_001";
+usageEngine.createCustomerAccount({
+  customerId: refundCustId,
+  email: "refund_test@spe.dev",
+  tier: "pro",
+  initialBalanceCents: 5000, // $50.00
+});
+const refundWebhookPayload = JSON.stringify({
+  id: "evt_charge_refund_test_001",
+  object: "event",
+  type: "charge.refunded",
+  data: {
+    object: {
+      payment_intent: "pi_refund_test_001",
+      customer: refundCustId,
+      client_reference_id: refundCustId,
+      amount_refunded: 5000, // full $50 refund
+    },
+  },
+});
+const refundSig = stripeProcessor.signPayload(refundWebhookPayload);
+const refundRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": refundSig },
+  },
+  refundWebhookPayload
+);
+assert(refundRes.statusCode === 200, "Charge refunded webhook returns HTTP 200");
+const refundAccountAfter = usageEngine.getCustomerAccount(refundCustId);
+assert(refundAccountAfter.balanceMicroCents === 0, "Refunded customer balance is deducted to 0");
+assert(refundAccountAfter.tier === "free", "Customer downgraded to free on full refund");
+assert(refundAccountAfter.subscriptionStatus === "REVOKED", "Customer subscription status marked REVOKED on refund");
+
+// 6.3 BILL-P0-08: Atomic Webhook Accounting Transaction
+const atomicCustId = "cust_atomic_txn_001";
+const atomicEventId = "evt_atomic_test_999";
+const atomicTxn = usageEngine.applyWebhookTransaction({
+  eventId: atomicEventId,
+  customerId: atomicCustId,
+  action: "credit_balance",
+  amountCents: 2500,
+});
+assert(atomicTxn.success === true, "Atomic transaction succeeded");
+assert(usageEngine.hasProcessedWebhookEvent(atomicEventId) === true, "Processed event ID durably recorded in same commit");
+assert(usageEngine.getCustomerAccount(atomicCustId).balanceMicroCents === 25000000, "Customer balance credited in same atomic commit");
+
+// Replay atomic transaction
+const atomicReplay = usageEngine.applyWebhookTransaction({
+  eventId: atomicEventId,
+  customerId: atomicCustId,
+  action: "credit_balance",
+  amountCents: 2500,
+});
+assert(atomicReplay.alreadyProcessed === true, "Atomic transaction recognized as duplicate on replay");
+assert(atomicReplay.accountUpdated === false, "Zero duplicate credit on replay");
+assert(usageEngine.getCustomerAccount(atomicCustId).balanceMicroCents === 25000000, "Balance unchanged on atomic replay");
+
+// 6.4 BILL-P0-09: Stronger Business Validation (Currency & Amount)
+const badCurrencyPayload = JSON.stringify({
+  id: "evt_bad_curr_001",
+  object: "event",
+  type: "checkout.session.completed",
+  data: {
+    object: {
+      client_reference_id: "cust_bad_curr",
+      currency: "eur", // Non-USD currency
+      amount_total: 1000,
+      mode: "payment",
+    },
+  },
+});
+const badCurrSig = stripeProcessor.signPayload(badCurrencyPayload);
+const badCurrRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": badCurrSig },
+  },
+  badCurrencyPayload
+);
+assert(badCurrRes.statusCode === 400, "Non-USD currency checkout strictly rejected with HTTP 400");
+assert(badCurrRes.body.message.includes("INVALID_CURRENCY"), "Error cites INVALID_CURRENCY");
+
+const zeroAmountPayload = JSON.stringify({
+  id: "evt_zero_amt_001",
+  object: "event",
+  type: "checkout.session.completed",
+  data: {
+    object: {
+      client_reference_id: "cust_zero_amt",
+      currency: "usd",
+      amount_total: 0, // <= 0 amount
+      mode: "payment",
+    },
+  },
+});
+const zeroAmtSig = stripeProcessor.signPayload(zeroAmountPayload);
+const zeroAmtRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": zeroAmtSig },
+  },
+  zeroAmountPayload
+);
+assert(zeroAmtRes.statusCode === 400, "Zero-amount payment session strictly rejected with HTTP 400");
+assert(zeroAmtRes.body.message.includes("INVALID_PAYMENT_AMOUNT"), "Error cites INVALID_PAYMENT_AMOUNT");
+
 console.log("\n==================================================================");
 console.log(`🎉 ALL ${passedTests}/${totalTests} PER-CALL METERING & STRIPE TESTS PASSED CLEANLY (100%)!`);
 console.log("==================================================================");

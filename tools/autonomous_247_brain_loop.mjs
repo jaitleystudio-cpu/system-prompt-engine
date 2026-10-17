@@ -125,14 +125,15 @@ print(json.dumps(out))
     logSuccess(`MetaCompiler generation ${parsed.generation} evolved: ${parsed.valid_passes} valid passes, speedup: ${parsed.best_speedup.toFixed(2)}x, Equivalence: ${parsed.equivalence_status}`);
     return parsed;
   } catch (err) {
-    logInfo(`Local virtualenv fallback for genetic evolution: ${err.message}`);
+    logError(`Genetic evolution execution failed: ${err.message}`);
     return {
       generation: 1,
-      best_speedup: 1.15,
-      valid_passes: 4,
-      promoted_passes: 2,
-      proof_digest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      equivalence_status: "PROVED_EQUIVALENT",
+      best_speedup: 0.0,
+      valid_passes: 0,
+      promoted_passes: 0,
+      proof_digest: "0".repeat(64),
+      equivalence_status: "UNPROVEN_EXCEPTION",
+      error: err.message,
     };
   }
 }
@@ -185,10 +186,10 @@ function enforceLanguagePerspectiveCopyGate() {
 }
 
 /**
- * Step 6: Generate Signed TUF/SLSA Brain Release Manifest
+ * Step 6: Generate Signed Hermetic Brain Release Manifest
  */
 async function generateSignedBrainManifest(generationNumber, sensoryAudit, evolutionResult, benchmarkReport) {
-  logStep("6/7", "Cryptographic Release Authority: Issuing TUF/SLSA Brain Release Manifest");
+  logStep("6/7", "Cryptographic Release Authority: Issuing Signed Brain Release Manifest");
   const { generateBrainReleaseManifest, signBrainReleaseManifest } = await import(
     resolve(ROOT, "apps/web/src/engine/brain/brainReleaseManifest.ts")
   );
@@ -196,6 +197,11 @@ async function generateSignedBrainManifest(generationNumber, sensoryAudit, evolu
   const now = new Date();
   const yyyymmdd = now.toISOString().slice(0, 10).replace(/-/g, "");
   const brainReleaseId = `spe-brain-v2.4.${yyyymmdd}.g${generationNumber}`;
+
+  let sourceCommit = "e1b4436ab53e5aa5095aa51cd73d7504209271d1";
+  try {
+    sourceCommit = execSync("git rev-parse HEAD", { encoding: "utf-8", cwd: ROOT }).trim();
+  } catch {}
 
   const manifest = generateBrainReleaseManifest({
     brainReleaseId,
@@ -215,20 +221,24 @@ async function generateSignedBrainManifest(generationNumber, sensoryAudit, evolu
       { sliceId: "slice-es", taskId: "plain-brief-to-prompt", language: "es", minPreservationFloor: 0.95 },
       { sliceId: "slice-hi", taskId: "plain-brief-to-prompt", language: "hi", script: "Deva", minPreservationFloor: 0.95 },
     ],
-    sourceCommit: "c4a0d68600000000000000000000000000000000",
+    sourceCommit,
     artifactDigest: /^[0-9a-f]{64}$/i.test(evolutionResult.proof_digest)
       ? evolutionResult.proof_digest
       : createHash("sha256").update(String(evolutionResult.proof_digest || "provenance")).digest("hex"),
     deploymentExecutionId: `deploy-continuous-${Date.now().toString(16)}`,
   });
 
+  const releaseSigningKey =
+    process.env.SPE_RELEASE_SIGNING_KEY ||
+    createHash("sha256").update(`spe-local-authority-${ROOT}`).digest("hex");
+
   const signedManifest = signBrainReleaseManifest(
     manifest,
     "spe_autonomous_operations_layer",
-    { hmacSecret: "spe_autonomous_brain_evolution_signing_secret_2026" }
+    { hmacSecret: releaseSigningKey }
   );
 
-  logSuccess(`Signed Brain Release Manifest emitted: ${brainReleaseId} (TUF/SLSA Level 3 Provenance)`);
+  logSuccess(`Signed Brain Release Manifest emitted: ${brainReleaseId} (HERMETIC_LOCAL_ATTESTATION_V1 - Local Signing Authority)`);
   return signedManifest;
 }
 
@@ -241,20 +251,30 @@ async function executeZeroDowntimeHotSwap(signedManifest, evolutionResult) {
     resolve(ROOT, "apps/web/src/engine/brain/zeroDowntimeBrainRuntime.ts")
   );
 
-  const runtime = ZeroDowntimeBrainRuntime.getInstance();
+  const releaseVerificationKey =
+    process.env.SPE_TRUSTED_AUTHORITY_KEY ||
+    process.env.SPE_RELEASE_SIGNING_KEY ||
+    createHash("sha256").update(`spe-local-authority-${ROOT}`).digest("hex");
+
+  const pointerPath = resolve(PROOFS_DIR, "ACTIVE_BRAIN_POINTER.json");
+  const runtime = ZeroDowntimeBrainRuntime.getInstance(undefined, pointerPath);
+
   const swapResult = runtime.hotSwapBrainAtomic(signedManifest, {
     compilerPassCount: 14 + (evolutionResult.valid_passes || 0),
     formalEquivalenceDigest: evolutionResult.proof_digest,
+    persistPointer: true,
   }, {
-    trustedKeys: { spe_autonomous_operations_layer: "spe_autonomous_brain_evolution_signing_secret_2026" },
+    trustedKeys: { spe_autonomous_operations_layer: releaseVerificationKey },
   });
 
   if (!swapResult.success) {
     throw new Error(`Atomic hot-swap failed: ${swapResult.error}`);
   }
 
+  const metrics = runtime.getMetrics();
   logSuccess(`Atomic hot-swap completed in ${swapResult.hotSwapDurationMs}ms! Active Brain: ${swapResult.activeBrainId}`);
-  logSuccess(`Serving status: FIVE_NINES_ACTIVE · Zero in-flight requests dropped.`);
+  logSuccess(`Serving status: ${metrics.uptimeStatus} · Measured Availability: ${metrics.measuredAvailabilityPercent}% · Zero in-flight requests dropped.`);
+  logSuccess(`Durable active pointer written: proofs/generated/ACTIVE_BRAIN_POINTER.json`);
   return swapResult;
 }
 
@@ -275,7 +295,7 @@ export async function runContinuousEvolutionCycle() {
     cycleIndex: currentCycleIndex,
     timestampIso: timestamp,
     executionMode: "24_7_CONTINUOUS_ZERO_DOWNTIME",
-    servingAvailabilityGuarantee: "100.000%_FIVE_NINES",
+    servingAvailabilityGuarantee: "OPERATIONAL_MEASURED_UPTIME",
     stages: {},
     success: false,
     durationMs: 0,
@@ -314,6 +334,13 @@ export async function runContinuousEvolutionCycle() {
     receipt.success = true;
     receipt.durationMs = durationMs;
     receipt.activeBrainId = swapResult.activeBrainId;
+    const { ZeroDowntimeBrainRuntime } = await import(
+      resolve(ROOT, "apps/web/src/engine/brain/zeroDowntimeBrainRuntime.ts")
+    );
+    const runtimeMetrics = ZeroDowntimeBrainRuntime.getInstance().getMetrics();
+    receipt.servingAvailabilityGuarantee = runtimeMetrics.uptimeStatus;
+    receipt.measuredAvailabilityPercent = runtimeMetrics.measuredAvailabilityPercent;
+    receipt.operationalEvidence = runtimeMetrics.operationalEvidence;
 
     if (!existsSync(PROOFS_DIR)) mkdirSync(PROOFS_DIR, { recursive: true });
     writeFileSync(CONTINUOUS_RECEIPT_PATH, JSON.stringify(receipt, null, 2), "utf-8");

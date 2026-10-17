@@ -49,6 +49,7 @@ export interface StripeWebhookProcessingResult {
   accountUpdated: boolean;
   amountCents?: number;
   entitlementToken?: string;
+  provenance?: "STRIPE_API_LIVE_PRODUCTION" | "STRIPE_API_TEST_MODE" | "LIVE_STRIPE_API" | "SIMULATED_TEST_SANDBOX";
 }
 
 export interface StripeCheckoutSessionResult {
@@ -57,7 +58,7 @@ export interface StripeCheckoutSessionResult {
   mode: "payment" | "subscription";
   amountTotalCents: number;
   clientReferenceId: string;
-  provenance: "LIVE_STRIPE_API" | "SIMULATED_TEST_SANDBOX";
+  provenance: "LIVE_STRIPE_API" | "STRIPE_API_TEST_MODE" | "STRIPE_API_LIVE_PRODUCTION" | "SIMULATED_TEST_SANDBOX";
 }
 
 export class StripeProcessorAdapter {
@@ -207,6 +208,23 @@ export class StripeProcessorAdapter {
       };
     }
 
+    // Business validation & test/live mode provenance (BILL-P0-09)
+    const eventLivemode = Boolean(event.livemode);
+    const eventProvenance: "STRIPE_API_LIVE_PRODUCTION" | "STRIPE_API_TEST_MODE" = eventLivemode
+      ? "STRIPE_API_LIVE_PRODUCTION"
+      : "STRIPE_API_TEST_MODE";
+
+    if (eventType === "checkout.session.completed") {
+      const currency = String(dataObject.currency || "usd").toLowerCase();
+      if (currency !== "usd") {
+        throw new Error(`INVALID_CURRENCY: Expected usd, received ${currency}`);
+      }
+      const amountTotal = dataObject.amount_total;
+      if (typeof amountTotal === "number" && amountTotal <= 0) {
+        throw new Error(`INVALID_PAYMENT_AMOUNT: Checkout session amount_total must be > 0 cents (got ${amountTotal})`);
+      }
+    }
+
     // 3. Dispatch known events
     switch (eventType) {
       case "checkout.session.completed": {
@@ -216,22 +234,15 @@ export class StripeProcessorAdapter {
         const amountCents = dataObject.amount_total || 0;
 
         if (mode === "payment") {
-          // Prepaid usage credit top-up
-          let account = this.#usageEngine.getCustomerAccount(customerId);
-          if (!account) {
-            // BILL-P0-03 Fix: initialBalanceCents expects integer cents, not dollars.
-            const created = this.#usageEngine.createCustomerAccount({
-              customerId,
-              email: customerEmail,
-              initialBalanceCents: amountCents,
-            });
-            account = created.account;
-          } else {
-            account = this.#usageEngine.creditBalance(customerId, amountCents);
-          }
-
+          // BILL-P0-08: Atomic webhook accounting transaction (credit balance + record event ID in one flush)
+          const txn = this.#usageEngine.applyWebhookTransaction({
+            eventId,
+            customerId,
+            action: "credit_balance",
+            amountCents,
+            customerEmail,
+          });
           this.#processedEventIds.add(eventId);
-          this.#usageEngine.recordProcessedWebhookEvent(eventId);
 
           return {
             verified: true,
@@ -239,8 +250,11 @@ export class StripeProcessorAdapter {
             eventType,
             customerId,
             amountCents,
-            actionTaken: `CREDITED_PREPAID_BALANCE: Added $${(amountCents / 100).toFixed(2)} to account`,
-            accountUpdated: true,
+            actionTaken: txn.alreadyProcessed
+              ? "IDEMPOTENT_IGNORED_DUPLICATE_EVENT: Event ID already processed"
+              : `CREDITED_PREPAID_BALANCE: Added $${(amountCents / 100).toFixed(2)} to account`,
+            accountUpdated: txn.accountUpdated,
+            provenance: eventProvenance,
           };
         } else if (mode === "subscription") {
           // Pro or Team subscription
@@ -267,8 +281,16 @@ export class StripeProcessorAdapter {
           );
 
           const token = this.#billingAuthority.issueSignedEntitlementTokenForPaidReceipt(paymentReceiptId);
+
+          const txn = this.#usageEngine.applyWebhookTransaction({
+            eventId,
+            customerId,
+            action: "activate_subscription",
+            tier,
+            subscriptionId,
+            customerEmail,
+          });
           this.#processedEventIds.add(eventId);
-          this.#usageEngine.recordProcessedWebhookEvent(eventId);
 
           return {
             verified: true,
@@ -277,37 +299,102 @@ export class StripeProcessorAdapter {
             customerId,
             amountCents,
             actionTaken: `ACTIVATED_SUBSCRIPTION: Issued Ed25519 ${tier} entitlement token`,
-            accountUpdated: true,
+            accountUpdated: txn.accountUpdated,
             entitlementToken: token,
+            provenance: eventProvenance,
           };
         }
         break;
       }
 
       case "customer.subscription.deleted": {
+        const customerId = dataObject.client_reference_id || dataObject.customer;
         const subscriptionId = dataObject.id;
+
+        // BILL-P0-07: Explicitly revoke customer subscription and entitlement
+        const txn = this.#usageEngine.applyWebhookTransaction({
+          eventId,
+          customerId,
+          action: "revoke_subscription",
+          subscriptionId,
+        });
         this.#processedEventIds.add(eventId);
-        this.#usageEngine.recordProcessedWebhookEvent(eventId);
-        // Mark subscription canceled in billing authority
+
+        try {
+          const cancelPayload: PaymentWebhookEvent = {
+            eventId,
+            eventType: "subscription.canceled",
+            paymentReceiptId: dataObject.payment_intent || subscriptionId,
+            subscriptionId,
+            tier: "pro",
+            planName: "SPE Subscription",
+            email: dataObject.customer_email || "customer@spe.dev",
+            amountCents: 0,
+            currency: "USD",
+            occurredAtMs: Date.now(),
+            expiresAtMs: Date.now(),
+          };
+          this.#billingAuthority.processVerifiedPaymentWebhook(
+            cancelPayload,
+            this.#billingAuthority.signWebhookPayload(cancelPayload)
+          );
+        } catch {}
+
         return {
           verified: true,
           eventId,
           eventType,
-          actionTaken: `SUBSCRIPTION_CANCELED: ${subscriptionId}`,
-          accountUpdated: true,
+          customerId,
+          actionTaken: `SUBSCRIPTION_CANCELED: Revoked subscription ${subscriptionId}`,
+          accountUpdated: txn.accountUpdated,
+          provenance: eventProvenance,
         };
       }
 
       case "charge.refunded": {
         const paymentIntentId = dataObject.payment_intent;
+        const customerId = dataObject.client_reference_id || dataObject.customer;
+        const amountRefundedCents = dataObject.amount_refunded || dataObject.amount || 0;
+
+        // BILL-P0-07: Deduct refunded amount and revoke entitlement if balance < 0 or subscription refunded
+        const txn = this.#usageEngine.applyWebhookTransaction({
+          eventId,
+          customerId,
+          action: "refund_charge",
+          amountCents: amountRefundedCents,
+          paymentIntentId,
+        });
         this.#processedEventIds.add(eventId);
-        this.#usageEngine.recordProcessedWebhookEvent(eventId);
+
+        try {
+          const refundPayload: PaymentWebhookEvent = {
+            eventId,
+            eventType: "charge.refunded",
+            paymentReceiptId: paymentIntentId,
+            subscriptionId: dataObject.subscription || `sub_${paymentIntentId}`,
+            tier: "pro",
+            planName: "SPE Charge Refund",
+            email: dataObject.billing_details?.email || "customer@spe.dev",
+            amountCents: amountRefundedCents,
+            currency: "USD",
+            occurredAtMs: Date.now(),
+            expiresAtMs: Date.now(),
+          };
+          this.#billingAuthority.processVerifiedPaymentWebhook(
+            refundPayload,
+            this.#billingAuthority.signWebhookPayload(refundPayload)
+          );
+        } catch {}
+
         return {
           verified: true,
           eventId,
           eventType,
-          actionTaken: `CHARGE_REFUNDED: Revoked payment ${paymentIntentId}`,
-          accountUpdated: true,
+          customerId,
+          amountCents: amountRefundedCents,
+          actionTaken: `CHARGE_REFUNDED: Revoked payment ${paymentIntentId} (amount: $${(amountRefundedCents / 100).toFixed(2)})`,
+          accountUpdated: txn.accountUpdated,
+          provenance: eventProvenance,
         };
       }
     }
@@ -318,6 +405,7 @@ export class StripeProcessorAdapter {
       eventType,
       actionTaken: "IGNORED_UNHANDLED_EVENT_TYPE",
       accountUpdated: false,
+      provenance: eventProvenance,
     };
   }
 
@@ -377,13 +465,15 @@ export class StripeProcessorAdapter {
         });
         const stripeData = (await stripeRes.json()) as any;
         if (stripeRes.ok && stripeData.id && stripeData.url) {
+          const isTestKey = Boolean(this.#stripeSecretKey.startsWith("sk_test_") || stripeData.livemode === false);
+          const liveProvenance = isTestKey ? "STRIPE_API_TEST_MODE" : "LIVE_STRIPE_API";
           return {
             id: stripeData.id,
             url: stripeData.url,
             mode: params.mode,
             amountTotalCents,
             clientReferenceId: params.customerId,
-            provenance: "LIVE_STRIPE_API",
+            provenance: liveProvenance,
           };
         } else {
           const errMsg = stripeData?.error?.message || `Stripe API error HTTP ${stripeRes.status}`;

@@ -62,6 +62,31 @@ export interface CustomerAccount {
   totalCalls: number;
   createdAtMs: number;
   updatedAtMs: number;
+  subscriptionStatus?: "ACTIVE" | "CANCELED" | "EXPIRED" | "REVOKED";
+  subscriptionId?: string;
+}
+
+export interface WebhookTransactionRequest {
+  readonly eventId: string;
+  readonly customerId: string;
+  readonly action: "credit_balance" | "activate_subscription" | "revoke_subscription" | "refund_charge";
+  readonly amountCents?: number;
+  readonly customerEmail?: string;
+  readonly tier?: "free" | "pro" | "team" | "enterprise";
+  readonly subscriptionId?: string;
+  readonly paymentIntentId?: string;
+}
+
+export interface WebhookTransactionOutcome {
+  readonly success: boolean;
+  readonly eventId: string;
+  readonly customerId: string;
+  readonly actionTaken: string;
+  readonly accountUpdated: boolean;
+  readonly alreadyProcessed: boolean;
+  readonly balanceMicroCents?: number;
+  readonly tier?: string;
+  readonly subscriptionStatus?: string;
 }
 
 export interface MeteredUsageRecord {
@@ -258,6 +283,148 @@ export class UsageMeteringEngine {
   recordProcessedWebhookEvent(eventId: string): void {
     this.#processedWebhookEvents.set(eventId, Date.now());
     this.flush();
+  }
+
+  /**
+   * BILL-P0-08: Applies a Stripe webhook transaction atomically.
+   * Updates customer balance / entitlement and records the eventId in a single synchronous
+   * operation that writes to durable disk storage in one atomic write + rename.
+   */
+  applyWebhookTransaction(request: WebhookTransactionRequest): WebhookTransactionOutcome {
+    const { eventId, customerId, action } = request;
+
+    if (this.#processedWebhookEvents.has(eventId)) {
+      const existingAccount = this.#accounts.get(customerId);
+      return {
+        success: true,
+        eventId,
+        customerId,
+        actionTaken: "IDEMPOTENT_IGNORED_DUPLICATE_EVENT: Event ID already processed",
+        accountUpdated: false,
+        alreadyProcessed: true,
+        balanceMicroCents: existingAccount?.balanceMicroCents,
+        tier: existingAccount?.tier,
+        subscriptionStatus: existingAccount?.subscriptionStatus,
+      };
+    }
+
+    let account = this.#accounts.get(customerId);
+    let actionTaken = "";
+
+    switch (action) {
+      case "credit_balance": {
+        const amountCents = request.amountCents || 0;
+        if (!account) {
+          const created = this.createCustomerAccount({
+            customerId,
+            email: request.customerEmail || `${customerId}@spe.internal`,
+            initialBalanceCents: amountCents,
+          });
+          account = created.account;
+          actionTaken = `CREATED_AND_CREDITED: Initial balance $${(amountCents / 100).toFixed(2)}`;
+        } else {
+          account.balanceMicroCents += amountCents * 10000;
+          account.updatedAtMs = Date.now();
+          actionTaken = `CREDITED_PREPAID_BALANCE: Added $${(amountCents / 100).toFixed(2)}`;
+        }
+        break;
+      }
+
+      case "activate_subscription": {
+        const tier = request.tier || "pro";
+        if (!account) {
+          const created = this.createCustomerAccount({
+            customerId,
+            email: request.customerEmail || `${customerId}@spe.internal`,
+            tier,
+          });
+          account = created.account;
+        } else {
+          account.tier = tier;
+          account.subscriptionStatus = "ACTIVE";
+          if (request.subscriptionId) account.subscriptionId = request.subscriptionId;
+          account.updatedAtMs = Date.now();
+        }
+        actionTaken = `ACTIVATED_SUBSCRIPTION: Tier set to ${tier}`;
+        break;
+      }
+
+      case "revoke_subscription": {
+        if (account) {
+          account.tier = "free";
+          account.subscriptionStatus = "CANCELED";
+          account.updatedAtMs = Date.now();
+          actionTaken = `REVOKED_SUBSCRIPTION: Customer downgraded to free tier`;
+        } else {
+          actionTaken = `REVOKED_SUBSCRIPTION_NOOP: Customer ${customerId} not found`;
+        }
+        break;
+      }
+
+      case "refund_charge": {
+        const refundMicroCents = (request.amountCents || 0) * 10000;
+        if (account) {
+          account.balanceMicroCents = Math.max(0, account.balanceMicroCents - refundMicroCents);
+          if (account.balanceMicroCents <= 0 || request.tier === "pro" || request.tier === "team") {
+            account.tier = "free";
+            account.subscriptionStatus = "REVOKED";
+          }
+          account.updatedAtMs = Date.now();
+          actionTaken = `REFUNDED_CHARGE: Deducted $${((request.amountCents || 0) / 100).toFixed(2)} from balance`;
+        } else {
+          actionTaken = `REFUNDED_CHARGE_NOOP: Customer ${customerId} not found`;
+        }
+        break;
+      }
+    }
+
+    // Record processed event ID
+    this.#processedWebhookEvents.set(eventId, Date.now());
+
+    // Single atomic flush to durable storage (.tmp + renameSync)
+    this.flush();
+
+    return {
+      success: true,
+      eventId,
+      customerId,
+      actionTaken,
+      accountUpdated: true,
+      alreadyProcessed: false,
+      balanceMicroCents: account?.balanceMicroCents,
+      tier: account?.tier,
+      subscriptionStatus: account?.subscriptionStatus,
+    };
+  }
+
+  /**
+   * BILL-P0-07: Explicitly revokes customer subscription and downgrades to free tier.
+   */
+  revokeCustomerSubscription(customerId: string): CustomerAccount | null {
+    const account = this.#accounts.get(customerId);
+    if (!account) return null;
+    account.tier = "free";
+    account.subscriptionStatus = "CANCELED";
+    account.updatedAtMs = Date.now();
+    this.flush();
+    return { ...account };
+  }
+
+  /**
+   * BILL-P0-07: Explicitly reverses balance and revokes entitlement on refund.
+   */
+  refundCustomerBalance(customerId: string, amountCents: number): CustomerAccount | null {
+    const account = this.#accounts.get(customerId);
+    if (!account) return null;
+    const refundMicroCents = amountCents * 10000;
+    account.balanceMicroCents = Math.max(0, account.balanceMicroCents - refundMicroCents);
+    if (account.balanceMicroCents <= 0) {
+      account.tier = "free";
+      account.subscriptionStatus = "REVOKED";
+    }
+    account.updatedAtMs = Date.now();
+    this.flush();
+    return { ...account };
   }
 
   /**

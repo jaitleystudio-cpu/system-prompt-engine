@@ -24,6 +24,8 @@ import {
 } from "../src/engine/maintenance/durableMaintenanceLedger.ts";
 import {
   SpeMaintenanceController,
+  createVerifiedDeploymentWitness,
+  verifyMaintenanceDeploymentWitness,
 } from "../src/engine/maintenance/speMaintenanceController.ts";
 
 console.log("==================================================================");
@@ -201,9 +203,9 @@ try {
   console.log("  ✓ PASS: Rollback drill safely restores active pointer to rollback target");
 
   // ────────────────────────────────────────────────────────────────
-  // TEST GROUP 7: DEPLOYMENT WITNESS & PERMITTED RELEASE BOUNDARY (MAINT-P0-01)
+  // TEST GROUP 7: DEPLOYMENT WITNESS & PERMITTED RELEASE BOUNDARY (MAINT-P0-01 & MAINT-P0-02)
   // ────────────────────────────────────────────────────────────────
-  console.log("\n[GATE 7] Testing Deployment Witness & Permitted Auto-Release Boundary (MAINT-P0-01)...");
+  console.log("\n[GATE 7] Testing Deployment Witness & Permitted Auto-Release Boundary (MAINT-P0-01 & MAINT-P0-02)...");
 
   // 7A: Discovered routine changes without verified deployment witness must NOT claim RELEASED_PERMITTED
   const unverifiedWitnessReceipt = await controller.executeMaintenanceCycle({
@@ -220,27 +222,71 @@ try {
   assert(unverifiedWitnessReceipt.permittedChangesApplied === 0, "Zero permitted changes applied without verified witness");
   console.log("  ✓ PASS: Discovered changes without verified deployment witness are held for review (NO_OP_CLEAN)");
 
-  // 7B: Discovered changes with verified deployment witness receipt allow RELEASED_PERMITTED
-  const verifiedWitnessReceipt = await controller.executeMaintenanceCycle({
+  // 7B: Forged witness with merely { verified: true } and fake hash must be REJECTED (MAINT-P0-02)
+  const forgedWitnessReceipt = await controller.executeMaintenanceCycle({
     triggerType: "SCHEDULED_0217_IST",
     businessDate: "2026-10-21",
-    workerId: "verified-deploy-worker",
+    workerId: "forged-worker",
     simulateDiscoveredChanges: 2,
     deploymentWitness: {
       verified: true,
       witnessReceiptHash: "witness_sha256_mock_digest",
-      deployedBy: "github-actions-verified-deployer",
+      deployedBy: "unverified-attacker",
       deployedAtIso: new Date().toISOString(),
     },
     receiptOutputDir: testDir,
   });
 
+  assert(forgedWitnessReceipt.discoveredChangesCount === 2, "Discovered changes count is 2");
+  assert(forgedWitnessReceipt.finalVerdict === "NO_OP_CLEAN", `Forged witness strictly rejected with NO_OP_CLEAN (got ${forgedWitnessReceipt.finalVerdict})`);
+  assert(forgedWitnessReceipt.heldForHumanReviewCount === 2, "Candidate changes held when witness is forged");
+  assert(forgedWitnessReceipt.permittedChangesApplied === 0, "Zero permitted changes applied with forged witness");
+  console.log("  ✓ PASS: Forged deployment witness lacking cryptographic integrity strictly rejected (NO_OP_CLEAN)");
+
+  // 7C: Non-production environment witness (e.g. staging) must be REJECTED for production release (MAINT-P0-02)
+  const stagingWitness = createVerifiedDeploymentWitness({
+    environment: "staging",
+    commitSha: "dcd7df0f92d3eaa62d915418b5009e85844be922",
+    artifactDigest: "b".repeat(64),
+    deployedBy: "ci-staging-deployer",
+  });
+  const stagingWitnessReceipt = await controller.executeMaintenanceCycle({
+    triggerType: "SCHEDULED_0217_IST",
+    businessDate: "2026-10-22",
+    workerId: "staging-worker",
+    simulateDiscoveredChanges: 2,
+    deploymentWitness: stagingWitness,
+    receiptOutputDir: testDir,
+  });
+
+  assert(stagingWitnessReceipt.finalVerdict === "NO_OP_CLEAN", "Non-production environment witness rejected for production release");
+  assert(stagingWitnessReceipt.heldForHumanReviewCount === 2, "Candidate changes held when witness environment is not production");
+  console.log("  ✓ PASS: Non-production environment witness strictly rejected for production release");
+
+  // 7D: Authentic cryptographic deployment witness permits RELEASED_PERMITTED (MAINT-P0-02)
+  const authenticWitness = createVerifiedDeploymentWitness({
+    environment: "production",
+    commitSha: "dcd7df0f92d3eaa62d915418b5009e85844be922",
+    artifactDigest: "c".repeat(64),
+    deployedBy: "github-actions-verified-deployer",
+  });
+
+  const verifiedWitnessReceipt = await controller.executeMaintenanceCycle({
+    triggerType: "SCHEDULED_0217_IST",
+    businessDate: "2026-10-23",
+    workerId: "verified-deploy-worker",
+    baseCommit: "dcd7df0f92d3eaa62d915418b5009e85844be922",
+    simulateDiscoveredChanges: 2,
+    deploymentWitness: authenticWitness,
+    receiptOutputDir: testDir,
+  });
+
   assert(verifiedWitnessReceipt.discoveredChangesCount === 2, "Discovered changes count is 2");
-  assert(verifiedWitnessReceipt.finalVerdict === "RELEASED_PERMITTED", "Verified deployment witness permits RELEASED_PERMITTED");
+  assert(verifiedWitnessReceipt.finalVerdict === "RELEASED_PERMITTED", "Authentic verified deployment witness permits RELEASED_PERMITTED");
   assert(verifiedWitnessReceipt.permittedChangesApplied === 2, "Permitted changes applied is 2");
   assert(verifiedWitnessReceipt.heldForHumanReviewCount === 0, "Zero changes held when witness is verified");
   assert(verifiedWitnessReceipt.activeProductionPointer.startsWith("rel-"), "Production pointer advanced to new release");
-  console.log("  ✓ PASS: Verified deployment witness permits RELEASED_PERMITTED and advances production pointer");
+  console.log("  ✓ PASS: Authentic cryptographic deployment witness permits RELEASED_PERMITTED and advances production pointer");
 
   console.log("\n==================================================================");
   console.log("🎉 ALL AUTONOMOUS MAINTENANCE CONTROLLER TESTS PASSED (100%)!");

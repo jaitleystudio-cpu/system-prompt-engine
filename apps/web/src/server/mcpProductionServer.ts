@@ -33,6 +33,7 @@ import {
   type CustomerAccount,
   type MeteredUsageRecord,
 } from "./billingAuthority.ts";
+import { ZeroDowntimeBrainRuntime } from "../engine/brain/zeroDowntimeBrainRuntime.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -592,6 +593,9 @@ export class McpProductionServer {
       // 3. HEALTH & GATEWAY STATUS
       // ────────────────────────────────────────────────────────────────
       if (url === "/api/v1/health" && method === "GET") {
+        const brainRuntime = ZeroDowntimeBrainRuntime.getInstance();
+        const runtimeMetrics = brainRuntime.getMetrics();
+
         res.setHeader("Content-Type", "application/json");
         res.setHeader("MCP-Protocol-Version", "2026-07-28");
         res.statusCode = 200;
@@ -601,9 +605,22 @@ export class McpProductionServer {
             gateway: "SPE Ω Global AI Gateway",
             protocolVersion: "2026-07-28",
             offlineAirGap: true,
-            zeroDowntimeGuaranteed: true,
+            zeroDowntimeGuaranteed: runtimeMetrics.zeroDowntimeGuaranteed,
             availability: "24/7/365_WORLDWIDE_NON_BLOCKING",
             servingArchitecture: "READ_COPY_UPDATE_ATOMIC_HOT_SWAP",
+            measuredAvailability: {
+              uptimeStatus: runtimeMetrics.uptimeStatus,
+              measuredAvailabilityPercent: runtimeMetrics.measuredAvailabilityPercent,
+              totalRequests: runtimeMetrics.totalRequests,
+              successfulRequests: runtimeMetrics.successfulRequests,
+              failedRequests: runtimeMetrics.failedRequests,
+              activeInFlightRequests: runtimeMetrics.activeInFlightRequests,
+              hotSwapsCompleted: runtimeMetrics.hotSwapsCompleted,
+              rollbacksExecuted: runtimeMetrics.rollbacksExecuted,
+              currentBrainId: runtimeMetrics.currentBrainId,
+              currentGenerationIndex: runtimeMetrics.currentGenerationIndex,
+            },
+            brainRuntimeMetrics: runtimeMetrics,
             timezoneIsolation: {
               principle: "Non-blocking out-of-band background maintenance with RCU pointer hot-swap",
               usBusinessHoursProtected: true,
