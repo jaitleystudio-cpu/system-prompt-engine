@@ -24,6 +24,12 @@ from spe_runtime.portability.browser_recovery_lineage import attach_recovery_to_
 
 GOAL = "Build an interactive canvas hero, preserving the canvas and Rotate the scene button."
 HEX = "0" * 64
+SCOPE = {
+    "selectors": ["#spe-app", "canvas#spe-stage", "#spe-interact"],
+    "interaction": "click increments window.speInteractionCount",
+    "errors": "zero page exceptions and relevant console errors in test window",
+    "network": "all browser requests blocked",
+}
 
 
 def sha(raw):
@@ -75,6 +81,7 @@ def observation(html, passed):
         "errors": [] if passed else ["ReferenceError: sceneConfig is not defined"],
         "passed": passed,
         "evidenceKind": "REAL_EPHEMERAL_CHROMIUM_OBSERVATION",
+        "testScope": copy.deepcopy(SCOPE),
     }
 
 
@@ -89,6 +96,7 @@ def fixture_manifest(directory: Path, *, repaired=True, provenance="FIXTURE"):
     ]
     record = {
         "schema": "spe.live_crash_recovery.acceptance.v0",
+        "acceptance": copy.deepcopy(SCOPE),
         "protectedGoal": GOAL,
         "protectedGoalDigest": sha(GOAL),
         "initialPromptDigest": sha(GOAL),
@@ -136,6 +144,7 @@ def test_canonical_artifact_preserved_and_roundtrips(tmp_path, fmt):
     "goal", "goalDigest", "promptDigest", "candidate", "repairSource",
     "repairPrompt", "fileBytes", "filePath", "savedDigest",
     "noScreenshot", "fakePass", "fakeModelQualification", "provenance",
+    "changedScope", "changedObservationScope",
 ])
 def test_adversarial_recovery_import_rejects_false_claims(tmp_path, attack):
     original = fixture_spe()
@@ -167,6 +176,10 @@ def test_adversarial_recovery_import_rejects_false_claims(tmp_path, attack):
         manifest["qualification"] = "LIVE_VERIFIED"
     elif attack == "provenance":
         manifest["provenance"] = "PRODUCTION_TRUSTED"
+    elif attack == "changedScope":
+        manifest["acceptance"]["selectors"] = ["#spe-app"]
+    elif attack == "changedObservationScope":
+        manifest["attempts"][1]["observation"]["testScope"]["network"] = "external requests allowed"
     with pytest.raises(ValueError):
         attach_recovery_to_spe(original, manifest, tmp_path)
 
