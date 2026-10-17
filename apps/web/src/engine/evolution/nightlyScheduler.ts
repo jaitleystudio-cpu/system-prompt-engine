@@ -234,8 +234,9 @@ export class NightlyEvolutionScheduler {
         ? "LIVE_GSC_API"
         : "CALIBRATION_FIXTURE_DEV_CI";
 
+      const hasMockSearch = Boolean(options.mockSearchData && options.mockSearchData.length > 0);
       const searchQueries: SearchConsoleQueryRow[] = (hasLiveSearch ? options.liveSearchData : null)
-        || options.mockSearchData
+        || (hasMockSearch ? options.mockSearchData : null)
         || [
           {
             query: "free system prompt generator",

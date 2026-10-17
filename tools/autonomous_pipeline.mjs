@@ -72,7 +72,9 @@ export function executeAutonomousPipeline(options = {}) {
     if (!checkOutput.includes("VERIFIED")) {
       throw new Error("Model Atlas SHA-256 integrity check failed!");
     }
-    logSuccess("26 Frontier AI models synchronized with verified bit-for-bit SHA-256 checksum.");
+    const countMatch = checkOutput.match(/Models Count:\s*(\d+)/);
+    const countStr = countMatch ? `${countMatch[1]} AI models` : "Verified AI models";
+    logSuccess(`${countStr} synchronized with verified bit-for-bit SHA-256 checksum.`);
     results.steps.modelAtlas = { status: "PASS", verified: true };
 
     // 2. Programmatic SEO Sitemaps Regeneration

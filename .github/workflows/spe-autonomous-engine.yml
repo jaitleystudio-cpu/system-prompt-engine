@@ -48,9 +48,9 @@ jobs:
           echo "[*] Verifying complete repository cleanliness..."
           git status --short
 
-          # 1. Strict check on primary generated artifacts
-          git diff --exit-code apps/web/src/engine/modelAtlas/modelAtlasRegistry.json
-          git diff --exit-code apps/web/public/sitemap-prompts.xml
+          # 1. Strict check on primary generated artifacts (staged or unstaged)
+          git diff HEAD --exit-code apps/web/src/engine/modelAtlas/modelAtlasRegistry.json
+          git diff HEAD --exit-code apps/web/public/sitemap-prompts.xml
 
           # 2. Complete check against any untracked files anywhere in repo
           UNTRACKED=$(git ls-files --others --exclude-standard)
@@ -60,16 +60,18 @@ jobs:
             exit 1
           fi
 
-          # 3. Complete check against any unexpected tracked modifications outside the execution receipt
-          UNEXPECTED_DIFF=$(git diff --name-only -- ':!evidence/autonomous_execution_receipt.json')
-          if [ -n "$UNEXPECTED_DIFF" ]; then
-            echo "❌ Error: Unexpected tracked files modified in working tree (AUD-06 violation):"
+          # 3. Complete check against any unexpected modifications (staged or unstaged) outside the execution receipt
+          UNEXPECTED_DIFF=$(git diff HEAD --name-only -- ':!evidence/autonomous_execution_receipt.json')
+          UNEXPECTED_PORCELAIN=$(git status --porcelain -- ':!evidence/autonomous_execution_receipt.json')
+          if [ -n "$UNEXPECTED_DIFF" ] || [ -n "$UNEXPECTED_PORCELAIN" ]; then
+            echo "❌ Error: Unexpected modified/staged/untracked files detected in working tree (AUD-06 violation):"
             echo "$UNEXPECTED_DIFF"
-            git diff -- ':!evidence/autonomous_execution_receipt.json'
+            echo "$UNEXPECTED_PORCELAIN"
+            git diff HEAD -- ':!evidence/autonomous_execution_receipt.json'
             exit 1
           fi
 
-          echo "✓ Complete repository cleanliness verified: 0 untracked files, 0 unexpected modifications."
+          echo "✓ Complete repository cleanliness verified: 0 untracked files, 0 unexpected modifications (staged or unstaged)."
 
 
       - name: Upload Cryptographic Audit Receipt

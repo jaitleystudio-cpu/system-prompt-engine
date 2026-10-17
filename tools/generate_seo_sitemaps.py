@@ -78,8 +78,19 @@ def extract_existing_lastmods(xml_path: Path) -> dict[str, str]:
         return {}
     try:
         content = xml_path.read_text(encoding="utf-8")
-        matches = re.findall(r"<loc>(.*?)</loc>\s*<lastmod>(\d{4}-\d{2}-\d{2})</lastmod>", content)
-        return dict(matches)
+        result = {}
+        # Parse each <url>...</url> block independently to handle arbitrary tag order or whitespace
+        url_blocks = re.findall(r"<url>(.*?)</url>", content, re.DOTALL)
+        for block in url_blocks:
+            loc_m = re.search(r"<loc>(.*?)</loc>", block)
+            lastmod_m = re.search(r"<lastmod>(\d{4}-\d{2}-\d{2})</lastmod>", block)
+            if loc_m and lastmod_m:
+                result[loc_m.group(1).strip()] = lastmod_m.group(1).strip()
+        # Fallback to direct regex if no <url> tags are present
+        if not result:
+            matches = re.findall(r"<loc>(.*?)</loc>.*?<lastmod>(\d{4}-\d{2}-\d{2})</lastmod>", content, re.DOTALL)
+            result = {loc.strip(): lm.strip() for loc, lm in matches}
+        return result
     except Exception:
         return {}
 
