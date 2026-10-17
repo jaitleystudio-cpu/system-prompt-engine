@@ -5,6 +5,7 @@
  * Prereq: npx playwright install chromium
  */
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -75,6 +76,11 @@ try {
     succeeded.attempts[0].observation.candidateDigest);
   const saved = JSON.parse(await readFile(join(dir, "positive", "living-spe-recovery.json"), "utf8"));
   assert.deepEqual(saved, succeeded, "durable JSON reopens without loss");
+  const boundArtifact = await readFile(
+    join(dir, "positive", succeeded.browserPassedArtifact.file), "utf8");
+  const actualDigest = "sha256:" + createHash("sha256").update(boundArtifact).digest("hex");
+  assert.equal(actualDigest, succeeded.browserPassedArtifact.digest);
+  assert.equal(boundArtifact, repaired, "stored artifact is exactly the browser-tested candidate");
 
   const deceptive = await runCrashRecovery({
     goal, originalPrompt: goal,
