@@ -39,6 +39,7 @@ try {
   ].join("\n");
   const child = spawn(process.execPath, ["--input-type=module", "-e", worker, crashedDir, url],
     { stdio: ["ignore", "pipe", "pipe"] });
+  const childExit = once(child, "close"); // Subscribe before SIGKILL or process exit.
   let stderr = "";
   child.stderr.on("data", b => { stderr += String(b).slice(0, 1000); });
   let started = false;
@@ -55,7 +56,7 @@ try {
     throw new Error("Child never dispatched: " + stderr);
   }
   child.kill("SIGKILL");
-  await once(child, "close");
+  await childExit;
   assert.ok(existsSync(join(crashedDir, JOURNAL_FILENAME)), "checkpoint survived abrupt termination");
   assert.ok(existsSync(join(crashedDir, JOURNAL_LOCK)), "orphaned lock flags reconciliation");
   const restored = await inspectRecoveryCheckpoint(crashedDir, { goal, originalPrompt: prompt });
