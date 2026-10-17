@@ -72,7 +72,7 @@ export class ProofCarryingEvolutionController {
     }
 
     // 1. Silent-Failure Watchdog (When Errors Become Narratives 2026)
-    if (!proposal.failingTestBeforeFix.reproduced) {
+    if (proposal.failingTestBeforeFix?.reproduced !== true) {
       auditLog.push("Silent Failure Watchdog REJECT: Problem was not reproduced with a failing test before fix.");
       return {
         status: "REJECTED",
@@ -135,13 +135,16 @@ export class ProofCarryingEvolutionController {
       };
     }
 
-    // 6. Risk Level vs Autonomy Level Promotion
+    // 6. This legacy controller receives self-asserted booleans and digests, not
+    // independently authenticated execution receipts. It may stage candidates,
+    // but is not an authority to release them. Promotion belongs to the
+    // existing independent release-safety governor after external qualification.
     if (proposal.riskLevel === "LOW" && this.allowedAutoReleaseCategories.has(proposal.defectCategory)) {
-      auditLog.push("LOW RISK Allowlisted Mechanical Fix: Approved for L4 Limited Auto-Release.");
+      auditLog.push("LOW RISK candidate staged only: no independently authenticated execution/reproduction receipts are verified here. RELEASE_AUTHORITY_HOLD.");
       return {
-        status: "PROMOTED",
-        authorizedAutonomyLevel: "L4_LIMITED_AUTO_RELEASE",
-        authorizedForLiveDeploy: true,
+        status: "PATCH_PREPARED",
+        authorizedAutonomyLevel: "L3_QUALIFY",
+        authorizedForLiveDeploy: false,
         auditLog,
       };
     }
