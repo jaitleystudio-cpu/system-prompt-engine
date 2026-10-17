@@ -103,6 +103,8 @@ export async function reconcileRecoveryReadOnly({
   let record;
   try { record = JSON.parse(journalBytes.toString("utf8")); }
   catch { return hold("UNREADABLE_JOURNAL"); }
+  if (!record || typeof record !== "object" || Array.isArray(record))
+    return hold("INVALID_CHECKPOINT_STRUCTURE");
   if (status.reason === "CHECKPOINT_INTEGRITY_MISMATCH"
       || sealCheckpoint(record).checkpointDigest !== record.checkpointDigest)
     return hold("CHECKPOINT_INTEGRITY_MISMATCH");
@@ -110,10 +112,13 @@ export async function reconcileRecoveryReadOnly({
     return hold("PROTECTED_IDENTITY_MISMATCH");
   if (!validateAttemptStructure(record))
     return hold("INCONSISTENT_ATTEMPT_LINEAGE");
-  const lock = await observeSafe(join(evidenceDirectory, JOURNAL_LOCK));
+  const lockPath = join(evidenceDirectory, JOURNAL_LOCK);
+  let lockPresent = false;
+  try { await lstat(lockPath); lockPresent = true; }
+  catch (err) { if (err?.code !== "ENOENT") throw err; }
   // A lock must remain untouched: it may represent a running process, not a
   // stale one. R3 cannot remove it based on file age or process PID alone.
-  if (lock) return hold("ACTIVE_OR_ORPHANED_LOCK", { journalState: record.phaseStatus });
+  if (lockPresent) return hold("ACTIVE_OR_ORPHANED_LOCK", { journalState: record.phaseStatus });
   if (status.disposition === decisions.HOLD && !REPLAY_STATES.has(record.phaseStatus)) {
     return hold(DISPATCH_STATES.has(record.phaseStatus)
       ? "PROVIDER_OUTCOME_UNKNOWN_DO_NOT_RETRY"
