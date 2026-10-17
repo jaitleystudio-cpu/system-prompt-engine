@@ -48,7 +48,7 @@ export const FEEDOUGH_COMPETITIVE_MATRIX: readonly CompetitorComparisonDimension
     speScore: 9.6,
     winner: "SPE",
     feedoughReality: "No execution runner, no latency measurement, zero assertion validation.",
-    speAdvantage: "EvalStudio runs live side-by-side matrices (Claude Sonnet 5.5 vs OpenAI GPT-6.1-Sol vs Gemini 3 vs Ollama) with 50+ assertion rules.",
+    speAdvantage: "EvalStudio runs live side-by-side matrices (Claude Sonnet 5.5 vs OpenAI GPT-6.1-Sol vs Gemini 3.8 Flash vs Aragon 4) with 50+ assertion rules.",
   },
   {
     id: "DIM-05",
@@ -167,7 +167,7 @@ Provide a clear executive financial diagnostic: Is this business economically vi
     title: "🚀 Venture Capital Pitch Deck Architect (12 Slides)",
     category: "Pitch",
     brief: "Compile a 12-slide investor pitch deck structure with problem statement, secret sauce, TAM/SAM/SOM calculation, and milestone-based use of funds.",
-    targetModel: "Claude Sonnet 5.5 / Gemini 3 Pro",
+    targetModel: "Claude Sonnet 5.5 / Gemini 3.8 Flash / Aragon 4",
     estimatedTokens: 2600,
     promptDirective: `You are a partner at Sequoia Capital advising a seed/Series A founder on crafting a 10/10 investor presentation.
 

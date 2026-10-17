@@ -110,22 +110,31 @@ export const FRONTIER_MODELS: ModelPricingTier[] = [
     tokensPerSec: 130
   },
   {
-    modelId: 'gemini-3-pro',
+    modelId: 'gemini-3-8-pro',
     provider: 'Google',
-    inputPerMillionUsd: 1.00,
-    outputPerMillionUsd: 4.00,
-    cachedInputPerMillionUsd: 0.25,
-    estimatedTtftMs: 260,
-    tokensPerSec: 95
+    inputPerMillionUsd: 1.25,
+    outputPerMillionUsd: 5.00,
+    cachedInputPerMillionUsd: 0.30,
+    estimatedTtftMs: 240,
+    tokensPerSec: 105
   },
   {
-    modelId: 'gemini-3-flash',
+    modelId: 'gemini-3-8-flash',
     provider: 'Google',
     inputPerMillionUsd: 0.10,
     outputPerMillionUsd: 0.40,
     cachedInputPerMillionUsd: 0.025,
-    estimatedTtftMs: 75,
-    tokensPerSec: 220
+    estimatedTtftMs: 70,
+    tokensPerSec: 240
+  },
+  {
+    modelId: 'aragon-4',
+    provider: 'Aragon',
+    inputPerMillionUsd: 0.85,
+    outputPerMillionUsd: 3.40,
+    cachedInputPerMillionUsd: 0.20,
+    estimatedTtftMs: 160,
+    tokensPerSec: 150
   },
   {
     modelId: 'deepseek-v4',

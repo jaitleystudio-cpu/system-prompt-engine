@@ -28,7 +28,10 @@ All prompts, transcompilers, model selectors, and benchmarks MUST strictly featu
 - **Meta**:
   - `meta-muse-code` (Meta Muse Code 1.3 / Muse-Spark 1.3 — Local Silicon Execution)
 - **Google**:
-  - `gemini-3-pro` / `gemini-3-flash`
+  - `gemini-3.8-flash` (Gemini 3.8 Flash — High-Speed Multimodal & Fast Verification)
+  - `gemini-3.8-pro` (Gemini 3.8 Pro — Deep Complex System Verification)
+- **Aragon**:
+  - `aragon-4` / `aragon-4-pro` (Aragon 4 Autonomous Cognitive Architecture)
 
 ---
 

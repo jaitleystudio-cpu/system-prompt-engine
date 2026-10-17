@@ -99,7 +99,9 @@ const AVAILABLE_MODELS = [
   { id: "openai:gpt-6-astra", label: "GPT-6 Astra (OpenAI 2026)", default: false },
   { id: "anthropic:claude-code-2-1", label: "Claude Code 2.1 (Anthropic 2026)", default: false },
   { id: "meta:meta-muse-code", label: "Meta Muse Code 1.3 (Meta 2026)", default: false },
-  { id: "google:gemini-3-pro", label: "Gemini 3 Pro (Google 2026)", default: false },
+  { id: "google:gemini-3-8-flash", label: "Gemini 3.8 Flash (Google 2026)", default: false },
+  { id: "google:gemini-3-8-pro", label: "Gemini 3.8 Pro (Google 2026)", default: false },
+  { id: "aragon:aragon-4-pro", label: "Aragon 4 Pro (Aragon 2026)", default: false },
   { id: "groq:llama-4-70b-versatile", label: "Llama 4 70B (Groq Ultra-Fast)", default: false },
   { id: "ollama:llama4", label: "Ollama Local Llama 4 (http://localhost:11434)", default: false },
 ];
