@@ -691,7 +691,7 @@ await runTest("T23: Concurrent repair jobs -> Prevent conflicting writes", async
   }, /Concurrency Conflict/);
 });
 
-await runTest("T24: Interrupted deployment -> Preserve or restore valid release", () => {
+await runTest("T24: Interrupted deployment -> Do not claim rollback without executor evidence", () => {
   const proofController = new ProofCarryingEvolutionController();
   const proposal = {
     id: "PROP-T24",
@@ -702,8 +702,10 @@ await runTest("T24: Interrupted deployment -> Preserve or restore valid release"
     },
   };
   const rb = proofController.executeRollbackDemonstration(proposal);
-  assert.equal(rb.success, true);
-  assert.equal(rb.restoredCommit, "9275039a");
+  assert.equal(rb.success, false, "A rollback plan cannot count as a restored release");
+  assert.equal(rb.restoredCommit, "");
+  assert.equal(rb.receiptId, "");
+  assert.match(rb.details, /NOT_EXECUTED/);
 });
 
 await runTest("T25: No reliable search data -> Mark SEO proposal inconclusive", () => {
