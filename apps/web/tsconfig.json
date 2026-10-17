@@ -42,6 +42,7 @@
   "include": [
     "src",
     "../../packages/web-runtime/src",
-    "../../packages/human-perspective/src"
+    "../../packages/human-perspective/src",
+    "pro-api"
   ]
 }

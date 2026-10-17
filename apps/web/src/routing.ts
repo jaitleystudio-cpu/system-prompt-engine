@@ -29,7 +29,8 @@ export type AppView =
   | "possibility"
   | "reality-frontier"
   | "challenge"
-  | "revocation";
+  | "revocation"
+  | "pro-studio";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -55,6 +56,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   "reality-frontier": "/reality-frontier",
   challenge: "/challenge",
   revocation: "/revocation",
+  "pro-studio": "/pro-studio",
   ...EXTRA_VIEW_PATH,
 };
 
@@ -66,6 +68,7 @@ export const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set([
   "media",
   "ocr",
   "research",
+  "pro-studio",
 ]);
 
 const PATH_VIEW: Record<string, AppView> = {
@@ -77,7 +80,14 @@ const PATH_VIEW: Record<string, AppView> = {
   ),
   "/skill-builder": "skill-builder",
   "/skills": "skill-builder",
+  "/pro": "pro-studio",
 } as Record<string, AppView>;
+
+/** /pro-studio/<tool> sub-routes stay on the Pro Studio view; the app shell resolves the tool. */
+export function isProStudioSubRoute(pathname: string): boolean {
+  const clean = pathname.replace(/\/+$/, "") || "/";
+  return clean.startsWith("/pro-studio/") && clean.length > "/pro-studio/".length;
+}
 
 export function pathForView(view: AppView): string {
   return VIEW_PATH[view] ?? "/";
@@ -87,6 +97,9 @@ export function resolveRoute(pathname: string):
   | { kind: "view"; view: AppView; canonicalPath: string }
   | { kind: "not-found"; pathname: string } {
   const clean = pathname.replace(/\/+$/, "") || "/";
+  if (isProStudioSubRoute(clean)) {
+    return { kind: "view", view: "pro-studio", canonicalPath: clean };
+  }
   if (isPromptSubRoute(clean)) {
     return { kind: "view", view: PATH_VIEW[VIEW_PATH.prompts], canonicalPath: clean };
   }
@@ -263,6 +276,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Semantic Revocation & Epistemic Non-Interference | SPE Ω",
     description:
       "Weiser semantic slicing and Goguen-Meseguer non-interference. Purge contaminated downstream dependencies and prevent latent model attention leaks.",
+  },
+  "pro-studio": {
+    path: "/pro-studio",
+    title: "Pro Studio — SPE workspace for Pro and Team plans",
+    description:
+      "SPE Pro Studio: prompt sessions, versions, regression tests, signed releases, agent blueprints, batch CSV, code export and governance tools in one workspace. Runs in your browser.",
   },
   ...EXTRA_ROUTE_META,
 };

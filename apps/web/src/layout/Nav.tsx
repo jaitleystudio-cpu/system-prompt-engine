@@ -293,6 +293,19 @@ export function Nav(p: Props) {
           );
         })}
 
+        {/* Direct Link: Pro Studio (paid workspace entry) */}
+        <a
+          href={pathForView("pro-studio")}
+          className="spe-nav-direct-link spe-nav-pro-studio"
+          data-testid="nav-pro-studio"
+          onClick={(e) => {
+            e.preventDefault();
+            handleLinkClick("pro-studio");
+          }}
+        >
+          Pro Studio <span className="spe-nav-pro-badge" aria-hidden="true">PRO</span>
+        </a>
+
         {/* Direct Link: Plans & Pricing */}
         <a
           href={pathForView("pricing")}

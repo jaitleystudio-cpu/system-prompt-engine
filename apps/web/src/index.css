@@ -380,6 +380,15 @@ em {
   padding: 1px 6px;
   border-radius: 999px;
 }
+.spe-nav-pro-badge {
+  background: #fbbf24;
+  color: #1a1206;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
 .spe-nav-cta {
   background: #eff2ff;
   color: #0a1020;
