@@ -1,16 +1,6 @@
 // Agent Blueprint Builder — pure model + draft exporters. Exports are DRAFT formats: verify before use.
-export const TOOLS: Record<string, string> = {
-  web_search: "Search the web and return result snippets.",
-  read_file: "Read a file from an allowed folder.",
-  write_file: "Write a file to an allowed folder.",
-  run_code: "Run code in a sandbox.",
-  send_email: "Send an email on the user's behalf.",
-};
-export const RISKY = new Set(["write_file", "run_code", "send_email"]);
-export interface Agent { id: string; name: string; role: string; instructions: string; tools: string[]; maxSteps: number; needsApproval: boolean; x: number; y: number; }
-export interface Handoff { from: string; to: string; when: string; }
-export interface Blueprint { name: string; agents: Agent[]; handoffs: Handoff[]; }
-export const DRAFT_NOTE = "Draft format, verify before use.";
+import { AGENT_TOOLS as TOOLS, RISKY, DRAFT_NOTE, type Blueprint } from "../shared/constants.ts";
+export { AGENT_TOOLS as TOOLS, RISKY, DRAFT_NOTE, type Agent, type Handoff, type Blueprint } from "../shared/constants.ts";
 
 export function validate(bp: Blueprint): string[] {
   const errs: string[] = []; const ids = new Set<string>(); const names = new Set<string>();

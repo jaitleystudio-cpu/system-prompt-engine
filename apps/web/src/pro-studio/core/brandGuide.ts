@@ -1,8 +1,7 @@
 // Brand & style guide: rules you write, checked by exact text matching. It does not judge tone or quality.
 import type { PlainBlock } from "./studio.ts";
-export interface BrandGuide { name: string; voice: string; required: string[]; banned: string[]; replace: { from: string; to: string }[]; maxSentenceWords: number | null }
-export interface BrandFinding { rule: "required" | "banned" | "replace" | "sentence"; level: "bad" | "warn" | "ok"; message: string }
-export const EMPTY_GUIDE: BrandGuide = { name: "", voice: "", required: [], banned: [], replace: [], maxSentenceWords: null };
+import type { BrandGuide, BrandFinding } from "../shared/constants.ts";
+export { EMPTY_GUIDE, type BrandGuide, type BrandFinding } from "../shared/constants.ts";
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const wordRe = (t: string) => new RegExp(`(^|[^\\p{L}\\p{N}])${esc(t.trim())}(?=$|[^\\p{L}\\p{N}])`, "giu");
 export const countTerm = (text: string, term: string) => (term.trim() ? [...text.matchAll(wordRe(term))].length : 0);
