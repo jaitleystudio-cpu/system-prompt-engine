@@ -1,23 +1,35 @@
 import { useState } from "react";
 import { usePro, useProAction, copyText } from "../context.ts";
 import { ToolFrame, Field } from "./Frame.tsx";
-import { scan, redact, type ScanFinding } from "../core/scanner.ts";
-import { assemble } from "../core/studio.ts";
-import { sessionTitle } from "../core/workspace.ts";
+import { proApi, useProQuery } from "../api.ts";
+import { sessionTitle, plainBlocks } from "../shared/workspace.ts";
+import type { ScanFinding } from "../core/scanner.ts";
 export default function Scanner() {
-  const { active, updateSession, announce, log } = usePro();
+  const { active, updateSession, announce } = usePro();
   const [text, setText] = useState("");
   const [src, setSrc] = useState<"paste" | "session">(active ? "session" : "paste");
-  const body = src === "session" && active ? assemble(active.blocks) : text;
-  const fs: ScanFinding[] = scan(body);
-  useProAction((id) => { if (id === "scan-session" && active) { setSrc("session"); const n = scan(assemble(active.blocks)).length; announce(n ? `Scanner found ${n} match${n > 1 ? "es" : ""}` : "No matches in the current session"); log("scan.session", `${sessionTitle(active)} · ${n} matches`); } });
+  const an = useProQuery<{ assembled: string }>("/studio/analyze", active ? { blocks: plainBlocks(active.blocks), vars: {} } : null, { enabled: !!active && src === "session" });
+  const body = src === "session" && active ? an.data?.assembled ?? "" : text;
+  const q = useProQuery<{ findings: ScanFinding[]; redacted: string }>("/scan", { text: body, redact: true }, { enabled: !!body });
+  const fs = body ? q.data?.findings ?? [] : [];
+  useProAction((id) => { if (id === "scan-session" && active) { setSrc("session"); void proApi<{ findings: ScanFinding[] }>("/scan", { text: active.blocks.map((b) => b.text).join("\n"), log: true }).then((d) => announce(d.findings.length ? `Scanner found ${d.findings.length} match${d.findings.length > 1 ? "es" : ""}` : "No matches in the current session")); } });
   const secrets = fs.filter((f) => f.severity === "secret").length;
+  const redactSession = async () => {
+    if (!active || !window.confirm("Replace matches in the session with [REDACTED:…] markers?")) return;
+    const items = active.blocks.flatMap((b) => [b.text, ...(b.must ?? []), ...(b.mustNot ?? [])]);
+    try {
+      const d = await proApi<{ redactedList: string[] }>("/scan", { text: "", redactList: items, log: true }); let i = 0; const next = () => d.redactedList[i++];
+      updateSession(active.id, (s) => ({ ...s, blocks: s.blocks.map((b) => { const text = next(); const must = (b.must ?? []).map(() => next()); const mustNot = (b.mustNot ?? []).map(() => next()); return b.kind === "requirements" ? { ...b, text, must, mustNot } : { ...b, text }; }) }));
+      announce(`Session “${sessionTitle(active)}” redacted`);
+    } catch (e) { announce((e as Error).message); }
+  };
   const panel = (<div className="ps-stack" data-testid="scan-out">
-    <p className={fs.length ? "ps-warn" : "ps-ok"} role="status">{fs.length ? `${fs.length} match${fs.length > 1 ? "es" : ""}: ${secrets} secret${secrets === 1 ? "" : "s"}, ${fs.length - secrets} personal data` : "No matches."}</p>
+    <p className={fs.length ? "ps-warn" : "ps-ok"} role="status">{!body ? "Nothing to scan yet." : q.loading && !q.data ? "Scanning on SPE Pro…" : fs.length ? `${fs.length} match${fs.length > 1 ? "es" : ""}: ${secrets} secret${secrets === 1 ? "" : "s"}, ${fs.length - secrets} personal data` : "No matches."}</p>
     <ul className="ps-list">{fs.map((f, i) => <li key={i} className="ps-li"><div><b>{f.label}</b><small>{f.severity} · character {f.index} · <code>{f.preview}</code></small></div></li>)}</ul>
-    {fs.length > 0 && <div className="ps-row ps-wrap"><button type="button" className="ps-btn ps-btn--sm" onClick={async () => announce((await copyText(redact(body, fs))) ? "Redacted copy copied" : "Copy was blocked")}>Copy redacted text</button>
-      {src === "session" && active && <button type="button" className="ps-btn ps-btn--sm ps-btn--danger" onClick={() => { if (!window.confirm("Replace matches in the session with [REDACTED:…] markers?")) return; updateSession(active.id, (s) => ({ ...s, blocks: s.blocks.map((b) => (b.kind === "requirements" ? { ...b, must: (b.must ?? []).map((x) => redact(x)), mustNot: (b.mustNot ?? []).map((x) => redact(x)), text: redact(b.text) } : { ...b, text: redact(b.text) })) })); announce("Session redacted"); log("scan.redact", sessionTitle(active)); }}>Redact in session</button>}</div>}
-    <p className="ps-hint">Pattern matching only. It can miss secrets and can flag look-alikes. Nothing leaves this browser.</p>
+    {fs.length > 0 && <div className="ps-row ps-wrap"><button type="button" className="ps-btn ps-btn--sm" onClick={async () => announce((await copyText(q.data?.redacted ?? "")) ? "Redacted copy copied" : "Copy was blocked")}>Copy redacted text</button>
+      {src === "session" && active && <button type="button" className="ps-btn ps-btn--sm ps-btn--danger" onClick={() => void redactSession()}>Redact in session</button>}</div>}
+    {q.error && <p className="ps-err" role="alert">{q.error}</p>}
+    <p className="ps-hint">Pattern matching only. It can miss secrets and can flag look-alikes. The text is scanned on the SPE Pro service and not stored.</p>
   </div>);
   return (
     <ToolFrame id="scanner" panel={panel} panelLabel="Findings">

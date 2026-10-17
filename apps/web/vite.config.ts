@@ -29,6 +29,7 @@ export default defineConfig({
     localOcrHostPlugin(repoRoot),
     localExtractDesignPlugin(),
     localMcpGatewayPlugin(),
+    proApiPlugin(),
   ],
   define: {
     __SPE_BUILD_SHA__: JSON.stringify(buildSha),
