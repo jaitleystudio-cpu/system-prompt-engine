@@ -69,13 +69,15 @@ const FLOATING_ALIAS_PATTERNS = [
   /-exp$/i,
 ];
 
-// Pinned version date patterns (e.g. 20241022, 2024-08-06, 20250219, -001, -0806)
+// Pinned version date patterns (e.g. 20241022, 2024-08-06, 20250219, -001, -0806, @20241022, :v1.0.0)
 const PINNED_VERSION_PATTERNS = [
   /\b202[4-9]\d{4}\b/, // e.g. 20241022
   /\b202[4-9]-\d{2}-\d{2}\b/, // e.g. 2024-08-06
   /-\d{8}$/, // e.g. -20250219
   /-\d{4}$/, // e.g. -0806
-  /-\d{3}$/, // e.g. -001
+  /-\d{3}$/, // e.g. -001, -002
+  /@202[4-9]\d{4}/, // e.g. @20240924 (Vertex AI snapshot)
+  /[:@]v?\d+(\.\d+)+/, // e.g. :v1.0.0
 ];
 
 /**
@@ -184,18 +186,25 @@ export function resolveQualifiedFallback(
   retiredModel: AiModelEntry,
   registry: ModelAtlasRegistry
 ): FallbackResolutionResult {
-  // If model explicitly specifies a deprecatedInFavorOf model
+  // If model explicitly specifies a deprecatedInFavorOf model, verify its compatibility first
   if (retiredModel.deprecatedInFavorOf) {
     const designated = registry.models.find((m) => m.id === retiredModel.deprecatedInFavorOf);
     if (designated && !designated.isLegacy) {
-      return {
-        resolved: true,
-        retiredModelId: retiredModel.id,
-        fallbackModelId: designated.id,
-        fallbackModel: designated,
-        verifiedCompatible: true,
-        reason: `Designated explicit compatible successor: ${designated.id}`,
-      };
+      const contextCompatible = designated.contextWindow >= retiredModel.contextWindow;
+      const toolsCompatible = !retiredModel.capabilities.supportsToolCalling || designated.capabilities.supportsToolCalling;
+      const jsonCompatible = !retiredModel.capabilities.supportsStructuredOutputs || designated.capabilities.supportsStructuredOutputs;
+      const visionCompatible = !retiredModel.capabilities.supportsVision || designated.capabilities.supportsVision;
+
+      if (contextCompatible && toolsCompatible && jsonCompatible && visionCompatible) {
+        return {
+          resolved: true,
+          retiredModelId: retiredModel.id,
+          fallbackModelId: designated.id,
+          fallbackModel: designated,
+          verifiedCompatible: true,
+          reason: `Designated explicit compatible successor: ${designated.id}`,
+        };
+      }
     }
   }
 
@@ -279,7 +288,7 @@ export function promoteModelWithValidation(
   }
 
   const isValid = errors.length === 0;
-  const isEligibleForRouting = isValid && targetState === "QUALIFIED" && witnesses.length > 0;
+  const isEligibleForRouting = isValid && targetState === "QUALIFIED" && witnesses.length > 0 && !model.isLegacy;
 
   let passport: ModelIdentityPassport | undefined;
 

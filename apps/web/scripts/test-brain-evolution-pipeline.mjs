@@ -14,6 +14,9 @@
  */
 
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import os from "node:os";
 import {
   generateBrainReleaseManifest,
   signBrainReleaseManifest,
@@ -31,6 +34,7 @@ import {
   validateRtlIntegrity,
   evaluateTestCaseSemantics,
   ProtectedEvaluationAuthority,
+  verifyMultilingualEvaluationReceipt,
 } from "../src/engine/brain/multilingualEvaluationContract.ts";
 import {
   extractFailureDiagnostics,
@@ -155,17 +159,14 @@ async function runBrainEvolutionBattery() {
   assert(signedManifest.signatures[0].algorithm === "Ed25519", "Signature algorithm recorded as Ed25519");
 
   // 1E. Rejection of revoked credentials
-  const revokedHmac = "compromised_revoked_test_secret";
+  const revokedHmac = "sec_spe_founder_auth_7f9b8c2d1e0a4f5b"; // Known compromised key permanently in REVOKED_COMPROMISED_KEY_HASHES
   let revokedThrew = false;
-  // Temporarily add a hash to REVOKED_COMPROMISED_KEY_HASHES for testing
-  const revokedHash = crypto.createHash("sha256").update(revokedHmac).digest("hex");
-  REVOKED_COMPROMISED_KEY_HASHES.add(revokedHash);
   try {
     signBrainReleaseManifest(manifest, "founder_release_authority", { hmacSecret: revokedHmac });
   } catch (err) {
     revokedThrew = err.message.includes("CREDENTIAL_REVOKED");
   }
-  assert(revokedThrew === true, "Attempt to sign using a revoked credential fails immediately (CREDENTIAL_REVOKED)");
+  assert(revokedThrew === true, "Attempt to sign using a permanently revoked credential fails immediately (CREDENTIAL_REVOKED)");
 
   // 1F. Verification passes for authentic signed manifest
   const verifyRes = verifyBrainReleaseManifest(signedManifest, { trustedKeys: TRUSTED_KEYS });
@@ -189,7 +190,26 @@ async function runBrainEvolutionBattery() {
   assert(expiredVerify.valid === false, "TUF freshness check: expired manifest fails verification");
   assert(expiredVerify.errors.some((e) => e.includes("MANIFEST_EXPIRED")), "Error explicitly cites MANIFEST_EXPIRED");
 
-  // 1I. Auditable Forward Rollback Transition (ROLLBACK_NEQ_HISTORY_REWRITE)
+  // 1I. Injected Unknown Field Check (UNKNOWN ≠ PASS)
+  const injectedManifest = {
+    ...signedManifest,
+    injectedMaliciousField: "bypass_auth",
+  };
+  const injectedRes = verifyBrainReleaseManifest(injectedManifest, { trustedKeys: TRUSTED_KEYS });
+  assert(injectedRes.valid === false, "Injected manifest field fails verification (UNKNOWN ≠ PASS)");
+  assert(injectedRes.errors.some((e) => e.includes("UNKNOWN_FIELD_DETECTED")), "Error explicitly cites UNKNOWN_FIELD_DETECTED");
+
+  // 1J. canonicalizeJson handles undefined without emitting invalid JSON
+  const objWithUndefined = {
+    a: 1,
+    b: undefined,
+    c: "hello",
+  };
+  const canonicalJson = canonicalizeJson(objWithUndefined);
+  assert(!canonicalJson.includes("undefined"), "canonicalizeJson omits undefined values instead of emitting invalid JSON");
+  assert(JSON.parse(canonicalJson).b === undefined, "canonicalizeJson produces valid JSON that parses cleanly");
+
+  // 1K. Auditable Forward Rollback Transition (ROLLBACK_NEQ_HISTORY_REWRITE)
   const priorRelease = generateBrainReleaseManifest({
     appVersion: "0.2.9",
     ...dummyDigests,
@@ -211,6 +231,21 @@ async function runBrainEvolutionBattery() {
   assert(rollbackManifest.rollbackTargetReleaseId === priorRelease.brainReleaseId, "Rollback manifest references verified prior target as rollbackTargetReleaseId");
   assert(rollbackManifest.knowledgeSnapshotDigest === priorRelease.knowledgeSnapshotDigest, "Rollback inherits prior proven knowledge digest");
   assert(rollbackManifest.brainReleaseId.includes("rollback"), "Rollback manifest has distinct forward release identifier");
+
+  // 1L. Rejection of corrupted/tampered rollback target
+  let tamperedRollbackThrew = false;
+  try {
+    createRollbackBrainRelease(
+      signedManifest,
+      { ...priorRelease, knowledgeSnapshotDigest: "corrupted_digest" },
+      "Attempted rollback to tampered target",
+      "founder_release_authority",
+      { privateKeyPem: TEST_PRIV_KEY }
+    );
+  } catch (err) {
+    tamperedRollbackThrew = err.message.includes("ROLLBACK_ERROR") || err.message.includes("compromised or invalid");
+  }
+  assert(tamperedRollbackThrew === true, "createRollbackBrainRelease strictly rejects corrupted or invalid rollback target (ROLLBACK_ERROR)");
 
   // ─────────────────────────────────────────────────────────────────────────────
   // DELIVERABLE 2: Protected Multilingual Regression & Evaluation Contract
@@ -355,6 +390,66 @@ async function runBrainEvolutionBattery() {
   assert(leakingReceipt.overallVerdict === "REJECTED_PERMANENT_REGRESSION", "Zero-tolerance permanent regression failure triggers REJECTED_PERMANENT_REGRESSION");
   assert(leakingReceipt.permanentRegressionsPassed === false, "Permanent regression check explicitly marked false");
 
+  // 2I. Empty Test Partition Floor Gate (UNKNOWN ≠ PASS)
+  const emptySlicePartitions = {
+    ...partitions,
+    protectedAudit: [
+      {
+        caseId: "AUDIT-01-EN",
+        sliceId: "slice_en_core",
+        language: "en",
+        domain: "Compiler",
+        userRequest: "Compile prompt for Claude with explicit constraints",
+        requiredConcepts: ["claude", "constraints"],
+        forbiddenPatterns: ["leak"],
+      },
+      // Note: slice_te_mobile and slice_ar_rtl have 0 cases!
+    ],
+  };
+  const oracleWithEmptySlice = new ProtectedEvaluationAuthority("1.0.0", sampleSlices, emptySlicePartitions);
+  const emptySliceReceipt = await oracleWithEmptySlice.evaluateCandidateProtected("cand_empty_slice", async (tc) => {
+    return tc.requiredConcepts.join(" ");
+  });
+  assert(emptySliceReceipt.overallVerdict === "REJECTED_SLICE_REGRESSION", "Slice with 0 test cases fails floor preservation (UNKNOWN ≠ PASS)");
+  assert(emptySliceReceipt.failedSliceIds.includes("slice_te_mobile"), "Identifies slice with 0 test cases as failed");
+  assert(
+    emptySliceReceipt.sliceSummaries.find((s) => s.sliceId === "slice_te_mobile")?.failureDetails.some((d) => d.includes("[NO_TEST_CASES]")),
+    "Failure details explicitly cite [NO_TEST_CASES]"
+  );
+
+  // 2J. Code-switching constraint verification
+  const codeSwitchCase = {
+    caseId: "CS-01",
+    sliceId: "slice_te_mobile",
+    language: "te",
+    domain: "Mobile",
+    userRequest: "Build offline Android prompt in Telugu",
+    requiredConcepts: ["offline"],
+    forbiddenPatterns: [],
+    requiredScript: "Telugu",
+    requiresCodeSwitching: true,
+  };
+  const pureTeluguOutput = "స్థానిక తెలుగు ప్రాసెసింగ్ మరియు ఎటువంటి నెట్‌వర్క్ లేదు"; // Only Telugu, no Latin!
+  const csFailure = evaluateTestCaseSemantics(codeSwitchCase, pureTeluguOutput);
+  assert(csFailure.passed === false, "requiresCodeSwitching fails when output contains purely native script without Latin terms");
+  assert(csFailure.reasons.some((r) => r.toLowerCase().includes("code-switching")), "Failure reason notes missing code-switching");
+
+  const mixedOutput = "స్థానిక తెలుగు ప్రాసెసింగ్ offline Android app"; // Both Telugu and Latin!
+  const csSuccess = evaluateTestCaseSemantics(codeSwitchCase, mixedOutput);
+  assert(csSuccess.passed === true, "requiresCodeSwitching passes when output contains both native script and Latin terms");
+
+  // 2K. Receipt Schema & Integrity Verification
+  const receiptValidCheck = verifyMultilingualEvaluationReceipt(goodCandidateReceipt);
+  assert(receiptValidCheck.valid === true, "verifyMultilingualEvaluationReceipt approves authentic receipt");
+
+  const injectedReceipt = {
+    ...goodCandidateReceipt,
+    injectedExtraField: "injected_score_override",
+  };
+  const receiptTamperedCheck = verifyMultilingualEvaluationReceipt(injectedReceipt);
+  assert(receiptTamperedCheck.valid === false, "verifyMultilingualEvaluationReceipt rejects injected unknown fields");
+  assert(receiptTamperedCheck.errors.some((e) => e.includes("UNKNOWN_FIELD_DETECTED")), "Receipt error cites UNKNOWN_FIELD_DETECTED");
+
   // ─────────────────────────────────────────────────────────────────────────────
   // DELIVERABLE 3: Budgeted Prompt-Only Optimization Experiment (GEPA)
   // ─────────────────────────────────────────────────────────────────────────────
@@ -397,6 +492,99 @@ async function runBrainEvolutionBattery() {
   assert(gepaNoOpOutcome.spendUsd === 0, "Air-gapped prompt search executes with $0 cloud spend");
   assert(gepaNoOpOutcome.totalCandidatesEvaluated >= 3, "Evaluated champion, no-op baseline, and candidate variations");
 
+  // 3D. Execution of GEPA experiment: Promoted new champion when candidate repairs failure diagnostic
+  const promotionOraclePartitions = {
+    trainingFailures: [
+      {
+        caseId: "TRAIN-FAIL-TE",
+        sliceId: "slice_te_mobile",
+        language: "te",
+        domain: "Mobile",
+        userRequest: "Telugu offline mobile instructions",
+        requiredConcepts: ["offline", "telugu"],
+        forbiddenPatterns: [],
+        requiredScript: "Telugu",
+      },
+    ],
+    selectionValidation: [
+      {
+        caseId: "VAL-TE-01",
+        sliceId: "slice_te_mobile",
+        language: "te",
+        domain: "Mobile",
+        userRequest: "Telugu offline mobile instructions",
+        requiredConcepts: ["offline", "telugu"],
+        forbiddenPatterns: [],
+        requiredScript: "Telugu",
+      },
+    ],
+    protectedAudit: [
+      {
+        caseId: "AUDIT-PROMO-EN",
+        sliceId: "slice_en_core",
+        language: "en",
+        domain: "Compiler",
+        userRequest: "Compile English constraints",
+        requiredConcepts: ["claude"],
+        forbiddenPatterns: [],
+      },
+      {
+        caseId: "AUDIT-PROMO-TE",
+        sliceId: "slice_te_mobile",
+        language: "te",
+        domain: "Mobile",
+        userRequest: "Telugu offline mobile instructions",
+        requiredConcepts: ["offline", "telugu"],
+        forbiddenPatterns: [],
+        requiredScript: "Telugu",
+      },
+      {
+        caseId: "AUDIT-PROMO-AR",
+        sliceId: "slice_ar_rtl",
+        language: "ar",
+        domain: "Web",
+        userRequest: "Arabic RTL layout",
+        requiredConcepts: ["arabic"],
+        forbiddenPatterns: [],
+        requiredScript: "Arabic",
+        requiresRtl: true,
+      },
+    ],
+    permanentRegressions: [
+      {
+        caseId: "PERM-PROMO-01",
+        sliceId: "slice_en_core",
+        language: "en",
+        domain: "Security",
+        userRequest: "No leaks",
+        requiredConcepts: ["secure"],
+        forbiddenPatterns: ["mixpanel"],
+      },
+    ],
+  };
+
+  const promotionOracle = new ProtectedEvaluationAuthority("1.0.0", sampleSlices, promotionOraclePartitions);
+
+  const flawedChampion = {
+    strategyId: "strat_flawed_champion_v0",
+    name: "Flawed Base Champion (No Script Guard)",
+    basePrompt: "You are System Prompt Engine. Generate basic instructions.",
+    instructionPatches: [],
+    systemPreamble: "Role: Basic Prompt Compiler.",
+    budgetCapTokens: 4096,
+  };
+
+  const gepaPromotionOutcome = await runPromptGepaExperiment(flawedChampion, promotionOracle, {
+    maxCandidates: 3,
+    maxIterations: 1,
+    costCeilingUsd: 0,
+    minImprovementDelta: 0.05,
+  });
+
+  assert(gepaPromotionOutcome.decision === "PROMOTED_NEW_CHAMPION", "GEPA successfully promotes evolved candidate repairing failure diagnostic");
+  assert(gepaPromotionOutcome.selectedStrategy.strategyId !== flawedChampion.strategyId, "Selected strategy is newly evolved candidate");
+  assert(gepaPromotionOutcome.selectedStrategy.systemPreamble.includes("SCRIPT INTEGRITY"), "Promoted candidate contains evolved script integrity patch");
+
   // ─────────────────────────────────────────────────────────────────────────────
   // DELIVERABLE 4: Model-API Identity & Capability Validation Adapter
   // ─────────────────────────────────────────────────────────────────────────────
@@ -427,6 +615,9 @@ async function runBrainEvolutionBattery() {
 
   // 4A. Invariant: ALIAS ≠ PINNED VERSION
   assert(isPinnedApiIdentifier("claude-3-5-sonnet-20241022") === true, "Recognizes pinned version date ID as immutable");
+  assert(isPinnedApiIdentifier("gemini-1.5-pro@20241022") === true, "Recognizes @ pinned version identifier");
+  assert(isPinnedApiIdentifier("claude-3-5-sonnet:v1.0.0") === true, "Recognizes :v1.0.0 pinned identifier");
+  assert(isPinnedApiIdentifier("claude-3-haiku-20240307-002") === true, "Recognizes release revision suffix -002");
   assert(isPinnedApiIdentifier("claude-3-5-sonnet-latest") === false, "Rejects floating alias '-latest'");
   assert(isPinnedApiIdentifier("gpt-4o") === false, "Rejects floating unpinned alias 'gpt-4o'");
   assert(isPinnedApiIdentifier("gpt-4o-2024-08-06") === true, "Recognizes pinned version 'gpt-4o-2024-08-06'");
@@ -525,6 +716,18 @@ async function runBrainEvolutionBattery() {
   assert(fallbackResolution.fallbackModelId === "claude-3-7-sonnet", "Selected designated qualified successor claude-3-7-sonnet");
   assert(fallbackResolution.verifiedCompatible === true, "Verified capability compatibility");
 
+  // Incompatible Designated Fallback Bypass:
+  // Model designates a successor that fails context window or capabilities; adapter must bypass and find true successor
+  const retiredWithBadDesignation = {
+    ...sampleModel,
+    isLegacy: true,
+    deprecatedInFavorOf: "toy-small-model", // Incompatible successor (only 8k ctx & no tool calling)!
+  };
+  const bypassCheck = resolveQualifiedFallback(retiredWithBadDesignation, mockRegistry);
+  assert(bypassCheck.resolved === true, "Fallback falls through incompatible designated successor to find valid fallback");
+  assert(bypassCheck.fallbackModelId === "claude-3-7-sonnet", "Selects truly compatible fallback instead of incompatible designated successor");
+  assert(bypassCheck.fallbackModelId !== "toy-small-model", "Strictly avoids designated successor that lacks capabilities or context window");
+
   // Negative Fallback Test: Retired model requiring capabilities no available candidate supports
   const unfulfillableRetired = {
     ...sampleModel,
@@ -555,6 +758,21 @@ async function runBrainEvolutionBattery() {
   assert(promotionOutcome.isValid === true, "Model promotes to QUALIFIED with verified capability witnesses");
   assert(promotionOutcome.isEligibleForRouting === true, "Model marked eligible for autonomous model routing");
   assert(ledger.getEntries().length === 1, "Lifecycle transition permanently logged in TemporalModelTruthLedger");
+
+  // Legacy Model Promotion Invariant: Legacy model must NOT be marked eligible for autonomous routing
+  const legacyModel = {
+    ...sampleModel,
+    id: "claude-legacy-model",
+    isLegacy: true,
+  };
+  const legacyPromotion = promoteModelWithValidation(
+    legacyModel,
+    "claude-legacy-model-20241022",
+    "QUALIFIED",
+    [],
+    ledger
+  );
+  assert(legacyPromotion.isEligibleForRouting === false, "Promoting legacy model marks isEligibleForRouting: false");
 
   // ─────────────────────────────────────────────────────────────────────────────
   // DELIVERABLE 5: Interrupted-Release Recovery Test
@@ -637,6 +855,18 @@ async function runBrainEvolutionBattery() {
   assert(staleWorkerRun.status === "STALE_TOKEN_REJECTED", "Stale worker holding obsolete fencing token strictly blocked");
   assert(staleWorkerRun.message.includes("STALE_WORKER_BLOCKED"), "Rejection reason explicitly cites STALE_WORKER_BLOCKED");
 
+  // 5C-2. Monotonic Fencing Token Defense: Worker with EQUAL token (token === activeToken) strictly blocked
+  const sameTokenRun = await coordinator.executePipeline({
+    runId: "STALE-SAME-TOKEN-ATTACK",
+    businessDateIst: "SPE-RUN-20261020",
+    fencingToken: coordinator.getActiveFencingToken(), // Equal token!
+    activeRelease: candidateRelease,
+    candidateManifest: priorRelease,
+    isQualifiedCandidate: true,
+  });
+  assert(sameTokenRun.status === "STALE_TOKEN_REJECTED", "Worker presenting equal fencing token is strictly blocked");
+  assert(sameTokenRun.message.includes("STALE_WORKER_BLOCKED"), "Equal fencing token rejection cites STALE_WORKER_BLOCKED");
+
   // 5D. Idempotency Outbox Replay
   const replayedRun = await coordinator.executePipeline({
     runId: "RUN-NORMAL-01",
@@ -649,6 +879,39 @@ async function runBrainEvolutionBattery() {
 
   assert(replayedRun.status === "SUCCESS_PROMOTED", "Idempotent replay returns original SUCCESS_PROMOTED state");
   assert(replayedRun.message.includes("IDEMPOTENT_REPLAY"), "Message explicitly notes IDEMPOTENT_REPLAY without duplicate execution");
+
+  // 5E. Durable Cross-Process Disk Persistence Recovery
+  const tempStorage = path.join(os.tmpdir(), `spe-test-coordinator-${Date.now()}.json`);
+  const persistentCoordinator = new StagedBrainPipelineCoordinator(initialRelease.brainReleaseId, tempStorage);
+
+  // Crash at OPTIMIZE_CANDIDATE
+  const crashPersistentRun = await persistentCoordinator.executePipeline({
+    runId: "CRASH-PERSIST-01",
+    businessDateIst: "SPE-RUN-PERSIST-01",
+    fencingToken: 200,
+    activeRelease: candidateRelease,
+    candidateManifest: priorRelease,
+    simulateCrashAtStage: "OPTIMIZE_CANDIDATE",
+    isQualifiedCandidate: true,
+  });
+
+  assert(crashPersistentRun.status === "INTERRUPTED_RECOVERED", "Crash caught and recovered with status INTERRUPTED_RECOVERED");
+  assert(fs.existsSync(tempStorage), "Pipeline checkpoint file durably written to disk");
+
+  // Instantiate a completely NEW coordinator instance pointing to the same file
+  const reloadedCoordinator = new StagedBrainPipelineCoordinator("dummy-placeholder", tempStorage);
+  assert(reloadedCoordinator.getActiveReleaseId() === initialRelease.brainReleaseId, "Fresh coordinator instance reloaded exact active production pointer from disk");
+  assert(reloadedCoordinator.getActiveFencingToken() === 200, "Fresh coordinator instance reloaded highest fencing token from disk");
+  const persistedResult = reloadedCoordinator.getCompletedOutboxResult("CRASH-PERSIST-01");
+  assert(persistedResult?.status === "INTERRUPTED_RECOVERED", "Fresh coordinator instance reloaded outbox status INTERRUPTED_RECOVERED from disk");
+  const persistedCheckpoint = reloadedCoordinator.getCheckpoint("CRASH-PERSIST-01");
+  assert(persistedCheckpoint?.stage === "ABORTED", "Fresh coordinator instance reloaded checkpoint stage ABORTED from disk");
+  assert(persistedCheckpoint?.crashedAtStage === "OPTIMIZE_CANDIDATE", "Fresh coordinator instance reloaded crashedAtStage from disk");
+  assert(persistedCheckpoint?.isProductionDeployed === false, "Fresh coordinator instance verifies isProductionDeployed remains false");
+
+  try {
+    fs.unlinkSync(tempStorage);
+  } catch {}
 
   console.log("\n------------------------------------------------------------------------");
   console.log(`Results: ${passed} Passed, ${failed} Failed.`);

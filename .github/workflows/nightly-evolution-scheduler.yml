@@ -1,16 +1,22 @@
-name: SPE Ω Nightly Website & Intelligence Evolution Scheduler
+name: SPE Ω Autonomous Maintenance Controller & Daily Watchdog
 
 # NOTE ON GITHUB ACTIONS SCHEDULING BEHAVIOR:
 # In GitHub Actions, `schedule` (cron) events are registered and triggered EXCLUSIVELY
-# from the repository's default branch (main). On feature branches
-# (e.g. `feature/p0-b-user-confirmed-requirements`), scheduled cron runs will NOT trigger
-# automatically on GitHub until merged into default branch. To execute on a feature branch,
-# use manual `workflow_dispatch` trigger or local runner: `node apps/web/scripts/nightly-evolution-loop.mjs`.
+# from the repository's default branch (main).
+#
+# Daily Rhythm (PROPOSAL.md):
+# - 02:17 AM IST (20:47 UTC): Discover changes, run specialist jobs, qualify permitted updates.
+# - 03:00 AM IST (21:30 UTC): Independently check progress; recover missing or interrupted work.
+# - 06:00 AM IST (00:30 UTC): Publish morning truth receipt and health verification.
 
 on:
   schedule:
-    # 02:17 AM IST = 20:47 UTC every day (Runs on default branch)
+    # 02:17 AM IST = 20:47 UTC (Primary autonomous maintenance run)
     - cron: '47 20 * * *'
+    # 03:00 AM IST = 21:30 UTC (Watchdog recovery for delayed/dropped runs)
+    - cron: '30 21 * * *'
+    # 06:00 AM IST = 00:30 UTC (Morning receipt publication & health review)
+    - cron: '30 0 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -18,14 +24,19 @@ on:
         required: false
         default: true
         type: boolean
+      watchdog_mode:
+        description: 'Run as watchdog recovery check'
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
-  group: spe-nightly-evolution-scheduler
+  group: spe-autonomous-maintenance-controller
   cancel-in-progress: false
 
 jobs:
-  nightly-evolution:
-    name: 02:17 AM IST Autonomous Evolution & Controlled Qualification
+  autonomous-maintenance:
+    name: Autonomous Maintenance Controller & Watchdog
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -54,9 +65,20 @@ jobs:
       - name: Check Global Fail-Closed STOP Sentinel
         run: |
           if [ -f .spe_emergency_stop ] || [ "$SPE_EMERGENCY_STOP" = "1" ]; then
-            echo "EMERGENCY STOP ACTIVE: Aborting nightly evolution."
+            echo "EMERGENCY STOP ACTIVE: Aborting maintenance run."
             exit 1
           fi
+
+      - name: Execute Unified Autonomous Maintenance Controller (8-Stage Loop)
+        run: |
+          FLAGS="--ci"
+          if [ "${{ inputs.dry_run }}" = "false" ]; then
+            FLAGS="--run"
+          fi
+          if [ "${{ inputs.watchdog_mode }}" = "true" ]; then
+            FLAGS="--watchdog"
+          fi
+          node apps/web/scripts/spe-autonomous-maintenance.mjs $FLAGS
 
       - name: Execute 9-Phase Autonomous Evolution Loop
         run: |
@@ -70,12 +92,14 @@ jobs:
         run: |
           node apps/web/scripts/test-autonomous-release-safety.mjs
 
-      - name: Upload Nightly Execution Evidence Receipts
+      - name: Upload Daily Maintenance & Evolution Evidence Receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: spe-nightly-evolution-receipts
+          name: spe-daily-maintenance-receipts
           path: |
+            proofs/generated/DAILY_MAINTENANCE_RECEIPT.json
+            proofs/generated/SPE_MAINTENANCE_LEDGER.json
             proofs/generated/NIGHTLY_INTELLIGENCE_UPGRADE_REPORT.json
             proofs/generated/NIGHTLY_EVOLUTION_RUN_RECEIPT.json
           retention-days: 30

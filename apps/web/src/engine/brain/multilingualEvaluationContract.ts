@@ -42,6 +42,9 @@ export interface MultilingualTestCase {
   readonly forbiddenPatterns: readonly string[];
   readonly requiredScript?: "Telugu" | "Devanagari" | "Arabic" | "JapaneseCJK" | "Latin";
   readonly requiresRtl?: boolean;
+  readonly requiresCodeSwitching?: boolean; // Checks presence of both native script and Latin technical terms
+  readonly expectedLocalFormats?: readonly string[]; // e.g. currency symbols (₹, د.إ, ¥) or date formats
+  readonly requiresAccessibilityCues?: boolean; // e.g. high contrast, screen reader labels, keyboard hints
   readonly expectedJsonFormat?: boolean;
   readonly customValidators?: readonly SemanticConstraintCheck[];
 }
@@ -56,6 +59,22 @@ export interface SliceEvaluationSummary {
   readonly floorPreserved: boolean;
   readonly failureDetails: readonly string[];
 }
+
+export const ALLOWED_EVALUATION_RECEIPT_KEYS: ReadonlySet<string> = new Set([
+  "receiptId",
+  "evaluatorVersion",
+  "candidateId",
+  "evaluationTimestampIso",
+  "overallScore",
+  "overallVerdict",
+  "permanentRegressionsPassed",
+  "protectedAuditPassed",
+  "sliceSummaries",
+  "failedSliceIds",
+  "totalCasesEvaluated",
+  "totalRegressionsDetected",
+  "evaluationReceiptDigest",
+]);
 
 export interface MultilingualEvaluationReceipt {
   readonly receiptId: string;
@@ -106,6 +125,13 @@ export function hasJapaneseCjk(text: string): boolean {
 }
 
 /**
+ * Checks for Latin script characters (including accented characters for Spanish/European languages).
+ */
+export function hasLatinScript(text: string): boolean {
+  return /[a-zA-Z\u00C0-\u00FF]/.test(text);
+}
+
+/**
  * Validates that text is in Unicode Normalization Form C (NFC) without mojibake or corrupt multi-byte sequences.
  */
 export function isValidUnicodeNfc(text: string): boolean {
@@ -141,6 +167,7 @@ export interface CaseValidationOutcome {
   passed: boolean;
   score: number;
   reasons: string[];
+  failureReasons?: string[];
 }
 
 /**
@@ -167,6 +194,39 @@ export function evaluateTestCaseSemantics(
     reasons.push("Missing required Arabic script characters");
   } else if (testCase.requiredScript === "JapaneseCJK" && !hasJapaneseCjk(normalizedOutput)) {
     reasons.push("Missing required Japanese (Kanji/Kana) characters");
+  } else if (testCase.requiredScript === "Latin" && !hasLatinScript(normalizedOutput)) {
+    reasons.push("Missing required Latin script characters");
+  }
+
+  // 2B. Code-Switching Preservation Check (Global MMLU invariant)
+  if (testCase.requiresCodeSwitching) {
+    const hasLatin = /[a-zA-Z]/.test(normalizedOutput);
+    const hasNative =
+      hasIndicTelugu(normalizedOutput) ||
+      hasDevanagariHindi(normalizedOutput) ||
+      hasArabicScript(normalizedOutput) ||
+      hasJapaneseCjk(normalizedOutput);
+    if (!hasLatin || !hasNative) {
+      reasons.push("Code-switching preservation failure: output must balance both native script and technical Latin terms");
+    }
+  }
+
+  // 2C. Local Formats Check (currency, numbers, date patterns)
+  if (testCase.expectedLocalFormats) {
+    for (const fmt of testCase.expectedLocalFormats) {
+      if (!normalizedOutput.includes(fmt)) {
+        reasons.push(`Missing mandatory local format: "${fmt}"`);
+      }
+    }
+  }
+
+  // 2D. Accessibility Cues Check (WCAG contrast / screen reader / keyboard invariants)
+  if (testCase.requiresAccessibilityCues) {
+    const a11yTerms = ["aria", "screen reader", "contrast", "keyboard", "accessibility", "accessible", "focus"];
+    const hasA11yCue = a11yTerms.some((term) => normalizedOutput.toLowerCase().includes(term));
+    if (!hasA11yCue) {
+      reasons.push("Missing mandatory accessibility cues (ARIA, contrast, or keyboard navigation invariants)");
+    }
   }
 
   // 3. RTL Directionality Check
@@ -222,7 +282,7 @@ export function evaluateTestCaseSemantics(
   const passed = reasons.length === 0;
   const score = passed ? 1.0 : Math.max(0, 1.0 - (reasons.length * 0.25));
 
-  return { passed, score, reasons };
+  return { passed, score, reasons, failureReasons: reasons };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -321,12 +381,17 @@ export class ProtectedEvaluationAuthority {
     }
 
     // 1. Permanent Regressions Evaluation (Zero tolerance)
-    let permanentRegressionsPassed = true;
+    let permanentRegressionsPassed = this.partitions.permanentRegressions.length > 0;
     let regressionsDetected = 0;
     for (const regCase of this.partitions.permanentRegressions) {
-      const output = await generateOutputFn(regCase);
-      const outcome = evaluateTestCaseSemantics(regCase, output);
-      if (!outcome.passed) {
+      try {
+        const output = await generateOutputFn(regCase);
+        const outcome = evaluateTestCaseSemantics(regCase, output);
+        if (!outcome.passed) {
+          permanentRegressionsPassed = false;
+          regressionsDetected++;
+        }
+      } catch (err: unknown) {
         permanentRegressionsPassed = false;
         regressionsDetected++;
       }
@@ -350,28 +415,37 @@ export class ProtectedEvaluationAuthority {
       }
       sliceEntry.total++;
 
-      const output = await generateOutputFn(auditCase);
-      const outcome = evaluateTestCaseSemantics(auditCase, output);
+      try {
+        const output = await generateOutputFn(auditCase);
+        const outcome = evaluateTestCaseSemantics(auditCase, output);
 
-      if (outcome.passed) {
-        sliceEntry.passed++;
-        totalAuditPassed++;
-      } else {
-        sliceEntry.failures.push(`[${auditCase.caseId}] ${outcome.reasons.join("; ")}`);
+        if (outcome.passed) {
+          sliceEntry.passed++;
+          totalAuditPassed++;
+        } else {
+          sliceEntry.failures.push(`[${auditCase.caseId}] ${outcome.reasons.join("; ")}`);
+        }
+      } catch (err: unknown) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        sliceEntry.failures.push(`[${auditCase.caseId}] Generation threw exception: ${errMsg}`);
       }
     }
 
-    // 3. Check Slice-Level Non-Degradation Floors
+    // 3. Check Slice-Level Non-Degradation Floors (UNKNOWN ≠ PASS Invariant)
     const sliceSummaries: SliceEvaluationSummary[] = [];
     const failedSliceIds: string[] = [];
 
     for (const slice of this.slices) {
       const entry = sliceMap.get(slice.sliceId) || { total: 0, passed: 0, failures: [] };
-      const score = entry.total > 0 ? Number((entry.passed / entry.total).toFixed(4)) : 1.0;
-      const floorPreserved = score >= slice.minPreservationFloor;
+      const score = entry.total > 0 ? Number((entry.passed / entry.total).toFixed(4)) : 0.0;
+      // UNKNOWN ≠ PASS: Slices with 0 evaluated cases cannot claim floor preservation unless min floor is 0
+      const floorPreserved = entry.total > 0 ? score >= slice.minPreservationFloor : slice.minPreservationFloor === 0;
 
       if (!floorPreserved) {
         failedSliceIds.push(slice.sliceId);
+        if (entry.total === 0) {
+          entry.failures.push(`[NO_TEST_CASES] Slice "${slice.sliceId}" has 0 cases in protected audit; cannot qualify without evaluation evidence.`);
+        }
       }
 
       sliceSummaries.push({
@@ -386,12 +460,14 @@ export class ProtectedEvaluationAuthority {
       });
     }
 
-    const protectedAuditPassed = failedSliceIds.length === 0;
-    const overallScore = totalAuditCases > 0 ? Number((totalAuditPassed / totalAuditCases).toFixed(4)) : 1.0;
+    const protectedAuditPassed = failedSliceIds.length === 0 && totalAuditCases > 0;
+    const overallScore = totalAuditCases > 0 ? Number((totalAuditPassed / totalAuditCases).toFixed(4)) : 0.0;
 
-    // Determine Overall Verdict
+    // Determine Overall Verdict (Zero test cases or missing permanent regression fixtures = INCONCLUSIVE)
     let overallVerdict: EvaluationVerdict = "QUALIFIED";
-    if (!permanentRegressionsPassed) {
+    if (this.partitions.permanentRegressions.length === 0 || totalAuditCases === 0) {
+      overallVerdict = "INCONCLUSIVE";
+    } else if (!permanentRegressionsPassed) {
       overallVerdict = "REJECTED_PERMANENT_REGRESSION";
     } else if (!protectedAuditPassed) {
       overallVerdict = "REJECTED_SLICE_REGRESSION";
@@ -424,4 +500,30 @@ export class ProtectedEvaluationAuthority {
       evaluationReceiptDigest,
     });
   }
+}
+
+/**
+ * Validates a MultilingualEvaluationReceipt for integrity and against unknown field injection.
+ */
+export function verifyMultilingualEvaluationReceipt(
+  receipt: MultilingualEvaluationReceipt
+): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  if (!receipt || typeof receipt !== "object") {
+    return { valid: false, errors: ["INVALID_RECEIPT: Receipt must be a non-null object."] };
+  }
+
+  for (const key of Object.keys(receipt)) {
+    if (!ALLOWED_EVALUATION_RECEIPT_KEYS.has(key)) {
+      errors.push(`UNKNOWN_FIELD_DETECTED: Field "${key}" in evaluation receipt violates UNKNOWN ≠ PASS invariant.`);
+    }
+  }
+
+  const { evaluationReceiptDigest, ...basePayload } = receipt;
+  const recomputed = computeSha256(JSON.stringify(basePayload));
+  if (recomputed !== evaluationReceiptDigest) {
+    errors.push(`DIGEST_MISMATCH: Evaluation receipt digest mismatch: recomputed ${recomputed} !== observed ${evaluationReceiptDigest}`);
+  }
+
+  return { valid: errors.length === 0, errors };
 }

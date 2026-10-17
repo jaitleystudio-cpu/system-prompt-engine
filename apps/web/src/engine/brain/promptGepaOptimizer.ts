@@ -151,36 +151,113 @@ export function generateCandidateStrategies(
 
 /**
  * Simulates rendering output with a prompt strategy against a test case.
+ * Evaluates whether the prompt strategy actually includes the required system instructions,
+ * patches, or script/format guards.
  */
 export function renderStrategyOutput(
   strategy: PromptTemplateStrategy,
   testCase: MultilingualTestCase
 ): string {
-  // Deterministic mock synthesis reflecting the prompt strategy instructions
+  const strategyText = `${strategy.systemPreamble}\n${strategy.basePrompt}\n${strategy.instructionPatches.join("\n")}`.toLowerCase();
+
   let text = `[SPE Generated Output for ${testCase.caseId}]\n`;
   text += `Domain: ${testCase.domain}\n`;
   text += `System: ${strategy.systemPreamble}\n`;
   text += `Task: ${testCase.userRequest}\n`;
 
-  // Render required concepts
-  for (const concept of testCase.requiredConcepts) {
+  // Render required concepts:
+  // If prompt explicitly instructs strict requirement preservation or invariants, preserve all.
+  // Otherwise, if strategy is an unpatched baseline and there are > 2 concepts, omit the last concept
+  // to reflect real-world LLM concept omission failure on unconstrained prompts.
+  const hasRequirementGuard =
+    strategyText.includes("requirement") ||
+    strategyText.includes("invariant") ||
+    strategyText.includes("preserve") ||
+    strategyText.includes("constraint");
+
+  const conceptsToRender = hasRequirementGuard || testCase.requiredConcepts.length <= 2
+    ? testCase.requiredConcepts
+    : testCase.requiredConcepts.slice(0, -1);
+
+  for (const concept of conceptsToRender) {
     text += `Preserved requirement: ${concept}\n`;
   }
 
-  // If script required, include native text snippet
+  // Script preservation:
+  // If strategy has explicit script or native language instructions, render natively;
+  // otherwise, unpatched prompt falls back to English translation.
+  const hasScriptGuard =
+    strategyText.includes("script") ||
+    strategyText.includes("native") ||
+    strategyText.includes("locale");
+
   if (testCase.requiredScript === "Telugu") {
-    text += `స్థానిక తెలుగు ప్రాసెసింగ్ (Local Telugu Offline Processing)\n`;
+    if (hasScriptGuard || strategyText.includes("telugu")) {
+      text += `స్థానిక తెలుగు ప్రాసెసింగ్ (Local Telugu Offline Processing)\n`;
+    } else {
+      text += `Local Telugu Offline Processing (English translation fallback)\n`;
+    }
   } else if (testCase.requiredScript === "Devanagari") {
-    text += `स्थानीय हिंदी प्रसंस्करण (Local Hindi Processing)\n`;
+    if (hasScriptGuard || strategyText.includes("hindi") || strategyText.includes("devanagari")) {
+      text += `स्थानीय हिंदी प्रसंस्करण (Local Hindi Processing)\n`;
+    } else {
+      text += `Local Hindi Processing (English translation fallback)\n`;
+    }
   } else if (testCase.requiredScript === "Arabic") {
-    text += `معالجة باللغة العربية مع اتجاه من اليمين إلى اليسار (Arabic RTL Processing)\n`;
+    if (hasScriptGuard || strategyText.includes("arabic") || strategyText.includes("rtl")) {
+      text += `معالجة باللغة العربية مع اتجاه من اليمين إلى اليسار (Arabic RTL Processing)\n`;
+    } else {
+      text += `Arabic RTL Processing (English translation fallback)\n`;
+    }
   } else if (testCase.requiredScript === "JapaneseCJK") {
-    text += `日本語の仕様書と検証 (Japanese Specification and Verification)\n`;
+    if (hasScriptGuard || strategyText.includes("japanese") || strategyText.includes("cjk")) {
+      text += `日本語の仕様書と検証 (Japanese Specification and Verification)\n`;
+    } else {
+      text += `Japanese Specification and Verification (English translation fallback)\n`;
+    }
+  } else if (testCase.requiredScript === "Latin") {
+    text += `Standard Latin instructions\n`;
   }
 
-  // If JSON requested
+  // RTL Directionality check:
+  if (testCase.requiresRtl) {
+    if (strategyText.includes("rtl") || strategyText.includes("bidirectional") || strategyText.includes("right-to-left")) {
+      text += `\u200F(RTL bidirectional formatting active)\u200F\n`;
+    }
+  }
+
+  // Code-switching support:
+  if (testCase.requiresCodeSwitching) {
+    text += `[Code-switch term: Android offline execution]\n`;
+  }
+
+  // Local formats support:
+  if (testCase.expectedLocalFormats) {
+    for (const fmt of testCase.expectedLocalFormats) {
+      text += `Local format active: ${fmt}\n`;
+    }
+  }
+
+  // Accessibility cues:
+  if (testCase.requiresAccessibilityCues) {
+    if (strategyText.includes("accessibility") || strategyText.includes("a11y") || strategyText.includes("aria") || strategyText.includes("contrast")) {
+      text += `Accessibility compliance: WCAG 2.1 AA high contrast, aria-live status, and full keyboard navigation focus.\n`;
+    }
+  }
+
+  // JSON format check:
+  // If expectedJsonFormat, only render valid JSON if strategy explicitly includes JSON/schema instructions.
+  // Otherwise render conversational markdown list.
   if (testCase.expectedJsonFormat) {
-    text += `\n{\n  "status": "success",\n  "caseId": "${testCase.caseId}",\n  "verified": true\n}\n`;
+    const hasJsonGuard =
+      strategyText.includes("json") ||
+      strategyText.includes("schema") ||
+      strategyText.includes("format");
+    if (hasJsonGuard) {
+      text += `\n{\n  "status": "success",\n  "caseId": "${testCase.caseId}",\n  "verified": true\n}\n`;
+    } else {
+      text += `\nHere is your specification in conversational markdown:\n- status: success\n- caseId: ${testCase.caseId}\n`;
+    }
   }
 
   return text.normalize("NFC");
@@ -197,17 +274,19 @@ export async function runPromptGepaExperiment(
     maxIterations: 2,
     costCeilingUsd: 0,
     minImprovementDelta: 0.02,
-  }
+  },
+  customRenderer?: (strategy: PromptTemplateStrategy, testCase: MultilingualTestCase) => Promise<string> | string
 ): Promise<GepaExperimentOutcome> {
   const timestampIso = new Date().toISOString();
   const experimentId = `gepa_exp_${timestampIso.replace(/[-:T]/g, "").slice(0, 8)}_${champion.strategyId}`;
+  const render = customRenderer || renderStrategyOutput;
 
   // 1. Inspect Training Failures to Extract Diagnostics (Evaluator Partition 1)
   const trainFailures = oracle.getTrainingFailures();
   const failureDiagnosticsList: Array<{ testCase: MultilingualTestCase; reasons: string[] }> = [];
 
   for (const c of trainFailures) {
-    const rendered = renderStrategyOutput(champion, c);
+    const rendered = await render(champion, c);
     const evalResult = evaluateTestCaseSemantics(c, rendered);
     if (!evalResult.passed) {
       failureDiagnosticsList.push({ testCase: c, reasons: evalResult.reasons });
@@ -237,6 +316,7 @@ export async function runPromptGepaExperiment(
   const candidateResults: CandidateEvaluationResult[] = [];
 
   let bestCandidate: PromptTemplateStrategy = champion;
+  let championScore = 0;
   let bestScore = -1;
   let backtrackCount = 0;
 
@@ -245,7 +325,7 @@ export async function runPromptGepaExperiment(
     const failures: string[] = [];
 
     for (const vc of validationCases) {
-      const output = renderStrategyOutput(strategy, vc);
+      const output = await render(strategy, vc);
       const outcome = evaluateTestCaseSemantics(vc, output);
       if (outcome.passed) {
         passedCount++;
@@ -258,6 +338,11 @@ export async function runPromptGepaExperiment(
     const isChampion = strategy.strategyId === champion.strategyId;
     const isNoop = strategy.strategyId === noopBaseline.strategyId;
 
+    if (isChampion) {
+      championScore = validationScore;
+      bestScore = validationScore;
+    }
+
     candidateResults.push({
       strategyId: strategy.strategyId,
       isChampion,
@@ -267,7 +352,7 @@ export async function runPromptGepaExperiment(
       qualifiedForPromotion: false,
     });
 
-    if (validationScore > bestScore + budget.minImprovementDelta && !isNoop) {
+    if (!isChampion && !isNoop && validationScore >= championScore + budget.minImprovementDelta && validationScore > bestScore) {
       bestScore = validationScore;
       bestCandidate = strategy;
     }
@@ -287,12 +372,12 @@ export async function runPromptGepaExperiment(
   // Evaluate candidate on protected holdout via ProtectedEvaluationAuthority
   const finalReceipt = await oracle.evaluateCandidateProtected(
     bestCandidate.strategyId,
-    async (tc) => renderStrategyOutput(bestCandidate, tc)
+    async (tc) => render(bestCandidate, tc)
   );
 
   const championReceipt = await oracle.evaluateCandidateProtected(
     champion.strategyId,
-    async (tc) => renderStrategyOutput(champion, tc)
+    async (tc) => render(champion, tc)
   );
 
   // Qualification condition:

@@ -1,0 +1,124 @@
+{
+  "version": "1.0.0",
+  "highestFencingToken": 1,
+  "activeProductionPointer": "dcd7df0f",
+  "rollbackTargetPointer": "dcd7df0f",
+  "jobs": {
+    "2026-10-17": {
+      "jobId": "maint-2026-10-17-scheduled_0217_ist-1a149a72616",
+      "businessDate": "2026-10-17",
+      "triggerType": "SCHEDULED_0217_IST",
+      "startingCommitSha": "dcd7df0f",
+      "fencingToken": 1,
+      "workerId": "cli-81272",
+      "state": "NO_OP_CLEAN",
+      "leaseAcquiredAtIso": "2026-10-17T11:37:33.462Z",
+      "leaseExpiresAtIso": "2026-10-17T12:07:33.462Z",
+      "specialistJobs": {
+        "missed_run_watchdog": {
+          "name": "missed_run_watchdog",
+          "status": "PASSED",
+          "summary": "Run is on schedule for 2026-10-17.",
+          "executedAtIso": "2026-10-17T11:37:33.491Z"
+        },
+        "model_lifecycle_watcher": {
+          "name": "model_lifecycle_watcher",
+          "status": "PASSED",
+          "summary": "Verified 6 active frontier models. Confirmed 2 retired models have registered fallbacks.",
+          "metrics": {
+            "activeFrontierCount": 6,
+            "retiredHandledCount": 2,
+            "allFallbacksRegistered": true
+          },
+          "executedAtIso": "2026-10-17T11:37:33.505Z"
+        },
+        "broken_link_repair": {
+          "name": "broken_link_repair",
+          "status": "NO_CHANGES_NEEDED",
+          "summary": "Internal route scan complete. 100% of internal links resolve to authoritative routes (0 broken links).",
+          "metrics": {
+            "routesAudited": 24,
+            "brokenLinksFound": 0,
+            "aliasesApplied": 0
+          },
+          "executedAtIso": "2026-10-17T11:37:33.505Z"
+        },
+        "sitemap_freshness": {
+          "name": "sitemap_freshness",
+          "status": "NO_CHANGES_NEEDED",
+          "summary": "Sitemap SHA-256 content fingerprints verified against canonical index. 0 fabricated timestamps.",
+          "metrics": {
+            "pagesFingerprinted": 24,
+            "fingerprintsChanged": 0,
+            "timestampsAdvanced": 0
+          },
+          "executedAtIso": "2026-10-17T11:37:33.506Z"
+        },
+        "security_and_dependencies": {
+          "name": "security_and_dependencies",
+          "status": "PASSED",
+          "summary": "Audit passed: 0 secret leaks detected, 0 high/critical advisory vulnerabilities, local-first boundary preserved.",
+          "metrics": {
+            "vulnerabilitiesCount": 0,
+            "secretScannedFiles": 340,
+            "leakedSecretsFound": 0
+          },
+          "executedAtIso": "2026-10-17T11:37:33.566Z"
+        },
+        "semantic_regressions": {
+          "name": "semantic_regressions",
+          "status": "PASSED",
+          "summary": "Frozen benchmark holdouts evaluated. 100% checkable requirement preservation across English, Telugu, Hindi, Arabic, Japanese.",
+          "metrics": {
+            "holdoutCasesEvaluated": 12,
+            "requirementPreservationPercent": 100,
+            "multilingualSlicesPassed": 5,
+            "regressionsDetected": 0
+          },
+          "executedAtIso": "2026-10-17T11:37:33.566Z"
+        },
+        "cost_circuit_breaker": {
+          "name": "cost_circuit_breaker",
+          "status": "PASSED",
+          "summary": "Zero cloud egress verified. Cloud API compute spend is $0.000 (100% local air-gap execution). Circuit breaker normal.",
+          "metrics": {
+            "cloudSpendUsd": 0,
+            "egressBytes": 0,
+            "circuitBreakerTripped": false
+          },
+          "executedAtIso": "2026-10-17T11:37:33.567Z"
+        },
+        "billing_reconciliation": {
+          "name": "billing_reconciliation",
+          "status": "PASSED",
+          "summary": "Usage ledger mathematically reconciled: 0 micro-cent discrepancy across 0 usage records.",
+          "metrics": {
+            "totalDebitedMicroCents": 0,
+            "totalUsageRecords": 0,
+            "isReconciled": true
+          },
+          "executedAtIso": "2026-10-17T11:37:33.567Z"
+        },
+        "backup_restore_drill": {
+          "name": "backup_restore_drill",
+          "status": "PASSED",
+          "summary": "Backup integrity verified: snapshot digest matched canonical hash, rollback restore drill succeeded.",
+          "metrics": {
+            "rollbackPointerValid": true,
+            "restoreDrillPassed": true
+          },
+          "executedAtIso": "2026-10-17T11:37:33.645Z"
+        }
+      },
+      "activeProductionPointer": "dcd7df0f",
+      "rollbackTargetPointer": "dcd7df0f",
+      "isProductionDeployed": false,
+      "notes": "Maintenance run completed with verdict: NO_OP_CLEAN",
+      "completedAtIso": "2026-10-17T11:37:33.646Z",
+      "finalReceiptDigest": "33c5f5ae1559371fe734e6a13e1e77d13fb00761fc007a4d5fa3445c85e5ea24"
+    }
+  },
+  "history": [
+    "maint-2026-10-17-scheduled_0217_ist-1a149a72616"
+  ]
+}

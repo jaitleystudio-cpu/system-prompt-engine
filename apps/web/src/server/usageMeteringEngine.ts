@@ -563,4 +563,39 @@ export class UsageMeteringEngine {
       activeRecordsCount: activeRecords,
     };
   }
+
+  /**
+   * Reconciles all accounts across the entire usage ledger.
+   */
+  reconcileLedger(): {
+    isReconciled: boolean;
+    totalUsageRecords: number;
+    totalAccounts: number;
+    totalDebitedMicroCents: number;
+    discrepancyMicroCents: number;
+  } {
+    let totalUsageRecords = 0;
+    let totalDebitedMicroCents = 0;
+
+    for (const rec of this.#records.values()) {
+      if (rec.status === "DEBITED") {
+        totalDebitedMicroCents += rec.debitedMicroCents;
+        totalUsageRecords++;
+      }
+    }
+
+    let sumAccountDebited = 0;
+    for (const acc of this.#accounts.values()) {
+      sumAccountDebited += acc.totalDebitedMicroCents;
+    }
+
+    const discrepancyMicroCents = Math.abs(totalDebitedMicroCents - sumAccountDebited);
+    return {
+      isReconciled: discrepancyMicroCents === 0,
+      totalUsageRecords,
+      totalAccounts: this.#accounts.size,
+      totalDebitedMicroCents,
+      discrepancyMicroCents,
+    };
+  }
 }

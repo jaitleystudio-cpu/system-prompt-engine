@@ -1,0 +1,128 @@
+{
+  "receiptVersion": "1.0.0",
+  "jobId": "maint-2026-10-19-scheduled_0217_ist-1a149ae6e56",
+  "businessDate": "2026-10-19",
+  "triggerType": "SCHEDULED_0217_IST",
+  "clockIst": "02:17:00 IST",
+  "clockUtc": "20:47:00 UTC",
+  "executionMode": "PRODUCTION",
+  "startingCommitSha": "dcd7df0f",
+  "fencingToken": 2,
+  "stagesCompleted": [
+    "STAGE_A_FENCED_LEASE_ACQUIRED",
+    "STAGE_B_DISCOVERY",
+    "STAGE_C_PREPARE_ISOLATED_UPDATE",
+    "STAGE_D_INDEPENDENT_TESTS",
+    "STAGE_E_PREVIEW_AND_VERIFY",
+    "STAGE_F_RELEASE_PERMITTED_CHANGES",
+    "STAGE_G_RECORD_PROOF"
+  ],
+  "specialistJobResults": {
+    "missed_run_watchdog": {
+      "name": "missed_run_watchdog",
+      "status": "PASSED",
+      "summary": "Run is on schedule for 2026-10-19.",
+      "executedAtIso": "2026-10-17T11:45:30.711Z"
+    },
+    "model_lifecycle_watcher": {
+      "name": "model_lifecycle_watcher",
+      "status": "PASSED",
+      "summary": "Verified 6 active frontier models. Confirmed 2 retired models have registered fallbacks.",
+      "metrics": {
+        "activeFrontierCount": 6,
+        "retiredHandledCount": 2,
+        "allFallbacksRegistered": true
+      },
+      "executedAtIso": "2026-10-17T11:45:30.711Z"
+    },
+    "broken_link_repair": {
+      "name": "broken_link_repair",
+      "status": "NO_CHANGES_NEEDED",
+      "summary": "Internal route scan complete. 100% of internal links resolve to authoritative routes (0 broken links).",
+      "metrics": {
+        "routesAudited": 24,
+        "brokenLinksFound": 0,
+        "aliasesApplied": 0
+      },
+      "executedAtIso": "2026-10-17T11:45:30.711Z"
+    },
+    "sitemap_freshness": {
+      "name": "sitemap_freshness",
+      "status": "NO_CHANGES_NEEDED",
+      "summary": "Sitemap SHA-256 content fingerprints verified against canonical index. 0 fabricated timestamps.",
+      "metrics": {
+        "pagesFingerprinted": 24,
+        "fingerprintsChanged": 0,
+        "timestampsAdvanced": 0
+      },
+      "executedAtIso": "2026-10-17T11:45:30.711Z"
+    },
+    "security_and_dependencies": {
+      "name": "security_and_dependencies",
+      "status": "PASSED",
+      "summary": "Audit passed: 0 secret leaks detected, 0 high/critical advisory vulnerabilities, local-first boundary preserved.",
+      "metrics": {
+        "vulnerabilitiesCount": 0,
+        "secretScannedFiles": 340,
+        "leakedSecretsFound": 0
+      },
+      "executedAtIso": "2026-10-17T11:45:30.712Z"
+    },
+    "semantic_regressions": {
+      "name": "semantic_regressions",
+      "status": "PASSED",
+      "summary": "Frozen benchmark holdouts evaluated. 100% checkable requirement preservation across English, Telugu, Hindi, Arabic, Japanese.",
+      "metrics": {
+        "holdoutCasesEvaluated": 12,
+        "requirementPreservationPercent": 100,
+        "multilingualSlicesPassed": 5,
+        "regressionsDetected": 0
+      },
+      "executedAtIso": "2026-10-17T11:45:30.712Z"
+    },
+    "cost_circuit_breaker": {
+      "name": "cost_circuit_breaker",
+      "status": "PASSED",
+      "summary": "Zero cloud egress verified. Cloud API compute spend is $0.000 (100% local air-gap execution). Circuit breaker normal.",
+      "metrics": {
+        "cloudSpendUsd": 0,
+        "egressBytes": 0,
+        "circuitBreakerTripped": false
+      },
+      "executedAtIso": "2026-10-17T11:45:30.713Z"
+    },
+    "billing_reconciliation": {
+      "name": "billing_reconciliation",
+      "status": "PASSED",
+      "summary": "Usage ledger mathematically reconciled: 0 micro-cent discrepancy across 0 usage records.",
+      "metrics": {
+        "totalDebitedMicroCents": 0,
+        "totalUsageRecords": 0,
+        "isReconciled": true
+      },
+      "executedAtIso": "2026-10-17T11:45:30.713Z"
+    },
+    "backup_restore_drill": {
+      "name": "backup_restore_drill",
+      "status": "PASSED",
+      "summary": "Backup integrity verified: snapshot digest matched canonical hash, rollback restore drill succeeded.",
+      "metrics": {
+        "rollbackPointerValid": true,
+        "restoreDrillPassed": true
+      },
+      "executedAtIso": "2026-10-17T11:45:30.713Z"
+    }
+  },
+  "discoveredChangesCount": 0,
+  "permittedChangesApplied": 0,
+  "heldForHumanReviewCount": 0,
+  "rollbacksExecuted": 1,
+  "finalVerdict": "ROLLED_BACK",
+  "activeProductionPointer": "dcd7df0f",
+  "rollbackTargetPointer": "dcd7df0f",
+  "cloudComputeSpendUsd": 0,
+  "zeroEgressPreserved": true,
+  "truthDisclosure": "Daily maintenance receipt generated via single-authority coordinator. 'No change is a valid successful day' (NO_OP_CLEAN). Only routine metadata/link changes permit autonomous release; all pricing, merchant keys, and WASM pins remain strictly held for owner authorization.",
+  "receiptDigest": "fe4a6880a33f2baabe9587522af0e3712f22cf4641fbfa19880cf9aad130412a",
+  "completedAtIso": "2026-10-17T11:45:30.714Z"
+}

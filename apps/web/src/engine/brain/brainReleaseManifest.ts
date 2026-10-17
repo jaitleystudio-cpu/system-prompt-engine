@@ -17,9 +17,9 @@
  * 6. DEPLOYED REQUIRES WITNESS: A 'deployed' release requires provider-observed deploymentExecutionId and verified signatures.
  */
 
-import { createHmac, createPrivateKey, createPublicKey, sign, verify, randomBytes } from "node:crypto";
+import { createHmac, createPrivateKey, createPublicKey, sign, verify, randomBytes, timingSafeEqual } from "node:crypto";
 import { computeSha256 } from "../hashUtils.ts";
-import { REVOKED_COMPROMISED_KEY_HASHES } from "../evolution/releaseSafetyGovernor.ts";
+import { REVOKED_COMPROMISED_KEY_HASHES, TRUSTED_AUTHORITY_PUBLIC_KEYS } from "../evolution/releaseSafetyGovernor.ts";
 
 export type BrainReleaseChannel = "development" | "qualified" | "deployed";
 
@@ -108,8 +108,33 @@ export interface ManifestVerificationResult {
 const HEX_64_REGEX = /^[0-9a-f]{64}$/i;
 const GIT_SHA_40_REGEX = /^[0-9a-f]{40}$/i;
 
+export const ALLOWED_MANIFEST_KEYS: ReadonlySet<string> = new Set([
+  "brainReleaseId",
+  "appVersion",
+  "channel",
+  "knowledgeSnapshotDigest",
+  "modelRegistryDigest",
+  "promptBundleDigest",
+  "routerDigest",
+  "skillLibraryDigest",
+  "policyDigest",
+  "evaluatorVersion",
+  "evaluationReceiptDigest",
+  "supportedTaskLanguageSlices",
+  "sourceCommit",
+  "artifactDigest",
+  "previousReleaseId",
+  "deploymentExecutionId",
+  "rollbackTargetReleaseId",
+  "createdAtIso",
+  "expiresAtIso",
+  "manifestDigest",
+  "signatures",
+]);
+
 /**
  * Deterministically sorts object keys for canonical RFC 8785 JSON serialization.
+ * Strictly ignores undefined properties so that in-memory objects match serialized JSON digests.
  */
 export function canonicalizeJson(value: unknown): string {
   if (value === null || typeof value !== "object") {
@@ -119,7 +144,7 @@ export function canonicalizeJson(value: unknown): string {
     return "[" + value.map((item) => canonicalizeJson(item)).join(",") + "]";
   }
   const obj = value as Record<string, unknown>;
-  const sortedKeys = Object.keys(obj).sort();
+  const sortedKeys = Object.keys(obj).filter((key) => obj[key] !== undefined).sort();
   const pairs = sortedKeys.map((key) => {
     return JSON.stringify(key) + ":" + canonicalizeJson(obj[key]);
   });
@@ -250,6 +275,22 @@ export function signBrainReleaseManifest(
     }
   }
 
+  if (credentials.privateKeyPem) {
+    const privKeyHash = computeSha256(credentials.privateKeyPem);
+    if (REVOKED_COMPROMISED_KEY_HASHES.has(privKeyHash)) {
+      throw new Error("CREDENTIAL_REVOKED: Attempted to sign manifest using an exposed, revoked private key credential.");
+    }
+    try {
+      const pubKeyObj = createPublicKey(credentials.privateKeyPem);
+      const pubDerHex = pubKeyObj.export({ type: "spki", format: "der" }).toString("hex");
+      if (REVOKED_COMPROMISED_KEY_HASHES.has(computeSha256(pubDerHex))) {
+        throw new Error("CREDENTIAL_REVOKED: Attempted to sign manifest using an exposed, revoked key credential.");
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.includes("CREDENTIAL_REVOKED")) throw err;
+    }
+  }
+
   const nonce = `brain_nonce_${Date.now()}_${randomBytes(8).toString("hex")}`;
   const signedAtIso = new Date().toISOString();
   const signaturePayload = `${manifest.manifestDigest}:${authorityId}:${signedAtIso}:${nonce}`;
@@ -292,6 +333,21 @@ export function verifyBrainReleaseManifest(
 ): ManifestVerificationResult {
   const errors: string[] = [];
   const verifiedAuthorities: string[] = [];
+
+  // 0. Unknown Fields Detection (UNKNOWN ≠ PASS Invariant)
+  if (!manifest || typeof manifest !== "object") {
+    return {
+      valid: false,
+      errors: ["INVALID_MANIFEST: Manifest payload must be a non-null object."],
+      manifestDigest: "",
+      verifiedAuthorities: [],
+    };
+  }
+  for (const key of Object.keys(manifest)) {
+    if (!ALLOWED_MANIFEST_KEYS.has(key)) {
+      errors.push(`UNKNOWN_FIELD_DETECTED: Field "${key}" is not part of canonical BrainRelease schema.`);
+    }
+  }
 
   // 1. Recompute and verify manifest digest
   const manifestFields: Omit<BrainReleaseManifest, "manifestDigest" | "signatures"> = {
@@ -342,8 +398,15 @@ export function verifyBrainReleaseManifest(
     }
   }
 
-  // 4. Freshness / TUF check
+  // 4. Freshness / TUF check & Future-dating defense
   const now = options.currentTimestampIso ? new Date(options.currentTimestampIso).getTime() : Date.now();
+  const createdAtMs = new Date(manifest.createdAtIso).getTime();
+  if (isNaN(createdAtMs)) {
+    errors.push(`INVALID_CREATED_AT: createdAtIso is not a valid ISO date string: "${manifest.createdAtIso}"`);
+  } else if (createdAtMs > now + 60000) {
+    errors.push(`FUTURE_DATED_MANIFEST: Manifest creation timestamp "${manifest.createdAtIso}" is in the future.`);
+  }
+
   const expiresAtMs = new Date(manifest.expiresAtIso).getTime();
   if (isNaN(expiresAtMs)) {
     errors.push(`INVALID_EXPIRATION: expiresAtIso is not a valid ISO date string: "${manifest.expiresAtIso}"`);
@@ -375,10 +438,11 @@ export function verifyBrainReleaseManifest(
     }
   }
 
-  // 7. Signature verification
-  if (options.trustedKeys && manifest.signatures.length > 0) {
+  // 7. Signature verification (constant-time timingSafeEqual HMAC + Ed25519)
+  const trustedKeys = options.trustedKeys ?? TRUSTED_AUTHORITY_PUBLIC_KEYS;
+  if (manifest.signatures.length > 0) {
     for (const sig of manifest.signatures) {
-      const trustedKey = options.trustedKeys[sig.authorityId];
+      const trustedKey = trustedKeys[sig.authorityId];
       if (!trustedKey) {
         errors.push(`UNTRUSTED_AUTHORITY: Authority "${sig.authorityId}" is not in trusted keys list.`);
         continue;
@@ -387,6 +451,12 @@ export function verifyBrainReleaseManifest(
       // Check key revocation
       if (REVOKED_COMPROMISED_KEY_HASHES.has(computeSha256(trustedKey))) {
         errors.push(`REVOKED_KEY_USED: Key for authority "${sig.authorityId}" is revoked.`);
+        continue;
+      }
+
+      const signedAtMs = new Date(sig.signedAtIso).getTime();
+      if (isNaN(signedAtMs) || signedAtMs > now + 60000) {
+        errors.push(`INVALID_SIGNATURE_TIMESTAMP: Signature timestamp "${sig.signedAtIso}" is invalid or future-dated.`);
         continue;
       }
 
@@ -407,7 +477,9 @@ export function verifyBrainReleaseManifest(
           }
         } else if (sig.algorithm === "HMAC-SHA256") {
           const expectedSig = createHmac("sha256", trustedKey).update(signaturePayload).digest("hex");
-          if (expectedSig !== sig.signatureHex) {
+          const bufExpected = Buffer.from(expectedSig, "hex");
+          const bufActual = Buffer.from(sig.signatureHex, "hex");
+          if (bufExpected.length !== bufActual.length || !timingSafeEqual(bufExpected, bufActual)) {
             errors.push(`INVALID_SIGNATURE: HMAC signature for authority "${sig.authorityId}" failed verification.`);
           } else {
             verifiedAuthorities.push(sig.authorityId);
@@ -445,6 +517,12 @@ export function createRollbackBrainRelease(
   }
   if (!author || author.trim().length === 0) {
     throw new Error("ROLLBACK_ERROR: An author identity must be provided for auditable rollback.");
+  }
+
+  // Pre-condition: Target prior release must pass integrity verification
+  const priorVerification = verifyBrainReleaseManifest(targetPriorRelease, { allowExpired: true });
+  if (!priorVerification.valid) {
+    throw new Error(`ROLLBACK_ERROR: targetPriorRelease failed verification: ${priorVerification.errors.join("; ")}`);
   }
 
   const createdAtIso = new Date().toISOString();

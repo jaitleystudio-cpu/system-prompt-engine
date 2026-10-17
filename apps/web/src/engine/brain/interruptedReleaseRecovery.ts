@@ -16,6 +16,8 @@
  *      with NO_OP_RETAINED without altering the working production release.
  */
 
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { computeSha256 } from "../hashUtils.ts";
 import type { BrainReleaseManifest } from "./brainReleaseManifest.ts";
 
@@ -37,6 +39,7 @@ export interface PipelineCheckpoint {
   readonly businessDateIst: string;
   readonly fencingToken: number;
   readonly stage: PipelineStage;
+  readonly status?: PipelineExecutionResult["status"];
   readonly lastCompletedStage?: PipelineStage;
   readonly candidateId?: string;
   readonly manifestDigest?: string;
@@ -86,9 +89,12 @@ export class StagedBrainPipelineCoordinator {
   private currentActiveReleaseId: string;
   private checkpoints = new Map<string, PipelineCheckpoint>();
   private completedOutbox = new Map<string, PipelineExecutionResult>();
+  private readonly storagePath?: string;
 
-  constructor(initialActiveReleaseId: string) {
+  constructor(initialActiveReleaseId: string, storagePath?: string) {
     this.currentActiveReleaseId = initialActiveReleaseId;
+    this.storagePath = storagePath;
+    this.loadStateFromDisk();
   }
 
   public getActiveReleaseId(): string {
@@ -103,6 +109,49 @@ export class StagedBrainPipelineCoordinator {
     return this.checkpoints.get(runId);
   }
 
+  public getCompletedOutboxResult(runId: string): PipelineExecutionResult | undefined {
+    return this.completedOutbox.get(runId);
+  }
+
+  private loadStateFromDisk(): void {
+    if (!this.storagePath || !existsSync(this.storagePath)) return;
+    try {
+      const raw = readFileSync(this.storagePath, "utf-8");
+      const data = JSON.parse(raw);
+      if (typeof data.activeFencingToken === "number") {
+        this.activeFencingToken = data.activeFencingToken;
+      }
+      if (typeof data.currentActiveReleaseId === "string" && data.currentActiveReleaseId.trim().length > 0) {
+        this.currentActiveReleaseId = data.currentActiveReleaseId;
+      }
+      if (Array.isArray(data.checkpoints)) {
+        for (const cp of data.checkpoints) {
+          this.checkpoints.set(cp.runId, cp);
+        }
+      }
+      if (Array.isArray(data.outbox)) {
+        for (const ob of data.outbox) {
+          this.completedOutbox.set(ob.runId, ob);
+        }
+      }
+    } catch {}
+  }
+
+  private persistStateToDisk(): void {
+    if (!this.storagePath) return;
+    try {
+      const dir = dirname(this.storagePath);
+      if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+      const payload = {
+        activeFencingToken: this.activeFencingToken,
+        currentActiveReleaseId: this.currentActiveReleaseId,
+        checkpoints: Array.from(this.checkpoints.values()),
+        outbox: Array.from(this.completedOutbox.values()),
+      };
+      writeFileSync(this.storagePath, JSON.stringify(payload, null, 2), "utf-8");
+    } catch {}
+  }
+
   /**
    * Acquires a monotonically increasing fencing token for a new pipeline run.
    */
@@ -115,14 +164,15 @@ export class StagedBrainPipelineCoordinator {
       };
     }
     this.activeFencingToken = candidateToken;
+    this.persistStateToDisk();
     return { granted: true, currentToken: this.activeFencingToken };
   }
 
   /**
-   * Executes a staged daily brain pipeline with checkpointing and simulated crash/recovery defense.
+   * Executes a staged daily brain pipeline with checkpointing and crash/recovery defense.
    */
   public async executePipeline(options: RunPipelineOptions): Promise<PipelineExecutionResult> {
-    const { runId, businessDateIst, fencingToken, activeRelease, simulateCrashAtStage, isQualifiedCandidate } = options;
+    const { runId, businessDateIst, fencingToken, activeRelease: _activeRelease, simulateCrashAtStage, isQualifiedCandidate } = options;
 
     // 1. Idempotency Check (Outbox Pattern)
     const existingOutbox = this.completedOutbox.get(runId);
@@ -133,8 +183,8 @@ export class StagedBrainPipelineCoordinator {
       };
     }
 
-    // 2. Fencing Token Verification
-    if (fencingToken < this.activeFencingToken) {
+    // 2. Fencing Token Verification (Monotonic: candidate token must strictly exceed active token)
+    if (fencingToken <= this.activeFencingToken) {
       return {
         runId,
         status: "STALE_TOKEN_REJECTED",
@@ -144,115 +194,127 @@ export class StagedBrainPipelineCoordinator {
       };
     }
     this.activeFencingToken = fencingToken;
+    this.persistStateToDisk();
 
-    // 3. Stage: INIT
+    // 3. Stage Execution wrapped in comprehensive Exception Safety
     let currentStage: PipelineStage = "INIT";
-    this.saveCheckpoint({
-      runId,
-      businessDateIst,
-      fencingToken,
-      stage: currentStage,
-      activeProductionReleaseId: this.currentActiveReleaseId,
-      isProductionDeployed: false,
-      updatedAtIso: new Date().toISOString(),
-    });
+    try {
+      this.saveCheckpoint({
+        runId,
+        businessDateIst,
+        fencingToken,
+        stage: currentStage,
+        activeProductionReleaseId: this.currentActiveReleaseId,
+        isProductionDeployed: false,
+        updatedAtIso: new Date().toISOString(),
+      });
 
-    if (simulateCrashAtStage === "INIT") {
-      return this.handleInterruption(runId, currentStage, "Simulated crash at INIT");
-    }
+      if (simulateCrashAtStage === "INIT") {
+        return this.handleInterruption(runId, currentStage, "Simulated crash at INIT");
+      }
 
-    // 4. Stage: DISCOVER
-    currentStage = "DISCOVER";
-    this.updateStage(runId, currentStage);
-    if (simulateCrashAtStage === "DISCOVER") {
-      return this.handleInterruption(runId, currentStage, "Simulated network failure during DISCOVER");
-    }
-
-    // 5. Stage: VERIFY_INPUTS
-    currentStage = "VERIFY_INPUTS";
-    this.updateStage(runId, currentStage);
-    if (simulateCrashAtStage === "VERIFY_INPUTS") {
-      return this.handleInterruption(runId, currentStage, "Simulated parse crash during VERIFY_INPUTS");
-    }
-
-    // 6. Stage: OPTIMIZE_CANDIDATE
-    currentStage = "OPTIMIZE_CANDIDATE";
-    this.updateStage(runId, currentStage);
-    if (simulateCrashAtStage === "OPTIMIZE_CANDIDATE") {
-      return this.handleInterruption(runId, currentStage, "Simulated process crash during candidate search");
-    }
-
-    // 7. Stage: EVALUATE_INDEPENDENT
-    currentStage = "EVALUATE_INDEPENDENT";
-    this.updateStage(runId, currentStage);
-    if (simulateCrashAtStage === "EVALUATE_INDEPENDENT") {
-      return this.handleInterruption(runId, currentStage, "Simulated timeout during protected evaluation");
-    }
-
-    // Check if candidate qualified
-    if (isQualifiedCandidate === false) {
-      currentStage = "NO_OP_RETAINED";
+      // 4. Stage: DISCOVER
+      currentStage = "DISCOVER";
       this.updateStage(runId, currentStage);
+      if (simulateCrashAtStage === "DISCOVER") {
+        return this.handleInterruption(runId, currentStage, "Simulated network failure during DISCOVER");
+      }
+
+      // 5. Stage: VERIFY_INPUTS
+      currentStage = "VERIFY_INPUTS";
+      this.updateStage(runId, currentStage);
+      if (simulateCrashAtStage === "VERIFY_INPUTS") {
+        return this.handleInterruption(runId, currentStage, "Simulated parse crash during VERIFY_INPUTS");
+      }
+
+      // 6. Stage: OPTIMIZE_CANDIDATE
+      currentStage = "OPTIMIZE_CANDIDATE";
+      this.updateStage(runId, currentStage);
+      if (simulateCrashAtStage === "OPTIMIZE_CANDIDATE") {
+        return this.handleInterruption(runId, currentStage, "Simulated process crash during candidate search");
+      }
+
+      // 7. Stage: EVALUATE_INDEPENDENT
+      currentStage = "EVALUATE_INDEPENDENT";
+      this.updateStage(runId, currentStage);
+      if (simulateCrashAtStage === "EVALUATE_INDEPENDENT") {
+        return this.handleInterruption(runId, currentStage, "Simulated timeout during protected evaluation");
+      }
+
+      // Check if candidate qualified
+      if (isQualifiedCandidate === false) {
+        currentStage = "NO_OP_RETAINED";
+        this.updateStage(runId, currentStage);
+        const result: PipelineExecutionResult = {
+          runId,
+          status: "SUCCESS_NO_OP_RETAINED",
+          activeProductionReleaseId: this.currentActiveReleaseId,
+          finalStage: currentStage,
+          message: "NO_QUALIFIED_IMPROVEMENT: No candidate beat champion on independent evaluation. Working release safely retained.",
+        };
+        this.completedOutbox.set(runId, result);
+        this.persistStateToDisk();
+        return result;
+      }
+
+      // 8. Stage: PACKAGE_MANIFEST
+      currentStage = "PACKAGE_MANIFEST";
+      this.updateStage(runId, currentStage);
+      if (simulateCrashAtStage === "PACKAGE_MANIFEST") {
+        return this.handleInterruption(runId, currentStage, "Simulated disk crash while writing manifest");
+      }
+
+      // 9. Stage: PREVIEW_STAGING
+      currentStage = "PREVIEW_STAGING";
+      this.updateStage(runId, currentStage);
+      if (simulateCrashAtStage === "PREVIEW_STAGING") {
+        return this.handleInterruption(runId, currentStage, "Simulated staging canary assertion failure");
+      }
+
+      // 10. Stage: PROMOTE_RELEASE
+      currentStage = "PROMOTE_RELEASE";
+      this.updateStage(runId, currentStage);
+      if (simulateCrashAtStage === "PROMOTE_RELEASE") {
+        return this.handleInterruption(runId, currentStage, "Simulated host kill immediately prior to atomic pointer switch");
+      }
+
+      // Atomic Promotion: candidateManifest is mandatory when qualified
+      if (!options.candidateManifest) {
+        throw new Error("PROMOTION_ERROR: Candidate manifest must be provided to promote release.");
+      }
+      const promotedManifest = options.candidateManifest;
+      this.currentActiveReleaseId = promotedManifest.brainReleaseId;
+      currentStage = "COMPLETED";
+
+      this.saveCheckpoint({
+        runId,
+        businessDateIst,
+        fencingToken,
+        stage: currentStage,
+        status: "SUCCESS_PROMOTED",
+        lastCompletedStage: "PROMOTE_RELEASE",
+        activeProductionReleaseId: this.currentActiveReleaseId,
+        isProductionDeployed: true,
+        manifestDigest: promotedManifest.manifestDigest,
+        updatedAtIso: new Date().toISOString(),
+      });
+
       const result: PipelineExecutionResult = {
         runId,
-        status: "SUCCESS_NO_OP_RETAINED",
+        status: "SUCCESS_PROMOTED",
         activeProductionReleaseId: this.currentActiveReleaseId,
+        deployedManifest: promotedManifest,
         finalStage: currentStage,
-        message: "NO_QUALIFIED_IMPROVEMENT: No candidate beat champion on independent evaluation. Working release safely retained.",
+        message: `RELEASE_PROMOTED: Brain release ${promotedManifest.brainReleaseId} promoted to active production.`,
       };
+
       this.completedOutbox.set(runId, result);
+      this.persistStateToDisk();
       return result;
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      return this.handleInterruption(runId, currentStage, `UNHANDLED_EXCEPTION: ${errorMsg}`);
     }
-
-    // 8. Stage: PACKAGE_MANIFEST
-    currentStage = "PACKAGE_MANIFEST";
-    this.updateStage(runId, currentStage);
-    if (simulateCrashAtStage === "PACKAGE_MANIFEST") {
-      return this.handleInterruption(runId, currentStage, "Simulated disk crash while writing manifest");
-    }
-
-    // 9. Stage: PREVIEW_STAGING
-    currentStage = "PREVIEW_STAGING";
-    this.updateStage(runId, currentStage);
-    if (simulateCrashAtStage === "PREVIEW_STAGING") {
-      return this.handleInterruption(runId, currentStage, "Simulated staging canary assertion failure");
-    }
-
-    // 10. Stage: PROMOTE_RELEASE
-    currentStage = "PROMOTE_RELEASE";
-    this.updateStage(runId, currentStage);
-    if (simulateCrashAtStage === "PROMOTE_RELEASE") {
-      return this.handleInterruption(runId, currentStage, "Simulated host kill immediately prior to atomic pointer switch");
-    }
-
-    // Atomic Promotion: advance pointer ONLY here
-    const promotedManifest = options.candidateManifest || activeRelease;
-    this.currentActiveReleaseId = promotedManifest.brainReleaseId;
-    currentStage = "COMPLETED";
-
-    this.saveCheckpoint({
-      runId,
-      businessDateIst,
-      fencingToken,
-      stage: currentStage,
-      lastCompletedStage: "PROMOTE_RELEASE",
-      activeProductionReleaseId: this.currentActiveReleaseId,
-      isProductionDeployed: true,
-      manifestDigest: promotedManifest.manifestDigest,
-      updatedAtIso: new Date().toISOString(),
-    });
-
-    const result: PipelineExecutionResult = {
-      runId,
-      status: "SUCCESS_PROMOTED",
-      activeProductionReleaseId: this.currentActiveReleaseId,
-      deployedManifest: promotedManifest,
-      finalStage: currentStage,
-      message: `RELEASE_PROMOTED: Brain release ${promotedManifest.brainReleaseId} promoted to active production.`,
-    };
-
-    this.completedOutbox.set(runId, result);
-    return result;
   }
 
   /**
@@ -269,6 +331,7 @@ export class StagedBrainPipelineCoordinator {
       businessDateIst,
       fencingToken,
       stage: "ABORTED",
+      status: "INTERRUPTED_RECOVERED",
       interruptedAtStage: stage,
       crashedAtStage: stage,
       crashReason: reason,
@@ -280,7 +343,7 @@ export class StagedBrainPipelineCoordinator {
     // Generate formal recovery receipt
     const recoveryReceipt = this.generateRecoveryReceipt(runId, stage, this.currentActiveReleaseId);
 
-    return {
+    const result: PipelineExecutionResult = {
       runId,
       status: "INTERRUPTED_RECOVERED",
       activeProductionReleaseId: this.currentActiveReleaseId,
@@ -288,6 +351,10 @@ export class StagedBrainPipelineCoordinator {
       recoveryReceipt,
       message: `RECOVERY_VERIFIED: Pipeline was interrupted at stage ${stage} (${reason}). Production pointer safely retained at ${this.currentActiveReleaseId}. False deployment claim prevented.`,
     };
+
+    this.completedOutbox.set(runId, result);
+    this.persistStateToDisk();
+    return result;
   }
 
   private saveCheckpoint(checkpoint: PipelineCheckpoint & { interruptedAtStage?: PipelineStage }): void {
