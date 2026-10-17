@@ -159,7 +159,8 @@ export class ProofCarryingEvolutionController {
   }
 
   /**
-   * Demonstrates forward rollback of a change proposal.
+   * Legacy rollback demonstration interface. No actual rollback executor is attached here.
+   * Fail closed: only an independently executed and verified rollback may report success.
    */
   public executeRollbackDemonstration(proposal: ProofCarryingChangeProposal): {
     success: boolean;
@@ -167,14 +168,14 @@ export class ProofCarryingEvolutionController {
     receiptId: string;
     details: string;
   } {
-    const restoredCommit = proposal.rollbackReference.snapshotCommit;
-    const receiptId = `rb-rcpt-${Date.now().toString(16)}`;
-
+    // A snapshot reference is a rollback *proposal*, not an execution receipt.
+    // In particular, do not mint a timestamp-based receipt without performing a rollback.
+    void proposal;
     return {
-      success: true,
-      restoredCommit,
-      receiptId,
-      details: `Rollback recipe executed cleanly. Restored base commit ${restoredCommit} without history rewriting (forward-only rollback).`,
+      success: false,
+      restoredCommit: "",
+      receiptId: "",
+      details: "NOT_EXECUTED: rollback was not performed. Supply an independently verified restore receipt before qualification.",
     };
   }
 }
