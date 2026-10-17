@@ -672,22 +672,22 @@ export const AUTHORITATIVE_OLDER_MODELS: AuthoritativeOlderModel[] = [
     id: "claude-3-7-sonnet-20250219",
     name: "Claude 3.7 Sonnet (Hybrid Reasoning)",
     provider: "Anthropic",
-    activeSuccessorId: "claude-sonnet-4-5",
-    retirementNotice: "Retired 19 February 2026. Superseded by Claude 4.5 Sonnet (claude-sonnet-4-5).",
+    activeSuccessorId: "claude-5-5-sonnet",
+    retirementNotice: "Retired 19 February 2026. Superseded by Claude Sonnet 5.5 (claude-5-5-sonnet).",
   },
   {
     id: "claude-3-7-sonnet",
     name: "Claude 3.7 Sonnet",
     provider: "Anthropic",
-    activeSuccessorId: "claude-sonnet-4-5",
-    retirementNotice: "Retired 19 February 2026. Superseded by Claude 4.5 Sonnet (claude-sonnet-4-5).",
+    activeSuccessorId: "claude-5-5-sonnet",
+    retirementNotice: "Retired 19 February 2026. Superseded by Claude Sonnet 5.5 (claude-5-5-sonnet).",
   },
   {
     id: "claude-3-sonnet-20240229",
     name: "Claude 3 Sonnet",
     provider: "Anthropic",
-    activeSuccessorId: "claude-sonnet-4-5",
-    retirementNotice: "Superseded by Claude 4.5 Sonnet (claude-sonnet-4-5).",
+    activeSuccessorId: "claude-5-5-sonnet",
+    retirementNotice: "Superseded by Claude Sonnet 5.5 (claude-5-5-sonnet).",
   },
   {
     id: "claude-3-sonnet",
@@ -1027,7 +1027,7 @@ export function autoUpgradeLegacyModel(
     };
   }
 
-  // Default fallback to Claude 3.7 Sonnet
+  // Default fallback to Claude Sonnet 5.5
   const fallbackModel = AUTHORITATIVE_PROVIDER_MODELS[0];
   return {
     upgradedId: fallbackModel.id,
@@ -1057,7 +1057,7 @@ export function assertModelCurrency(modelId: string, context: string = "model ex
 }
 
 /**
- * Default Frontier Model for general prompt compilation (Claude 3.7 Sonnet).
+ * Default Frontier Model for general prompt compilation (Claude Sonnet 5.5).
  */
 export function getDefaultFrontierModel(): AiModelEntry {
   return AUTHORITATIVE_PROVIDER_MODELS[0];

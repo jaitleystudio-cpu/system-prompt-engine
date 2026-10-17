@@ -66,6 +66,8 @@ export class McpProductionServer {
   public billingAuthority: AuthoritativeBillingAuthority;
   public usageEngine: UsageMeteringEngine;
   public stripeProcessor: StripeProcessorAdapter;
+  public brainPointerPath: string;
+  private pointerSyncTimer: NodeJS.Timeout | null = null;
 
   constructor(config?: McpServerConfig) {
     this.mcpServer = new SpeMcpServer();
@@ -107,6 +109,17 @@ export class McpProductionServer {
     }
 
     this.adminSecret = configuredAdminSecret || "spe_admin_secret_auth_token_prod_v1";
+
+    this.brainPointerPath =
+      process.env.SPE_ACTIVE_BRAIN_POINTER_PATH ||
+      path.resolve(process.cwd(), "proofs/generated/ACTIVE_BRAIN_POINTER.json");
+
+    // P0-03: Synchronize with durable pointer on disk if available
+    try {
+      ZeroDowntimeBrainRuntime.getInstance(undefined, this.brainPointerPath).syncWithDurablePointer(
+        this.brainPointerPath
+      );
+    } catch {}
   }
 
   private isRateLimited(ip: string): boolean {
@@ -594,6 +607,9 @@ export class McpProductionServer {
       // ────────────────────────────────────────────────────────────────
       if (url === "/api/v1/health" && method === "GET") {
         const brainRuntime = ZeroDowntimeBrainRuntime.getInstance();
+        try {
+          brainRuntime.syncWithDurablePointer(this.brainPointerPath);
+        } catch {}
         const runtimeMetrics = brainRuntime.getMetrics();
 
         res.setHeader("Content-Type", "application/json");
@@ -606,7 +622,7 @@ export class McpProductionServer {
             protocolVersion: "2026-07-28",
             offlineAirGap: true,
             zeroDowntimeGuaranteed: runtimeMetrics.zeroDowntimeGuaranteed,
-            availability: "24/7/365_WORLDWIDE_NON_BLOCKING",
+            availability: runtimeMetrics.uptimeStatus,
             servingArchitecture: "READ_COPY_UPDATE_ATOMIC_HOT_SWAP",
             measuredAvailability: {
               uptimeStatus: runtimeMetrics.uptimeStatus,
@@ -710,6 +726,14 @@ export class McpProductionServer {
     }, 5 * 60 * 1000);
     this.cleanupTimer.unref?.();
 
+    // P0-03: Cross-process durable pointer hot-reload watcher
+    this.pointerSyncTimer = setInterval(() => {
+      try {
+        ZeroDowntimeBrainRuntime.getInstance().syncWithDurablePointer(this.brainPointerPath);
+      } catch {}
+    }, 2000);
+    this.pointerSyncTimer.unref?.();
+
     return new Promise((resolve) => {
       this.server!.listen(port, host, () => {
         const addr = this.server!.address();
@@ -719,10 +743,18 @@ export class McpProductionServer {
     });
   }
 
+  public syncBrainPointer(): { reloaded: boolean; activeBrainId: string } {
+    return ZeroDowntimeBrainRuntime.getInstance().syncWithDurablePointer(this.brainPointerPath);
+  }
+
   public async stop(): Promise<void> {
     if (this.cleanupTimer) {
       clearInterval(this.cleanupTimer);
       this.cleanupTimer = null;
+    }
+    if (this.pointerSyncTimer) {
+      clearInterval(this.pointerSyncTimer);
+      this.pointerSyncTimer = null;
     }
     if (this.server) {
       return new Promise((resolve, reject) => {

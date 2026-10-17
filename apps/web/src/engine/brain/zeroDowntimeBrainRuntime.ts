@@ -139,16 +139,7 @@ export function createCompilerFromSnapshot(
       compilerConfig: snapshot.compilerConfig,
     };
 
-    let synthesized = synthesizeSystemPrompt(brief, enrichedOpts);
-
-    if (snapshot.compilerConfig?.customDirectives?.length) {
-      const directiveLines = snapshot.compilerConfig.customDirectives
-        .map((d) => `- ${d}`)
-        .join("\n");
-      synthesized = `${synthesized}\n\n# Compiler Directives [${snapshot.manifest.brainReleaseId} · Gen ${snapshot.generationIndex}]\n${directiveLines}`;
-    }
-
-    return synthesized;
+    return synthesizeSystemPrompt(brief, enrichedOpts);
   };
 }
 
@@ -548,6 +539,14 @@ export class ZeroDowntimeBrainRuntime {
         return { reloaded: false, reason: "MALFORMED_POINTER_DATA", activeBrainId: this.activeBrain.manifest.brainReleaseId };
       }
 
+      // Verify pointer digest integrity (prevents loading torn or tampered pointer files)
+      const expectedPointerDigest = createHash("sha256")
+        .update(`${data.activeBrainReleaseId}:${data.generationIndex}`)
+        .digest("hex");
+      if (data.pointerDigest !== expectedPointerDigest) {
+        return { reloaded: false, reason: "POINTER_DIGEST_CORRUPTED", activeBrainId: this.activeBrain.manifest.brainReleaseId };
+      }
+
       // Check if disk pointer is ahead of current in-memory active brain
       if (
         data.generationIndex > this.activeBrain.generationIndex ||
@@ -627,5 +626,9 @@ export class ZeroDowntimeBrainRuntime {
 
   public getActiveSnapshot(): BrainSnapshot {
     return this.activeBrain;
+  }
+
+  public getPointerFilePath(): string {
+    return this.pointerFilePath;
   }
 }

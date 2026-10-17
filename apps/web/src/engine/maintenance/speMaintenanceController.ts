@@ -22,7 +22,7 @@
 
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { createHash } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import {
   DurableMaintenanceLedger,
   findRepoRoot,
@@ -43,6 +43,14 @@ export interface MaintenanceDeploymentWitness {
   readonly verificationEvidence?: string;
 }
 
+export const AUTHORIZED_DEPLOYMENT_IDENTITIES: ReadonlySet<string> = new Set([
+  "spe_autonomous_operations_layer",
+  "spe_production_cd_authority",
+  "github-actions[bot]",
+  "github-actions-verified-deployer",
+  "spe_orchestration_kernel",
+]);
+
 export interface CreateDeploymentWitnessOptions {
   environment?: "production" | "staging" | "preview" | "test" | string;
   commitSha: string;
@@ -50,6 +58,7 @@ export interface CreateDeploymentWitnessOptions {
   deployedBy: string;
   deployedAtIso?: string;
   verificationEvidence?: string;
+  authoritySecret?: string;
 }
 
 export function computeDeploymentWitnessHash(params: {
@@ -57,8 +66,13 @@ export function computeDeploymentWitnessHash(params: {
   commitSha: string;
   artifactDigest: string;
   deployedBy: string;
+  authoritySecret?: string;
 }): string {
-  return createHash("sha256")
+  const secret =
+    params.authoritySecret ||
+    process.env.SPE_DEPLOYMENT_WITNESS_SECRET ||
+    "spe_deployment_witness_authority_secret_v1";
+  return createHmac("sha256", secret)
     .update(`${params.environment}:${params.commitSha}:${params.artifactDigest}:${params.deployedBy}`)
     .digest("hex");
 }
@@ -73,6 +87,7 @@ export function createVerifiedDeploymentWitness(
     commitSha: options.commitSha,
     artifactDigest: options.artifactDigest,
     deployedBy: options.deployedBy,
+    authoritySecret: options.authoritySecret,
   });
 
   return {
@@ -92,6 +107,7 @@ export function createVerifiedDeploymentWitness(
 export interface DeploymentWitnessVerificationContext {
   expectedEnvironment?: string;
   expectedCommitSha?: string;
+  authoritySecret?: string;
 }
 
 export function verifyMaintenanceDeploymentWitness(
@@ -141,6 +157,13 @@ export function verifyMaintenanceDeploymentWitness(
     return { valid: false, reason: "INVALID_DEPLOYED_BY" };
   }
 
+  if (!AUTHORIZED_DEPLOYMENT_IDENTITIES.has(witness.deployedBy)) {
+    return {
+      valid: false,
+      reason: `UNAUTHORIZED_DEPLOYER_IDENTITY: "${witness.deployedBy}" is not in authorized deployers set`,
+    };
+  }
+
   if (
     !witness.witnessReceiptHash ||
     typeof witness.witnessReceiptHash !== "string" ||
@@ -154,9 +177,12 @@ export function verifyMaintenanceDeploymentWitness(
     commitSha: witness.commitSha,
     artifactDigest: witness.artifactDigest,
     deployedBy: witness.deployedBy,
+    authoritySecret: context?.authoritySecret,
   });
 
-  if (witness.witnessReceiptHash !== expectedHash) {
+  const bufExpected = Buffer.from(expectedHash, "hex");
+  const bufActual = Buffer.from(witness.witnessReceiptHash, "hex");
+  if (bufExpected.length !== bufActual.length || !timingSafeEqual(bufExpected, bufActual)) {
     return {
       valid: false,
       reason: `WITNESS_HASH_MISMATCH: expected ${expectedHash}, got ${witness.witnessReceiptHash}`,

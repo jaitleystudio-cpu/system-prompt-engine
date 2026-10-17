@@ -16,6 +16,7 @@
  *      Verify a qualified compatible fallback exists with matching capabilities and slice coverage.
  */
 
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { computeSha256 } from "../hashUtils.ts";
 import type { AiModelEntry, ModelAtlasRegistry } from "../modelAtlas/modelAtlasSchema.ts";
 import type { ModelIdentityPassport, CapabilityWitness, ModelLifecycleState } from "../modelAtlas/modelIdentityPassport.ts";
@@ -45,6 +46,7 @@ export interface CreateLiveProviderWitnessOptions {
   requestId?: string;
   responseDigest?: string;
   verifiedAtIso?: string;
+  witnessSecret?: string;
 }
 
 export function computeLiveProviderWitnessSignature(params: {
@@ -55,9 +57,14 @@ export function computeLiveProviderWitnessSignature(params: {
   requestId: string;
   responseDigest: string;
   verifiedAtIso: string;
+  witnessSecret?: string;
 }): string {
+  const secret =
+    params.witnessSecret ||
+    process.env.SPE_PROVIDER_WITNESS_SECRET ||
+    "spe_live_provider_witness_authority_secret_v1";
   const payload = `${params.provider}:${params.modelId}:${params.executableApiId}:${params.httpStatus}:${params.requestId}:${params.responseDigest}:${params.verifiedAtIso}`;
-  return computeSha256(payload);
+  return createHmac("sha256", secret).update(payload).digest("hex");
 }
 
 export function createLiveProviderWitness(options: CreateLiveProviderWitnessOptions): LiveProviderWitness {
@@ -74,6 +81,7 @@ export function createLiveProviderWitness(options: CreateLiveProviderWitnessOpti
     requestId,
     responseDigest,
     verifiedAtIso,
+    witnessSecret: options.witnessSecret,
   });
 
   return Object.freeze({
@@ -91,7 +99,8 @@ export function createLiveProviderWitness(options: CreateLiveProviderWitnessOpti
 export function verifyLiveProviderWitness(
   witness: LiveProviderWitness | undefined | null,
   model: AiModelEntry,
-  executableApiId: string
+  executableApiId: string,
+  options?: { witnessSecret?: string } | string
 ): { valid: boolean; reason?: string } {
   if (!witness) {
     return { valid: false, reason: "WITNESS_MISSING" };
@@ -115,6 +124,7 @@ export function verifyLiveProviderWitness(
     return { valid: false, reason: "INVALID_RESPONSE_DIGEST" };
   }
 
+  const witnessSecret = typeof options === "string" ? options : options?.witnessSecret;
   const expectedSignature = computeLiveProviderWitnessSignature({
     provider: witness.provider,
     modelId: witness.modelId,
@@ -123,9 +133,12 @@ export function verifyLiveProviderWitness(
     requestId: witness.requestId,
     responseDigest: witness.responseDigest,
     verifiedAtIso: witness.verifiedAtIso,
+    witnessSecret,
   });
 
-  if (witness.witnessSignatureHex !== expectedSignature) {
+  const bufExpected = Buffer.from(expectedSignature, "hex");
+  const bufActual = Buffer.from(witness.witnessSignatureHex, "hex");
+  if (bufExpected.length !== bufActual.length || !timingSafeEqual(bufExpected, bufActual)) {
     return { valid: false, reason: `SIGNATURE_MISMATCH: expected ${expectedSignature}, got ${witness.witnessSignatureHex}` };
   }
 

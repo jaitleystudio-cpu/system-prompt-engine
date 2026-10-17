@@ -223,6 +223,29 @@ export class StripeProcessorAdapter {
       if (typeof amountTotal === "number" && amountTotal <= 0) {
         throw new Error(`INVALID_PAYMENT_AMOUNT: Checkout session amount_total must be > 0 cents (got ${amountTotal})`);
       }
+      const paymentStatus = dataObject.payment_status;
+      if (paymentStatus && paymentStatus !== "paid") {
+        throw new Error(`PAYMENT_STATUS_NOT_PAID: Expected payment_status to be 'paid', received '${paymentStatus}'`);
+      }
+      const customerId = dataObject.client_reference_id || dataObject.customer;
+      if (!customerId || typeof customerId !== "string" || !customerId.trim()) {
+        throw new Error("MISSING_CUSTOMER_IDENTITY: client_reference_id or customer is required");
+      }
+    }
+
+    if (eventType === "charge.refunded") {
+      const currency = String(dataObject.currency || "usd").toLowerCase();
+      if (currency !== "usd") {
+        throw new Error(`INVALID_CURRENCY: Expected usd, received ${currency}`);
+      }
+      const amountRefunded = dataObject.amount_refunded || dataObject.amount || 0;
+      if (typeof amountRefunded === "number" && amountRefunded <= 0) {
+        throw new Error(`INVALID_REFUND_AMOUNT: Refund amount must be > 0 cents (got ${amountRefunded})`);
+      }
+      const customerId = dataObject.client_reference_id || dataObject.customer;
+      if (!customerId || typeof customerId !== "string" || !customerId.trim()) {
+        throw new Error("MISSING_CUSTOMER_IDENTITY: client_reference_id or customer is required for refund");
+      }
     }
 
     // 3. Dispatch known events
@@ -347,6 +370,40 @@ export class StripeProcessorAdapter {
           customerId,
           actionTaken: `SUBSCRIPTION_CANCELED: Revoked subscription ${subscriptionId}`,
           accountUpdated: txn.accountUpdated,
+          provenance: eventProvenance,
+        };
+      }
+
+      case "customer.subscription.updated": {
+        const customerId = dataObject.client_reference_id || dataObject.customer;
+        const subscriptionId = dataObject.id;
+        const status = dataObject.status;
+
+        if (status === "canceled" || status === "unpaid" || status === "past_due") {
+          const txn = this.#usageEngine.applyWebhookTransaction({
+            eventId,
+            customerId,
+            action: "revoke_subscription",
+            subscriptionId,
+          });
+          this.#processedEventIds.add(eventId);
+          return {
+            verified: true,
+            eventId,
+            eventType,
+            customerId,
+            actionTaken: `SUBSCRIPTION_REVOKED_STATUS_${status.toUpperCase()}: Revoked subscription ${subscriptionId}`,
+            accountUpdated: txn.accountUpdated,
+            provenance: eventProvenance,
+          };
+        }
+        return {
+          verified: true,
+          eventId,
+          eventType,
+          customerId,
+          actionTaken: `SUBSCRIPTION_STATUS_UPDATED_${status?.toUpperCase() || "ACTIVE"}`,
+          accountUpdated: false,
           provenance: eventProvenance,
         };
       }

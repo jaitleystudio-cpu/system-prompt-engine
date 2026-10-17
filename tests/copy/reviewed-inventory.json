@@ -10531,16 +10531,16 @@
       "text": "Writing & Productivity"
     },
     {
+      "id": "eae8efebc767e372cd29",
+      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, OpenAI GPT-6 Astra, Meta Muse Code 1.3, Gemini 3 Pro, and DeepSeek Frontier."
+    },
+    {
       "id": "f588a98092d9c39a39fc",
       "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
       "depth": "PRODUCT",
       "text": "Image Generation"
-    },
-    {
-      "id": "f71c661e13e4f035519f",
-      "file": "apps/web/src/landing/FeaturedArsenalPreview.tsx",
-      "depth": "PRODUCT",
-      "text": "Explore 10,000+ battle-tested AI prompt assets engineered for real-world tasks across 13 domains. Dynamically adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7."
     },
     {
       "id": "0069a9f6e94710a68dfb",
@@ -13363,12 +13363,6 @@
       "text": "local"
     },
     {
-      "id": "0e2e4892c881d4c73197",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Anthropic Claude 4.5 Sonnet & Opus Code terminal rules, tool limits & build contracts"
-    },
-    {
       "id": "0ed2ed23fe2e71b5467f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -13465,12 +13459,6 @@
       "text": "TUTORING_INSTRUCTION_FRAMEWORK"
     },
     {
-      "id": "195c3a96aae891cc5ef1",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "OpenAI GPT-5 / o4-mini"
-    },
-    {
       "id": "19c3c5777b5ae8260e6b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -13535,12 +13523,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🌍 Trivia (Pass-Through)"
-    },
-    {
-      "id": "2631e66018433f212f4b",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Execute Claude 4.5, GPT-5, and DeepSeek-R2 at sub-200ms latency with zero setup."
     },
     {
       "id": "264820996ed77dd8c3c6",
@@ -13661,6 +13643,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "SPONSORED COMPUTE"
+    },
+    {
+      "id": "3f0ea8d57594f522a902",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Claude Sonnet 5.5 / Claude Code 2.1"
     },
     {
       "id": "3feaae2db2207102d8d3",
@@ -14053,12 +14041,6 @@
       "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
     },
     {
-      "id": "67e1c1c32d4421d785ba",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Claude 4.5 / 4.5 Opus Code"
-    },
-    {
       "id": "696847279ad1ae6ee164",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -14323,6 +14305,12 @@
       "text": "Branch databases like Git branches for agent test runs and prompt evaluation workflows."
     },
     {
+      "id": "8b435423f61621003203",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI GPT-6.1-Sol / Astra"
+    },
+    {
       "id": "8bd0d999bf778496153b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -14339,6 +14327,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "⚡ Distributed Sagas Engine"
+    },
+    {
+      "id": "8d56474321a9c78ee803",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude Code 2.1 / Sonnet 5.5"
     },
     {
       "id": "8d6efd7d25174c2efb33",
@@ -14455,12 +14449,6 @@
       "text": "Customer Support & HR"
     },
     {
-      "id": "9ccd9b0f6fba20c41973",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "OpenAI GPT-5 / o4-mini"
-    },
-    {
       "id": "9d5282991363889eecc6",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -14513,6 +14501,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "15K Deep"
+    },
+    {
+      "id": "a6b5d495f2829cb7d62a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic Claude Code 2.1.293, Sonnet 5.5 & Opus 5.5 terminal rules, tool limits & build contracts"
     },
     {
       "id": "a6c150a33d569255797a",
@@ -14633,12 +14627,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "openai-markdown"
-    },
-    {
-      "id": "bb0173f077861d276dcb",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "OpenAI Developer role markdown schemas with bold non-negotiable invariants"
     },
     {
       "id": "bd65de3cc3ea55146050",
@@ -14809,12 +14797,6 @@
       "text": "Finance & Analytics"
     },
     {
-      "id": "d642358b28a2529800c9",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek-R2 & Llama 4 token-level ChatML header framing & proof kernel"
-    },
-    {
       "id": "d64428dab04b991d0c31",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PROOF",
@@ -14833,22 +14815,10 @@
       "text": "Enter system goal, architecture or agent requirements..."
     },
     {
-      "id": "dbf4e84f66e29ae80b24",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "Claude 4.5 Sonnet (Hybrid Reasoning)"
-    },
-    {
       "id": "dc486f035c76abc8a186",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "https://neon.tech"
-    },
-    {
-      "id": "dda11fb491d43b9e9911",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PROOF",
-      "text": "All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7."
     },
     {
       "id": "ddada23e62a9cc1a253c",
@@ -14905,6 +14875,12 @@
       "text": "Type request (e.g. 'Build me a shopping app' or 'What is 2+2?')..."
     },
     {
+      "id": "e27460fb44a8f77e59f6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Execute Claude Sonnet 5.5, GPT-6.1-Sol, and Meta Muse Code 1.3 at sub-200ms latency with zero setup."
+    },
+    {
       "id": "e4602eff414782b45421",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -14915,6 +14891,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "pro"
+    },
+    {
+      "id": "e6d09bef752132777032",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI GPT-6.1-Sol Codex & GPT-6 Astra Developer role markdown schemas with bold non-negotiable invariants"
     },
     {
       "id": "e735d18adef3d9ee0d04",
@@ -14953,6 +14935,12 @@
       "text": "WRITING_QUALITY_AUDIT"
     },
     {
+      "id": "eae850105791b3e043cb",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "All 10,000+ prompts are 100% free for everyone on the website, supported by developer sponsorships. Browse verified, task-specific prompt assets across 13 professional domains. Dynamically adapted for Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, OpenAI GPT-6 Astra, Meta Muse Code 1.3, Gemini 3 Pro, and DeepSeek Frontier."
+    },
+    {
       "id": "ec5fe0148383e2c3c1d3",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -14977,10 +14965,10 @@
       "text": "words)"
     },
     {
-      "id": "eefdb56ff7ca150722a7",
+      "id": "eeb24c24e7125358ba71",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "DeepSeek-R2 / Llama 4"
+      "text": "Meta Muse Code 1.3 & DeepSeek Frontier token-level ChatML header framing & proof kernel"
     },
     {
       "id": "f00812f29c26a7c17aff",
@@ -14993,6 +14981,18 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Moonshot Kimi K1.5"
+    },
+    {
+      "id": "f219c5535c589eee3f39",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Meta Muse Code 1.3 / DeepSeek"
+    },
+    {
+      "id": "f2adc6e20d5aabcaa3d5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "OpenAI GPT-6.1-Sol Codex / Astra"
     },
     {
       "id": "f33d2fa13c6270719698",
@@ -17449,6 +17449,12 @@
       "text": "SPE 3D Sun Core"
     },
     {
+      "id": "a8975e464d1bac98b3a6",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI GPT-6.1"
+    },
+    {
       "id": "aa4e60403f2d2561cec9",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
@@ -17531,12 +17537,6 @@
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "prompt-studio"
-    },
-    {
-      "id": "d548f08c86d7ccbc2b6e",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "OpenAI o3/GPT"
     },
     {
       "id": "dc7fc68dceb5762b1b3c",

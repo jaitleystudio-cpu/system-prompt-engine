@@ -2,7 +2,7 @@
  * SPE Ω — Frontier Model Cost, Carbon & Latency Simulator with Lossless AST Pruner
  * 
  * Provides compile-time financial, performance, and environmental intelligence:
- * 1. Multi-Provider Cost Matrix (Claude 3.7, GPT-4o, Gemini 2.5, DeepSeek V3/R1, Llama 3.3)
+ * 1. Multi-Provider Cost Matrix (Claude 5.5, GPT-6.1-Sol, Meta Muse Code 1.3, Claude 4.5, Gemini 3, DeepSeek)
  * 2. Carbon Footprint & Energy Modeling (kWh & gCO2e per million requests)
  * 3. Lossless Semantic AST Token Pruner (Compresses prompt 25-40% while preserving 100% invariants)
  */
@@ -45,6 +45,43 @@ export interface CostOptimizationResult {
 }
 
 export const FRONTIER_MODELS: ModelPricingTier[] = [
+  // ─── LATE 2026 FRONTIER SPECIFICATIONS ─────────────────────────────────────
+  {
+    modelId: 'claude-5-5-sonnet',
+    provider: 'Anthropic',
+    inputPerMillionUsd: 3.00,
+    outputPerMillionUsd: 15.00,
+    cachedInputPerMillionUsd: 0.30,
+    estimatedTtftMs: 280,
+    tokensPerSec: 95
+  },
+  {
+    modelId: 'claude-5-5-haiku',
+    provider: 'Anthropic',
+    inputPerMillionUsd: 0.80,
+    outputPerMillionUsd: 4.00,
+    cachedInputPerMillionUsd: 0.08,
+    estimatedTtftMs: 90,
+    tokensPerSec: 180
+  },
+  {
+    modelId: 'gpt-6-1-sol',
+    provider: 'OpenAI',
+    inputPerMillionUsd: 2.50,
+    outputPerMillionUsd: 10.00,
+    cachedInputPerMillionUsd: 1.25,
+    estimatedTtftMs: 220,
+    tokensPerSec: 110
+  },
+  {
+    modelId: 'meta-muse-code',
+    provider: 'Meta',
+    inputPerMillionUsd: 0.00, // Open weights local execution
+    outputPerMillionUsd: 0.00,
+    cachedInputPerMillionUsd: 0.00,
+    estimatedTtftMs: 120,
+    tokensPerSec: 140
+  },
   {
     modelId: 'claude-4-5-sonnet',
     provider: 'Anthropic',

@@ -200,7 +200,7 @@ const ORBIT_MODELS: ModelNode[] = [
     answeringTitle: "ChatGPT / OpenAI · Structured Schema & System Roles",
     answeringDesc:
       "Compiles system prompts with strict JSON schema outputs, reasoning boundaries, and zero-leak prompt defenses for OpenAI models.",
-    tokenWaste: "OpenAI o3/GPT",
+    tokenWaste: "OpenAI GPT-6.1",
     invariantPass: "Zero Drift",
     costProfile: "Deterministic",
     latency: "Real-Time",

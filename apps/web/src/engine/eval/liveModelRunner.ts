@@ -53,6 +53,16 @@ export interface LiveModelResponse {
 
 // Built-in cost estimates per 1M tokens (input / output)
 const MODEL_COSTS_PER_M: Record<string, { input: number; output: number }> = {
+  // Late 2026 Frontier Models
+  "claude-5-5-sonnet": { input: 3.0, output: 15.0 },
+  "claude-5-5-haiku": { input: 0.8, output: 4.0 },
+  "claude-5-5-opus": { input: 15.0, output: 75.0 },
+  "claude-code": { input: 3.0, output: 15.0 },
+  "claude-code-2-1": { input: 3.0, output: 15.0 },
+  "gpt-6-1-sol": { input: 2.5, output: 10.0 },
+  "gpt-6-astra": { input: 3.0, output: 12.0 },
+  "meta-muse-code": { input: 0, output: 0 },
+  // Historical snapshots
   "gpt-4o": { input: 2.5, output: 10.0 },
   "gpt-4o-mini": { input: 0.15, output: 0.6 },
   "o3-mini": { input: 1.1, output: 4.4 },

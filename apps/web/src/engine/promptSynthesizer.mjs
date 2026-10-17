@@ -1135,8 +1135,44 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
       ? Math.min(baseTargetChars, effectiveMaxOutputChars)
       : baseTargetChars;
 
+  const compilerConfig = opts && typeof opts === "object" ? (opts.compilerConfig || opts.brainSnapshot?.compilerConfig) : null;
+  const brainReleaseId = opts && typeof opts === "object" ? (opts.brainReleaseId || opts.brainSnapshot?.manifest?.brainReleaseId) : null;
+  const compilerGen = opts && typeof opts === "object" ? (opts.compilerGeneration ?? opts.brainSnapshot?.generationIndex) : null;
+
+  const appendCompilerDirectives = (text, isXml) => {
+    if (!compilerConfig) return text;
+    const rulesVer = compilerConfig.rulesVersion || (compilerGen ? `2.4.0-g${compilerGen}` : "2.4.0");
+    const targetArch = compilerConfig.targetArchitecture || "spe-ast-supercompiler-v2";
+    const passCount = compilerConfig.passes ? compilerConfig.passes.length : (opts.compilerPassCount || 14);
+
+    if (isXml) {
+      let directivesXml = `\n<compiler_specification>\n<rules_version>${rulesVer}</rules_version>\n<target_architecture>${targetArch}</target_architecture>\n<verified_passes count="${passCount}">\n${(compilerConfig.passes || []).map((p) => `  <pass>${p}</pass>`).join("\n")}\n</verified_passes>\n`;
+      if (Array.isArray(compilerConfig.customDirectives) && compilerConfig.customDirectives.length > 0) {
+        directivesXml += `<custom_directives>\n${compilerConfig.customDirectives.map((d) => `  <directive>${d}</directive>`).join("\n")}\n</custom_directives>\n`;
+      }
+      directivesXml += `</compiler_specification>`;
+      const closingTagIdx = text.lastIndexOf("</system_prompt>");
+      if (closingTagIdx !== -1) {
+        return text.slice(0, closingTagIdx).trim() + directivesXml + "\n</system_prompt>";
+      }
+      return text + directivesXml;
+    }
+
+    let block = `\n\n# Compiler Directives [${brainReleaseId || "spe-brain-canonical"} · Gen ${compilerGen || 1}]\n`;
+    block += `- Compiler Rules: ${rulesVer}\n`;
+    block += `- Target Architecture: ${targetArch}\n`;
+    block += `- Verified Passes (${passCount}): ${(compilerConfig.passes || []).join(", ") || "Canonical AST Pipeline"}\n`;
+    if (Array.isArray(compilerConfig.customDirectives) && compilerConfig.customDirectives.length > 0) {
+      for (const d of compilerConfig.customDirectives) {
+        block += `- ${d}\n`;
+      }
+    }
+    return text.trim() + block;
+  };
+
   const finalizePrompt = (text, isXml = false, isLocal = false) => {
-    return enforceCapacityCeiling(text, targetChars, isXml, isLocal);
+    const enrichedText = appendCompilerDirectives(text, isXml);
+    return enforceCapacityCeiling(enrichedText, targetChars, isXml, isLocal);
   };
 
   const sections = {};

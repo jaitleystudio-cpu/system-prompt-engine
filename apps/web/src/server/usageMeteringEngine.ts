@@ -314,6 +314,9 @@ export class UsageMeteringEngine {
     switch (action) {
       case "credit_balance": {
         const amountCents = request.amountCents || 0;
+        if (amountCents <= 0) {
+          throw new Error(`INVALID_CREDIT_AMOUNT: amount must be > 0 cents (got ${amountCents})`);
+        }
         if (!account) {
           const created = this.createCustomerAccount({
             customerId,
@@ -362,7 +365,11 @@ export class UsageMeteringEngine {
       }
 
       case "refund_charge": {
-        const refundMicroCents = (request.amountCents || 0) * 10000;
+        const amountCents = request.amountCents || 0;
+        if (amountCents <= 0) {
+          throw new Error(`INVALID_REFUND_AMOUNT: amount must be > 0 cents (got ${amountCents})`);
+        }
+        const refundMicroCents = amountCents * 10000;
         if (account) {
           account.balanceMicroCents = Math.max(0, account.balanceMicroCents - refundMicroCents);
           if (account.balanceMicroCents <= 0 || request.tier === "pro" || request.tier === "team") {
@@ -370,7 +377,7 @@ export class UsageMeteringEngine {
             account.subscriptionStatus = "REVOKED";
           }
           account.updatedAtMs = Date.now();
-          actionTaken = `REFUNDED_CHARGE: Deducted $${((request.amountCents || 0) / 100).toFixed(2)} from balance`;
+          actionTaken = `REFUNDED_CHARGE: Deducted $${(amountCents / 100).toFixed(2)} from balance`;
         } else {
           actionTaken = `REFUNDED_CHARGE_NOOP: Customer ${customerId} not found`;
         }
