@@ -1,10 +1,10 @@
 {
-  "timestampIso": "2026-10-17T09:34:18.718Z",
+  "timestampIso": "2026-10-17T09:56:33.805Z",
   "qualificationStatus": "QUALIFIED_FOR_PROMOTION",
   "totalCases": 5,
   "passedCases": 5,
   "passRatePercent": 100,
-  "averageLatencyMs": 384.33,
+  "averageLatencyMs": 520.32,
   "requirementPreservationPercent": 100,
   "regressionsCount": 0,
   "caseResults": [
@@ -16,7 +16,7 @@
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 1868.749
+      "latencyMs": 2546.396
     },
     {
       "caseId": "BENCH-02-3D-WEBGL-CANVAS",
@@ -26,7 +26,7 @@
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 18.555
+      "latencyMs": 20.78
     },
     {
       "caseId": "BENCH-03-DATA-PIPELINE-JSON",
@@ -36,7 +36,7 @@
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 18.61
+      "latencyMs": 16.321
     },
     {
       "caseId": "BENCH-04-CONTRADICTION-DETECTION",
@@ -46,7 +46,7 @@
       "expectedStatus": "CONTRADICTION_BLOCKED",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 0.286
+      "latencyMs": 0.271
     },
     {
       "caseId": "BENCH-05-ZERO-PII-SECURITY-GUARD",
@@ -56,10 +56,10 @@
       "expectedStatus": "QUALIFIED_GENERATIVE_SUCCESS",
       "mandatoryRequirementsPassed": true,
       "unwantedPatternsDetected": [],
-      "latencyMs": 15.47
+      "latencyMs": 17.807
     }
   ],
   "zeroEgressAuditPassed": true,
   "costUsd": 0,
-  "releaseCandidateDigest": "b9e6b6ab2e5ec481d67e4a280b624546646aa27941a8fa9e8650a92c851907af"
+  "releaseCandidateDigest": "8d9a5899aa4c7751e2d6d22f447defa2a6ed4719a6ef5b39b351bb8966c1b264"
 }
