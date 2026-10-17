@@ -264,11 +264,22 @@ export async function executeProviderCall(request: LiveModelRequest): Promise<Li
         "Content-Type": "application/json",
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
         "dangerously-allow-browser": "true",
       };
 
+      let anthropicModel = request.model.replace(/^anthropic:/i, "");
+      if (
+        anthropicModel === "claude-4-5-sonnet" ||
+        anthropicModel === "claude-3-7-sonnet" ||
+        anthropicModel === "claude-3-7-sonnet-20250219" ||
+        anthropicModel === "claude-sonnet"
+      ) {
+        anthropicModel = "claude-sonnet-4-5";
+      }
+
       const body = {
-        model: request.model,
+        model: anthropicModel,
         system: request.systemPrompt,
         messages: [{ role: "user", content: request.userInput }],
         temperature: request.temperature ?? 0.2,

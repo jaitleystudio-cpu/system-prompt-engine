@@ -196,7 +196,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
 from anthropic import Anthropic
 client = Anthropic()
 response = client.messages.create(
-    model="claude-3-7-sonnet-20250219",
+    model="claude-sonnet-4-5",
     max_tokens=4096,
     system=${JSON.stringify(claudePrompt)},
     messages=[{"role": "user", "content": "Execute following instructions."}]
@@ -212,7 +212,8 @@ completion = openai_client.chat.completions.create(
         {"role": "system", "content": ${JSON.stringify(gptPrompt)}},
         {"role": "user", "content": "Execute according to policy."}
     ]
-)`;
+)
+`;
 
   const typescriptSnippet = `// SPE Ω TypeScript / Node Production Runner
 // Install: npm install @anthropic-ai/sdk openai
@@ -222,7 +223,7 @@ import OpenAI from "openai";
 
 const anthropic = new Anthropic();
 const anthropicRes = await anthropic.messages.create({
-  model: "claude-3-7-sonnet-20250219",
+  model: "claude-sonnet-4-5",
   max_tokens: 4096,
   system: ${JSON.stringify(claudePrompt)},
   messages: [{ role: "user", content: "Begin task." }]

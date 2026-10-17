@@ -103,7 +103,7 @@ export function PromptVaultPanel({ onSelectPrompt, initialAssetId }: Props) {
   const atlasStats = useMemo(() => getModelAtlasStats(), []);
   void atlasStats;
 
-  const [activeModelId, setActiveModelId] = useState<string>("claude-3-7-sonnet");
+  const [activeModelId, setActiveModelId] = useState<string>("claude-sonnet-4-5");
   const [showProUpgradeModal, setShowProUpgradeModal] = useState<boolean>(false);
   const [entitlementTokenInput, setEntitlementTokenInput] = useState<string>("");
   const [tokenActivationMessage, setTokenActivationMessage] = useState<string | null>(null);

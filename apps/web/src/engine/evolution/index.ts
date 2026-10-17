@@ -16,3 +16,4 @@ export * from "./proofCarryingEvolution.ts";
 export * from "./independentRepairTournament.ts";
 export * from "./privacyBudgetedEvolution.ts";
 export * from "./nightlyScheduler.ts";
+export * from "./autonomousOperationsLayer.ts";

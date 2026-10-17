@@ -329,7 +329,7 @@ export class AuthoritativeBillingAuthority {
         licenseTerm,
         sku: event.sku,
         revocationTerms: licenseTerm === "lifetime"
-          ? "OFFLINE_PERPETUAL_SUBJECT_TO_REFUND_OR_REVOCATION_ATTESTATION"
+          ? "OFFLINE_VALID_AT_ATTESTATION_EPOCH_BOUNDED_BY_LOCAL_CRL: Online revocations/refunds require periodic re-attestation or updated CRL"
           : "RECURRING_SUBSCRIPTION_FRESHNESS_WINDOW_REQUIRED",
       };
       this.#receiptLedger.set(event.paymentReceiptId, record);
@@ -471,7 +471,7 @@ export class AuthoritativeBillingAuthority {
       issuerKeyId: this.issuerKeyId,
       revocationTerms: record.revocationTerms ?? (
         record.licenseTerm === "lifetime"
-          ? "OFFLINE_PERPETUAL_SUBJECT_TO_REFUND_OR_REVOCATION_ATTESTATION"
+          ? "OFFLINE_VALID_AT_ATTESTATION_EPOCH_BOUNDED_BY_LOCAL_CRL: Online revocations/refunds require periodic re-attestation or updated CRL"
           : "RECURRING_SUBSCRIPTION_FRESHNESS_WINDOW_REQUIRED"
       ),
     };

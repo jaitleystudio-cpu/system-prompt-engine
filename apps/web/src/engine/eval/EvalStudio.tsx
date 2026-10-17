@@ -359,7 +359,7 @@ export function EvalStudio() {
             setActiveTab("telemetry");
             const apm = new SovereignApmStore();
             const record = await apm.createExecutionTrace({
-              model: selectedModels[0] || "claude-3-7-sonnet",
+              model: selectedModels[0] || "claude-sonnet-4-5",
               promptText: promptText,
               totalLatencyMs: 42,
               status: "SUCCESS",

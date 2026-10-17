@@ -101,7 +101,7 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
             "anthropic-dangerous-direct-browser-access": "true",
           },
           body: JSON.stringify({
-            model: "claude-4-5-sonnet",
+            model: "claude-sonnet-4-5",
             max_tokens: 4096,
             system: promptText,
             messages: [{ role: "user", content: userQuery }],

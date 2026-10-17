@@ -58,7 +58,7 @@ export async function exportTelemetryPackage(
     isKvAligned?: boolean;
   }
 ): Promise<TelemetryExportResult> {
-  const model = options?.modelTarget || 'claude-3-7-sonnet';
+  const model = options?.modelTarget || 'claude-sonnet-4-5';
   const promptHash = (await computeSha256(prompt)).slice(0, 16);
   const receipt = options?.receiptDigest || `receipt_sha256_${promptHash}`;
   const tokens = Math.max(1, Math.ceil(prompt.length / 3.8));

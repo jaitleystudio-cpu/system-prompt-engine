@@ -128,37 +128,51 @@ export function computeDeploymentReceiptSignature(
   return createHmac("sha256", secret).update(canonicalPayload).digest("hex");
 }
 
+export const RECOGNIZED_DEPLOYMENT_PROVIDERS = [
+  "github-actions",
+  "cloudflare-pages",
+  "vercel",
+  "google-cloud-build",
+] as const;
+
 export function verifyAuthoritativeDeploymentReceipt(
   receipt: unknown,
   expectedCommitSha: string,
-  secret = SPE_DEPLOYMENT_SECRET_DEFAULT
+  secret?: string
 ): { valid: boolean; reason?: string } {
   if (!receipt || typeof receipt !== "object") {
     return { valid: false, reason: "Deployment receipt is null or not an object" };
   }
   const r = receipt as Partial<VerifiedDeploymentReceipt>;
 
+  // 1. Target Environment
   if (r.targetEnvironment !== "production") {
     return { valid: false, reason: `Invalid target environment: '${r.targetEnvironment}', expected 'production'` };
   }
 
-  if (!r.deploymentSha || !/^[0-9a-f]{7,64}$/i.test(r.deploymentSha)) {
-    return { valid: false, reason: `deploymentSha '${r.deploymentSha}' is not a valid hexadecimal commit SHA` };
+  // 2. Exact 40-hex Git commit matching
+  if (!r.deploymentSha || !/^[0-9a-f]{40}$/i.test(r.deploymentSha)) {
+    return { valid: false, reason: `deploymentSha '${r.deploymentSha}' is not a valid 40-character hexadecimal commit SHA` };
   }
-
-  const depSha = r.deploymentSha.toLowerCase();
-  const expSha = expectedCommitSha.toLowerCase();
-  const shaMatches =
-    depSha === expSha ||
-    (expSha.length >= 7 && depSha.startsWith(expSha)) ||
-    (depSha.length >= 7 && expSha.startsWith(depSha));
-  if (!shaMatches) {
+  if (!expectedCommitSha || !/^[0-9a-f]{40}$/i.test(expectedCommitSha)) {
+    return { valid: false, reason: `expectedCommitSha '${expectedCommitSha}' is not a valid 40-character hexadecimal commit SHA` };
+  }
+  if (r.deploymentSha.toLowerCase() !== expectedCommitSha.toLowerCase()) {
     return {
       valid: false,
-      reason: `deploymentSha '${r.deploymentSha}' does not match expected target commit '${expectedCommitSha}'`,
+      reason: `deploymentSha '${r.deploymentSha}' does not match expected target commit '${expectedCommitSha}' exactly`,
     };
   }
 
+  // 3. Recognized Production Deployment Provider
+  if (!r.deploymentProvider || !RECOGNIZED_DEPLOYMENT_PROVIDERS.includes(r.deploymentProvider as typeof RECOGNIZED_DEPLOYMENT_PROVIDERS[number])) {
+    return {
+      valid: false,
+      reason: `deploymentProvider '${r.deploymentProvider}' is not a recognized production provider (${RECOGNIZED_DEPLOYMENT_PROVIDERS.join(", ")})`,
+    };
+  }
+
+  // 4. Timestamp Validation & Bounded Freshness (not future > 5m, not stale > 24h)
   if (!r.executedAt || typeof r.executedAt !== "string") {
     return { valid: false, reason: "executedAt timestamp is missing" };
   }
@@ -167,10 +181,15 @@ export function verifyAuthoritativeDeploymentReceipt(
     return { valid: false, reason: `executedAt '${r.executedAt}' is not a valid ISO 8601 timestamp` };
   }
   const nowMs = Date.now();
-  if (parsedTime > nowMs + 10 * 60 * 1000) {
-    return { valid: false, reason: `executedAt '${r.executedAt}' is in the future` };
+  if (parsedTime > nowMs + 5 * 60 * 1000) {
+    return { valid: false, reason: `executedAt '${r.executedAt}' is in the future (> 5 minutes clock skew)` };
+  }
+  const MAX_RECEIPT_AGE_MS = 24 * 60 * 60 * 1000;
+  if (nowMs - parsedTime > MAX_RECEIPT_AGE_MS) {
+    return { valid: false, reason: `executedAt '${r.executedAt}' is stale (> 24 hours old)` };
   }
 
+  // 5. Immutable 64-hex SHA-256 Artifact Digest
   if (!r.artifactDigestSha256 || !/^[0-9a-f]{64}$/i.test(r.artifactDigestSha256)) {
     return {
       valid: false,
@@ -178,10 +197,19 @@ export function verifyAuthoritativeDeploymentReceipt(
     };
   }
 
+  // 6. Signature Scheme & Non-Default Secret Verification
   if (!r.signatureScheme || r.signatureScheme === "DEV_LOCAL_UNAUTHENTICATED") {
     return {
       valid: false,
       reason: "signatureScheme is unsigned or DEV_LOCAL_UNAUTHENTICATED (authoritative production release rejected)",
+    };
+  }
+
+  const effectiveSecret = secret || (typeof process !== "undefined" ? process.env?.SPE_DEPLOYMENT_HMAC_SECRET : undefined);
+  if (!effectiveSecret || effectiveSecret === SPE_DEPLOYMENT_SECRET_DEFAULT) {
+    return {
+      valid: false,
+      reason: "Authoritative production deployment verification requires an explicit non-default secret key (default built-in secret rejected for production authority)",
     };
   }
 
@@ -196,10 +224,10 @@ export function verifyAuthoritativeDeploymentReceipt(
       targetEnvironment: "production",
       executedAt: r.executedAt,
       artifactDigestSha256: r.artifactDigestSha256,
-      deploymentProvider: r.deploymentProvider || "github-actions",
+      deploymentProvider: r.deploymentProvider,
       signatureScheme: r.signatureScheme,
     },
-    secret
+    effectiveSecret
   );
 
   try {
@@ -237,18 +265,64 @@ export function verifyGscRetrievalBoundary(proof: unknown): { verified: boolean;
   if (!p.verifiedAuthorized) {
     return { verified: false, reason: "Proof verifiedAuthorized is false" };
   }
-  if (!p.siteUrl || !p.siteUrl.startsWith("http")) {
-    return { verified: false, reason: `Invalid siteUrl '${p.siteUrl}'` };
+
+  // 1. Authorized SPE Site URL
+  const isAuthorizedSiteUrl =
+    typeof p.siteUrl === "string" &&
+    (p.siteUrl === "https://systempromptengine.com" ||
+     p.siteUrl === "https://systempromptengine.com/" ||
+     p.siteUrl === "sc-domain:systempromptengine.com");
+  if (!isAuthorizedSiteUrl) {
+    return {
+      verified: false,
+      reason: `siteUrl '${p.siteUrl}' is not an authorized property for SPE (expected https://systempromptengine.com/ or sc-domain:systempromptengine.com)`,
+    };
   }
-  if (!p.serviceAccountOrClientId || p.serviceAccountOrClientId.trim().length < 5) {
-    return { verified: false, reason: "Missing service account or client ID" };
+
+  // 2. Official Google Search Console API Endpoint
+  const isOfficialGscEndpoint =
+    typeof p.apiEndpoint === "string" &&
+    (p.apiEndpoint.startsWith("https://searchconsole.googleapis.com/") ||
+     p.apiEndpoint.startsWith("https://www.googleapis.com/webmaster/v1/sites/"));
+  if (!isOfficialGscEndpoint) {
+    return {
+      verified: false,
+      reason: `apiEndpoint '${p.apiEndpoint}' is not an official Google Search Console API endpoint (must start with https://searchconsole.googleapis.com/ or https://www.googleapis.com/webmaster/v1/sites/)`,
+    };
   }
+
+  // 3. Recognized Google Service Account or Google OAuth Client ID
+  const isGoogleServiceAccount =
+    typeof p.serviceAccountOrClientId === "string" &&
+    /^[a-z0-9._-]+@[a-z0-9-]+\.(?:iam\.)?gserviceaccount\.com$/i.test(p.serviceAccountOrClientId);
+  const isGoogleOAuthClient =
+    typeof p.serviceAccountOrClientId === "string" &&
+    /^[0-9]+-[a-z0-9_]+\.apps\.googleusercontent\.com$/i.test(p.serviceAccountOrClientId);
+  if (!isGoogleServiceAccount && !isGoogleOAuthClient) {
+    return {
+      verified: false,
+      reason: `serviceAccountOrClientId '${p.serviceAccountOrClientId}' is not a recognized Google service account (*.gserviceaccount.com) or Google OAuth Client ID (*.apps.googleusercontent.com)`,
+    };
+  }
+
+  // 4. Timestamp freshness (not future > 5m, not stale > 24h)
   if (!p.retrievalTimestamp || isNaN(Date.parse(p.retrievalTimestamp))) {
     return { verified: false, reason: `Invalid retrievalTimestamp '${p.retrievalTimestamp}'` };
   }
+  const parsedTime = Date.parse(p.retrievalTimestamp);
+  const nowMs = Date.now();
+  if (parsedTime > nowMs + 5 * 60 * 1000) {
+    return { verified: false, reason: `retrievalTimestamp '${p.retrievalTimestamp}' is in the future` };
+  }
+  if (nowMs - parsedTime > 24 * 60 * 60 * 1000) {
+    return { verified: false, reason: `retrievalTimestamp '${p.retrievalTimestamp}' is stale (> 24 hours old)` };
+  }
+
+  // 5. OAuth Token Digest (SHA-256)
   if (!p.oauthTokenDigestSha256 || !/^[0-9a-f]{64}$/i.test(p.oauthTokenDigestSha256)) {
     return { verified: false, reason: "Missing or invalid oauthTokenDigestSha256 (64-char hex SHA-256 required)" };
   }
+
   return { verified: true };
 }
 
@@ -601,7 +675,7 @@ export class NightlyEvolutionScheduler {
       const deploymentCheck = verifyAuthoritativeDeploymentReceipt(
         options.verifiedDeploymentReceipt,
         baseCommit,
-        options.deploymentSecret || SPE_DEPLOYMENT_SECRET_DEFAULT
+        options.deploymentSecret
       );
 
       const hasAuthoritativeDeploymentEvidence = Boolean(
