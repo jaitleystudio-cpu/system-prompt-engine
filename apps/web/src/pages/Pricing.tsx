@@ -25,10 +25,17 @@ export interface StripeCheckoutLinks {
 }
 
 export const DEFAULT_STRIPE_LINKS: StripeCheckoutLinks = {
-  proIntroUrl: "https://buy.stripe.com/test_spe_pro_intro_1",
-  lifetimeUrl: "https://buy.stripe.com/test_spe_lifetime_69",
-  companyIntroUrl: "https://buy.stripe.com/test_spe_company_intro_9",
+  proIntroUrl:
+    (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_STRIPE_PRO_INTRO_URL) ||
+    "https://buy.stripe.com/test_spe_pro_intro_1",
+  lifetimeUrl:
+    (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_STRIPE_LIFETIME_URL) ||
+    "https://buy.stripe.com/test_spe_lifetime_69",
+  companyIntroUrl:
+    (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_STRIPE_COMPANY_INTRO_URL) ||
+    "https://buy.stripe.com/test_spe_company_intro_9",
 };
+
 
 interface PricingProps {
   onNavigate?: (view: AppView) => void;
@@ -228,6 +235,8 @@ export function Pricing({
           <span><strong>Qualification Status:</strong> Public Beta</span>
           <span>·</span>
           <span><strong>WASM Core:</strong> Verified (1.3 MB Local)</span>
+          <span>·</span>
+          <span><strong>Checkout Mode:</strong> {links.proIntroUrl.includes("test_") ? "Preview (sandbox / test links active)" : "Live Production"}</span>
           <span>·</span>
           <span><strong>Gates Pending Full Production:</strong> G6-H (Blinded Human Study) &amp; REC-2E (External Multi-Provider Holdout)</span>
         </div>

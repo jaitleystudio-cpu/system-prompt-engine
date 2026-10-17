@@ -24,7 +24,17 @@ import { fileURLToPath } from "node:url";
 
 import { getModelById, getAllModels } from "../src/engine/modelAtlas/modelAtlasService.ts";
 import { compileSystemPrompt } from "../../../packages/spe-plugin/src/tools.ts";
-import { verifySignedReceiptStatusAttestation } from "../src/engine/entitlementVerifier.ts";
+import {
+  verifySignedReceiptStatusAttestation,
+  verifySignedEntitlementToken,
+  resolveBrowserVerifiedEntitlement,
+  startBrowserFreeTrial,
+  resolveBrowserTrialEntitlement,
+  clearBrowserTrialEntitlement,
+  hasDeviceConsumedTrial,
+  resetTrialTombstoneForTesting,
+  SPE_TRIAL_CONSUMED_KEY,
+} from "../src/engine/entitlementVerifier.ts";
 import { AuthoritativeBillingAuthority } from "../src/server/billingAuthority.ts";
 import { constructMarkdownSystemPrompt } from "../src/engine/markdownExportCore.ts";
 import { artifactPrintHtml } from "../../../packages/web-runtime/src/speArtifact.ts";
@@ -139,7 +149,35 @@ console.log("\n[2/6] Verifying Finding F05: Mandatory instructions in goal never
     `Must preserve 'No customer data may leave this device', got:\n${advCompiled.prompt}`
   );
 
-  console.log("  ✓ Finding F05 verified: Mandatory goal obligations strictly preserved and fail-closed enforced.");
+  // Subtest: Verify 'Keep account_id unchanged' and Telugu privacy instruction in oversized goal
+  const teluguInstruction = "వ్యక్తిగత డేటాను లేదా ఖాతా IDని ఎప్పటికీ భాగస్వామ్యం చేయవద్దు";
+  const accountIdInstruction = "Keep account_id unchanged under all transformations";
+  const oversizedGoalWithInvariants =
+    `Enterprise processing system. ${accountIdInstruction}. ${teluguInstruction}. ` +
+    "General context filler paragraph. ".repeat(1000);
+
+  assert.ok(oversizedGoalWithInvariants.length > 30000, "Goal must exceed 30,000 characters");
+
+  const oversizedCompiled = compileSystemPrompt({
+    goal: oversizedGoalWithInvariants,
+    category: "Coding",
+    target_model: "claude",
+  });
+
+  assert.ok(
+    oversizedCompiled.prompt.length <= 30000,
+    `Compiled prompt must respect 30,000 ceiling, got: ${oversizedCompiled.prompt.length}`
+  );
+  assert.ok(
+    oversizedCompiled.prompt.includes("account_id"),
+    `Compiled prompt MUST preserve 'account_id' instruction, got:\n${oversizedCompiled.prompt}`
+  );
+  assert.ok(
+    oversizedCompiled.prompt.includes(teluguInstruction),
+    `Compiled prompt MUST preserve Telugu instruction '${teluguInstruction}', got:\n${oversizedCompiled.prompt}`
+  );
+
+  console.log("  ✓ Finding F05 verified: Mandatory goal obligations (including Telugu and account_id) strictly preserved and fail-closed enforced.");
 }
 
 // -----------------------------------------------------------------------------
@@ -417,13 +455,23 @@ console.log("\n[6/6] Verifying BYOK 2026 Frontier Models, Headers & CSP Permissi
   assert.ok(headersSource.includes("https://api.anthropic.com"), "CSP connect-src must allow api.anthropic.com");
   assert.ok(headersSource.includes("https://generativelanguage.googleapis.com"), "CSP connect-src must allow generativelanguage.googleapis.com");
 
-  console.log("  ✓ BYOK 2026 models, official headers, and CSP connect-src origins verified.");
+  // Provider Security Advisory
+  assert.ok(
+    simulatorSource.includes("Provider Security Notice (OpenAI Best Practices)"),
+    "AgentSimulatorPanel must include OpenAI client-side secret key security advisory"
+  );
+  assert.ok(
+    simulatorSource.includes("OpenAI explicitly advises against deploying secret API keys"),
+    "AgentSimulatorPanel must cite official OpenAI advisory against client deployment"
+  );
+
+  console.log("  ✓ BYOK 2026 models, official headers, provider advisories, and CSP connect-src origins verified.");
 }
 
 // -----------------------------------------------------------------------------
 // GATE 7: Plain English Parser & Clipboard Async Reliability
 // -----------------------------------------------------------------------------
-console.log("\n[7/7] Verifying Plain English Parser & Async Clipboard Reliability...");
+console.log("\n[7/8] Verifying Plain English Parser & Async Clipboard Reliability...");
 {
   // Test case matching ChatGPT's screenshot: "must reply warmly" with negative constraint
   const sampleInput = "Act as a customer support assistant that resolves billing complaints, must reply warmly and never share user passwords, return responses in 3 bulleted steps.";
@@ -452,6 +500,19 @@ console.log("\n[7/7] Verifying Plain English Parser & Async Clipboard Reliabilit
     `Constraint must preserve standalone 'must reply warmly', got: '${warmParsed.constraint}'`
   );
 
+  // Multi-constraint test case: Multiple affirmative (warmth + consent + account_id) and negative (passwords + internal keys)
+  const complexMultiConstraint =
+    "Act as an enterprise support agent that manages user migrations, must reply warmly and must obtain user consent and keep account_id unchanged, never share user passwords and do not disclose internal keys, output in markdown tables.";
+  const complexParsed = parseCustomSentence(complexMultiConstraint);
+
+  assert.ok(complexParsed.constraint.toLowerCase().includes("must reply warmly"), "Must extract 'must reply warmly'");
+  assert.ok(complexParsed.constraint.toLowerCase().includes("consent"), "Must extract 'consent' requirement");
+  assert.ok(complexParsed.constraint.toLowerCase().includes("account_id"), "Must extract 'account_id' requirement");
+  assert.ok(complexParsed.constraint.toLowerCase().includes("passwords"), "Must extract 'passwords' requirement");
+  assert.ok(complexParsed.constraint.toLowerCase().includes("internal keys"), "Must extract 'internal keys' requirement");
+  assert.equal(complexParsed.role, "Enterprise support agent.", "Must extract role");
+  assert.equal(complexParsed.goal, "Manages user migrations.", "Must extract goal");
+
   // Verify RealPromptLiveHud.tsx uses async/await and clipboard error fallback
   const hudSource = readFileSync(resolve(__dirname, "../src/engine/RealPromptLiveHud.tsx"), "utf8");
   assert.ok(
@@ -463,9 +524,89 @@ console.log("\n[7/7] Verifying Plain English Parser & Async Clipboard Reliabilit
     "Copy handler must handle failure states rather than assuming success"
   );
 
-  console.log("  ✓ Plain English parser preserves all affirmative and negative requirements without omission; clipboard async verified.");
+  console.log("  ✓ Plain English parser preserves multiple affirmative and negative requirements without omission; clipboard async verified.");
+}
+
+// -----------------------------------------------------------------------------
+// GATE 8: Adjudication Closure — Crash Defense, Automation & Commercial Verification
+// -----------------------------------------------------------------------------
+console.log("\n[8/8] Verifying Adjudication Closure: Crash Defense, Automation Calibration & Entitlement Separation...");
+{
+  // 1. Crash Defense in PromptRadarInspector
+  const inspectorSource = readFileSync(resolve(__dirname, "../src/engine/PromptRadarInspector.tsx"), "utf8");
+  assert.ok(
+    inspectorSource.includes("synthesisState"),
+    "PromptRadarInspector must track per-target synthesisState errors"
+  );
+  assert.ok(
+    inspectorSource.includes("try {") && inspectorSource.includes("constructMarkdownSystemPrompt("),
+    "PromptRadarInspector must guard constructMarkdownSystemPrompt with try/catch"
+  );
+  assert.ok(
+    !inspectorSource.includes("crash impossible"),
+    "PromptRadarInspector must not make unsupported 'crash impossible' claims"
+  );
+
+  // 2. Stripe Commercial Integration in Pricing.tsx
+  const pricingSource = readFileSync(resolve(__dirname, "../src/pages/Pricing.tsx"), "utf8");
+  assert.ok(
+    pricingSource.includes("VITE_STRIPE_PRO_INTRO_URL"),
+    "Pricing.tsx must support VITE_STRIPE_PRO_INTRO_URL environment variable"
+  );
+  assert.ok(
+    pricingSource.includes("VITE_STRIPE_LIFETIME_URL"),
+    "Pricing.tsx must support VITE_STRIPE_LIFETIME_URL environment variable"
+  );
+  assert.ok(
+    pricingSource.includes("sandbox / test links"),
+    "Pricing.tsx must transparently display test mode sandbox indicator when defaults are used"
+  );
+
+  // 3. Verification Type & Trial Tombstone Separation
+  if (typeof globalThis.localStorage === "undefined") {
+    const memoryStorage = new Map();
+    globalThis.localStorage = {
+      getItem: (key) => memoryStorage.get(key) ?? null,
+      setItem: (key, val) => memoryStorage.set(key, String(val)),
+      removeItem: (key) => memoryStorage.delete(key),
+      clear: () => memoryStorage.clear(),
+    };
+  }
+
+  resetTrialTombstoneForTesting();
+  startBrowserFreeTrial("pro", "audit@spe.local", 7, 1_700_000_000_000);
+  const browserTrialCheck = resolveBrowserVerifiedEntitlement({ currentEpochMs: 1_700_000_000_000 });
+  assert.equal(
+    browserTrialCheck.verificationType,
+    "LOCAL_CLIENT_TRIAL",
+    "Local browser trial MUST have verificationType: 'LOCAL_CLIENT_TRIAL'"
+  );
+  assert.equal(browserTrialCheck.isAuthoritative, false, "Local browser trial is not authoritative");
+
+  // Verify trial tombstone prevents restart
+  const trialExpiredCheck = resolveBrowserTrialEntitlement(1_700_000_000_000 + 8 * 86400 * 1000);
+  assert.equal(trialExpiredCheck.status, "EXPIRED_TRIAL");
+  assert.equal(hasDeviceConsumedTrial(), true, "Device trial tombstone must be active after expiry");
+
+  assert.throws(
+    () => startBrowserFreeTrial("pro", "audit@spe.local", 7, 1_700_000_000_000 + 8 * 86400 * 1000),
+    /TRIAL_ALREADY_CONSUMED/,
+    "Expired trial cannot restart on same device"
+  );
+
+  resetTrialTombstoneForTesting();
+  clearBrowserTrialEntitlement();
+
+  // 4. Nightly Evolution Loop Automation Proof
+  const loopSource = readFileSync(resolve(__dirname, "./nightly-evolution-loop.mjs"), "utf8");
+  assert.ok(
+    loopSource.includes("Architecturally constrained CSS color modulation"),
+    "Automation proof must accurately describe CLS as architecturally constrained, not live Chrome Performance API"
+  );
+
+  console.log("  ✓ Adjudication Gate 8 verified: Crash defenses guarded, Stripe links configurable, trials strictly isolated from cryptographic verification.");
 }
 
 console.log("\n==================================================================");
-console.log("🎉 ALL 7 CHATGPT COUNTER-REVIEW REMEDIATION GATES PASSED CLEANLY!");
+console.log("🎉 ALL 8 CHATGPT COUNTER-REVIEW REMEDIATION GATES PASSED CLEANLY!");
 console.log("==================================================================");

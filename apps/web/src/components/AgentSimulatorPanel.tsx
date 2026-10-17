@@ -326,9 +326,35 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
                   </div>
                 )}
               </div>
-              <p style={{ margin: 0, fontSize: "0.72rem", color: "#64748b" }}>
-                🔒 Direct Browser Egress: Dispatched directly from your browser sandbox to the official {byokProvider.toUpperCase()} API. Zero server proxy.
-              </p>
+              <div style={{ marginTop: "0.5rem", padding: "0.5rem", borderRadius: "4px", backgroundColor: "rgba(30, 41, 59, 0.5)", border: "1px solid rgba(148, 163, 184, 0.2)", fontSize: "0.72rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                {byokProvider === "openai" && (
+                  <div>
+                    <strong style={{ color: "#f59e0b" }}>⚠️ Provider Security Notice (OpenAI Best Practices):</strong>{" "}
+                    OpenAI explicitly advises against deploying secret API keys (<code style={{ color: "#38bdf8" }}>sk-...</code>) directly in client-side browser applications. Keys entered here reside strictly in transient browser component memory and are never transmitted to any SPE server, but users should prefer restricted/ephemeral test keys or backend proxy deployment for production agent runtimes.
+                  </div>
+                )}
+                {byokProvider === "anthropic" && (
+                  <div>
+                    <strong style={{ color: "#f59e0b" }}>⚠️ Anthropic Direct Browser Access:</strong>{" "}
+                    Direct browser requests require the <code style={{ color: "#38bdf8" }}>anthropic-dangerous-direct-browser-access: true</code> header. Use only temporary developer keys in isolated development environments.
+                  </div>
+                )}
+                {byokProvider === "gemini" && (
+                  <div>
+                    <strong style={{ color: "#38bdf8" }}>ℹ️ Google AI Studio Key:</strong>{" "}
+                    Dispatched directly via <code style={{ color: "#38bdf8" }}>x-goog-api-key</code> request header. We recommend using keys with restricted API permissions.
+                  </div>
+                )}
+                {byokProvider === "ollama" && (
+                  <div>
+                    <strong style={{ color: "#10b981" }}>🖥️ Local Ollama Daemon:</strong>{" "}
+                    Connects directly to <code style={{ color: "#38bdf8" }}>http://127.0.0.1:11434</code>. $0 API cost, 100% offline air-gapped execution. Ensure your Ollama daemon is running.
+                  </div>
+                )}
+                <div style={{ marginTop: "0.35rem", color: "#64748b" }}>
+                  🔒 Direct Browser Egress: Dispatched directly from your browser sandbox to official {byokProvider.toUpperCase()} endpoints. Zero server proxy.
+                </div>
+              </div>
             </div>
           )}
 

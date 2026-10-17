@@ -142,6 +142,7 @@ export interface EntitlementVerificationResult {
   isTrial?: boolean;
   isAuthoritative?: boolean;
   trialDaysRemaining?: number;
+  verificationType?: "CRYPTOGRAPHIC_ED25519" | "LOCAL_CLIENT_TRIAL" | "NONE";
 }
 
 export interface TrialEntitlementRecord {
@@ -326,26 +327,22 @@ export function verifySignedEntitlementToken(
   rawToken: string,
   options: EntitlementVerificationOptions = {},
 ): EntitlementVerificationResult {
+  const reject = (rejectionReason: string): EntitlementVerificationResult => ({
+    verified: false,
+    tier: null,
+    payload: null,
+    signatureHex: null,
+    rejectionReason,
+    verificationType: "NONE",
+  });
+
   const trimmed = (rawToken || "").trim();
   if (!trimmed) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "EMPTY_ENTITLEMENT_TOKEN",
-    };
+    return reject("EMPTY_ENTITLEMENT_TOKEN");
   }
 
   if (/^SPE-(PRO|TEAM)-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/i.test(trimmed)) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason:
-        "SELF_MINTED_UNVERIFIED_KEY_REJECTED: Client-generated license strings cannot unlock paid tiers.",
-    };
+    return reject("SELF_MINTED_UNVERIFIED_KEY_REJECTED: Client-generated license strings cannot unlock paid tiers.");
   }
 
   const parts = trimmed.split(".");
@@ -354,25 +351,12 @@ export function verifySignedEntitlementToken(
     parts[0] !== "spe_entitlement" ||
     parts[1] !== "v1"
   ) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason:
-        "INVALID_TOKEN_ENVELOPE: Expected spe_entitlement.v1.<payload_hex>.<ed25519_signature_hex>",
-    };
+    return reject("INVALID_TOKEN_ENVELOPE: Expected spe_entitlement.v1.<payload_hex>.<ed25519_signature_hex>");
   }
 
   const [, , payloadHex, signatureHex, embeddedReceiptAttHex, embeddedReceiptSigHex] = parts;
   if (!signatureHex || signatureHex.length !== 128 || !/^[0-9a-fA-F]{128}$/.test(signatureHex)) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE_FORMAT: Expected 64-byte (128-hex) Ed25519 signature",
-    };
+    return reject("INVALID_ENTITLEMENT_SIGNATURE_FORMAT: Expected 64-byte (128-hex) Ed25519 signature");
   }
 
   let parsed: EntitlementTokenPayload;
@@ -380,13 +364,7 @@ export function verifySignedEntitlementToken(
     const jsonStr = hexToUtf8(payloadHex);
     parsed = JSON.parse(jsonStr) as EntitlementTokenPayload;
   } catch {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "MALFORMED_ENTITLEMENT_PAYLOAD",
-    };
+    return reject("MALFORMED_ENTITLEMENT_PAYLOAD");
   }
 
   if (
@@ -399,33 +377,15 @@ export function verifySignedEntitlementToken(
     typeof parsed.issuedAtMs !== "number" ||
     typeof parsed.expiresAtMs !== "number"
   ) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "INCOMPLETE_ENTITLEMENT_CLAIMS",
-    };
+    return reject("INCOMPLETE_ENTITLEMENT_CLAIMS");
   }
 
   if (parsed.paymentStatus !== "PAID") {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: `UNPAID_OR_INVALID_PAYMENT_STATUS:${String(parsed.paymentStatus ?? "MISSING")}`,
-    };
+    return reject(`UNPAID_OR_INVALID_PAYMENT_STATUS:${String(parsed.paymentStatus ?? "MISSING")}`);
   }
 
   if (parsed.subscriptionStatus !== "ACTIVE") {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: `INACTIVE_SUBSCRIPTION_STATUS:${String(parsed.subscriptionStatus ?? "MISSING")}`,
-    };
+    return reject(`INACTIVE_SUBSCRIPTION_STATUS:${String(parsed.subscriptionStatus ?? "MISSING")}`);
   }
 
   const revokedReceipts = new Set(options.revokedReceiptIds ?? []);
@@ -434,46 +394,22 @@ export function verifySignedEntitlementToken(
     revokedReceipts.has(parsed.paymentReceiptId) ||
     (parsed.subscriptionId && revokedSubs.has(parsed.subscriptionId))
   ) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "REVOKED_ENTITLEMENT_TOKEN",
-    };
+    return reject("REVOKED_ENTITLEMENT_TOKEN");
   }
 
   const nowMs = options.currentEpochMs ?? Date.now();
   if (parsed.expiresAtMs <= nowMs) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "EXPIRED_ENTITLEMENT_TOKEN",
-    };
+    return reject("EXPIRED_ENTITLEMENT_TOKEN");
   }
   if (parsed.issuedAtMs > nowMs + 60_000) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "INVALID_ISSUANCE_TIMESTAMP",
-    };
+    return reject("INVALID_ISSUANCE_TIMESTAMP");
   }
 
   if (
     options.expectedEmail &&
     parsed.email.trim().toLowerCase() !== options.expectedEmail.trim().toLowerCase()
   ) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "ENTITLEMENT_EMAIL_MISMATCH",
-    };
+    return reject("ENTITLEMENT_EMAIL_MISMATCH");
   }
 
   // Enforce explicit public-key pinning for the claiming issuerKeyId
@@ -487,13 +423,7 @@ export function verifySignedEntitlementToken(
   const rawPinnedKey = pinnedKeyMap[parsed.issuerKeyId];
   const normalizedPinnedKey = rawPinnedKey ? normalizeEd25519PublicKeyHex(rawPinnedKey) : null;
   if (!normalizedPinnedKey) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: `UNTRUSTED_ENTITLEMENT_ISSUER:${parsed.issuerKeyId}`,
-    };
+    return reject(`UNTRUSTED_ENTITLEMENT_ISSUER:${parsed.issuerKeyId}`);
   }
 
   // Cryptographically verify RFC 8032 Ed25519 signature over RFC 8785 canonical JSON payload
@@ -503,13 +433,7 @@ export function verifySignedEntitlementToken(
     : verifyEd25519Signature(canonicalPayload, signatureHex, normalizedPinnedKey);
 
   if (!sigValid) {
-    return {
-      verified: false,
-      tier: null,
-      payload: null,
-      signatureHex: null,
-      rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE",
-    };
+    return reject("INVALID_ENTITLEMENT_SIGNATURE");
   }
 
   // Enforce authoritative payment receipt, subscription status, expiration, and revocation check
@@ -543,14 +467,7 @@ export function verifySignedEntitlementToken(
     }
 
     if (!effectiveVerifier) {
-      return {
-        verified: false,
-        tier: null,
-        payload: null,
-        signatureHex: null,
-        rejectionReason:
-          "AUTHORITATIVE_RECEIPT_VERIFICATION_REQUIRED: Claimed paymentReceiptId cannot be accepted without authoritative server confirmation.",
-      };
+      return reject("AUTHORITATIVE_RECEIPT_VERIFICATION_REQUIRED: Claimed paymentReceiptId cannot be accepted without authoritative server confirmation.");
     }
     const record = effectiveVerifier(parsed.paymentReceiptId, parsed);
     if (!record || !record.exists) {
@@ -567,62 +484,25 @@ export function verifySignedEntitlementToken(
           maxAttestationAgeMs: Number.MAX_SAFE_INTEGER,
         });
         if (withoutFreshnessLimit) {
-          return {
-            verified: false,
-            tier: null,
-            payload: null,
-            signatureHex: null,
-            rejectionReason:
-              "STALE_RECEIPT_ATTESTATION: Signed receipt attestation exceeds maximum freshness window (maxAttestationAgeMs). Offline attestation expired.",
-          };
+          return reject("STALE_RECEIPT_ATTESTATION: Signed receipt attestation exceeds maximum freshness window (maxAttestationAgeMs). Offline attestation expired.");
         }
       }
-      return {
-        verified: false,
-        tier: null,
-        payload: null,
-        signatureHex: null,
-        rejectionReason: `UNKNOWN_PAYMENT_RECEIPT_ID:${parsed.paymentReceiptId}`,
-      };
+      return reject(`UNKNOWN_PAYMENT_RECEIPT_ID:${parsed.paymentReceiptId}`);
     }
     if (!record.paid || record.paymentStatus === "REFUNDED" || record.paymentStatus === "DISPUTED") {
-      return {
-        verified: false,
-        tier: null,
-        payload: null,
-        signatureHex: null,
-        rejectionReason: `UNPAID_PAYMENT_RECEIPT:${parsed.paymentReceiptId}`,
-      };
+      return reject(`UNPAID_PAYMENT_RECEIPT:${parsed.paymentReceiptId}`);
     }
     if (record.revoked || record.subscriptionStatus !== "ACTIVE") {
-      return {
-        verified: false,
-        tier: null,
-        payload: null,
-        signatureHex: null,
-        rejectionReason: `REVOKED_OR_CANCELED_SUBSCRIPTION:${record.subscriptionStatus}`,
-      };
+      return reject(`REVOKED_OR_CANCELED_SUBSCRIPTION:${record.subscriptionStatus}`);
     }
     if (record.expiresAtMs <= nowMs) {
-      return {
-        verified: false,
-        tier: null,
-        payload: null,
-        signatureHex: null,
-        rejectionReason: "EXPIRED_AUTHORITATIVE_SUBSCRIPTION",
-      };
+      return reject("EXPIRED_AUTHORITATIVE_SUBSCRIPTION");
     }
     if (
       record.tier !== parsed.tier ||
       record.email.trim().toLowerCase() !== parsed.email.trim().toLowerCase()
     ) {
-      return {
-        verified: false,
-        tier: null,
-        payload: null,
-        signatureHex: null,
-        rejectionReason: "AUTHORITATIVE_RECEIPT_CLAIM_MISMATCH",
-      };
+      return reject("AUTHORITATIVE_RECEIPT_CLAIM_MISMATCH");
     }
   }
 
@@ -640,6 +520,7 @@ export function verifySignedEntitlementToken(
     isTrial,
     isAuthoritative: !isTrial,
     trialDaysRemaining,
+    verificationType: "CRYPTOGRAPHIC_ED25519",
   };
 }
 
@@ -658,6 +539,7 @@ export function resolveBrowserVerifiedEntitlement(
         payload: null,
         signatureHex: null,
         rejectionReason: "NO_BROWSER_STORAGE",
+        verificationType: "NONE",
       };
     }
     const storedToken =
@@ -672,7 +554,9 @@ export function resolveBrowserVerifiedEntitlement(
           verified: true,
           tier: trial.tier,
           isTrial: true,
+          isAuthoritative: false,
           trialDaysRemaining: daysRemaining,
+          verificationType: "LOCAL_CLIENT_TRIAL",
           payload: {
             schema: "spe.entitlement.v1",
             tier: trial.tier,
@@ -697,6 +581,7 @@ export function resolveBrowserVerifiedEntitlement(
         payload: null,
         signatureHex: null,
         rejectionReason: "NO_STORED_ENTITLEMENT_TOKEN",
+        verificationType: "NONE",
       };
     }
     const storedAttestation =
@@ -737,6 +622,7 @@ export function resolveBrowserVerifiedEntitlement(
           isTrial: true,
           isAuthoritative: false,
           trialDaysRemaining: daysRemaining,
+          verificationType: "LOCAL_CLIENT_TRIAL",
           payload: {
             schema: "spe.entitlement.v1",
             tier: trial.tier,
@@ -765,8 +651,27 @@ export function resolveBrowserVerifiedEntitlement(
       payload: null,
       signatureHex: null,
       rejectionReason: "STORAGE_ACCESS_ERROR",
+      verificationType: "NONE",
     };
   }
+}
+
+export const SPE_TRIAL_CONSUMED_KEY = "spe-trial-consumed-tombstone";
+
+export function hasDeviceConsumedTrial(): boolean {
+  if (typeof localStorage === "undefined") return false;
+  try {
+    return localStorage.getItem(SPE_TRIAL_CONSUMED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function resetTrialTombstoneForTesting(): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.removeItem(SPE_TRIAL_CONSUMED_KEY);
+  } catch {}
 }
 
 export function startBrowserFreeTrial(
@@ -775,6 +680,9 @@ export function startBrowserFreeTrial(
   days: number = 7,
   currentEpochMs: number = Date.now(),
 ): TrialEntitlementRecord {
+  if (hasDeviceConsumedTrial()) {
+    throw new Error("TRIAL_ALREADY_CONSUMED: Device has already completed or expired a trial window.");
+  }
   const safeEmail = email.trim() || "developer@workspace.local";
   const digest = computeSha256(`trial:${tier}:${safeEmail}:${currentEpochMs}`)
     .slice(0, 10)
@@ -819,10 +727,19 @@ export function resolveBrowserTrialEntitlement(
     // Reject tampered trial durations exceeding 7-day maximum window
     if (parsed.expiresAtMs < parsed.activatedAtMs) return null;
     if (parsed.expiresAtMs - parsed.activatedAtMs > MAX_TRIAL_DURATION_MS) return null;
+    if (hasDeviceConsumedTrial()) {
+      return { ...parsed, status: "EXPIRED_TRIAL" };
+    }
     if (currentEpochMs - parsed.activatedAtMs > MAX_TRIAL_DURATION_MS) {
+      try {
+        localStorage.setItem(SPE_TRIAL_CONSUMED_KEY, "true");
+      } catch {}
       return { ...parsed, status: "EXPIRED_TRIAL" };
     }
     if (parsed.expiresAtMs <= currentEpochMs) {
+      try {
+        localStorage.setItem(SPE_TRIAL_CONSUMED_KEY, "true");
+      } catch {}
       return { ...parsed, status: "EXPIRED_TRIAL" };
     }
     return { ...parsed, status: "ACTIVE_TRIAL" };

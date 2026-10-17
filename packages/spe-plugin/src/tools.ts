@@ -72,17 +72,35 @@ export function compileSystemPrompt(req: CompilePromptRequest): CompilePromptRes
   );
 
   // Extract any inline or sentence-level mandatory instructions from goal (Finding F05)
+  const isMandatoryGoalDirective = (sentence: string): boolean => {
+    const s = sentence.trim().replace(/^[-*•\d.)\s]+/, "").trim();
+    if (s.length < 3) return false;
+    // 1. Multilingual preservation: Telugu, Devanagari, Arabic, CJK, etc. (non-ASCII characters)
+    if (/[^\x00-\x7F]/.test(s)) return true;
+    // 2. State & schema preservation (e.g. Keep account_id unchanged, retain user_id, preserve tokens)
+    if (/\b(?:keep|retain|preserve|maintain|leave|hold)\b.*\b(?:unchanged|intact|as is|untouched|constant|immutable)\b/i.test(s)) {
+      return true;
+    }
+    if (/\b(?:account_id|user_id|session_id|api_key|token|credentials?|secret|password)\b/i.test(s)) {
+      return true;
+    }
+    // 3. Directive & preservation verbs (negative prohibitions + affirmative requirements + privacy/consent)
+    const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|CONSENT|DISCLOSE|NONDISCLOSURE|NON-DISCLOSURE|CONFIDENTIAL|SECRET|PRIVATE|PRIVACY|PROTECT|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|EXFILTRATE|LEAK)\b/i;
+    if (directiveKeywords.test(s)) return true;
+    return false;
+  };
+
   const goalDirectives: string[] = [];
-  const rawSentences = goal.split(/(?<=[.!?])\s+|\n+/).filter(Boolean);
-  const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|DISCLOSE|EXFILTRATE|LEAK)\b/i;
+  const rawSentences = goal.split(/(?<=[.!?\u0964\u0965])\s+|\n+/).filter(Boolean);
   for (const s of rawSentences) {
-    const cleanM = s.trim().replace(/^[-*]\s*/, "");
-    if (cleanM.length > 5 && directiveKeywords.test(cleanM)) {
+    const cleanM = s.trim().replace(/^[-*•\s]+/, "");
+    if (cleanM.length >= 3 && isMandatoryGoalDirective(cleanM)) {
       if (!goalDirectives.includes(cleanM)) {
         goalDirectives.push(cleanM);
       }
     }
   }
+
 
   // Protected Section 1: Role & Persona
   const secRole = `# System Role & Persona\n${role}`;

@@ -892,6 +892,9 @@ export function enforceCapacityCeiling(text, maxChars, isXml = false, isLocal = 
         const newExecLen = currentExec.length - excess;
         const trimmedExec = truncateCleanly(currentExec, newExecLen);
         result = result.slice(0, startIdx + startTag.length) + trimmedExec + result.slice(endIdx);
+      } else if (currentExec.length > 80) {
+        const trimmedExec = truncateCleanly(currentExec, 80);
+        result = result.slice(0, startIdx + startTag.length) + trimmedExec + result.slice(endIdx);
       }
     }
   } else {
@@ -912,6 +915,9 @@ export function enforceCapacityCeiling(text, maxChars, isXml = false, isLocal = 
           const newExecLen = currentExec.length - excess;
           const trimmedExec = truncateCleanly(currentExec, newExecLen);
           result = result.slice(0, execStart) + trimmedExec + "\n\n" + result.slice(execEnd).trimStart();
+        } else if (currentExec.length > 80) {
+          const trimmedExec = truncateCleanly(currentExec, 80);
+          result = result.slice(0, execStart) + trimmedExec + "\n\n" + result.slice(execEnd).trimStart();
         }
       }
     }
@@ -923,8 +929,21 @@ export function enforceCapacityCeiling(text, maxChars, isXml = false, isLocal = 
     const localClosing = "\n<</SYS>>\n\nExecute the objective according to the above instructions. [/INST]";
     const geminiGate = "\n## Final Verification Gate";
     const mdGate = "\n# Final Verification Gate";
+    const mdGuidelines = "\n# Operating Guidelines";
+    const geminiGuidelines = "\n## Operating Guidelines";
+    const xmlGuidelines = "\n<guidelines>";
 
-    if (isXml && result.includes("</system_prompt>")) {
+    if (isXml && result.includes(xmlGuidelines)) {
+      const idx = result.indexOf(xmlGuidelines);
+      const closing = result.slice(idx);
+      if (maxChars > closing.length + 50) {
+        const base = result.slice(0, idx);
+        const budget = maxChars - closing.length;
+        result = truncateCleanly(base, budget) + closing;
+      } else {
+        result = truncateCleanly(result, maxChars);
+      }
+    } else if (isXml && result.includes("</system_prompt>")) {
       const closing = xmlClosing;
       const base = result.slice(0, result.lastIndexOf(closing));
       const budget = maxChars - closing.length;
@@ -934,6 +953,26 @@ export function enforceCapacityCeiling(text, maxChars, isXml = false, isLocal = 
       const base = result.slice(0, result.lastIndexOf(closing));
       const budget = maxChars - closing.length;
       result = truncateCleanly(base, budget) + closing;
+    } else if (result.includes(mdGuidelines)) {
+      const idx = result.lastIndexOf(mdGuidelines);
+      const closing = result.slice(idx);
+      if (maxChars > closing.length + 50) {
+        const base = result.slice(0, idx);
+        const budget = maxChars - closing.length;
+        result = truncateCleanly(base, budget) + closing;
+      } else {
+        result = truncateCleanly(result, maxChars);
+      }
+    } else if (result.includes(geminiGuidelines)) {
+      const idx = result.lastIndexOf(geminiGuidelines);
+      const closing = result.slice(idx);
+      if (maxChars > closing.length + 50) {
+        const base = result.slice(0, idx);
+        const budget = maxChars - closing.length;
+        result = truncateCleanly(base, budget) + closing;
+      } else {
+        result = truncateCleanly(result, maxChars);
+      }
     } else if (result.includes(geminiGate)) {
       const idx = result.lastIndexOf(geminiGate);
       const closing = result.slice(idx);
@@ -986,31 +1025,48 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
     const rawLines = raw.split("\n");
     const extractedConstraints = [];
     const objectiveLines = [];
-    const mandatoryDirectiveRegex = /\b(?:MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS)\b/i;
+    const isMandatoryGoalDirective = (sentence) => {
+      const s = sentence.trim().replace(/^[-*•\d.)\s]+/, "").trim();
+      if (s.length < 3) return false;
+      // 1. Multilingual preservation: Telugu, Devanagari, Arabic, CJK, etc. (non-ASCII characters)
+      if (/[^\x00-\x7F]/.test(s)) return true;
+      // 2. State & schema preservation (e.g. Keep account_id unchanged, retain user_id, preserve tokens)
+      if (/\b(?:keep|retain|preserve|maintain|leave|hold)\b.*\b(?:unchanged|intact|as is|untouched|constant|immutable)\b/i.test(s)) {
+        return true;
+      }
+      if (/\b(?:account_id|user_id|session_id|api_key|token|credentials?|secret|password)\b/i.test(s)) {
+        return true;
+      }
+      // 3. Directive & preservation verbs (negative prohibitions + affirmative requirements + privacy/consent)
+      const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|CONSENT|DISCLOSE|NONDISCLOSURE|NON-DISCLOSURE|CONFIDENTIAL|SECRET|PRIVATE|PRIVACY|PROTECT|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|EXFILTRATE|LEAK)\b/i;
+      if (directiveKeywords.test(s)) return true;
+      return false;
+    };
+
     for (const l of rawLines) {
       const trimmed = l.trim();
       if (
         /^(?:CONSTRAINT[\w\d]*\s*[:—\-]|\bMust strictly\b|\bStrictly\b|\bHard constraint:)/i.test(trimmed) ||
-        mandatoryDirectiveRegex.test(trimmed)
+        isMandatoryGoalDirective(trimmed)
       ) {
-        extractedConstraints.push(trimmed.replace(/^[-*]\s*/, ""));
+        extractedConstraints.push(trimmed.replace(/^[-*•\s]+/, ""));
       } else {
         objectiveLines.push(l);
       }
     }
     // Also scan multi-sentence objective lines for embedded mandatory obligations
-    const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|DISCLOSE|EXFILTRATE|LEAK)\b/i;
     for (const objLine of objectiveLines) {
-      const rawSentences = objLine.split(/(?<=[.!?])\s+|\n+/).filter(Boolean);
+      const rawSentences = objLine.split(/(?<=[.!?\u0964\u0965])\s+|\n+/).filter(Boolean);
       for (const s of rawSentences) {
-        const cleanM = s.trim().replace(/^[-*]\s*/, "");
-        if (cleanM.length > 5 && directiveKeywords.test(cleanM)) {
+        const cleanM = s.trim().replace(/^[-*•\s]+/, "");
+        if (cleanM.length >= 3 && isMandatoryGoalDirective(cleanM)) {
           if (!extractedConstraints.includes(cleanM)) {
             extractedConstraints.push(cleanM);
           }
         }
       }
     }
+
     if (extractedConstraints.length > 0) {
       input = `## Objective\n${objectiveLines.join("\n").trim()}\n\n## Hard constraints\n${extractedConstraints.map((c) => `- ${c}`).join("\n")}\n`;
     } else {

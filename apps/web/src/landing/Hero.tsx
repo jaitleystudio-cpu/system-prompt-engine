@@ -450,7 +450,9 @@ export function Hero(p: Props) {
                   ? ui.phases[p.phase]
                   : p.prompt
                     ? "Ready to use"
-                    : "Awaiting your brief"}
+                    : p.value.trim()
+                      ? "Live preview"
+                      : "Awaiting your brief"}
               </span>
             </div>
             {p.error ? (

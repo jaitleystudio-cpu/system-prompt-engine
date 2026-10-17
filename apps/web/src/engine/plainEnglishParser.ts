@@ -73,26 +73,31 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     if (!output.endsWith(".")) output += ".";
   }
 
-  // 3. Constraint extraction (captures affirmative directives like 'must reply warmly' as well as negative prohibitions)
-  const affirmativePattern = /\b((?:must\s+(?!not\b)|shall\s+(?!not\b)|always\s+|strictly\s+|ensure\s+|reply\s+warmly\b)[^.;,]*?)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/i;
-  const negativePattern = /\b(never\s+.+?|do not\s+.+?|don'\''t\s+.+?|avoid\s+.+?|without\s+.+?|must not\s+.+?|no\s+hallucinations?|omit\s+.+?|cannot\s+.+?)(?=\s*[,.;]?\s*(?:\band\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/i;
+  // 3. Multi-constraint extraction (captures ALL affirmative and negative directives without dropping secondary instructions)
+  const affirmativePattern = /\b((?:must\s+(?!not\b)|shall\s+(?!not\b)|always\s+|strictly\s+|ensure\s+|reply\s+warmly\b|keep\s+[^.,;]+?\s+(?:unchanged|intact|as\s+is|untouched))[^.;,]*?)(?=\s*[,.;]?\s*(?:\band\b|\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/gi;
+  const negativePattern = /\b((?:never\s+|do\s+not\s+|don'\''t\s+|avoid\s+|without\s+|must\s+not\s+|shall\s+not\s+|cannot\s+|omit\s+|no\s+hallucinations?|do\s+not\s+disclose).+?)(?=\s*[,.;]?\s*(?:\band\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/gi;
+
+  const rawConstraints: string[] = [];
+  for (const m of text.matchAll(affirmativePattern)) {
+    rawConstraints.push(m[1]);
+  }
+  for (const m of text.matchAll(negativePattern)) {
+    rawConstraints.push(m[1]);
+  }
 
   const collectedConstraints: string[] = [];
-  const affMatch = text.match(affirmativePattern);
-  if (affMatch && affMatch[1]) {
-    const cleanAff = affMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
-    if (cleanAff && !cleanAff.toLowerCase().startsWith("be a") && !cleanAff.toLowerCase().startsWith("be an")) {
-      collectedConstraints.push(cleanAff);
+  for (const item of rawConstraints) {
+    const subParts = item.split(/\s+and\s+(?=(?:must|shall|always|strictly|ensure|reply\s+warmly|keep|never|do\s+not|don'\''t|avoid|without|cannot)\b)/i);
+    for (const part of subParts) {
+      const clean = part.trim().replace(/\s+(?:and|with)$/i, "").trim();
+      if (clean && !clean.toLowerCase().startsWith("be a") && !clean.toLowerCase().startsWith("be an")) {
+        if (!collectedConstraints.some((c) => c.toLowerCase() === clean.toLowerCase())) {
+          collectedConstraints.push(clean);
+        }
+      }
     }
   }
 
-  const negMatch = text.match(negativePattern);
-  if (negMatch && negMatch[1]) {
-    const cleanNeg = negMatch[1].trim().replace(/\s+(?:and|with)$/i, "").trim();
-    if (cleanNeg && !collectedConstraints.includes(cleanNeg)) {
-      collectedConstraints.push(cleanNeg);
-    }
-  }
 
   if (collectedConstraints.length > 0) {
     constraintPhrase = collectedConstraints.join(", ");
@@ -101,6 +106,8 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
       .join(". ");
     if (!constraint.endsWith(".")) constraint += ".";
   }
+
+
 
   // 4. Goal extraction
   const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\band\b|[.;]|$))/i;
@@ -161,16 +168,21 @@ export function segmentCustomInput(
 
   for (const { type, phrase } of entries) {
     if (!phrase || phrase.trim().length === 0) continue;
-    const clean = phrase.trim();
-    const idx = text.toLowerCase().indexOf(clean.toLowerCase());
-    if (idx !== -1) {
-      spans.push({
-        start: idx,
-        end: idx + clean.length,
-        type,
-      });
+    const subphrases = phrase.includes(",") ? phrase.split(/,\s*/) : [phrase];
+    for (const sub of subphrases) {
+      const clean = sub.trim();
+      if (!clean) continue;
+      const idx = text.toLowerCase().indexOf(clean.toLowerCase());
+      if (idx !== -1) {
+        spans.push({
+          start: idx,
+          end: idx + clean.length,
+          type,
+        });
+      }
     }
   }
+
 
   spans.sort((a, b) => a.start - b.start);
 

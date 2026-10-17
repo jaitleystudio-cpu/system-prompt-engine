@@ -4,6 +4,9 @@ import {
   resolveBrowserTrialEntitlement,
   clearBrowserTrialEntitlement,
   verifySignedEntitlementToken,
+  hasDeviceConsumedTrial,
+  resetTrialTombstoneForTesting,
+  SPE_TRIAL_CONSUMED_KEY,
 } from "../src/engine/entitlementVerifier.ts";
 import { isVerifiedPaidEntitlementResult } from "../src/engine/promptSynthesizer.mjs";
 import { AuthoritativeBillingAuthority } from "../src/server/billingAuthority.ts";
@@ -130,6 +133,48 @@ assert.equal(
 clearBrowserTrialEntitlement();
 console.log("  ✓ Anti-spoofing verified: Far-future and tampered trial durations strictly rejected.");
 
+// [7/7] Testing Trial Tombstone & Anti-Restart Protection
+console.log("[7/7] Testing Trial Tombstone & Anti-Restart Protection...");
+resetTrialTombstoneForTesting();
+assert.equal(hasDeviceConsumedTrial(), false, "Initial state: device has not consumed trial");
+
+// Start a fresh trial
+const activeTrial = startBrowserFreeTrial("pro", "user@trial.test", 7, now);
+assert.equal(activeTrial.status, "ACTIVE_TRIAL");
+
+// Simulate time expiry past 7 days
+const expiredMs = now + 8 * 24 * 60 * 60 * 1000;
+const expiredResult = resolveBrowserTrialEntitlement(expiredMs);
+assert.equal(expiredResult.status, "EXPIRED_TRIAL", "Trial past 7 days must resolve as EXPIRED_TRIAL");
+assert.equal(hasDeviceConsumedTrial(), true, "Tombstone must be set upon trial expiration");
+
+// Verify that starting a new trial throws TRIAL_ALREADY_CONSUMED
+assert.throws(
+  () => startBrowserFreeTrial("pro", "user@trial.test", 7, expiredMs),
+  /TRIAL_ALREADY_CONSUMED/,
+  "Must reject restart when device trial tombstone is active",
+);
+
+// Verify that manual injection of a fake active trial while tombstone exists resolves to EXPIRED_TRIAL
+localStorage.setItem("spe-trial-entitlement", JSON.stringify({
+  status: "ACTIVE_TRIAL",
+  tier: "team",
+  planName: "Injected Pass",
+  email: "attacker@spoof.local",
+  trialId: "SPE-TRIAL-TEAM-SPOOF",
+  activatedAtMs: expiredMs,
+  expiresAtMs: expiredMs + 7 * 86400 * 1000,
+  isTrial: true,
+}));
+const blockedSpoof = resolveBrowserTrialEntitlement(expiredMs + 1000);
+assert.equal(blockedSpoof.status, "EXPIRED_TRIAL", "Injected trial record must fail closed as EXPIRED_TRIAL when tombstone exists");
+
+// Clean up tombstone for testing
+resetTrialTombstoneForTesting();
+clearBrowserTrialEntitlement();
+console.log("  ✓ Trial tombstone verified: Expired trials cannot restart on same device, and injected records fail closed.");
+
 console.log("==================================================================");
 console.log("🎉 ALL 7-DAY UNIVERSAL FREE TRIAL TESTS PASSED (100%)!");
 console.log("==================================================================");
+

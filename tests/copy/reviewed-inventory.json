@@ -4225,16 +4225,16 @@
       "text": "CLAUDE.md"
     },
     {
-      "id": "04bdd2165b4a2414f159",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "llama3"
-    },
-    {
       "id": "04ffb4df4e026a1d4f55",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Executes structured code enhancement with test verification receipt."
+    },
+    {
+      "id": "052fba818eb221b223b4",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": ". $0 API cost, 100% offline air-gapped execution. Ensure your Ollama daemon is running."
     },
     {
       "id": "0562ef1e646ac094d275",
@@ -4249,22 +4249,10 @@
       "text": "sk-..."
     },
     {
-      "id": "090ee58d693c371e18c5",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Local Ollama (Llama 3.3)"
-    },
-    {
       "id": "0d5352000979173bceda",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "byok"
-    },
-    {
-      "id": "0ddbd7e6dc328e7fe3bf",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "http://localhost:11434/api/generate"
     },
     {
       "id": "0eb488a6528791f114a7",
@@ -4291,6 +4279,12 @@
       "text": "ollama"
     },
     {
+      "id": "149e0dde17a9ce47d642",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "anthropic-dangerous-direct-browser-access: true"
+    },
+    {
       "id": "151f534f334b3b63d382",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4315,6 +4309,12 @@
       "text": "POST"
     },
     {
+      "id": "1872ebff069d1e16cea5",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI explicitly advises against deploying secret API keys ("
+    },
+    {
       "id": "187edab8c8e97979ca0d",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4327,10 +4327,10 @@
       "text": "Zero server API calls · 100% deterministic local guardrails"
     },
     {
-      "id": "1a2678e46c84ce694cf0",
+      "id": "19bbdc003858360f0f13",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI (GPT-4o)"
+      "text": "Connects directly to"
     },
     {
       "id": "1b4ea6eedcb24197bc8c",
@@ -4367,12 +4367,6 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "anthropic"
-    },
-    {
-      "id": "2301cf16f7639bb77ec3",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key="
     },
     {
       "id": "23062480e550463bbe55",
@@ -4417,22 +4411,16 @@
       "text": "exfiltration"
     },
     {
-      "id": "4a1f6af3a2df12ccdc45",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Google (Gemini 2.0 Flash)"
-    },
-    {
       "id": "4ceb194afcc0a3b80273",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Provider:"
     },
     {
-      "id": "52904cbe5945061fb560",
+      "id": "51b66a3e004b1db48dd0",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Local Ollama (Llama 3)"
+      "text": "ℹ️ Google AI Studio Key:"
     },
     {
       "id": "541a47c4181838e0865c",
@@ -4447,10 +4435,28 @@
       "text": "Enforces scope boundary refusal — denies modification outside assigned task files."
     },
     {
-      "id": "5551303f408bad815887",
+      "id": "55a641aca1785c0affab",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+      "text": "Google (Gemini 2.5 Flash)"
+    },
+    {
+      "id": "57aa3abc524e1d1bd3ab",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-4-5-sonnet"
+    },
+    {
+      "id": "5851a77247a656bc3801",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": ") directly in client-side browser applications. Keys entered here reside strictly in transient browser component memory and are never transmitted to any SPE server, but users should prefer restricted/ephemeral test keys or backend proxy deployment for production agent runtimes."
+    },
+    {
+      "id": "595cc9ab02b81d000fc5",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🔒 Direct Browser Egress: Dispatched directly from your browser sandbox to official"
     },
     {
       "id": "59874b4534fc48c8935c",
@@ -4507,10 +4513,16 @@
       "text": "boundary"
     },
     {
-      "id": "72a00c0d4d7d776be2ff",
+      "id": "6e086de7bf83cc4485d7",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Anthropic (Claude 3.7 Sonnet)"
+      "text": "⚠️ Provider Security Notice (OpenAI Best Practices):"
+    },
+    {
+      "id": "6e3a64edc61fe18a6732",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI (GPT-4o / GPT-5)"
     },
     {
       "id": "7d20b264700e6c809b6f",
@@ -4531,28 +4543,16 @@
       "text": "Scope Breach: Out-of-Scope Deletion"
     },
     {
-      "id": "863c75ca9b5776155815",
+      "id": "840279c2f21da5c17378",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "claude-3-7-sonnet-20250219"
+      "text": "🖥️ Local Ollama Daemon:"
     },
     {
       "id": "8839b10bd0407fd75046",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Attack Gym · Live Agent Security Sandbox"
-    },
-    {
-      "id": "88e35e866dc44c834eba",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Anthropic (Claude 3.5 Sonnet)"
-    },
-    {
-      "id": "8dc2a412add2624e3fb0",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "llama3.3"
     },
     {
       "id": "8ed63736315c00164d3c",
@@ -4577,6 +4577,12 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "local"
+    },
+    {
+      "id": "9a182768aad4b384e0ab",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "http://127.0.0.1:11434"
     },
     {
       "id": "9a51c8c2c3330873588c",
@@ -4607,6 +4613,12 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "gemini"
+    },
+    {
+      "id": "a04b812cf5a0eadf32d0",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "endpoints. Zero server proxy."
     },
     {
       "id": "a187fcfff7647ce982fe",
@@ -4645,10 +4657,34 @@
       "text": "[LIVE MODEL TEST FLIGHT ·"
     },
     {
+      "id": "b439d341bac0b543788a",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "llama4"
+    },
+    {
       "id": "b864d8a2621ae01b6d9f",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Analyze this function: function divide(a, b) { return a / b; } and add guardrails for division by zero with a unit test."
+    },
+    {
+      "id": "b880968fb34e2dd81ee8",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Dispatched directly via"
+    },
+    {
+      "id": "b927b489a027c9d35a90",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Direct browser requests require the"
+    },
+    {
+      "id": "bcb0c487b971a9ebc58b",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "⚠️ Anthropic Direct Browser Access:"
     },
     {
       "id": "bf0309435747f20be6f4",
@@ -4673,12 +4709,6 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Open Sandbox ▼"
-    },
-    {
-      "id": "c2509de6c4c84e3a9618",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Test how Claude Code, Cursor, or ChatGPT will behave with this prompt ($0 local sandbox)"
     },
     {
       "id": "c258554edc8c325db2bb",
@@ -4717,28 +4747,16 @@
       "text": "test-exfiltration"
     },
     {
-      "id": "d021be4ced7123b09627",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Testing Defense…"
-    },
-    {
-      "id": "d1d74ffe0fd187e07ec1",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Google (Gemini 1.5 Pro)"
-    },
-    {
       "id": "d2a94dd1774c85092451",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Direct client-side fetch to provider · No server proxy"
     },
     {
-      "id": "d45629b35a321d67e548",
+      "id": "d61b2656f375ca91c0b3",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "claude-3-5-sonnet-20241022"
+      "text": "x-goog-api-key"
     },
     {
       "id": "d72768833e636990cbff",
@@ -4771,10 +4789,22 @@
       "text": "Jailbreak: Prompt Disclosure Attack"
     },
     {
+      "id": "dd04e500d827a1a8f8f6",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic (Claude 4.5 Sonnet)"
+    },
+    {
       "id": "e33d48c0ac69d0c83d8e",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "AIzaSy..."
+    },
+    {
+      "id": "e8602e814f7a9bda7842",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local Ollama (Llama 4 / 3.3)"
     },
     {
       "id": "e9fa253586ca3f90c42e",
@@ -4789,6 +4819,12 @@
       "text": "Test how Claude Code, Cursor, or ChatGPT will behave with this prompt"
     },
     {
+      "id": "ebd726d762a8be66b939",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "request header. We recommend using keys with restricted API permissions."
+    },
+    {
       "id": "ed224a707038fb95a528",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4799,12 +4835,6 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "schema.sql"
-    },
-    {
-      "id": "f08b0e7a07959ce6e31c",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🔒 Direct Browser Egress: Dispatched directly from your browser sandbox to the official"
     },
     {
       "id": "f21b72a8decb6109afa7",
@@ -4819,22 +4849,22 @@
       "text": "🚫 [SCOPE BOUNDARY ENFORCED · TASK HALTED]\n\nTask aborted: The requested action targets files outside the authorized project boundary (LOCAL_FILESYSTEM_READ / scope constraint).\n\nDeclared Scope: Current task files only.\nViolations Prevented: Destructive filesystem deletion & credential tampering."
     },
     {
-      "id": "f70707de942210538c7b",
+      "id": "f5158c631464e1c76e85",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
-      "text": "API. Zero server proxy."
+      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    },
+    {
+      "id": "f736efd5030a6d420206",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "header. Use only temporary developer keys in isolated development environments."
     },
     {
       "id": "f7786afc79e59db18aa7",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "raw system prompt"
-    },
-    {
-      "id": "f8fed3c4fe60f8ee8496",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🔒 Client-Held Key: Directly dispatched from your browser to provider API. Zero server retention."
     },
     {
       "id": "f9adb14c18069a50b8d3",
@@ -10643,6 +10673,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Make my prompt"
+    },
+    {
+      "id": "3a8f69450d6c09ce26d3",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Live preview"
     },
     {
       "id": "3b8d292aafcfb7f6d167",
@@ -26335,16 +26371,10 @@
       "text": "Start test-driving full 30,000+ character capacity and all Pro capabilities in your browser right now for 7 days."
     },
     {
-      "id": "04ba60d00eeb7ee3b6b7",
+      "id": "02dcfb74055c48b4de6b",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "Start 14-Day Free Trial (Zero Card Required) →"
-    },
-    {
-      "id": "05d263a134cb7eb9d8a5",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Start test-driving full 30,000+ character capacity and all Pro capabilities in your browser right now for 14 days."
+      "text": "Checkout Mode:"
     },
     {
       "id": "066e69d366096eb7b253",
@@ -26375,12 +26405,6 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": ": Browser speech/text to structured English prompts"
-    },
-    {
-      "id": "110473a9dd04a5b11b9f",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "✓ 14-Day Free Trial Activated Successfully!"
     },
     {
       "id": "131240f20f6d993febba",
@@ -26419,12 +26443,6 @@
       "text": "with scope checks"
     },
     {
-      "id": "189b1f68ef2334348385",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Activate 14-Day Free Trial Instantly →"
-    },
-    {
       "id": "197e570cc3dd36c06f39",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -26455,12 +26473,6 @@
       "text": "For individual builders who want an ad-free workspace, deterministic session continuation, and pre-flight invariant checks."
     },
     {
-      "id": "1f74fa8554900f2fa5eb",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Universal 14-Day Free Trial"
-    },
-    {
       "id": "20166b0eb23c3dd56040",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -26477,6 +26489,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PRODUCT",
       "text": "Invalid or unverified server entitlement token."
+    },
+    {
+      "id": "20ee0c0a386b7f407982",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "undefined"
     },
     {
       "id": "2105d9a08259f3df21d6",
@@ -26513,12 +26531,6 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": ": `spe check --pre-commit` checks declared scope invariants locally"
-    },
-    {
-      "id": "27039a08ebb5ce27c8ab",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Active 14-Day Trial Token:"
     },
     {
       "id": "274eb306427636a6b944",
@@ -26627,6 +26639,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "· 100% Ad-Free Sanctuary Active (Deactivating removes local token; recurring billing is managed via server checkout)"
+    },
+    {
+      "id": "4371cffb6b67cb4495dc",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "test_"
     },
     {
       "id": "45abc5b110d7cd8f0c57",
@@ -26869,22 +26887,10 @@
       "text": "Developer Pro Features"
     },
     {
-      "id": "703dec17b9be6bb3de99",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "14-Day Full Access Free Trial · Available for Everyone"
-    },
-    {
       "id": "74d5ea2d9583b0c7665a",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Which features run 100% locally in my browser vs. external services?"
-    },
-    {
-      "id": "78d25956131a191d8fe6",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Enter your email to reserve your Public Beta introductory rate, or paste a server-issued signed entitlement token ("
     },
     {
       "id": "792d912e0df07e3a8aa8",
@@ -26965,22 +26971,10 @@
       "text": "How does the $1 and $9 introductory pricing work?"
     },
     {
-      "id": "833b8816423ca28a64af",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Your 14-day free trial for"
-    },
-    {
       "id": "8563b3c36970a09e1ede",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Standard renewal price $9"
-    },
-    {
-      "id": "86fd32d14b6d8811e168",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Test-Drive Developer Pro or Team Free for 14 Days"
     },
     {
       "id": "8754b4041d5124a1382d",
@@ -27085,12 +27079,6 @@
       "text": "Reserve Public Beta Rate →"
     },
     {
-      "id": "966ff6638e855543965b",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Or Start 14-Day Free Trial (No Card) →"
-    },
-    {
       "id": "9779b26c09808af9f50b",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -27101,6 +27089,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Pay once, keep Developer Pro capabilities forever. No recurring subscriptions, perpetual local offline license."
+    },
+    {
+      "id": "98ec4ec995d39c6ae4aa",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Live Production"
     },
     {
       "id": "98fe781be7087536a46a",
@@ -27235,12 +27229,6 @@
       "text": "permanently unlocked"
     },
     {
-      "id": "c1884c80a6cbb6b49b6d",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": ") to verify and activate a paid tier:"
-    },
-    {
       "id": "c71cd78fe005c5896598",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -27319,12 +27307,6 @@
       "text": "Lifetime Offline Entitlement Key"
     },
     {
-      "id": "d3ae35d5f077b8837493",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "14-Day Instant Free Trial (Zero Card Required)"
-    },
-    {
       "id": "d4e9a177460b1fe135b8",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -27353,12 +27335,6 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "signed with Ed25519"
-    },
-    {
-      "id": "db9ff90b49376642459e",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Or Start 14-Day Team Trial (No Card) →"
     },
     {
       "id": "dc69b36fe785e457b7d7",
@@ -27415,12 +27391,6 @@
       "text": "https://buy.stripe.com/test_spe_lifetime_69"
     },
     {
-      "id": "e45be440c6d275a8729e",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "14-Day Free Trial Active"
-    },
-    {
       "id": "e4624f4299651cbb271b",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -27431,12 +27401,6 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": ": Tamper-evident verification logs for engineering review"
-    },
-    {
-      "id": "e6903cb3d2f627bebe1d",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Zero payment upfront. Zero credit card required. Experience 30,000+ character prompt output, 11+ dialect transcompilers, and 101 skill packs instantly with 1-click browser activation."
     },
     {
       "id": "e6f04fdb7d0a14926d5a",
@@ -27515,6 +27479,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Company &amp; CI/CD Gate is $9 for your first month (renews at $99/month)"
+    },
+    {
+      "id": "fc8736e54f16233eb22e",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Preview (sandbox / test links active)"
     },
     {
       "id": "fd353ba09d1433fa90ac",
@@ -37793,48 +37763,6 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Building your prompt…"
-    },
-    {
-      "id": "55a641aca1785c0affab",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Google (Gemini 2.5 Flash)"
-    },
-    {
-      "id": "57aa3abc524e1d1bd3ab",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "claude-4-5-sonnet"
-    },
-    {
-      "id": "6e3a64edc61fe18a6732",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "OpenAI (GPT-4o / GPT-5)"
-    },
-    {
-      "id": "b439d341bac0b543788a",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "llama4"
-    },
-    {
-      "id": "dd04e500d827a1a8f8f6",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Anthropic (Claude 4.5 Sonnet)"
-    },
-    {
-      "id": "e8602e814f7a9bda7842",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Local Ollama (Llama 4 / 3.3)"
-    },
-    {
-      "id": "f5158c631464e1c76e85",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     }
   ]
 }

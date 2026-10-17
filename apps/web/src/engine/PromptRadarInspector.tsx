@@ -152,33 +152,41 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   }, [rawIrPrompt, currentPrompt]);
   const resolvedEntitlement =
     entitlement !== undefined ? entitlement : resolveBrowserVerifiedEntitlement();
-  const claudePrompt = synthesizeSystemPrompt(irSource, {
-    target: "claude",
-    depthTier: activeDepthTier,
-    entitlement: resolvedEntitlement,
-  });
-  const gptPrompt = synthesizeSystemPrompt(irSource, {
-    target: "chatgpt",
-    depthTier: activeDepthTier,
-    entitlement: resolvedEntitlement,
-  });
-  const geminiPrompt = synthesizeSystemPrompt(irSource, {
-    target: "gemini",
-    depthTier: activeDepthTier,
-    entitlement: resolvedEntitlement,
-  });
-  const localPrompt = synthesizeSystemPrompt(irSource, {
-    target: "local",
-    depthTier: activeDepthTier,
-    entitlement: resolvedEntitlement,
-  });
+  const synthesisState = useMemo(() => {
+    const targets: ("claude" | "chatgpt" | "gemini" | "local")[] = ["claude", "chatgpt", "gemini", "local"];
+    const prompts: Record<string, string> = {};
+    const errors: Record<string, string> = {};
+    for (const t of targets) {
+      try {
+        prompts[t] = synthesizeSystemPrompt(irSource, {
+          target: t,
+          depthTier: activeDepthTier,
+          entitlement: resolvedEntitlement,
+        });
+      } catch (err: unknown) {
+        errors[t] = err instanceof Error ? err.message : String(err);
+        prompts[t] = currentPrompt;
+      }
+    }
+    return { prompts, errors };
+  }, [irSource, activeDepthTier, resolvedEntitlement, currentPrompt]);
+
+  const claudePrompt = synthesisState.prompts.claude;
+  const gptPrompt = synthesisState.prompts.chatgpt;
+  const geminiPrompt = synthesisState.prompts.gemini;
+  const localPrompt = synthesisState.prompts.local;
+
   const markdownPrompt = useMemo(() => {
-    return constructMarkdownSystemPrompt(irSource, {
-      depthTier: activeDepthTier,
-      includeFrontmatter,
-      entitlement: resolvedEntitlement,
-    });
-  }, [irSource, activeDepthTier, includeFrontmatter, resolvedEntitlement]);
+    try {
+      return constructMarkdownSystemPrompt(irSource, {
+        depthTier: activeDepthTier,
+        includeFrontmatter,
+        entitlement: resolvedEntitlement,
+      });
+    } catch {
+      return currentPrompt;
+    }
+  }, [irSource, activeDepthTier, includeFrontmatter, resolvedEntitlement, currentPrompt]);
 
   // Code Export Snippets
   const pythonSnippet = `# SPE Ω Python Production Runner
@@ -188,7 +196,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
 from anthropic import Anthropic
 client = Anthropic()
 response = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-3-7-sonnet-20250219",
     max_tokens=4096,
     system=${JSON.stringify(claudePrompt)},
     messages=[{"role": "user", "content": "Execute following instructions."}]
@@ -214,7 +222,7 @@ import OpenAI from "openai";
 
 const anthropic = new Anthropic();
 const anthropicRes = await anthropic.messages.create({
-  model: "claude-3-5-sonnet-20241022",
+  model: "claude-3-7-sonnet-20250219",
   max_tokens: 4096,
   system: ${JSON.stringify(claudePrompt)},
   messages: [{ role: "user", content: "Begin task." }]
@@ -1443,7 +1451,13 @@ ${promptText}
               Local Llama/Mistral ({localPrompt.length.toLocaleString()}c)
             </button>
           </div>
+          {synthesisState.errors[activeTarget] && (
+            <div style={{ margin: "0.5rem 0", padding: "0.5rem 0.75rem", borderRadius: "6px", backgroundColor: "rgba(245, 158, 11, 0.1)", border: "1px solid rgba(245, 158, 11, 0.3)", color: "#fcd34d", fontSize: "0.76rem" }}>
+              ⚠️ Target Adaptation Notice: Target &apos;{activeTarget}&apos; synthesis encountered an invariant boundary ({synthesisState.errors[activeTarget]}). Displaying calibrated primary prompt fallback.
+            </div>
+          )}
           <p style={{ fontSize: "0.74rem", color: "#94a3b8", lineHeight: "1.4" }}>
+
             The prompt automatically adapts to each target provider’s architecture: Claude receives explicit XML tag bounds; ChatGPT receives structured developer headers; Gemini receives grounded multimodal constraints; Local models receive instruction token delimiters.
           </p>
         </div>
