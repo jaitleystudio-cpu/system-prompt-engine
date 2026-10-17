@@ -44,16 +44,8 @@ export async function callModel(cfg: CallCfg, system: string, user: string, f: t
 /** Deterministic stand-in used ONLY on dev servers with a test key, for demos and e2e tests. Labelled SIMULATED.
  * It follows explicit repair clauses so the loop can be exercised, and it always claims to be "done" to show
  * that such claims are ignored by the verifier. */
-// Flagship demo scripts (deterministic). The generated code is real JavaScript that the harness really runs;
-// only the "model" is scripted. crash-then-fix: crashes (undefined `todos`) until the prompt carries the
-// targeted repair for that exact error. always-crash: keeps crashing no matter what the prompt says.
-const DEMO_CRASH = (claim: string) => "```js\nconst root = document.getElementById(\"root\");\nroot.innerHTML = \"<h1>My todos</h1><ul>\" + todos.map((t) => \"<li>\" + t + \"</li>\").join(\"\") + \"</ul>\";\nconsole.log(\"" + claim + "\");\n```\n" + claim;
-const DEMO_FIXED = "```js\nconst todos = [\"Buy milk\", \"Ship the release\"];\nconst root = document.getElementById(\"root\");\nroot.innerHTML = \"<h1>My todos</h1><ul>\" + todos.map((t) => \"<li>\" + t + \"</li>\").join(\"\") + \"</ul>\";\n```\nDone — the app renders.";
-export function demoAnswer(system: string, user: string): string | null {
-  if (user.includes("[demo:always-crash]")) return DEMO_CRASH("Done — fixed, all requirements met.");
-  if (user.includes("[demo:crash-then-fix]")) return /Do not reference `todos` unless you declare and initialise it first/.test(system) ? DEMO_FIXED : DEMO_CRASH("Done — all requirements met.");
-  return null;
-}
+import { demoAnswer } from "./demoScripts.ts";
+export { demoAnswer };
 export function mockAnswer(system: string, user: string): string {
   const demo = demoAnswer(system, user); if (demo) return demo;
   const fixes = system.split("## Fixes from earlier attempts")[1] ?? "";

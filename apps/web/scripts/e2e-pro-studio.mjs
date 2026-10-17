@@ -46,6 +46,7 @@ try {
     await p.fill("#ps-key", "spe_pro.v1.eyJmYWtlIjoxfQ.AAAA"); await p.getByRole("button", { name: "Unlock" }).click();
     await expectText(p.locator('[data-testid="gate-reason"]'), /malformed|signature|not valid|key/i);
   });
+  for (let i = consoleErrors.length - 1; i >= 0; i--) if (/^1440-entry: Failed to load resource: the server responded with a status of 401/.test(consoleErrors[i])) consoleErrors.splice(i, 1); // expected: the forged key above
   await step("gate unlocks with a server-verified key", async () => {
     await p.fill("#ps-key", KEY); await p.getByRole("button", { name: "Unlock" }).click();
     await p.locator("#ps-home-h").waitFor({ timeout: 15000 });
@@ -67,14 +68,23 @@ try {
     await p.goto(BASE + "/pro-studio/living"); await p.locator('[data-testid="living-demo"]').click();
     await p.locator('[data-testid="living-run"]').click();
     await expectText(p.locator('[data-testid="living-status"]'), /VERIFIED/, 30000);
-    await expectText(p.locator('[data-testid="captured-errors"]'), /ReferenceError: todos is not defined/);
-    await expectText(p.locator('[data-testid="prompt-diff"]'), /Do not reference `todos`/);
+    await expectText(p.locator('[data-testid="captured-errors"]'), /ReferenceError: window is not defined/);
+    await expectText(p.locator('[data-testid="prompt-diff"]'), /MUST NOT use `window` during server-side rendering/);
     await expectText(p.locator('[data-testid="living-ledger"]'), /0 runtime errors, 0 console errors/);
+    await expectText(p.locator('[data-testid="living-timeline"]'), /Verified 0 errors, fix recorded/);
+    await expectText(p.locator('[data-testid="scoped-repairs"]'), /Accepted/);
     await p.locator('[data-testid="living-cert"]').click(); await expectText(p.locator('[data-testid="cert-summary"]'), /VERIFIED/);
     await expectText(p.locator(".ps-badge-sim").first(), /SIMULATED/);
   });
   await shot(p, "1440-dark-living-verified");
   await p.locator('[data-testid="living-attempts"]').scrollIntoViewIfNeeded().catch(() => {}); await shot(p, "1440-dark-living-attempts");
+  await step("NEGATIVE (UI): a fix that renders but drops a feature is rejected as drift", async () => {
+    await p.locator('[data-testid="living-demo-drift"]').click(); await p.locator('[data-testid="living-run"]').click();
+    await expectText(p.locator('[data-testid="living-status"]'), /PAUSED/, 30000);
+    await expectText(p.locator('[data-testid="scoped-repairs"]'), /Rejected: drift/);
+    await expectText(p.locator('[data-testid="scoped-repairs"]'), /Features removed: footer/);
+  });
+  await shot(p, "1440-dark-living-drift-rejected");
   await step("NEGATIVE (UI): code that keeps crashing pauses at the cap with a receipt, never verified", async () => {
     await p.locator('[data-testid="living-demo"]').click();
     await p.fill("#lv-in-0", "Write the app as one JavaScript code block. [demo:always-crash]"); await p.fill("#lv-max", "3"); await p.fill("#lv-name", "Always crashes");
