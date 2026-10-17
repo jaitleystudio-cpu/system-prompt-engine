@@ -269,6 +269,20 @@ export class ReleaseSafetyGovernor {
     );
   }
 
+  public static getWorkspaceRoot(): string {
+    const curr = process.cwd();
+    if (existsSync(resolve(curr, "apps/web/package.json"))) {
+      return curr;
+    }
+    if (existsSync(resolve(curr, "../../apps/web/package.json"))) {
+      return resolve(curr, "../..");
+    }
+    if (existsSync(resolve(curr, "../apps/web/package.json"))) {
+      return resolve(curr, "..");
+    }
+    return curr;
+  }
+
   constructor(options: { customAuthorityKeys?: Record<string, string> } = {}) {
     if (
       ReleaseSafetyGovernor.isProductionOrStagingEnvironment() &&
@@ -316,7 +330,7 @@ export class ReleaseSafetyGovernor {
   }
 
   private getNonceFilePath(): string {
-    const speDir = resolve(process.cwd(), ".spe");
+    const speDir = resolve(ReleaseSafetyGovernor.getWorkspaceRoot(), ".spe");
     if (!existsSync(speDir)) {
       try {
         mkdirSync(speDir, { recursive: true });
@@ -477,9 +491,10 @@ export class ReleaseSafetyGovernor {
       );
     }
 
+    const root = ReleaseSafetyGovernor.getWorkspaceRoot();
     const fileHashes: string[] = [];
     for (const filePath of [...candidate.targetFiles].sort()) {
-      const fullPath = resolve(process.cwd(), filePath);
+      const fullPath = resolve(root, filePath);
       if (!existsSync(fullPath)) {
         throw new Error(`PROPOSAL_TARGET_FILE_UNREADABLE: Target file '${filePath}' does not exist on disk.`);
       }
@@ -508,9 +523,10 @@ export class ReleaseSafetyGovernor {
 
     // Check sentinel file in workspace
     try {
+      const root = ReleaseSafetyGovernor.getWorkspaceRoot();
       const stopPaths = [
-        resolve(process.cwd(), ".spe_emergency_stop"),
-        resolve(process.cwd(), "EMERGENCY_STOP.flag"),
+        resolve(root, ".spe_emergency_stop"),
+        resolve(root, "EMERGENCY_STOP.flag"),
       ];
       return stopPaths.some((p) => existsSync(p));
     } catch {
@@ -947,7 +963,8 @@ export class ReleaseSafetyGovernor {
     } = {}
   ): Promise<RollbackExecutionResult> {
     const timestamp = new Date().toISOString();
-    const pointerDir = resolve(process.cwd(), "proofs/generated");
+    const root = ReleaseSafetyGovernor.getWorkspaceRoot();
+    const pointerDir = resolve(root, "proofs/generated");
     try {
       mkdirSync(pointerDir, { recursive: true });
     } catch {}
@@ -989,11 +1006,11 @@ export class ReleaseSafetyGovernor {
     }
 
     // 2. Physically restore destination from immutable pinned storage
-    const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
+    const pinnedBaseDir = resolve(root, "apps/web/deployments/pinned-base");
     const pinnedWasm = resolve(pinnedBaseDir, "spe_wasm.wasm");
-    const distDir = resolve(process.cwd(), "apps/web/dist");
+    const distDir = resolve(root, "apps/web/dist");
     const distWasm = resolve(distDir, "spe_wasm.wasm");
-    const publicWasm = resolve(process.cwd(), "apps/web/public/spe_wasm.wasm");
+    const publicWasm = resolve(root, "apps/web/public/spe_wasm.wasm");
     const distManifest = resolve(distDir, "release-manifest.json");
     const pinnedManifest = resolve(pinnedBaseDir, "release-manifest.json");
 
@@ -1046,8 +1063,8 @@ export class ReleaseSafetyGovernor {
         ReleaseSafetyGovernor.safeRestoreFile(pinnedManifest, distManifest, distDir);
 
         // Step 4: Restore canonical WASM to public if directory present in workspace
-        if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
-          ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(process.cwd(), "apps/web/public"));
+        if (existsSync(resolve(root, "apps/web/public")) && existsSync(pinnedWasm)) {
+          ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(root, "apps/web/public"));
         }
 
         // Step 5: Purge any unexpected / uncataloged files (including symlinks) that were added to distDir
@@ -1071,8 +1088,8 @@ export class ReleaseSafetyGovernor {
     } else if (existsSync(pinnedWasm)) {
       try {
         ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, distWasm, distDir);
-        if (existsSync(resolve(process.cwd(), "apps/web/public"))) {
-          ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(process.cwd(), "apps/web/public"));
+        if (existsSync(resolve(root, "apps/web/public"))) {
+          ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(root, "apps/web/public"));
         }
       } catch (err) {
         console.warn("Rollback physical WASM restoration notice:", err);
