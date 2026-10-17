@@ -43,11 +43,33 @@ jobs:
       - name: Execute Autonomous A-to-Z Master Pipeline
         run: node tools/autonomous_pipeline.mjs
 
-      - name: Verify Clean Working Tree for Model Atlas & Sitemaps (Fail-Closed)
+      - name: Verify Fail-Closed Repository Cleanliness Gate (AUD-06)
         run: |
+          echo "[*] Verifying complete repository cleanliness..."
           git status --short
+
+          # 1. Strict check on primary generated artifacts
           git diff --exit-code apps/web/src/engine/modelAtlas/modelAtlasRegistry.json
           git diff --exit-code apps/web/public/sitemap-prompts.xml
+
+          # 2. Complete check against any untracked files anywhere in repo
+          UNTRACKED=$(git ls-files --others --exclude-standard)
+          if [ -n "$UNTRACKED" ]; then
+            echo "❌ Error: Untracked files detected in repository (AUD-06 violation):"
+            echo "$UNTRACKED"
+            exit 1
+          fi
+
+          # 3. Complete check against any unexpected tracked modifications outside the execution receipt
+          UNEXPECTED_DIFF=$(git diff --name-only -- ':!evidence/autonomous_execution_receipt.json')
+          if [ -n "$UNEXPECTED_DIFF" ]; then
+            echo "❌ Error: Unexpected tracked files modified in working tree (AUD-06 violation):"
+            echo "$UNEXPECTED_DIFF"
+            git diff -- ':!evidence/autonomous_execution_receipt.json'
+            exit 1
+          fi
+
+          echo "✓ Complete repository cleanliness verified: 0 untracked files, 0 unexpected modifications."
 
 
       - name: Upload Cryptographic Audit Receipt

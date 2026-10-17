@@ -202,14 +202,11 @@ async function runNightlySync() {
 
   const nowIso = new Date().toISOString();
 
-  // Reuse existing timestamps and signature if checksum is identical (deterministic idempotency)
+  // Reuse existing timestamp if checksum is identical (deterministic idempotency)
   const existingAttestation = existsSync(ATTESTATION_PATH) ? JSON.parse(readFileSync(ATTESTATION_PATH, "utf-8")) : null;
   const attestationTimestamp = (existingAttestation && existingAttestation.checksumSha256 === canonicalJcsHash && existingAttestation.timestamp)
     ? existingAttestation.timestamp
     : nowIso;
-  const attestationSig = (existingAttestation && existingAttestation.checksumSha256 === canonicalJcsHash && existingAttestation.attestationSignature)
-    ? existingAttestation.attestationSignature
-    : `sig_spe_fmcg_${canonicalJcsHash.slice(0, 32)}_${Date.now().toString(16)}`;
 
   // Create RFC 8785 Canonical SHA-256 Currency Integrity Attestation Payload
   const attestation = {
@@ -227,7 +224,6 @@ async function runNightlySync() {
     providers: MANDATORY_PROVIDERS,
     staleModelsDetected: auditViolations,
     governorVerdict: "FRONTIER_CURRENCY_QUALIFIED",
-    attestationSignature: attestationSig,
     nightWatchEngine: {
       version: "3.0.0",
       cadence: "NIGHTLY_AT_0200_UTC",

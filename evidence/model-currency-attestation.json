@@ -22,7 +22,6 @@
   ],
   "staleModelsDetected": 0,
   "governorVerdict": "FRONTIER_CURRENCY_QUALIFIED",
-  "attestationSignature": "sig_spe_fmcg_7404e140652acd32e3eca5b272e36c8f_1a147a4792f",
   "nightWatchEngine": {
     "version": "3.0.0",
     "cadence": "NIGHTLY_AT_0200_UTC",

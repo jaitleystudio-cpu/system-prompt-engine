@@ -21,8 +21,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
 
 import { getModelById, getAllModels } from "../src/engine/modelAtlas/modelAtlasService.ts";
+import { NightlyEvolutionScheduler } from "../src/engine/evolution/nightlyScheduler.ts";
 import { compileSystemPrompt } from "../../../packages/spe-plugin/src/tools.ts";
 import {
   verifySignedReceiptStatusAttestation,
@@ -622,10 +624,171 @@ console.log("\n[8/8] Verifying Adjudication Closure: Crash Defense, Automation C
   assert.equal(attestation.signatureType, "UNSIGNED_SHA256_INTEGRITY_DIGEST", "Attestation signatureType must be UNSIGNED_SHA256_INTEGRITY_DIGEST");
   assert.equal(attestation.contentDigestSha256, attestation.checksumSha256, "contentDigestSha256 must match checksumSha256");
   assert.ok(attestation.signatureNotice.includes("Not an asymmetric private-key signature"), "Must include disclaimer that it is not an asymmetric signature");
+  assert.strictEqual(attestation.attestationSignature, undefined, "AUD-04: Pseudo-signature field must not exist on unsigned integrity digest");
 
   console.log("  ✓ Adjudication Gate 8 verified: Crash defenses guarded, Stripe links configurable, trials strictly isolated from cryptographic verification, dry-run simulations isolated from production releases, and cryptographic signatures honestly labeled.");
 }
 
+// ==================================================================
+// [9/9] Verifying October 17 Independent Remediation Adjudication Gates (AUD-01 to AUD-06)
+// ==================================================================
+console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to AUD-06)...");
+{
+  const scheduler = new NightlyEvolutionScheduler();
+
+  // AUD-01 (High): The scheduler can report PRODUCTION_DEPLOYED in non-dry-run mode based solely on an approval decision.
+  // Test 1: In non-dry-run mode WITHOUT verified deployment receipt, it must report PROMOTED_PENDING_DEPLOYMENT_RECEIPT and proposalsAutoReleased = 0.
+  const unverifiedNonDryRun = await scheduler.executeNightlyRun({
+    dryRun: false,
+    baseCommit: "test-commit-aud-01",
+    simulateMilestoneSlice: true,
+  });
+  assert.equal(unverifiedNonDryRun.isDryRun, false, "Must run in non-dry-run mode");
+  assert.equal(unverifiedNonDryRun.proposalsAutoReleased, 0, "AUD-01: Must report 0 auto released without verified deployment receipt");
+  assert.equal(unverifiedNonDryRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Must report PROMOTED_PENDING_DEPLOYMENT_RECEIPT when authorized without deployment execution");
+
+  // Test 2: In non-dry-run mode WITH authoritative verified deployment receipt, it reports PRODUCTION_DEPLOYED and proposalsAutoReleased = 1.
+  const verifiedNonDryRun = await scheduler.executeNightlyRun({
+    dryRun: false,
+    baseCommit: "test-commit-aud-01-verified",
+    simulateMilestoneSlice: true,
+    verifiedDeploymentReceipt: {
+      receiptId: "receipt-prod-deploy-aud01",
+      deploymentSha: "commit-abc12345",
+      targetEnvironment: "production",
+      executedAt: new Date().toISOString(),
+      verified: true,
+    },
+  });
+  assert.equal(verifiedNonDryRun.deployedStatus, "PRODUCTION_DEPLOYED", "AUD-01: Must report PRODUCTION_DEPLOYED only when authoritative deployment receipt is verified");
+  assert.equal(verifiedNonDryRun.proposalsAutoReleased, 1, "AUD-01: proposalsAutoReleased must match qualified proposals when deployed");
+  console.log("  ✓ AUD-01 verified: Controller promotion is authorization, not execution; PRODUCTION_DEPLOYED requires verified deployment receipt.");
+
+  // AUD-05 (Medium): searchConsoleSource becomes LIVE_GSC_API whenever mockSearchData is supplied.
+  // Test 1: Injected mock search data must NEVER be labeled LIVE_GSC_API
+  const mockGscRun = await scheduler.executeNightlyRun({
+    dryRun: true,
+    mockSearchData: [
+      {
+        query: "injected fixture query",
+        page: "/prompts",
+        country: "USA",
+        device: "DESKTOP",
+        date: "2026-10-17",
+        searchAppearance: "STANDARD",
+        impressions: 100,
+        clicks: 10,
+        ctr: 0.1,
+        position: 1.0,
+        isFinalized: true,
+      },
+    ],
+  });
+  assert.equal(mockGscRun.searchConsoleSource, "CALIBRATION_FIXTURE_DEV_CI", "AUD-05: Injected mockSearchData must be labeled CALIBRATION_FIXTURE_DEV_CI, never LIVE_GSC_API");
+
+  // Test 2: Authenticated liveSearchData must be labeled LIVE_GSC_API
+  const liveGscRun = await scheduler.executeNightlyRun({
+    dryRun: true,
+    liveSearchData: [
+      {
+        query: "live authenticated query",
+        page: "/prompts",
+        country: "USA",
+        device: "DESKTOP",
+        date: "2026-10-17",
+        searchAppearance: "STANDARD",
+        impressions: 500,
+        clicks: 50,
+        ctr: 0.1,
+        position: 1.0,
+        isFinalized: true,
+      },
+    ],
+  });
+  assert.equal(liveGscRun.searchConsoleSource, "LIVE_GSC_API", "AUD-05: Authenticated liveSearchData must be labeled LIVE_GSC_API");
+  console.log("  ✓ AUD-05 verified: Injected test fixtures strictly labeled CALIBRATION_FIXTURE_DEV_CI, authenticated live data labeled LIVE_GSC_API.");
+
+  // AUD-02 (Medium): sync_model_atlas.py has fallback assignment for models_to_use when registry file is absent.
+  const testBootstrapScript = `import tempfile, pathlib, json
+from tools.sync_model_atlas import sync_atlas, VERIFIED_MODELS
+import tools.sync_model_atlas as sma
+
+with tempfile.TemporaryDirectory() as td:
+    temp_reg = pathlib.Path(td) / 'test_reg.json'
+    temp_man = pathlib.Path(td) / 'test_man.json'
+    sma.OUTPUT_REGISTRY_PATH = temp_reg
+    sma.MANIFEST_PATH = temp_man
+    assert not temp_reg.exists()
+    sync_atlas()
+    assert temp_reg.exists()
+    data = json.loads(temp_reg.read_text())
+    assert len(data['models']) == len(VERIFIED_MODELS)
+`;
+  execSync("python3", {
+    input: testBootstrapScript,
+    cwd: resolve(__dirname, "../../.."),
+    stdio: ["pipe", "pipe", "pipe"],
+  });
+  console.log("  ✓ AUD-02 verified: sync_model_atlas.py cleanly bootstraps from VERIFIED_MODELS when registry is absent.");
+
+  // AUD-03 (Medium): generate_seo_sitemaps.py reuses the existing date even when prompt content changes.
+  const testSitemapScript = `import tempfile, pathlib, json
+import tools.generate_seo_sitemaps as gss
+
+with tempfile.TemporaryDirectory() as td:
+    tpath = pathlib.Path(td)
+    idx_path = tpath / 'index.json'
+    pub_path = tpath / 'public'
+    man_path = tpath / 'manifest.json'
+    pub_path.mkdir()
+    prompts = [
+        {'id': 'SPE-TEST-001', 'title': 'Test 1', 'domain': 'DevOps'},
+        {'id': 'SPE-TEST-002', 'title': 'Test 2', 'domain': 'DevOps'}
+    ]
+    idx_path.write_text(json.dumps(prompts))
+    gss.INDEX_FILE = idx_path
+    gss.PUBLIC_DIR = pub_path
+    gss.MANIFEST_FILE = man_path
+
+    # Run 1: generate initial sitemaps
+    gss.generate_sitemaps()
+
+    # Backdate prompt xml to simulate historical date
+    xml = (pub_path / 'sitemap-prompts.xml').read_text()
+    (pub_path / 'sitemap-prompts.xml').write_text(xml.replace('2026-10-17', '2025-01-01'))
+
+    # Run 2: Unchanged prompts must retain 2025-01-01
+    gss.generate_sitemaps()
+    xml_retained = (pub_path / 'sitemap-prompts.xml').read_text()
+    assert '2025-01-01' in xml_retained, 'Unchanged prompts must retain previous date'
+
+    # Run 3: Modify ONLY prompt 2
+    prompts[1]['title'] = 'Test 2 Modified Content'
+    idx_path.write_text(json.dumps(prompts))
+    gss.generate_sitemaps()
+    xml_modified = (pub_path / 'sitemap-prompts.xml').read_text()
+    assert '<loc>https://systempromptengine.com/prompts/SPE-TEST-001</loc>\\n    <lastmod>2025-01-01</lastmod>' in xml_modified
+    assert '<loc>https://systempromptengine.com/prompts/SPE-TEST-002</loc>\\n    <lastmod>2026-10-17</lastmod>' in xml_modified
+`;
+  execSync("python3", {
+    input: testSitemapScript,
+    cwd: resolve(__dirname, "../../.."),
+    stdio: ["pipe", "pipe", "pipe"],
+  });
+  console.log("  ✓ AUD-03 verified: generate_seo_sitemaps.py retains lastmod for unchanged pages and advances lastmod for changed content.");
+
+  // AUD-04 (Medium): Model attestation pseudo-signature removal
+  const attestationCheck = JSON.parse(readFileSync(resolve(__dirname, "../../../evidence/model-currency-attestation.json"), "utf8"));
+  assert.strictEqual(attestationCheck.attestationSignature, undefined, "AUD-04: Pseudo-signature field must not exist on unsigned integrity digest");
+  console.log("  ✓ AUD-04 verified: Fabricated attestationSignature pseudo-signature removed from unsigned digest.");
+
+  // AUD-06 (Medium): Clean-tree repository cleanliness gate
+  const workflowContent = readFileSync(resolve(__dirname, "../../../.github/workflows/spe-autonomous-engine.yml"), "utf8");
+  assert.ok(workflowContent.includes("git ls-files --others --exclude-standard"), "AUD-06: Gate must fail on untracked files");
+  assert.ok(workflowContent.includes("git diff --name-only -- ':!evidence/autonomous_execution_receipt.json'"), "AUD-06: Gate must fail on unexpected tracked modifications");
+  console.log("  ✓ AUD-06 verified: Complete repository-cleanliness gate fails-closed on untracked files and unexpected tracked modifications.");
+}
+
 console.log("\n==================================================================");
-console.log("🎉 ALL 8 CHATGPT COUNTER-REVIEW REMEDIATION GATES PASSED CLEANLY!");
+console.log("🎉 ALL 9 CHATGPT COUNTER-REVIEW & AUDIT REMEDIATION GATES PASSED CLEANLY!");
 console.log("==================================================================");

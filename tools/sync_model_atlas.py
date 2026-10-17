@@ -639,9 +639,13 @@ VERIFIED_MODELS = [
 
 
 def sync_atlas() -> None:
+    models_to_use = VERIFIED_MODELS
     if OUTPUT_REGISTRY_PATH.exists():
-        existing_data = json.loads(OUTPUT_REGISTRY_PATH.read_text(encoding="utf-8"))
-        models_to_use = existing_data.get("models", VERIFIED_MODELS)
+        try:
+            existing_data = json.loads(OUTPUT_REGISTRY_PATH.read_text(encoding="utf-8"))
+            models_to_use = existing_data.get("models", VERIFIED_MODELS)
+        except Exception:
+            models_to_use = VERIFIED_MODELS
     frontier_active = sum(1 for m in models_to_use if not m.get("isLegacy", False))
     print(f"[*] Synchronizing SPE Model Atlas with {len(models_to_use)} verified models ({frontier_active} active 2026 frontier models)...")
 

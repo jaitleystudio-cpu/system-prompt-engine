@@ -105,6 +105,16 @@ export function releaseEvolutionLock(lockPath = resolve(process.cwd(), EVOLUTION
   } catch {}
 }
 
+export interface VerifiedDeploymentReceipt {
+  receiptId: string;
+  deploymentSha: string;
+  targetEnvironment: "production";
+  executedAt: string;
+  verified: boolean;
+  deploymentProvider?: string;
+  deployLogDigest?: string;
+}
+
 export interface NightlyRunReceipt {
   runId: string;
   clockIst: string;
@@ -118,8 +128,13 @@ export interface NightlyRunReceipt {
   proposalsQualified: number;
   proposalsAutoReleased: number;
   proposalsSimulatedQualified: number;
-  deployedStatus: "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN" | "PRODUCTION_DEPLOYED";
+  deployedStatus:
+    | "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN"
+    | "PROMOTED_PENDING_DEPLOYMENT_RECEIPT"
+    | "NO_CHANGES_QUALIFIED_FOR_DEPLOYMENT"
+    | "PRODUCTION_DEPLOYED";
   searchConsoleSource: "CALIBRATION_FIXTURE_DEV_CI" | "LIVE_GSC_API";
+  verifiedDeploymentReceipt?: VerifiedDeploymentReceipt;
   proposalsHeldForHumanReview: number;
   proposalsRejected: number;
   missedRunDetected: boolean;
@@ -166,6 +181,8 @@ export class NightlyEvolutionScheduler {
     dryRun?: boolean;
     baseCommit?: string;
     mockSearchData?: SearchConsoleQueryRow[];
+    liveSearchData?: SearchConsoleQueryRow[];
+    verifiedDeploymentReceipt?: VerifiedDeploymentReceipt;
     simulateMilestoneSlice?: boolean;
     injectedBrokenLinks?: string[];
     injectedDefects?: Array<{
@@ -212,34 +229,41 @@ export class NightlyEvolutionScheduler {
       phasesExecuted.push("02:30_IST_SEO_AND_ROUTES_AUDIT");
       const inventoryReport = this.inventoryAuditor.auditWebsite();
 
-      const searchQueries: SearchConsoleQueryRow[] = options.mockSearchData || [
-        {
-          query: "free system prompt generator",
-          page: "/",
-          country: "USA",
-          device: "DESKTOP",
-          date: "2026-10-14",
-          searchAppearance: "STANDARD",
-          impressions: 4200,
-          clicks: 340,
-          ctr: 0.081,
-          position: 2.1,
-          isFinalized: true,
-        },
-        {
-          query: "screenshot to code prompt",
-          page: "/code",
-          country: "IND",
-          device: "MOBILE",
-          date: "2026-10-14",
-          searchAppearance: "STANDARD",
-          impressions: 1800,
-          clicks: 145,
-          ctr: 0.08,
-          position: 3.4,
-          isFinalized: true,
-        },
-      ];
+      const hasLiveSearch = Boolean(options.liveSearchData && options.liveSearchData.length > 0);
+      const searchConsoleSource: "CALIBRATION_FIXTURE_DEV_CI" | "LIVE_GSC_API" = hasLiveSearch
+        ? "LIVE_GSC_API"
+        : "CALIBRATION_FIXTURE_DEV_CI";
+
+      const searchQueries: SearchConsoleQueryRow[] = (hasLiveSearch ? options.liveSearchData : null)
+        || options.mockSearchData
+        || [
+          {
+            query: "free system prompt generator",
+            page: "/",
+            country: "USA",
+            device: "DESKTOP",
+            date: "2026-10-14",
+            searchAppearance: "STANDARD",
+            impressions: 4200,
+            clicks: 340,
+            ctr: 0.081,
+            position: 2.1,
+            isFinalized: true,
+          },
+          {
+            query: "screenshot to code prompt",
+            page: "/code",
+            country: "IND",
+            device: "MOBILE",
+            date: "2026-10-14",
+            searchAppearance: "STANDARD",
+            impressions: 1800,
+            clicks: 145,
+            ctr: 0.08,
+            position: 3.4,
+            isFinalized: true,
+          },
+        ];
       const searchAnalysis = this.searchEngine.analyzeSearchQueries(searchQueries);
 
       // Phase 3: 03:00 AM IST — Execute browser and visual regression checks
@@ -404,6 +428,31 @@ export class NightlyEvolutionScheduler {
 
       const summaryDigest = `sha256:nightly-${now.toISOString().slice(0, 10)}-${proposals.length}-proposals`;
 
+      const hasAuthoritativeDeploymentEvidence = Boolean(
+        !isDryRun &&
+        options.verifiedDeploymentReceipt &&
+        options.verifiedDeploymentReceipt.verified === true &&
+        options.verifiedDeploymentReceipt.targetEnvironment === "production" &&
+        options.verifiedDeploymentReceipt.deploymentSha
+      );
+
+      let deployedStatus: NightlyRunReceipt["deployedStatus"];
+      let proposalsAutoReleased = 0;
+
+      if (isDryRun) {
+        deployedStatus = "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN";
+        proposalsAutoReleased = 0;
+      } else if (hasAuthoritativeDeploymentEvidence && autoReleasedCount > 0) {
+        deployedStatus = "PRODUCTION_DEPLOYED";
+        proposalsAutoReleased = autoReleasedCount;
+      } else if (autoReleasedCount > 0) {
+        deployedStatus = "PROMOTED_PENDING_DEPLOYMENT_RECEIPT";
+        proposalsAutoReleased = 0;
+      } else {
+        deployedStatus = "NO_CHANGES_QUALIFIED_FOR_DEPLOYMENT";
+        proposalsAutoReleased = 0;
+      }
+
       return {
         runId,
         clockIst: "02:17 AM IST",
@@ -415,12 +464,11 @@ export class NightlyEvolutionScheduler {
         defectsDiscovered: inventoryReport.brokenInternalLinks.length + (authoritativeDest ? 1 : 0),
         proposalsPrepared: proposals.length,
         proposalsQualified: proposals.filter((p) => p.qualificationResults.targetedUnitTestsPassed).length,
-        proposalsAutoReleased: isDryRun ? 0 : autoReleasedCount,
+        proposalsAutoReleased,
         proposalsSimulatedQualified: autoReleasedCount,
-        deployedStatus: isDryRun
-          ? "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN"
-          : (autoReleasedCount > 0 ? "PRODUCTION_DEPLOYED" : "NO_PRODUCTION_DEPLOYMENT_IN_DRY_RUN"),
-        searchConsoleSource: options.mockSearchData ? "LIVE_GSC_API" : "CALIBRATION_FIXTURE_DEV_CI",
+        deployedStatus,
+        searchConsoleSource,
+        ...(options.verifiedDeploymentReceipt ? { verifiedDeploymentReceipt: options.verifiedDeploymentReceipt } : {}),
         proposalsHeldForHumanReview: heldForHumanCount,
         proposalsRejected: rejectedCount,
         missedRunDetected,
