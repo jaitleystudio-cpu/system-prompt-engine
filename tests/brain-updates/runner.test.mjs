@@ -17,3 +17,7 @@ test('help performs no update and documents scope', {skip: !api}, () => {
   assert.equal(result.status, 0); assert.match(result.stdout, /source.bundle/i);
   assert.match(result.stdout, /--update/);
 });
+test('emergency stop prevents even a clean source update',()=>{
+  const result=spawnSync(process.execPath,[fileURLToPath(new URL('../../tools/brain-updates/run.mjs',import.meta.url)),'--update'],{encoding:'utf8',env:{PATH:process.env.PATH,SPE_EMERGENCY_STOP:'1'}});
+  assert.equal(result.status,1);assert.match(result.stderr,/emergency stop/i);
+});

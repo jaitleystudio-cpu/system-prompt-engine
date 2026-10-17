@@ -19,6 +19,7 @@ export const SOURCES = [
     'packages/spe-plugin/src/tools.ts',
     'tools/brain-updates/bundles.mjs',
     'tools/brain-updates/evolve.mjs',
+    'tools/brain-updates/evaluate-worker.mjs',
     'tests/brain-updates/cases/goal-preservation.json',
     'tools/brain-updates/policy.mjs',
     'tools/brain-updates/run.mjs',

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +29,7 @@ export async function main(args = process.argv.slice(2)) {
     return 0;
   }
   const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+  if(process.env.SPE_EMERGENCY_STOP==='1'||existsSync(resolve(root,'.spe_emergency_stop')))throw new Error('Emergency stop active');
   const revision = spawnSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding:'utf8', timeout:10_000});
   if (revision.status !== 0) throw new Error('Cannot determine exact source commit');
   const paths = [...SOURCES, ...GATES].map(s => s.path);
