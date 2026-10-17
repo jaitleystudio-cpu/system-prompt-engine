@@ -64,7 +64,7 @@ jobs:
     permissions:
       contents: write
     env:
-      SPE_BRAIN_STATE: ${{ runner.temp }}/spe-brain-state
+      SPE_BRAIN_STATE: .spe/brain-updates
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,7 +95,7 @@ jobs:
         with:
           name: spe-brain-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/spe-brain-state/current.json
-            ${{ runner.temp }}/spe-brain-state/last-run.json
+            ${{ env.SPE_BRAIN_STATE }}/current.json
+            ${{ env.SPE_BRAIN_STATE }}/last-run.json
           if-no-files-found: warn
           retention-days: 30
