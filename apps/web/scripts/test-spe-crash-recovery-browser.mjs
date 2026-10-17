@@ -167,9 +167,9 @@ try {
     assert.equal(attack.valid, false, mutation + " should not verify");
     assert.equal(attack.nextModelCallAuthorized, false, mutation + " must not authorize a model");
   }
-  const forged = structuredClone(receipt);
-  forged.signed.observations.tests.interactionWorking = false;
-  assert.equal(verifyBrowserReplayReceipt(forged, pin).valid, false);
+  const forgedReceipt = structuredClone(receipt);
+  forgedReceipt.signed.observations.tests.interactionWorking = false;
+  assert.equal(verifyBrowserReplayReceipt(forgedReceipt, pin).valid, false);
   const replayForgery = structuredClone(receipt);
   replayForgery.signed.receiptNonce = "attacker-changed-nonce";
   assert.equal(verifyBrowserReplayReceipt(replayForgery, pin).reason, "BAD_REVIEWER_SIGNATURE");
