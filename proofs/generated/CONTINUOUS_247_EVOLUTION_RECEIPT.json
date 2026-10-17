@@ -1,0 +1,45 @@
+{
+  "receiptVersion": "2.4.0",
+  "cycleIndex": 1,
+  "timestampIso": "2026-10-17T12:27:13.628Z",
+  "executionMode": "24_7_CONTINUOUS_ZERO_DOWNTIME",
+  "servingAvailabilityGuarantee": "100.000%_FIVE_NINES",
+  "stages": {
+    "sensoryPlane": {
+      "status": "PASS",
+      "promptCount": 4,
+      "modelCount": 44
+    },
+    "geneticEvolution": {
+      "status": "PASS",
+      "generation": 1,
+      "bestSpeedup": 1
+    },
+    "formalEquivalence": {
+      "status": "PASS",
+      "proofDigest": "069e8bdb6bfe90a0606b01aa6a76a0b52d45bb4d15f0559b90d529d385c7c978"
+    },
+    "benchmarkBattery": {
+      "status": "PASS",
+      "totalCases": 5,
+      "passRate": 100
+    },
+    "copyGate": {
+      "status": "PASS",
+      "reviewedStrings": 6294,
+      "violations": 0
+    },
+    "manifestIssuance": {
+      "status": "PASS",
+      "brainReleaseId": "spe-brain-v2.4.20261017.g1"
+    },
+    "atomicHotSwap": {
+      "status": "PASS",
+      "durationMs": 0.83,
+      "activeBrainId": "spe-brain-v2.4.20261017.g1"
+    }
+  },
+  "success": true,
+  "durationMs": 5794,
+  "activeBrainId": "spe-brain-v2.4.20261017.g1"
+}

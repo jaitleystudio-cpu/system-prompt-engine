@@ -25,6 +25,10 @@ echo "Step 2: Running Website Evolution Loop..."
 echo "Step 3: Running Autonomous A-to-Z Master Pipeline..."
 "$NODE_BIN" tools/autonomous_pipeline.mjs
 
+# 4. Continuous Zero-Downtime Autonomous Brain Evolution & Hot-Swap
+echo "Step 4: Running 24/7 Autonomous Brain Evolution & Hot-Swap Cycle..."
+"$NODE_BIN" tools/autonomous_247_brain_loop.mjs --once
+
 echo "=================================================================="
 echo "🎉 NIGHTLY AUTONOMOUS MAINTENANCE COMPLETED: $(date)"
 echo "=================================================================="
