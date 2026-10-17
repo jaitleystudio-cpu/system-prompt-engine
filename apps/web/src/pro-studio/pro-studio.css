@@ -333,3 +333,10 @@ a.ps-card:hover { border-color: var(--acc); }
 .ps .ps-tl-step--warn .ps-tl-dot { border-color: var(--warn); color: var(--warn); }
 .ps .ps-tl-step--todo b { color: var(--fg2); font-weight: 500; }
 .ps .ps-tl-d { display: block; color: var(--fg2); font-size: 12px; word-break: break-word; }
+/* Top bar: never wrap the breadcrumb, badge or shortcut when the centre column is narrow (1280 with CoWorkie pinned). */
+.ps-crumb { min-width: 0; overflow: hidden; }
+.ps-crumb ol { white-space: nowrap; }
+.ps-crumb li { overflow: hidden; text-overflow: ellipsis; }
+.ps-top-r, .ps-top-r * { white-space: nowrap; }
+.ps-search kbd, .ps-top kbd { white-space: nowrap; }
+@media (max-width: 1439px) { .ps-search .ps-only-desktop { display: none; } }

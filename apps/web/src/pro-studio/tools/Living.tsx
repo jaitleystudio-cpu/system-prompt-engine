@@ -95,8 +95,8 @@ export default function Living() {
   const importFile = async (f: File) => { try { const r = await proApi<{ project: Pub }>("/living/import", { raw: await f.text() }); setP(r.project); setD(toDraft(r.project)); setEditing(false); void loadList(); announce("Imported. History is not imported; the loop starts fresh."); } catch (e) { setErr((e as Error).message); } };
 
   const running = busy === "run";
-  const setReq = (i: number, q: Partial<Requirement>) => setD({ ...d, requirements: d.requirements.map((x, j) => (j === i ? { ...x, ...q } : x)) });
-  const setInp = (i: number, q: Partial<LivingInput>) => setD({ ...d, inputs: d.inputs.map((x, j) => (j === i ? { ...x, ...q } : x)) });
+  const setReq = (i: number, q: Partial<Requirement>) => setD((dd) => ({ ...dd, requirements: dd.requirements.map((x, j) => (j === i ? { ...x, ...q } : x)) }));
+  const setInp = (i: number, q: Partial<LivingInput>) => setD((dd) => ({ ...dd, inputs: dd.inputs.map((x, j) => (j === i ? { ...x, ...q } : x)) }));
   const rc = p?.receipt;
 
   const panel = p ? (<div className="ps-stack" data-testid="living-panel">
@@ -123,8 +123,8 @@ export default function Living() {
   return (
     <ToolFrame id="living" panel={panel} panelLabel="Proof" actions={<>
       <button type="button" className="ps-btn" onClick={() => startNew()}>New project</button>
-      <button type="button" className="ps-btn" onClick={() => { startNew(DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo">Load flagship demo</button>
-      <button type="button" className="ps-btn" onClick={() => { startNew(DRIFT_DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo-drift">Load drift demo</button>
+      <button type="button" className="ps-btn" disabled={running} onClick={() => { startNew(DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo">Load flagship demo</button>
+      <button type="button" className="ps-btn" disabled={running} onClick={() => { startNew(DRIFT_DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo-drift">Load drift demo</button>
       <label className="ps-btn ps-file">Import<input type="file" accept=".json,application/json" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void importFile(f); }} /></label>
     </>}>
       {err && <p className="ps-err" role="alert" data-testid="living-err">{err}</p>}
@@ -132,10 +132,10 @@ export default function Living() {
       {d.inputs.some((x) => x.text.includes("[demo:")) && !demoReady && <p className="ps-warn">The flagship demo uses the simulated provider and the code sandbox, which are only switched on for development servers. On this server it will pause honestly instead of pretending.</p>}
 
       {editing ? (<form className="ps-form" aria-label="Living project definition" onSubmit={(e) => { e.preventDefault(); void save(); }}>
-        <div className="ps-cols"><Field label="Project name" id="lv-name"><input id="lv-name" className="ps-inp" value={d.name} maxLength={120} onChange={(e) => setD({ ...d, name: e.target.value })} /></Field>
-          <div className="ps-cols"><Field label="Attempt cap (1–12)" id="lv-max"><input id="lv-max" className="ps-inp" type="number" min={1} max={12} value={d.budget.maxAttempts} onChange={(e) => setD({ ...d, budget: { ...d.budget, maxAttempts: Number(e.target.value) } })} /></Field>
-            <Field label="Token budget" id="lv-tok"><input id="lv-tok" className="ps-inp" type="number" min={100} step={1000} value={d.budget.maxTokens} onChange={(e) => setD({ ...d, budget: { ...d.budget, maxTokens: Number(e.target.value) } })} /></Field></div></div>
-        <Field label="Goal (what the prompt must achieve)" id="lv-goal"><textarea id="lv-goal" className="ps-ta" rows={3} value={d.intent} onChange={(e) => setD({ ...d, intent: e.target.value })} /></Field>
+        <div className="ps-cols"><Field label="Project name" id="lv-name"><input id="lv-name" className="ps-inp" value={d.name} maxLength={120} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, name: v })); }} /></Field>
+          <div className="ps-cols"><Field label="Attempt cap (1–12)" id="lv-max"><input id="lv-max" className="ps-inp" type="number" min={1} max={12} value={d.budget.maxAttempts} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxAttempts: Number(v) } })); }} /></Field>
+            <Field label="Token budget" id="lv-tok"><input id="lv-tok" className="ps-inp" type="number" min={100} step={1000} value={d.budget.maxTokens} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxTokens: Number(v) } })); }} /></Field></div></div>
+        <Field label="Goal (what the prompt must achieve)" id="lv-goal"><textarea id="lv-goal" className="ps-ta" rows={3} value={d.intent} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, intent: v })); }} /></Field>
         <fieldset className="ps-fieldset"><legend>Protected requirements ({d.requirements.length}) — a version that loses one fails</legend>
           <ol className="ps-lv-reqs">{d.requirements.map((q, i) => <li key={i} className="ps-lv-req">
             <label className="sr-only" htmlFor={`lv-rq-${i}`}>Requirement {i + 1}</label><input id={`lv-rq-${i}`} className="ps-inp" value={q.text} placeholder="e.g. Mention the 30-day refund window" onChange={(e) => setReq(i, { text: e.target.value })} />
@@ -144,18 +144,18 @@ export default function Living() {
             {q.check.kind === "runs_clean" && <><label className="sr-only" htmlFor={`lv-ce-${i}`}>Where the code runs</label><select id={`lv-ce-${i}`} className="ps-inp" value={q.check.env ?? "browser"} onChange={(e) => setReq(i, { check: { ...q.check, env: e.target.value === "ssr" ? "ssr" : undefined } })}><option value="browser">In a page (DOM)</option><option value="ssr">Server render (no window)</option></select></>}
             {NEEDS_N.includes(q.check.kind) && <><label className="sr-only" htmlFor={`lv-cn-${i}`}>Number</label><input id={`lv-cn-${i}`} className="ps-inp ps-inp--num" type="number" min={0} value={q.check.n ?? ""} onChange={(e) => setReq(i, { check: { ...q.check, n: Number(e.target.value) } })} /></>}
             {q.check.kind === "json_keys" && <><label className="sr-only" htmlFor={`lv-ckeys-${i}`}>Keys</label><input id={`lv-ckeys-${i}`} className="ps-inp" value={(q.check.keys ?? []).join(", ")} placeholder="answer, sources" onChange={(e) => setReq(i, { check: { ...q.check, keys: e.target.value.split(",").map((x) => x.trim()).filter(Boolean) } })} /></>}
-            <button type="button" className="ps-btn ps-btn--sm" aria-label={`Remove requirement ${i + 1}`} onClick={() => setD({ ...d, requirements: d.requirements.filter((_, j) => j !== i) })}>Remove</button>
+            <button type="button" className="ps-btn ps-btn--sm" aria-label={`Remove requirement ${i + 1}`} onClick={() => setD((dd) => ({ ...dd, requirements: dd.requirements.filter((_, j) => j !== i) }))}>Remove</button>
           </li>)}</ol>
-          <button type="button" className="ps-btn ps-btn--sm" onClick={() => setD({ ...d, requirements: [...d.requirements, { id: `r${Date.now().toString(36).slice(-4)}`, text: "", check: { kind: "contains", value: "" } }] })}>Add requirement</button>
+          <button type="button" className="ps-btn ps-btn--sm" onClick={() => setD((dd) => ({ ...dd, requirements: [...dd.requirements, { id: `r${Date.now().toString(36).slice(-4)}`, text: "", check: { kind: "contains", value: "" } }] }))}>Add requirement</button>
         </fieldset>
         <fieldset className="ps-fieldset"><legend>Test inputs ({d.inputs.length}) — each attempt runs every input</legend>
           <ol className="ps-lv-reqs">{d.inputs.map((x, i) => <li key={i} className="ps-lv-req">
             <label className="sr-only" htmlFor={`lv-in-${i}`}>Input {i + 1}</label><textarea id={`lv-in-${i}`} className="ps-ta" rows={2} value={x.text} placeholder="A real user message" onChange={(e) => setInp(i, { text: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-cat-${i}`}>Category</label><input id={`lv-cat-${i}`} className="ps-inp" value={x.category ?? ""} placeholder="category" onChange={(e) => setInp(i, { category: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-lang-${i}`}>Language</label><input id={`lv-lang-${i}`} className="ps-inp ps-inp--num" value={x.language ?? ""} placeholder="lang" onChange={(e) => setInp(i, { language: e.target.value })} />
-            <button type="button" className="ps-btn ps-btn--sm" aria-label={`Remove input ${i + 1}`} onClick={() => setD({ ...d, inputs: d.inputs.filter((_, j) => j !== i) })}>Remove</button>
+            <button type="button" className="ps-btn ps-btn--sm" aria-label={`Remove input ${i + 1}`} onClick={() => setD((dd) => ({ ...dd, inputs: dd.inputs.filter((_, j) => j !== i) }))}>Remove</button>
           </li>)}</ol>
-          <button type="button" className="ps-btn ps-btn--sm" onClick={() => setD({ ...d, inputs: [...d.inputs, { id: `i${Date.now().toString(36).slice(-4)}`, text: "" }] })}>Add input</button>
+          <button type="button" className="ps-btn ps-btn--sm" onClick={() => setD((dd) => ({ ...dd, inputs: [...dd.inputs, { id: `i${Date.now().toString(36).slice(-4)}`, text: "" }] }))}>Add input</button>
         </fieldset>
         <div className="ps-row ps-wrap"><button type="submit" className="ps-btn ps-btn--primary" disabled={busy === "save"} data-testid="living-save">{p ? "Save changes" : "Create project"}</button>{p && <button type="button" className="ps-btn" onClick={() => { setD(toDraft(p)); setEditing(false); }}>Cancel</button>}</div>
       </form>) : p && (<div className="ps-card ps-card--flat" data-testid="living-def">

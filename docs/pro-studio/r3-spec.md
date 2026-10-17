@@ -84,3 +84,36 @@ limit, providers), API integration (401 without key / tampered key / test key di
 body cap, BYOK with mocked fetch, key never in responses), negative tests, mutation checks (flip expiry,
 skip signature, skip revocation, test keys without flag, firewall off, verifier trusts "done"), client
 import-graph test, built-bundle grep, Playwright e2e + screenshots at 1440/1280/390.
+
+## 7. Flagship acceptance: crash → captured error → Prompt V2 → 0 errors
+
+Flow (Prawin's diagram, shown as the Living timeline): goal → Prompt V1 compiled → model writes code →
+code executed → error captured → Intent Loss Shield → Prompt V2 (scoped repair) → re-executed →
+**Verified 0 errors, fix recorded**. The last step never says "Deployed".
+
+- Check kind `runs_clean` (`env: "browser" | "ssr"`). The verifier reads the recorded execution evidence
+  (`Run.exec`). No execution → `NOT_RUN`. Errors or console errors → `FAILED` with the captured error.
+- No sandbox configured (e.g. Workers today) → the loop pauses with `NO_SANDBOX`. It never guesses.
+- Sandbox: `pro-api/sandbox-node.ts` (worker thread, empty env, 64 MB, 3 s wall kill, `vm` with a fake DOM or
+  SSR context with no `window`/`document`). Not a security boundary. A production sandbox is still to be chosen.
+- Scoped repair guard (`core/living/scope.ts`):
+  1. ProtectedIntent frozen (`FREEZE_RULE`).
+  2. Failing call site pinned (line, column, expression) from the stack or by name search.
+  3. Error-class constraints (undefined reference, wrong import, conditional hooks, browser globals in SSR,
+     TypeError on undefined, SyntaxError) plus `SCOPE_RULE`: must not touch UI, layout, styling or libraries;
+     change only the broken expression; keep all props.
+  4. After V2, the drift is checked, not assumed: an LCS line diff V1→V2. The attempt is `REJECTED_DRIFT` when
+     lines change outside the pinned region beyond the allowance, imports change, styling changes, a declared
+     feature disappears, or a check that passed before now fails. The receipt records diff size, touched regions
+     and the preserved-feature results. The certificate recomputes the drift verdict, so tampering is detected.
+- Intent Loss Detector (`src/engine/intentLossDetector`) runs on every compiled prompt through
+  `core/living/intentShield.ts`. A CRITICAL finding (for example, a dropped negative constraint) blocks the attempt
+  before the model is called.
+- Evidence: SIMULATED model output (the dev mock provider) is labelled SIMULATED in the receipt and UI. Sandbox
+  execution, checks, diffs, receipts and certificates are real computation.
+- Tests (deterministic mock: crash first, fix second): `flagship.test.ts`, `scope.test.ts`, e2e
+  `scripts/e2e-pro-studio.mjs`. Negative tests: V2 still crashes → retries up to the cap → `PAUSED BUDGET_ATTEMPTS`
+  with a receipt, never VERIFIED. A 200-line rewrite, a dropped feature, a style change, a library swap, or a
+  regression → `REJECTED_DRIFT`.
+- Unverified figures found in the repo (the "41% constraints dropped" claim, whose cited arXiv id is unrelated;
+  the antiDrift "-60%/-40%" claim; the refiner "4.8x" claim) are not used in any Pro Studio copy.
