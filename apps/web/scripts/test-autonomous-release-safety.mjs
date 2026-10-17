@@ -53,7 +53,13 @@ const TEST_ORACLE_PRIV_KEY = testOracleKeys.privateKey.export({ type: "pkcs8", f
 
 async function runReleaseSafetyBattery() {
   const governor = new ReleaseSafetyGovernor();
-  governor.setTrustedAuthorityKeyForTesting("founder_release_authority", TEST_FOUNDER_PUB_HEX);
+  let founderOverrideThrew = false;
+  try {
+    governor.setTrustedAuthorityKeyForTesting("founder_release_authority", TEST_FOUNDER_PUB_HEX);
+  } catch (err) {
+    founderOverrideThrew = err.message.includes("SECURITY_ERROR_IMMUTABLE_FOUNDER_KEY");
+  }
+  assert(founderOverrideThrew === true, "Founder release authority key is immutably pinned (cannot be overridden)");
   governor.setTrustedAuthorityKeyForTesting("independent_quality_oracle", TEST_ORACLE_PUB_HEX);
 
   // ─── GATE 1: Global Emergency STOP (Fail-Closed) ───────────────────────────
@@ -124,8 +130,8 @@ async function runReleaseSafetyBattery() {
   const testDigest = "a".repeat(64);
   const validFounderProof = generateReleaseAuthorityProof(
     "PROP-VERIFY-01",
-    "founder_release_authority",
-    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    "independent_quality_oracle",
+    { privateKeyPem: TEST_ORACLE_PRIV_KEY },
     testDigest
   );
 
@@ -164,8 +170,8 @@ async function runReleaseSafetyBattery() {
   // Attack 2J: Target environment mismatch rejection
   const stagingProof = generateReleaseAuthorityProof(
     "PROP-ENV-01",
-    "founder_release_authority",
-    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    "independent_quality_oracle",
+    { privateKeyPem: TEST_ORACLE_PRIV_KEY },
     testDigest,
     "staging"
   );
@@ -182,8 +188,8 @@ async function runReleaseSafetyBattery() {
   // Attack 2K: Authorized action mismatch rejection
   const rollbackActionProof = generateReleaseAuthorityProof(
     "PROP-ACTION-01",
-    "founder_release_authority",
-    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    "independent_quality_oracle",
+    { privateKeyPem: TEST_ORACLE_PRIV_KEY },
     testDigest,
     "production",
     "AUTOMATED_ROLLBACK"
@@ -202,8 +208,8 @@ async function runReleaseSafetyBattery() {
   // Attack 2L: Replay attack prevention (reusing the same single-use nonce)
   const freshProof = generateReleaseAuthorityProof(
     "PROP-REPLAY-01",
-    "founder_release_authority",
-    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    "independent_quality_oracle",
+    { privateKeyPem: TEST_ORACLE_PRIV_KEY },
     testDigest
   );
   const firstUse = governor.verifyReleaseAuthority("agent:antigravity", freshProof, "PROP-REPLAY-01", testDigest);
@@ -215,7 +221,7 @@ async function runReleaseSafetyBattery() {
 
   // Attack 2M: Persistent replay defense across separate governor instances (disk persistence)
   const secondGovernor = new ReleaseSafetyGovernor();
-  secondGovernor.setTrustedAuthorityKeyForTesting("founder_release_authority", TEST_FOUNDER_PUB_HEX);
+  secondGovernor.setTrustedAuthorityKeyForTesting("independent_quality_oracle", TEST_ORACLE_PUB_HEX);
   const crossInstanceReplay = secondGovernor.verifyReleaseAuthority("agent:antigravity", freshProof, "PROP-REPLAY-01", testDigest);
   assert(crossInstanceReplay.allowed === false, "Replay attack detected and blocked across separate governor instances (persisted nonces)");
   assert(crossInstanceReplay.reason.includes("REPLAY_ATTACK_DETECTED"), "Reason explicitly cites REPLAY_ATTACK_DETECTED across process restarts");
@@ -223,8 +229,8 @@ async function runReleaseSafetyBattery() {
   // Attack 2N: Expired signature rejection
   const expiredProof = generateReleaseAuthorityProof(
     "PROP-EXPIRED-01",
-    "founder_release_authority",
-    { privateKeyPem: TEST_FOUNDER_PRIV_KEY },
+    "independent_quality_oracle",
+    { privateKeyPem: TEST_ORACLE_PRIV_KEY },
     testDigest
   );
   // Backdate timestamp by 20 minutes
