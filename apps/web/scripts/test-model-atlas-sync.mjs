@@ -58,14 +58,14 @@ assert.strictEqual(activeModels.length, 18, "Model Atlas must contain strictly 1
 const allModels = getAllModels({ includeLegacy: true });
 assert.strictEqual(allModels.length, 44, "Model Atlas must contain 44 total models with audit history");
 
-const claude45 = getModelById("claude-4-5-sonnet");
-assert.ok(claude45, "Claude 4.5 Sonnet must exist in Model Atlas");
-assert.strictEqual(claude45.capabilities.supportsThinking, true, "Claude 4.5 Sonnet must support reasoning/thinking");
-assert.strictEqual(claude45.contextWindow, 262144, "Claude 4.5 Sonnet must have 256k context window");
+const claude45 = getModelById("claude-4-5-sonnet"); // historical model lookup
+assert.ok(claude45, "Claude 4.5 Sonnet must exist in Model Atlas (historical)");
+assert.strictEqual(claude45.capabilities.supportsThinking, true, "Claude 4.5 Sonnet must support reasoning/thinking (historical)");
+assert.strictEqual(claude45.contextWindow, 262144, "Claude 4.5 Sonnet must have 256k context window (historical)");
 
-const upgradedClaude = getModelById("claude-3-7-sonnet");
-assert.ok(upgradedClaude, "Claude 3.7 Sonnet must resolve via auto-upgrade");
-assert.strictEqual(upgradedClaude.id, "claude-4-5-sonnet", "Claude 3.7 must auto-upgrade to Claude 4.5 Sonnet");
+const upgradedClaude = getModelById("claude-3-7-sonnet"); // historical migration test
+assert.ok(upgradedClaude, "Claude 3.7 Sonnet must resolve via auto-upgrade (historical)");
+assert.strictEqual(upgradedClaude.id, "claude-4-5-sonnet", "Claude 3.7 must auto-upgrade to Claude 4.5 Sonnet (historical)");
 
 const deepseekR2 = getModelById("deepseek-r2");
 assert.ok(deepseekR2, "DeepSeek-R2 must exist in Model Atlas");

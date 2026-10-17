@@ -595,8 +595,8 @@ async function runBrainEvolutionBattery() {
   console.log("\n▶ DELIVERABLE 4: Model-API Identity & Capability Validation Adapter");
 
   const sampleModel = {
-    id: "claude-3-5-sonnet",
-    name: "Claude 3.5 Sonnet",
+    id: "claude-5-5-sonnet",
+    name: "Claude Sonnet 5.5",
     provider: "Anthropic",
     category: "frontier-reasoning",
     contextWindow: 200000,
@@ -696,8 +696,8 @@ async function runBrainEvolutionBattery() {
     models: [
       sampleModel,
       {
-        id: "claude-3-7-sonnet",
-        name: "Claude 3.7 Sonnet",
+        id: "claude-5-5-opus",
+        name: "Claude Opus 5.5",
         provider: "Anthropic",
         category: "frontier-reasoning",
         contextWindow: 200000,
@@ -745,12 +745,12 @@ async function runBrainEvolutionBattery() {
   const retiredClaude = {
     ...sampleModel,
     isLegacy: true,
-    deprecatedInFavorOf: "claude-3-7-sonnet",
+    deprecatedInFavorOf: "claude-5-5-opus",
   };
 
   const fallbackResolution = resolveQualifiedFallback(retiredClaude, mockRegistry);
   assert(fallbackResolution.resolved === true, "Successfully resolved qualified compatible fallback for retired model");
-  assert(fallbackResolution.fallbackModelId === "claude-3-7-sonnet", "Selected designated qualified successor claude-3-7-sonnet");
+  assert(fallbackResolution.fallbackModelId === "claude-5-5-opus", "Selected designated qualified successor claude-5-5-opus");
   assert(fallbackResolution.verifiedCompatible === true, "Verified capability compatibility");
 
   // Incompatible Designated Fallback Bypass:
@@ -762,7 +762,7 @@ async function runBrainEvolutionBattery() {
   };
   const bypassCheck = resolveQualifiedFallback(retiredWithBadDesignation, mockRegistry);
   assert(bypassCheck.resolved === true, "Fallback falls through incompatible designated successor to find valid fallback");
-  assert(bypassCheck.fallbackModelId === "claude-3-7-sonnet", "Selects truly compatible fallback instead of incompatible designated successor");
+  assert(bypassCheck.fallbackModelId === "claude-5-5-opus", "Selects truly compatible fallback instead of incompatible designated successor");
   assert(bypassCheck.fallbackModelId !== "toy-small-model", "Strictly avoids designated successor that lacks capabilities or context window");
 
   // Negative Fallback Test: Retired model requiring capabilities no available candidate supports

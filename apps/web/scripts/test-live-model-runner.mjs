@@ -22,15 +22,15 @@ async function main() {
   console.log("  ✓ Provider/Model target string parsing verified.");
 
   // 2. Cost Estimation
-  const costGpt4o = estimateCostUsd("gpt-4o", 1000, 500);
-  if (costGpt4o <= 0) {
-    throw new Error(`Expected non-zero cost for gpt-4o, got ${costGpt4o}`);
+  const costGpt6 = estimateCostUsd("gpt-6-1-sol", 1000, 500);
+  if (costGpt6 <= 0) {
+    throw new Error(`Expected non-zero cost for gpt-6-1-sol, got ${costGpt6}`);
   }
-  const costClaude = estimateCostUsd("claude-3-5-sonnet-20241022", 2000, 1000);
+  const costClaude = estimateCostUsd("claude-5-5-sonnet", 2000, 1000);
   if (costClaude <= 0) {
-    throw new Error(`Expected non-zero cost for Claude 3.5 Sonnet, got ${costClaude}`);
+    throw new Error(`Expected non-zero cost for Claude Sonnet 5.5, got ${costClaude}`);
   }
-  console.log(`  ✓ Cost estimation verified: GPT-4o=$${costGpt4o}, Claude 3.5=$${costClaude}`);
+  console.log(`  ✓ Cost estimation verified: GPT-6.1=$${costGpt6}, Claude 5.5=$${costClaude}`);
 
   // 3. Mock Execution with Streaming Callback
   let streamed = "";

@@ -15,6 +15,7 @@
 
 import { resolve } from "node:path";
 import { existsSync, rmSync } from "node:fs";
+import { EventEmitter } from "node:events";
 import assert from "node:assert/strict";
 
 const ROOT = resolve(import.meta.dirname, "../..");
@@ -31,6 +32,8 @@ const {
 const { generateBrainReleaseManifest, signBrainReleaseManifest } = await import(
   "../src/engine/brain/brainReleaseManifest.ts"
 );
+
+const { McpProductionServer } = await import("../src/server/mcpProductionServer.ts");
 
 const testPointerPath = resolve(ROOT, "proofs/generated/TEST_ACTIVE_BRAIN_POINTER.json");
 try {
@@ -270,6 +273,86 @@ assert.equal(finalMetrics.measuredAvailabilityPercent, 100.0);
 assert.ok(finalMetrics.operationalEvidence.totalRequests >= 1, "Requests tracked in operational evidence");
 assert.equal(finalMetrics.operationalEvidence.failedRequests, 0, "Zero failed requests");
 console.log("  ✓ Telemetry verified: Empirical 100% availability calculated from measured requests.");
+
+// ----------------------------------------------------------------------
+// Test 8: McpProductionServer Durable Pointer Hot-Reload (/api/v1/health)
+// ----------------------------------------------------------------------
+console.log("\n[TEST 8] Testing McpProductionServer cross-process durable pointer hot-reload on /api/v1/health...");
+const testLedgerPath = resolve(ROOT, "proofs/generated/TEST_METERING_LEDGER.json");
+const mcpServer = new McpProductionServer({
+  brainPointerPath: testPointerPath,
+  storageFilePath: testLedgerPath,
+});
+
+async function simulateHttpHealthRequest(server) {
+  const httpServer = server.createHttpServer();
+  const requestHandler = httpServer.listeners("request")[0];
+  return new Promise((resolveReq) => {
+    const req = new EventEmitter();
+    Object.assign(req, {
+      url: "/api/v1/health",
+      method: "GET",
+      socket: { remoteAddress: "127.0.0.1" },
+      headers: {},
+    });
+    const responseHeaders = {};
+    const res = {
+      statusCode: 200,
+      setHeader(k, v) {
+        responseHeaders[k.toLowerCase()] = v;
+      },
+      end(body) {
+        let json = null;
+        try {
+          json = JSON.parse(body || "{}");
+        } catch {
+          json = body;
+        }
+        resolveReq({ statusCode: res.statusCode, headers: responseHeaders, body: json });
+      },
+    };
+    requestHandler(req, res);
+    req.emit("end");
+  });
+}
+
+// 1. Initial health check reflects Gen 1 state after rollback
+const initialHealth = await simulateHttpHealthRequest(mcpServer);
+assert.equal(initialHealth.statusCode, 200);
+assert.equal(initialHealth.body.brain?.generationIndex, 1);
+assert.equal(initialHealth.body.brain?.activeBrainId, initialMetrics.currentBrainId);
+
+// 2. Perform background hot-swap writing Gen 2 pointer to disk
+const backgroundSwap = coldRuntime.hotSwapBrainAtomic(
+  signedCandidateGen2,
+  {
+    compilerPassCount: 16,
+    frontierModelsCount: 54,
+    formalEquivalenceDigest: "proof-gen2-zero-drift",
+    compilerConfig: {
+      passes: ["AST_NORMALIZATION", "SUPERCOMPILER_FUSED_PASS_G2"],
+      rulesVersion: "2.4.0-g2",
+      customDirectives: ["Generation 2 supercompiler active"],
+    },
+    persistPointer: true,
+  },
+  {
+    trustedKeys: { spe_autonomous_operations_layer: "spe_test_secret" },
+  }
+);
+assert.equal(backgroundSwap.success, true);
+assert.ok(existsSync(testPointerPath), "testPointerPath written by background hot-swap");
+
+// 3. Health check on McpProductionServer reloads durable pointer and immediately reflects Gen 2
+const postSwapHealth = await simulateHttpHealthRequest(mcpServer);
+assert.equal(postSwapHealth.statusCode, 200);
+assert.equal(postSwapHealth.body.brain?.generationIndex, 2, "Health check reloaded Gen 2 from disk pointer");
+assert.equal(postSwapHealth.body.brain?.activeBrainId, "spe-brain-v2.4.20261017.g2-continuous");
+assert.equal(postSwapHealth.body.brain?.compilerPassCount, 16);
+assert.equal(postSwapHealth.body.brain?.rulesVersion, "2.4.0-g2");
+assert.equal(postSwapHealth.body.zeroDowntimeGuaranteed, true);
+assert.equal(postSwapHealth.body.measuredAvailability?.uptimeStatus, "OPERATIONAL_MEASURED_UPTIME");
+console.log("  ✓ McpProductionServer /api/v1/health successfully reloaded durable pointer and reflected Gen 2.");
 
 console.log("\n==================================================================");
 console.log("📊 FINAL SERVING TELEMETRY AUDIT");

@@ -105,13 +105,23 @@ from spe_runtime.supercompiler.meta_evolver import MetaCompilerEvolver
 evolver = MetaCompilerEvolver(population_size=10, mutation_rate=0.25)
 result = evolver.step_generation()
 
+champion = getattr(evolver, "champion", None)
+cert = getattr(champion, "proof_certificate", None) if champion else None
+is_proved = bool(
+    champion and 
+    getattr(champion, "verified", False) and 
+    cert and 
+    getattr(cert, "is_verified", False) and 
+    not getattr(cert, "drift_detected", True)
+)
+
 out = {
     "generation": result.get("generation", 1),
-    "best_speedup": result.get("champion_speedup", 1.0),
-    "valid_passes": result.get("verified_count", 2),
-    "promoted_passes": len(result.get("champion_passes", [])),
-    "proof_digest": result.get("champion_digest", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"),
-    "equivalence_status": "PROVED_EQUIVALENT"
+    "best_speedup": result.get("champion_speedup", 1.0) if is_proved else 0.0,
+    "valid_passes": result.get("verified_count", 0) if is_proved else 0,
+    "promoted_passes": len(result.get("champion_passes", [])) if is_proved else 0,
+    "proof_digest": result.get("champion_digest", ""),
+    "equivalence_status": "PROVED_EQUIVALENT" if is_proved else "UNPROVEN_SEMANTIC_DRIFT"
 }
 print(json.dumps(out))
 `;
@@ -146,8 +156,20 @@ function verifyFormalEquivalence(evolutionResult) {
   if (evolutionResult.equivalence_status !== "PROVED_EQUIVALENT") {
     throw new Error(`Semantic drift detected! Status: ${evolutionResult.equivalence_status}`);
   }
-  logSuccess(`Formal Equivalence Proven: For all x in adversarial suite, Pass_new(x) == Pass_old(x). Drift = 0.000%.`);
-  return { verified: true, proofDigest: evolutionResult.proof_digest };
+  if (!evolutionResult.valid_passes || evolutionResult.valid_passes <= 0) {
+    throw new Error(`Formal verification failed: 0 valid passes recorded.`);
+  }
+  const digest = evolutionResult.proof_digest;
+  if (!digest || typeof digest !== "string" || digest.length !== 64) {
+    throw new Error(`Invalid proof digest format: ${digest}`);
+  }
+  const DUMMY_ZERO = "0".repeat(64);
+  const EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+  if (digest === DUMMY_ZERO || digest === EMPTY_SHA256) {
+    throw new Error(`Formal verification rejected dummy proof digest: ${digest}`);
+  }
+  logSuccess(`Formal Equivalence Proven: For all x in adversarial suite, Pass_new(x) == Pass_old(x). Drift = 0.000%. Digest: ${digest.slice(0, 16)}...`);
+  return { verified: true, proofDigest: digest };
 }
 
 /**

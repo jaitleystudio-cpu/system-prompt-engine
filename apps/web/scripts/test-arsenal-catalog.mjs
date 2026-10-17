@@ -119,7 +119,7 @@ assert.ok(freeExport.includes("Generated via SPE Universal Prompt Engine"), "Fre
 const proExport = transcompilePromptForPlatform(codeAsset, "claude", {}, { tier: "pro" });
 assert.ok(!proExport.includes("Generated via SPE Universal Prompt Engine"), "Pro export must be 100% clean and unwatermarked");
 
-console.log(`  ✓ Transcompilation across Claude 3.7, ChatGPT, Gemini 2.0, Grok 3, Midjourney v6.1, Runway, and Suno verified.`);
+console.log(`  ✓ Transcompilation across Claude Sonnet 5.5, ChatGPT, Gemini 3, Grok 4, Midjourney v7, Runway, and Suno verified.`);
 console.log(`  ✓ Monetization verified: Free exports enforce viral watermark, Pro exports are 100% clean.`);
 
 // 5. Index search file check & 10,000 Scale Hydration Engine

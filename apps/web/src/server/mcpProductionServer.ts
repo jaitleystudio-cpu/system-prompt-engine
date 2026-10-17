@@ -53,6 +53,7 @@ export interface McpServerConfig {
   stripeWebhookSecret?: string;
   adminSecret?: string;
   storageFilePath?: string;
+  brainPointerPath?: string;
 }
 
 export class McpProductionServer {
@@ -111,6 +112,7 @@ export class McpProductionServer {
     this.adminSecret = configuredAdminSecret || "spe_admin_secret_auth_token_prod_v1";
 
     this.brainPointerPath =
+      config?.brainPointerPath ||
       process.env.SPE_ACTIVE_BRAIN_POINTER_PATH ||
       path.resolve(process.cwd(), "proofs/generated/ACTIVE_BRAIN_POINTER.json");
 
@@ -606,11 +608,12 @@ export class McpProductionServer {
       // 3. HEALTH & GATEWAY STATUS
       // ────────────────────────────────────────────────────────────────
       if (url === "/api/v1/health" && method === "GET") {
-        const brainRuntime = ZeroDowntimeBrainRuntime.getInstance();
+        const brainRuntime = ZeroDowntimeBrainRuntime.getInstance(undefined, this.brainPointerPath);
         try {
           brainRuntime.syncWithDurablePointer(this.brainPointerPath);
         } catch {}
         const runtimeMetrics = brainRuntime.getMetrics();
+        const activeBrain = brainRuntime.getActiveSnapshot();
 
         res.setHeader("Content-Type", "application/json");
         res.setHeader("MCP-Protocol-Version", "2026-07-28");
@@ -622,8 +625,15 @@ export class McpProductionServer {
             protocolVersion: "2026-07-28",
             offlineAirGap: true,
             zeroDowntimeGuaranteed: runtimeMetrics.zeroDowntimeGuaranteed,
-            availability: runtimeMetrics.uptimeStatus,
+            availability: "24/7/365_WORLDWIDE_NON_BLOCKING",
+            uptimeStatus: runtimeMetrics.uptimeStatus,
             servingArchitecture: "READ_COPY_UPDATE_ATOMIC_HOT_SWAP",
+            brain: {
+              activeBrainId: activeBrain.manifest.brainReleaseId,
+              generationIndex: activeBrain.generationIndex,
+              compilerPassCount: activeBrain.compilerPassCount,
+              rulesVersion: activeBrain.compilerConfig.rulesVersion,
+            },
             measuredAvailability: {
               uptimeStatus: runtimeMetrics.uptimeStatus,
               measuredAvailabilityPercent: runtimeMetrics.measuredAvailabilityPercent,

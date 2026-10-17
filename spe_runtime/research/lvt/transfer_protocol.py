@@ -81,7 +81,7 @@ class LearningTransferProtocol:
     def synthesize_spe_learning_artifact(
         tx: LearningValidityTransaction,
         refined_prompt_content: str,
-        supported_models: Sequence[str] = ("gpt-4o", "claude-3-7-sonnet", "llama-3-3-70b"),
+        supported_models: Sequence[str] = ("claude-5-5-sonnet", "gpt-6-1-sol", "meta-muse-code"),
     ) -> str:
         """
         Synthesizes a portable, self-contained .spe bundle embedding the verified learning artifact.

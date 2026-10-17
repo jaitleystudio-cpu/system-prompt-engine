@@ -22,7 +22,7 @@
 
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import {
   DurableMaintenanceLedger,
   findRepoRoot,

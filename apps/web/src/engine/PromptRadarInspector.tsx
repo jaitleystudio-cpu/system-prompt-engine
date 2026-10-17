@@ -748,7 +748,7 @@ ${promptText}
                         ? `Needs Repair: Missing ${qualityAudit.missingRequirements.length} required constraint(s).`
                         : isOptimized
                           ? `✓ Prompt upgraded. Evaluated health score: ${metrics.healthScore}/100 based on independently verified invariant axes.`
-                          : "Multi-axis audit evaluating your prompt against Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, and Gemini 3 Pro frontier guardrails."}
+                          : "Multi-axis audit evaluating your prompt against Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, and Gemini 3 Pro frontier guardrails."}
                   </p>
 
                   {/* 1-Click Generate & Improve Button */}
@@ -903,7 +903,7 @@ ${promptText}
                 mistakeTitle: "No Phased Execution Steps or Cognitive Scaffolding Detected",
                 passedDescription: "Sequential reasoning milestones and cognitive scaffolding (Approach, Methodology, Execution Steps) are explicitly established, preventing premature one-shot conclusions.",
                 defectDescription: "Your prompt lacks sequential reasoning phases or step-by-step methodology (e.g. Phase 1: Context, Phase 2: Implementation, Phase 3: Verification).",
-                whyItMatters: "Without sequential execution phases, frontier LLMs (Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro) jump directly to premature conclusions, hallucinate intermediate steps, fail complex multi-step reasoning, and produce shallow 1-shot responses. Phased cognitive scaffolding forces the model to deliberate systematically before emitting code or text.",
+                whyItMatters: "Without sequential execution phases, frontier LLMs (Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, Gemini 3 Pro) jump directly to premature conclusions, hallucinate intermediate steps, fail complex multi-step reasoning, and produce shallow 1-shot responses. Phased cognitive scaffolding forces the model to deliberate systematically before emitting code or text.",
                 howToFix: "Break the task into clear sequential milestones: (1) Diagnosis & Input Inspection, (2) Core Architecture, (3) Edge-Case & Fallback Handling, (4) Verification Battery.",
                 exampleSnippet: `# Approach & Methodological Plan\n1. Inspect supplied requirements, dependencies, and environment constraints before proposing changes.\n2. Implement the smallest complete, robust solution adhering to the architectural contracts.\n3. Consider failure modes, memory bounds, and defensive error boundaries explicitly.\n4. Validate against deterministic verification criteria before completion.`,
               },
@@ -1073,7 +1073,7 @@ ${promptText}
 
                     <div style={{ marginBottom: "0.5rem" }}>
                       <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase" }}>
-                        Why Frontier LLMs (Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro) Need This:
+                        Why Frontier LLMs (Claude Sonnet 5.5, Claude Code 2.1, OpenAI GPT-6.1-Sol Codex, Gemini 3 Pro) Need This:
                       </div>
                       <p style={{ fontSize: "0.7rem", color: "#cbd5e1", margin: "0.15rem 0 0", lineHeight: 1.4 }}>
                         {activeDiag.whyItMatters}

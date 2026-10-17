@@ -61,7 +61,7 @@ export function PromptArsenalPage({ onNavigate, onSelectPrompt }: Props) {
             Universal <span className="spe-gradient-text">Prompt Arsenal</span>
           </h1>
           <p className="spe-arsenal-hero-desc">
-            Production-grade, task-specific prompt assets adapted for Claude 4.5 Sonnet, OpenAI GPT-5/o4-mini, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. Browse across 13 professional domains with real-time model transcompilation.
+            Production-grade, task-specific prompt assets adapted for Claude Sonnet 5.5, OpenAI GPT-6.1-Sol / Astra, Gemini 3 Pro, Grok 4, DeepSeek-R2, and Midjourney v7. Browse across 13 professional domains with real-time model transcompilation.
           </p>
 
           <div className="spe-arsenal-trust-strip">

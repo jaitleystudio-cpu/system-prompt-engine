@@ -303,10 +303,10 @@ export const AgentSimulatorPanel: React.FC<AgentSimulatorPanelProps> = ({
                     onChange={(e) => setByokProvider(e.target.value as any)}
                     style={{ padding: "0.35rem 0.6rem", borderRadius: "4px", backgroundColor: "#020617", color: "#f8fafc", border: "1px solid #334155", fontSize: "0.8rem" }}
                   >
-                    <option value="openai">OpenAI (GPT-4o / GPT-5)</option>
-                    <option value="anthropic">Anthropic (Claude 4.5 Sonnet)</option>
-                    <option value="gemini">Google (Gemini 2.5 Flash)</option>
-                    <option value="ollama">Local Ollama (Llama 4 / 3.3)</option>
+                    <option value="anthropic">Anthropic (Claude Sonnet 5.5 / Claude Code 2.1)</option>
+                    <option value="openai">OpenAI (GPT-6.1-Sol Codex / Astra)</option>
+                    <option value="gemini">Google (Gemini 3 Pro / Flash)</option>
+                    <option value="ollama">Local Ollama (Meta Muse Code 1.3 / DeepSeek)</option>
                   </select>
                 </div>
                 {byokProvider !== "ollama" && (

@@ -1,7 +1,7 @@
 {
   "receiptVersion": "2.4.0",
   "cycleIndex": 1,
-  "timestampIso": "2026-10-17T14:58:58.498Z",
+  "timestampIso": "2026-10-17T15:51:13.312Z",
   "executionMode": "24_7_CONTINUOUS_ZERO_DOWNTIME",
   "servingAvailabilityGuarantee": "OPERATIONAL_MEASURED_UPTIME",
   "stages": {
@@ -35,16 +35,16 @@
     },
     "atomicHotSwap": {
       "status": "PASS",
-      "durationMs": 1.56,
+      "durationMs": 0.85,
       "activeBrainId": "spe-brain-v2.4.20261017.g1"
     }
   },
   "success": true,
-  "durationMs": 6206,
+  "durationMs": 12996,
   "activeBrainId": "spe-brain-v2.4.20261017.g1",
   "measuredAvailabilityPercent": 100,
   "operationalEvidence": {
-    "reportingPeriodSeconds": 0,
+    "reportingPeriodSeconds": 1,
     "totalRequests": 0,
     "successfulRequests": 0,
     "failedRequests": 0,

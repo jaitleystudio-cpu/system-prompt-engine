@@ -239,7 +239,7 @@ async function callVlmApi(base64Data, settings) {
           ? "https://openrouter.ai/api/v1/chat/completions"
           : "https://api.openai.com/v1/chat/completions";
 
-      const model = settings.model || (settings.provider === "openrouter" ? "google/gemini-2.5-flash" : "gpt-4o");
+      const model = settings.model || (settings.provider === "openrouter" ? "google/gemini-2.5-flash" : "gpt-6-1-sol");
 
       const res = await fetch(endpoint, {
         method: "POST",

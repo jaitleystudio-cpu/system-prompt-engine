@@ -33,8 +33,8 @@ async function run() {
     await universeSection.screenshot({ path: join(ARTIFACTS_DIR, "preview_spe_orbital_universe.png") });
     console.log("✓ Saved preview_spe_orbital_universe.png");
 
-    // Click another model node (e.g. Claude 3.7 Sonnet) to test interaction state
-    const claudeNode = page.locator(".spe-satellite-node:has-text('Claude 3.7 Sonnet')");
+    // Click another model node (e.g. Claude Sonnet 5.5) to test interaction state
+    const claudeNode = page.locator(".spe-satellite-node:has-text('Claude Sonnet 5.5')");
     if (await claudeNode.isVisible()) {
       await claudeNode.click();
       await page.waitForTimeout(600);

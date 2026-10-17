@@ -25,7 +25,7 @@ def test_shipped_capabilities_registry():
 
 def test_promise_contract_rejects_unshipped_claims():
     res = verify_copy_against_promise_contract(
-        headline="Run Claude 4.5 and GPT-5 inside your browser without API keys",
+        headline="Run Claude Sonnet 5.5 and OpenAI GPT-6.1 inside your browser without API keys",
         support="Our neural network weights are loaded locally in WebAssembly.",
     )
     assert not res.valid

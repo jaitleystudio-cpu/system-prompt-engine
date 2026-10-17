@@ -2,7 +2,7 @@
  * SPE Ω — Frontier Model Cost, Carbon & Latency Simulator with Lossless AST Pruner
  * 
  * Provides compile-time financial, performance, and environmental intelligence:
- * 1. Multi-Provider Cost Matrix (Claude 5.5, GPT-6.1-Sol, Meta Muse Code 1.3, Claude 4.5, Gemini 3, DeepSeek)
+ * 1. Multi-Provider Cost Matrix (Claude 5.5, GPT-6.1-Sol, Meta Muse Code 1.3, Claude Code 2.1, Gemini 3, DeepSeek)
  * 2. Carbon Footprint & Energy Modeling (kWh & gCO2e per million requests)
  * 3. Lossless Semantic AST Token Pruner (Compresses prompt 25-40% while preserving 100% invariants)
  */
@@ -83,40 +83,31 @@ export const FRONTIER_MODELS: ModelPricingTier[] = [
     tokensPerSec: 140
   },
   {
-    modelId: 'claude-4-5-sonnet',
+    modelId: 'claude-5-5-opus',
     provider: 'Anthropic',
-    inputPerMillionUsd: 2.50,
+    inputPerMillionUsd: 15.00,
+    outputPerMillionUsd: 75.00,
+    cachedInputPerMillionUsd: 1.50,
+    estimatedTtftMs: 450,
+    tokensPerSec: 60
+  },
+  {
+    modelId: 'claude-code-2-1',
+    provider: 'Anthropic',
+    inputPerMillionUsd: 3.00,
+    outputPerMillionUsd: 15.00,
+    cachedInputPerMillionUsd: 0.30,
+    estimatedTtftMs: 250,
+    tokensPerSec: 100
+  },
+  {
+    modelId: 'gpt-6-astra',
+    provider: 'OpenAI',
+    inputPerMillionUsd: 3.00,
     outputPerMillionUsd: 12.00,
-    cachedInputPerMillionUsd: 0.25,
-    estimatedTtftMs: 320,
-    tokensPerSec: 85
-  },
-  {
-    modelId: 'claude-4-5-haiku',
-    provider: 'Anthropic',
-    inputPerMillionUsd: 0.60,
-    outputPerMillionUsd: 3.00,
-    cachedInputPerMillionUsd: 0.06,
-    estimatedTtftMs: 110,
-    tokensPerSec: 160
-  },
-  {
-    modelId: 'gpt-5',
-    provider: 'OpenAI',
-    inputPerMillionUsd: 2.00,
-    outputPerMillionUsd: 8.00,
-    cachedInputPerMillionUsd: 1.00,
-    estimatedTtftMs: 240,
-    tokensPerSec: 105
-  },
-  {
-    modelId: 'o4-mini',
-    provider: 'OpenAI',
-    inputPerMillionUsd: 0.80,
-    outputPerMillionUsd: 3.20,
-    cachedInputPerMillionUsd: 0.20,
-    estimatedTtftMs: 150,
-    tokensPerSec: 120
+    cachedInputPerMillionUsd: 1.50,
+    estimatedTtftMs: 190,
+    tokensPerSec: 130
   },
   {
     modelId: 'gemini-3-pro',
@@ -252,23 +243,23 @@ export function simulateCostAndCarbon(prompt: string): CostOptimizationResult {
   });
 
   // Calculate annual savings across 10M requests (2026 Frontier Models)
-  const gpt5Model = modelEstimates.find(m => m.modelId === 'gpt-5') || modelEstimates[0];
-  const claudeModel = modelEstimates.find(m => m.modelId === 'claude-4-5-sonnet') || modelEstimates[0];
+  const gpt6Model = modelEstimates.find(m => m.modelId === 'gpt-6-1-sol') || modelEstimates[0];
+  const claudeModel = modelEstimates.find(m => m.modelId === 'claude-5-5-sonnet') || modelEstimates[0];
   const deepseekModel = modelEstimates.find(m => m.modelId === 'deepseek-r2') || modelEstimates[0];
 
   const volumeFactor = 10; // 10M requests
   const savedTokensRatio = tokenReductionPercent / 100;
 
-  const gpt5Savings = Math.round(gpt5Model.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
+  const gpt6Savings = Math.round(gpt6Model.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
   const claudeSavings = Math.round(claudeModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
   const deepseekSavings = Math.round(deepseekModel.costPerMillionCallsUsd * volumeFactor * savedTokensRatio);
 
   const annualSavingsUsdAt10mCalls = {
-    gpt5: gpt5Savings,
+    gpt5: gpt6Savings,
     claude45Sonnet: claudeSavings,
     deepseekR2: deepseekSavings,
     // Backwards-compatible aliases
-    gpt4o: gpt5Savings,
+    gpt4o: gpt6Savings,
     claude37Sonnet: claudeSavings,
     deepseekR1: deepseekSavings,
   };

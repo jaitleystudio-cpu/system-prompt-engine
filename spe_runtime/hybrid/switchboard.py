@@ -103,7 +103,7 @@ class HybridSwitchboard:
 
         # 3. Device Not Qualified -> Evaluate Cloud Gate
         # Estimate cloud cost conservatively from pinned price table
-        cloud_model = force_cloud_model or "gpt-4o"
+        cloud_model = force_cloud_model or "claude-5-5-sonnet"
         est_cost_usd, _, _ = compute_pinned_cost(
             prompt_tokens=task.estimated_tokens,
             completion_tokens=max(64, task.estimated_tokens // 2),

@@ -203,7 +203,7 @@ class WebsiteInventoryAuditorPy:
             "view": "eval-studio",
             "indexable": True,
             "title": "Frontier Model Eval Studio & 1-Click Immunizer | SPE Ω",
-            "description": "Side-by-side prompt evaluation against Claude 4.5, GPT-5, Gemini 3, and Local Ollama. Live assertions, 10 OWASP red-team attack probes, and 1-click vulnerability immunization.",
+            "description": "Side-by-side prompt evaluation against Claude Sonnet 5.5, OpenAI GPT-6.1-Sol, Claude Code 2.1, and Local Meta Muse. Live assertions, 10 OWASP red-team attack probes, and 1-click vulnerability immunization.",
             "task": "Side-by-side prompt evaluation and 1-click vulnerability immunization against frontier models",
             "owner": "frontier-eval-squad",
         },

@@ -57,7 +57,7 @@ async function run() {
 
   test("1.2: Promise verifier rejects ungrounded capability claims", () => {
     const ungrounded = verifyCopyAgainstPromiseContract({
-      headline: "Run Claude 4.5 and GPT-5 inside your browser without API keys",
+      headline: "Run Claude Sonnet 5.5 and GPT-6.1 inside your browser without API keys",
       support: "Our neural network weights are loaded locally into WebAssembly.",
       cta: "Generate Free AI Output",
     });

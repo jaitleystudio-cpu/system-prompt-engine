@@ -41,7 +41,7 @@ Unlike community directories that lock basic features behind $9–$50/mo subscri
    Run automated OWASP red-teaming directly in your chat interface. Detect prompt injection vulnerabilities and immunize them with formal negative invariants in one click.
 
 3. Multi-Model Transcompilation:
-   Craft once, execute anywhere. Transcompile your prompt with exact syntax tailoring for Claude XML, Cursor .cursorrules, Windsurf, Grok 3, Gemini, OpenAI o3-mini, and Ollama Modelfiles.
+   Craft once, execute anywhere. Transcompile your prompt with exact syntax tailoring for Claude XML, Cursor .cursorrules, Windsurf, Grok 4, Gemini 3, OpenAI GPT-6.1-Sol, and Ollama Modelfiles.
 
 4. Built-in Humanizer & Anti-Slop Doctor (QuillBot & Grammarly Killer):
    Strip conversational filler ("delve deeply", "tapestry", "foster collaboration") and replace them with sharp, causal instructions that force frontier models to reason rather than flatter.

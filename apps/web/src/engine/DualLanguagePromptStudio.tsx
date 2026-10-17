@@ -42,7 +42,7 @@ export const DualLanguagePromptStudio: React.FC<DualLanguagePromptStudioProps> =
   onClose,
 }) => {
   const [inputText, setInputText] = useState(initialInput);
-  const [selectedModel, setSelectedModel] = useState<string>("claude-sonnet");
+  const [selectedModel, setSelectedModel] = useState<string>("claude-5-5-sonnet");
   const [activeTab, setActiveTab] = useState<"native" | "english" | "compare" | "hybrid">("compare");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 

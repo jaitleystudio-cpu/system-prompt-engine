@@ -288,7 +288,7 @@ if (typeof document !== "undefined") {
     btnLlm.addEventListener("click", () => {
       const enPrompt = activeItem?.prompts?.en || promptOutput?.value || "";
       const tags = activeItem?.tags || [];
-      copyToClipboard(formatForClaudeGpt(enPrompt, tags), "Copied Claude / GPT-4o directive!");
+      copyToClipboard(formatForClaudeGpt(enPrompt, tags), "Copied Claude Sonnet 5.5 / GPT-6.1-Sol directive!");
     });
   }
 

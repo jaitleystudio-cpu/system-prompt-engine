@@ -224,7 +224,7 @@ def cmd_bench(args: argparse.Namespace) -> int:
 
 
 def cmd_passport(args: argparse.Namespace) -> int:
-    model_id = args.model or "gpt-4o"
+    model_id = args.model or "claude-5-5-sonnet"
     print(f"📋 MODEL PASSPORT & ATLAS: {model_id}")
     atlas = ModelAtlasRegistry(Path(".spe/atlas.json"))
     prov = ExecutionProvenance(
@@ -259,8 +259,8 @@ def cmd_failures(args: argparse.Namespace) -> int:
     print("🧬 FAILURE GENOME Ω REPOSITORY")
     store = FailureGenomeStore()
     sample_raw = {
-        "model": "gpt-4o",
-        "model_version": "2024-08-06",
+        "model": "gpt-6-1-sol",
+        "model_version": "2026-10",
         "failure_class": FailureClass.PROMPT_INJECTION.value,
         "severity": Severity.CRITICAL.value,
         "affected_capability": "FILE_SYSTEM_READ",
@@ -1333,7 +1333,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # passport
     p_passport = subparsers.add_parser("passport", help="Inspect model passport and execution provenance")
-    p_passport.add_argument("model", nargs="?", default="gpt-4o", help="Target model ID")
+    p_passport.add_argument("model", nargs="?", default="claude-5-5-sonnet", help="Target model ID")
 
     # failures
     p_failures = subparsers.add_parser("failures", help="Query or list Failure Genome Ω entries")

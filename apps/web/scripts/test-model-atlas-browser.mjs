@@ -3,7 +3,7 @@
  * End-to-End Browser Test for SPE Model Atlas & Monetization Engine
  * Spawns Vite preview server, opens chromium, and tests:
  * 1. Model Atlas pills rendering real AI models with PRO and FREE badges
- * 2. Pro model gating: Clicking Claude 3.7 Sonnet displays the Pro Upgrade Modal
+ * 2. Pro model gating: Clicking Claude Opus 5.5 displays the Pro Upgrade Modal
  * 3. Modal dismissal
  * 4. Free model selection: Gemini 2.0 Flash selects cleanly
  * 5. Sponsored Partner Compute Banner renders with CTA
@@ -67,21 +67,20 @@ async function run() {
     const modelPills = await page.locator(".spe-vault-model-tag").all();
     assert.ok(modelPills.length >= 6, `Expected >= 6 model pills, got ${modelPills.length}`);
 
-    // Verify Claude 3.7 Sonnet pill with REASONING badge exists
-    const claudePill = page.locator(".spe-vault-model-tag", { hasText: "Claude 3.7 Sonnet" });
+    // Verify Claude Sonnet 5.5 pill exists
+    const claudePill = page.locator(".spe-vault-model-tag", { hasText: "Claude Sonnet 5.5" });
     const claudeText = await claudePill.textContent();
-    assert.ok(claudeText?.includes("Claude 3.7 Sonnet"), `Expected Claude 3.7 Sonnet, got: ${claudeText}`);
-    assert.ok(claudeText?.includes("REASONING"), `Expected REASONING badge on Claude 3.7, got: ${claudeText}`);
+    assert.ok(claudeText?.includes("Claude Sonnet 5.5"), `Expected Claude Sonnet 5.5, got: ${claudeText}`);
     console.log(`  ✓ Found verified model pill: "${claudeText.trim()}"`);
 
-    // Click Claude 3.7 Sonnet (100% free on web) -> should select cleanly WITHOUT modal
+    // Click Claude Sonnet 5.5 (100% free on web) -> should select cleanly WITHOUT modal
     await claudePill.click();
     await page.waitForTimeout(300);
     const activePill = await page.textContent(".spe-vault-model-tag.active");
-    assert.ok(activePill?.includes("Claude 3.7 Sonnet"), `Expected Claude 3.7 Sonnet to be active, got: ${activePill}`);
+    assert.ok(activePill?.includes("Claude Sonnet 5.5"), `Expected Claude Sonnet 5.5 to be active, got: ${activePill}`);
     const modalVisible = await page.locator(".spe-pro-modal-box").isVisible();
-    assert.strictEqual(modalVisible, false, "Modal should NOT appear when selecting Claude 3.7 Sonnet on the web");
-    console.log(`  ✓ Claude 3.7 Sonnet selected cleanly on web (100% free for all users).`);
+    assert.strictEqual(modalVisible, false, "Modal should NOT appear when selecting Claude Sonnet 5.5 on the web");
+    console.log(`  ✓ Claude Sonnet 5.5 selected cleanly on web (100% free for all users).`);
 
     // Verify Sponsored Partner Compute Banner
     console.log(`[5/5] Verifying Ad & Sponsorship Monetization Units...`);

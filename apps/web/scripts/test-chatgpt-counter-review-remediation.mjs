@@ -4,7 +4,7 @@
  * Conclusively verifies that all 6 findings from ChatGPT's October 17, 2026 Counter-Review
  * are 100% repaired, hardened, and verified with zero regressions:
  *
- * 1. Model Atlas Sync: Claude 3.7 auto-upgrades to Claude 4.5 Sonnet via deprecatedInFavorOf.
+ * 1. Model Atlas Sync: Claude 3.7 (historical legacy) auto-upgrades to Claude Sonnet via deprecatedInFavorOf.
  * 2. Finding F05: Mandatory instructions inside goal (e.g. MUST NEVER SHARE PRIVATE DATA)
  *    are protected from truncation, preserved in output, and fail closed when budget is exceeded.
  * 3. Finding F06: Complete Unicode validation replaces internal/external lone surrogates
@@ -64,7 +64,7 @@ console.log("=================================================================="
 console.log("\n[1/6] Verifying Model Atlas auto-upgrade for claude-3-7-sonnet...");
 {
   const upgradedClaude = getModelById("claude-3-7-sonnet");
-  assert.ok(upgradedClaude, "Claude 3.7 Sonnet must resolve via auto-upgrade");
+  assert.ok(upgradedClaude, "Claude 3.7 Sonnet must resolve via auto-upgrade (historical legacy)");
   assert.equal(
     upgradedClaude.id,
     "claude-4-5-sonnet",

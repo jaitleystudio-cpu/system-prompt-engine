@@ -33,13 +33,13 @@ export function generateProductionSdkCode(promptText: string, options: CodeGenOp
   const alignedPrompt = aligned.alignedPromptText;
 
   if (options.target === 'typescript-vercel') {
-    return generateTypeScriptVercel(cleanName, alignedPrompt, options.modelId || 'anthropic/claude-3-5-sonnet-20241022');
+    return generateTypeScriptVercel(cleanName, alignedPrompt, options.modelId || 'anthropic/claude-5-5-sonnet');
   } else if (options.target === 'typescript-anthropic') {
-    return generateTypeScriptAnthropic(cleanName, alignedPrompt, options.modelId || 'claude-3-5-sonnet-20241022');
+    return generateTypeScriptAnthropic(cleanName, alignedPrompt, options.modelId || 'claude-5-5-sonnet');
   } else if (options.target === 'python-langchain') {
-    return generatePythonLangChain(cleanName, alignedPrompt, options.modelId || 'gpt-4o');
+    return generatePythonLangChain(cleanName, alignedPrompt, options.modelId || 'gpt-6-1-sol');
   } else {
-    return generatePythonOpenAI(cleanName, alignedPrompt, options.modelId || 'gpt-4o');
+    return generatePythonOpenAI(cleanName, alignedPrompt, options.modelId || 'gpt-6-1-sol');
   }
 }
 

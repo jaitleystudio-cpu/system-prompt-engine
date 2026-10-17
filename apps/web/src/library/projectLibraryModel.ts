@@ -167,7 +167,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       parent_revision_id: null,
       created_at: "2026-09-30T10:05:00Z",
       artifact_type: "prompt",
-      provider_target: "anthropic:claude-3-5-sonnet",
+      provider_target: "anthropic:claude-5-5-sonnet",
       provenance_refs: ["prov:prompt_v1_seed"],
       quality_evidence_refs: ["example:syntax_not_verified"],
       body: {
@@ -186,7 +186,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       parent_revision_id: "rev_00000000000000000000000000000001",
       created_at: "2026-09-30T10:20:00Z",
       artifact_type: "prompt",
-      provider_target: "anthropic:claude-3-5-sonnet",
+      provider_target: "anthropic:claude-5-5-sonnet",
       provenance_refs: ["prov:prompt_v1_seed", "example:eval_not_run"],
       quality_evidence_refs: ["example:syntax_not_verified", "example:cwv_not_measured"],
       body: {
@@ -205,7 +205,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       parent_revision_id: null,
       created_at: "2026-09-30T10:30:00Z",
       artifact_type: "code",
-      provider_target: "openai:gpt-4o",
+      provider_target: "openai:gpt-6-1-sol",
       provenance_refs: ["prov:code_spec_init"],
       quality_evidence_refs: ["example:typecheck_not_run"],
       body: {
@@ -227,7 +227,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       parent_revision_id: null,
       created_at: "2026-09-30T10:05:00Z",
       artifact_type: "prompt",
-      provider_target: "anthropic:claude-3-5-sonnet",
+      provider_target: "anthropic:claude-5-5-sonnet",
       provenance_refs: ["prov:prompt_v1_seed"],
       quality_evidence_refs: ["example:syntax_not_verified"],
       body: {
@@ -246,7 +246,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       parent_revision_id: "rev_00000000000000000000000000000001",
       created_at: "2026-09-30T10:20:00Z",
       artifact_type: "prompt",
-      provider_target: "anthropic:claude-3-5-sonnet",
+      provider_target: "anthropic:claude-5-5-sonnet",
       provenance_refs: ["prov:prompt_v1_seed", "example:eval_not_run"],
       quality_evidence_refs: ["example:syntax_not_verified", "example:cwv_not_measured"],
       body: {
@@ -273,7 +273,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       parent_revision_id: null,
       created_at: "2026-09-30T10:30:00Z",
       artifact_type: "code",
-      provider_target: "openai:gpt-4o",
+      provider_target: "openai:gpt-6-1-sol",
       provenance_refs: ["prov:code_spec_init"],
       quality_evidence_refs: ["example:typecheck_not_run"],
       body: {

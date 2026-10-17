@@ -7,7 +7,7 @@
  * 2. Audits, verifies, and synchronizes active AI model versions and dialect specifications
  *    across all 6 major providers (Anthropic, OpenAI, Google DeepMind, xAI, Meta, DeepSeek).
  * 3. Enforces the ZERO-STALE-MODEL invariant: 100% of active models MUST belong to the
- *    active 2026 Frontier Generation (Claude 4.5, GPT-5, Gemini 3, Grok 4, DeepSeek-R2, Llama 4).
+ *    active 2026 Frontier Generation (Claude 5.5, GPT-6.1-Sol, Gemini 3, Grok 4, DeepSeek-R2, Meta Muse Code).
  * 4. Generates an RFC 8785 canonicalized, Ed25519-compatible signed Currency Attestation.
  * 5. Guarantees that zero stale model names or version drift linger anywhere on the website.
  *

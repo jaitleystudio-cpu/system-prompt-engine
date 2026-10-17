@@ -958,6 +958,120 @@ const zeroAmtRes = await simulateHttpRequest(
 assert(zeroAmtRes.statusCode === 400, "Zero-amount payment session strictly rejected with HTTP 400");
 assert(zeroAmtRes.body.message.includes("INVALID_PAYMENT_AMOUNT"), "Error cites INVALID_PAYMENT_AMOUNT");
 
+// 6.5 BILL-P0-09: Unpaid Payment Status Rejection
+const unpaidPayload = JSON.stringify({
+  id: "evt_unpaid_status_001",
+  object: "event",
+  type: "checkout.session.completed",
+  data: {
+    object: {
+      client_reference_id: "cust_unpaid_001",
+      currency: "usd",
+      amount_total: 2000,
+      payment_status: "unpaid",
+      mode: "payment",
+    },
+  },
+});
+const unpaidSig = stripeProcessor.signPayload(unpaidPayload);
+const unpaidRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": unpaidSig },
+  },
+  unpaidPayload
+);
+assert(unpaidRes.statusCode === 400, "Unpaid checkout session strictly rejected with HTTP 400");
+assert(unpaidRes.body.message.includes("PAYMENT_STATUS_NOT_PAID"), "Error cites PAYMENT_STATUS_NOT_PAID");
+
+// 6.6 BILL-P0-09: Missing Customer Identity Rejection
+const missingCustPayload = JSON.stringify({
+  id: "evt_missing_cust_001",
+  object: "event",
+  type: "checkout.session.completed",
+  data: {
+    object: {
+      currency: "usd",
+      amount_total: 2000,
+      payment_status: "paid",
+      mode: "payment",
+    },
+  },
+});
+const missingCustSig = stripeProcessor.signPayload(missingCustPayload);
+const missingCustRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": missingCustSig },
+  },
+  missingCustPayload
+);
+assert(missingCustRes.statusCode === 400, "Checkout without customer identity strictly rejected with HTTP 400");
+assert(missingCustRes.body.message.includes("MISSING_CUSTOMER_IDENTITY"), "Error cites MISSING_CUSTOMER_IDENTITY");
+
+// 6.7 BILL-P0-07: Negative / Zero Refund Amount Rejection
+const negativeRefundPayload = JSON.stringify({
+  id: "evt_neg_refund_001",
+  object: "event",
+  type: "charge.refunded",
+  data: {
+    object: {
+      payment_intent: "pi_neg_refund_001",
+      customer: "cust_refund_test_001",
+      currency: "usd",
+      amount_refunded: -500,
+    },
+  },
+});
+const negRefundSig = stripeProcessor.signPayload(negativeRefundPayload);
+const negRefundRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": negRefundSig },
+  },
+  negativeRefundPayload
+);
+assert(negRefundRes.statusCode === 400, "Negative refund amount strictly rejected with HTTP 400");
+assert(negRefundRes.body.message.includes("INVALID_REFUND_AMOUNT"), "Error cites INVALID_REFUND_AMOUNT");
+
+// 6.8 BILL-P0-07 / BILL-P0-09: customer.subscription.updated Revocation (past_due, unpaid, canceled)
+const subUpdateCustId = "cust_sub_update_001";
+usageEngine.createCustomerAccount({
+  customerId: subUpdateCustId,
+  email: "sub_update@spe.dev",
+  tier: "pro",
+  initialBalanceCents: 1000,
+});
+const pastDuePayload = JSON.stringify({
+  id: "evt_sub_past_due_001",
+  object: "event",
+  type: "customer.subscription.updated",
+  data: {
+    object: {
+      id: "sub_past_due_123",
+      customer: subUpdateCustId,
+      status: "past_due",
+    },
+  },
+});
+const pastDueSig = stripeProcessor.signPayload(pastDuePayload);
+const pastDueRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": pastDueSig },
+  },
+  pastDuePayload
+);
+assert(pastDueRes.statusCode === 200, "customer.subscription.updated webhook returns HTTP 200");
+assert(pastDueRes.body.result?.actionTaken?.includes("SUBSCRIPTION_REVOKED_STATUS_PAST_DUE"), "Action indicates subscription revocation on past_due");
+const updatedCustAccount = usageEngine.getCustomerAccount(subUpdateCustId);
+assert(updatedCustAccount.tier === "free", "Customer downgraded to free on past_due subscription update");
+assert(updatedCustAccount.subscriptionStatus === "CANCELED", "Subscription marked CANCELED in ledger");
+
 console.log("\n==================================================================");
 console.log(`🎉 ALL ${passedTests}/${totalTests} PER-CALL METERING & STRIPE TESTS PASSED CLEANLY (100%)!`);
 console.log("==================================================================");

@@ -355,7 +355,7 @@ assert.ok(existsSync(workflowYmlPath), '.github/workflows/spe-verify.yml must ex
 // Test Distributed APM Trace Store
 const apmStore = new SovereignApmStore(250);
 const createdTrace = await apmStore.createExecutionTrace({
-  model: 'Claude 3.7 Sonnet',
+  model: 'Claude Sonnet 5.5',
   promptText: 'Build zero-egress order processing engine with atomic financial guarantees',
   totalLatencyMs: 38,
   status: 'SUCCESS',

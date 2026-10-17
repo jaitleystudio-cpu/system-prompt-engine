@@ -342,8 +342,8 @@ description: "Living Outcome Contract Evaluation for {contract_id}"
 prompts:
   - "file://CLAUDE.md"
 providers:
-  - id: "anthropic:claude-3-5-sonnet-20241022"
-  - id: "openai:gpt-4o"
+  - id: "anthropic:claude-5-5-sonnet"
+  - id: "openai:gpt-6-1-sol"
 tests:
   - description: "Constraint C01 File Scope Preservation"
     assert:

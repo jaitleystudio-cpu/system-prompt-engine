@@ -94,9 +94,11 @@ const DEFAULT_TEST_CASES: StudioTestCase[] = [
 
 const AVAILABLE_MODELS = [
   { id: "mock:simulated-fast", label: "Mock Fast Runner (Zero Cost / In-Browser)", default: true },
-  { id: "anthropic:claude-4-5-sonnet", label: "Claude 4.5 Sonnet (Anthropic 2026)", default: true },
-  { id: "openai:gpt-5", label: "GPT-5 Omni (OpenAI 2026)", default: false },
-  { id: "openai:o4-mini", label: "o4-mini (Frontier Reasoning 2026)", default: false },
+  { id: "anthropic:claude-5-5-sonnet", label: "Claude Sonnet 5.5 (Anthropic 2026)", default: true },
+  { id: "openai:gpt-6-1-sol", label: "GPT-6.1-Sol Codex (OpenAI 2026)", default: false },
+  { id: "openai:gpt-6-astra", label: "GPT-6 Astra (OpenAI 2026)", default: false },
+  { id: "anthropic:claude-code-2-1", label: "Claude Code 2.1 (Anthropic 2026)", default: false },
+  { id: "meta:meta-muse-code", label: "Meta Muse Code 1.3 (Meta 2026)", default: false },
   { id: "google:gemini-3-pro", label: "Gemini 3 Pro (Google 2026)", default: false },
   { id: "groq:llama-4-70b-versatile", label: "Llama 4 70B (Groq Ultra-Fast)", default: false },
   { id: "ollama:llama4", label: "Ollama Local Llama 4 (http://localhost:11434)", default: false },
@@ -106,7 +108,7 @@ export function EvalStudio() {
   const [promptText, setPromptText] = useState(DEFAULT_PRESET_PROMPT);
   const [selectedModels, setSelectedModels] = useState<string[]>([
     "mock:simulated-fast",
-    "anthropic:claude-4-5-sonnet",
+    "anthropic:claude-5-5-sonnet",
   ]);
   const [testCases, setTestCases] = useState<StudioTestCase[]>(DEFAULT_TEST_CASES);
   const [activeTab, setActiveTab] = useState<"matrix" | "redteam" | "import" | "keys" | "telemetry">("matrix");
@@ -317,7 +319,7 @@ export function EvalStudio() {
         </div>
         <h1 className="spe-eval-title">Frontier Model Matrix & Vulnerability Studio</h1>
         <p className="spe-eval-subtitle">
-          Compare real prompts side-by-side across Claude 4.5, GPT-5, Gemini 3, and Local Ollama.
+          Compare real prompts side-by-side across Claude Sonnet 5.5, OpenAI GPT-6.1-Sol, Claude Code 2.1, and Local Meta Muse.
           Execute live assertions, probe 10 OWASP attack vectors, and automatically patch vulnerabilities in 1 click.
         </p>
       </div>
@@ -829,7 +831,7 @@ export function EvalStudio() {
               <span className="spe-waterfall-meta-pill" style={{ color: "#34d399", borderColor: "rgba(52, 211, 153, 0.4)" }}>
                 🛡️ ZERO-EGRESS $0
               </span>
-              <span className="spe-waterfall-meta-pill">MODEL: {activeTraceRecord?.model || "Claude 4.5 Sonnet"}</span>
+              <span className="spe-waterfall-meta-pill">MODEL: {activeTraceRecord?.model || "Claude Sonnet 5.5"}</span>
               <span className="spe-waterfall-meta-pill">LATENCY: {activeTraceRecord?.totalLatencyMs || 42}ms</span>
             </div>
           </div>

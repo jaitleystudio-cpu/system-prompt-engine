@@ -25,13 +25,13 @@ interface Props {
 }
 
 const SUPPORTED_STUDIO_PLATFORMS: { id: ArsenalTargetPlatform; label: string; file: string; badge: string }[] = [
-  { id: "claude", label: "Claude 4.5 Sonnet", file: "CLAUDE.md", badge: "XML & Reasoning" },
-  { id: "chatgpt", label: "GPT-5 / o4-mini", file: "SYSTEM_POLICY.md", badge: "o-Series Markdown" },
+  { id: "claude", label: "Claude Sonnet 5.5 / Code 2.1", file: "CLAUDE.md", badge: "XML & Reasoning" },
+  { id: "chatgpt", label: "OpenAI GPT-6.1-Sol Codex / Astra", file: "SYSTEM_POLICY.md", badge: "Developer Markdown" },
   { id: "gemini", label: "Gemini 3 Pro", file: "gemini_directive.ts", badge: "Grounding Contracts" },
   { id: "cursor", label: "Cursor IDE (.mdc)", file: ".cursor/rules/spe-rules.mdc", badge: "MDC & AGENTS.md" },
   { id: "midjourney", label: "Midjourney v6.1", file: "midjourney_prompt.txt", badge: "Photoreal Optics" },
   { id: "flux", label: "FLUX.2 [pro]", file: "flux_prompt.txt", badge: "Raw 8K Shutter" },
-  { id: "local", label: "Ollama / DeepSeek", file: "Modelfile", badge: "Local Offline" },
+  { id: "local", label: "Meta Muse Code 1.3 / DeepSeek", file: "Modelfile", badge: "Local Offline" },
 ];
 
 function downloadText(filename: string, text: string) {

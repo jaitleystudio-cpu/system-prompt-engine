@@ -56,12 +56,12 @@ export interface ModelPricingTier {
 }
 
 export const MODEL_PRICING_CATALOG: Record<string, ModelPricingTier> = {
-  "claude-sonnet": { id: "claude-sonnet", name: "Claude 3.7 Sonnet", provider: "Anthropic", inputCostPer1M: 3.00 },
-  "gpt-4o": { id: "gpt-4o", name: "OpenAI GPT-4o", provider: "OpenAI", inputCostPer1M: 2.50 },
-  "o3-mini": { id: "o3-mini", name: "OpenAI o3-mini", provider: "OpenAI", inputCostPer1M: 1.10 },
-  "gemini-flash": { id: "gemini-flash", name: "Gemini 2.0 Flash", provider: "Google", inputCostPer1M: 0.10 },
-  "deepseek-r1": { id: "deepseek-r1", name: "DeepSeek R1", provider: "DeepSeek", inputCostPer1M: 0.55 },
-  "local-llama": { id: "local-llama", name: "Local On-Device (Llama / SPE)", provider: "Private", inputCostPer1M: 0.00 },
+  "claude-5-5-sonnet": { id: "claude-5-5-sonnet", name: "Claude Sonnet 5.5", provider: "Anthropic", inputCostPer1M: 3.00 },
+  "gpt-6-1-sol": { id: "gpt-6-1-sol", name: "OpenAI GPT-6.1-Sol Codex", provider: "OpenAI", inputCostPer1M: 2.50 },
+  "gpt-6-astra": { id: "gpt-6-astra", name: "OpenAI GPT-6 Astra", provider: "OpenAI", inputCostPer1M: 1.10 },
+  "gemini-3-flash": { id: "gemini-3-flash", name: "Gemini 3 Flash", provider: "Google", inputCostPer1M: 0.10 },
+  "deepseek-r2": { id: "deepseek-r2", name: "DeepSeek R2", provider: "DeepSeek", inputCostPer1M: 0.55 },
+  "local-muse": { id: "local-muse", name: "Local Meta Muse Code 1.3 (SPE)", provider: "Private", inputCostPer1M: 0.00 },
 };
 
 export interface PromptLanguageMetrics {
@@ -1359,7 +1359,7 @@ export function computePromptMetrics(
   
   // Use exact tokenizer density ratio for the script
   const tokens = Math.max(1, Math.round(charCount * lang.tokensPerChar));
-  const pricing = MODEL_PRICING_CATALOG[modelId] ?? MODEL_PRICING_CATALOG["claude-sonnet"];
+  const pricing = MODEL_PRICING_CATALOG[modelId] ?? MODEL_PRICING_CATALOG["claude-5-5-sonnet"];
   
   // Cost for 1,000 prompt invocations
   const costPer1kRuns = (tokens * 1000 * pricing.inputCostPer1M) / 1_000_000;
