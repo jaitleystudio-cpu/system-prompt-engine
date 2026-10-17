@@ -10,6 +10,9 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import {
+  startExclusiveRecovery, finishExclusiveRecovery, persistRecoveryCheckpoint,
+} from "./spe-recovery-journal-custody.mjs";
 
 export const TEST_SCOPE = Object.freeze({
   selectors: ["#spe-app", "canvas#spe-stage", "#spe-interact"],
@@ -122,17 +125,26 @@ export async function runCrashRecovery({
     initialPromptDigest: sha(originalPrompt), provenance,
     qualification: "UNQUALIFIED", attempts: [], repair: null,
     artifactDigest: null, acceptance: TEST_SCOPE,
+    phaseStatus: "INITIAL_DISPATCHING",
   };
+  // A previous run or orphaned lock must be reconciled, never silently replayed.
+  const lock = await startExclusiveRecovery(evidenceDirectory);
   const persist = async () => {
-    await mkdir(evidenceDirectory, { recursive: true });
-    await writeFile(join(evidenceDirectory, "living-spe-recovery.json"),
-      JSON.stringify(record, null, 2) + "\n", { mode: 0o600 });
+    const sealed = await persistRecoveryCheckpoint(evidenceDirectory, record);
+    record.checkpointDigest = sealed.checkpointDigest;
   };
   const attempt = async (phase, prompt) => {
+    record.phaseStatus = phase + "_DISPATCHING";
+    record.pendingPhase = phase;
+    record.pendingPromptDigest = sha(prompt);
+    await persist(); // Durable before an external model can receive a request.
     const response = await generate({
       phase, prompt, protectedGoalDigest: record.protectedGoalDigest,
     });
     if (!response || typeof response.html !== "string") throw new Error("MODEL_DID_NOT_RETURN_HTML");
+    record.phaseStatus = phase + "_OUTPUT_RETURNED";
+    record.pendingCandidateDigest = sha(response.html);
+    await persist(); // Output returned, but browser outcome remains unverified.
     const observed = await inspectCandidateInBrowser(browser, response.html);
     record.attempts.push({
       phase, promptDigest: sha(prompt),
@@ -141,6 +153,10 @@ export async function runCrashRecovery({
       observation: observed,
     });
     record.artifactDigest = observed.candidateDigest;
+    record.phaseStatus = phase + "_BROWSER_OBSERVED";
+    delete record.pendingCandidateDigest;
+    delete record.pendingPhase;
+    delete record.pendingPromptDigest;
     if (observed.passed) {
       // Persist exactly the browser-tested bytes. A model-supplied success
       // message cannot cause an artifact to be marked browser-passed.
@@ -161,6 +177,7 @@ export async function runCrashRecovery({
       record.repair = compileEvidenceBoundRepairPrompt({
         goal, originalPrompt, observed: initial,
       });
+      record.phaseStatus = "REPAIR_PREPARED";
       await persist();
       const repaired = await attempt("REPAIR", record.repair.prompt);
       record.qualification = repaired.passed
@@ -168,10 +185,14 @@ export async function runCrashRecovery({
           : "BROWSER_REPAIRED_PROVIDER_UNATTESTED")
         : "FAILED_BOUNDED_REPAIR";
     }
+    record.phaseStatus = "FINISHED";
   } catch (err) {
     record.qualification = "INCONCLUSIVE_EXCEPTION";
     record.error = redact(err?.message || err);
+    record.phaseStatus = "INCONCLUSIVE";
+  } finally {
+    await persist();
+    await finishExclusiveRecovery(lock);
   }
-  await persist();
   return record;
 }

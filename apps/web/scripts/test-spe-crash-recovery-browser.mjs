@@ -15,6 +15,7 @@ import {
   inspectCandidateInBrowser,
   runCrashRecovery,
 } from "./spe-crash-recovery-harness.mjs";
+import { inspectRecoveryCheckpoint } from "./spe-recovery-journal-custody.mjs";
 
 const broken = [
   '<!doctype html><html><body>',
@@ -81,6 +82,19 @@ try {
   const actualDigest = "sha256:" + createHash("sha256").update(boundArtifact).digest("hex");
   assert.equal(actualDigest, succeeded.browserPassedArtifact.digest);
   assert.equal(boundArtifact, repaired, "stored artifact is exactly the browser-tested candidate");
+  assert.equal(saved.phaseStatus, "FINISHED");
+  const complete = await inspectRecoveryCheckpoint(join(dir, "positive"), {
+    goal, originalPrompt: goal,
+  });
+  assert.equal(complete.disposition, "FINISHED_REVIEW_ONLY");
+  let forbiddenRetries = 0;
+  await assert.rejects(runCrashRecovery({
+    goal, originalPrompt: goal, provenance: "FIXTURE",
+    browser, evidenceDirectory: join(dir, "positive"),
+    generate: async () => { forbiddenRetries++; return { html: repaired }; },
+  }), /EXISTING_RECOVERY_RECONCILIATION_REQUIRED/);
+  assert.equal(forbiddenRetries, 0, "completed jobs cannot be blindly replayed");
+
 
   const deceptive = await runCrashRecovery({
     goal, originalPrompt: goal,
