@@ -13,7 +13,7 @@ import { hitRate } from "../ratelimit.ts";
 test("export to code: tricky prompt survives in every target", () => {
   const prompt = `He said "don't"\nnew line \\ backslash $HOME \`tick\``;
   for (const t of CODE_TARGETS) { const c = exportCode(t.id, prompt, "my-model", "Hi"); assert.ok(c.length > 20, t.id); assert.ok(!c.includes("\n" + "new line \\ backslash $HOME") || t.id.includes("python"), t.id); }
-  const js = exportCode("js-openai", prompt, "m", "Hi"); const m = js.match(/const system = (".*?");\n/s); assert.ok(m, "js has system const"); assert.equal(JSON.parse(m![1]), prompt);
+  const js = exportCode("js-openai", prompt, "m", "Hi"); const m = js.match(/const SYSTEM_PROMPT = (".*?");\n/s); assert.ok(m, "js has system const"); assert.equal(JSON.parse(m![1]), prompt);
 });
 test("CSV batch: quoted commas and newlines, missing values reported", () => {
   const r = batchFill("Hi {{name}} from {{city}}", 'name,city\n"Doe, J","New\nYork"\nAnn,');
@@ -36,7 +36,7 @@ test("formats: xml escaped, json parseable", () => {
 });
 test("cost: rejects negative input", () => {
   const r = estimateCost({ promptTokens: -1, inputTokensPerCall: 1, outputTokensPerCall: 1, pricePerMInput: 1, pricePerMOutput: 1, callsPerDay: 1, contextWindow: null }) as any;
-  assert.ok(r.error || r.errors?.length, JSON.stringify(r));
+  assert.ok(r.warnings.some((w: string) => /promptTokens must be a number of 0 or more/.test(w)), JSON.stringify(r));
 });
 test("coworkie parses living-loop commands", () => {
   const i = parseCommand("open living project"); assert.equal(i.type, "open"); assert.equal((i as any).tool, "living");
