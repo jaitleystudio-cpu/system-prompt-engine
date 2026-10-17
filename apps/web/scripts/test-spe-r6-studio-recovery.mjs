@@ -101,6 +101,7 @@ try {
   page.on("pageerror", err => browserErrors.push(err.message));
   await page.goto(pathToFileURL(html).href, { waitUntil: "domcontentloaded" });
   await page.getByTestId("spe-recovery-evidence-panel").waitFor({ timeout: 10_000 });
+  const activeSpecBefore = await page.evaluate(() => JSON.stringify(window.__studioState.spec));
   await page.getByTestId("spe-recovery-empty").waitFor();
   await page.getByTestId("spe-recovery-import").setInputFiles({
     name: "fixture.spe", mimeType: "application/json", buffer: Buffer.from(valid),
@@ -116,6 +117,9 @@ try {
   assert.match(copy, /NO RETRY · NO DEPLOY/);
   assert.doesNotMatch(copy, /LIVE_VERIFIED|AUTHORIZED TO DEPLOY/);
   assert.equal(await page.getByTestId("website-studio").count(), 1);
+  const activeSpecAfter = await page.evaluate(() => JSON.stringify(window.__studioState.spec));
+  assert.equal(activeSpecAfter, activeSpecBefore,
+    "Evidence import must not modify the active website or editor state");
 
   const xss = fixture();
   xss.user_request = '<img src=x onerror="window.__speInjected=1">';
@@ -139,6 +143,8 @@ try {
     buffer: Buffer.alloc(257_000, "x"),
   });
   assert.match(await page.getByTestId("spe-recovery-error").textContent(), /TOO_LARGE/);
+  assert.equal(await page.evaluate(() => JSON.stringify(window.__studioState.spec)),
+    activeSpecBefore, "Rejected imports must not mutate the Studio website spec");
   assert.deepEqual(browserErrors, [], "Studio evidence viewer must not throw");
   await ctx.close();
   console.log("PASS R6: actual Studio Intelligence sidebar shows limited evidence claims");
