@@ -83,7 +83,7 @@ export default function Living() {
         if (cur.status !== "running" || once || stopRef.current) break;
       }
       if (stopRef.current && cur.status === "running") { const r: { project: Pub } = await proApi<{ project: Pub }>("/living/stop", { id: cur.id }); cur = r.project; setP(cur); }
-      announce(cur.status === "verified" ? "Verified: every check passed on real outputs." : cur.receipt ? `Paused: ${cur.receipt.message}` : "Stopped after one attempt.");
+      announce(cur.status === "verified" ? "Verified: every check passed on the recorded outputs." : cur.receipt ? `Paused: ${cur.receipt.message}` : "Stopped after one attempt.");
       void loadList();
     } catch (e) { setErr((e as Error).message); } finally { setBusy(""); }
   };

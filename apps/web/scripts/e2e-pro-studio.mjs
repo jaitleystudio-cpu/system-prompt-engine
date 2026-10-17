@@ -85,6 +85,8 @@ try {
     await expectText(p.locator('[data-testid="living-status"]'), /PAUSED/, 30000);
     await expectText(p.locator('[data-testid="scoped-repairs"]'), /Rejected: drift/);
     await expectText(p.locator('[data-testid="scoped-repairs"]'), /Features removed: footer/);
+    const ov = await p.evaluate(() => { const panel = document.querySelector(".ps-panel"), main = document.querySelector("main") ?? document.body; if (!panel) return null; const pr = panel.getBoundingClientRect(), cw = document.querySelector(".ps-cw, [data-testid=\"coworkie\"], aside.ps-right"), mr = cw ? { right: cw.getBoundingClientRect().left } : main.getBoundingClientRect(); if (pr.right <= mr.right + 1 && panel.scrollWidth <= panel.clientWidth + 1) return null; const wide = [...panel.querySelectorAll("*")].map((e) => [e.tagName + "." + e.className, Math.round(e.getBoundingClientRect().width), e.scrollWidth]).sort((a, b) => b[2] - a[2]).slice(0, 5); return { sw: panel.scrollWidth, cwid: panel.clientWidth, panelRight: pr.right, mainRight: mr.right, panelW: pr.width, wide }; });
+    if (ov) throw new Error(`proof panel overflows the workspace: ${JSON.stringify(ov)}`);
   });
   await shot(p, "1440-dark-living-drift-rejected");
   await step("NEGATIVE (UI): code that keeps crashing pauses at the cap with a receipt, never verified", async () => {

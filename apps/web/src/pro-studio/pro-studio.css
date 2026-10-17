@@ -326,13 +326,13 @@ a.ps-card:hover { border-color: var(--acc); }
 }
 /* Living flow timeline */
 .ps .ps-tl { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.ps .ps-tl-step { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start; font-size: 13px; line-height: 1.45; }
+.ps .ps-tl-step { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 8px; align-items: start; font-size: 13px; line-height: 1.45; }
 .ps .ps-tl-dot { width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 12px; font-weight: 700; border: 1.5px solid var(--line); color: var(--fg2); background: var(--bg); }
 .ps .ps-tl-step--done .ps-tl-dot { border-color: var(--ok); color: var(--ok); }
 .ps .ps-tl-step--fail .ps-tl-dot { border-color: var(--bad); color: var(--bad); }
 .ps .ps-tl-step--warn .ps-tl-dot { border-color: var(--warn); color: var(--warn); }
 .ps .ps-tl-step--todo b { color: var(--fg2); font-weight: 500; }
-.ps .ps-tl-d { display: block; color: var(--fg2); font-size: 12px; word-break: break-word; }
+.ps .ps-tl-d { display: block; color: var(--fg2); font-size: 12px; overflow-wrap: anywhere; }
 /* Top bar: never wrap the breadcrumb, badge or shortcut when the centre column is narrow (1280 with CoWorkie pinned). */
 .ps-crumb { min-width: 0; overflow: hidden; }
 .ps-crumb ol { white-space: nowrap; }
@@ -340,3 +340,12 @@ a.ps-card:hover { border-color: var(--acc); }
 .ps-top-r, .ps-top-r * { white-space: nowrap; }
 .ps-search kbd, .ps-top kbd { white-space: nowrap; }
 @media (max-width: 1439px) { .ps-search .ps-only-desktop { display: none; } }
+/* r3: receipt tables scroll inside their card; project chips without list bullets */
+.ps-table-wrap { overflow-x: auto; max-width: 100%; }
+.ps-lv-list ul { list-style: none; padding: 0; margin: 0; }
+.ps-lv-list li { list-style: none; }
+.ps-panel > * { min-width: 0; max-width: 100%; }
+.ps-panel pre, .ps-panel code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.ps-stack > * { min-width: 0; }
+.ps-panel .ps-table code { overflow-wrap: break-word; word-break: normal; }
+.ps-table-wrap .ps-table td:nth-child(3) { min-width: 18ch; }
