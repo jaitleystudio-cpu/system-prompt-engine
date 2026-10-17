@@ -225,8 +225,13 @@ export function verifyBrowserReplayReceipt(receipt, {
     return reject("STALE_OR_INVALID_TIME_WINDOW");
   if (!pinnedReviewerPublicKey) return reject("UNPINNED_REVIEWER_KEY");
   try {
-    const key = createPublicKey(pinnedReviewerPublicKey);
-    if (key.asymmetricKeyType !== "ed25519") return reject("UNTRUSTED_KEY_TYPE");
+    // crypto.createPublicKey() only accepts a PRIVATE KeyObject input;
+    // an already-pinned PUBLIC KeyObject is used directly, not recreated.
+    const key = pinnedReviewerPublicKey?.type === "public"
+      ? pinnedReviewerPublicKey
+      : createPublicKey(pinnedReviewerPublicKey);
+    if (key.type !== "public" || key.asymmetricKeyType !== "ed25519")
+      return reject("UNTRUSTED_KEY_TYPE");
     const signedBytes = Buffer.from(canonical(signed), "utf8");
     const signature = Buffer.from(receipt.signatureBase64, "base64");
     if (!edVerify(null, signedBytes, key, signature)) return reject("BAD_REVIEWER_SIGNATURE");
