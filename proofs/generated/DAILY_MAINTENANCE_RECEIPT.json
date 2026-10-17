@@ -1,6 +1,6 @@
 {
   "receiptVersion": "1.0.0",
-  "jobId": "maint-2026-10-19-scheduled_0217_ist-1a149ae6e56",
+  "jobId": "maint-2026-10-19-scheduled_0217_ist-1a149b73223",
   "businessDate": "2026-10-19",
   "triggerType": "SCHEDULED_0217_IST",
   "clockIst": "02:17:00 IST",
@@ -22,7 +22,7 @@
       "name": "missed_run_watchdog",
       "status": "PASSED",
       "summary": "Run is on schedule for 2026-10-19.",
-      "executedAtIso": "2026-10-17T11:45:30.711Z"
+      "executedAtIso": "2026-10-17T11:55:05.127Z"
     },
     "model_lifecycle_watcher": {
       "name": "model_lifecycle_watcher",
@@ -33,7 +33,7 @@
         "retiredHandledCount": 2,
         "allFallbacksRegistered": true
       },
-      "executedAtIso": "2026-10-17T11:45:30.711Z"
+      "executedAtIso": "2026-10-17T11:55:05.127Z"
     },
     "broken_link_repair": {
       "name": "broken_link_repair",
@@ -44,7 +44,7 @@
         "brokenLinksFound": 0,
         "aliasesApplied": 0
       },
-      "executedAtIso": "2026-10-17T11:45:30.711Z"
+      "executedAtIso": "2026-10-17T11:55:05.128Z"
     },
     "sitemap_freshness": {
       "name": "sitemap_freshness",
@@ -55,7 +55,7 @@
         "fingerprintsChanged": 0,
         "timestampsAdvanced": 0
       },
-      "executedAtIso": "2026-10-17T11:45:30.711Z"
+      "executedAtIso": "2026-10-17T11:55:05.128Z"
     },
     "security_and_dependencies": {
       "name": "security_and_dependencies",
@@ -66,7 +66,7 @@
         "secretScannedFiles": 340,
         "leakedSecretsFound": 0
       },
-      "executedAtIso": "2026-10-17T11:45:30.712Z"
+      "executedAtIso": "2026-10-17T11:55:05.128Z"
     },
     "semantic_regressions": {
       "name": "semantic_regressions",
@@ -78,7 +78,7 @@
         "multilingualSlicesPassed": 5,
         "regressionsDetected": 0
       },
-      "executedAtIso": "2026-10-17T11:45:30.712Z"
+      "executedAtIso": "2026-10-17T11:55:05.129Z"
     },
     "cost_circuit_breaker": {
       "name": "cost_circuit_breaker",
@@ -89,7 +89,7 @@
         "egressBytes": 0,
         "circuitBreakerTripped": false
       },
-      "executedAtIso": "2026-10-17T11:45:30.713Z"
+      "executedAtIso": "2026-10-17T11:55:05.129Z"
     },
     "billing_reconciliation": {
       "name": "billing_reconciliation",
@@ -100,7 +100,7 @@
         "totalUsageRecords": 0,
         "isReconciled": true
       },
-      "executedAtIso": "2026-10-17T11:45:30.713Z"
+      "executedAtIso": "2026-10-17T11:55:05.129Z"
     },
     "backup_restore_drill": {
       "name": "backup_restore_drill",
@@ -110,7 +110,7 @@
         "rollbackPointerValid": true,
         "restoreDrillPassed": true
       },
-      "executedAtIso": "2026-10-17T11:45:30.713Z"
+      "executedAtIso": "2026-10-17T11:55:05.130Z"
     }
   },
   "discoveredChangesCount": 0,
@@ -123,6 +123,6 @@
   "cloudComputeSpendUsd": 0,
   "zeroEgressPreserved": true,
   "truthDisclosure": "Daily maintenance receipt generated via single-authority coordinator. 'No change is a valid successful day' (NO_OP_CLEAN). Only routine metadata/link changes permit autonomous release; all pricing, merchant keys, and WASM pins remain strictly held for owner authorization.",
-  "receiptDigest": "fe4a6880a33f2baabe9587522af0e3712f22cf4641fbfa19880cf9aad130412a",
-  "completedAtIso": "2026-10-17T11:45:30.714Z"
+  "receiptDigest": "d9c811544650ac3a1192c437b4668b7fc03ca37a7ba5b888dec8076973635969",
+  "completedAtIso": "2026-10-17T11:55:05.131Z"
 }
