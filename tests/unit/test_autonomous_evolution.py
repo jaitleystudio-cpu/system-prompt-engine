@@ -191,7 +191,9 @@ def test_root_cause_repair_and_oscillation():
         {"brokenHref": "/skills", "authoritativeDestination": "/build-skill"},
     )
     assert cand["minimal_patch"].target_file == "apps/web/src/routing.ts"
-    assert "assert resolve_route" in cand["failing_test_before_fix"].test_name or cand["failing_test_before_fix"].reproduced
+    assert cand["failing_test_before_fix"].test_name == "test_reproduce_broken_internal_link"
+    assert cand["failing_test_before_fix"].reproduced is False
+    assert "NOT_EXECUTED" in cand["failing_test_before_fix"].failing_output
     assert not cand["isolated_branch"].startswith("main")
 
     # Oscillation brake
@@ -235,9 +237,10 @@ def test_proof_carrying_governance_and_rollback():
     assert digest1.startswith("sha256:prop-")
 
     decision = controller.evaluate_release_authority(proposal)
-    assert decision["status"] == ProposalStatus.PROMOTED
-    assert decision["authorized_autonomy"] == AutonomyLevel.L4_LIMITED_AUTO_RELEASE
-    assert decision["authorized_for_live_deploy"] is True
+    assert decision["status"] == ProposalStatus.PATCH_PREPARED
+    assert decision["authorized_autonomy"] == AutonomyLevel.L3_QUALIFY
+    assert decision["authorized_for_live_deploy"] is False
+    assert any("RELEASE_AUTHORITY_HOLD" in log for log in decision["audit_log"])
 
     # Inconclusive search data marks proposal HELD_INCONCLUSIVE
     proposal.observed_evidence.confidence_score = 0.2
@@ -253,8 +256,10 @@ def test_proof_carrying_governance_and_rollback():
 
     # Rollback demonstration
     rb = controller.execute_rollback(proposal)
-    assert rb["success"] is True
-    assert rb["restored_commit"] == "9275039a"
+    assert rb["success"] is False
+    assert rb["restored_commit"] == ""
+    assert rb["receipt_id"] == ""
+    assert "NOT_EXECUTED" in rb["details"]
 
 
 def test_nightly_scheduler_execution():
@@ -263,7 +268,8 @@ def test_nightly_scheduler_execution():
     assert receipt["clock_ist"] == "02:17 AM IST"
     assert len(receipt["phases_executed"]) == 9
     assert receipt["routes_audited"] == 24
-    assert receipt["proposals_auto_released"] == 1
+    assert receipt["proposals_auto_released"] == 0
+    assert receipt["proposals_held_for_human"] == 1
     assert receipt["concurrency_lock_acquired"] is True
 
     # Observe-only with no defects
@@ -272,4 +278,16 @@ def test_nightly_scheduler_execution():
     assert clean_receipt["proposals_auto_released"] == 0
 
     alert = scheduler.trigger_outage_alert("Simulated Outage", "Traceback...")
-    assert alert["alert_dispatched"] is True
+    assert alert["alert_dispatched"] is False
+    assert alert["reason"] == "NOT_DISPATCHED_NO_ALERT_TRANSPORT"
+
+
+def test_proof_carrying_python_rejects_unexecuted_reproduction():
+    engine = RootCauseRepairEnginePy()
+    prepared = engine.diagnose_and_prepare_repair(
+        DefectCategory.BROKEN_INTERNAL_LINK,
+        "Broken route",
+        {"brokenHref": "/skills", "authoritativeDestination": "/build-skill"},
+    )
+    assert prepared["failing_test_before_fix"].reproduced is False
+    assert "NOT_EXECUTED" in prepared["failing_test_before_fix"].failing_output
