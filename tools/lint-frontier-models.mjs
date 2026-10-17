@@ -26,6 +26,8 @@ const FORBIDDEN_RULES = [
 // Folders/files where legacy names appear solely for historical incident reproduction,
 // migration tables, or backwards-compat test cases.
 const EXCLUDED_PATHS = [
+  ':(exclude)tools/lint-frontier-models.mjs',
+  ':(exclude)AGENTS.md',
   ':(exclude)apps/web/src/engine/modelCurrencyGovernor.ts',
   ':(exclude)spe_runtime/model_governor/currency_kernel.py',
   ':(exclude)apps/web/src/engine/incidents/aiIncidentsRegistry.ts',
