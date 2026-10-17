@@ -37,6 +37,7 @@
     "maintenance": "node scripts/spe-autonomous-maintenance.mjs",
     "test:workflows-audit": "node --experimental-strip-types scripts/test-client-workflows-audit.mjs",
     "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",
+    "test:invitation": "node scripts/test-ai-invitation-protocol.mjs",
     "test:capability-host": "node scripts/test-capability-host.mjs",
     "audit:deps": "node scripts/audit-deps.mjs",
     "test:a11y": "node scripts/test-accessibility-harness.mjs",

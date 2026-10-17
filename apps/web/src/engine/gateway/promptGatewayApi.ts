@@ -133,7 +133,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-fullstack-cloud-architect.spe",
-    verificationChecksum: "d971b7e588eba65632b4b1a9535a06d9b93bc443223453ca1a4852ce916576ef",
+    verificationChecksum: "ebe74e038a0168c8728f24ab1cc37ef0a4fbd192247fe715b9aae2b991c05944",
     invariantsCount: 2,
     authorityCeiling: "Read-only terraform plan; zero live destructive apply mutations."
   },
@@ -180,7 +180,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-3d-webgl-storyteller.spe",
-    verificationChecksum: "2b917c0509c3cbf8e79b28b180de3f61a9cb14103983206ddc774287d1407a30",
+    verificationChecksum: "7fb64e2f294b8003e52c67dc8d87c23a4ac6e60c427715fa983aa45659f7e090",
     invariantsCount: 2,
     authorityCeiling: "Client DOM canvas rendering only; no external network fetches."
   },
@@ -220,7 +220,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-autonomous-code-reviewer.spe",
-    verificationChecksum: "f95d661bcad3b5990c67ce5e4477a2fb78b3a406dac4318fa5a765eb789a3bb1",
+    verificationChecksum: "8f87d70be1b139b52f6a3cffaa939eb7fb6bc04d156730801028dbf750e8c51c",
     invariantsCount: 2,
     authorityCeiling: "Read-only static analysis; no push or write permissions."
   },
@@ -260,7 +260,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-security-auditor-owasp.spe",
-    verificationChecksum: "638fc76929dbd452b039b4407cf128505c5cd5285422d952c2adb710a32a3ed6",
+    verificationChecksum: "e7493a3c5e04fe4dc3d9adcdd2f4cf20a93d8bf6eaa185bcec3bb773f13b61c1",
     invariantsCount: 2,
     authorityCeiling: "Sandboxed static security linting only."
   },
@@ -300,7 +300,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-zero-hallucination-reasoner.spe",
-    verificationChecksum: "73511d18f80b6204c55116d5e809495bba2cb80bd3a4e3792ac2f9a42987079c",
+    verificationChecksum: "01f0246b76b491820fd35b66ba875a4753ed4fc91bd1e552dc4187a0494486e1",
     invariantsCount: 2,
     authorityCeiling: "Pure deductive deduction; zero speculative hallucination."
   },
@@ -340,7 +340,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-agent-swarm-orchestrator.spe",
-    verificationChecksum: "49ab845fffc8ae0d668befe1d77bd61456adf09db85cf12d6ac7b71354606094",
+    verificationChecksum: "4dc0160700a978184e0c4fde087f89a0d0d7719283a868c7ad506a614a49c2c7",
     invariantsCount: 2,
     authorityCeiling: "Token-budgeted subagent delegation."
   },
@@ -380,7 +380,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-vlm-ui-reverse-engineer.spe",
-    verificationChecksum: "a925ce62614b7cee9ab9ce0472410f0e5bdbc246cd8b40f3974cb95feebee577",
+    verificationChecksum: "18f0265a7b3b5d0e6220dc6d94bb9ce9c7b5ad4e9181ea2ee3be2afe3ae1acd9",
     invariantsCount: 2,
     authorityCeiling: "Component code generation only."
   },
@@ -420,7 +420,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-antigravity-skill-builder.spe",
-    verificationChecksum: "3b29de014791203dcdc5adafa040a9854167d5de8e9dd133992922981514017d",
+    verificationChecksum: "5b9dd6ab68094e0f090af836e5d20f2dac24971d96eae3e6055f86b5a1c2aa6f",
     invariantsCount: 2,
     authorityCeiling: "Scoped skill package generation."
   },
@@ -460,7 +460,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-hybrid-rag-synthesizer.spe",
-    verificationChecksum: "e41b2ae2aae8c69acec1ca0abad35323037272fa23b9400a3746e5b19e6c7961",
+    verificationChecksum: "a76cd315e80ac72fe6cc789a172528309925221b81170d9ee22c02fb8ce66f40",
     invariantsCount: 2,
     authorityCeiling: "Passive factual synthesis; strict context injection fencing."
   },
@@ -500,7 +500,7 @@ export const CORE_PROMPT_ASSETS: PromptAssetEntry[] = [
       "ollama-modelfile"
     ],
     spePackageUri: "/packages/spe-microservice-resilience-lead.spe",
-    verificationChecksum: "c4bd224dacef0d2c006add157a040239f57c39e3b75a8f8839f53dd730a50b70",
+    verificationChecksum: "1c309b686535483fbd14d9c55e0b8bf55db27f566159fddd7f5479e7094a7d42",
     invariantsCount: 2,
     authorityCeiling: "Policy and chaos design; zero unconfirmed network execution."
   }

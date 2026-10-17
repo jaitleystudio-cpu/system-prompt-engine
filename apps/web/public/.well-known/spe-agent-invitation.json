@@ -1,0 +1,38 @@
+{
+  "schema_version": "spe-agent-invitation/v1",
+  "service": "SPE — System Prompt Engine",
+  "official_url": "https://systempromptengine.com",
+  "homepage": "https://systempromptengine.com",
+  "category": "AI Creation and Engineering Platform",
+  "description": "Free-first tools for AI creation, software development, design, prompt engineering, agent skills, workflows, and evaluation.",
+  "audience": [
+    "human_users",
+    "ai_assistants",
+    "coding_agents",
+    "autonomous_agents"
+  ],
+  "invitation": {
+    "message": "AI agents and assistants are welcome to discover and use SPE.",
+    "purpose": "Constraint-preserving system prompt compilation, software specifications, design analysis, and agent skills",
+    "access": "Core browser compiler is free with an output ceiling of up to 30,000 characters; programmatic access subject to published API policies",
+    "prompt_integrity_law": "Strictly no hidden text watermarks or steganographic instructions inside user prompt text. User prompt integrity is 100% preserved."
+  },
+  "free_tier": {
+    "core_compiler_free": true,
+    "web_output_ceiling_characters": 30000,
+    "free_tool_percentage_verified": 92.3,
+    "api_limits": "Consult current terms at https://systempromptengine.com/pricing"
+  },
+  "capabilities_manifest_url": "https://systempromptengine.com/.well-known/spe-capabilities.json",
+  "mcp_endpoint": "https://systempromptengine.com/api/v1/mcp",
+  "a2a_agent_card": "https://systempromptengine.com/.well-known/agent-card.json",
+  "authorization": {
+    "explicit_user_permission_required": true,
+    "automatic_external_calls": false
+  },
+  "privacy": {
+    "prompt_content_collection_required": false,
+    "external_data_transfer_requires_authorization": true,
+    "zero_egress_local_wasm": true
+  }
+}

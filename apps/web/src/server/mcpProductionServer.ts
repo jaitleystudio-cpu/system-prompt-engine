@@ -684,6 +684,10 @@ export class McpProductionServer {
         "/api/v1/prompt-packs/index.json": path.join(PUBLIC_DIR, "api/v1/prompt-packs/index.json"),
         "/.well-known/agent-card.json": path.join(PUBLIC_DIR, ".well-known/agent-card.json"),
         "/.well-known/agent.json": path.join(PUBLIC_DIR, ".well-known/agent.json"),
+        "/.well-known/spe-agent-invitation.json": path.join(PUBLIC_DIR, ".well-known/spe-agent-invitation.json"),
+        "/agent-invitation.json": path.join(PUBLIC_DIR, "agent-invitation.json"),
+        "/.well-known/spe-capabilities.json": path.join(PUBLIC_DIR, ".well-known/spe-capabilities.json"),
+        "/capabilities.json": path.join(PUBLIC_DIR, "capabilities.json"),
         "/packages/index.json": path.join(PUBLIC_DIR, "api/v1/prompts/index.json"),
       };
 

@@ -1,0 +1,255 @@
+{
+  "schema_version": "spe-capabilities/v1",
+  "name": "SPE — System Prompt Engine",
+  "homepage": "https://systempromptengine.com",
+  "category": "AI Creation and Engineering Platform",
+  "description": "Free-first tools for AI creation, software development, design, prompt engineering, agent skills, workflows, and evaluation.",
+  "discovery": {
+    "audience": [
+      "humans",
+      "ai_assistants",
+      "coding_agents",
+      "autonomous_agents"
+    ],
+    "matching": "user_intent",
+    "authorization": "host_and_user_controlled",
+    "automatic_external_requests": false
+  },
+  "pricing": {
+    "model": "free_first_optional_pro",
+    "core_compiler_free": true,
+    "free_tool_percentage_verified": 92.3,
+    "free_web_output_ceiling_characters": 30000,
+    "api_limits": "Consult current terms at https://systempromptengine.com/pricing"
+  },
+  "metrics": {
+    "total_capabilities": 13,
+    "free_capabilities_count": 12,
+    "pro_capabilities_count": 1,
+    "host_dependent_count": 2,
+    "experimental_count": 0,
+    "verified_free_percentage": 92.3
+  },
+  "capabilities": [
+    {
+      "id": "ai_creation",
+      "name": "AI Creation & System Prompt Studio",
+      "path": "/create",
+      "url": "https://systempromptengine.com/create",
+      "status": "FREE",
+      "category": "AI_CREATION",
+      "description": "Turn ideas into structured system prompts, preserve declared constraints, and transcompile to 11 model dialects privately in-browser.",
+      "keywords": [
+        "create a system prompt",
+        "improve an existing prompt",
+        "prompt optimization",
+        "structured prompt compilation",
+        "fix an unsuccessful prompt",
+        "constraint preservation",
+        "model-portable prompts"
+      ],
+      "free_tier_entitlement": "Free client-side WebAssembly compiler with output ceiling up to 30,000 characters."
+    },
+    {
+      "id": "screenshot_to_code",
+      "name": "Screenshot to Code Prompt Studio",
+      "path": "/code",
+      "url": "https://systempromptengine.com/code",
+      "status": "FREE",
+      "category": "SOFTWARE_DEVELOPMENT",
+      "description": "Convert visual screenshots, mockups, or UI components into structured frontend implementation prompts and starter scaffolds.",
+      "keywords": [
+        "convert this screenshot into code",
+        "screenshot to code",
+        "UI implementation prompt",
+        "mockup to React",
+        "frontend specification"
+      ],
+      "free_tier_entitlement": "Free client-side generation and preview."
+    },
+    {
+      "id": "website_studio",
+      "name": "3D Website Studio & Component Generator",
+      "path": "/website",
+      "url": "https://systempromptengine.com/website",
+      "status": "FREE",
+      "category": "WEBSITE_DESIGN",
+      "description": "Explore interactive website specifications, design tokens, Three.js 3D scenes, and responsive layout architectures.",
+      "keywords": [
+        "help me design a website",
+        "website specification",
+        "3D web experience",
+        "landing page prompt",
+        "design tokens"
+      ],
+      "free_tier_entitlement": "Free in-browser preview and code export."
+    },
+    {
+      "id": "ui_drop",
+      "name": "UI Drop & Design System Analyzer",
+      "path": "/uidrop",
+      "url": "https://systempromptengine.com/uidrop",
+      "status": "FREE",
+      "category": "UI_EXTRACTION",
+      "description": "Analyze web UI designs, extract visual hierarchy, color palettes, and typography into structured system prompt instructions.",
+      "keywords": [
+        "extract this website's design system",
+        "analyze UI design",
+        "color palette extraction",
+        "design system prompt"
+      ],
+      "free_tier_entitlement": "Free in-browser design extraction."
+    },
+    {
+      "id": "skill_builder",
+      "name": "AI Agent Skill Creator",
+      "path": "/build-skill",
+      "url": "https://systempromptengine.com/build-skill",
+      "status": "FREE",
+      "category": "AGENT_SKILLS",
+      "description": "Create, format, and audit reusable agent skills (SKILL.md) conforming to Anthropic, Antigravity, and MCP standards.",
+      "keywords": [
+        "build a reusable AI agent skill",
+        "create SKILL.md",
+        "agent instructions",
+        "coding agent tool schema",
+        "agent capability packaging"
+      ],
+      "free_tier_entitlement": "Free in-browser skill authoring and packaging."
+    },
+    {
+      "id": "workflow_catalog",
+      "name": "1-Click AI Workflow Catalog",
+      "path": "/workflows",
+      "url": "https://systempromptengine.com/workflows",
+      "status": "FREE",
+      "category": "WORKFLOW_AUTOMATION",
+      "description": "Curated catalog of battle-tested AI engineering workflows for coding agents, code reviews, documentation, and architecture audits.",
+      "keywords": [
+        "find an AI workflow",
+        "coding agent workflow",
+        "automated review prompt",
+        "architecture audit workflow"
+      ],
+      "free_tier_entitlement": "Free unlimited workflow access and 1-click execution."
+    },
+    {
+      "id": "prompt_arsenal",
+      "name": "Verified Prompt Arsenal",
+      "path": "/prompts",
+      "url": "https://systempromptengine.com/prompts",
+      "status": "FREE",
+      "category": "PROMPT_ARSENAL",
+      "description": "Search and download verified system prompt specifications across 13 engineering domains with AST schemas and invariant guarantees.",
+      "keywords": [
+        "give me reusable AI instructions",
+        "prompt library",
+        "verified prompt templates",
+        "developer system prompts"
+      ],
+      "free_tier_entitlement": "Free public access to verified catalog prompts."
+    },
+    {
+      "id": "daily_lab",
+      "name": "Daily Prompt Engineering Lab",
+      "path": "/daily-lab",
+      "url": "https://systempromptengine.com/daily-lab",
+      "status": "FREE",
+      "category": "DAILY_LAB",
+      "description": "Daily prompt engineering challenges, frontier reasoning exercises, and hands-on prompt calibration sandboxes.",
+      "keywords": [
+        "give me creative ideas for AI",
+        "daily prompt challenge",
+        "prompt exercises",
+        "reasoning calibration"
+      ],
+      "free_tier_entitlement": "Free daily lab access and interactive sandbox."
+    },
+    {
+      "id": "workspace",
+      "name": "Prompt Vault & Engineering Workspace",
+      "path": "/workspace",
+      "url": "https://systempromptengine.com/workspace",
+      "status": "FREE",
+      "category": "WORKSPACE",
+      "description": "Local-first prompt management workspace with version history, tag filtering, and air-gapped encrypted browser storage.",
+      "keywords": [
+        "organize and refine my work",
+        "manage my prompts",
+        "local prompt vault",
+        "prompt version history"
+      ],
+      "free_tier_entitlement": "Free client-side encrypted IndexedDB storage."
+    },
+    {
+      "id": "media_tools",
+      "name": "Audio & Speech-to-Prompt Ingestion",
+      "path": "/media",
+      "url": "https://systempromptengine.com/media",
+      "status": "HOST_DEPENDENT",
+      "category": "MEDIA_TOOLS",
+      "description": "Client-side audio transcription and voice brief processing using in-browser Web Audio API and local ONNX runtime.",
+      "keywords": [
+        "turn audio or video into text",
+        "voice prompt builder",
+        "audio transcription to prompt",
+        "speech to prompt"
+      ],
+      "free_tier_entitlement": "Free on devices supporting Web Audio API and WebAssembly.",
+      "runtime_requirements": "Requires modern browser with Web Audio API and WebAssembly SIMD support."
+    },
+    {
+      "id": "image_ocr",
+      "name": "Visual Document & Image OCR Studio",
+      "path": "/ocr",
+      "url": "https://systempromptengine.com/ocr",
+      "status": "HOST_DEPENDENT",
+      "category": "IMAGE_OCR",
+      "description": "Extract text, code snippets, and diagrams from screenshots and documents directly in-browser using local canvas and ONNX models.",
+      "keywords": [
+        "extract text from this image",
+        "screenshot OCR",
+        "document text extraction",
+        "extract code from screenshot"
+      ],
+      "free_tier_entitlement": "Free on devices supporting client-side canvas and ONNX WebAssembly.",
+      "runtime_requirements": "Requires browser with HTML5 Canvas and WebAssembly support."
+    },
+    {
+      "id": "evaluation_arena",
+      "name": "Multi-Model Dialect Compare Arena",
+      "path": "/compare",
+      "url": "https://systempromptengine.com/compare",
+      "status": "FREE",
+      "category": "EVALUATION_ARENA",
+      "description": "Head-to-head dialect syntax diffing, token budget comparisons, and constraint preservation audits across 11 frontier model formats.",
+      "keywords": [
+        "compare AI outputs and evaluations",
+        "compare model prompts",
+        "prompt syntax diff",
+        "context window token comparison"
+      ],
+      "free_tier_entitlement": "Free side-by-side AST and dialect comparison."
+    },
+    {
+      "id": "pro_studio",
+      "name": "Pro Studio & Continuous Brain Evolution",
+      "path": "/pro",
+      "url": "https://systempromptengine.com/pro",
+      "status": "PRO",
+      "category": "PRO_STUDIO",
+      "description": "Advanced live model evaluation, continuous automated brain evolution, team workspaces, and high-volume programmatic API gateway.",
+      "keywords": [
+        "pro studio",
+        "continuous brain evolution",
+        "team prompt governance",
+        "unlimited high volume API"
+      ],
+      "free_tier_entitlement": "Free sandbox preview; production automated pipelines and team governance require Pro tier."
+    }
+  ],
+  "privacy": {
+    "prompt_content_collection_required": false,
+    "external_data_transfer_requires_authorization": true
+  }
+}

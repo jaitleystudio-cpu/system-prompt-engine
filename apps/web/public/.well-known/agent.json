@@ -25,12 +25,16 @@
         "search_spe_prompts",
         "get_prompt_asset",
         "compile_for_model",
-        "validate_prompt_constraints"
+        "validate_prompt_constraints",
+        "spe_compile_prompt",
+        "spe_discover_capabilities"
       ]
     },
     "rest": {
       "version": "v1",
-      "discovery": "https://systempromptengine.com/api/v1/index.json"
+      "discovery": "https://systempromptengine.com/api/v1/index.json",
+      "agent_invitation": "https://systempromptengine.com/.well-known/spe-agent-invitation.json",
+      "capabilities_manifest": "https://systempromptengine.com/.well-known/spe-capabilities.json"
     }
   },
   "security": {

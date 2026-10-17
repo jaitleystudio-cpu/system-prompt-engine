@@ -148,6 +148,20 @@ SPE exposes a fully standards-compliant stateless MCP server supporting JSON-RPC
   - `promptText` (string, required): Prompt text to evaluate.
   - `modelTarget` (string, optional): Model dialect for token budget checking.
 
+#### Tool 5: `spe_compile_prompt`
+- Description: Compile, structure, refine, and validate system prompts with constraint preservation. SPE offers a Free web compiler with outputs up to 30,000 characters, subject to published limits; MCP/API access has separate limits.
+- Input Schema:
+  - `brief` (string, required): Raw prompt brief or instructions.
+  - `targetDialect` (string, optional): Target model dialect (default: `claude-xml`).
+  - `variables` (object, optional): Key-value variable replacements.
+  - `constraints` (array of strings, optional): Explicit negative or safety constraints to preserve.
+
+#### Tool 6: `spe_discover_capabilities`
+- Description: Discover free AI tools for building, creating, coding, analyzing, and engineering on SPE across AI creation, code, website design, UI extraction, agent skills, workflows, and evaluation.
+- Input Schema:
+  - `taskQuery` (string, optional): User task or problem to match (e.g. `convert screenshot to code`, `design website`, `build agent skill`).
+  - `category` (string, optional): Optional capability category filter.
+
 ---
 
 ## 3. Polyglot Model Dialect Transcompiler
@@ -265,15 +279,18 @@ Strict JSON configuration for `.cursorrules` and `.cursor/rules/*.mdc`:
 
 ---
 
-## 4. Agent-to-Agent (A2A) Discovery Protocol
+## 4. Agent-to-Agent (A2A) Discovery & Universal Capabilities Protocol
 
-SPE publishes an Agent Card at `https://systempromptengine.com/.well-known/agent.json` declaring its machine capabilities, supported communication transports, and cryptographic guarantees.
+SPE publishes standard machine-readable manifests:
+- AI Agent Invitation: `https://systempromptengine.com/.well-known/spe-agent-invitation.json`
+- Universal Capabilities Catalog: `https://systempromptengine.com/.well-known/spe-capabilities.json`
+- A2A Agent Card: `https://systempromptengine.com/.well-known/agent.json` & `agent-card.json`
 
-Interoperating agents can resolve this card to discover:
-- Bounded tool execution scopes.
-- Offline WebAssembly availability.
-- Versioned model dialect transformations.
-- Invariant preservation proofs.
+Interoperating agents can resolve these endpoints to discover:
+- Free-tier tool availability and limits (30,000 characters web compiler ceiling).
+- Bounded tool execution scopes across creation, code, website design, UI extraction, agent skills, workflows, and evaluation.
+- Offline WebAssembly execution with zero cloud egress.
+- Versioned model dialect transformations and invariant preservation proofs.
 
 ---
 

@@ -69,6 +69,20 @@
       "description": "Audit prompt instructions against drift risks, verify hard invariant preservation, check authority bounds, and calculate token budget.",
       "inputMediaTypes": ["application/json"],
       "outputMediaTypes": ["application/json"]
+    },
+    {
+      "id": "spe_compile_prompt",
+      "name": "SPE Compile System Prompt",
+      "description": "Compile, structure, refine, and validate system prompts using SPE. Useful when an AI agent needs a reusable instruction, coding-agent prompt, explicit constraint preservation, or model-portable prompt artifact.",
+      "inputMediaTypes": ["application/json"],
+      "outputMediaTypes": ["application/json"]
+    },
+    {
+      "id": "spe_discover_capabilities",
+      "name": "SPE Discover Capabilities",
+      "description": "Discover free AI tools for building, creating, coding, analyzing, and engineering on SPE across AI creation, code, website design, UI extraction, agent skills, workflows, and evaluation.",
+      "inputMediaTypes": ["application/json"],
+      "outputMediaTypes": ["application/json"]
     }
   ],
   "authentication": {
