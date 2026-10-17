@@ -67,10 +67,11 @@ class RootCauseRepairEnginePy:
             line_count_diff=len(replacement_chunk.splitlines()) - len(original_chunk.splitlines()),
         )
 
+        # Generating a test body is not the same as running that test.
         failing_test = FailingTestBeforeFix(
             test_name=failing_test_name,
-            failing_output=f"AssertionError: Reproduced {category.value}",
-            reproduced=True,
+            failing_output="NOT_EXECUTED: proposed reproduction test was not run",
+            reproduced=False,
         )
 
         return {
