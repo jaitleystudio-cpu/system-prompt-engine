@@ -69,7 +69,7 @@ console.log("──────────────────────�
 console.log("📦 SECTION 1: FIRST DELIVERY MILESTONE (Complete Vertical Slice)");
 console.log("──────────────────────────────────────────────────────────────────────────");
 
-await runTest("Milestone 1-3: Discover broken internal link, reproduce, identify destination", () => {
+await runTest("Milestone 1-3: Discover broken internal link and PREPARE reproduction (not executed)", () => {
   const auditor = new WebsiteInventoryAuditor();
   const repairEngine = new RootCauseRepairEngine();
 
@@ -87,12 +87,13 @@ await runTest("Milestone 1-3: Discover broken internal link, reproduce, identify
     context: { brokenHref, authoritativeDestination: authoritativeDest },
   });
 
-  assert.equal(repair.failingTestBeforeFix.reproduced, true);
+  assert.equal(repair.failingTestBeforeFix.reproduced, false, "Proposed reproduction must not claim execution");
+  assert.match(repair.failingTestBeforeFix.failingOutput, /NOT_EXECUTED/);
   assert.ok(repair.failingTestBeforeFix.testName.includes("broken_internal_link"));
   assert.ok(repair.minimalPatch.replacementChunk.includes("/build-skill"));
 });
 
-await runTest("Milestone 4-7: Prepare isolated patch, run tests, generate proof receipt, apply policy", () => {
+await runTest("Milestone 4-7: Stage proposed patch; deny promotion without executed reproduction", () => {
   const repairEngine = new RootCauseRepairEngine();
   const proofController = new ProofCarryingEvolutionController();
 
@@ -155,11 +156,11 @@ await runTest("Milestone 4-7: Prepare isolated patch, run tests, generate proof 
   proposal.verificationDigest = digest1;
 
   const decision = proofController.evaluateReleaseAuthority(proposal);
-  assert.equal(decision.status, "PROMOTED", "Allowlisted LOW risk must qualify for L4 Auto-Release");
-  assert.equal(decision.authorizedForLiveDeploy, true);
+  assert.equal(decision.status, "REJECTED", "No reproduced failure or execution receipt: no promotion");
+  assert.equal(decision.authorizedForLiveDeploy, false);
 });
 
-await runTest("Milestone 8-10: Stage approved change, verify page behavior, demonstrate rollback", () => {
+await runTest("Milestone 8-10: Reject unexecuted rollback demonstrations", () => {
   const proofController = new ProofCarryingEvolutionController();
   const proposal = {
     id: "PROP-SLICE-01",
@@ -172,9 +173,10 @@ await runTest("Milestone 8-10: Stage approved change, verify page behavior, demo
   };
 
   const rollback = proofController.executeRollbackDemonstration(proposal);
-  assert.equal(rollback.success, true);
-  assert.equal(rollback.restoredCommit, "9275039a");
-  assert.ok(rollback.receiptId.startsWith("rb-rcpt-"));
+  assert.equal(rollback.success, false, "Rollback description is not an executed rollback");
+  assert.equal(rollback.restoredCommit, "");
+  assert.equal(rollback.receiptId, "");
+  assert.match(rollback.details, /NOT_EXECUTED/);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
