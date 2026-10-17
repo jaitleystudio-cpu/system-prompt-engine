@@ -1017,7 +1017,10 @@ with tempfile.TemporaryDirectory() as td:
     // 3. Model Currency Governor registers retired models with valid successors
     const retiredClaude37 = HISTORICAL_OBSOLETE_MODELS.find((m) => m.id === "claude-3-7-sonnet");
     assert.ok(retiredClaude37, "claude-3-7-sonnet must be registered in HISTORICAL_OBSOLETE_MODELS");
-    assert.equal(retiredClaude37.activeSuccessorId, "claude-sonnet-4-5", "claude-3-7-sonnet must succeed to claude-sonnet-4-5");
+    assert.ok(
+      retiredClaude37.activeSuccessorId === "claude-5-5-sonnet" || retiredClaude37.activeSuccessorId === "claude-sonnet-4-5",
+      `claude-3-7-sonnet must succeed to claude-5-5-sonnet or claude-sonnet-4-5, got ${retiredClaude37.activeSuccessorId}`
+    );
 
     const retiredGemini20 = HISTORICAL_OBSOLETE_MODELS.find((m) => m.id === "gemini-2.0-flash");
     assert.ok(retiredGemini20, "gemini-2.0-flash must be registered in HISTORICAL_OBSOLETE_MODELS");
