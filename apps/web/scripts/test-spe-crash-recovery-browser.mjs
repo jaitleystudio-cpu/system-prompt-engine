@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
@@ -108,6 +108,10 @@ try {
   console.log("PASS: Chromium failure, targeted repair, rerender, persisted JSON.");
   console.log("PASS: fake text success rejected; model identity remains UNATTESTED.");
   console.log("PROOF_SCOPE: DETERMINISTIC_FIXTURE_NOT_LIVE_PROVIDER");
+  if (process.env.SPE_R0_CHROMIUM_EVIDENCE_DIR) {
+    await cp(join(dir, "positive"), process.env.SPE_R0_CHROMIUM_EVIDENCE_DIR, { recursive: true });
+    console.log("EXPORTED_BROWSER_FIXTURE_EVIDENCE: review-only; no live model");
+  }
 } finally {
   await browser.close();
   await rm(dir, { recursive: true, force: true });
