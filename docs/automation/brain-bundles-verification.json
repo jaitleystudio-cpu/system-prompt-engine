@@ -1,0 +1,449 @@
+{
+  "schema": "spe.brain-implementation-verification.v1",
+  "scope": "SOURCE_BUNDLE_REGRESSION_CHECKS",
+  "testedSourceCommit": "e35e49f0addfc15205b86389a41db1247c87dcfd",
+  "localTests": [
+    {
+      "node": "22.23.2",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "node": "24.14.1",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    }
+  ],
+  "command": "node --test tests/brain-updates/*.test.mjs",
+  "workflowYamlParsed": true,
+  "diffWhitespaceCheckPassed": true,
+  "review": {
+    "reviewedCommit": "a74e0f52c4737b9d90daf629b7d29858ae7700da",
+    "critical": 0,
+    "important": 5,
+    "acceptedFixes": 5,
+    "validation": "New adversarial tests and a single fix pass; no second independent whole-branch review claimed"
+  },
+  "localRehearsal": [
+    {
+      "schema": "spe.brain-run.v1",
+      "scope": "SOURCE_BUNDLE_REGRESSION_CHECKS",
+      "runId": "62a7d576-32b3-4794-bc00-174182bbddda",
+      "observedAt": "2026-10-17T11:14:00.167Z",
+      "status": "UPDATED",
+      "sourceCommit": "e35e49f0addfc15205b86389a41db1247c87dcfd",
+      "productionDeployed": false,
+      "modelTrainingPerformed": false,
+      "previousVersion": null,
+      "historyDetected": false,
+      "gates": [
+        {
+          "id": "brain-bundle-recovery",
+          "path": "tests/brain-updates/bundles.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 5998,
+          "stdoutDigest": "1bd5ad4f2bcbb8efad2cbd8aa6a272e6a60d7046b39105eb03ef4427a7703da4",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "brain-policy-inputs",
+          "path": "tests/brain-updates/policy.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 621,
+          "stdoutDigest": "cd4fbd64bb60a3b7597fa1da774ef1ce01f3f48c596c32a921702c916db22cc4",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "brain-cli",
+          "path": "tests/brain-updates/runner.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 203,
+          "stdoutDigest": "037ee0c26703a8e39bc83c3f1c990b06586a5f35903231df21de85d5340a7e24",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "brain-distribution",
+          "path": "tests/brain-updates/github-state.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 26240,
+          "stdoutDigest": "0145801b4b7a22c42d4b2c669e645c53270be92ac2170575d1f2265edbeee3f4",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "instruction-contracts",
+          "path": "tests/brain-updates/contract.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 2463,
+          "stdoutDigest": "3c03af565410dca5330c45d8c60b840b763b99c282e16612e57596fea49d0a7f",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "plain-english-showcase",
+          "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 2488,
+          "stdoutDigest": "9be0480a9c37006b93ad6ee59b0c0f56bc1ec8a4a58f114ff23524950db6d7ab",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "assertion-engine",
+          "path": "apps/web/scripts/test-assertion-engine.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 1157,
+          "stdoutDigest": "5a100bedf993c44536fc01c2b5d6dc6812591b45b9aefb62c151569f7eade58a",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "businessDateIst": "2026-10-17",
+      "fingerprint": "638f15091c44036fb486a264baba6bd9bf911f7ea3899aeb2a6c36556cf983a8",
+      "observedSourceDigests": [
+        {
+          "path": "apps/web/scripts/test-assertion-engine.mjs",
+          "sha256": "5243eb8089b8e3aafc04722fe268ff8a762659c33ecc7f895c910dc261dc5a37"
+        },
+        {
+          "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+          "sha256": "42e2111cbe53ec89a4f5011fa9769f395ca921691a69a6b825af5cb5061366d0"
+        },
+        {
+          "path": "apps/web/src/App.tsx",
+          "sha256": "1921d5a8f2a4ef7d5e5e94a190fbb06745b5768aaf86f78852518fe6671589fb"
+        },
+        {
+          "path": "apps/web/src/engine/ed25519Verifier.ts",
+          "sha256": "ed3b7db96132b1d74b7f739265cc07d67ed04b875df797c0f7a8ae01252a1b43"
+        },
+        {
+          "path": "apps/web/src/engine/entitlementVerifier.ts",
+          "sha256": "84017395d7760a99d7288e69c986189d9cba202a0def36848afa92e428a22248"
+        },
+        {
+          "path": "apps/web/src/engine/eval/assertionEngine.ts",
+          "sha256": "5f664e1e10ffeed2be10d5fe1a5d67e9f99979c41abcb2eb346e5bfa9cc8a441"
+        },
+        {
+          "path": "apps/web/src/engine/hashUtils.ts",
+          "sha256": "328252d7f9843575cf194db482afaaefb979e91c270e998e04f213604df9c756"
+        },
+        {
+          "path": "apps/web/src/engine/markdownExportCore.ts",
+          "sha256": "97577a1587e9f9deba810e9ef190c4fad942a5f123fe9e480c8e14664901ea74"
+        },
+        {
+          "path": "apps/web/src/engine/modelAtlas/modelAtlasRegistry.json",
+          "sha256": "0b02ad1b2d10a424baf7146713b7f6c2b2d4f6d0d2c445021baeb11777f720a3"
+        },
+        {
+          "path": "apps/web/src/engine/modelTranscompiler.ts",
+          "sha256": "19f59b11cb8d86ea6668914440197280efc4cde2fbf7c030ece81c945f108be8"
+        },
+        {
+          "path": "apps/web/src/engine/multilingualDualPrompt.ts",
+          "sha256": "ad4d47bed4a3a4885877505d8e42135fe72d0be13da14a5007f3e488c9dd66b9"
+        },
+        {
+          "path": "apps/web/src/engine/plain-english-showcase.css",
+          "sha256": "6b5b51ea8e5dc406eebee636687e970d39ad0482c5c50e2325fa5fe078ce0ae3"
+        },
+        {
+          "path": "apps/web/src/engine/plainEnglishParser.ts",
+          "sha256": "ffbe61d0232947245f414c6c2e8cf76d386137d85da7511fb379c7d04207d1db"
+        },
+        {
+          "path": "apps/web/src/engine/PlainEnglishShowcase.tsx",
+          "sha256": "e67657c863973e8a2c74b4ef8c1ad821d7f88a67c730bf6106f28bde4cf62f10"
+        },
+        {
+          "path": "apps/web/src/engine/promptSynthesizer.mjs",
+          "sha256": "855c2e665ec9d9b2f748350b0849302dceda20e46f8f94e96ece4749cd83e767"
+        },
+        {
+          "path": "apps/web/src/engine/promptSynthesizer.ts",
+          "sha256": "01246a5e2aac5d60d14dc5d248ac1d0b996512ec8aa52a93e8b59a4832cf2cbe"
+        },
+        {
+          "path": "apps/web/src/engine/proofReceipt.ts",
+          "sha256": "c027e902ffad600346ade9256b91e6d15f90e159ce4434ba4414ac4ac6c9c10f"
+        },
+        {
+          "path": "packages/spe-plugin/src/tools.ts",
+          "sha256": "218ae2c5cb8f902edfed120aa42ece44a4febda6eecefd4329f299e95f727d3c"
+        },
+        {
+          "path": "tests/brain-updates/bundles.test.mjs",
+          "sha256": "2834a0e7aee57038bdd544b6859d366bf4f7d3e512e2b119d076125e10912d1c"
+        },
+        {
+          "path": "tests/brain-updates/contract.test.mjs",
+          "sha256": "641dee9f6093d161149d570d402275f3a67d9086c03486c883e279feef1cd65c"
+        },
+        {
+          "path": "tests/brain-updates/github-state.test.mjs",
+          "sha256": "372ab8ef5a33f8338c10a4627d35a4dc4729d06225b23f75f83629c8bbea8654"
+        },
+        {
+          "path": "tests/brain-updates/policy.test.mjs",
+          "sha256": "a8b0ccda6a5491938bd67b396c061c827e3c931a4c7d85cc73b278f4a1155184"
+        },
+        {
+          "path": "tests/brain-updates/runner.test.mjs",
+          "sha256": "64aebb43f097d26c66391dfb401a833000151d1aa0e80f415915b9b269cf418a"
+        },
+        {
+          "path": "tools/brain-updates/bundles.mjs",
+          "sha256": "ab26ab656adffc53296c64af020116fd18ee913b05f4ce130294afac1b327962"
+        },
+        {
+          "path": "tools/brain-updates/github-state.mjs",
+          "sha256": "242a7864261e00f437c72ffa0e6127748977760aa8673af2e7da3d358770a356"
+        },
+        {
+          "path": "tools/brain-updates/policy.mjs",
+          "sha256": "5ed9cf2f4476ed4a2b5138c003821081b8adcf575f01c1df3d450d97217ceebf"
+        },
+        {
+          "path": "tools/brain-updates/run.mjs",
+          "sha256": "5525e909695f6953d4090d19e2a69c3e76350efc9837f93e3820676f1e7689dc"
+        }
+      ],
+      "version": "0.1.0",
+      "bundleDigest": "3c016e8b8fd3554843b8fb2042433553d713c2161ec67c397b7706623b4d1b4c"
+    },
+    {
+      "schema": "spe.brain-run.v1",
+      "scope": "SOURCE_BUNDLE_REGRESSION_CHECKS",
+      "runId": "5f11170e-f3e5-425f-a307-fb71b2ab1d7e",
+      "observedAt": "2026-10-17T11:14:53.581Z",
+      "status": "UNCHANGED",
+      "sourceCommit": "e35e49f0addfc15205b86389a41db1247c87dcfd",
+      "productionDeployed": false,
+      "modelTrainingPerformed": false,
+      "previousVersion": "0.1.0",
+      "historyDetected": true,
+      "gates": [
+        {
+          "id": "brain-bundle-recovery",
+          "path": "tests/brain-updates/bundles.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 61525,
+          "stdoutDigest": "c98fcaabe4a27032ce89333d7a18fc6eb67abeefd1669f56cfaa50e00d93b4c2",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "brain-policy-inputs",
+          "path": "tests/brain-updates/policy.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 2180,
+          "stdoutDigest": "9374cd0a2b814999e0bee14213a078e169b510382f46aff700a988e602f144bb",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "brain-cli",
+          "path": "tests/brain-updates/runner.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 277,
+          "stdoutDigest": "2049df1b04f5038ae2dd45848bfdf68342fb0e968a0eb8b680f76faa4f7c64a9",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "brain-distribution",
+          "path": "tests/brain-updates/github-state.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 5033,
+          "stdoutDigest": "23a97fdb95bc6817612d65140de847326377180af6f5d33d8049365040bd6a1b",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "instruction-contracts",
+          "path": "tests/brain-updates/contract.test.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 376,
+          "stdoutDigest": "122bbab5a30ac561b91093b590717c54e9f9b422185ad77054eb0d71d4d3dd1d",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "plain-english-showcase",
+          "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 317,
+          "stdoutDigest": "9be0480a9c37006b93ad6ee59b0c0f56bc1ec8a4a58f114ff23524950db6d7ab",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "assertion-engine",
+          "path": "apps/web/scripts/test-assertion-engine.mjs",
+          "passed": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "durationMs": 100,
+          "stdoutDigest": "5a100bedf993c44536fc01c2b5d6dc6812591b45b9aefb62c151569f7eade58a",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "businessDateIst": "2026-10-17",
+      "fingerprint": "638f15091c44036fb486a264baba6bd9bf911f7ea3899aeb2a6c36556cf983a8",
+      "observedSourceDigests": [
+        {
+          "path": "apps/web/scripts/test-assertion-engine.mjs",
+          "sha256": "5243eb8089b8e3aafc04722fe268ff8a762659c33ecc7f895c910dc261dc5a37"
+        },
+        {
+          "path": "apps/web/scripts/test-plain-english-showcase.mjs",
+          "sha256": "42e2111cbe53ec89a4f5011fa9769f395ca921691a69a6b825af5cb5061366d0"
+        },
+        {
+          "path": "apps/web/src/App.tsx",
+          "sha256": "1921d5a8f2a4ef7d5e5e94a190fbb06745b5768aaf86f78852518fe6671589fb"
+        },
+        {
+          "path": "apps/web/src/engine/ed25519Verifier.ts",
+          "sha256": "ed3b7db96132b1d74b7f739265cc07d67ed04b875df797c0f7a8ae01252a1b43"
+        },
+        {
+          "path": "apps/web/src/engine/entitlementVerifier.ts",
+          "sha256": "84017395d7760a99d7288e69c986189d9cba202a0def36848afa92e428a22248"
+        },
+        {
+          "path": "apps/web/src/engine/eval/assertionEngine.ts",
+          "sha256": "5f664e1e10ffeed2be10d5fe1a5d67e9f99979c41abcb2eb346e5bfa9cc8a441"
+        },
+        {
+          "path": "apps/web/src/engine/hashUtils.ts",
+          "sha256": "328252d7f9843575cf194db482afaaefb979e91c270e998e04f213604df9c756"
+        },
+        {
+          "path": "apps/web/src/engine/markdownExportCore.ts",
+          "sha256": "97577a1587e9f9deba810e9ef190c4fad942a5f123fe9e480c8e14664901ea74"
+        },
+        {
+          "path": "apps/web/src/engine/modelAtlas/modelAtlasRegistry.json",
+          "sha256": "0b02ad1b2d10a424baf7146713b7f6c2b2d4f6d0d2c445021baeb11777f720a3"
+        },
+        {
+          "path": "apps/web/src/engine/modelTranscompiler.ts",
+          "sha256": "19f59b11cb8d86ea6668914440197280efc4cde2fbf7c030ece81c945f108be8"
+        },
+        {
+          "path": "apps/web/src/engine/multilingualDualPrompt.ts",
+          "sha256": "ad4d47bed4a3a4885877505d8e42135fe72d0be13da14a5007f3e488c9dd66b9"
+        },
+        {
+          "path": "apps/web/src/engine/plain-english-showcase.css",
+          "sha256": "6b5b51ea8e5dc406eebee636687e970d39ad0482c5c50e2325fa5fe078ce0ae3"
+        },
+        {
+          "path": "apps/web/src/engine/plainEnglishParser.ts",
+          "sha256": "ffbe61d0232947245f414c6c2e8cf76d386137d85da7511fb379c7d04207d1db"
+        },
+        {
+          "path": "apps/web/src/engine/PlainEnglishShowcase.tsx",
+          "sha256": "e67657c863973e8a2c74b4ef8c1ad821d7f88a67c730bf6106f28bde4cf62f10"
+        },
+        {
+          "path": "apps/web/src/engine/promptSynthesizer.mjs",
+          "sha256": "855c2e665ec9d9b2f748350b0849302dceda20e46f8f94e96ece4749cd83e767"
+        },
+        {
+          "path": "apps/web/src/engine/promptSynthesizer.ts",
+          "sha256": "01246a5e2aac5d60d14dc5d248ac1d0b996512ec8aa52a93e8b59a4832cf2cbe"
+        },
+        {
+          "path": "apps/web/src/engine/proofReceipt.ts",
+          "sha256": "c027e902ffad600346ade9256b91e6d15f90e159ce4434ba4414ac4ac6c9c10f"
+        },
+        {
+          "path": "packages/spe-plugin/src/tools.ts",
+          "sha256": "218ae2c5cb8f902edfed120aa42ece44a4febda6eecefd4329f299e95f727d3c"
+        },
+        {
+          "path": "tests/brain-updates/bundles.test.mjs",
+          "sha256": "2834a0e7aee57038bdd544b6859d366bf4f7d3e512e2b119d076125e10912d1c"
+        },
+        {
+          "path": "tests/brain-updates/contract.test.mjs",
+          "sha256": "641dee9f6093d161149d570d402275f3a67d9086c03486c883e279feef1cd65c"
+        },
+        {
+          "path": "tests/brain-updates/github-state.test.mjs",
+          "sha256": "372ab8ef5a33f8338c10a4627d35a4dc4729d06225b23f75f83629c8bbea8654"
+        },
+        {
+          "path": "tests/brain-updates/policy.test.mjs",
+          "sha256": "a8b0ccda6a5491938bd67b396c061c827e3c931a4c7d85cc73b278f4a1155184"
+        },
+        {
+          "path": "tests/brain-updates/runner.test.mjs",
+          "sha256": "64aebb43f097d26c66391dfb401a833000151d1aa0e80f415915b9b269cf418a"
+        },
+        {
+          "path": "tools/brain-updates/bundles.mjs",
+          "sha256": "ab26ab656adffc53296c64af020116fd18ee913b05f4ce130294afac1b327962"
+        },
+        {
+          "path": "tools/brain-updates/github-state.mjs",
+          "sha256": "242a7864261e00f437c72ffa0e6127748977760aa8673af2e7da3d358770a356"
+        },
+        {
+          "path": "tools/brain-updates/policy.mjs",
+          "sha256": "5ed9cf2f4476ed4a2b5138c003821081b8adcf575f01c1df3d450d97217ceebf"
+        },
+        {
+          "path": "tools/brain-updates/run.mjs",
+          "sha256": "5525e909695f6953d4090d19e2a69c3e76350efc9837f93e3820676f1e7689dc"
+        }
+      ],
+      "version": "0.1.0",
+      "bundleDigest": "3c016e8b8fd3554843b8fb2042433553d713c2161ec67c397b7706623b4d1b4c"
+    }
+  ],
+  "remotePublicationExecuted": false,
+  "observedScheduledRun": false,
+  "productionDeployed": false,
+  "intelligenceGainMeasured": false,
+  "providerAvailabilityVerified": false,
+  "modelTrainingPerformed": false
+}
