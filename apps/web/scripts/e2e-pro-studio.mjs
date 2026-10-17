@@ -7,7 +7,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { build } from "esbuild";
 import { chromium } from "playwright";
 
-const OUT = process.env.SHOTS_DIR || "/workspace/pro-studio/r3-shots";
+const OUT = process.env.SHOTS_DIR || "/workspace/pro-studio/r4-shots";
 const PORT = 5199, BASE = `http://127.0.0.1:${PORT}`;
 mkdirSync(OUT, { recursive: true });
 await build({ entryPoints: ["pro-api/keys.ts"], bundle: true, format: "esm", platform: "node", outfile: "node_modules/.cache/e2e-keys.mjs", logLevel: "silent" });
@@ -33,6 +33,8 @@ const watch = (page, tag) => { page.on("console", (m) => { if (m.type() === "err
   page.on("dialog", (d) => { console.log(`  [${tag}] dialog: ${d.message().slice(0, 160)}`); void d.dismiss(); }); page.on("response", async (r) => { if (r.url().includes("/api/pro") && r.status() >= 400) console.log(`  [${tag}] ${r.status()} ${r.request().method()} ${r.url().split("/api/pro")[1]} ${(await r.text().catch(() => "")).slice(0, 160)}`); }); page.on("requestfailed", (r) => { if (r.url().includes("/api/pro")) console.log(`  [${tag}] request failed: ${r.url()} ${r.failure()?.errorText}`); }); };
 const idle = (page) => page.waitForFunction(() => !/Running/.test(document.querySelector('[data-testid="living-run"]')?.textContent ?? ""), null, { timeout: 30000 });
 const shot = (page, name) => page.screenshot({ path: `${OUT}/${name}.png`, fullPage: false });
+const into = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); const sc = document.querySelector(".ps-content"); if (el && sc) sc.scrollTop += el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 12; }, sel).then(() => page.waitForTimeout(350));
+const noHOverflow = async (page, where) => { const o = await page.evaluate(() => { const c = document.querySelector(".ps-content"); if (!c) return null; const r = c.getBoundingClientRect(); return { sw: c.scrollWidth, cw: c.clientWidth, wide: [...c.querySelectorAll("*")].filter((e) => e.getBoundingClientRect().right > r.right + 1).slice(0, 6).map((e) => `${e.tagName}.${String(e.className).slice(0, 30)}:${Math.round(e.getBoundingClientRect().width)}`), chain: (() => { const out = []; let e = [...c.querySelectorAll("*")].find((x) => x.getBoundingClientRect().right > r.right + 1); while (e && e !== c) { const cs = getComputedStyle(e); out.push(`${e.tagName}.${String(e.className).slice(0, 24)}[${cs.display} ${cs.gridTemplateColumns.slice(0, 30)} w${Math.round(e.getBoundingClientRect().width)}]`); e = e.parentElement; } return out.join(" < "); })() }; }); if (o && o.sw > o.cw + 1) throw new Error(`${where}: workspace scrolls sideways (${o.sw} > ${o.cw}) ${o.wide.join(" ")} CHAIN ${o.chain}`); };
 const expectText = async (loc, re, timeout = 15000) => { await loc.first().waitFor({ state: "visible", timeout }); const end = Date.now() + timeout; let t = ""; while (Date.now() < end) { t = await loc.first().innerText(); if (re.test(t)) return; await new Promise((r) => setTimeout(r, 150)); } throw new Error(`expected ${re} in: ${t.slice(0, 300)}`); };
 
 try {
@@ -61,9 +63,11 @@ try {
   });
   await step("CoWorkie opens a tool by command", async () => {
     if (!(await p.locator("#ps-cw-input").isVisible())) await p.locator('[data-testid="cw-toggle"]').click();
+    await p.locator(".ps-cw-empty").waitFor(); await p.mouse.move(700, 400); await shot(p, "1440-dark-coworkie-open");
     await p.fill("#ps-cw-input", "open batch"); await p.keyboard.press("Enter");
     await p.locator('[data-tool="batch"]').waitFor({ timeout: 10000 });
   });
+  await p.waitForTimeout(400); await shot(p, "1440-dark-batch-with-coworkie");
 
   // 2. Flagship: Living loop with the simulated provider + real sandbox execution
   await step("FLAGSHIP: crash -> captured error -> V2 -> verified (sandbox), receipt + certificate", async () => {
@@ -71,6 +75,7 @@ try {
     await p.locator('[data-testid="living-run"]').click();
     await expectText(p.locator('[data-testid="living-status"]'), /VERIFIED/, 30000);
     await expectText(p.locator('[data-testid="captured-errors"]'), /ReferenceError: window is not defined/);
+    await p.locator('[data-testid="prompt-diff-details"]').evaluate((d) => { d.open = true; });
     await expectText(p.locator('[data-testid="prompt-diff"]'), /MUST NOT use `window` during server-side rendering/);
     await expectText(p.locator('[data-testid="living-ledger"]'), /0 runtime errors, 0 console errors/);
     await expectText(p.locator('[data-testid="living-timeline"]'), /Verified 0 errors, fix recorded/);
@@ -78,17 +83,21 @@ try {
     await p.locator('[data-testid="living-cert"]').click(); await expectText(p.locator('[data-testid="cert-summary"]'), /VERIFIED/);
     await expectText(p.locator(".ps-badge-sim").first(), /SIMULATED/);
   });
-  await shot(p, "1440-dark-living-verified");
-  await p.locator('[data-testid="living-attempts"]').scrollIntoViewIfNeeded().catch(() => {}); await shot(p, "1440-dark-living-attempts");
+  await into(p, '[data-testid="living-panel"]'); await shot(p, "1440-dark-living-verified");
+  await into(p, '[data-testid="living-timeline"]'); await shot(p, "1440-dark-living-timeline");
+  await into(p, '[data-testid="living-receipt"]'); await shot(p, "1440-dark-living-receipt");
+  await into(p, '[data-testid="living-ledger"]'); await shot(p, "1440-dark-living-ledger");
+  await into(p, '[data-testid="living-attempts"]'); await shot(p, "1440-dark-living-attempts");
+  await step("Living page has no sideways overflow (1440)", async () => noHOverflow(p, "living 1440"));
   await step("NEGATIVE (UI): a fix that renders but drops a feature is rejected as drift", async () => {
     await idle(p); await p.locator('[data-testid="living-demo-drift"]').click(); await p.locator('[data-testid="living-run"]').click();
     await expectText(p.locator('[data-testid="living-status"]'), /PAUSED/, 30000);
     await expectText(p.locator('[data-testid="scoped-repairs"]'), /Rejected: drift/);
     await expectText(p.locator('[data-testid="scoped-repairs"]'), /Features removed: footer/);
-    const ov = await p.evaluate(() => { const panel = document.querySelector(".ps-panel"), main = document.querySelector("main") ?? document.body; if (!panel) return null; const pr = panel.getBoundingClientRect(), cw = document.querySelector(".ps-cw, [data-testid=\"coworkie\"], aside.ps-right"), mr = cw ? { right: cw.getBoundingClientRect().left } : main.getBoundingClientRect(); if (pr.right <= mr.right + 1 && panel.scrollWidth <= panel.clientWidth + 1) return null; const wide = [...panel.querySelectorAll("*")].map((e) => [e.tagName + "." + e.className, Math.round(e.getBoundingClientRect().width), e.scrollWidth]).sort((a, b) => b[2] - a[2]).slice(0, 5); return { sw: panel.scrollWidth, cwid: panel.clientWidth, panelRight: pr.right, mainRight: mr.right, panelW: pr.width, wide }; });
+    const ov = await p.evaluate(() => { const panel = document.querySelector(".ps-run"), main = document.querySelector("main") ?? document.body; if (!panel) return null; const pr = panel.getBoundingClientRect(), cw = document.querySelector(".ps-cw, [data-testid=\"coworkie\"], aside.ps-right"), mr = cw ? { right: cw.getBoundingClientRect().left } : main.getBoundingClientRect(); if (pr.right <= mr.right + 1 && panel.scrollWidth <= panel.clientWidth + 1) return null; const wide = [...panel.querySelectorAll("*")].map((e) => [e.tagName + "." + e.className, Math.round(e.getBoundingClientRect().width), e.scrollWidth]).sort((a, b) => b[2] - a[2]).slice(0, 5); return { sw: panel.scrollWidth, cwid: panel.clientWidth, panelRight: pr.right, mainRight: mr.right, panelW: pr.width, wide }; });
     if (ov) throw new Error(`proof panel overflows the workspace: ${JSON.stringify(ov)}`);
   });
-  await shot(p, "1440-dark-living-drift-rejected");
+  await into(p, '[data-testid="scoped-repairs"]'); await shot(p, "1440-dark-living-drift-rejected");
   await step("NEGATIVE (UI): code that keeps crashing pauses at the cap with a receipt, never verified", async () => {
     await idle(p); await p.locator('[data-testid="living-demo"]').click();
     await p.fill("#lv-in-0", "Write the app as one JavaScript code block. [demo:always-crash]"); await p.fill("#lv-max", "3"); await p.fill("#lv-name", "Always crashes");
@@ -98,7 +107,7 @@ try {
     await expectText(p.locator('[data-testid="living-receipt"]'), /BUDGET_ATTEMPTS/);
     const st = await p.locator('[data-testid="living-status"]').innerText(); if (/VERIFIED/.test(st)) throw new Error("reported success");
   });
-  await shot(p, "1440-dark-living-paused");
+  await into(p, '[data-testid="living-panel"]'); await shot(p, "1440-dark-living-paused");
   await step("Stop button is available and audit log records Living steps", async () => {
     await p.goto(BASE + "/pro-studio/audit"); await expectText(p.locator('[data-testid="audit-out"]'), /Chain intact/);
     await expectText(p.locator(".ps-table"), /living\.step/);
@@ -108,7 +117,7 @@ try {
   // 3. Every tool renders at 1280 (light), plus key screens
   const c2 = await ctxFor(1280, 800, "light"); const q = await c2.newPage(); watch(q, "1280-light");
   for (const t of ["living", "blind", "portability", "studio", "blueprint", "regression", "releases", "code", "batch", "brand", "formats", "cost", "scanner", "audit", "library", "report"]) {
-    await step(`tool renders: ${t} (1280 light)`, async () => { await q.goto(`${BASE}/pro-studio/${t}`); await q.locator(`[data-tool="${t}"]`).waitFor({ timeout: 10000 }); });
+    await step(`tool renders: ${t} (1280 light)`, async () => { await q.goto(`${BASE}/pro-studio/${t}`); await q.locator(`[data-tool="${t}"]`).waitFor({ timeout: 10000 }); await noHOverflow(q, `${t} 1280`); });
     if (["living", "studio", "blind", "portability", "scanner"].includes(t)) await shot(q, `1280-light-${t}`);
   }
   await step("Prompt Studio: example session analysed on the server", async () => {
@@ -125,7 +134,7 @@ try {
   // 4. Mobile 390
   const c4 = await ctxFor(390, 844, "dark"); const m = await c4.newPage(); watch(m, "390-dark");
   await step("390: home, menu drawer, CoWorkie drawer, Living", async () => {
-    await m.goto(`${BASE}/pro-studio`); await m.locator("#ps-home-h").waitFor(); await shot(m, "390-dark-home");
+    await m.goto(`${BASE}/pro-studio`); await m.locator("#ps-home-h").waitFor(); await shot(m, "390-dark-home"); const hw = await m.evaluate(() => document.documentElement.scrollWidth); if (hw > 392) throw new Error(`home horizontal overflow: ${hw}px`);
     await m.getByRole("button", { name: "Open menu" }).click(); await m.locator(".ps-drawer--left[open]").waitFor(); await shot(m, "390-dark-menu"); await m.keyboard.press("Escape");
     await m.locator('[data-testid="cw-toggle"]').click(); await m.locator(".ps-drawer--right[open]").waitFor(); await shot(m, "390-dark-coworkie"); await m.keyboard.press("Escape");
     await m.goto(`${BASE}/pro-studio/living`); await m.locator('[data-tool="living"]').waitFor(); await shot(m, "390-dark-living");

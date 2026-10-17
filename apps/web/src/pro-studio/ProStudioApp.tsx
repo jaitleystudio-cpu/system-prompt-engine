@@ -212,11 +212,12 @@ export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
           <header className="ps-top">
             <button type="button" className="ps-iconbtn ps-only-mobile" aria-label="Open menu" aria-haspopup="dialog" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(true)}><Icon name="menu" /></button>
             <nav aria-label="Breadcrumb" className="ps-crumb"><ol><li><a href="/pro-studio" onClick={(e) => { e.preventDefault(); go({ kind: "home" }); }}>Pro Studio</a></li><li aria-current="page">{title}</li></ol></nav>
+            <div className="ps-toast-slot">{toast && <div className="ps-toast" key={toast.id} aria-hidden="true" title={toast.msg}><Icon name="check" size={14} /><span>{toast.msg}</span></div>}</div>
             <div className="ps-top-r">
               <span className={`ps-plan ps-plan--${access.state}`} title={access.detail}>{access.state !== "locked" ? access.label : <><Icon name="lock" size={14} /> Pro only</>}</span>
               <button type="button" className="ps-search" onClick={() => setPaletteOpen(true)} aria-label={`Search tools and actions (${MOD} K)`}><Icon name="search" size={16} /><span className="ps-only-desktop">Search</span><kbd className="ps-only-desktop">{MOD} K</kbd></button>
               {route.kind === "tool" && ok && <button type="button" className="ps-iconbtn" aria-pressed={panelOpen} aria-label={`Output panel (${MOD} .)`} title={`Output panel (${MOD} .)`} onClick={() => setPanelOpen((o) => !o)}><Icon name="panel" /></button>}
-              <button type="button" className="ps-cwbtn" aria-pressed={prefs.rightPinned} aria-label={`CoWorkie assistant (${MOD} I)`} title={`CoWorkie (${MOD} I)`} onClick={toggleRight} data-testid="cw-toggle"><Icon name="chat" size={16} /><span className="ps-only-desktop">CoWorkie</span></button>
+              <button type="button" className="ps-cwbtn" aria-pressed={prefs.rightPinned} aria-label={`CoWorkie assistant (${MOD} I)`} title={`CoWorkie (${MOD} I)`} onClick={toggleRight} data-testid="cw-toggle"><Icon name="sparkles" size={16} /><span className="ps-only-desktop">CoWorkie</span></button>
             </div>
           </header>
           <div id="ps-main" className="ps-content" ref={mainRef} tabIndex={-1}>{body}</div>
@@ -225,7 +226,7 @@ export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
           onMouseEnter={() => { if (!prefs.rightPinned) peek("r", true); }} onMouseLeave={() => { if (!prefs.rightPinned) peek("r", false, 280); }}
           onFocus={() => { if (!prefs.rightPinned) peek("r", true); }} onBlur={(e) => { if (!prefs.rightPinned && !e.currentTarget.contains(e.relatedTarget as Node)) peek("r", false, 120); }}>
           {prefs.rightPinned || rightPeek ? <Suspense fallback={<div className="ps-loading" role="status">Loading CoWorkie…</div>}><CoWorkiePanel {...cwProps} /></Suspense>
-            : <button type="button" className="ps-cw-handle" onClick={() => peek("r", true)} aria-label={`Show CoWorkie (${MOD} I to pin)`} data-testid="cw-handle"><Icon name="chat" size={16} /><span>CoWorkie</span></button>}
+            : <button type="button" className="ps-cw-handle" onClick={() => peek("r", true)} aria-label={`Show CoWorkie (${MOD} I to pin)`} data-testid="cw-handle"><Icon name="sparkles" size={16} /><span>CoWorkie</span></button>}
         </aside>
         <Drawer open={cwDrawerOpen} onClose={() => setCwDrawerOpen(false)} label="CoWorkie assistant" side="right">
           <Suspense fallback={null}><CoWorkiePanel {...cwProps} inDrawer onClose={() => setCwDrawerOpen(false)} /></Suspense>
@@ -233,7 +234,6 @@ export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
         <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} items={paletteItems} />
         <ShortcutsDialog open={keysOpen} onClose={() => setKeysOpen(false)} />
         <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{live}</div>
-        {toast && <div className="ps-toast" key={toast.id} aria-hidden="true">{toast.msg}</div>}
       </div>
     </ProCtx.Provider>
   );
@@ -241,13 +241,20 @@ export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
 
 function Rail({ onNew, onPalette, onPin, route }: { onNew: () => void; onPalette: () => void; onPin: () => void; route: ProRoute }) {
   const { go } = usePro(); const cur = route.kind === "tool" ? route.tool : null;
+  const [tip, setTip] = useState<{ t: string; x: number; y: number } | null>(null);
+  const show = (t: string) => (e: React.SyntheticEvent<HTMLElement>) => { const r = e.currentTarget.getBoundingClientRect(); setTip({ t, x: r.right + 10, y: r.top + r.height / 2 }); };
+  const hide = () => setTip(null);
+  const tp = (t: string) => ({ onMouseEnter: show(t), onFocus: show(t), onMouseLeave: hide, onBlur: hide });
   return (
-    <div className="ps-rail" data-testid="ps-rail">
-      <button type="button" className="ps-iconbtn" onClick={onPin} aria-label={`Pin sidebar (${MOD} B)`} title={`Pin sidebar (${MOD} B)`}><Icon name="sidebar" /></button>
-      <button type="button" className="ps-iconbtn" onClick={onNew} aria-label="New session" title="New session"><Icon name="edit" /></button>
-      <button type="button" className="ps-iconbtn" onClick={onPalette} aria-label={`Search (${MOD} K)`} title={`Search (${MOD} K)`}><Icon name="search" /></button>
-      <span className="ps-rail-sep" aria-hidden="true" />
-      {TOOLS.map((t) => <a key={t.id} href={pathFor({ kind: "tool", tool: t.id })} className="ps-rail-a" aria-current={cur === t.id ? "page" : undefined} aria-label={t.label} title={t.label} onClick={(e) => { e.preventDefault(); go({ kind: "tool", tool: t.id }); }}><Icon name={t.id} /></a>)}
+    <div className="ps-rail" data-testid="ps-rail" onScroll={hide}>
+      <button type="button" className="ps-iconbtn" onClick={onPin} aria-label={`Pin sidebar (${MOD} B)`} {...tp(`Pin sidebar · ${MOD} B`)}><Icon name="sidebar" /></button>
+      <button type="button" className="ps-iconbtn" onClick={onNew} aria-label="New session" {...tp(`New session · ${MOD} ⇧ O`)}><Icon name="plus" /></button>
+      <button type="button" className="ps-iconbtn" onClick={onPalette} aria-label={`Search (${MOD} K)`} {...tp(`Search · ${MOD} K`)}><Icon name="search" /></button>
+      {GROUPS.map((g) => <div key={g} className="ps-rail-g" role="group" aria-label={g}>
+        <span className="ps-rail-sep" aria-hidden="true" />
+        {TOOLS.filter((t) => t.group === g).map((t) => <a key={t.id} href={pathFor({ kind: "tool", tool: t.id })} className="ps-rail-a" aria-current={cur === t.id ? "page" : undefined} aria-label={t.label} {...tp(`${t.label} · ${g}`)} onClick={(e) => { e.preventDefault(); hide(); go({ kind: "tool", tool: t.id }); }}><Icon name={t.id} /></a>)}
+      </div>)}
+      {tip && <div className="ps-tipbox" role="tooltip" style={{ left: tip.x, top: tip.y }}>{tip.t}</div>}
     </div>
   );
 }
@@ -262,11 +269,11 @@ function SidebarContent({ route, pinned, onPin, onPalette, onNew, theme, onTheme
   return (
     <div className="ps-side-in">
       <div className="ps-side-head">
-        <a className="ps-brand" href="/pro-studio" onClick={(e) => { e.preventDefault(); go({ kind: "home" }); }}><span className="ps-logo" aria-hidden="true">S</span><span>SPE <b>Pro Studio</b></span></a>
+        <a className="ps-brand" href="/pro-studio" onClick={(e) => { e.preventDefault(); go({ kind: "home" }); }}><span className="ps-logo" aria-hidden="true"><Icon name="sparkles" size={14} /></span><span>SPE <b>Pro Studio</b></span></a>
         <button type="button" className="ps-iconbtn" onClick={onPin} aria-pressed={inDrawer ? undefined : pinned} aria-label={inDrawer ? "Close menu" : pinned ? `Unpin sidebar, auto-hide (${MOD} B)` : `Pin sidebar (${MOD} B)`} title={inDrawer ? "Close menu" : pinned ? `Unpin sidebar (${MOD} B)` : `Pin sidebar (${MOD} B)`} data-testid={inDrawer ? undefined : "left-pin"}><Icon name={inDrawer ? "close" : "sidebar"} /></button>
       </div>
       <div className="ps-side-actions">
-        <button type="button" className="ps-newbtn" onClick={onNew}><Icon name="edit" size={16} /> New session <kbd>{MOD} ⇧ O</kbd></button>
+        <button type="button" className="ps-newbtn" onClick={onNew}><Icon name="plus" size={16} /> New session <kbd>{MOD} ⇧ O</kbd></button>
         <button type="button" className="ps-sidebtn" onClick={onPalette}><Icon name="search" size={16} /> Search <kbd>{MOD} K</kbd></button>
       </div>
       <nav className="ps-nav" aria-label="Pro tools">
@@ -275,7 +282,7 @@ function SidebarContent({ route, pinned, onPin, onPalette, onNew, theme, onTheme
             <h2 className="ps-nav-h">{g}</h2>
             <ul>{TOOLS.filter((t) => t.group === g).map((t) => (
               <li key={t.id}><a href={pathFor({ kind: "tool", tool: t.id })} className="ps-nav-a" aria-current={cur === t.id ? "page" : undefined} onClick={(e) => { e.preventDefault(); go({ kind: "tool", tool: t.id }); }}>
-                <Icon name={t.id} size={16} /><span>{t.label}</span>{!ok && <span className="ps-lock" aria-label="Pro only"><Icon name="lock" size={12} /></span>}{ok && t.isNew && <span className="ps-new">New</span>}</a></li>))}</ul>
+                <Icon name={t.id} size={16} /><span>{t.label}</span>{!ok && <span className="ps-lock" aria-label="Pro only"><Icon name="lock" size={12} /></span>}{ok && t.id === "living" && <span className="ps-new">New</span>}</a></li>))}</ul>
           </div>))}
         <div className="ps-nav-group">
           <div className="ps-nav-hrow"><h2 className="ps-nav-h">Projects &amp; history</h2>{ok && <button type="button" className="ps-iconbtn ps-iconbtn--sm" onClick={addProject} aria-label="New project folder" title="New project folder"><Icon name="plus" size={14} /></button>}</div>
@@ -301,7 +308,7 @@ function SidebarContent({ route, pinned, onPin, onPalette, onNew, theme, onTheme
           <span className="ps-avatar" aria-hidden="true"><Icon name={access.state === "locked" ? "lock" : "releases"} size={16} /></span>
           <span className="ps-acct-t"><b>{access.label}</b><small>{access.detail}</small></span>
         </div>
-        {ok && <p className="ps-sync" data-testid="ps-sync" role="status">{SYNC_TEXT[sync]}{info?.storage === "memory" ? " Development storage: server memory, lost on restart." : ""}</p>}
+        {ok && <p className="ps-sync" data-testid="ps-sync" role="status" title={info?.storage === "memory" ? "Development storage: server memory, lost on restart." : undefined}>{SYNC_TEXT[sync]}{info?.storage === "memory" && <span className="ps-sync-dev" title="Development storage: server memory, lost on restart.">Dev storage · memory</span>}</p>}
         <div className="ps-foot-row">
           <button type="button" className="ps-sidebtn" onClick={onTheme} aria-label={`Theme: ${themeLabel(theme)}. Switch theme`}><Icon name={theme === "light" ? "sun" : "moon"} size={16} /> {themeLabel(theme)}</button>
           <button type="button" className="ps-sidebtn" onClick={onKeys} aria-label="Keyboard shortcuts"><Icon name="keyboard" size={16} /> Keys</button>
@@ -355,6 +362,11 @@ function ShortcutsDialog({ open, onClose }: { open: boolean; onClose: () => void
   );
 }
 
+const FEATURED: { id: ToolId; title: string; text: string; tag?: string }[] = [
+  { id: "living", title: "Living .spe", text: "Give it a goal and protected requirements. It runs, captures crashes, repairs the prompt and stops only on proof.", tag: "Flagship" },
+  { id: "studio", title: "Prompt Studio", text: "Structure a prompt into blocks, version it and export a portable .spe file." },
+  { id: "blind", title: "Blind A/B", text: "Compare two prompts on the same inputs without knowing which is which." },
+];
 function Home() {
   const { createSession, go, ws, setWs, composer: text, setComposer: setText } = usePro();
   const slash = text.startsWith("/") ? TOOLS.filter((t) => (t.id + " " + t.label.toLowerCase()).includes(text.slice(1).trim().toLowerCase())) : [];
@@ -366,30 +378,41 @@ function Home() {
     createSession(newSession(blocks)); setText("");
   };
   const recent = [...ws.sessions].sort((a, b) => (b.updatedAt > a.updatedAt ? 1 : -1)).slice(0, 4);
+  const toolLink = (id: ToolId) => ({ href: pathFor({ kind: "tool", tool: id }), onClick: (e: React.MouseEvent) => { e.preventDefault(); go({ kind: "tool", tool: id }); } });
   return (
     <section className="ps-home" aria-labelledby="ps-home-h">
+      <span className="ps-home-mark" aria-hidden="true"><Icon name="sparkles" size={22} /></span>
       <h1 id="ps-home-h" className="ps-home-h">What are you building today?</h1>
-      <p className="ps-home-sub">Start a prompt session, or type <kbd>/</kbd> to jump to any Pro tool. Tools run on the SPE Pro service. Model runs use your own provider key; SPE never pays for or stores it.</p>
+      <p className="ps-home-sub">Start a prompt session, or type <kbd>/</kbd> to jump to a tool.</p>
       <form className="ps-composer" onSubmit={(e) => { e.preventDefault(); start(); }}>
         <label htmlFor="ps-composer" className="sr-only">Describe the assistant or paste a prompt</label>
         <textarea id="ps-composer" rows={3} value={text} placeholder="Paste a prompt, or start with “You are…”" onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); start(); } }} aria-describedby="ps-composer-hint" />
         <div className="ps-composer-bar">
-          <span id="ps-composer-hint" className="ps-hint">Enter to start · Shift Enter for a new line</span>
-          <button type="submit" className="ps-send" disabled={!text.trim()} aria-label="Start session"><Icon name="send" /></button>
+          <div className="ps-composer-tools">
+            <button type="button" className="ps-chip ps-chip--sm" onClick={() => setText(text.startsWith("/") ? text : "/")}><Icon name="search" size={14} />Tools</button>
+            <span id="ps-composer-hint" className="ps-hint">Enter to start · Shift Enter for a new line</span>
+          </div>
+          <button type="submit" className="ps-send" disabled={!text.trim()} aria-label="Start session"><Icon name="send" size={16} /></button>
         </div>
         {slash.length > 0 && <ul className="ps-slash" aria-label="Matching tools">{slash.slice(0, 6).map((t) => <li key={t.id}><button type="button" onClick={() => go({ kind: "tool", tool: t.id })}><Icon name={t.id} size={16} />{t.label}<small>{t.blurb}</small></button></li>)}</ul>}
       </form>
       <div className="ps-chips" aria-label="Quick starts">
-        <button type="button" className="ps-chip ps-chip--accent" onClick={() => go({ kind: "tool", tool: "living" })}><Icon name="living" size={16} />Start a Living .spe project</button>
-        <button type="button" className="ps-chip" onClick={() => { go({ kind: "tool", tool: "studio" }); }}><Icon name="studio" size={16} />Open Prompt Studio</button>
-        <button type="button" className="ps-chip" onClick={() => go({ kind: "tool", tool: "blueprint" })}><Icon name="blueprint" size={16} />Design an agent team</button>
-        <button type="button" className="ps-chip" onClick={() => go({ kind: "tool", tool: "batch" })}><Icon name="batch" size={16} />Batch from CSV</button>
-        <button type="button" className="ps-chip" onClick={() => go({ kind: "tool", tool: "scanner" })}><Icon name="scanner" size={16} />Scan for secrets</button>
+        <button type="button" className="ps-chip" onClick={() => go({ kind: "tool", tool: "blueprint" })}><Icon name="blueprint" size={14} />Design an agent team</button>
+        <button type="button" className="ps-chip" onClick={() => go({ kind: "tool", tool: "batch" })}><Icon name="batch" size={14} />Batch from CSV</button>
+        <button type="button" className="ps-chip" onClick={() => go({ kind: "tool", tool: "scanner" })}><Icon name="scanner" size={14} />Scan for secrets</button>
+        <button type="button" className="ps-chip" onClick={() => go({ kind: "tool", tool: "regression" })}><Icon name="regression" size={14} />Run regression tests</button>
       </div>
-      {recent.length > 0 && (<div className="ps-recent"><h2 className="ps-h3">Recent sessions</h2><ul>{recent.map((s) => <li key={s.id}><button type="button" onClick={() => { setWs((w) => ({ ...w, activeId: s.id })); go({ kind: "tool", tool: "studio" }); }}><Icon name="chat" size={16} /><span>{sessionTitle(s)}</span><small>{s.blocks.length} blocks</small></button></li>)}</ul></div>)}
-      <div className="ps-grid" aria-label="All Pro tools">
-        {TOOLS.map((t) => <a key={t.id} className="ps-card" href={pathFor({ kind: "tool", tool: t.id })} onClick={(e) => { e.preventDefault(); go({ kind: "tool", tool: t.id }); }}><span className="ps-card-i"><Icon name={t.id} /></span><b>{t.label}{t.isNew && <span className="ps-new">New</span>}</b><small>{t.blurb}</small></a>)}
+      <div className="ps-home-sec"><h2>Start with</h2>
+        <div className="ps-feature">{FEATURED.map((f) => <a key={f.id} className={`ps-card${f.tag ? " ps-card--hero" : ""}`} {...toolLink(f.id)}>
+          <span className="ps-card-i" aria-hidden="true"><Icon name={f.id} size={18} /></span>
+          <b>{f.title}{f.tag && <span className="ps-new">{f.tag}</span>}</b><small>{f.text}</small>
+          <span className="ps-card-go" aria-hidden="true"><Icon name="right" size={16} /></span></a>)}</div>
       </div>
+      {recent.length > 0 && (<div className="ps-home-sec ps-recent"><h2>Recent sessions</h2><ul>{recent.map((s) => <li key={s.id}><button type="button" onClick={() => { setWs((w) => ({ ...w, activeId: s.id })); go({ kind: "tool", tool: "studio" }); }}><Icon name="chat" size={16} /><span>{sessionTitle(s)}</span><small>{s.blocks.length} blocks</small></button></li>)}</ul></div>)}
+      <div className="ps-home-sec"><h2>All tools</h2>
+        <nav className="ps-alltools" aria-label="All Pro tools">{TOOLS.map((t) => <a key={t.id} {...toolLink(t.id)}><span className="ps-card-i" aria-hidden="true"><Icon name={t.id} size={15} /></span><b>{t.label}</b><small>{t.blurb}</small></a>)}</nav>
+      </div>
+      <p className="ps-home-foot"><Icon name="shield" size={12} /> Tools run on the SPE Pro service. Model runs use your own provider key; SPE never pays for or stores it.</p>
     </section>
   );
 }
@@ -414,8 +437,8 @@ export function ProGate({ access, tool, onRecheck }: { access: Access; tool: Too
           <small id="ps-key-hint" className="ps-hint">No account or password. The SPE Pro service checks the key's signature, expiry and revocation on every request. The key is kept in this browser until you remove it.</small>
         </form>
       ) : <button type="button" className="ps-btn ps-btn--primary" onClick={() => void onRecheck()}>Try again</button>}
-      <h2 className="ps-h3">What's included</h2>
-      <ul className="ps-gate-list">{TOOLS.map((x) => <li key={x.id}><Icon name={x.id} size={16} /><span><b>{x.label}</b> — {x.blurb}</span></li>)}</ul>
+      <details className="ps-details"><summary>What's included ({TOOLS.length} tools)</summary>
+      <ul className="ps-gate-list">{TOOLS.map((x) => <li key={x.id}><Icon name={x.id} size={16} /><span><b>{x.label}</b> — {x.blurb}</span></li>)}</ul></details>
       <div className="ps-gate-cta"><a className="ps-btn" href="/pricing">See plans</a></div>
       <p className="ps-fine">Pro Studio never takes payment. Keys are not on sale yet.</p>
     </section>
