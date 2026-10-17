@@ -274,6 +274,8 @@ async function runReleaseSafetyBattery() {
   const testPort = 4188;
   const distDir = resolve(process.cwd(), "apps/web/dist");
   const distWasmPath = resolve(distDir, "spe_wasm.wasm");
+  const pointerPath = resolve(process.cwd(), "proofs/generated/ACTIVE_DEPLOYMENT_POINTER.json");
+  const originalPointerData = existsSync(pointerPath) ? readFileSync(pointerPath, "utf-8") : null;
 
   // Start ephemeral static server
   const server = createServer((req, res) => {
@@ -356,6 +358,10 @@ async function runReleaseSafetyBattery() {
     // Restore original dist file if it existed
     if (originalDistWasm) {
       writeFileSync(distWasmPath, originalDistWasm);
+    }
+    // Restore original pointer data if it existed
+    if (originalPointerData) {
+      writeFileSync(pointerPath, originalPointerData, "utf-8");
     }
   } finally {
     server.close();
