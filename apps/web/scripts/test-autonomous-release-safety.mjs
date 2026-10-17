@@ -12,10 +12,14 @@
  * 6. Hard operating-cost limits: enforces $0 spend and zero network egress.
  */
 
-import { readFileSync, writeFileSync, unlinkSync, existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync, writeFileSync, unlinkSync, existsSync, mkdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createServer } from "node:http";
 import crypto from "node:crypto";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const repoRoot = resolve(__dirname, "../../..");
 import {
   ReleaseSafetyGovernor,
   CANONICAL_WASM_SHA256,
@@ -259,7 +263,7 @@ async function runReleaseSafetyBattery() {
 
   // ─── GATE 4: Production Artifact Verification (Bit-for-Bit WASM) ───────────
   console.log("\n▶ Gate 4: Production Artifact Verification (Bit-for-Bit WASM)");
-  const wasmPath = resolve(process.cwd(), "apps/web/public/spe_wasm.wasm");
+  const wasmPath = resolve(repoRoot, "apps/web/public/spe_wasm.wasm");
   const wasmBuffer = readFileSync(wasmPath);
 
   const wasmAudit = governor.verifyProductionArtifactIntegrity(wasmBuffer);
@@ -270,11 +274,10 @@ async function runReleaseSafetyBattery() {
   // ─── GATE 5: Rollback Fault Injection & Real Deployment Rollback ────────────
   console.log("\n▶ Gate 5: Rollback Fault Injection & Real Deployment Rollback");
 
-  // Setup local HTTP static server on port 4188 simulating deployment endpoint
-  const testPort = 4188;
-  const distDir = resolve(process.cwd(), "apps/web/dist");
+  // Setup local HTTP static server simulating deployment endpoint (ephemeral port 0 to prevent collisions)
+  const distDir = resolve(repoRoot, "apps/web/dist");
   const distWasmPath = resolve(distDir, "spe_wasm.wasm");
-  const pointerPath = resolve(process.cwd(), "proofs/generated/ACTIVE_DEPLOYMENT_POINTER.json");
+  const pointerPath = resolve(repoRoot, "proofs/generated/ACTIVE_DEPLOYMENT_POINTER.json");
   const originalPointerData = existsSync(pointerPath) ? readFileSync(pointerPath, "utf-8") : null;
 
   // Start ephemeral static server
@@ -282,25 +285,30 @@ async function runReleaseSafetyBattery() {
     const url = req.url || "/";
     if (url === "/spe_wasm.wasm" && existsSync(distWasmPath)) {
       const data = readFileSync(distWasmPath);
-      res.writeHead(200, { "Content-Type": "application/wasm" });
+      res.writeHead(200, { "Content-Type": "application/wasm", "Connection": "close" });
       res.end(data);
       return;
     }
     if (url === "/release-manifest.json" && existsSync(resolve(distDir, "release-manifest.json"))) {
       const data = readFileSync(resolve(distDir, "release-manifest.json"));
-      res.writeHead(200, { "Content-Type": "application/json" });
+      res.writeHead(200, { "Content-Type": "application/json", "Connection": "close" });
       res.end(data);
       return;
     }
-    res.writeHead(404);
+    res.writeHead(404, { "Connection": "close" });
     res.end();
   });
 
-  await new Promise((res) => server.listen(testPort, "127.0.0.1", res));
+  await new Promise((res) => server.listen(0, "127.0.0.1", res));
+  const testPort = server.address().port;
+  let originalDistWasm = null;
 
   try {
+    // Ensure dist directory exists
+    mkdirSync(distDir, { recursive: true });
+
     // Inject regression: Corrupt dist WASM
-    const originalDistWasm = existsSync(distWasmPath) ? readFileSync(distWasmPath) : null;
+    originalDistWasm = existsSync(distWasmPath) ? readFileSync(distWasmPath) : null;
     writeFileSync(distWasmPath, Buffer.from("CORRUPTED_INJECTED_REGRESSION_PAYLOAD"));
 
     // Verify HTTP endpoint currently serves corrupted bytes
@@ -354,16 +362,18 @@ async function runReleaseSafetyBattery() {
     });
     assert(failedRollback.verifiedSafe === false, "Failed rollback remains marked verifiedSafe: false");
     assert(failedRollback.incidentAlertTriggered === true, "Failed rollback triggers immediate incident alert");
-
+  } finally {
     // Restore original dist file if it existed
     if (originalDistWasm) {
-      writeFileSync(distWasmPath, originalDistWasm);
+      try { writeFileSync(distWasmPath, originalDistWasm); } catch {}
     }
     // Restore original pointer data if it existed
     if (originalPointerData) {
-      writeFileSync(pointerPath, originalPointerData, "utf-8");
+      try { writeFileSync(pointerPath, originalPointerData, "utf-8"); } catch {}
     }
-  } finally {
+    if (typeof server.closeAllConnections === "function") {
+      server.closeAllConnections();
+    }
     server.close();
   }
 
