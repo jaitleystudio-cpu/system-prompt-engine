@@ -13,6 +13,7 @@ import {
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { TEST_SCOPE } from "./spe-crash-recovery-harness.mjs";
+import { reconcileRecoveryReadOnly } from "./spe-recovery-reconciliation.mjs";
 
 export const RECEIPT_SCHEMA = "spe.browser-replay.observation.v1";
 export const RECEIPT_AUTHORITY = "REVIEW_ONLY_NO_MODEL_OR_RELEASE_AUTHORITY";
@@ -61,7 +62,7 @@ export async function getR4HarnessDigest() {
  * Caller is responsible for actual key isolation and reviewer independence;
  * CI's temporary key is an acceptance-test fixture, NOT a production trust root.
  */
-export async function signBrowserReplayReceipt({
+async function signBrowserReplayReceipt({
   reconciliation, goal, originalPrompt, reviewerPrivateKey,
   reviewerKeyId, audience, operationId, browserVersion,
   now = new Date(), lifetimeMs = 5 * 60_000,
@@ -115,6 +116,46 @@ export async function signBrowserReplayReceipt({
   };
   const signature = edSign(null, Buffer.from(canonical(signed)), reviewerPrivateKey);
   return { signed, signatureAlgorithm: "Ed25519", signatureBase64: signature.toString("base64") };
+}
+
+/**
+ * Only public receipt-issuance entry point: EXECUTE fresh browser replay first.
+ * There is intentionally no public API to sign a caller-supplied PASS object.
+ * Caller must keep the reviewer private key outside model and app execution.
+ */
+export async function reviewRecoveryAndSign({
+  evidenceDirectory, browser, goal, originalPrompt,
+  reviewerPrivateKey, reviewerKeyId, audience, operationId,
+  now = new Date(),
+}) {
+  if (!browser || typeof browser.newContext !== "function") {
+    return {
+      disposition: "HOLD_RECONCILIATION_REQUIRED",
+      reason: "REVIEWER_BROWSER_EXECUTOR_REQUIRED",
+      receipt: null,
+    };
+  }
+  const reconciliation = await reconcileRecoveryReadOnly({
+    evidenceDirectory, browser, goal, originalPrompt,
+  });
+  if (reconciliation.status !== "BROWSER_REPLAYED_PROVIDER_UNATTESTED"
+      || reconciliation.browserReplay?.passed !== true) {
+    return {
+      disposition: "HOLD_RECONCILIATION_REQUIRED",
+      reason: reconciliation.reason,
+      receipt: null,
+      reconciliation,
+    };
+  }
+  const receipt = await signBrowserReplayReceipt({
+    reconciliation, goal, originalPrompt, reviewerPrivateKey,
+    reviewerKeyId, audience, operationId, browserVersion: browser.version(),
+    now,
+  });
+  return {
+    disposition: "REVIEW_ONLY_SIGNED_BROWSER_REPLAY",
+    receipt, reconciliation,
+  };
 }
 
 /**
