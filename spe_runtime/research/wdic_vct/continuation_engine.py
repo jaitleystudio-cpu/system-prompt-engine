@@ -287,9 +287,8 @@ class WDICContinuationEngine:
             verdict = "UNQUALIFIED_NO_REQUIREMENTS"
         else:
             # This text-only research reviewer is not a proof authority.
-            # Even if a future caller supplies claim text that looks like a receipt,
-            # qualification requires the existing independent verifier first.
-            verdict = "DEFICIT_DETECTED" if unverified_count > 0 else "QUALIFIED"
+            # QUALIFIED is not reachable until the independent verifier is wired.
+            verdict = "DEFICIT_DETECTED"
 
         # Economic savings calculation:
         # A typical ChatGPT Pro conversation reviewing a report and generating next steps
