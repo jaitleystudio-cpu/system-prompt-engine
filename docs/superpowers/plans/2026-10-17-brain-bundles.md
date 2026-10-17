@@ -16,12 +16,12 @@
 - Report source-bundle regression qualification only; intelligence gain, provider currency, production deployment and training remain separate.
 
 ## Tasks (native execution)
-1. [ ] Add failing tests for deterministic fingerprints, registry validation, version/no-op behavior, corruption, failed gates, input mutation and atomic pointer recovery.
-2. [ ] Implement packaging/state runner with atomic writes, fixed source policy, bounded actual child-process gates and receipts.
-3. [ ] Add end-to-end CLI tests and real SPE compile/parser/Unicode regression checks. Run Node 22 and 24.
-4. [ ] Implement authenticated GitHub state transport with mocked HTTP negative cases: missing ref vs denied access, CAS conflict, malformed state and no token logging.
-5. [ ] Wire a nightly/default-branch workflow plus PR tests. Document scope, activation, local use, state branch and recovery.
-6. [ ] Run the real updater twice to demonstrate update then unchanged; run focused regression and inspect diff. Commit only this feature and prepare a reviewable handoff.
+1. [x] Add failing tests for deterministic fingerprints, registry validation, version/no-op behavior, corruption, failed gates, input mutation and atomic pointer recovery.
+2. [x] Implement packaging/state runner with atomic writes, fixed source policy, bounded actual child-process gates and receipts.
+3. [x] Add end-to-end CLI tests and real SPE compile/parser/Unicode regression checks. Run Node 22 and 24.
+4. [x] Implement authenticated GitHub state transport with mocked HTTP negative cases: missing ref vs denied access, CAS conflict, malformed state and no token logging.
+5. [x] Wire a nightly/default-branch workflow plus PR tests. Document scope, activation, local use, state branch and recovery.
+6. [x] Run the real updater twice to demonstrate update then unchanged; run focused regression and inspect diff. Commit only this feature and prepare a reviewable handoff.
 
 ## Review focus
 - A gate that exits zero after modifying an input must not qualify the old snapshot.
@@ -32,3 +32,7 @@
 
 ## Evidence policy
 Record real exits and output digests, tested commands, source commit and snapshot hashes. Preserve failed receipts without modifying existing tests to manufacture PASS. All automation remains inactive remotely until the workflow reaches the default branch. Model optimization/training is not implemented by this slice.
+
+## Fresh review and repair
+
+The independent review of `a74e0f52` found five Important defects and no Critical defects: cross-gate mutation, missing remote immutable verification, surviving-receipt history reset, Contents API size incompatibility, and unbound helper inputs. All five were accepted for the single fix pass. New negative tests reproduced the mutation/history/remote restore defects before their fixes; helper inputs and workflow path filters were expanded. Runtime rollout, learning gains, live providers, malicious trusted-main code and external GitHub activation remain outside the measured scope.

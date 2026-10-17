@@ -38,10 +38,22 @@ export class GitHubBrainState {
     if (head) {
       const commit = await this.api('/git/commits/' + head);
       if (!sha(commit.tree?.sha)) throw new Error('Invalid state tree'); tree = commit.tree.sha;
-      const file = await this.api('/contents/state.json?ref=' + head);
-      if (file.encoding !== 'base64' || typeof file.content !== 'string') throw new Error('Unsupported remote state encoding');
-      const bytes = Buffer.from(file.content, 'base64'); if (bytes.length > 4_500_000) throw new Error('State exceeds byte limit');
-      bundle = validateBundle(JSON.parse(bytes.toString('utf8')));
+      // Resolve both files from the exact commit tree, then use the Git Blobs API.
+      // Contents JSON cannot return normal base64 content for files above 1 MB.
+      const snapshot = await this.api('/git/trees/' + tree + '?recursive=1');
+      if (snapshot.truncated !== false || !Array.isArray(snapshot.tree)) throw new Error('Incomplete state tree');
+      const readBundle = async path => {
+        const entries = snapshot.tree.filter(entry => entry.path === path);
+        if (entries.length !== 1 || entries[0].type !== 'blob' || !sha(entries[0].sha)) throw new Error('Missing immutable/state blob: ' + path);
+        const file = await this.api('/git/blobs/' + entries[0].sha);
+        if (file.encoding !== 'base64' || typeof file.content !== 'string') throw new Error('Unsupported remote state encoding');
+        const bytes = Buffer.from(file.content, 'base64');
+        if (bytes.length > 4_500_000) throw new Error('State exceeds byte limit');
+        return validateBundle(JSON.parse(bytes.toString('utf8')));
+      };
+      bundle = await readBundle('state.json');
+      const immutable = await readBundle('bundles/' + bundle.bundleDigest + '.json');
+      if (canonical(bundle) !== canonical(immutable)) throw new Error('Remote immutable bundle mismatch');
       atomicJson(join(store,'bundles',bundle.bundleDigest + '.json'),bundle);
       atomicJson(join(store,'current.json'),bundle);
     }

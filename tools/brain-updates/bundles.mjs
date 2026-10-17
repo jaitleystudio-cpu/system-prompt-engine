@@ -87,13 +87,29 @@ export function atomicJson(path, value) {
   }
 }
 
-function readCurrent(store) {
+function readCurrent(store, report) {
   const path = join(store, 'current.json');
   if (!existsSync(path)) {
     // An existing history must never silently become a fresh version after pointer loss.
-    if (existsSync(join(store, 'bundles'))) throw new Error('Missing pointer in existing brain history');
+    if (existsSync(join(store, 'bundles'))) {
+      report.historyDetected = true; throw new Error('Missing pointer in existing brain history');
+    }
+    if (existsSync(join(store, 'last-run.json'))) {
+      report.historyDetected = true;
+      const receipt = JSON.parse(readFileSync(join(store, 'last-run.json'), 'utf8'));
+      if (receipt.status !== 'HELD' || receipt.previousVersion !== null || receipt.historyDetected !== false)
+        throw new Error('Missing pointer with surviving brain history receipt');
+      report.historyDetected = false;
+    }
+    if (existsSync(join(store, '.remote.json'))) {
+      report.historyDetected = true;
+      const remote = JSON.parse(readFileSync(join(store, '.remote.json'), 'utf8'));
+      if (remote.head !== null) throw new Error('Missing pointer with surviving remote history');
+      report.historyDetected = false;
+    }
     return null;
   }
+  report.historyDetected = true;
   const current = validateBundle(JSON.parse(readFileSync(path, 'utf8')));
   const immutable = validateBundle(JSON.parse(readFileSync(join(store, 'bundles', current.bundleDigest + '.json'), 'utf8')));
   if (canonical(current) !== canonical(immutable)) throw new Error('Pointer does not match immutable brain bundle');
@@ -121,19 +137,22 @@ export async function runBrainUpdate(options) {
   const lock = join(store, '.lock'); let locked = false;
   const report = { schema: 'spe.brain-run.v1', scope: SCOPE, runId: randomUUID(),
     observedAt: options.now ?? new Date().toISOString(), status: 'HELD', sourceCommit,
-    productionDeployed: false, modelTrainingPerformed: false, gates: [] };
+    productionDeployed: false, modelTrainingPerformed: false, previousVersion: null, historyDetected: false, gates: [] };
   try {
     if (!['check', 'update'].includes(mode) || !/^[a-f0-9]{40}$/.test(sourceCommit)) throw new Error('Invalid mode or exact source commit');
     const date = new Date(report.observedAt); if (!Number.isFinite(date.getTime())) throw new Error('Invalid observation date');
     report.businessDateIst = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
     mkdirSync(store, { recursive: true }); mkdirSync(lock); locked = true;
-    const previous = readCurrent(store);
+    const previous = readCurrent(store, report);
+    report.previousVersion = previous?.manifest.version ?? null;
     const before = captureSources(root, sources, gates);
     report.fingerprint = before.fingerprint; report.observedSourceDigests = before.observations;
-    for (const gate of gates) report.gates.push(executeGate(root, gate));
-    const after = captureSources(root, sources, gates);
-    if (canonical(before.observations) !== canonical(after.observations)) throw new Error('Inputs or evaluation gates changed during qualification');
-    if (report.gates.some(g => !g.passed)) throw new Error('Regression gate failed or timed out');
+    for (const gate of gates) {
+      report.gates.push(executeGate(root, gate));
+      const after = captureSources(root, sources, gates);
+      if (canonical(before.observations) !== canonical(after.observations)) throw new Error('Inputs or evaluation gates changed during qualification');
+      if (!report.gates.at(-1).passed) throw new Error('Regression gate failed or timed out');
+    }
     if (previous?.manifest.fingerprint === before.fingerprint) {
       report.status = 'UNCHANGED'; report.version = previous.manifest.version; report.bundleDigest = previous.bundleDigest;
     } else {

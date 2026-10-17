@@ -3,6 +3,16 @@ export const SOURCES = [
   { path: 'apps/web/src/engine/modelAtlas/modelAtlasRegistry.json', kind: 'registry' },
   ...[
     'apps/web/src/engine/plainEnglishParser.ts',
+    'apps/web/src/App.tsx',
+    'apps/web/src/engine/PlainEnglishShowcase.tsx',
+    'apps/web/src/engine/plain-english-showcase.css',
+    'apps/web/src/engine/promptSynthesizer.ts',
+    'apps/web/src/engine/multilingualDualPrompt.ts',
+    'apps/web/src/engine/proofReceipt.ts',
+    'apps/web/src/engine/hashUtils.ts',
+    'apps/web/src/engine/entitlementVerifier.ts',
+    'apps/web/src/engine/ed25519Verifier.ts',
+    'apps/web/src/engine/eval/assertionEngine.ts',
     'apps/web/src/engine/promptSynthesizer.mjs',
     'apps/web/src/engine/markdownExportCore.ts',
     'apps/web/src/engine/modelTranscompiler.ts',
@@ -15,6 +25,7 @@ export const SOURCES = [
 ];
 export const GATES = [
   { id: 'brain-bundle-recovery', path: 'tests/brain-updates/bundles.test.mjs' },
+  { id: 'brain-policy-inputs', path: 'tests/brain-updates/policy.test.mjs' },
   { id: 'brain-cli', path: 'tests/brain-updates/runner.test.mjs' },
   { id: 'brain-distribution', path: 'tests/brain-updates/github-state.test.mjs' },
   { id: 'instruction-contracts', path: 'tests/brain-updates/contract.test.mjs' },

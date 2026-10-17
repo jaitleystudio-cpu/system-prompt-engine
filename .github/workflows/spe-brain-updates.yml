@@ -16,22 +16,22 @@ on:
       - 'tools/brain-updates/**'
       - 'tests/brain-updates/**'
       - '.github/workflows/spe-brain-updates.yml'
-      - 'apps/web/src/engine/plainEnglishParser.ts'
-      - 'apps/web/src/engine/promptSynthesizer.mjs'
-      - 'apps/web/src/engine/modelAtlas/**'
-      - 'packages/spe-plugin/src/tools.ts'
+      - 'apps/web/src/engine/**'
+      - 'apps/web/src/App.tsx'
+      - 'apps/web/scripts/test-plain-english-showcase.mjs'
+      - 'apps/web/scripts/test-assertion-engine.mjs'
+      - 'packages/spe-plugin/src/**'
   push:
     branches: [main]
     paths:
       - 'tools/brain-updates/**'
       - 'tests/brain-updates/**'
       - '.github/workflows/spe-brain-updates.yml'
-      - 'apps/web/src/engine/plainEnglishParser.ts'
-      - 'apps/web/src/engine/promptSynthesizer.mjs'
-      - 'apps/web/src/engine/markdownExportCore.ts'
-      - 'apps/web/src/engine/modelTranscompiler.ts'
-      - 'apps/web/src/engine/modelAtlas/**'
-      - 'packages/spe-plugin/src/tools.ts'
+      - 'apps/web/src/engine/**'
+      - 'apps/web/src/App.tsx'
+      - 'apps/web/scripts/test-plain-english-showcase.mjs'
+      - 'apps/web/scripts/test-assertion-engine.mjs'
+      - 'packages/spe-plugin/src/**'
 
 permissions:
   contents: read

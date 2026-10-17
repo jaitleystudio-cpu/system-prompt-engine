@@ -62,10 +62,8 @@ behavior('qualify, publish, restore and repeat preserves the exact bundle and ve
     if(path==='/git/trees'){const sha=identity();trees.set(sha,data.tree);return response(201,{sha});}
     if(path==='/git/commits'){const sha=identity();commits.set(sha,data);return response(201,{sha});}
     if(path.startsWith('/git/commits/'))return response(200,{tree:{sha:commits.get(head).tree}});
-    if(path.startsWith('/contents/')){
-      const entry=trees.get(commits.get(head).tree).find(x=>x.path==='state.json');
-      return response(200,{encoding:'base64',content:Buffer.from(blobs.get(entry.sha)).toString('base64')});
-    }
+    if(path.startsWith('/git/trees/'))return response(200,{truncated:false,tree:trees.get(commits.get(head).tree)});
+    if(path.startsWith('/git/blobs/'))return response(200,{encoding:'base64',content:Buffer.from(blobs.get(path.split('/').at(-1))).toString('base64')});
     if(path==='/git/refs' || path.startsWith('/git/refs/')){
       if(head)assert.equal(data.force,false);
       assert.deepEqual(commits.get(data.sha).parents,head?[head]:[]);
@@ -85,3 +83,35 @@ behavior('qualify, publish, restore and repeat preserves the exact bundle and ve
   assert.equal((await runBrainUpdate({...opts,store:restored})).status,'UNCHANGED');
   await client.publish(restored); // A new execution receipt, without a content/version bump.
 });
+for (const scenario of ['missing immutable', 'mismatched immutable', 'large bundle']) {
+  behavior('pinned remote restore: '+scenario, async t => {
+    const {runBrainUpdate}=await import('../../tools/brain-updates/bundles.mjs');
+    const root=temp(t),store=join(root,'state');
+    const content=scenario==='large bundle'?'x'.repeat(800_000):'instruction';
+    writeFileSync(join(root,'one.txt'),content);writeFileSync(join(root,'two.txt'),content);
+    writeFileSync(join(root,'gate.mjs'),'process.exit(0)');
+    await runBrainUpdate({root,store,sources:['one.txt','two.txt'].map(path=>({path,kind:'implementation'})),
+      gates:[{id:'gate',path:'gate.mjs'}],sourceCommit:'a'.repeat(40),mode:'update'});
+    const current=JSON.parse(readFileSync(join(store,'current.json')));
+    const immutable=structuredClone(current);
+    if(scenario==='mismatched immutable'){
+      immutable.manifest.qualifiedAt='different';
+      const {canonical,digest}=await import('../../tools/brain-updates/bundles.mjs');
+      immutable.bundleDigest=digest(canonical({schema:immutable.schema,manifest:immutable.manifest,components:immutable.components}));
+    }
+    const calls=[];
+    const client=new api.GitHubBrainState({repository:'owner/repo',token:'fixture',request:async url=>{
+      calls.push(url);const path=new URL(url).pathname.replace('/repos/owner/repo','');
+      if(path==='')return response(200,{});
+      if(path.startsWith('/git/ref/'))return response(200,{object:{sha:'a'.repeat(40)}});
+      if(path.startsWith('/git/commits/'))return response(200,{tree:{sha:'b'.repeat(40)}});
+      if(path.startsWith('/git/trees/'))return response(200,{truncated:false,tree:[{path:'state.json',type:'blob',sha:'c'.repeat(40)},
+        ...(scenario==='missing immutable'?[]:[{path:'bundles/'+current.bundleDigest+'.json',type:'blob',sha:'d'.repeat(40)}])]});
+      if(path.startsWith('/git/blobs/'))return response(200,{encoding:'base64',content:Buffer.from(JSON.stringify(path.endsWith('c'.repeat(40))?current:immutable)).toString('base64')});
+      if(path.startsWith('/contents/'))return response(200,scenario==='large bundle'?{encoding:'none',content:''}:{encoding:'base64',content:Buffer.from(JSON.stringify(current)).toString('base64')});
+      throw new Error('Unexpected path '+path);
+    }});
+    if(scenario==='large bundle')assert.equal((await client.load(join(root,'restored'))).bundleDigest,current.bundleDigest);
+    else await assert.rejects(()=>client.load(join(root,'restored')),/immutable|mismatch|missing/i);
+  });
+}

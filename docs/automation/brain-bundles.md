@@ -4,7 +4,7 @@ This adds an automatically versioned **source-bundle distribution channel**, ext
 
 ## What runs
 
-`node tools/brain-updates/run.mjs --check` fingerprints the committed allowlist and executes six actual regression commands. `--update` also writes a bundle and atomically advances the local pointer after successful checks. Default state is the git-ignored `.spe/brain-updates` directory. Use `--state /absolute/directory` for an isolated rehearsal.
+`node tools/brain-updates/run.mjs --check` fingerprints the committed allowlist and executes seven actual regression commands. `--update` also writes a bundle and atomically advances the local pointer after successful checks. Default state is the git-ignored `.spe/brain-updates` directory. Use `--state /absolute/directory` for an isolated rehearsal.
 
 The workflow runs tests on Node 22/24. On default-branch changes, manual dispatch or the desired 02:17/06:17 IST schedules, it restores data state, executes checks and publishes to `spe-brain-state`. GitHub cron is best-effort, not a precise timing/availability guarantee. The 06:17 run supplies another recovery opportunity. It does not declare the previous run successful.
 
@@ -18,11 +18,11 @@ The manifest records exact source commit, normalized component content/digests, 
 
 ## Failure/recovery behavior
 
-- Nonzero/timeout gates, duplicate model IDs, malformed registries and gate/source mutation hold the candidate.
-- Traversal, source symlinks, excessive files/bytes, corrupt pointers and missing immutable bundles fail closed.
+- Nonzero/timeout gates, duplicate model IDs, malformed registries and gate/source mutation hold the candidate before another check runs.
+- Traversal, source symlinks, excessive files/bytes, corrupt pointers, missing immutable bundles and surviving-history receipts without a pointer fail closed.
 - Write the immutable bundle before replacing the pointer; a partial candidate must not replace the last known good pointer.
 - Local state uses an exclusive directory lock. It is single-host coordination, not a transactional distributed lease. A crashed local process can leave a lock; inspect the process/state before removing it. Cloud jobs restore state onto a fresh runner, so stale local locks are not distributed.
-- GitHub repository access failure is distinct from an absent state branch. Corrupt/missing remote state on an existing branch never becomes an empty baseline.
+- GitHub repository access failure is distinct from an absent state branch. Both the current and immutable bundle are independently read from the pinned Git tree through the bounded Git Blobs API and must match. Corrupt/missing remote state on an existing branch never becomes an empty baseline.
 - Upload failures/conflicts fail the workflow. No blind forced retry. A later run reads current remote state before retrying.
 - The execution receipt records attempts. A failed remote publish is not production success. Git history and the final state-publish result must be consulted separately from a local UPDATED receipt.
 
@@ -30,7 +30,7 @@ The manifest records exact source commit, normalized component content/digests, 
 
 PR checks have read-only permissions. Only trusted main jobs receive repository write permission, and the token is supplied only to state transport steps. Child regression processes receive a reduced environment without inherited payment/provider credentials. This is not an OS sandbox against malicious trusted-main code. Restrict the write-capable workflow/branch through normal repository controls; GitHub's contents permission is repository-scoped, not a cryptographic single-branch capability.
 
-Source package inputs are fixed in `tools/brain-updates/policy.mjs`; no downloaded instructions/custom CLI command is executed. Registry packaging does not correct false upstream claims or prove internal IDs are valid provider API names. Qualify real model calls, hidden holdouts and matched-budget learning separately before a future runtime rollout. No remote source bundle is automatically executed by the browser.
+Known runtime helpers and files read by checks are included in the fingerprint. New imports or file reads require a policy review; this is not an automatic dependency-discovery system. Source package inputs are fixed in `tools/brain-updates/policy.mjs`; no downloaded instructions/custom CLI command is executed. Registry packaging does not correct false upstream claims or prove internal IDs are valid provider API names. Qualify real model calls, hidden holdouts and matched-budget learning separately before a future runtime rollout. No remote source bundle is automatically executed by the browser.
 
 ## Activation and verification
 

@@ -124,3 +124,27 @@ behavior('returning to older content creates a new auditable version, not a hist
   assert.equal(back.status,'UPDATED'); assert.equal(back.version,'0.1.2');
   assert.equal(back.fingerprint,a.fingerprint); assert.notEqual(back.bundleDigest,a.bundleDigest);
 });
+behavior('cross-gate mutation is held before another gate can restore the snapshot', async t => {
+  const {root,opts}=fixture(t);
+  const old=readFileSync(join(root,'prompt.mjs'),'utf8');
+  writeFileSync(join(root,'gate.mjs'),'import fs from "node:fs";fs.writeFileSync("prompt.mjs","new");');
+  writeFileSync(join(root,'restore.mjs'),'import fs from "node:fs";fs.writeFileSync("prompt.mjs",'+JSON.stringify(old)+');');
+  opts.gates.push({id:'restore',path:'restore.mjs'});
+  const r=await api.runBrainUpdate(opts);
+  assert.equal(r.status,'HELD');assert.equal(r.gates.length,1);
+});
+behavior('surviving history receipts and remote provenance forbid silent reinitialization', async t => {
+  const {store,opts}=fixture(t);await api.runBrainUpdate(opts);
+  rmSync(join(store,'current.json'));rmSync(join(store,'bundles'),{recursive:true});
+  assert.equal((await api.runBrainUpdate(opts)).status,'HELD');
+  assert.equal((await api.runBrainUpdate(opts)).status,'HELD');
+  rmSync(join(store,'last-run.json'));
+  writeFileSync(join(store,'.remote.json'),JSON.stringify({head:'a'.repeat(40)}));
+  assert.equal((await api.runBrainUpdate(opts)).status,'HELD');
+});
+behavior('an initial failed attempt remains retryable without a predecessor', async t => {
+  const {root,opts}=fixture(t);writeFileSync(join(root,'gate.mjs'),'process.exit(1)');
+  assert.equal((await api.runBrainUpdate(opts)).status,'HELD');
+  writeFileSync(join(root,'gate.mjs'),'process.exit(0)');
+  assert.equal((await api.runBrainUpdate(opts)).status,'UPDATED');
+});
