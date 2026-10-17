@@ -6,6 +6,8 @@ import copy
 import hashlib
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -227,3 +229,32 @@ def test_real_browser_fixture_export_when_explicitly_available():
     assert result["execution_record"]["browser_passed_artifact_digest"] == (
         manifest["browserPassedArtifact"]["digest"]
     )
+
+
+def test_cli_creates_distinct_integrity_checked_spe(tmp_path):
+    manifest = fixture_manifest(tmp_path)
+    source = tmp_path / "original.spe"
+    destination = tmp_path / "annotated.spe"
+    source.write_text(dumps_spe_artifact(fixture_spe()), encoding="utf8")
+    (tmp_path / "living-spe-recovery.json").write_text(
+        json.dumps(manifest), encoding="utf8"
+    )
+    project_root = Path(__file__).resolve().parents[2]
+    command = [
+        sys.executable, "tools/attach_spe_crash_recovery.py",
+        "--source-spe", str(source),
+        "--manifest", str(tmp_path / "living-spe-recovery.json"),
+        "--evidence-dir", str(tmp_path),
+        "--output-spe", str(destination),
+    ]
+    child = subprocess.run(command, cwd=project_root, capture_output=True, text=True)
+    assert child.returncode == 0, child.stderr
+    assert "REVIEW_ONLY_UNATTESTED" in child.stdout
+    original_text = source.read_text(encoding="utf8")
+    assert "execution_record" not in original_text
+    out = json.loads(destination.read_text(encoding="utf8"))
+    assert out["execution_record"]["execution_authority"] == "NONE"
+    assert verify_integrity(out)["integrity"]["state"] == "VERIFIED"
+
+    repeat = subprocess.run(command, cwd=project_root, capture_output=True, text=True)
+    assert repeat.returncode != 0, "Never overwrite a previous .spe export"
