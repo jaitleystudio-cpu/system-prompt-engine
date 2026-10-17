@@ -135,6 +135,28 @@ try {
   assert.equal(forged.status, "HOLD_RECONCILIATION_REQUIRED");
   assert.equal(forged.reason, "INCONSISTENT_ATTEMPT_LINEAGE");
 
+  const conflictingDir = join(dir, "conflicting");
+  await cp(join(dir, "positive"), conflictingDir, { recursive: true });
+  const conflictingPath = join(conflictingDir, "living-spe-recovery.json");
+  const conflictingRecord = JSON.parse(await readFile(conflictingPath, "utf8"));
+  conflictingRecord.qualification = "FAILED_BOUNDED_REPAIR";
+  await writeFile(conflictingPath, JSON.stringify(sealCheckpoint(conflictingRecord)));
+  const conflicting = await reconcileRecoveryReadOnly({
+    evidenceDirectory: conflictingDir, goal, originalPrompt: goal, browser,
+  });
+  assert.equal(conflicting.reason, "QUALIFICATION_CONTRADICTS_OBSERVED_ATTEMPTS");
+
+  const scopeDir = join(dir, "weakened-scope");
+  await cp(join(dir, "positive"), scopeDir, { recursive: true });
+  const scopePath = join(scopeDir, "living-spe-recovery.json");
+  const scopeRecord = JSON.parse(await readFile(scopePath, "utf8"));
+  scopeRecord.acceptance.selectors = ["#spe-app"];
+  await writeFile(scopePath, JSON.stringify(sealCheckpoint(scopeRecord)));
+  const scopeVerdict = await reconcileRecoveryReadOnly({
+    evidenceDirectory: scopeDir, goal, originalPrompt: goal, browser,
+  });
+  assert.equal(scopeVerdict.reason, "FROZEN_ACCEPTANCE_CONTRACT_MISMATCH");
+
   const noBrowser = await reconcileRecoveryReadOnly({
     evidenceDirectory: join(dir, "positive"), goal, originalPrompt: goal,
   });
