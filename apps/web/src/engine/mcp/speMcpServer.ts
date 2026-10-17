@@ -32,6 +32,21 @@ export interface JsonRpcResponse {
   };
 }
 
+export interface RequestBillingContext {
+  customerId?: string;
+  isPaid?: boolean;
+  isPro?: boolean;
+  tier?: "free" | "pro" | "team" | "enterprise";
+  debitedAmountMicroCents?: number;
+  debitedUsdString?: string;
+  remainingBalanceCents?: number;
+}
+
+export interface McpRequestContext {
+  clientIp?: string;
+  billing?: RequestBillingContext;
+}
+
 export class SpeMcpServer {
   private gateway = new PromptGatewayApi();
 
@@ -131,7 +146,10 @@ export class SpeMcpServer {
    * Dispatches and handles stateless JSON-RPC 2.0 MCP request(s).
    * Supports single requests, batches, notifications, and prompts/resources discovery.
    */
-  public async handleJsonRpcRequest(request: any): Promise<JsonRpcResponse | JsonRpcResponse[] | null> {
+  public async handleJsonRpcRequest(
+    request: any,
+    context?: McpRequestContext
+  ): Promise<JsonRpcResponse | JsonRpcResponse[] | null> {
     if (Array.isArray(request)) {
       if (request.length === 0) {
         return {
@@ -145,7 +163,7 @@ export class SpeMcpServer {
       }
       const responses: JsonRpcResponse[] = [];
       for (const item of request) {
-        const res = await this.handleSingleRequest(item);
+        const res = await this.handleSingleRequest(item, context);
         if (res !== null) {
           responses.push(res);
         }
@@ -153,10 +171,13 @@ export class SpeMcpServer {
       return responses.length > 0 ? responses : null;
     }
 
-    return this.handleSingleRequest(request);
+    return this.handleSingleRequest(request, context);
   }
 
-  private async handleSingleRequest(request: any): Promise<JsonRpcResponse | null> {
+  private async handleSingleRequest(
+    request: any,
+    context?: McpRequestContext
+  ): Promise<JsonRpcResponse | null> {
     if (!request || typeof request !== "object") {
       return {
         jsonrpc: "2.0",
@@ -308,7 +329,7 @@ export class SpeMcpServer {
         }
 
         try {
-          const output = await this.executeTool(toolName, args);
+          const output = await this.executeTool(toolName, args, context);
           if (isNotification) return null;
           return {
             jsonrpc: "2.0",
@@ -320,16 +341,34 @@ export class SpeMcpServer {
                   text: typeof output === "string" ? output : JSON.stringify(output, null, 2),
                 },
               ],
+              meta: {
+                billing: context?.billing || {
+                  tier: "free",
+                  debitedUsdString: "$0.000",
+                },
+              },
             },
           };
         } catch (err: any) {
           if (isNotification) return null;
+          const isPaymentRequired = err.message?.startsWith("PAYMENT_REQUIRED");
           return {
             jsonrpc: "2.0",
             id,
             error: {
-              code: -32603,
-              message: `Tool execution failed: ${err.message || String(err)}`,
+              code: isPaymentRequired ? -32002 : -32603,
+              message: isPaymentRequired ? err.message : `Tool execution failed: ${err.message || String(err)}`,
+              data: isPaymentRequired
+                ? {
+                    errorType: "PAYMENT_REQUIRED",
+                    pricingSchedule: "https://systempromptengine.com/pricing",
+                    rates: {
+                      standard: "$0.001",
+                      pro: "$0.005",
+                      deep_reasoning: "$0.010",
+                    },
+                  }
+                : undefined,
             },
           };
         }
@@ -493,7 +532,11 @@ export class SpeMcpServer {
   /**
    * Execute an individual tool invocation.
    */
-  public async executeTool(toolName: string, args: Record<string, any>): Promise<any> {
+  public async executeTool(
+    toolName: string,
+    args: Record<string, any>,
+    context?: McpRequestContext
+  ): Promise<any> {
     switch (toolName) {
       case "search_spe_prompts": {
         return this.gateway.searchPrompts({
@@ -525,6 +568,25 @@ export class SpeMcpServer {
         if (!args.targetDialect) {
           throw new Error("Missing required argument: 'targetDialect'");
         }
+
+        const textLen = typeof args.promptText === "string" ? args.promptText.length : 0;
+        const proDialects = new Set([
+          "cursor-rules",
+          "windsurf-rules",
+          "antigravity-skills",
+          "gemini-agent",
+        ]);
+        const isProDialect = proDialects.has(args.targetDialect);
+        const exceedsFreeLimit = textLen > 5000 || isProDialect;
+
+        if (context && exceedsFreeLimit && !context.billing?.isPaid && !context.billing?.isPro) {
+          throw new Error(
+            `PAYMENT_REQUIRED: Compilation exceeds Free Tier allowance (${
+              textLen > 5000 ? `${textLen} chars > 5,000 char free limit` : `pro dialect '${args.targetDialect}'`
+            }). Provide an authenticated API key via 'Authorization: Bearer spe_live_...' or upgrade at https://systempromptengine.com/pricing`
+          );
+        }
+
         return this.gateway.compileForModel(
           args.promptText,
           args.targetDialect as ModelDialect,
