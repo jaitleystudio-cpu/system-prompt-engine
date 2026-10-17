@@ -17,7 +17,12 @@ import argparse
 import json
 import os
 import tempfile
+import sys
 from pathlib import Path
+
+# Direct script invocation sets sys.path[0] to tools/, not the repository root.
+# Resolve our own repository root; never require an external PYTHONPATH.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from spe_runtime.portability.browser_recovery_lineage import (
     attach_recovery_to_spe,
@@ -52,9 +57,9 @@ def main() -> int:
             f.write(data)
             f.flush()
             os.fsync(f.fileno())
-        if output.exists():
-            raise FileExistsError("output appeared while writing")
-        os.replace(staged, output)
+        # Hard-link is atomic and fails with FileExistsError: unlike os.replace
+        # it never clobbers a concurrently created .spe artifact.
+        os.link(staged, output)
     finally:
         if os.path.exists(staged):
             os.unlink(staged)
