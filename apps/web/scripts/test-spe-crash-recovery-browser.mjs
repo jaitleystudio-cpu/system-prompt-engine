@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
@@ -15,7 +15,8 @@ import {
   inspectCandidateInBrowser,
   runCrashRecovery,
 } from "./spe-crash-recovery-harness.mjs";
-import { inspectRecoveryCheckpoint } from "./spe-recovery-journal-custody.mjs";
+import { inspectRecoveryCheckpoint, sealCheckpoint } from "./spe-recovery-journal-custody.mjs";
+import { reconcileRecoveryReadOnly } from "./spe-recovery-reconciliation.mjs";
 
 const broken = [
   '<!doctype html><html><body>',
@@ -94,6 +95,53 @@ try {
     generate: async () => { forbiddenRetries++; return { html: repaired }; },
   }), /EXISTING_RECOVERY_RECONCILIATION_REQUIRED/);
   assert.equal(forbiddenRetries, 0, "completed jobs cannot be blindly replayed");
+
+  const reconciled = await reconcileRecoveryReadOnly({
+    evidenceDirectory: join(dir, "positive"), goal, originalPrompt: goal, browser,
+  });
+  assert.equal(reconciled.status, "BROWSER_REPLAYED_PROVIDER_UNATTESTED");
+  assert.equal(reconciled.browserReplay.passed, true);
+  assert.equal(reconciled.browserReplay.candidateDigest, succeeded.browserPassedArtifact.digest);
+  assert.equal(reconciled.nextModelCallAuthorized, false);
+  assert.equal(reconciled.retryEligible, false);
+  assert.equal(reconciled.providerOutcomeProven, false);
+  assert.equal(reconciled.releaseAuthorized, false);
+
+  const fakeGoal = await reconcileRecoveryReadOnly({
+    evidenceDirectory: join(dir, "positive"), goal: "different goal", originalPrompt: goal, browser,
+  });
+  assert.equal(fakeGoal.status, "HOLD_RECONCILIATION_REQUIRED");
+  assert.equal(fakeGoal.nextModelCallAuthorized, false);
+
+  const tamperDir = join(dir, "tamper");
+  await cp(join(dir, "positive"), tamperDir, { recursive: true });
+  const tamperedPath = join(tamperDir, succeeded.browserPassedArtifact.file);
+  await writeFile(tamperedPath, "<html><body>Fake PASS</body></html>");
+  const tampered = await reconcileRecoveryReadOnly({
+    evidenceDirectory: tamperDir, goal, originalPrompt: goal, browser,
+  });
+  assert.equal(tampered.reason, "MISSING_OR_TAMPERED_ARTIFACT_BYTES");
+
+  // Even self-resealing a forged local PASS cannot bypass fresh-browser replay.
+  const forgedDir = join(dir, "forged");
+  await cp(join(dir, "positive"), forgedDir, { recursive: true });
+  const forgedPath = join(forgedDir, "living-spe-recovery.json");
+  const forgedRecord = JSON.parse(await readFile(forgedPath, "utf8"));
+  forgedRecord.attempts[1].observation.checks.interactionWorking = false;
+  await writeFile(forgedPath, JSON.stringify(sealCheckpoint(forgedRecord)));
+  const forged = await reconcileRecoveryReadOnly({
+    evidenceDirectory: forgedDir, goal, originalPrompt: goal, browser,
+  });
+  assert.equal(forged.status, "HOLD_RECONCILIATION_REQUIRED");
+  assert.equal(forged.reason, "INCONSISTENT_ATTEMPT_LINEAGE");
+
+  const noBrowser = await reconcileRecoveryReadOnly({
+    evidenceDirectory: join(dir, "positive"), goal, originalPrompt: goal,
+  });
+  assert.equal(noBrowser.reason, "INDEPENDENT_BROWSER_REQUIRED");
+
+  console.log("PASS R3: independent fresh-browser replay; no implicit provider or retry authority");
+  console.log("PASS R3: tampered HTML, fake goal, and forged self-resealed observation held");
 
 
   const deceptive = await runCrashRecovery({
