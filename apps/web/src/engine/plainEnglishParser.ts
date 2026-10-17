@@ -116,7 +116,7 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
   }
 
   // 4. Goal extraction
-  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*(?:[;,]|\s+and\s+|\s+with\s+)?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\band\b|[.;]|$))/i;
+  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*(?:[;,]|\s+and\s+|\s+with\s+)?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|[.;]|$))/i;
   const goalClauseMatch = text.match(goalClausePattern);
 
   if (goalClauseMatch && goalClauseMatch[1]) {
