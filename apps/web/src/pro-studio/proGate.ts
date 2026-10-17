@@ -1,6 +1,7 @@
 // Pro gate. The ONLY source of truth is the server: GET /api/pro/session verifies the Pro access key
-// (Ed25519, server-side) on every request. The browser stores the pasted key and renders the result.
-// No accounts, no passwords, no payments are taken here; live key issuance needs Antigravity's go-ahead.
+// (Ed25519, server-side) on every request, and every tool request is verified again. The browser stores the
+// pasted key and renders the result. No accounts, no passwords, no payments are taken here; live key issuance
+// needs Antigravity's go-ahead.
 export type AccessState = "checking" | "pro" | "locked" | "offline";
 export interface Access { state: AccessState; tier: "pro" | "team" | null; label: string; detail: string; test: boolean; reason: string | null }
 export interface SessionOk { ok: true; tier: "pro" | "team"; exp: number; sub: string; test: boolean }
@@ -14,6 +15,7 @@ export const REASON_TEXT: Record<string, string> = {
   NOT_YET_VALID: "This key isn't valid yet. Check your device clock.",
   REVOKED_KEY: "This key has been revoked.",
   BAD_CLAIMS: "This key is missing required details.",
+  RATE_LIMITED: "Too many requests. Wait a minute and try again.",
 };
 export const CHECKING: Access = { state: "checking", tier: null, label: "Checking key…", detail: "Verifying your Pro access key with the SPE Pro service.", test: false, reason: null };
 export function accessFromSession(res: SessionOk | { reason?: string } | null, opts: { network?: boolean; now?: number } = {}): Access {

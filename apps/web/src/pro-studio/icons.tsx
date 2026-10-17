@@ -7,6 +7,8 @@ const P: Record<string, string> = {
   cost: "M12 3v18M16 7H10a3 3 0 000 6h4a3 3 0 010 6H8", scanner: "M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5M8 11h6",
   audit: "M6 3h9l4 4v14H6zM9 10h7M9 14h7M9 18h4", library: "M4 4h5v16H4zM10 4h5v16h-5zM16 5l4 1-3 14-4-1z",
   report: "M6 3h12v18H6zM9 8h6M9 12h6M9 16h3",
+  living: "M20 12a8 8 0 11-2.3-5.7M20 4v4h-4M8.5 12.5l2.5 2.5 4.5-5", blind: "M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6zM4 4l16 16",
+  portability: "M4 7h7v10H4zM13 7h7v10h-7zM11 12h2", stop: "M7 7h10v10H7z", play: "M8 5l11 7-11 7z", check: "M5 12l4 4 10-10", cert: "M7 3h10v12l-5-3-5 3zM9 7h6",
   home: "M4 11l8-7 8 7v9h-5v-6H9v6H4z", plus: "M12 5v14M5 12h14", search: "M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5",
   sidebar: "M4 4h16v16H4zM9 4v16", panel: "M4 4h16v16H4zM15 4v16", menu: "M4 6h16M4 12h16M4 18h16", close: "M6 6l12 12M18 6L6 18",
   sun: "M12 4V2M12 22v-2M4 12H2M22 12h-2M5.6 5.6L4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4M12 7a5 5 0 100 10 5 5 0 000-10z",
