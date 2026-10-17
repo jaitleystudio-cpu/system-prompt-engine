@@ -1489,7 +1489,7 @@ export class ReleaseSafetyGovernor {
     unexpectedFiles: string[];
     reason?: string;
   } {
-    const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
+    const pinnedBaseDir = resolve(ReleaseSafetyGovernor.getWorkspaceRoot(), "apps/web/deployments/pinned-base");
     const pinnedManifestPath = resolve(pinnedBaseDir, "release-manifest.json");
 
     let refManifest = manifestObj;
@@ -1693,7 +1693,8 @@ export class ReleaseSafetyGovernor {
    */
   public executeDeploymentRollbackSync(candidate: ReleaseCandidateProposal): RollbackExecutionResult {
     const timestamp = new Date().toISOString();
-    const pointerDir = resolve(process.cwd(), "proofs/generated");
+    const root = ReleaseSafetyGovernor.getWorkspaceRoot();
+    const pointerDir = resolve(root, "proofs/generated");
     try {
       mkdirSync(pointerDir, { recursive: true });
     } catch {}
@@ -1717,11 +1718,11 @@ export class ReleaseSafetyGovernor {
       ReleaseSafetyGovernor.atomicWriteJson(pointerPath, inProgressPointerData);
     } catch {}
 
-    const pinnedBaseDir = resolve(process.cwd(), "apps/web/deployments/pinned-base");
+    const pinnedBaseDir = resolve(root, "apps/web/deployments/pinned-base");
     const pinnedWasm = resolve(pinnedBaseDir, "spe_wasm.wasm");
-    const distDir = resolve(process.cwd(), "apps/web/dist");
+    const distDir = resolve(root, "apps/web/dist");
     const distWasm = resolve(distDir, "spe_wasm.wasm");
-    const publicWasm = resolve(process.cwd(), "apps/web/public/spe_wasm.wasm");
+    const publicWasm = resolve(root, "apps/web/public/spe_wasm.wasm");
     const distManifest = resolve(distDir, "release-manifest.json");
     const pinnedManifest = resolve(pinnedBaseDir, "release-manifest.json");
 
@@ -1773,8 +1774,8 @@ export class ReleaseSafetyGovernor {
       ReleaseSafetyGovernor.safeRestoreFile(pinnedManifest, distManifest, distDir);
 
       // Step 4: Restore canonical WASM to public if directory present in workspace
-      if (existsSync(resolve(process.cwd(), "apps/web/public")) && existsSync(pinnedWasm)) {
-        ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(process.cwd(), "apps/web/public"));
+      if (existsSync(resolve(root, "apps/web/public")) && existsSync(pinnedWasm)) {
+        ReleaseSafetyGovernor.safeRestoreFile(pinnedWasm, publicWasm, resolve(root, "apps/web/public"));
       }
 
       // Step 5: Purge any unexpected / uncataloged files (including symlinks and special files) that were added to distDir
