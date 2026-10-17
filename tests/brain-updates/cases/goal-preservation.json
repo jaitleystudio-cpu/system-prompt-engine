@@ -1,0 +1,18 @@
+{
+  "schema": "spe.parser-goals.v1",
+  "scope": "Coordinated task goals; finite, public regression corpus, not general intelligence",
+  "cases": [
+    {"id":"t1","split":"train","input":"Act as a tutor that teaches recursion and explains stack frames. Never expose student names.","goals":["teaches recursion","explains stack frames"],"constraints":["Never expose student names"]},
+    {"id":"t2","split":"train","input":"Build an assistant that summarizes tickets and identifies repeated incidents. Return only JSON.","goals":["summarizes tickets","identifies repeated incidents"],"constraints":["Return only JSON"]},
+    {"id":"t3","split":"train","input":"I need an analyst that compares revenue and calculates margins and flags missing records. Never invent data.","goals":["compares revenue","calculates margins","flags missing records"],"constraints":["Never invent data"]},
+    {"id":"t4","split":"train","input":"Create an editor that checks spelling and preserves quotations. Keep client.secret unchanged.","goals":["checks spelling","preserves quotations"],"constraints":["Keep client.secret unchanged"]},
+    {"id":"v1","split":"validation","input":"Act as an engineer who reviews migrations and estimates downtime. Do not change account_id.","goals":["reviews migrations","estimates downtime"],"constraints":["Do not change account_id"]},
+    {"id":"v2","split":"validation","input":"I need a librarian who indexes Telugu titles and locates English translations. Never upload documents.","goals":["indexes Telugu titles","locates English translations"],"constraints":["Never upload documents"]},
+    {"id":"v3","split":"validation","input":"Build a coach who checks practice logs and suggests recovery sessions and tracks workload. Return only JSON.","goals":["checks practice logs","suggests recovery sessions","tracks workload"],"constraints":["Return only JSON"]},
+    {"id":"v4","split":"validation","input":"Serve as a planner who schedules deliveries and balances driver workloads and keeps depot coverage. Never disclose customer addresses.","goals":["schedules deliveries","balances driver workloads","keeps depot coverage"],"constraints":["Never disclose customer addresses"]},
+    {"id":"a1","split":"audit","input":"Build a tool which checks Arabic labels and maps duplicate identifiers. Never alter the original labels.","goals":["checks Arabic labels","maps duplicate identifiers"],"constraints":["Never alter the original labels"]},
+    {"id":"a2","split":"audit","input":"Create an assistant which explains tradeoffs and lists open questions and estimates effort. Do not fabricate sources.","goals":["explains tradeoffs","lists open questions","estimates effort"],"constraints":["Do not fabricate sources"]},
+    {"id":"a3","split":"audit","input":"I need a system which sorts applications and counts missing attachments. Always preserve application IDs.","goals":["sorts applications","counts missing attachments"],"constraints":["Always preserve application IDs"]},
+    {"id":"a4","split":"audit","input":"Act as a guide which describes temples and compares access routes and explains local customs. Never request passport numbers.","goals":["describes temples","compares access routes","explains local customs"],"constraints":["Never request passport numbers"]}
+  ]
+}
