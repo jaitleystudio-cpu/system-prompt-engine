@@ -18,7 +18,7 @@ import {
 import { inspectRecoveryCheckpoint, sealCheckpoint } from "./spe-recovery-journal-custody.mjs";
 import { reconcileRecoveryReadOnly } from "./spe-recovery-reconciliation.mjs";
 import {
-  getR4HarnessDigest, signBrowserReplayReceipt, verifyBrowserReplayReceipt,
+  getR4HarnessDigest, reviewRecoveryAndSign, verifyBrowserReplayReceipt,
 } from "./spe-recovery-receipt.mjs";
 
 const broken = [
@@ -120,13 +120,15 @@ try {
   const browserVersion = browser.version();
   const harnessDigest = await getR4HarnessDigest();
   const issuedTime = new Date();
-  const receipt = await signBrowserReplayReceipt({
-    reconciliation: reconciled,
+  const actualReview = await reviewRecoveryAndSign({
+    evidenceDirectory: join(dir, "positive"), browser,
     goal, originalPrompt: goal,
     reviewerPrivateKey: reviewer.privateKey,
-    reviewerKeyId, audience, operationId, browserVersion,
-    now: issuedTime,
+    reviewerKeyId, audience, operationId, now: issuedTime,
   });
+  assert.equal(actualReview.disposition, "REVIEW_ONLY_SIGNED_BROWSER_REPLAY");
+  assert.equal(actualReview.reconciliation.browserReplay.passed, true);
+  const receipt = actualReview.receipt;
   const pin = {
     pinnedReviewerPublicKey: reviewer.publicKey,
     reviewerKeyId, audience, operationId,
@@ -177,14 +179,20 @@ try {
   authorizationForgery.signed.authority = "ALLOW_DEPLOY";
   assert.equal(verifyBrowserReplayReceipt(authorizationForgery, pin).valid, false);
 
-  await assert.rejects(
-    signBrowserReplayReceipt({
-      reconciliation: { ...reconciled, status: "HOLD_RECONCILIATION_REQUIRED" },
-      goal, originalPrompt: goal, reviewerPrivateKey: reviewer.privateKey,
-      reviewerKeyId, audience, operationId, browserVersion,
-    }),
-    /UNQUALIFIED_RECONCILIATION_CANNOT_SIGN/,
-  );
+  const deniedReview = await reviewRecoveryAndSign({
+    evidenceDirectory: join(dir, "positive"), browser: null,
+    goal, originalPrompt: goal, reviewerPrivateKey: reviewer.privateKey,
+    reviewerKeyId, audience, operationId,
+  });
+  assert.equal(deniedReview.disposition, "HOLD_RECONCILIATION_REQUIRED");
+  assert.equal(deniedReview.receipt, null);
+  const badIdentityReview = await reviewRecoveryAndSign({
+    evidenceDirectory: join(dir, "positive"), browser,
+    goal: "wrong goal", originalPrompt: goal,
+    reviewerPrivateKey: reviewer.privateKey,
+    reviewerKeyId, audience, operationId,
+  });
+  assert.equal(badIdentityReview.receipt, null);
   console.log("PASS R4: pinned Ed25519 reviewer signature bound to browser/candidate/intent/scope");
   console.log("PASS R4: forged, stale, reused, and mismatched receipts rejected; authority NONE");
 
