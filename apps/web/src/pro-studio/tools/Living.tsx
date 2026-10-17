@@ -5,6 +5,7 @@ import { usePro, useProAction, download, slug } from "../context.ts";
 import { ToolFrame, Field, ModelConnect, StatusBadge } from "./Frame.tsx";
 import { proApi, byokReady, ApiError } from "../api.ts";
 import { LivingTimeline } from "./LivingTimeline.tsx";
+import { Icon } from "../icons.tsx";
 import type { LivingProject, LedgerEntry, Requirement, LivingInput, CheckKind, Attempt } from "../core/living/types.ts";
 import type { Certificate } from "../core/living/certificate.ts";
 
@@ -99,44 +100,77 @@ export default function Living() {
   const setInp = (i: number, q: Partial<LivingInput>) => setD((dd) => ({ ...dd, inputs: dd.inputs.map((x, j) => (j === i ? { ...x, ...q } : x)) }));
   const rc = p?.receipt;
 
-  const panel = p ? (<div className="ps-stack" data-testid="living-panel">
-    <div className="ps-row ps-wrap"><span className={`ps-lv-status ps-lv-status--${p.status}`} data-testid="living-status">{p.status.toUpperCase()}</span><span className="ps-hint">Attempt {p.attempts.length} of {p.budget.maxAttempts} · tokens {p.tokensUsed.toLocaleString()} / {p.budget.maxTokens.toLocaleString()} · approach: {p.strategyLabel}</span></div>
+  const pct = (a: number, b: number) => `${Math.max(0, Math.min(100, b ? (a / b) * 100 : 0))}%`;
+  const diffPre = (removed: string[], added: string[], testid?: string) => <pre className="ps-pre ps-diff ps-pre--sm" data-testid={testid}>{removed.map((l, i) => <del key={`d${i}`}><span className="sr-only">Removed: </span>{l}{"\n"}</del>)}{added.map((l, i) => <ins key={`a${i}`}><span className="sr-only">Added: </span>{l}{"\n"}</ins>)}</pre>;
+  const rcTone = rc ? (rc.reason === "VERIFIED" ? "ok" : rc.reason === "USER_STOP" ? "warn" : "warn") : "warn";
+
+  const run = p ? (<section className="ps-run" aria-labelledby="lv-run-h" data-testid="living-panel">
+    <div className="ps-run-head">
+      <h2 id="lv-run-h">Run</h2>
+      {p.attempts.some((a) => a.simulated) && <span className="ps-sim" title="Model output comes from the development provider">Simulated model</span>}
+      <span className={`ps-lv-status ps-lv-status--${p.status}`} data-testid="living-status">{p.status.toUpperCase()}</span>
+    </div>
+    <div className="ps-run-meta">
+      <div className="ps-kv"><span>Attempts</span><b>{p.attempts.length} <span className="ps-muted">of {p.budget.maxAttempts}</span></b><div className="ps-meter" aria-hidden="true"><i style={{ width: pct(p.attempts.length, p.budget.maxAttempts) }} /></div></div>
+      <div className="ps-kv"><span>Tokens</span><b>{p.tokensUsed.toLocaleString()} <span className="ps-muted">/ {p.budget.maxTokens.toLocaleString()}</span></b><div className="ps-meter" aria-hidden="true"><i style={{ width: pct(p.tokensUsed, p.budget.maxTokens) }} /></div></div>
+      <div className="ps-kv"><span>Approach</span><b title={p.strategyLabel}>{p.strategyLabel}</b></div>
+    </div>
     <LivingTimeline p={p} />
-    {p.attempts.some((a) => a.simulated) && <p className="ps-badge-sim">SIMULATED model output (development provider). Code execution and checks are real; the model text is scripted and proves nothing about a real model.</p>}
-    {rc && <div className={`ps-verdict ps-verdict--${rc.reason === "VERIFIED" ? "ok" : "bad"}`} role="status" data-testid="living-receipt">
-      <b>{rc.reason === "VERIFIED" ? "Verified" : rc.reason === "USER_STOP" ? "Stopped by you" : `Paused: ${rc.reason}`}</b><p>{rc.message}</p>
-      <ul className="ps-hint"><li>Verified: {rc.verified.join(", ") || "none"}</li><li>Failed: {rc.failed.join(", ") || "none"}</li><li>Unproven: {rc.unproven.join(", ") || "none"}</li><li>Not run: {rc.notRun.join(", ") || "none"}</li><li>Attempts {rc.attemptsUsed}/{rc.maxAttempts} · tokens {rc.tokensUsed} ({rc.tokenSource.toLowerCase()}) · best attempt {rc.bestAttempt ?? "–"}</li></ul>
-      {!!rc.capturedErrors?.length && <><h3 className="ps-h3">Errors captured by the sandbox</h3><ul className="ps-hint" data-testid="captured-errors">{rc.capturedErrors.map((e, i) => <li key={i}>Attempt {e.attempt} · {e.inputId}: <code>{e.error}</code></li>)}</ul></>}
-      {rc.promptDiff && (rc.promptDiff.added.length > 0 || rc.promptDiff.removed.length > 0) && <><h3 className="ps-h3">Prompt V{rc.promptDiff.from} → V{rc.promptDiff.to}</h3><pre className="ps-pre ps-diff ps-pre--sm" data-testid="prompt-diff">{rc.promptDiff.removed.map((l, i) => <del key={`d${i}`}><span className="sr-only">Removed: </span>{l}{"\n"}</del>)}{rc.promptDiff.added.map((l, i) => <ins key={`a${i}`}><span className="sr-only">Added: </span>{l}{"\n"}</ins>)}</pre></>}
-      {!!rc.scopedRepairs?.length && <><h3 className="ps-h3">Scoped repair checks</h3><div className="ps-table-wrap"><table className="ps-table" data-testid="scoped-repairs"><caption className="sr-only">Was each fix confined to the failing call-site?</caption><thead><tr><th scope="col">Attempt</th><th scope="col">Verdict</th><th scope="col">Pinned call-site</th><th scope="col">Lines changed</th><th scope="col">Outside pin</th><th scope="col">Regions</th><th scope="col">Kept checks</th><th scope="col">Why</th></tr></thead><tbody>{rc.scopedRepairs.map((x, k) => <tr key={k}><td>{x.attempt}</td><td><span className={`ps-badge ${x.verdict === "ACCEPTED" ? "ps-badge--ok" : "ps-badge--bad"}`}>{x.verdict === "ACCEPTED" ? "Accepted" : "Rejected: drift"}</span></td><td><code>{x.pin}</code></td><td>{x.changed}</td><td>{x.outsidePin} / {x.allowance}</td><td>{x.touchedRegions || "none"}</td><td>{x.preserved.join("; ") || "none"}{x.regressions.length ? ` · regressed: ${x.regressions.join(", ")}` : ""}</td><td>{x.reasons.join(" ") || "Inside the pinned region; imports, styling and features unchanged."}</td></tr>)}</tbody></table></div></>}
+    {p.attempts.some((a) => a.simulated) && <p className="ps-badge-sim"><span className="ps-sim">SIMULATED</span><span>Model text is scripted by the development provider. Sandbox execution and checks are real.</span></p>}
+    {rc && <div className={`ps-verdict ps-verdict--${rcTone}`} role="status" data-testid="living-receipt">
+      <div className="ps-verdict-h"><Icon name={rc.reason === "VERIFIED" ? "check" : "alert"} size={16} />{rc.reason === "VERIFIED" ? "Verified" : rc.reason === "USER_STOP" ? "Stopped by you" : `Paused: ${rc.reason}`}</div>
+      <p>{rc.message}</p>
+      <ul className="ps-rc-grid" aria-label="Requirements by status">
+        <li><span>Verified</span><b>{rc.verified.join(", ") || "none"}</b></li><li><span>Failed</span><b>{rc.failed.join(", ") || "none"}</b></li>
+        <li><span>Unproven</span><b>{rc.unproven.join(", ") || "none"}</b></li><li><span>Not run</span><b>{rc.notRun.join(", ") || "none"}</b></li>
+      </ul>
+      <p className="ps-meta"><span>Attempts {rc.attemptsUsed}/{rc.maxAttempts}</span><span>Tokens {rc.tokensUsed} ({rc.tokenSource.toLowerCase()})</span><span>Best attempt {rc.bestAttempt ?? "–"}</span></p>
+      {!!rc.capturedErrors?.length && <div className="ps-stack" style={{ gap: 6 }}><h3 className="ps-eyebrow">Errors captured by the sandbox</h3><ul className="ps-cap-list" data-testid="captured-errors">{rc.capturedErrors.map((e, i) => <li key={i}><span className="ps-muted">Attempt {e.attempt} · {e.inputId}</span><code>{e.error}</code></li>)}</ul></div>}
+      {rc.promptDiff && (rc.promptDiff.added.length > 0 || rc.promptDiff.removed.length > 0) && <details className="ps-details" data-testid="prompt-diff-details"><summary>Prompt V{rc.promptDiff.from} → V{rc.promptDiff.to} changes ({rc.promptDiff.added.length} added, {rc.promptDiff.removed.length} removed)</summary>{diffPre(rc.promptDiff.removed, rc.promptDiff.added, "prompt-diff")}</details>}
     </div>}
-    <h3 className="ps-h3">Proof ledger</h3>
-    {p.ledger.length === 0 ? <p className="ps-hint">Add requirements and test inputs.</p> : <div className="ps-scroll-x"><table className="ps-table" data-testid="living-ledger"><caption className="sr-only">Latest status of each requirement on each test input</caption><thead><tr><th scope="col">Requirement</th><th scope="col">Input</th><th scope="col">Status</th><th scope="col">Evidence</th></tr></thead>
-      <tbody>{p.ledger.map((e) => { const q = p.requirements.find((x) => x.id === e.reqId); return <tr key={`${e.reqId}-${e.inputId}`}><th scope="row">{e.reqId}. {e.text}</th><td>{e.inputId}</td><td><StatusBadge s={e.status} />{q?.check.kind === "manual" && e.status !== "NOT_RUN" && <span className="ps-row"><button type="button" className="ps-btn ps-btn--sm" onClick={() => void mark(e.reqId, "pass")}>Mark met</button><button type="button" className="ps-btn ps-btn--sm" onClick={() => void mark(e.reqId, "fail")}>Mark not met</button></span>}</td><td className="ps-ev">{e.evidence}</td></tr>; })}</tbody></table></div>}
-    <p className="ps-hint">Only deterministic checks and execution in the sandbox can produce Verified. A model saying “done” is never evidence. Human marks are labelled as human.</p>
-    <h3 className="ps-h3">Proof certificate</h3>
-    <div className="ps-row ps-wrap"><button type="button" className="ps-btn ps-btn--sm" disabled={!p.attempts.length} onClick={() => void getCert()} data-testid="living-cert">Create certificate</button>{cert && <button type="button" className="ps-btn ps-btn--sm" onClick={() => download(`${slug(p.name)}-attempt-${cert.attempt}.proof.json`, JSON.stringify(cert, null, 2))}>Download</button>}</div>
-    {cert && <p className="ps-hint" data-testid="cert-summary">Verdict <b>{cert.verdict}</b> · attempt {cert.attempt} · {cert.signed === "ED25519" ? "Ed25519-signed by this server" : "UNSIGNED (no release key on this server)"} · sha256 <code>{cert.certSha256.slice(0, 16)}…</code>{cert.simulated ? " · SIMULATED model" : ""}</p>}
-    {certCheck && <p className={certCheck.ok ? "ps-ok" : "ps-err"} role="status">{certCheck.ok ? "Independent re-check: the verifier re-ran every check on the stored outputs and agrees." : `Re-check failed: ${certCheck.reasons.join(" ")}`}</p>}
-  </div>) : <div className="ps-empty ps-empty--inline"><p>Create or open a Living project to see its proof ledger.</p></div>;
+    {!!rc?.scopedRepairs?.length && <div className="ps-sect"><div className="ps-sect-h"><h3 className="ps-h3">Scoped repair checks</h3><span className="ps-hint">Was each fix confined to the failing call-site?</span></div>
+      <ul className="ps-scoped" data-testid="scoped-repairs">{rc.scopedRepairs.map((x, k) => <li key={k}>
+        <div className="ps-scoped-h"><span className={`ps-badge ${x.verdict === "ACCEPTED" ? "ps-badge--ok" : "ps-badge--bad"}`}>{x.verdict === "ACCEPTED" ? "Accepted" : "Rejected: drift"}</span><b>Attempt {x.attempt}</b><code>{x.pin}</code></div>
+        <p className="ps-meta"><span>{x.changed} line{x.changed === 1 ? "" : "s"} changed</span><span>{x.outsidePin} / {x.allowance} outside the pin</span><span>Regions: {x.touchedRegions || "none"}</span></p>
+        <p className="ps-scoped-why">{x.reasons.join(" ") || "Inside the pinned region; imports, styling and features unchanged."}</p>
+        <p className="ps-meta"><span>Kept checks: {x.preserved.join("; ") || "none"}</span>{x.regressions.length > 0 && <span className="ps-err">Regressed: {x.regressions.join(", ")}</span>}</p>
+      </li>)}</ul></div>}
+    <div className="ps-sect"><div className="ps-sect-h"><h3 className="ps-h3">Proof ledger</h3><span className="ps-hint">Latest status of each requirement on each input</span></div>
+      {p.ledger.length === 0 ? <p className="ps-hint">Add requirements and test inputs.</p> : <ul className="ps-ledger" data-testid="living-ledger">{p.ledger.map((e) => { const q = p.requirements.find((x) => x.id === e.reqId); return <li key={`${e.reqId}-${e.inputId}`}>
+        <span className="ps-ledger-t"><span className="ps-rid">{e.reqId}</span><span>{e.text}</span></span>
+        <span className="ps-ledger-side"><span className="ps-tag">{e.inputId}</span><StatusBadge s={e.status} />{q?.check.kind === "manual" && e.status !== "NOT_RUN" && <><button type="button" className="ps-btn ps-btn--sm" onClick={() => void mark(e.reqId, "pass")}>Mark met</button><button type="button" className="ps-btn ps-btn--sm" onClick={() => void mark(e.reqId, "fail")}>Mark not met</button></>}</span>
+        <span className="ps-ledger-ev">{e.evidence}</span></li>; })}</ul>}
+      <details className="ps-details"><summary>How verification works</summary><p>Only deterministic checks and execution in the sandbox can produce Verified. A model saying “done” is never evidence. Unproven, skipped, simulated and not-run results never count as a pass. Human marks are labelled as human.</p></details>
+    </div>
+    <div className="ps-cert">
+      <span className="ps-cert-i" aria-hidden="true"><Icon name="cert" size={18} /></span>
+      <div className="ps-cert-t"><b>Proof certificate</b>
+        {cert ? <p className="ps-hint" data-testid="cert-summary">Verdict <b>{cert.verdict}</b> · attempt {cert.attempt} · {cert.signed === "ED25519" ? "Ed25519-signed by this server" : "UNSIGNED (no release key on this server)"} · sha256 <code>{cert.certSha256.slice(0, 16)}…</code>{cert.simulated ? " · SIMULATED model" : ""}</p> : <p className="ps-hint">A portable record of this run that anyone can re-check.</p>}
+        {certCheck && <p className={certCheck.ok ? "ps-ok" : "ps-err"} role="status" style={{ fontSize: 12.5 }}>{certCheck.ok ? "Independent re-check: the verifier re-ran every check on the stored outputs and agrees." : `Re-check failed: ${certCheck.reasons.join(" ")}`}</p>}
+      </div>
+      <div className="ps-row"><button type="button" className="ps-btn ps-btn--sm" disabled={!p.attempts.length} onClick={() => void getCert()} data-testid="living-cert">{cert ? "Recreate" : "Create certificate"}</button>{cert && <button type="button" className="ps-btn ps-btn--sm" onClick={() => download(`${slug(p.name)}-attempt-${cert.attempt}.proof.json`, JSON.stringify(cert, null, 2))}><Icon name="download" size={14} />Download</button>}</div>
+    </div>
+  </section>) : null;
 
   return (
-    <ToolFrame id="living" panel={panel} panelLabel="Proof" actions={<>
-      <button type="button" className="ps-btn" onClick={() => startNew()}>New project</button>
-      <button type="button" className="ps-btn" disabled={running} onClick={() => { startNew(DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo">Load flagship demo</button>
-      <button type="button" className="ps-btn" disabled={running} onClick={() => { startNew(DRIFT_DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo-drift">Load drift demo</button>
-      <label className="ps-btn ps-file">Import<input type="file" accept=".json,application/json" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void importFile(f); }} /></label>
+    <ToolFrame id="living" layout="flow" actions={<>
+      <button type="button" className="ps-btn ps-btn--ghost" disabled={running} onClick={() => { startNew(DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo"><Icon name="play" size={14} />Load flagship demo</button>
+      <button type="button" className="ps-btn ps-btn--ghost" disabled={running} onClick={() => { startNew(DRIFT_DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo-drift">Load drift demo</button>
+      <label className="ps-btn ps-file"><Icon name="upload" size={14} />Import<input type="file" accept=".json,application/json" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void importFile(f); }} /></label>
+      <button type="button" className="ps-btn ps-btn--primary" onClick={() => startNew()}><Icon name="plus" size={14} />New project</button>
     </>}>
       {err && <p className="ps-err" role="alert" data-testid="living-err">{err}</p>}
-      {list.length > 0 && <nav aria-label="Living projects" className="ps-lv-list"><ul className="ps-row ps-wrap">{list.map((x) => <li key={x.id}><button type="button" className="ps-chip" aria-pressed={p?.id === x.id} onClick={() => void open(x.id)}>{x.name} <small>· {x.status} · {x.attempts} attempts</small></button></li>)}</ul></nav>}
+      {list.length > 0 && <nav aria-label="Living projects" className="ps-lv-list"><ul>{list.map((x) => <li key={x.id}><button type="button" className="ps-lv-proj" aria-pressed={p?.id === x.id} onClick={() => void open(x.id)}><b>{x.name}</b><small><span className={`ps-dot ps-dot--${x.status}`} aria-hidden="true" />{x.status} · {x.attempts} attempt{x.attempts === 1 ? "" : "s"}</small></button></li>)}</ul></nav>}
       {d.inputs.some((x) => x.text.includes("[demo:")) && !demoReady && <p className="ps-warn">The flagship demo uses the simulated provider and the code sandbox, which are only switched on for development servers. On this server it will pause honestly instead of pretending.</p>}
 
       {editing ? (<form className="ps-form" aria-label="Living project definition" onSubmit={(e) => { e.preventDefault(); void save(); }}>
-        <div className="ps-cols"><Field label="Project name" id="lv-name"><input id="lv-name" className="ps-inp" value={d.name} maxLength={120} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, name: v })); }} /></Field>
-          <div className="ps-cols"><Field label="Attempt cap (1–12)" id="lv-max"><input id="lv-max" className="ps-inp" type="number" min={1} max={12} value={d.budget.maxAttempts} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxAttempts: Number(v) } })); }} /></Field>
-            <Field label="Token budget" id="lv-tok"><input id="lv-tok" className="ps-inp" type="number" min={100} step={1000} value={d.budget.maxTokens} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxTokens: Number(v) } })); }} /></Field></div></div>
-        <Field label="Goal (what the prompt must achieve)" id="lv-goal"><textarea id="lv-goal" className="ps-ta" rows={3} value={d.intent} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, intent: v })); }} /></Field>
-        <fieldset className="ps-fieldset"><legend>Protected requirements ({d.requirements.length}) — a version that loses one fails</legend>
+        <fieldset className="ps-fieldset"><legend>Project</legend>
+          <div className="ps-cols"><Field label="Project name" id="lv-name"><input id="lv-name" className="ps-inp" value={d.name} maxLength={120} placeholder="e.g. Support reply bot" onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, name: v })); }} /></Field>
+            <div className="ps-cols"><Field label="Attempt cap (1–12)" id="lv-max"><input id="lv-max" className="ps-inp" type="number" min={1} max={12} value={d.budget.maxAttempts} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxAttempts: Number(v) } })); }} /></Field>
+              <Field label="Token budget" id="lv-tok"><input id="lv-tok" className="ps-inp" type="number" min={100} step={1000} value={d.budget.maxTokens} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxTokens: Number(v) } })); }} /></Field></div></div>
+          <Field label="Goal (what the prompt must achieve)" id="lv-goal"><textarea id="lv-goal" className="ps-ta" rows={2} value={d.intent} placeholder="e.g. Answer billing questions in under 120 words" onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, intent: v })); }} /></Field>
+        </fieldset>
+        <fieldset className="ps-fieldset"><legend>Protected requirements <small>· {d.requirements.length} · a version that loses one fails</small></legend>
           <ol className="ps-lv-reqs">{d.requirements.map((q, i) => <li key={i} className="ps-lv-req">
             <label className="sr-only" htmlFor={`lv-rq-${i}`}>Requirement {i + 1}</label><input id={`lv-rq-${i}`} className="ps-inp" value={q.text} placeholder="e.g. Mention the 30-day refund window" onChange={(e) => setReq(i, { text: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-ck-${i}`}>Check for requirement {i + 1}</label><select id={`lv-ck-${i}`} className="ps-inp ps-inp--auto" value={q.check.kind} onChange={(e) => setReq(i, { check: { kind: e.target.value as CheckKind } })}>{(Object.keys(KIND_LABEL) as CheckKind[]).map((k) => <option key={k} value={k}>{KIND_LABEL[k]}</option>)}</select>
@@ -144,44 +178,50 @@ export default function Living() {
             {q.check.kind === "runs_clean" && <><label className="sr-only" htmlFor={`lv-ce-${i}`}>Where the code runs</label><select id={`lv-ce-${i}`} className="ps-inp" value={q.check.env ?? "browser"} onChange={(e) => setReq(i, { check: { ...q.check, env: e.target.value === "ssr" ? "ssr" : undefined } })}><option value="browser">In a page (DOM)</option><option value="ssr">Server render (no window)</option></select></>}
             {NEEDS_N.includes(q.check.kind) && <><label className="sr-only" htmlFor={`lv-cn-${i}`}>Number</label><input id={`lv-cn-${i}`} className="ps-inp ps-inp--num" type="number" min={0} value={q.check.n ?? ""} onChange={(e) => setReq(i, { check: { ...q.check, n: Number(e.target.value) } })} /></>}
             {q.check.kind === "json_keys" && <><label className="sr-only" htmlFor={`lv-ckeys-${i}`}>Keys</label><input id={`lv-ckeys-${i}`} className="ps-inp" value={(q.check.keys ?? []).join(", ")} placeholder="answer, sources" onChange={(e) => setReq(i, { check: { ...q.check, keys: e.target.value.split(",").map((x) => x.trim()).filter(Boolean) } })} /></>}
-            <button type="button" className="ps-btn ps-btn--sm" aria-label={`Remove requirement ${i + 1}`} onClick={() => setD((dd) => ({ ...dd, requirements: dd.requirements.filter((_, j) => j !== i) }))}>Remove</button>
+            <button type="button" className="ps-iconbtn" aria-label={`Remove requirement ${i + 1}`} title="Remove" onClick={() => setD((dd) => ({ ...dd, requirements: dd.requirements.filter((_, j) => j !== i) }))}><Icon name="trash" size={15} /></button>
           </li>)}</ol>
-          <button type="button" className="ps-btn ps-btn--sm" onClick={() => setD((dd) => ({ ...dd, requirements: [...dd.requirements, { id: `r${Date.now().toString(36).slice(-4)}`, text: "", check: { kind: "contains", value: "" } }] }))}>Add requirement</button>
+          <div><button type="button" className="ps-btn ps-btn--sm ps-btn--ghost" onClick={() => setD((dd) => ({ ...dd, requirements: [...dd.requirements, { id: `r${Date.now().toString(36).slice(-4)}`, text: "", check: { kind: "contains", value: "" } }] }))}><Icon name="plus" size={14} />Add requirement</button></div>
         </fieldset>
-        <fieldset className="ps-fieldset"><legend>Test inputs ({d.inputs.length}) — each attempt runs every input</legend>
+        <fieldset className="ps-fieldset"><legend>Test inputs <small>· {d.inputs.length} · each attempt runs every input</small></legend>
           <ol className="ps-lv-reqs">{d.inputs.map((x, i) => <li key={i} className="ps-lv-req">
             <label className="sr-only" htmlFor={`lv-in-${i}`}>Input {i + 1}</label><textarea id={`lv-in-${i}`} className="ps-ta" rows={2} value={x.text} placeholder="A real user message" onChange={(e) => setInp(i, { text: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-cat-${i}`}>Category</label><input id={`lv-cat-${i}`} className="ps-inp" value={x.category ?? ""} placeholder="category" onChange={(e) => setInp(i, { category: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-lang-${i}`}>Language</label><input id={`lv-lang-${i}`} className="ps-inp ps-inp--num" value={x.language ?? ""} placeholder="lang" onChange={(e) => setInp(i, { language: e.target.value })} />
-            <button type="button" className="ps-btn ps-btn--sm" aria-label={`Remove input ${i + 1}`} onClick={() => setD((dd) => ({ ...dd, inputs: dd.inputs.filter((_, j) => j !== i) }))}>Remove</button>
+            <button type="button" className="ps-iconbtn" aria-label={`Remove input ${i + 1}`} title="Remove" onClick={() => setD((dd) => ({ ...dd, inputs: dd.inputs.filter((_, j) => j !== i) }))}><Icon name="trash" size={15} /></button>
           </li>)}</ol>
-          <button type="button" className="ps-btn ps-btn--sm" onClick={() => setD((dd) => ({ ...dd, inputs: [...dd.inputs, { id: `i${Date.now().toString(36).slice(-4)}`, text: "" }] }))}>Add input</button>
+          <div><button type="button" className="ps-btn ps-btn--sm ps-btn--ghost" onClick={() => setD((dd) => ({ ...dd, inputs: [...dd.inputs, { id: `i${Date.now().toString(36).slice(-4)}`, text: "" }] }))}><Icon name="plus" size={14} />Add input</button></div>
         </fieldset>
-        <div className="ps-row ps-wrap"><button type="submit" className="ps-btn ps-btn--primary" disabled={busy === "save"} data-testid="living-save">{p ? "Save changes" : "Create project"}</button>{p && <button type="button" className="ps-btn" onClick={() => { setD(toDraft(p)); setEditing(false); }}>Cancel</button>}</div>
-      </form>) : p && (<div className="ps-card ps-card--flat" data-testid="living-def">
-        <h2 className="ps-h3">{p.name}</h2><p>{p.intent}</p>
-        <ol className="ps-hint">{p.requirements.map((q) => <li key={q.id}><b>{q.id}</b> {q.text} <small>· {KIND_LABEL[q.check.kind]}{q.check.value ? `: “${q.check.value}”` : ""}{q.check.n != null ? `: ${q.check.n}` : ""}</small></li>)}</ol>
-        <p className="ps-hint">{p.inputs.length} test input{p.inputs.length === 1 ? "" : "s"} · cap {p.budget.maxAttempts} attempts · {p.budget.maxTokens.toLocaleString()} tokens</p>
-        <div className="ps-row ps-wrap"><button type="button" className="ps-btn ps-btn--sm" disabled={running} onClick={() => setEditing(true)}>Edit</button><button type="button" className="ps-btn ps-btn--sm" onClick={() => void exportFile()}>Export</button><button type="button" className="ps-btn ps-btn--sm ps-btn--danger" disabled={running} onClick={() => void del()}>Delete</button></div>
+        <div className="ps-row ps-wrap"><button type="submit" className="ps-btn ps-btn--primary" disabled={busy === "save"} data-testid="living-save">{p ? "Save changes" : "Create project"}</button>{p && <button type="button" className="ps-btn ps-btn--ghost" onClick={() => { setD(toDraft(p)); setEditing(false); }}>Cancel</button>}</div>
+      </form>) : p && (<div className="ps-card ps-def" data-testid="living-def">
+        <div className="ps-def-top"><div style={{ minWidth: 0 }}><h2>{p.name}</h2><p className="ps-def-goal"><Icon name="target" size={14} />{p.intent}</p></div>
+          <div className="ps-row"><button type="button" className="ps-btn ps-btn--sm ps-btn--ghost" disabled={running} onClick={() => setEditing(true)}><Icon name="edit" size={14} />Edit</button><button type="button" className="ps-btn ps-btn--sm ps-btn--ghost" onClick={() => void exportFile()}><Icon name="download" size={14} />Export</button><button type="button" className="ps-btn ps-btn--sm ps-btn--ghost ps-btn--danger" disabled={running} onClick={() => void del()}><Icon name="trash" size={14} />Delete</button></div></div>
+        <ol className="ps-reqlist" aria-label="Protected requirements">{p.requirements.map((q) => <li key={q.id}><span className="ps-rid">{q.id}</span><span>{q.text}</span><small>{KIND_LABEL[q.check.kind]}{q.check.value ? `: “${q.check.value}”` : ""}{q.check.n != null ? `: ${q.check.n}` : ""}{q.check.env === "ssr" ? " · server render" : ""}</small></li>)}</ol>
+        <p className="ps-meta"><span>{p.inputs.length} test input{p.inputs.length === 1 ? "" : "s"}</span><span>Cap {p.budget.maxAttempts} attempts</span><span>{p.budget.maxTokens.toLocaleString()} tokens</span></p>
       </div>)}
 
-      <ModelConnect idp="lv-mc" />
-      <div className="ps-row ps-wrap ps-lv-run">
-        <button type="button" className="ps-btn ps-btn--primary" disabled={running || busy === "save"} onClick={() => void runLoop()} data-testid="living-run">{running ? "Running…" : p?.attempts.length ? "Continue loop" : "Run loop"}</button>
-        <button type="button" className="ps-btn" disabled={running} onClick={() => void runLoop(true)}>Run one attempt</button>
-        <button type="button" className="ps-btn ps-btn--danger" disabled={!p || (!running && p.status !== "running")} onClick={() => void stop()} data-testid="living-stop">Stop</button>
-      </div>
-      <p className="ps-hint">Each attempt sends the compiled prompt and every test input to your model, using your key once. The loop stops by itself when everything is verified, when your cap or budget is reached, or when it cannot make honest progress.</p>
+      <section className="ps-runbar" aria-label="Model and run controls">
+        <ModelConnect idp="lv-mc" />
+        <div className="ps-runbar-actions">
+          <button type="button" className="ps-btn ps-btn--primary" disabled={running || busy === "save"} onClick={() => void runLoop()} data-testid="living-run">{running ? <><span className="ps-spinner" aria-hidden="true" />Running…</> : <><Icon name="play" size={14} />{p?.attempts.length ? "Continue loop" : "Run loop"}</>}</button>
+          <button type="button" className="ps-btn" disabled={running} onClick={() => void runLoop(true)}>Run one attempt</button>
+          <button type="button" className="ps-btn ps-btn--ghost ps-btn--danger" disabled={!p || (!running && p.status !== "running")} onClick={() => void stop()} data-testid="living-stop"><Icon name="stop" size={14} />Stop</button>
+          <details className="ps-details"><summary>How the loop works</summary><p>Each attempt sends the compiled prompt and every test input to your model, using your key once. The loop stops by itself when everything is verified, when your cap or budget is reached, or when it cannot make honest progress.</p></details>
+        </div>
+      </section>
 
-      {p && p.attempts.length > 0 && <section aria-label="Attempts" className="ps-stack" data-testid="living-attempts"><h2 className="ps-h3">Attempts</h2>
-        <ol className="ps-lv-attempts">{[...p.attempts].reverse().map((a) => { const prev = p.attempts.find((x) => x.n === a.n - 1); const df = prev ? lineDiff(prev.prompt, a.prompt) : null; return <li key={a.n} className="ps-card ps-card--flat">
-          <p><b>Attempt {a.n}</b> · {a.strategy} · {a.provider}/{a.model}{a.simulated ? " · SIMULATED" : ""} · {a.tokens} tokens ({a.tokenSource.toLowerCase()})</p>
+      {run ?? <div className="ps-empty ps-empty--inline"><span className="ps-card-i" aria-hidden="true"><Icon name="living" /></span><p><b>No run yet.</b> Create a project, or load the flagship demo to watch a crash get captured, repaired and verified.</p></div>}
+
+      {p && p.attempts.length > 0 && <section aria-labelledby="lv-att-h" className="ps-sect" data-testid="living-attempts"><div className="ps-sect-h"><h2 id="lv-att-h">Attempts</h2><span className="ps-hint">Newest first</span></div>
+        <ol className="ps-lv-attempts">{[...p.attempts].reverse().map((a) => { const prev = p.attempts.find((x) => x.n === a.n - 1); const df = prev ? lineDiff(prev.prompt, a.prompt) : null; const cnt = (st: string) => a.results.filter((r) => r.status === st).length; return <li key={a.n} className="ps-attempt">
+          <div className="ps-attempt-h"><b>Attempt {a.n}</b><span className="ps-tag">{a.strategy}</span>{a.simulated && <span className="ps-sim">Simulated</span>}<span className="ps-muted">{a.provider}/{a.model} · {a.tokens} tokens ({a.tokenSource.toLowerCase()})</span></div>
           <p className="ps-hint">{DECISION(a)}</p>
-          <p className="ps-hint">{a.results.filter((r) => r.status === "VERIFIED").length} verified · {a.results.filter((r) => r.status === "FAILED").length} failed · {a.results.filter((r) => r.status === "UNPROVEN").length} unproven · {a.results.filter((r) => r.status === "NOT_RUN").length} not run</p>
-          {a.runs.filter((r) => r.exec).map((r) => <p key={r.inputId} className={r.exec!.ok ? "ps-ok" : "ps-err"}>Sandbox ({r.exec!.engine}) on {r.inputId}: {r.exec!.ok ? `0 runtime errors, 0 console errors · rendered “${r.exec!.rendered.slice(0, 80)}”` : `${[...r.exec!.errors, ...r.exec!.consoleErrors.map((c) => `console.error: ${c}`)].join(" · ")}`}</p>)}
-          {df && (df.added.length > 0 || df.removed.length > 0) && <details><summary>Prompt changes from attempt {a.n - 1}</summary><pre className="ps-pre ps-diff ps-pre--sm">{df.removed.map((l, i) => <del key={`d${i}`}><span className="sr-only">Removed: </span>{l}{"\n"}</del>)}{df.added.map((l, i) => <ins key={`a${i}`}><span className="sr-only">Added: </span>{l}{"\n"}</ins>)}</pre></details>}
-          <details><summary>Prompt V{a.n} (sha256 {a.promptSha.slice(0, 12)}…)</summary><pre className="ps-pre ps-pre--sm">{a.prompt}</pre></details>
-          {a.runs.map((r) => <details key={r.inputId}><summary>Model output for {r.inputId}{r.error ? " (provider error)" : ""}</summary><pre className="ps-pre ps-pre--sm">{r.error ?? r.output}</pre></details>)}
+          <p className="ps-meta"><span className="ps-st ps-st--ok">{cnt("VERIFIED")} verified</span><span className="ps-st ps-st--bad">{cnt("FAILED")} failed</span><span className="ps-st ps-st--warn">{cnt("UNPROVEN")} unproven</span><span className="ps-st ps-st--na">{cnt("NOT_RUN")} not run</span></p>
+          {a.runs.filter((r) => r.exec).map((r) => <p key={r.inputId} className={r.exec!.ok ? "ps-ok" : "ps-err"} style={{ fontSize: 12.5 }}>Sandbox ({r.exec!.engine}) on {r.inputId}: {r.exec!.ok ? `0 runtime errors, 0 console errors · rendered “${r.exec!.rendered.slice(0, 80)}”` : `${[...r.exec!.errors, ...r.exec!.consoleErrors.map((c) => `console.error: ${c}`)].join(" · ")}`}</p>)}
+          <div className="ps-attempt-x">
+            {df && (df.added.length > 0 || df.removed.length > 0) && <details className="ps-details"><summary>Prompt changes from attempt {a.n - 1}</summary>{diffPre(df.removed, df.added)}</details>}
+            <details className="ps-details"><summary>Prompt V{a.n} <span className="ps-muted ps-mono">sha256 {a.promptSha.slice(0, 12)}…</span></summary><pre className="ps-pre ps-pre--sm">{a.prompt}</pre></details>
+            {a.runs.map((r) => <details key={r.inputId} className="ps-details"><summary>Model output for {r.inputId}{r.error ? " (provider error)" : ""}</summary><pre className="ps-pre ps-pre--sm">{r.error ?? r.output}</pre></details>)}
+          </div>
         </li>; })}</ol></section>}
     </ToolFrame>
   );

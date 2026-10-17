@@ -6,15 +6,15 @@ import { useEffect, useState } from "react";
 import { QTYPE_LABEL, type Q } from "../shared/constants.ts";
 import { proApi, type ProviderInfo } from "../api.ts";
 
-export function ToolFrame({ id, actions, panel, panelLabel = "Output", children }: { id: ToolId; actions?: ReactNode; panel?: ReactNode; panelLabel?: string; children: ReactNode }) {
+export function ToolFrame({ id, actions, panel, panelLabel = "Output", layout, children }: { id: ToolId; actions?: ReactNode; panel?: ReactNode; panelLabel?: string; layout?: "flow"; children: ReactNode }) {
   const { panelOpen } = usePro(); const t = toolById(id)!;
   return (
-    <section className="ps-tool" aria-labelledby={`ps-h-${id}`} data-tool={id}>
+    <section className="ps-tool" aria-labelledby={`ps-h-${id}`} data-tool={id} data-layout={layout}>
       <header className="ps-tool-head">
-        <div className="ps-tool-ttl"><span className="ps-tool-i" aria-hidden="true"><Icon name={id} /></span><div><h1 id={`ps-h-${id}`}>{t.label}{t.isNew && <span className="ps-new">New</span>}</h1><p>{t.blurb}</p></div></div>
+        <div className="ps-tool-ttl"><span className="ps-tool-i" aria-hidden="true"><Icon name={id} /></span><div><h1 id={`ps-h-${id}`}>{t.label}{id === "living" && <span className="ps-new">New</span>}</h1><p>{t.blurb}</p></div></div>
         {actions && <div className="ps-tool-act">{actions}</div>}
       </header>
-      <div className="ps-tool-body" data-has-panel={panel && panelOpen ? "1" : "0"}>
+      <div className="ps-tool-body" data-has-panel={panel && panelOpen ? "1" : "0"} data-layout={layout}>
         <div className="ps-work">{children}</div>
         {panel && panelOpen && <aside className="ps-panel" aria-label={`${t.label} ${panelLabel.toLowerCase()}`}><h2 className="ps-panel-h">{panelLabel}</h2>{panel}</aside>}
       </div>
@@ -23,7 +23,7 @@ export function ToolFrame({ id, actions, panel, panelLabel = "Output", children 
 }
 export function NeedSession({ what }: { what: string }) {
   const { go } = usePro();
-  return (<div className="ps-empty ps-empty--inline"><p>{what} works on a Prompt Studio session. Open or start one first.</p><button type="button" className="ps-btn ps-btn--primary" onClick={() => go({ kind: "home" })}>Start a session</button></div>);
+  return (<div className="ps-empty ps-empty--inline ps-empty--hero"><span className="ps-empty-i" aria-hidden="true"><Icon name="studio" size={20} /></span><h2>No session open</h2><p>{what} works on a Prompt Studio session. Open or start one first.</p><div className="ps-row"><button type="button" className="ps-btn ps-btn--primary" onClick={() => go({ kind: "home" })}><Icon name="plus" size={14} />Start a session</button><button type="button" className="ps-btn" onClick={() => go({ kind: "tool", tool: "studio" })}>Open Prompt Studio</button></div></div>);
 }
 const SYM = { ok: "✓", warn: "!", bad: "×", na: "–" } as const;
 const SR = { ok: "Pass: ", warn: "Warning: ", bad: "Fail: ", na: "" } as const;
@@ -55,7 +55,7 @@ export function ModelConnect({ idp = "mc", compact }: { idp?: string; compact?: 
   const p = providers.find((x) => x.id === byok.provider);
   return (
     <fieldset className={`ps-mc${compact ? " ps-mc--compact" : ""}`} data-testid="model-connect">
-      <legend>Your model (BYOK)</legend>
+      <legend>Your model <span className="ps-mc-tag">BYOK</span>{byok.provider === "mock" && <span className="ps-sim">Simulated</span>}</legend>
       <div className="ps-cols ps-cols--3">
         <div className="ps-field"><label htmlFor={`${idp}-prov`}>Provider</label>
           <select id={`${idp}-prov`} className="ps-inp" value={byok.provider} onChange={(e) => setByok({ ...byok, provider: e.target.value })}>
@@ -66,7 +66,9 @@ export function ModelConnect({ idp = "mc", compact }: { idp?: string; compact?: 
         {byok.provider !== "mock" && <div className="ps-field"><label htmlFor={`${idp}-key`}>Provider key</label>
           <input id={`${idp}-key`} className="ps-inp ps-mono" type="password" value={byok.key} placeholder="your own API key" onChange={(e) => setByok({ ...byok, key: e.target.value })} autoComplete="off" spellCheck={false} /></div>}
       </div>
-      <p className="ps-hint">{p?.note ? `${p.note} ` : ""}SPE pays nothing for model calls and never stores this key: it stays in this page's memory and is sent only with each run, then discarded by the server.{byok.provider === "mock" ? " Simulated runs prove nothing about a real model and are labelled SIMULATED." : ""}</p>
+      <details className="ps-details"><summary>About your key and costs</summary>
+        <p>{p?.note ? `${p.note} ` : ""}SPE pays nothing for model calls and never stores this key: it stays in this page's memory and is sent only with each run, then discarded by the server.{byok.provider === "mock" ? " Simulated runs prove nothing about a real model and are labelled SIMULATED." : ""}</p>
+      </details>
     </fieldset>
   );
 }
