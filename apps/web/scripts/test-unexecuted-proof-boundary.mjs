@@ -47,4 +47,34 @@ assert.equal(rollback.restoredCommit, "", "Do not claim any revision was actuall
 assert.equal(rollback.receiptId, "", "Do not mint synthetic execution receipts");
 assert.match(rollback.details, /NOT_EXECUTED/);
 
-console.log("PASS: unexecuted reproduction/rollback evidence remains unqualified");
+// A malicious or buggy model may set every boolean to true. That still must
+// not give this legacy staging controller authority to perform a live release.
+const selfAssertedPass = {
+  defectCategory: "BROKEN_INTERNAL_LINK",
+  riskLevel: "LOW",
+  observedEvidence: { confidenceScore: 1, isFinalized: true },
+  failingTestBeforeFix: { testName: "fake", failingOutput: "claimed", reproduced: true },
+  qualificationResults: {
+    oracleIntegrityPreserved: true,
+    targetedUnitTestsPassed: true,
+    regressionSuitePassed: true,
+    securityPolicyPassed: true,
+    visualA11yPassed: true,
+    seoPolicyPassed: true,
+    antiMutationKillRate: 1,
+  },
+  rollbackReference: { verifiedRollbackCapable: true },
+};
+const selfAssertionVerdict = proof.evaluateReleaseAuthority(selfAssertedPass);
+assert.equal(selfAssertionVerdict.status, "PATCH_PREPARED");
+assert.equal(selfAssertionVerdict.authorizedForLiveDeploy, false);
+assert.match(selfAssertionVerdict.auditLog.join(" "), /RELEASE_AUTHORITY_HOLD/);
+
+const missingReproduction = proof.evaluateReleaseAuthority({
+  ...selfAssertedPass,
+  failingTestBeforeFix: undefined,
+});
+assert.equal(missingReproduction.status, "REJECTED");
+assert.equal(missingReproduction.authorizedForLiveDeploy, false);
+
+console.log("PASS: unexecuted reproduction, rollback, and self-asserted release claims remain unqualified");
