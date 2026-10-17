@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePro, useProAction, download, slug } from "../context.ts";
 import { ToolFrame, Field, ModelConnect, StatusBadge } from "./Frame.tsx";
 import { proApi, byokReady, ApiError } from "../api.ts";
+import { LivingTimeline } from "./LivingTimeline.tsx";
 import type { LivingProject, LedgerEntry, Requirement, LivingInput, CheckKind, Attempt } from "../core/living/types.ts";
 import type { Certificate } from "../core/living/certificate.ts";
 
@@ -21,15 +22,25 @@ const lineDiff = (a: string, b: string) => { const A = a.split("\n"), B = b.spli
 interface Draft { name: string; intent: string; requirements: Requirement[]; inputs: LivingInput[]; budget: { maxAttempts: number; maxTokens: number } }
 const blank = (): Draft => ({ name: "", intent: "", requirements: [{ id: "r1", text: "", check: { kind: "contains", value: "" } }], inputs: [{ id: "i1", text: "" }], budget: { maxAttempts: 5, maxTokens: 50_000 } });
 const DEMO: Draft = {
-  name: "Flagship demo: crash → captured error → fixed",
+  name: "Flagship demo: 3D Hero (SSR crash → captured error → scoped fix)",
+  intent: "Build 3D Hero App",
+  requirements: [
+    { id: "r1", text: "The page must render on the server with zero runtime or console errors", check: { kind: "runs_clean", value: "3D Hero", env: "ssr" } },
+    { id: "r2", text: "Keep the hero layout section", check: { kind: "contains", value: 'class=\\"hero\\"' } },
+    { id: "r3", text: "Do not use eval", check: { kind: "not_contains", value: "eval(" } },
+  ],
+  inputs: [{ id: "i1", text: "Write the server-rendered hero as one JavaScript code block with a render() function. [demo:ssr-window]", category: "codegen", language: "js" }],
+  budget: { maxAttempts: 4, maxTokens: 50_000 },
+};
+const DRIFT_DEMO: Draft = {
+  name: "Drift demo: a fix that also drops a feature",
   intent: "Build a small todo list app that renders into #root.",
   requirements: [
     { id: "r1", text: "The app must run with zero runtime or console errors", check: { kind: "runs_clean", value: "My todos" } },
     { id: "r2", text: "Render a heading that says My todos", check: { kind: "contains", value: "My todos" } },
-    { id: "r3", text: "Do not use eval", check: { kind: "not_contains", value: "eval(" } },
   ],
-  inputs: [{ id: "i1", text: "Write the app as one JavaScript code block. [demo:crash-then-fix]", category: "codegen", language: "js" }],
-  budget: { maxAttempts: 4, maxTokens: 50_000 },
+  inputs: [{ id: "i1", text: "Write the app as one JavaScript code block. [demo:drift-drop]", category: "codegen", language: "js" }],
+  budget: { maxAttempts: 3, maxTokens: 50_000 },
 };
 const toDraft = (p: LivingProject): Draft => ({ name: p.name, intent: p.intent, requirements: p.requirements, inputs: p.inputs, budget: p.budget });
 
@@ -90,12 +101,14 @@ export default function Living() {
 
   const panel = p ? (<div className="ps-stack" data-testid="living-panel">
     <div className="ps-row ps-wrap"><span className={`ps-lv-status ps-lv-status--${p.status}`} data-testid="living-status">{p.status.toUpperCase()}</span><span className="ps-hint">Attempt {p.attempts.length} of {p.budget.maxAttempts} · tokens {p.tokensUsed.toLocaleString()} / {p.budget.maxTokens.toLocaleString()} · approach: {p.strategyLabel}</span></div>
+    <LivingTimeline p={p} />
     {p.attempts.some((a) => a.simulated) && <p className="ps-badge-sim">SIMULATED model output (development provider). Code execution and checks are real; the model text is scripted and proves nothing about a real model.</p>}
     {rc && <div className={`ps-verdict ps-verdict--${rc.reason === "VERIFIED" ? "ok" : "bad"}`} role="status" data-testid="living-receipt">
       <b>{rc.reason === "VERIFIED" ? "Verified" : rc.reason === "USER_STOP" ? "Stopped by you" : `Paused: ${rc.reason}`}</b><p>{rc.message}</p>
       <ul className="ps-hint"><li>Verified: {rc.verified.join(", ") || "none"}</li><li>Failed: {rc.failed.join(", ") || "none"}</li><li>Unproven: {rc.unproven.join(", ") || "none"}</li><li>Not run: {rc.notRun.join(", ") || "none"}</li><li>Attempts {rc.attemptsUsed}/{rc.maxAttempts} · tokens {rc.tokensUsed} ({rc.tokenSource.toLowerCase()}) · best attempt {rc.bestAttempt ?? "–"}</li></ul>
       {!!rc.capturedErrors?.length && <><h3 className="ps-h3">Errors captured by the sandbox</h3><ul className="ps-hint" data-testid="captured-errors">{rc.capturedErrors.map((e, i) => <li key={i}>Attempt {e.attempt} · {e.inputId}: <code>{e.error}</code></li>)}</ul></>}
       {rc.promptDiff && (rc.promptDiff.added.length > 0 || rc.promptDiff.removed.length > 0) && <><h3 className="ps-h3">Prompt V{rc.promptDiff.from} → V{rc.promptDiff.to}</h3><pre className="ps-pre ps-diff ps-pre--sm" data-testid="prompt-diff">{rc.promptDiff.removed.map((l, i) => <del key={`d${i}`}><span className="sr-only">Removed: </span>{l}{"\n"}</del>)}{rc.promptDiff.added.map((l, i) => <ins key={`a${i}`}><span className="sr-only">Added: </span>{l}{"\n"}</ins>)}</pre></>}
+      {!!rc.scopedRepairs?.length && <><h3 className="ps-h3">Scoped repair checks</h3><div className="ps-table-wrap"><table className="ps-table" data-testid="scoped-repairs"><caption className="sr-only">Was each fix confined to the failing call-site?</caption><thead><tr><th scope="col">Attempt</th><th scope="col">Verdict</th><th scope="col">Pinned call-site</th><th scope="col">Lines changed</th><th scope="col">Outside pin</th><th scope="col">Regions</th><th scope="col">Kept checks</th><th scope="col">Why</th></tr></thead><tbody>{rc.scopedRepairs.map((x, k) => <tr key={k}><td>{x.attempt}</td><td><span className={`ps-badge ${x.verdict === "ACCEPTED" ? "ps-badge--ok" : "ps-badge--bad"}`}>{x.verdict === "ACCEPTED" ? "Accepted" : "Rejected: drift"}</span></td><td><code>{x.pin}</code></td><td>{x.changed}</td><td>{x.outsidePin} / {x.allowance}</td><td>{x.touchedRegions || "none"}</td><td>{x.preserved.join("; ") || "none"}{x.regressions.length ? ` · regressed: ${x.regressions.join(", ")}` : ""}</td><td>{x.reasons.join(" ") || "Inside the pinned region; imports, styling and features unchanged."}</td></tr>)}</tbody></table></div></>}
     </div>}
     <h3 className="ps-h3">Proof ledger</h3>
     {p.ledger.length === 0 ? <p className="ps-hint">Add requirements and test inputs.</p> : <div className="ps-scroll-x"><table className="ps-table" data-testid="living-ledger"><caption className="sr-only">Latest status of each requirement on each test input</caption><thead><tr><th scope="col">Requirement</th><th scope="col">Input</th><th scope="col">Status</th><th scope="col">Evidence</th></tr></thead>
@@ -111,6 +124,7 @@ export default function Living() {
     <ToolFrame id="living" panel={panel} panelLabel="Proof" actions={<>
       <button type="button" className="ps-btn" onClick={() => startNew()}>New project</button>
       <button type="button" className="ps-btn" onClick={() => { startNew(DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo">Load flagship demo</button>
+      <button type="button" className="ps-btn" onClick={() => { startNew(DRIFT_DEMO); if (demoReady) setByok({ provider: "mock", model: "scripted-demo", key: "" }); }} data-testid="living-demo-drift">Load drift demo</button>
       <label className="ps-btn ps-file">Import<input type="file" accept=".json,application/json" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void importFile(f); }} /></label>
     </>}>
       {err && <p className="ps-err" role="alert" data-testid="living-err">{err}</p>}
@@ -127,6 +141,7 @@ export default function Living() {
             <label className="sr-only" htmlFor={`lv-rq-${i}`}>Requirement {i + 1}</label><input id={`lv-rq-${i}`} className="ps-inp" value={q.text} placeholder="e.g. Mention the 30-day refund window" onChange={(e) => setReq(i, { text: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-ck-${i}`}>Check for requirement {i + 1}</label><select id={`lv-ck-${i}`} className="ps-inp ps-inp--auto" value={q.check.kind} onChange={(e) => setReq(i, { check: { kind: e.target.value as CheckKind } })}>{(Object.keys(KIND_LABEL) as CheckKind[]).map((k) => <option key={k} value={k}>{KIND_LABEL[k]}</option>)}</select>
             {(NEEDS_VALUE.includes(q.check.kind) || q.check.kind === "runs_clean") && <><label className="sr-only" htmlFor={`lv-cv-${i}`}>{q.check.kind === "runs_clean" ? "Text the app must render (optional)" : "Check text"}</label><input id={`lv-cv-${i}`} className="ps-inp" value={q.check.value ?? ""} placeholder={q.check.kind === "runs_clean" ? "must render (optional)" : "text or pattern"} onChange={(e) => setReq(i, { check: { ...q.check, value: e.target.value } })} /></>}
+            {q.check.kind === "runs_clean" && <><label className="sr-only" htmlFor={`lv-ce-${i}`}>Where the code runs</label><select id={`lv-ce-${i}`} className="ps-inp" value={q.check.env ?? "browser"} onChange={(e) => setReq(i, { check: { ...q.check, env: e.target.value === "ssr" ? "ssr" : undefined } })}><option value="browser">In a page (DOM)</option><option value="ssr">Server render (no window)</option></select></>}
             {NEEDS_N.includes(q.check.kind) && <><label className="sr-only" htmlFor={`lv-cn-${i}`}>Number</label><input id={`lv-cn-${i}`} className="ps-inp ps-inp--num" type="number" min={0} value={q.check.n ?? ""} onChange={(e) => setReq(i, { check: { ...q.check, n: Number(e.target.value) } })} /></>}
             {q.check.kind === "json_keys" && <><label className="sr-only" htmlFor={`lv-ckeys-${i}`}>Keys</label><input id={`lv-ckeys-${i}`} className="ps-inp" value={(q.check.keys ?? []).join(", ")} placeholder="answer, sources" onChange={(e) => setReq(i, { check: { ...q.check, keys: e.target.value.split(",").map((x) => x.trim()).filter(Boolean) } })} /></>}
             <button type="button" className="ps-btn ps-btn--sm" aria-label={`Remove requirement ${i + 1}`} onClick={() => setD({ ...d, requirements: d.requirements.filter((_, j) => j !== i) })}>Remove</button>
