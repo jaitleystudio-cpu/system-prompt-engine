@@ -286,11 +286,29 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [quality, setQuality] = useState<VisualQuality>("LITE");
-  const [userRequest, setUserRequest] = useState("");
+  const [userRequest, setUserRequest] = useState(() => {
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      const promptParam = sp.get("prompt") || sp.get("request");
+      if (promptParam && promptParam.trim()) {
+        return promptParam.trim();
+      }
+    }
+    return "";
+  });
   const [category, setCategory] = useState<CategoryId>("AI Assistant");
   const [depthTier, setDepthTier] = useState<DepthTier>(DEFAULT_DEPTH_TIER);
   const [target, setTarget] = useState<TargetId>(getInitialSelectedHeroTarget);
-  const [intent, setIntent] = useState(() => defaultIntentLens(""));
+  const [intent, setIntent] = useState(() => {
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      const promptParam = sp.get("prompt") || sp.get("request");
+      if (promptParam && promptParam.trim()) {
+        return defaultIntentLens(promptParam.trim());
+      }
+    }
+    return defaultIntentLens("");
+  });
   const [intentProvenance, setIntentProvenance] =
     useState<IntentProvenance>("AUTO_DERIVED_INTENT");
   const [phase, setPhase] = useState<CompilePhase>("idle");

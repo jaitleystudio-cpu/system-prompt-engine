@@ -1457,7 +1457,27 @@ run();`;
                     type="button"
                     onClick={() => {
                       const filename = `spe-contract-${Date.now()}.spe`;
-                      const blob = new Blob([safePrompt], { type: "application/octet-stream" });
+                      const spePackage = {
+                        artifact: {
+                          format: "spe",
+                          version: "1",
+                          id: `spe-pkg-${Date.now().toString(36)}`,
+                          createdAt: new Date().toISOString(),
+                          title: effectiveUserBrief.slice(0, 60),
+                        },
+                        provenance: {
+                          created_with: "SPE — System Prompt Engine",
+                          homepage: "https://systempromptengine.com",
+                          license: "MIT OR Apache-2.0",
+                        },
+                        prompt: {
+                          canonicalSystemPrompt: safePrompt,
+                          characterCount: safePrompt.length,
+                          modelTarget: activeTarget || "claude-5-5-sonnet",
+                        },
+                        openWithSpeUrl: `https://systempromptengine.com/?prompt=${encodeURIComponent(safePrompt.slice(0, 1500))}`,
+                      };
+                      const blob = new Blob([JSON.stringify(spePackage, null, 2)], { type: "application/json" });
                       const url = URL.createObjectURL(blob);
                       const link = document.createElement("a");
                       link.href = url;
@@ -1466,7 +1486,7 @@ run();`;
                       link.click();
                       document.body.removeChild(link);
                       URL.revokeObjectURL(url);
-                      showToast("Downloaded verifiable .spe bundle");
+                      showToast("Downloaded verifiable .spe bundle with clean provenance");
                     }}
                     style={{
                       minHeight: "42px",
@@ -1490,6 +1510,38 @@ run();`;
                       <polyline points="2 12 12 17 22 12" />
                     </svg>
                     <span>Download .spe</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const shareUrl = `https://systempromptengine.com/?prompt=${encodeURIComponent(safePrompt.slice(0, 1500))}`;
+                      navigator.clipboard.writeText(shareUrl).then(() => {
+                        showToast("Copied 'Open With SPE' share link to clipboard");
+                      });
+                    }}
+                    style={{
+                      minHeight: "42px",
+                      padding: "6px 12px",
+                      borderRadius: "9999px",
+                      background: "rgba(56, 189, 248, 0.12)",
+                      border: "1px solid rgba(56, 189, 248, 0.35)",
+                      color: "#38bdf8",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "6px",
+                      cursor: "pointer",
+                    }}
+                    title="Copy shareable link to open and remix this prompt in SPE"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                    <span>Open With SPE ↗</span>
                   </button>
                 </div>
               </div>
