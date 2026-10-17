@@ -196,6 +196,24 @@ try {
   console.log("PASS R4: pinned Ed25519 reviewer signature bound to browser/candidate/intent/scope");
   console.log("PASS R4: forged, stale, reused, and mismatched receipts rejected; authority NONE");
 
+  // R5 defense in depth: even within the browser, remote beacons must not
+  // succeed. A forbidden request is itself a negative execution observation.
+  const beacon = [
+    '<!doctype html><main id="spe-app">',
+    '<canvas id="spe-stage" width="300" height="160"></canvas>',
+    '<button id="spe-interact">Click</button></main>',
+    '<script>window.speInteractionCount=0;',
+    'document.querySelector("#spe-interact").onclick=()=>window.speInteractionCount++;',
+    'fetch("https://example.invalid/spe-beacon").catch(()=>{});',
+    '</script>',
+  ].join("\n");
+  const beaconResult = await inspectCandidateInBrowser(browser, beacon);
+  assert.equal(beaconResult.passed, false);
+  assert.ok(beaconResult.errors.some(e => e.includes("NETWORK_DENIED:")),
+    "External request must be denied and visible as a test failure");
+  console.log("PASS R5: browser-level forbidden egress fails qualification");
+
+
   const fakeGoal = await reconcileRecoveryReadOnly({
     evidenceDirectory: join(dir, "positive"), goal: "different goal", originalPrompt: goal, browser,
   });
