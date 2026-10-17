@@ -14,6 +14,7 @@ const APPROACH: Record<Strategy, string> = {
 export function runtimeRepair(error: string): string {
   const e = error.replace(/\s+/g, " ").trim().slice(0, 240);
   let m = /ReferenceError: ([A-Za-z_$][\w$]*) is not defined/.exec(e);
+  if (m && ["window", "document", "localStorage", "sessionStorage", "navigator", "location", "requestAnimationFrame", "HTMLElement"].includes(m[1])) return `The previous code crashed when it ran: "${e}". \`${m[1]}\` does not exist where this code runs (server-side rendering or a non-browser runtime).`;
   if (m) return `The previous code crashed when it ran: "${e}". Do not reference \`${m[1]}\` unless you declare and initialise it first in the same code.`;
   m = /TypeError: Cannot read propert(?:y|ies) of (undefined|null) \(reading '([^']+)'\)/.exec(e);
   if (m) return `The previous code crashed when it ran: "${e}". Do not read \`.${m[2]}\` from a value that can be ${m[1]}; make sure it exists before you use it.`;

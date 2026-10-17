@@ -19,8 +19,10 @@ export const NODE_HARNESS_ID = "node-vm-worker/1 (dev/test harness)";
 const WORKER_SRC = String.raw`
 const { parentPort, workerData } = require("node:worker_threads");
 const vm = require("node:vm");
-const errors = [], consoleErrors = [], logs = [];
-const fmt = (e) => (e && e.name && e.message ? e.name + ": " + e.message : String(e));
+const errors = [], consoleErrors = [], logs = [], sites = [];
+const SSR = workerData.env === "ssr";
+const site = (e) => { const m = /generated\.js:(\d+)(?::(\d+))?/.exec(String((e && e.stack) || "")); if (m && !sites.length) sites.push(m[2] ? { line: +m[1], col: +m[2] } : { line: +m[1] }); };
+const fmt = (e) => { site(e); return e && e.name && e.message ? e.name + ": " + e.message : String(e); };
 process.on("uncaughtException", (e) => errors.push(fmt(e)));
 process.on("unhandledRejection", (e) => errors.push("Unhandled rejection: " + fmt(e)));
 const strip = (h) => String(h).replace(/<[^>]*>/g, " ");
@@ -46,29 +48,32 @@ const document = { body, documentElement: body, title: "",
 const out = (arr) => (...a) => arr.push(a.map((x) => (typeof x === "string" ? x : (() => { try { return JSON.stringify(x); } catch { return String(x); } })())).join(" ").slice(0, 500));
 const sandboxConsole = { log: out(logs), info: out(logs), warn: out(logs), debug: out(logs), error: out(consoleErrors) };
 const timers = [];
-const ctx = vm.createContext({ document, window: undefined, console: sandboxConsole, setTimeout: (f, ms) => { timers.push(f); return timers.length; }, clearTimeout() {}, queueMicrotask: (f) => Promise.resolve().then(f) }, { codeGeneration: { strings: false, wasm: false } });
-ctx.window = ctx; ctx.globalThis = ctx;
+const ctx = vm.createContext({ ...(SSR ? {} : { document }), console: sandboxConsole, setTimeout: (f, ms) => { timers.push(f); return timers.length; }, clearTimeout() {}, queueMicrotask: (f) => Promise.resolve().then(f) }, { codeGeneration: { strings: false, wasm: false } });
+if (!SSR) ctx.window = ctx;
+let ssrHtml = "";
 const t0 = Date.now();
 try { new vm.Script(workerData.code, { filename: "generated.js" }).runInContext(ctx, { timeout: 1000 }); }
 catch (e) { errors.push(/Script execution timed out/.test(String(e && e.message)) ? "Timed out: the code ran longer than 1 s." : fmt(e)); }
 (async () => {
   for (let i = 0; i < 20 && timers.length; i++) { const f = timers.shift(); try { vm.runInContext("void 0", ctx); f(); } catch (e) { errors.push(fmt(e)); } }
+  if (SSR && !errors.length) { try { const f = vm.runInContext("typeof render === 'function' ? render : null", ctx); if (f) ssrHtml = strip(String(f())); else errors.push("SSR: the code defines no render() function to call."); } catch (e) { errors.push(fmt(e)); } }
   await new Promise((r) => setImmediate(r)); await new Promise((r) => setTimeout(r, 20));
-  parentPort.postMessage({ errors: errors.slice(0, 20), consoleErrors: consoleErrors.slice(0, 20), rendered: root.text().concat(" ", app.text(), " ", body.children.slice(2).map((c) => (c && c.text ? c.text() : "")).join(" ")).replace(/\s+/g, " ").trim().slice(0, 2000), ms: Date.now() - t0 });
+  parentPort.postMessage({ sites, consoleErrors: consoleErrors.slice(0, 20), errors: errors.slice(0, 20), rendered: SSR ? ssrHtml.replace(/\s+/g, " ").trim().slice(0, 2000) : root.text().concat(" ", app.text(), " ", body.children.slice(2).map((c) => (c && c.text ? c.text() : "")).join(" ")).replace(/\s+/g, " ").trim().slice(0, 2000), ms: Date.now() - t0 });
 })();
 `;
 
-export async function executeInNodeHarness(code: string, opts: { wallMs?: number } = {}): Promise<ExecEvidence> {
+export async function executeInNodeHarness(code: string, opts: { wallMs?: number; env?: "browser" | "ssr" } = {}): Promise<ExecEvidence> {
+  const env = opts.env === "ssr" ? "ssr" : "browser";
   const codeSha = await sha256Hex(code);
   const started = Date.now();
   if (!code.trim()) return { engine: NODE_HARNESS_ID, codeSha, ok: false, errors: ["No code to execute: the output had no code block and was empty."], consoleErrors: [], rendered: "", ms: 0 };
   if (code.length > 100_000) return { engine: NODE_HARNESS_ID, codeSha, ok: false, errors: ["Code is over 100,000 characters; not executed."], consoleErrors: [], rendered: "", ms: 0 };
   return await new Promise<ExecEvidence>((resolve) => {
-    const w = new Worker(WORKER_SRC, { eval: true, workerData: { code }, env: {}, resourceLimits: { maxOldGenerationSizeMb: 64, maxYoungGenerationSizeMb: 16, codeRangeSizeMb: 16 }, stdout: true, stderr: true });
+    const w = new Worker(WORKER_SRC, { eval: true, workerData: { code, env }, env: {}, resourceLimits: { maxOldGenerationSizeMb: 64, maxYoungGenerationSizeMb: 16, codeRangeSizeMb: 16 }, stdout: true, stderr: true });
     let done = false;
-    const finish = (x: Omit<ExecEvidence, "engine" | "codeSha" | "ok">) => { if (done) return; done = true; clearTimeout(kill); void w.terminate(); resolve({ engine: NODE_HARNESS_ID, codeSha, ok: x.errors.length === 0 && x.consoleErrors.length === 0, ...x }); };
+    const finish = (x: Omit<ExecEvidence, "engine" | "codeSha" | "ok" | "env">) => { if (done) return; done = true; clearTimeout(kill); void w.terminate(); resolve({ engine: NODE_HARNESS_ID, codeSha, ok: x.errors.length === 0 && x.consoleErrors.length === 0, ...x, env, ...(x.sites?.length ? {} : { sites: undefined }) }); };
     const kill = setTimeout(() => finish({ errors: [`Timed out: no result after ${opts.wallMs ?? 3000} ms.`], consoleErrors: [], rendered: "", ms: Date.now() - started }), opts.wallMs ?? 3000);
-    w.once("message", (m: { errors: string[]; consoleErrors: string[]; rendered: string; ms: number }) => finish(m));
+    w.once("message", (m: { errors: string[]; consoleErrors: string[]; rendered: string; ms: number; sites?: { line: number; col?: number }[] }) => finish(m));
     w.once("error", (e: Error) => finish({ errors: [`Harness worker crashed: ${String(e?.message ?? e).slice(0, 200)}`], consoleErrors: [], rendered: "", ms: Date.now() - started }));
     w.once("exit", (c) => { if (!done) finish({ errors: [`Harness worker exited (code ${c}) before reporting.`], consoleErrors: [], rendered: "", ms: Date.now() - started }); });
   });

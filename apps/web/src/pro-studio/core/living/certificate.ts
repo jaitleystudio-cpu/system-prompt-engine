@@ -3,13 +3,14 @@
 import type { Check, ExecEvidence, LivingProject, Status } from "./types.ts";
 import { runCheck, sha256Hex, VERIFIER_ID, isPass, extractCode } from "./verify.ts";
 import { BUILDER_ID } from "./compile.ts";
+import { driftCheck, type ScopeReport } from "./scope.ts";
 import { ledgerOf } from "./loop.ts";
 export const CERT_FORMAT = "spe.proof-certificate/1";
 export interface Certificate {
   format: typeof CERT_FORMAT; projectId: string; projectName: string; intent: string; attempt: number;
   provider: string; model: string; simulated: boolean; speVersion: string; promptSha256: string;
   requirements: { id: string; text: string; check: Check }[];
-  evidence: { inputId: string; output: string; outputSha: string; error?: string; exec?: ExecEvidence }[];
+  evidence: { inputId: string; output: string; outputSha: string; error?: string; exec?: ExecEvidence; scope?: ScopeReport }[];
   tests: { reqId: string; inputId: string; status: Status }[];
   verdict: "VERIFIED" | "NOT_VERIFIED"; counts: Record<Status, number>;
   builder: string; verifier: string; issuedAt: string; certSha256: string;
@@ -32,7 +33,7 @@ export async function buildCertificate(p: LivingProject, o: { speVersion: string
   const c: Certificate = {
     format: CERT_FORMAT, projectId: p.id, projectName: p.name, intent: p.intent, attempt: a.n, provider: a.provider, model: a.model, simulated: a.simulated,
     speVersion: o.speVersion, promptSha256: a.promptSha, requirements: p.requirements.map((q) => ({ id: q.id, text: q.text, check: q.check })),
-    evidence: a.runs.map((r) => ({ inputId: r.inputId, output: r.output, outputSha: r.outputSha, ...(r.error ? { error: r.error } : {}), ...(r.exec ? { exec: r.exec } : {}) })),
+    evidence: a.runs.map((r) => ({ inputId: r.inputId, output: r.output, outputSha: r.outputSha, ...(r.error ? { error: r.error } : {}), ...(r.exec ? { exec: r.exec } : {}), ...(r.scope ? { scope: r.scope } : {}) })),
     tests, verdict, counts, builder: BUILDER_ID, verifier: VERIFIER_ID, issuedAt: o.issuedAt ?? new Date().toISOString(),
     certSha256: "", signed: "UNSIGNED", signature: null, publicKey: null,
   };
@@ -50,10 +51,21 @@ export async function verifyCertificate(c: Certificate, expectPublicKey?: string
   if (c.builder === c.verifier) reasons.push("Builder and verifier must be different.");
   for (const e of c.evidence ?? []) if (!e.error && (await sha256Hex(e.output ?? "")) !== e.outputSha) reasons.push(`Output for input ${e.inputId} does not match its recorded hash.`);
   for (const e of c.evidence ?? []) if (e.exec && (await sha256Hex(extractCode(e.output ?? ""))) !== e.exec.codeSha) reasons.push(`Execution record for input ${e.inputId} is for different code than the recorded output.`);
+  // Scoped-repair drift: recomputed from the recorded baseline code, never taken from the recorded verdict.
+  const driftRejected = new Set<string>();
+  for (const e of c.evidence ?? []) {
+    if (!e.scope) continue;
+    if ((await sha256Hex(e.scope.baseline?.code ?? "")) !== e.scope.baseline?.codeSha) { reasons.push(`Scope baseline for input ${e.inputId} does not match its recorded hash.`); continue; }
+    const d = driftCheck(e.scope.baseline.code, extractCode(e.output ?? ""), e.scope.pin ?? null);
+    const rejected = !d.ok || (e.scope.regressions ?? []).length > 0;
+    if (rejected) driftRejected.add(e.inputId);
+    if ((rejected ? "REJECTED_DRIFT" : "ACCEPTED") !== e.scope.verdict) reasons.push(`Scope verdict for input ${e.inputId} does not follow from the code diff (recomputed ${rejected ? "REJECTED_DRIFT" : "ACCEPTED"}).`);
+  }
   for (const t of c.tests ?? []) {
     const q = c.requirements.find((x) => x.id === t.reqId); const e = c.evidence.find((x) => x.inputId === t.inputId);
     if (!q || !e) { reasons.push(`Test ${t.reqId}/${t.inputId} has no matching requirement or evidence.`); continue; }
     let rerun: Status = e.error ? "NOT_RUN" : runCheck(q.check, e.output, e.exec).status;
+    if (rerun === "VERIFIED" && q.check.kind === "runs_clean" && driftRejected.has(e.inputId)) rerun = "FAILED";
     if (rerun === "UNPROVEN" && (t.status === "HUMAN_PASS" || t.status === "HUMAN_FAIL")) rerun = t.status; // human marks only on manual checks
     recheck.push({ reqId: t.reqId, inputId: t.inputId, claimed: t.status, rerun });
     if (rerun !== t.status) reasons.push(`Verifier re-ran ${t.reqId} on input ${t.inputId}: got ${rerun}, certificate says ${t.status}.`);
