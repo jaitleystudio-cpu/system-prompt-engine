@@ -141,6 +141,14 @@ export async function runCrashRecovery({
       observation: observed,
     });
     record.artifactDigest = observed.candidateDigest;
+    if (observed.passed) {
+      // Persist exactly the browser-tested bytes. A model-supplied success
+      // message cannot cause an artifact to be marked browser-passed.
+      await mkdir(evidenceDirectory, { recursive: true });
+      const file = "browser-passed-" + observed.candidateDigest.slice(7, 23) + ".html";
+      await writeFile(join(evidenceDirectory, file), response.html, { mode: 0o600 });
+      record.browserPassedArtifact = { file, digest: observed.candidateDigest };
+    }
     await persist();
     return observed;
   };
