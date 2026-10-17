@@ -1,26 +1,28 @@
 import { useState } from "react";
-import { usePro, usePersisted, useProAction, download, copyText } from "../context.ts";
+import { usePro, useProAction, download, copyText } from "../context.ts";
 import { ToolFrame } from "./Frame.tsx";
-import { type Blueprint as BP, type Agent, TOOLS as AGENT_TOOLS, RISKY, validate, toOpenAI, toAnthropic, toMcpStyle, DRAFT_NOTE } from "../core/blueprint.ts";
-import { uid } from "../core/studio.ts";
-const KEY = "spe.pro.studio.v2.blueprint";
+import { type Blueprint as BP, type Agent, AGENT_TOOLS, RISKY, DRAFT_NOTE, uid } from "../shared/constants.ts";
+import { useProQuery } from "../api.ts";
 export const exampleBlueprint = (): BP => ({ name: "Bike shop help desk", agents: [
   { id: "triage", name: "Triage", role: "Reads each message and decides who should answer.", instructions: "Ask one clarifying question if the request is unclear.", tools: [], maxSteps: 4, needsApproval: false, x: 16, y: 168 },
   { id: "repairs", name: "Repair advisor", role: "Suggests the right repair and a price range.", instructions: "Use the shop's price list. Never promise refunds.", tools: ["read_file", "web_search"], maxSteps: 8, needsApproval: false, x: 232, y: 40 },
   { id: "billing", name: "Billing", role: "Drafts replies about invoices.", instructions: "Hand anything about refunds to a person.", tools: ["read_file", "send_email"], maxSteps: 6, needsApproval: true, x: 232, y: 296 },
   { id: "human", name: "Staff member", role: "A person who approves refunds.", instructions: "", tools: [], maxSteps: 1, needsApproval: false, x: 448, y: 296 }],
   handoffs: [{ from: "triage", to: "repairs", when: "the question is about a repair" }, { from: "triage", to: "billing", when: "the question is about billing" }, { from: "billing", to: "human", when: "a refund is requested" }] });
-const isBP = (v: unknown): v is BP => !!v && typeof v === "object" && Array.isArray((v as BP).agents) && Array.isArray((v as BP).handoffs);
-const EXP = { mcp: toMcpStyle, openai: toOpenAI, anthropic: toAnthropic } as const;
+const EXP = { mcp: "MCP-style", openai: "OpenAI-style", anthropic: "Anthropic-style" } as const;
+// Kept for the page's lifetime. Download the draft config to keep it.
+let lastBp: BP | null = null;
 const W = 168, H = 64;
 export default function Blueprint() {
   const { announce, log } = usePro();
-  const [bp, setBp] = usePersisted<BP>(KEY, exampleBlueprint, isBP);
+  const [bp, setBp0] = useState<BP>(() => lastBp ?? exampleBlueprint());
+  const setBp = (fn: BP | ((b: BP) => BP)) => setBp0((b) => { const n = typeof fn === "function" ? fn(b) : fn; lastBp = n; return n; });
   const [sel, setSel] = useState(bp.agents[0]?.id ?? "");
   const [fmt, setFmt] = useState<keyof typeof EXP>("mcp");
   const [hf, setHf] = useState(""); const [ht, setHt] = useState(""); const [hw, setHw] = useState("");
   const a = bp.agents.find((x) => x.id === sel);
-  const errs = validate(bp); const exp = JSON.stringify(EXP[fmt](bp), null, 2);
+  const q = useProQuery<{ errors: string[]; export: unknown }>("/blueprint", { bp, fmt });
+  const errs = q.data?.errors ?? []; const exp = q.data ? JSON.stringify(q.data.export, null, 2) : "";
   const patch = (p: Partial<Agent>) => setBp((b) => ({ ...b, agents: b.agents.map((x) => (x.id === sel ? { ...x, ...p } : x)) }));
   const addAgent = () => { const id = uid(); const n = bp.agents.length; setBp((b) => ({ ...b, agents: [...b.agents, { id, name: `Agent ${n + 1}`, role: "", instructions: "", tools: [], maxSteps: 5, needsApproval: false, x: 16 + (n % 3) * 216, y: 24 + (Math.floor(n / 3) * 120) % 360 }] })); setSel(id); announce(`Added Agent ${n + 1}`); requestAnimationFrame(() => document.getElementById("bp-name")?.focus()); };
   useProAction((id) => { if (id === "add-agent") addAgent(); });
@@ -28,12 +30,12 @@ export default function Blueprint() {
   const pos = new Map(bp.agents.map((x) => [x.id, x]));
   const panel = (<div className="ps-stack">
     <h3 className="ps-h3">Checks</h3>
-    <ul className="ps-checks" data-testid="bp-checks">{errs.length ? errs.map((e, i) => <li key={i} className="ps-q ps-q--bad"><i aria-hidden="true">×</i><div><b><span className="sr-only">Problem: </span>{e}</b></div></li>) : <li className="ps-q ps-q--ok"><i aria-hidden="true">✓</i><div><b>No problems found.</b></div></li>}</ul>
+    <ul className="ps-checks" data-testid="bp-checks">{!q.data ? <li className="ps-hint" role="status">{q.error || "Checking on SPE Pro…"}</li> : errs.length ? errs.map((e, i) => <li key={i} className="ps-q ps-q--bad"><i aria-hidden="true">×</i><div><b><span className="sr-only">Problem: </span>{e}</b></div></li>) : <li className="ps-q ps-q--ok"><i aria-hidden="true">✓</i><div><b>No problems found.</b></div></li>}</ul>
     <h3 className="ps-h3">Export draft config</h3>
-    <div className="ps-seg" role="group" aria-label="Export format">{(Object.keys(EXP) as (keyof typeof EXP)[]).map((k) => <button key={k} type="button" aria-pressed={fmt === k} onClick={() => setFmt(k)}>{k === "mcp" ? "MCP-style" : k === "openai" ? "OpenAI-style" : "Anthropic-style"}</button>)}</div>
+    <div className="ps-seg" role="group" aria-label="Export format">{(Object.keys(EXP) as (keyof typeof EXP)[]).map((k) => <button key={k} type="button" aria-pressed={fmt === k} onClick={() => setFmt(k)}>{EXP[k]}</button>)}</div>
     <p className="ps-hint">{DRAFT_NOTE}</p>
     <pre className="ps-pre ps-pre--sm" tabIndex={0} aria-label="Exported config">{exp}</pre>
-    <div className="ps-row"><button type="button" className="ps-btn ps-btn--sm" onClick={async () => announce((await copyText(exp)) ? "Draft config copied" : "Copy was blocked")}>Copy</button><button type="button" className="ps-btn ps-btn--sm" onClick={() => { download(`blueprint-${fmt}-draft.json`, exp); log("export.blueprint", fmt); }}>Download</button></div>
+    <div className="ps-row"><button type="button" className="ps-btn ps-btn--sm" disabled={!exp} onClick={async () => announce((await copyText(exp)) ? "Draft config copied" : "Copy was blocked")}>Copy</button><button type="button" className="ps-btn ps-btn--sm" disabled={!exp} onClick={() => { download(`blueprint-${fmt}-draft.json`, exp); log("export.blueprint", fmt); }}>Download</button></div>
   </div>);
   return (
     <ToolFrame id="blueprint" panel={panel} panelLabel="Checks & export" actions={<><button type="button" className="ps-btn" onClick={() => { setBp(exampleBlueprint()); setSel("triage"); announce("Example restored"); }}>Reset example</button><button type="button" className="ps-btn ps-btn--primary" onClick={addAgent}>Add agent</button></>}>
