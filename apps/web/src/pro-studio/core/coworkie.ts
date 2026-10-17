@@ -21,6 +21,7 @@ const ACTIONS: { re: RegExp; tool: ToolId; action: string; label: string }[] = [
   { re: /\bexport\b.*\b(spe|file)\b/, tool: "studio", action: "export", label: "Export a .spe file" },
 ];
 const ALIASES: [RegExp, ToolId][] = [
+  [/\b(living|loop|goal|must-?haves?|proof|certificate|retry)\b/, "living"], [/\b(blind|a\/b|ab test)\b/, "blind"], [/\b(cross[- ]?model|portability|portable|models)\b/, "portability"],
   [/\b(python|javascript|js|curl|sdk|code)\b/, "code"], [/\b(csv|batch|bulk|rows)\b/, "batch"], [/\b(cost|price|budget|tokens?)\b/, "cost"],
   [/\b(brand|style|voice)\b/, "brand"], [/\b(xml|json|markdown|format|convert)\b/, "formats"], [/\b(audit|log)\b/, "audit"],
   [/\b(library|pack|share|team)\b/, "library"], [/\b(report|handoff|client)\b/, "report"], [/\b(agents?|blueprint|handoffs?)\b/, "blueprint"],
@@ -74,11 +75,13 @@ export function suggest(s: CwState): Suggestion[] {
   if (vs.length) out.push({ label: "Fill variables from a CSV", why: `${vs.length} variable${vs.length > 1 ? "s" : ""} can be filled per row.`, intent: { type: "open", tool: "batch" } });
   if (!s.versions.length) out.push({ label: "Save a version", why: "No versions yet; versions enable diff and compare.", intent: { type: "action", tool: "studio", action: "save-version", label: "Save a version" } });
   else out.push({ label: "Sign a release", why: `${s.versions.length} version${s.versions.length > 1 ? "s" : ""} saved; sign one to share a verifiable pack.`, intent: { type: "action", tool: "releases", action: "sign", label: "Sign a release" } });
+  const req = s.blocks.filter((b) => b.kind === "requirements").flatMap((b) => b.must ?? []);
+  if (req.length) out.unshift({ label: "Prove it on your model", why: `${req.length} must-have${req.length > 1 ? "s" : ""} in this session can become protected, checked requirements in a Living .spe project.`, intent: { type: "open", tool: "living" } });
   out.push({ label: "Export to code", why: "Get Python, JavaScript or cURL with this prompt embedded.", intent: { type: "open", tool: "code" } });
   return out.slice(0, 4);
 }
 export const HELP = [
-  "I can open any Pro tool: try “open batch” or “cost”.",
+  "I can open any Pro tool: try “open living”, “blind compare”, “open batch” or “cost”.",
   "I can run tool actions: “scan for secrets”, “run tests”, “save version”, “sign release”, “templates”.",
   "I can fill the Home composer: “fill: You are a support assistant for…”.",
   "“explain” summarises the current session's checks and scan; “next” suggests what to do.",

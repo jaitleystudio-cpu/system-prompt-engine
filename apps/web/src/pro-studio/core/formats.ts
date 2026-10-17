@@ -1,10 +1,7 @@
 // Prompt format converter: the same blocks rendered as Markdown, XML tags, JSON or plain text. Deterministic.
 import { type PlainBlock, assemble, LABEL } from "./studio.ts";
-export type Fmt = "markdown" | "xml" | "json" | "plain";
-export const FORMATS: { id: Fmt; label: string; ext: string }[] = [
-  { id: "markdown", label: "Markdown headings", ext: "md" }, { id: "xml", label: "XML tags", ext: "xml" },
-  { id: "json", label: "JSON sections", ext: "json" }, { id: "plain", label: "Plain text", ext: "txt" },
-];
+import type { Fmt } from "../shared/constants.ts";
+export { FORMATS, type Fmt } from "../shared/constants.ts";
 export const tagName = (title: string) => (title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").replace(/^(\d)/, "_$1") || "section");
 const xmlEsc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 export function convert(bs: PlainBlock[], f: Fmt): string {

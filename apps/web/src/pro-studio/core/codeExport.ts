@@ -1,13 +1,7 @@
 // Export a prompt as starter code. Pure string generation: nothing is sent anywhere.
 // The model name is whatever the user types; Pro Studio does not pick or recommend a model.
-export type CodeTarget = "curl-openai" | "python-openai" | "js-openai" | "curl-anthropic" | "python-anthropic";
-export const CODE_TARGETS: { id: CodeTarget; label: string; file: string }[] = [
-  { id: "python-openai", label: "Python · OpenAI SDK", file: "prompt_openai.py" },
-  { id: "js-openai", label: "JavaScript · OpenAI SDK", file: "prompt_openai.mjs" },
-  { id: "curl-openai", label: "cURL · OpenAI Chat Completions", file: "prompt_openai.sh" },
-  { id: "python-anthropic", label: "Python · Anthropic SDK", file: "prompt_anthropic.py" },
-  { id: "curl-anthropic", label: "cURL · Anthropic Messages", file: "prompt_anthropic.sh" },
-];
+import { type CodeTarget } from "../shared/constants.ts";
+export { CODE_TARGETS, type CodeTarget } from "../shared/constants.ts";
 const js = (s: string) => JSON.stringify(s);
 /** Single-quoted shell string: the only character that needs care is the single quote itself. */
 export const shellQuote = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`;
