@@ -4279,6 +4279,12 @@
       "text": "ollama"
     },
     {
+      "id": "112e08933e3a4a4c9e4b",
+      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-sonnet-4-5"
+    },
+    {
       "id": "149e0dde17a9ce47d642",
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
@@ -4439,12 +4445,6 @@
       "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Google (Gemini 2.5 Flash)"
-    },
-    {
-      "id": "57aa3abc524e1d1bd3ab",
-      "file": "apps/web/src/components/AgentSimulatorPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "claude-4-5-sonnet"
     },
     {
       "id": "5851a77247a656bc3801",
@@ -13585,6 +13585,12 @@
       "text": "Template Ready"
     },
     {
+      "id": "32c69f9d4b898bd621f0",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-sonnet-4-5"
+    },
+    {
       "id": "373d33afae9d5bae2c32",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -14153,12 +14159,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Research & Education"
-    },
-    {
-      "id": "73342153324579df720b",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "claude-3-7-sonnet"
     },
     {
       "id": "735ea9a93384fa01a52d",

@@ -78,7 +78,7 @@ async function runOnce() {
   console.log(`🧪 Proposals Qualified:  ${receipt.proposalsQualified}`);
   console.log(`🚀 Production Deployed:  ${receipt.proposalsAutoReleased} (${receipt.deployedStatus})`);
   console.log(`🧪 Simulated Qualified:  ${receipt.proposalsSimulatedQualified}`);
-  console.log(`📡 Search Console Data:  ${receipt.searchConsoleSource === "CALIBRATION_FIXTURE_DEV_CI" ? "Synthetic calibration fixture (offline/CI mode)" : "Live GSC API"}`);
+  console.log(`📡 Search Console Data:  ${receipt.searchConsoleSource === "CALIBRATION_FIXTURE_DEV_CI" ? "Synthetic calibration fixture (offline/CI mode)" : (receipt.searchConsoleSource === "LIVE_AUTHENTICATED_GSC_API" ? "Live Authenticated GSC API" : "Caller-supplied unauthenticated rows")}`);
   console.log(`👥 Gated for Human PR:   ${receipt.proposalsHeldForHumanReview}`);
   console.log(`❌ Proposals Rejected:   ${receipt.proposalsRejected}`);
   console.log(`📜 Summary Digest:       ${receipt.summaryReceiptDigest}`);

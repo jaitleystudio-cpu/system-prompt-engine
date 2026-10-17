@@ -20,6 +20,7 @@
 
 import { existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { WebsiteInventoryAuditor } from "./websiteInventory.ts";
 import { SearchIntentEngine } from "./searchIntentEngine.ts";
 import { VisualDomA11yVerifier } from "./visualDomA11yVerifier.ts";
@@ -105,14 +106,224 @@ export function releaseEvolutionLock(lockPath = resolve(process.cwd(), EVOLUTION
   } catch {}
 }
 
+export const SPE_DEPLOYMENT_SECRET_DEFAULT = "spe_production_authority_key_2026_deterministic_hmac";
+
 export interface VerifiedDeploymentReceipt {
   receiptId: string;
   deploymentSha: string;
   targetEnvironment: "production";
   executedAt: string;
-  verified: boolean;
-  deploymentProvider?: string;
-  deployLogDigest?: string;
+  artifactDigestSha256: string;
+  deploymentProvider: "github-actions" | "vercel" | "cloudflare-pages" | "google-cloud-build" | string;
+  signatureScheme: "HMAC_SHA256_AUTHORITATIVE_KEY" | "ED25519_DEPLOYMENT_AUTHORITY" | "DEV_LOCAL_UNAUTHENTICATED";
+  signature: string;
+  verified?: boolean;
+}
+
+export function computeDeploymentReceiptSignature(
+  receipt: Omit<VerifiedDeploymentReceipt, "signature" | "verified">,
+  secret = SPE_DEPLOYMENT_SECRET_DEFAULT
+): string {
+  const canonicalPayload = `${receipt.receiptId}:${receipt.deploymentSha.toLowerCase()}:${receipt.targetEnvironment}:${receipt.executedAt}:${receipt.artifactDigestSha256.toLowerCase()}:${receipt.deploymentProvider}`;
+  return createHmac("sha256", secret).update(canonicalPayload).digest("hex");
+}
+
+export const RECOGNIZED_DEPLOYMENT_PROVIDERS = [
+  "github-actions",
+  "cloudflare-pages",
+  "vercel",
+  "google-cloud-build",
+] as const;
+
+export function verifyAuthoritativeDeploymentReceipt(
+  receipt: unknown,
+  expectedCommitSha: string,
+  secret?: string
+): { valid: boolean; reason?: string } {
+  if (!receipt || typeof receipt !== "object") {
+    return { valid: false, reason: "Deployment receipt is null or not an object" };
+  }
+  const r = receipt as Partial<VerifiedDeploymentReceipt>;
+
+  // 1. Target Environment
+  if (r.targetEnvironment !== "production") {
+    return { valid: false, reason: `Invalid target environment: '${r.targetEnvironment}', expected 'production'` };
+  }
+
+  // 2. Exact 40-hex Git commit matching
+  if (!r.deploymentSha || !/^[0-9a-f]{40}$/i.test(r.deploymentSha)) {
+    return { valid: false, reason: `deploymentSha '${r.deploymentSha}' is not a valid 40-character hexadecimal commit SHA` };
+  }
+  if (!expectedCommitSha || !/^[0-9a-f]{40}$/i.test(expectedCommitSha)) {
+    return { valid: false, reason: `expectedCommitSha '${expectedCommitSha}' is not a valid 40-character hexadecimal commit SHA` };
+  }
+  if (r.deploymentSha.toLowerCase() !== expectedCommitSha.toLowerCase()) {
+    return {
+      valid: false,
+      reason: `deploymentSha '${r.deploymentSha}' does not match expected target commit '${expectedCommitSha}' exactly`,
+    };
+  }
+
+  // 3. Recognized Production Deployment Provider
+  if (!r.deploymentProvider || !RECOGNIZED_DEPLOYMENT_PROVIDERS.includes(r.deploymentProvider as typeof RECOGNIZED_DEPLOYMENT_PROVIDERS[number])) {
+    return {
+      valid: false,
+      reason: `deploymentProvider '${r.deploymentProvider}' is not a recognized production provider (${RECOGNIZED_DEPLOYMENT_PROVIDERS.join(", ")})`,
+    };
+  }
+
+  // 4. Timestamp Validation & Bounded Freshness (not future > 5m, not stale > 24h)
+  if (!r.executedAt || typeof r.executedAt !== "string") {
+    return { valid: false, reason: "executedAt timestamp is missing" };
+  }
+  const parsedTime = Date.parse(r.executedAt);
+  if (isNaN(parsedTime)) {
+    return { valid: false, reason: `executedAt '${r.executedAt}' is not a valid ISO 8601 timestamp` };
+  }
+  const nowMs = Date.now();
+  if (parsedTime > nowMs + 5 * 60 * 1000) {
+    return { valid: false, reason: `executedAt '${r.executedAt}' is in the future (> 5 minutes clock skew)` };
+  }
+  const MAX_RECEIPT_AGE_MS = 24 * 60 * 60 * 1000;
+  if (nowMs - parsedTime > MAX_RECEIPT_AGE_MS) {
+    return { valid: false, reason: `executedAt '${r.executedAt}' is stale (> 24 hours old)` };
+  }
+
+  // 5. Immutable 64-hex SHA-256 Artifact Digest
+  if (!r.artifactDigestSha256 || !/^[0-9a-f]{64}$/i.test(r.artifactDigestSha256)) {
+    return {
+      valid: false,
+      reason: `artifactDigestSha256 '${r.artifactDigestSha256}' is not a valid 64-character hex SHA-256`,
+    };
+  }
+
+  // 6. Signature Scheme & Non-Default Secret Verification
+  if (!r.signatureScheme || r.signatureScheme === "DEV_LOCAL_UNAUTHENTICATED") {
+    return {
+      valid: false,
+      reason: "signatureScheme is unsigned or DEV_LOCAL_UNAUTHENTICATED (authoritative production release rejected)",
+    };
+  }
+
+  const effectiveSecret = secret || (typeof process !== "undefined" ? process.env?.SPE_DEPLOYMENT_HMAC_SECRET : undefined);
+  if (!effectiveSecret || effectiveSecret === SPE_DEPLOYMENT_SECRET_DEFAULT) {
+    return {
+      valid: false,
+      reason: "Authoritative production deployment verification requires an explicit non-default secret key (default built-in secret rejected for production authority)",
+    };
+  }
+
+  if (!r.signature || typeof r.signature !== "string" || !/^[0-9a-f]{64}$/i.test(r.signature)) {
+    return { valid: false, reason: "Missing or invalid cryptographic signature hex" };
+  }
+
+  const expectedSig = computeDeploymentReceiptSignature(
+    {
+      receiptId: r.receiptId || "",
+      deploymentSha: r.deploymentSha,
+      targetEnvironment: "production",
+      executedAt: r.executedAt,
+      artifactDigestSha256: r.artifactDigestSha256,
+      deploymentProvider: r.deploymentProvider,
+      signatureScheme: r.signatureScheme,
+    },
+    effectiveSecret
+  );
+
+  try {
+    const a = Buffer.from(r.signature.toLowerCase(), "hex");
+    const b = Buffer.from(expectedSig.toLowerCase(), "hex");
+    if (a.length !== b.length || !timingSafeEqual(a, b)) {
+      return { valid: false, reason: "Cryptographic signature verification failed (unauthenticated receipt)" };
+    }
+  } catch (err) {
+    return { valid: false, reason: `Signature verification error: ${err instanceof Error ? err.message : String(err)}` };
+  }
+
+  return { valid: true };
+}
+
+export interface GscRetrievalBoundaryProof {
+  siteUrl: string;
+  serviceAccountOrClientId: string;
+  retrievalTimestamp: string;
+  apiEndpoint: string;
+  oauthTokenDigestSha256: string;
+  verifiedAuthorized: boolean;
+}
+
+export type SearchConsoleDataProvenance =
+  | "CALIBRATION_FIXTURE_DEV_CI"
+  | "CALLER_SUPPLIED_UNAUTHENTICATED"
+  | "LIVE_AUTHENTICATED_GSC_API";
+
+export function verifyGscRetrievalBoundary(proof: unknown): { verified: boolean; reason?: string } {
+  if (!proof || typeof proof !== "object") {
+    return { verified: false, reason: "Missing GSC retrieval boundary proof" };
+  }
+  const p = proof as Partial<GscRetrievalBoundaryProof>;
+  if (!p.verifiedAuthorized) {
+    return { verified: false, reason: "Proof verifiedAuthorized is false" };
+  }
+
+  // 1. Authorized SPE Site URL
+  const isAuthorizedSiteUrl =
+    typeof p.siteUrl === "string" &&
+    (p.siteUrl === "https://systempromptengine.com" ||
+     p.siteUrl === "https://systempromptengine.com/" ||
+     p.siteUrl === "sc-domain:systempromptengine.com");
+  if (!isAuthorizedSiteUrl) {
+    return {
+      verified: false,
+      reason: `siteUrl '${p.siteUrl}' is not an authorized property for SPE (expected https://systempromptengine.com/ or sc-domain:systempromptengine.com)`,
+    };
+  }
+
+  // 2. Official Google Search Console API Endpoint
+  const isOfficialGscEndpoint =
+    typeof p.apiEndpoint === "string" &&
+    (p.apiEndpoint.startsWith("https://searchconsole.googleapis.com/") ||
+     p.apiEndpoint.startsWith("https://www.googleapis.com/webmaster/v1/sites/"));
+  if (!isOfficialGscEndpoint) {
+    return {
+      verified: false,
+      reason: `apiEndpoint '${p.apiEndpoint}' is not an official Google Search Console API endpoint (must start with https://searchconsole.googleapis.com/ or https://www.googleapis.com/webmaster/v1/sites/)`,
+    };
+  }
+
+  // 3. Recognized Google Service Account or Google OAuth Client ID
+  const isGoogleServiceAccount =
+    typeof p.serviceAccountOrClientId === "string" &&
+    /^[a-z0-9._-]+@[a-z0-9-]+\.(?:iam\.)?gserviceaccount\.com$/i.test(p.serviceAccountOrClientId);
+  const isGoogleOAuthClient =
+    typeof p.serviceAccountOrClientId === "string" &&
+    /^[0-9]+-[a-z0-9_]+\.apps\.googleusercontent\.com$/i.test(p.serviceAccountOrClientId);
+  if (!isGoogleServiceAccount && !isGoogleOAuthClient) {
+    return {
+      verified: false,
+      reason: `serviceAccountOrClientId '${p.serviceAccountOrClientId}' is not a recognized Google service account (*.gserviceaccount.com) or Google OAuth Client ID (*.apps.googleusercontent.com)`,
+    };
+  }
+
+  // 4. Timestamp freshness (not future > 5m, not stale > 24h)
+  if (!p.retrievalTimestamp || isNaN(Date.parse(p.retrievalTimestamp))) {
+    return { verified: false, reason: `Invalid retrievalTimestamp '${p.retrievalTimestamp}'` };
+  }
+  const parsedTime = Date.parse(p.retrievalTimestamp);
+  const nowMs = Date.now();
+  if (parsedTime > nowMs + 5 * 60 * 1000) {
+    return { verified: false, reason: `retrievalTimestamp '${p.retrievalTimestamp}' is in the future` };
+  }
+  if (nowMs - parsedTime > 24 * 60 * 60 * 1000) {
+    return { verified: false, reason: `retrievalTimestamp '${p.retrievalTimestamp}' is stale (> 24 hours old)` };
+  }
+
+  // 5. OAuth Token Digest (SHA-256)
+  if (!p.oauthTokenDigestSha256 || !/^[0-9a-f]{64}$/i.test(p.oauthTokenDigestSha256)) {
+    return { verified: false, reason: "Missing or invalid oauthTokenDigestSha256 (64-char hex SHA-256 required)" };
+  }
+
+  return { verified: true };
 }
 
 export interface NightlyRunReceipt {
@@ -133,8 +344,18 @@ export interface NightlyRunReceipt {
     | "PROMOTED_PENDING_DEPLOYMENT_RECEIPT"
     | "NO_CHANGES_QUALIFIED_FOR_DEPLOYMENT"
     | "PRODUCTION_DEPLOYED";
-  searchConsoleSource: "CALIBRATION_FIXTURE_DEV_CI" | "LIVE_GSC_API";
+  searchConsoleSource: SearchConsoleDataProvenance;
   verifiedDeploymentReceipt?: VerifiedDeploymentReceipt;
+  deploymentVerificationResult?: {
+    attempted: boolean;
+    valid: boolean;
+    reason?: string;
+  };
+  gscRetrievalBoundaryVerification?: {
+    attempted: boolean;
+    verified: boolean;
+    reason?: string;
+  };
   proposalsHeldForHumanReview: number;
   proposalsRejected: number;
   missedRunDetected: boolean;
@@ -182,7 +403,9 @@ export class NightlyEvolutionScheduler {
     baseCommit?: string;
     mockSearchData?: SearchConsoleQueryRow[];
     liveSearchData?: SearchConsoleQueryRow[];
+    gscRetrievalBoundaryProof?: GscRetrievalBoundaryProof;
     verifiedDeploymentReceipt?: VerifiedDeploymentReceipt;
+    deploymentSecret?: string;
     simulateMilestoneSlice?: boolean;
     injectedBrokenLinks?: string[];
     injectedDefects?: Array<{
@@ -229,13 +452,34 @@ export class NightlyEvolutionScheduler {
       phasesExecuted.push("02:30_IST_SEO_AND_ROUTES_AUDIT");
       const inventoryReport = this.inventoryAuditor.auditWebsite();
 
+      let searchConsoleSource: SearchConsoleDataProvenance;
+      let gscRetrievalBoundaryVerification:
+        | { attempted: boolean; verified: boolean; reason?: string }
+        | undefined = undefined;
+
       const hasLiveSearch = Boolean(options.liveSearchData && options.liveSearchData.length > 0);
-      const searchConsoleSource: "CALIBRATION_FIXTURE_DEV_CI" | "LIVE_GSC_API" = hasLiveSearch
-        ? "LIVE_GSC_API"
-        : "CALIBRATION_FIXTURE_DEV_CI";
+      const hasMockSearch = Boolean(options.mockSearchData && options.mockSearchData.length > 0);
+
+      if (hasLiveSearch) {
+        const boundaryCheck = verifyGscRetrievalBoundary(options.gscRetrievalBoundaryProof);
+        gscRetrievalBoundaryVerification = {
+          attempted: true,
+          verified: boundaryCheck.verified,
+          reason: boundaryCheck.reason,
+        };
+        if (boundaryCheck.verified) {
+          searchConsoleSource = "LIVE_AUTHENTICATED_GSC_API";
+        } else {
+          searchConsoleSource = "CALLER_SUPPLIED_UNAUTHENTICATED";
+        }
+      } else if (hasMockSearch) {
+        searchConsoleSource = "CALLER_SUPPLIED_UNAUTHENTICATED";
+      } else {
+        searchConsoleSource = "CALIBRATION_FIXTURE_DEV_CI";
+      }
 
       const searchQueries: SearchConsoleQueryRow[] = (hasLiveSearch ? options.liveSearchData : null)
-        || options.mockSearchData
+        || (hasMockSearch ? options.mockSearchData : null)
         || [
           {
             query: "free system prompt generator",
@@ -428,12 +672,14 @@ export class NightlyEvolutionScheduler {
 
       const summaryDigest = `sha256:nightly-${now.toISOString().slice(0, 10)}-${proposals.length}-proposals`;
 
+      const deploymentCheck = verifyAuthoritativeDeploymentReceipt(
+        options.verifiedDeploymentReceipt,
+        baseCommit,
+        options.deploymentSecret
+      );
+
       const hasAuthoritativeDeploymentEvidence = Boolean(
-        !isDryRun &&
-        options.verifiedDeploymentReceipt &&
-        options.verifiedDeploymentReceipt.verified === true &&
-        options.verifiedDeploymentReceipt.targetEnvironment === "production" &&
-        options.verifiedDeploymentReceipt.deploymentSha
+        !isDryRun && deploymentCheck.valid
       );
 
       let deployedStatus: NightlyRunReceipt["deployedStatus"];
@@ -468,7 +714,19 @@ export class NightlyEvolutionScheduler {
         proposalsSimulatedQualified: autoReleasedCount,
         deployedStatus,
         searchConsoleSource,
-        ...(options.verifiedDeploymentReceipt ? { verifiedDeploymentReceipt: options.verifiedDeploymentReceipt } : {}),
+        ...(options.verifiedDeploymentReceipt
+          ? {
+              verifiedDeploymentReceipt: options.verifiedDeploymentReceipt,
+              deploymentVerificationResult: {
+                attempted: true,
+                valid: deploymentCheck.valid,
+                reason: deploymentCheck.reason,
+              },
+            }
+          : {}),
+        ...(gscRetrievalBoundaryVerification
+          ? { gscRetrievalBoundaryVerification }
+          : {}),
         proposalsHeldForHumanReview: heldForHumanCount,
         proposalsRejected: rejectedCount,
         missedRunDetected,

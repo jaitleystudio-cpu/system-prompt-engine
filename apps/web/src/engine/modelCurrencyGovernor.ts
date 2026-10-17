@@ -21,11 +21,11 @@ export const FRONTIER_MIN_RELEASE_DATE = "2024-01-01";
 export const AUTHORITATIVE_PROVIDER_MODELS: AiModelEntry[] = [
   // ─── ANTHROPIC (Authoritative Documentation) ───────────────────────────────
   {
-    id: "claude-3-7-sonnet-20250219",
-    name: "Claude 3.7 Sonnet (Hybrid Reasoning)",
+    id: "claude-sonnet-4-5",
+    name: "Claude 4.5 Sonnet (Hybrid Reasoning)",
     provider: "Anthropic",
     category: "frontier-reasoning",
-    contextWindow: 200000,
+    contextWindow: 1000000,
     maxOutputTokens: 64000,
     costInputPerM: 3.0,
     costOutputPerM: 15.0,
@@ -39,9 +39,9 @@ export const AUTHORITATIVE_PROVIDER_MODELS: AiModelEntry[] = [
     },
     requiredTier: "free",
     badge: "Official Hybrid SOTA",
-    releaseDate: "2025-02-19",
+    releaseDate: "2026-06-18",
     dialectTemplateKey: "claude",
-    description: "Anthropic's flagship model with hybrid instantaneous response and controllable extended thinking.",
+    description: "Anthropic's flagship 2026 model with hybrid instantaneous response and controllable extended thinking.",
     isLegacy: false,
     generation: "2026-frontier",
   },
@@ -250,8 +250,8 @@ export const AUTHORITATIVE_PROVIDER_MODELS: AiModelEntry[] = [
 
   // ─── GOOGLE DEEPMIND (Authoritative Documentation) ─────────────────────────
   {
-    id: "gemini-2.0-flash",
-    name: "Google Gemini 2.0 Flash",
+    id: "gemini-2.5-flash",
+    name: "Google Gemini 2.5 Flash",
     provider: "Google",
     category: "general-intelligence",
     contextWindow: 1048576,
@@ -268,9 +268,9 @@ export const AUTHORITATIVE_PROVIDER_MODELS: AiModelEntry[] = [
     },
     requiredTier: "free",
     badge: "1M Realtime Flash",
-    releaseDate: "2025-02-05",
+    releaseDate: "2026-02-15",
     dialectTemplateKey: "gemini",
-    description: "Next-gen multimodal workhorse with sub-second execution and native tool calling.",
+    description: "Next-gen multimodal workhorse with sub-second execution, 1M context, and native tool calling.",
     isLegacy: false,
     generation: "2026-frontier",
   },
@@ -669,18 +669,32 @@ export const AUTHORITATIVE_OLDER_MODELS: AuthoritativeOlderModel[] = [
     retirementNotice: "Legacy generation model superseded by GPT-4o mini.",
   },
   {
+    id: "claude-3-7-sonnet-20250219",
+    name: "Claude 3.7 Sonnet (Hybrid Reasoning)",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-sonnet-4-5",
+    retirementNotice: "Retired 19 February 2026. Superseded by Claude 4.5 Sonnet (claude-sonnet-4-5).",
+  },
+  {
+    id: "claude-3-7-sonnet",
+    name: "Claude 3.7 Sonnet",
+    provider: "Anthropic",
+    activeSuccessorId: "claude-sonnet-4-5",
+    retirementNotice: "Retired 19 February 2026. Superseded by Claude 4.5 Sonnet (claude-sonnet-4-5).",
+  },
+  {
     id: "claude-3-sonnet-20240229",
     name: "Claude 3 Sonnet",
     provider: "Anthropic",
-    activeSuccessorId: "claude-3-5-sonnet-20241022",
-    retirementNotice: "Superseded by Claude 3.5 Sonnet.",
+    activeSuccessorId: "claude-sonnet-4-5",
+    retirementNotice: "Superseded by Claude 4.5 Sonnet (claude-sonnet-4-5).",
   },
   {
     id: "claude-3-sonnet",
     name: "Claude 3 Sonnet",
     provider: "Anthropic",
-    activeSuccessorId: "claude-3-5-sonnet-20241022",
-    retirementNotice: "Superseded by Claude 3.5 Sonnet.",
+    activeSuccessorId: "claude-sonnet-4-5",
+    retirementNotice: "Superseded by Claude 4.5 Sonnet (claude-sonnet-4-5).",
   },
   {
     id: "claude-3-haiku-20240307",
@@ -700,31 +714,40 @@ export const AUTHORITATIVE_OLDER_MODELS: AuthoritativeOlderModel[] = [
     id: "claude-2.1",
     name: "Claude 2.1",
     provider: "Anthropic",
-    activeSuccessorId: "claude-3-5-sonnet-20241022",
+    activeSuccessorId: "claude-sonnet-4-5",
     retirementNotice: "Legacy Claude 2.1 architecture preserved for historical reproducibility.",
   },
   {
     id: "claude-2",
     name: "Claude 2.0",
     provider: "Anthropic",
-    activeSuccessorId: "claude-3-5-sonnet-20241022",
+    activeSuccessorId: "claude-sonnet-4-5",
     retirementNotice: "Legacy Claude 2.0 architecture preserved for historical reproducibility.",
+  },
+  {
+    id: "gemini-2.0-flash",
+    name: "Google Gemini 2.0 Flash",
+    provider: "Google",
+    activeSuccessorId: "gemini-2.5-flash",
+    retirementNotice: "Shut down 1 June 2026. Superseded by Gemini 2.5 Flash.",
   },
   {
     id: "gemini-1.5-flash",
     name: "Google Gemini 1.5 Flash",
     provider: "Google",
-    activeSuccessorId: "gemini-2.0-flash",
-    retirementNotice: "Superseded by Gemini 2.0 Flash.",
+    activeSuccessorId: "gemini-2.5-flash",
+    retirementNotice: "Superseded by Gemini 2.5 Flash.",
   },
   {
     id: "gemini-1.0-pro",
     name: "Google Gemini 1.0 Pro",
     provider: "Google",
-    activeSuccessorId: "gemini-2.0-flash",
-    retirementNotice: "Superseded by Gemini 2.0 Flash.",
+    activeSuccessorId: "gemini-2.5-flash",
+    retirementNotice: "Superseded by Gemini 2.5 Flash.",
   },
 ];
+
+export const HISTORICAL_OBSOLETE_MODELS = AUTHORITATIVE_OLDER_MODELS;
 
 /**
  * Returns true if an identifier is known to be speculative or invented.
@@ -937,7 +960,7 @@ export function governModelSelection(
   if (match.id === "gpt-4o" && options.requiredCapabilities?.includes("supportsThinking")) {
     suggestedAlt = "o3-mini";
   } else if (match.id.startsWith("claude-3-opus") && options.requiredCapabilities?.includes("supportsThinking")) {
-    suggestedAlt = "claude-3-7-sonnet-20250219";
+    suggestedAlt = "claude-sonnet-4-5";
   }
 
   // INVARIANT: Never silently substitute! Only adapt when explicit consent is provided

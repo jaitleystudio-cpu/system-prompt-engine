@@ -188,8 +188,8 @@ const KNOWN_PINNED_CONFIG: Record<
   { executableApiId: string; floatingAliases: string[]; fingerprint?: string }
 > = {
   "claude-4-5-sonnet": {
-    executableApiId: "claude-4-5-sonnet-20260618",
-    floatingAliases: ["claude-4-5-sonnet-latest", "claude-latest", "claude-sonnet"],
+    executableApiId: "claude-sonnet-4-5",
+    floatingAliases: ["claude-4-5-sonnet-latest", "claude-latest", "claude-sonnet", "claude-sonnet-4-5"],
     fingerprint: "fp_ant_45sonnet_20260618",
   },
   "claude-4-5-opus": {

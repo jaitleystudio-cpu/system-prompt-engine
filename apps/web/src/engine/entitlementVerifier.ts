@@ -253,7 +253,11 @@ export function verifySignedReceiptStatusAttestation(
     return null;
   }
 
-  // Enforce attestation freshness window (default: 24h) for recurring subs, while preserving perpetual offline validity ONLY for explicit lifetime terms/SKUs
+  // Enforce attestation freshness window:
+  // If maxAttestationAgeMs is explicitly provided by the caller, enforce it unconditionally
+  // (allowing verifiers to enforce bounded offline validity and prevent stale refund bypass).
+  // If omitted, enforce DEFAULT_MAX_ATTESTATION_AGE_MS (24h) for recurring subscriptions,
+  // while bounding offline lifetime tokens to local CRL (revokedReceiptIds).
   const nowMs = options.currentEpochMs ?? Date.now();
   const isExplicitLifetime =
     parsed.lifetime === true &&
@@ -265,8 +269,12 @@ export function verifySignedReceiptStatusAttestation(
           parsed.sku === "spe-team-lifetime" ||
           parsed.sku.startsWith("spe-lifetime-"))));
 
-  if (!isExplicitLifetime) {
-    const maxAgeMs = options.maxAttestationAgeMs ?? DEFAULT_MAX_ATTESTATION_AGE_MS;
+  if (options.maxAttestationAgeMs !== undefined) {
+    if (parsed.attestedAtMs + options.maxAttestationAgeMs < nowMs) {
+      return null; // Expired / stale offline attestation window
+    }
+  } else if (!isExplicitLifetime) {
+    const maxAgeMs = DEFAULT_MAX_ATTESTATION_AGE_MS;
     if (parsed.attestedAtMs + maxAgeMs < nowMs) {
       return null; // Expired / stale offline attestation window
     }
@@ -390,11 +398,11 @@ export function verifySignedEntitlementToken(
 
   const revokedReceipts = new Set(options.revokedReceiptIds ?? []);
   const revokedSubs = new Set(options.revokedSubscriptionIds ?? []);
-  if (
-    revokedReceipts.has(parsed.paymentReceiptId) ||
-    (parsed.subscriptionId && revokedSubs.has(parsed.subscriptionId))
-  ) {
-    return reject("REVOKED_ENTITLEMENT_TOKEN");
+  if (revokedReceipts.has(parsed.paymentReceiptId)) {
+    return reject("REVOKED_ENTITLEMENT_TOKEN: REVOKED_RECEIPT_ID");
+  }
+  if (parsed.subscriptionId && revokedSubs.has(parsed.subscriptionId)) {
+    return reject("REVOKED_ENTITLEMENT_TOKEN: REVOKED_SUBSCRIPTION_ID");
   }
 
   const nowMs = options.currentEpochMs ?? Date.now();

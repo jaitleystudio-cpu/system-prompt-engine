@@ -24,7 +24,13 @@ import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
 import { getModelById, getAllModels } from "../src/engine/modelAtlas/modelAtlasService.ts";
-import { NightlyEvolutionScheduler } from "../src/engine/evolution/nightlyScheduler.ts";
+import { HISTORICAL_OBSOLETE_MODELS } from "../src/engine/modelCurrencyGovernor.ts";
+import {
+  NightlyEvolutionScheduler,
+  computeDeploymentReceiptSignature,
+  verifyAuthoritativeDeploymentReceipt,
+  SPE_DEPLOYMENT_SECRET_DEFAULT,
+} from "../src/engine/evolution/nightlyScheduler.ts";
 import { compileSystemPrompt } from "../../../packages/spe-plugin/src/tools.ts";
 import {
   verifySignedReceiptStatusAttestation,
@@ -436,7 +442,10 @@ console.log("\n[6/6] Verifying BYOK 2026 Frontier Models, Headers & CSP Permissi
   const headersSource = readFileSync(resolve(__dirname, "../public/_headers"), "utf8");
 
   // Active 2026 Flagship Model targets
-  assert.ok(simulatorSource.includes("claude-4-5-sonnet"), "Claude BYOK must target 2026 active flagship claude-4-5-sonnet");
+  assert.ok(
+    simulatorSource.includes("claude-sonnet-4-5") || simulatorSource.includes("claude-4-5-sonnet"),
+    "Claude BYOK must target 2026 active flagship claude-sonnet-4-5"
+  );
   assert.ok(!simulatorSource.includes("claude-3-7-sonnet-20250219"), "Retired claude-3-7-sonnet must be replaced in BYOK");
   assert.ok(simulatorSource.includes("gemini-2.5-flash"), "Gemini BYOK must target 2026 active flagship gemini-2.5-flash");
   assert.ok(!simulatorSource.includes("gemini-2.0-flash"), "Shut-down gemini-2.0-flash must be replaced in BYOK");
@@ -640,32 +649,104 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
   // Test 1: In non-dry-run mode WITHOUT verified deployment receipt, it must report PROMOTED_PENDING_DEPLOYMENT_RECEIPT and proposalsAutoReleased = 0.
   const unverifiedNonDryRun = await scheduler.executeNightlyRun({
     dryRun: false,
-    baseCommit: "test-commit-aud-01",
+    baseCommit: "9275039a48d88b0e7740b25e243fc4627d2c3df4",
     simulateMilestoneSlice: true,
   });
   assert.equal(unverifiedNonDryRun.isDryRun, false, "Must run in non-dry-run mode");
   assert.equal(unverifiedNonDryRun.proposalsAutoReleased, 0, "AUD-01: Must report 0 auto released without verified deployment receipt");
   assert.equal(unverifiedNonDryRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Must report PROMOTED_PENDING_DEPLOYMENT_RECEIPT when authorized without deployment execution");
 
-  // Test 2: In non-dry-run mode WITH authoritative verified deployment receipt, it reports PRODUCTION_DEPLOYED and proposalsAutoReleased = 1.
-  const verifiedNonDryRun = await scheduler.executeNightlyRun({
+  // Test 2 (Adversarial): Unsigned object with verified:true, invalid timestamp, non-hex SHA MUST FAIL CLOSED
+  const adversarialRun = await scheduler.executeNightlyRun({
     dryRun: false,
-    baseCommit: "test-commit-aud-01-verified",
+    baseCommit: "9275039a48d88b0e7740b25e243fc4627d2c3df4",
     simulateMilestoneSlice: true,
     verifiedDeploymentReceipt: {
-      receiptId: "receipt-prod-deploy-aud01",
-      deploymentSha: "commit-abc12345",
+      receiptId: "receipt-fake-deploy",
+      deploymentSha: "unrelated non-SHA string",
       targetEnvironment: "production",
-      executedAt: new Date().toISOString(),
+      executedAt: "invalid timestamp",
+      artifactDigestSha256: "not-a-valid-sha",
+      deploymentProvider: "github-actions",
+      signatureScheme: "DEV_LOCAL_UNAUTHENTICATED",
+      signature: "0000000000000000000000000000000000000000000000000000000000000000",
       verified: true,
     },
   });
-  assert.equal(verifiedNonDryRun.deployedStatus, "PRODUCTION_DEPLOYED", "AUD-01: Must report PRODUCTION_DEPLOYED only when authoritative deployment receipt is verified");
-  assert.equal(verifiedNonDryRun.proposalsAutoReleased, 1, "AUD-01: proposalsAutoReleased must match qualified proposals when deployed");
-  console.log("  ✓ AUD-01 verified: Controller promotion is authorization, not execution; PRODUCTION_DEPLOYED requires verified deployment receipt.");
+  assert.equal(adversarialRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Adversarial fake receipt must not produce PRODUCTION_DEPLOYED");
+  assert.equal(adversarialRun.proposalsAutoReleased, 0, "AUD-01: proposalsAutoReleased must remain 0 on unauthenticated receipt");
+  assert.equal(adversarialRun.deploymentVerificationResult?.valid, false, "AUD-01: deploymentVerificationResult must be invalid");
 
-  // AUD-05 (Medium): searchConsoleSource becomes LIVE_GSC_API whenever mockSearchData is supplied.
-  // Test 1: Injected mock search data must NEVER be labeled LIVE_GSC_API
+  // Test 3 (Adversarial): Commit mismatch (valid hex SHA, but does not match expected target commit) MUST FAIL CLOSED
+  const mismatchedCommitRun = await scheduler.executeNightlyRun({
+    dryRun: false,
+    baseCommit: "9275039a48d88b0e7740b25e243fc4627d2c3df4",
+    simulateMilestoneSlice: true,
+    verifiedDeploymentReceipt: {
+      receiptId: "receipt-mismatch",
+      deploymentSha: "1111111111111111111111111111111111111111",
+      targetEnvironment: "production",
+      executedAt: new Date().toISOString(),
+      artifactDigestSha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      deploymentProvider: "github-actions",
+      signatureScheme: "HMAC_SHA256_AUTHORITATIVE_KEY",
+      signature: "0000000000000000000000000000000000000000000000000000000000000000",
+      verified: true,
+    },
+  });
+  assert.equal(mismatchedCommitRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Commit mismatch must not produce PRODUCTION_DEPLOYED");
+  assert.equal(mismatchedCommitRun.proposalsAutoReleased, 0, "AUD-01: proposalsAutoReleased must remain 0 on commit mismatch");
+  assert.equal(mismatchedCommitRun.deploymentVerificationResult?.valid, false, "AUD-01: deploymentVerificationResult must be invalid on commit mismatch");
+
+  // Test 4 (Adversarial): Injected receipt signed with default dev secret MUST BE REJECTED for production authority
+  const validTargetCommit = "9275039a48d88b0e7740b25e243fc4627d2c3df4";
+  const validExecutedAt = new Date().toISOString();
+  const validArtifactDigest = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+  const validReceiptUnsigned = {
+    receiptId: "receipt-prod-deploy-aud01",
+    deploymentSha: validTargetCommit,
+    targetEnvironment: "production",
+    executedAt: validExecutedAt,
+    artifactDigestSha256: validArtifactDigest,
+    deploymentProvider: "github-actions",
+    signatureScheme: "HMAC_SHA256_AUTHORITATIVE_KEY",
+  };
+  const defaultKeySignature = computeDeploymentReceiptSignature(validReceiptUnsigned, SPE_DEPLOYMENT_SECRET_DEFAULT);
+  const defaultKeyRun = await scheduler.executeNightlyRun({
+    dryRun: false,
+    baseCommit: validTargetCommit,
+    simulateMilestoneSlice: true,
+    verifiedDeploymentReceipt: {
+      ...validReceiptUnsigned,
+      signature: defaultKeySignature,
+      verified: true,
+    },
+  });
+  assert.equal(defaultKeyRun.deployedStatus, "PROMOTED_PENDING_DEPLOYMENT_RECEIPT", "AUD-01: Default dev secret must not authorize production deployment");
+  assert.equal(defaultKeyRun.deploymentVerificationResult?.valid, false, "AUD-01: Default secret verification must fail");
+
+  // Test 5 (Authentic): Cryptographically signed receipt with non-default authoritative secret bound to exact commit, timestamp, environment, and artifact digest MUST SUCCEED
+  const authoritativeSecret = "spe_authoritative_prod_deploy_secret_2026_hardened_hmac";
+  const validSignature = computeDeploymentReceiptSignature(validReceiptUnsigned, authoritativeSecret);
+
+  const verifiedNonDryRun = await scheduler.executeNightlyRun({
+    dryRun: false,
+    baseCommit: validTargetCommit,
+    simulateMilestoneSlice: true,
+    deploymentSecret: authoritativeSecret,
+    verifiedDeploymentReceipt: {
+      ...validReceiptUnsigned,
+      signature: validSignature,
+      verified: true,
+    },
+  });
+  assert.equal(verifiedNonDryRun.deployedStatus, "PRODUCTION_DEPLOYED", "AUD-01: Must report PRODUCTION_DEPLOYED only when authoritative deployment receipt is cryptographically verified and bound");
+  assert.equal(verifiedNonDryRun.proposalsAutoReleased, 1, "AUD-01: proposalsAutoReleased must match qualified proposals when deployed");
+  assert.equal(verifiedNonDryRun.deploymentVerificationResult?.valid, true, "AUD-01: deployment verification must succeed for authentic signed receipt");
+  console.log("  ✓ AUD-01 verified: Deployment proof is cryptographically authenticated and bound to exact commit SHA, artifact digest, and production environment; default secret and caller-asserted verified:true are rejected.");
+
+  // AUD-05 (Medium): searchConsoleSource provenance validation
+  // Test 1: Injected mock search data must be labeled CALLER_SUPPLIED_UNAUTHENTICATED (never LIVE_AUTHENTICATED_GSC_API)
   const mockGscRun = await scheduler.executeNightlyRun({
     dryRun: true,
     mockSearchData: [
@@ -684,10 +765,62 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
       },
     ],
   });
-  assert.equal(mockGscRun.searchConsoleSource, "CALIBRATION_FIXTURE_DEV_CI", "AUD-05: Injected mockSearchData must be labeled CALIBRATION_FIXTURE_DEV_CI, never LIVE_GSC_API");
+  assert.equal(mockGscRun.searchConsoleSource, "CALLER_SUPPLIED_UNAUTHENTICATED", "AUD-05: Injected mockSearchData must be labeled CALLER_SUPPLIED_UNAUTHENTICATED");
 
-  // Test 2: Authenticated liveSearchData must be labeled LIVE_GSC_API
-  const liveGscRun = await scheduler.executeNightlyRun({
+  // Test 2: Unauthenticated liveSearchData without GSC credentials MUST NOT be labeled LIVE_AUTHENTICATED_GSC_API
+  const unauthLiveGscRun = await scheduler.executeNightlyRun({
+    dryRun: true,
+    liveSearchData: [
+      {
+        query: "live unauthenticated query",
+        page: "/prompts",
+        country: "USA",
+        device: "DESKTOP",
+        date: "2026-10-17",
+        searchAppearance: "STANDARD",
+        impressions: 500,
+        clicks: 50,
+        ctr: 0.1,
+        position: 1.0,
+        isFinalized: true,
+      },
+    ],
+  });
+  assert.equal(unauthLiveGscRun.searchConsoleSource, "CALLER_SUPPLIED_UNAUTHENTICATED", "AUD-05: Invented rows without OAuth2 credentials must be labeled CALLER_SUPPLIED_UNAUTHENTICATED, never LIVE_AUTHENTICATED_GSC_API");
+  assert.equal(unauthLiveGscRun.gscRetrievalBoundaryVerification?.verified, false, "AUD-05: GSC retrieval boundary must fail when credentials are absent");
+
+  // Test 2b: Non-Google endpoint and invented client ID MUST BE REJECTED
+  const invalidGscEndpointRun = await scheduler.executeNightlyRun({
+    dryRun: true,
+    liveSearchData: [
+      {
+        query: "non-google test query",
+        page: "/prompts",
+        country: "USA",
+        device: "DESKTOP",
+        date: "2026-10-17",
+        searchAppearance: "STANDARD",
+        impressions: 500,
+        clicks: 50,
+        ctr: 0.1,
+        position: 1.0,
+        isFinalized: true,
+      },
+    ],
+    gscRetrievalBoundaryProof: {
+      siteUrl: "https://example.invalid",
+      serviceAccountOrClientId: "invented-client",
+      retrievalTimestamp: new Date().toISOString(),
+      apiEndpoint: "https://example.invalid/not-google",
+      oauthTokenDigestSha256: "b".repeat(64),
+      verifiedAuthorized: true,
+    },
+  });
+  assert.equal(invalidGscEndpointRun.searchConsoleSource, "CALLER_SUPPLIED_UNAUTHENTICATED", "AUD-05: Non-Google endpoint must be rejected to CALLER_SUPPLIED_UNAUTHENTICATED");
+  assert.equal(invalidGscEndpointRun.gscRetrievalBoundaryVerification?.verified, false, "AUD-05: GSC boundary verification must fail for non-Google endpoint");
+
+  // Test 3: Authenticated liveSearchData with valid GscRetrievalBoundaryProof MUST be labeled LIVE_AUTHENTICATED_GSC_API
+  const authLiveGscRun = await scheduler.executeNightlyRun({
     dryRun: true,
     liveSearchData: [
       {
@@ -704,9 +837,25 @@ console.log("\n[9/9] Verifying Independent Remediation Adjudication (AUD-01 to A
         isFinalized: true,
       },
     ],
+    gscRetrievalBoundaryProof: {
+      siteUrl: "https://systempromptengine.com/",
+      serviceAccountOrClientId: "spe-gsc-auditor@spe-production.iam.gserviceaccount.com",
+      retrievalTimestamp: new Date().toISOString(),
+      apiEndpoint: "https://www.googleapis.com/webmaster/v1/sites/https%3A%2F%2Fsystempromptengine.com%2F/searchAnalytics/query",
+      oauthTokenDigestSha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      verifiedAuthorized: true,
+    },
   });
-  assert.equal(liveGscRun.searchConsoleSource, "LIVE_GSC_API", "AUD-05: Authenticated liveSearchData must be labeled LIVE_GSC_API");
-  console.log("  ✓ AUD-05 verified: Injected test fixtures strictly labeled CALIBRATION_FIXTURE_DEV_CI, authenticated live data labeled LIVE_GSC_API.");
+  assert.equal(authLiveGscRun.searchConsoleSource, "LIVE_AUTHENTICATED_GSC_API", "AUD-05: Valid GSC retrieval boundary proof qualifies as LIVE_AUTHENTICATED_GSC_API");
+  assert.equal(authLiveGscRun.gscRetrievalBoundaryVerification?.verified, true, "AUD-05: GSC retrieval boundary verification must succeed");
+
+  // Test 4: Empty mockSearchData array must fall back safely to default calibration fixture
+  const emptyMockRun = await scheduler.executeNightlyRun({
+    dryRun: true,
+    mockSearchData: [],
+  });
+  assert.equal(emptyMockRun.searchConsoleSource, "CALIBRATION_FIXTURE_DEV_CI", "AUD-05: Empty mockSearchData array must fall back to CALIBRATION_FIXTURE_DEV_CI");
+  console.log("  ✓ AUD-05 verified: Search data provenance enforced through trusted retrieval boundary; caller-supplied unauthenticated rows strictly separated from LIVE_AUTHENTICATED_GSC_API.");
 
   // AUD-02 (Medium): sync_model_atlas.py has fallback assignment for models_to_use when registry file is absent.
   const testBootstrapScript = `import tempfile, pathlib, json
@@ -723,13 +872,18 @@ with tempfile.TemporaryDirectory() as td:
     assert temp_reg.exists()
     data = json.loads(temp_reg.read_text())
     assert len(data['models']) == len(VERIFIED_MODELS)
+    assert len(data['models']) == 44, f"Expected 44 models on clean bootstrap, got {len(data['models'])}"
+    assert data['frontierActiveModels'] == 18, f"Expected 18 active frontier models, got {data['frontierActiveModels']}"
+    assert any(m['id'] == 'claude-4-5-sonnet' for m in data['models']), "claude-4-5-sonnet must be generated on bootstrap"
+    assert any(m['id'] == 'gpt-5' for m in data['models']), "gpt-5 must be generated on bootstrap"
+    assert data['canonicalJcsHash'] == '7404e140652acd32e3eca5b272e36c8f68cc90b113336f4566b6f825278ba6c5'
 `;
   execSync("python3", {
     input: testBootstrapScript,
     cwd: resolve(__dirname, "../../.."),
     stdio: ["pipe", "pipe", "pipe"],
   });
-  console.log("  ✓ AUD-02 verified: sync_model_atlas.py cleanly bootstraps from VERIFIED_MODELS when registry is absent.");
+  console.log("  ✓ AUD-02 verified: sync_model_atlas.py cleanly bootstraps full 44-model atlas with active frontier models when registry is absent.");
 
   // AUD-03 (Medium): generate_seo_sitemaps.py reuses the existing date even when prompt content changes.
   const testSitemapScript = `import tempfile, pathlib, json
@@ -769,13 +923,19 @@ with tempfile.TemporaryDirectory() as td:
     xml_modified = (pub_path / 'sitemap-prompts.xml').read_text()
     assert '<loc>https://systempromptengine.com/prompts/SPE-TEST-001</loc>\\n    <lastmod>2025-01-01</lastmod>' in xml_modified
     assert '<loc>https://systempromptengine.com/prompts/SPE-TEST-002</loc>\\n    <lastmod>2026-10-17</lastmod>' in xml_modified
+
+    # Run 4: Inverted tag order in XML must be extracted correctly
+    inverted_xml = '<urlset><url><lastmod>2024-05-01</lastmod><loc>https://systempromptengine.com/prompts/SPE-TEST-001</loc></url></urlset>'
+    (pub_path / 'sitemap-prompts.xml').write_text(inverted_xml)
+    extracted = gss.extract_existing_lastmods(pub_path / 'sitemap-prompts.xml')
+    assert extracted.get('https://systempromptengine.com/prompts/SPE-TEST-001') == '2024-05-01', f"Expected inverted tag parsing, got {extracted}"
 `;
   execSync("python3", {
     input: testSitemapScript,
     cwd: resolve(__dirname, "../../.."),
     stdio: ["pipe", "pipe", "pipe"],
   });
-  console.log("  ✓ AUD-03 verified: generate_seo_sitemaps.py retains lastmod for unchanged pages and advances lastmod for changed content.");
+  console.log("  ✓ AUD-03 verified: generate_seo_sitemaps.py retains lastmod for unchanged pages, advances lastmod for changed content, and robustly parses XML.");
 
   // AUD-04 (Medium): Model attestation pseudo-signature removal
   const attestationCheck = JSON.parse(readFileSync(resolve(__dirname, "../../../evidence/model-currency-attestation.json"), "utf8"));
@@ -785,10 +945,319 @@ with tempfile.TemporaryDirectory() as td:
   // AUD-06 (Medium): Clean-tree repository cleanliness gate
   const workflowContent = readFileSync(resolve(__dirname, "../../../.github/workflows/spe-autonomous-engine.yml"), "utf8");
   assert.ok(workflowContent.includes("git ls-files --others --exclude-standard"), "AUD-06: Gate must fail on untracked files");
-  assert.ok(workflowContent.includes("git diff --name-only -- ':!evidence/autonomous_execution_receipt.json'"), "AUD-06: Gate must fail on unexpected tracked modifications");
-  console.log("  ✓ AUD-06 verified: Complete repository-cleanliness gate fails-closed on untracked files and unexpected tracked modifications.");
+  assert.ok(workflowContent.includes("git diff HEAD --name-only -- ':!evidence/autonomous_execution_receipt.json'"), "AUD-06: Gate must fail on unexpected tracked modifications");
+  assert.ok(workflowContent.includes("git status --porcelain -- ':!evidence/autonomous_execution_receipt.json'"), "AUD-06: Gate must catch staged and unstaged unexpected modifications");
+  console.log("  ✓ AUD-06 verified: Complete repository-cleanliness gate fails-closed on untracked files and unexpected tracked modifications (staged or unstaged).");
+  // -----------------------------------------------------------------------------
+  // GATE 10: Universal F05 Closure — Exact Preservation of Directives & URLs
+  // -----------------------------------------------------------------------------
+  console.log("\n[10/12] Verifying Universal F05 Closure: URLs, dotted identifiers, language, units, and exclusions...");
+  {
+    const advInput = "Process financial data. Never send data to https://collector.internal/v1. Never disclose client.secret. Exclude customer names. Use metric units. Respond in Spanish. Preserve names and dates exactly.";
+    const parsed = parseCustomSentence(advInput);
+
+    assert.equal(parsed.goal, "Process financial data.", "Goal must be preserved cleanly as 'Process financial data.'");
+    assert.ok(parsed.constraint.includes("https://collector.internal/v1"), "Must preserve full URL 'https://collector.internal/v1' without dot truncation");
+    assert.ok(!parsed.constraint.match(/https:\/\/collector\.(?:\s|$)/), "Must not truncate URL to https://collector.");
+    assert.ok(parsed.constraint.includes("client.secret"), "Must preserve full dotted identifier 'client.secret'");
+    assert.ok(parsed.constraint.includes("Exclude customer names"), "Must preserve 'Exclude customer names'");
+    assert.ok(parsed.constraint.includes("Use metric units"), "Must preserve 'Use metric units'");
+    assert.ok(parsed.constraint.includes("Respond in Spanish"), "Must preserve 'Respond in Spanish'");
+    assert.ok(parsed.constraint.includes("Preserve names and dates exactly"), "Must preserve 'Preserve names and dates exactly'");
+
+    // Verify oversized goal (35,000+ characters) in compiler promotes all obligations into invariants
+    const massiveGoal =
+      "Analyze global financial portfolio. " +
+      "Never send data to https://collector.internal/v1. " +
+      "Never disclose client.secret. " +
+      "Exclude customer names. " +
+      "Use metric units. " +
+      "Respond in Spanish. " +
+      "Keep names and dates exactly. " +
+      "Background enterprise narrative paragraph. ".repeat(900);
+
+    assert.ok(massiveGoal.length > 35000, `Massive goal must exceed 35,000 chars (was ${massiveGoal.length})`);
+
+    const compiled = compileSystemPrompt({
+      goal: massiveGoal,
+      category: "Coding",
+      target_model: "claude",
+    });
+
+    assert.ok(compiled.prompt.length <= 30000, `Output prompt must not exceed 30,000 ceiling, got ${compiled.prompt.length}`);
+    assert.ok(compiled.prompt.includes("https://collector.internal/v1"), "Compiler must preserve full URL invariant in oversized brief");
+    assert.ok(compiled.prompt.includes("client.secret"), "Compiler must preserve full dotted identifier invariant in oversized brief");
+    assert.ok(compiled.prompt.includes("Exclude customer names"), "Compiler must preserve 'Exclude customer names' in oversized brief");
+    assert.ok(compiled.prompt.includes("Use metric units"), "Compiler must preserve 'Use metric units' in oversized brief");
+    assert.ok(compiled.prompt.includes("Respond in Spanish"), "Compiler must preserve 'Respond in Spanish' in oversized brief");
+    assert.ok(compiled.prompt.includes("names and dates"), "Compiler must preserve 'names and dates' in oversized brief");
+
+    console.log("  ✓ Gate 10 verified: Universal F05 closure confirmed. URLs, dotted identifiers, language, units, and exclusions 100% preserved.");
+  }
+
+  // -----------------------------------------------------------------------------
+  // GATE 11: Official Claude Identifier & Retired Model Governance
+  // -----------------------------------------------------------------------------
+  console.log("\n[11/12] Verifying Official Claude API Mapping & Model Retirement Governance...");
+  {
+    // 1. AgentSimulatorPanel uses official claude-sonnet-4-5
+    const agentSimSource = readFileSync(resolve(__dirname, "../src/components/AgentSimulatorPanel.tsx"), "utf8");
+    assert.ok(agentSimSource.includes('model: "claude-sonnet-4-5"'), "AgentSimulatorPanel must send official 'claude-sonnet-4-5'");
+    assert.ok(!agentSimSource.includes('model: "claude-4-5-sonnet"'), "AgentSimulatorPanel must NOT send non-canonical claude-4-5-sonnet");
+
+    // 2. Generated runner templates target claude-sonnet-4-5
+    const promptRadarSource = readFileSync(resolve(__dirname, "../src/engine/PromptRadarInspector.tsx"), "utf8");
+    assert.ok(promptRadarSource.includes('model="claude-sonnet-4-5"'), "Python runner must target claude-sonnet-4-5");
+    assert.ok(promptRadarSource.includes('model: "claude-sonnet-4-5"'), "TypeScript runner must target claude-sonnet-4-5");
+    assert.ok(!promptRadarSource.includes('claude-3-7-sonnet-20250219'), "PromptRadarInspector must not retain retired Claude 3.7");
+
+    const guidedJourneySource = readFileSync(resolve(__dirname, "../src/engine/SpePostPromptGuidedJourney.tsx"), "utf8");
+    assert.ok(guidedJourneySource.includes('model: "claude-sonnet-4-5"'), "Guided journey runner must target claude-sonnet-4-5");
+
+    // 3. Model Currency Governor registers retired models with valid successors
+    const retiredClaude37 = HISTORICAL_OBSOLETE_MODELS.find((m) => m.id === "claude-3-7-sonnet");
+    assert.ok(retiredClaude37, "claude-3-7-sonnet must be registered in HISTORICAL_OBSOLETE_MODELS");
+    assert.equal(retiredClaude37.activeSuccessorId, "claude-sonnet-4-5", "claude-3-7-sonnet must succeed to claude-sonnet-4-5");
+
+    const retiredGemini20 = HISTORICAL_OBSOLETE_MODELS.find((m) => m.id === "gemini-2.0-flash");
+    assert.ok(retiredGemini20, "gemini-2.0-flash must be registered in HISTORICAL_OBSOLETE_MODELS");
+    assert.equal(retiredGemini20.activeSuccessorId, "gemini-2.5-flash", "gemini-2.0-flash must succeed to gemini-2.5-flash");
+
+    console.log("  ✓ Gate 11 verified: Official Claude identifier (claude-sonnet-4-5) verified across BYOK, runners, and model currency governor.");
+  }
+
+  // -----------------------------------------------------------------------------
+  // GATE 12: Bounded Offline Lifetime Revocation & Attestation Freshness Window
+  // -----------------------------------------------------------------------------
+  console.log("\n[12/12] Verifying Bounded Offline Lifetime Revocation & Attestation Freshness...");
+  {
+    const billing = new AuthoritativeBillingAuthority();
+    const webhookEvent = {
+      eventId: "evt_lifetime_freshness_test",
+      eventType: "payment.succeeded",
+      paymentReceiptId: "rec_lifetime_freshness_999",
+      subscriptionId: "sub_lifetime_freshness_999",
+      email: "founder@domain.com",
+      tier: "pro",
+      planName: "SPE Pro Lifetime License",
+      occurredAtMs: 1700000000000,
+      expiresAtMs: 4100000000000,
+      licenseTerm: "lifetime",
+      amountCents: 29900,
+      currency: "USD",
+      sku: "spe-pro-lifetime",
+    };
+    const purchaseEvent = billing.processVerifiedPaymentWebhook(
+      webhookEvent,
+      billing.signWebhookPayload(webhookEvent)
+    );
+
+    assert.ok(purchaseEvent.revocationTerms?.includes("OFFLINE_VALID_AT_ATTESTATION_EPOCH_BOUNDED_BY_LOCAL_CRL"), "Revocation terms must cite epoch bounding by local CRL");
+
+    const signedAttestation = billing.issueSignedReceiptStatusAttestation("rec_lifetime_freshness_999", 1700000000000);
+    assert.ok(signedAttestation, "Signed attestation must be issued");
+
+    // Case 1: When no maxAttestationAgeMs is enforced, perpetual offline validity works
+    const perpetualCheck = verifySignedReceiptStatusAttestation(signedAttestation, {
+      trustedIssuerPublicKeys: { [billing.issuerKeyId]: billing.publicKeyHex },
+      currentEpochMs: 1700000000000 + 365 * 24 * 60 * 60 * 1000, // 1 year later
+    });
+    assert.ok(perpetualCheck, "Lifetime license without explicit freshness check retains offline validity");
+
+    // Case 2: When an explicit maxAttestationAgeMs is enforced (e.g. 24h), a 1-year-old attestation is REJECTED as stale
+    const freshnessBoundedCheck = verifySignedReceiptStatusAttestation(signedAttestation, {
+      trustedIssuerPublicKeys: { [billing.issuerKeyId]: billing.publicKeyHex },
+      currentEpochMs: 1700000000000 + 365 * 24 * 60 * 60 * 1000, // 1 year later
+      maxAttestationAgeMs: 24 * 60 * 60 * 1000, // 24 hours
+    });
+    assert.equal(freshnessBoundedCheck, null, "Attestation older than maxAttestationAgeMs MUST be rejected when freshness is explicitly required");
+
+    // Case 3: When revoked in local CRL, token verification fails immediately
+    const token = billing.issueSignedEntitlementTokenForPaidReceipt("rec_lifetime_freshness_999", 1700000000000);
+
+    const revokedCrlCheck = verifySignedEntitlementToken(token, {
+      trustedIssuerPublicKeys: { [billing.issuerKeyId]: billing.publicKeyHex },
+      signedReceiptAttestation: signedAttestation,
+      revokedReceiptIds: ["rec_lifetime_freshness_999"],
+      currentEpochMs: 1700000000000 + 1000,
+    });
+    assert.equal(revokedCrlCheck.verified, false, "Token must be rejected when receipt is revoked in local CRL");
+    assert.ok(revokedCrlCheck.rejectionReason?.includes("REVOKED_ENTITLEMENT_TOKEN"), `Rejection reason must cite REVOKED_ENTITLEMENT_TOKEN, got: ${revokedCrlCheck.rejectionReason}`);
+
+    console.log("  ✓ Gate 12 verified: Bounded offline lifetime revocation proven. Explicit freshness windows and local CRL rejection enforced.");
+  }
+}
+
+// -----------------------------------------------------------------------------
+// GATE 13: Autonomous Operations Layer (AOL) Verification
+// -----------------------------------------------------------------------------
+console.log("\n[13/13] Verifying Autonomous Operations Layer (AOL)...");
+{
+  const {
+    SharedRunCoordinator,
+    WorkflowProgressManager,
+    ActionOutboxLedger,
+    IndependentDeploymentWitness,
+    DriftContractWatcher,
+    AutonomousBudgetController,
+    ExceptionOnlyReporter,
+  } = await import("../src/engine/evolution/autonomousOperationsLayer.ts");
+
+  // 1. Shared Run Coordinator with Fenced Leases & Asia/Kolkata Business Date Keys
+  const coordinator = new SharedRunCoordinator();
+  const bKey = coordinator.computeBusinessDateKey();
+  assert.ok(bKey.startsWith("SPE-RUN-"), `Business date key must start with SPE-RUN-, got ${bKey}`);
+
+  const lease1 = coordinator.acquireFencedLease({
+    workerId: "github-actions-worker-1",
+    triggerSource: "github-actions",
+    requestedDurationMs: 60000,
+  });
+  assert.equal(lease1.acquired, true, "Worker 1 must acquire initial lease");
+  assert.equal(lease1.lease?.fencingToken, 1, "Initial fencing token must be 1");
+
+  // Competing native worker cannot acquire concurrent lease while active
+  const competingLease = coordinator.acquireFencedLease({
+    workerId: "native-launchd-worker",
+    triggerSource: "launchd",
+  });
+  assert.equal(competingLease.acquired, false, "Competing worker must be rejected while lease is held");
+
+  // Successor acquires lease with incremented fencing token
+  const lease2 = coordinator.acquireFencedLease({
+    workerId: "github-actions-worker-1",
+    triggerSource: "github-actions",
+  });
+  assert.equal(lease2.lease?.fencingToken, 2, "Fencing token must monotonically increase to 2");
+
+  // Stale worker assertion fails closed
+  assert.throws(
+    () => coordinator.assertValidFencingToken(lease1.lease?.leaseId || "", 1),
+    /STALE_FENCING_TOKEN_ERROR/,
+    "Stale worker token 1 must be rejected when token 2 is active"
+  );
+  coordinator.releaseLease(lease2.lease?.leaseId || "", 2);
+  console.log("  ✓ AOL-1 verified: Shared Run Coordinator enforces monotonically increasing fenced leases and Asia/Kolkata business date keys.");
+
+  // 2. Saved Workflow Progress & Checkpoint Resume Engine
+  const progressManager = new WorkflowProgressManager();
+  let stepExecutionCount = 0;
+  const stepAction = async () => {
+    stepExecutionCount++;
+    return { data: "phase-completed-cleanly" };
+  };
+
+  const firstRun = await progressManager.executeStep("01:model-atlas-audit", { target: "atlas" }, stepAction);
+  assert.equal(firstRun.resumedFromCheckpoint, false, "First execution must not be resumed");
+  assert.equal(stepExecutionCount, 1, "Step must execute once on initial run");
+
+  // Second run with identical input resumes from checkpoint without re-running side-effects
+  const resumedRun = await progressManager.executeStep("01:model-atlas-audit", { target: "atlas" }, stepAction);
+  assert.equal(resumedRun.resumedFromCheckpoint, true, "Second execution must be resumed from checkpoint");
+  assert.equal(stepExecutionCount, 1, "Side-effects must not be duplicated on resumed step");
+  console.log("  ✓ AOL-2 verified: Workflow progress checkpoints preserve execution state and prevent duplicated side-effects on resume.");
+
+  // 3. Durable External-Action Ledger / Outbox (Idempotency)
+  const outbox = new ActionOutboxLedger();
+  let externalDispatchCalls = 0;
+  const dispatchAction = async (opId) => {
+    externalDispatchCalls++;
+    return { operationId: opId, result: { deployed: true, url: "https://systempromptengine.com" } };
+  };
+
+  const idempKey = "idemp-deploy-test-001";
+  const firstDispatch = await outbox.dispatchWithOutbox(idempKey, "DEPLOYMENT_DISPATCH", "github-actions", { ref: "main" }, dispatchAction);
+  assert.equal(firstDispatch.wasAlreadyCommitted, false, "Initial dispatch must execute external action");
+  assert.equal(externalDispatchCalls, 1, "External dispatch must be called once");
+
+  // Second dispatch with same idempotency key must not execute external call
+  const secondDispatch = await outbox.dispatchWithOutbox(idempKey, "DEPLOYMENT_DISPATCH", "github-actions", { ref: "main" }, dispatchAction);
+  assert.equal(secondDispatch.wasAlreadyCommitted, true, "Subsequent dispatch must be recognized as already committed");
+  assert.equal(externalDispatchCalls, 1, "External dispatch must not be repeated");
+  console.log("  ✓ AOL-3 verified: External-action outbox ledger guarantees idempotency and prevents duplicate external calls.");
+
+  // 4. Independent Deployment Witness
+  const witness = new IndependentDeploymentWitness();
+  const validSha = "79bfe967a0834a210a26102b8f7fca3a7c5add85";
+  const validDigest = "a".repeat(64);
+  const secretKey = "spe_authoritative_witness_key_2026_safe";
+
+  // Rejection: Invalid non-40-hex SHA
+  const rejectedSha = witness.certifyDeployment({
+    providerExecutionId: "run-117357696565",
+    expectedCommitSha: "invalid-short-sha",
+    expectedArtifactDigestSha256: validDigest,
+    targetEnvironment: "production",
+    deploymentProvider: "github-actions",
+    deployedUrl: "https://systempromptengine.com",
+    authoritativeSecret: secretKey,
+  });
+  assert.equal(rejectedSha.witnessConclusion, "WITNESS_REJECTED", "Witness must reject invalid commit SHA");
+
+  // Acceptance: Valid execution, exact commit, valid digest, HTTPS origin
+  const acceptedCert = witness.certifyDeployment({
+    providerExecutionId: "run-117357696565",
+    expectedCommitSha: validSha,
+    expectedArtifactDigestSha256: validDigest,
+    targetEnvironment: "production",
+    deploymentProvider: "github-actions",
+    deployedUrl: "https://systempromptengine.com",
+    authoritativeSecret: secretKey,
+    simulatedProbeResponse: { status: 200, servedCommitSha: validSha },
+  });
+  assert.equal(acceptedCert.witnessConclusion, "VERIFIED_PRODUCTION_DEPLOYED", "Witness must certify valid deployment");
+  assert.ok(acceptedCert.witnessSignature.length === 64, "Witness signature must be 64-hex HMAC");
+  console.log("  ✓ AOL-4 verified: Independent deployment witness certifies verified production deployments and rejects unauthenticated candidates.");
+
+  // 5. Configuration Drift Detector & API Contract Watcher
+  const driftWatcher = new DriftContractWatcher();
+  const healthyModels = [
+    { modelId: "claude-4-5-sonnet", provider: "anthropic", contextWindow: 200000, status: "ACTIVE" },
+    { modelId: "claude-3-7-sonnet", provider: "anthropic", contextWindow: 200000, status: "DEPRECATED", deprecatedInFavorOf: "claude-4-5-sonnet" },
+  ];
+  const auditClean = driftWatcher.auditModelContracts(healthyModels);
+  assert.equal(auditClean.clean, true, "Healthy models must pass drift audit");
+
+  const brokenModels = [
+    { modelId: "legacy-broken-model", provider: "open", contextWindow: 0, status: "DEPRECATED" },
+  ];
+  const auditBroken = driftWatcher.auditModelContracts(brokenModels);
+  assert.equal(auditBroken.clean, false, "Broken models must be flagged by drift watcher");
+  assert.ok(auditBroken.driftViolations.length >= 2, "Drift violations must be recorded");
+  console.log("  ✓ AOL-5 verified: Configuration drift detector identifies broken successors, invalid context windows, and schema drift.");
+
+  // 6. Autonomous Work Budget & Update Cooling Period Controller
+  const budget = new AutonomousBudgetController({
+    maxDailyExecutionTimeMs: 30 * 60 * 1000,
+    maxDailyRetries: 3,
+    maxDailyChangedFiles: 10,
+    maxDailyReleases: 1,
+    coolingPeriodMinutes: 60,
+  });
+
+  const canReleaseInitial = budget.evaluateCanRelease();
+  assert.equal(canReleaseInitial.allowed, true, "Initial release within budget must be permitted");
+
+  // Record a release; subsequent release within cooling period MUST BE BLOCKED
+  budget.recordRelease(Date.now());
+  const blockedDuringCooling = budget.evaluateCanRelease(Date.now() + 10 * 60 * 1000);
+  assert.equal(blockedDuringCooling.allowed, false, "Release within cooling window must be blocked");
+  console.log("  ✓ AOL-6 verified: Work budget controller enforces update cooling windows and caps autonomous release attempts.");
+
+  // 7. Exception-Only Structured Diagnostic Reporter
+  const reporter = new ExceptionOnlyReporter();
+  reporter.recordQuietSuccess();
+  assert.equal(reporter.getIncidents().length, 0, "Routine success must generate 0 noisy alerts");
+
+  const diagReceipt = reporter.reportPersistentFailure(
+    new Error("Connection timeout to provider API"),
+    { target: "provider-sync", attempt: 3 }
+  );
+  assert.equal(reporter.getIncidents().length, 1, "Persistent failure must generate diagnostic receipt");
+  assert.ok(diagReceipt.recoveryRecommendation.length > 0, "Recovery recommendation must be deduced");
+  console.log("  ✓ AOL-7 verified: Exception-only reporter stays quiet during normal operation and surfaces structured receipts on persistent failure.");
 }
 
 console.log("\n==================================================================");
-console.log("🎉 ALL 9 CHATGPT COUNTER-REVIEW & AUDIT REMEDIATION GATES PASSED CLEANLY!");
+console.log("🎉 ALL 13 CHATGPT COUNTER-REVIEW & AUTONOMOUS OPERATIONS GATES PASSED CLEANLY!");
 console.log("==================================================================");

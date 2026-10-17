@@ -73,31 +73,39 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     if (!output.endsWith(".")) output += ".";
   }
 
-  // 3. Multi-constraint extraction (captures ALL affirmative and negative directives without dropping secondary instructions)
-  const affirmativePattern = /\b((?:must\s+(?!not\b)|shall\s+(?!not\b)|always\s+|strictly\s+|ensure\s+|reply\s+warmly\b|keep\s+[^.,;]+?\s+(?:unchanged|intact|as\s+is|untouched))[^.;,]*?)(?=\s*[,.;]?\s*(?:\band\b|\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/gi;
-  const negativePattern = /\b((?:never\s+|do\s+not\s+|don'\''t\s+|avoid\s+|without\s+|must\s+not\s+|shall\s+not\s+|cannot\s+|omit\s+|no\s+hallucinations?|do\s+not\s+disclose).+?)(?=\s*[,.;]?\s*(?:\band\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\blist\b|\bprovide\b|\bunder\b|\binto\b|[.;]|$))/gi;
-
-  const rawConstraints: string[] = [];
-  for (const m of text.matchAll(affirmativePattern)) {
-    rawConstraints.push(m[1]);
-  }
-  for (const m of text.matchAll(negativePattern)) {
-    rawConstraints.push(m[1]);
-  }
-
+  // 3. Multi-constraint extraction (captures ALL affirmative and negative directives without dropping secondary instructions, URLs, or dotted identifiers)
+  const sentenceCandidates = text.split(/(?<=[.!?])\s+(?=[A-Z0-9]|$)/).filter(Boolean);
   const collectedConstraints: string[] = [];
-  for (const item of rawConstraints) {
-    const subParts = item.split(/\s+and\s+(?=(?:must|shall|always|strictly|ensure|reply\s+warmly|keep|never|do\s+not|don'\''t|avoid|without|cannot)\b)/i);
-    for (const part of subParts) {
-      const clean = part.trim().replace(/\s+(?:and|with)$/i, "").trim();
-      if (clean && !clean.toLowerCase().startsWith("be a") && !clean.toLowerCase().startsWith("be an")) {
-        if (!collectedConstraints.some((c) => c.toLowerCase() === clean.toLowerCase())) {
-          collectedConstraints.push(clean);
+
+  const directiveKeywordRegex = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'\''T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|CONSENT|DISCLOSE|NONDISCLOSURE|NON-DISCLOSURE|CONFIDENTIAL|SECRET|PRIVATE|PRIVACY|PROTECT|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|EXFILTRATE|LEAK|RESPOND IN|REPLY IN|WRITE IN|TRANSLATE TO|USE METRIC|USE\s+[a-zA-Z0-9_-]+\s+UNITS?|EXCLUDE|OMIT|DISALLOW|PRESERVE|RETAIN|KEEP|WITHOUT|AVOID)\b/i;
+
+  const directiveConjunctionSplitter = /\s+(?:and\s+|with\s+|,\s*|\s*;\s*)(?=(?:never\s+|do\s+not\s+|don'\''t\s+|avoid\s+|without\s+|must\s+not\s+|shall\s+not\s+|cannot\s+|omit\s+|exclude\s+|disallow\s+|prohibit\s+|no\s+hallucinations?|do\s+not\s+disclose|never\s+disclose|never\s+send|must\s+(?!not\b)|shall\s+(?!not\b)|always\s+|strictly\s+|ensure\s+|reply\s+warmly\b|respond\s+in\s+|reply\s+in\s+|write\s+in\s+|translate\s+to\s+|use\s+metric\s+|use\s+[a-zA-Z0-9_-]+\s+units?|keep\s+|preserve\s+|retain\s+)\b)/i;
+
+  for (const sent of sentenceCandidates) {
+    const rawTokens = sent.split(directiveConjunctionSplitter);
+    for (const rawToken of rawTokens) {
+      let t = rawToken.trim().replace(/^[-*•\d.)\s]+/, "").replace(/[.]+$/, "").trim();
+      if (!t) continue;
+
+      const inlineDirectiveMatch = t.match(/\b((?:never\s+|do\s+not\s+|don'\''t\s+|avoid\s+|without\s+|must\s+not\s+|shall\s+not\s+|cannot\s+|omit\s+|exclude\s+|disallow\s+|prohibit\s+|no\s+hallucinations?|do\s+not\s+disclose|never\s+disclose|never\s+send|must\s+(?!not\b)|shall\s+(?!not\b)|always\s+|strictly\s+|ensure\s+|reply\s+warmly\b|respond\s+in\s+|reply\s+in\s+|write\s+in\s+|translate\s+to\s+|use\s+metric\s+|use\s+[a-zA-Z0-9_-]+\s+units?|keep\s+|preserve\s+|retain\s+).+)$/i);
+
+      if (inlineDirectiveMatch && inlineDirectiveMatch[1]) {
+        t = inlineDirectiveMatch[1].trim();
+      }
+
+      if (
+        directiveKeywordRegex.test(t) ||
+        /\b(?:keep|retain|preserve)\b.*\b(?:unchanged|intact|as is|untouched|exactly|constant|immutable)\b/i.test(t) ||
+        /\b(?:names and dates|account_id|client\.secret|user_id|session_id|api_key|token)\b/i.test(t)
+      ) {
+        if (!t.toLowerCase().startsWith("be a") && !t.toLowerCase().startsWith("be an")) {
+          if (!collectedConstraints.some((c) => c.toLowerCase() === t.toLowerCase())) {
+            collectedConstraints.push(t);
+          }
         }
       }
     }
   }
-
 
   if (collectedConstraints.length > 0) {
     constraintPhrase = collectedConstraints.join(", ");
@@ -107,10 +115,8 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     if (!constraint.endsWith(".")) constraint += ".";
   }
 
-
-
   // 4. Goal extraction
-  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\band\b|[.;]|$))/i;
+  const goalClausePattern = /\b(?:that|who|which)\s+(.+?)(?=\s*(?:[;,]|\s+and\s+|\s+with\s+)?\s*(?:\bnever\b|\bdo not\b|\bdon'\''t\b|\bavoid\b|\bwithout\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bstrictly\b|\breply\s+warmly\b|\bkeep\b|\bformat\b|\breturn\b|\boutput\b|\band\b|[.;]|$))/i;
   const goalClauseMatch = text.match(goalClausePattern);
 
   if (goalClauseMatch && goalClauseMatch[1]) {
@@ -118,12 +124,12 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
     goal = goalPhrase.charAt(0).toUpperCase() + goalPhrase.slice(1);
   } else {
     // Check infinitive "to <verb>" or imperative start
-    const toMatch = text.match(/\bto\s+([a-z]+[^.,;]+)(?=\s*[,.;]?\s*(?:\bnever\b|\bdo not\b|\bwithout\b|\bavoid\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bkeep\b|\bformat\b|$))/i);
+    const toMatch = text.match(/\bto\s+([a-z]+[^.,;]+?)(?=\s*(?:[;,]|\s+and\s+|\s+with\s+)?\s*(?:\bnever\b|\bdo not\b|\bwithout\b|\bavoid\b|\bmust not\b|\bmust\b|\bshall\b|\balways\b|\bkeep\b|\bformat\b|\bexclude\b|\bdisallow\b|$))/i);
     if (toMatch && toMatch[1] && !rolePhrase.includes(toMatch[1])) {
       goalPhrase = toMatch[1].trim();
       goal = goalPhrase.charAt(0).toUpperCase() + goalPhrase.slice(1);
     } else {
-      let first = text.split(/[.;]/)[0] || text;
+      let first = text.split(/(?<=[.!?])\s+(?=[A-Z0-9]|$)/)[0] || text;
       if (outputPhrase && first.includes(outputPhrase)) {
         first = first.replace(outputPhrase, "");
       }
@@ -132,7 +138,7 @@ export function parseCustomSentence(raw: string): ParsedSentenceResult {
           first = first.replace(c, "");
         }
       }
-      goalPhrase = first.replace(/\b(?:into|under|in|without|avoid)\s*$/i, "").replace(/[,;\s]+and\s*$/i, "").replace(/[,;]\s*$/i, "").trim();
+      goalPhrase = first.replace(/\b(?:into|under|in|without|avoid)\s*$/i, "").replace(/[,;\s]+and\s*$/i, "").replace(/[,;.]\s*$/i, "").trim();
       goal = goalPhrase;
     }
   }

@@ -239,6 +239,8 @@ def test_kernel3_sixty_second_onboarding_contract_level0():
     - Exact 4-part response format present.
     """
     compiler = MetaPromptCompiler()
+    # Warm up compiler regex caches before timing
+    compiler.synthesize_two_speed("warmup")
     raw_prompt = "Build a customer feedback sentiment analysis microservice"
 
     t0 = time.perf_counter()

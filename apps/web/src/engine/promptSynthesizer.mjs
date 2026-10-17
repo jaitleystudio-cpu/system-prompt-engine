@@ -1030,18 +1030,20 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
       if (s.length < 3) return false;
       // 1. Multilingual preservation: Telugu, Devanagari, Arabic, CJK, etc. (non-ASCII characters)
       if (/[^\x00-\x7F]/.test(s)) return true;
-      // 2. State & schema preservation (e.g. Keep account_id unchanged, retain user_id, preserve tokens)
-      if (/\b(?:keep|retain|preserve|maintain|leave|hold)\b.*\b(?:unchanged|intact|as is|untouched|constant|immutable)\b/i.test(s)) {
+      // 2. State & schema preservation (e.g. Keep account_id unchanged, retain user_id, preserve tokens, names and dates)
+      if (/\b(?:keep|retain|preserve|maintain|leave|hold)\b.*\b(?:unchanged|intact|as is|untouched|constant|immutable|exactly)\b/i.test(s)) {
         return true;
       }
-      if (/\b(?:account_id|user_id|session_id|api_key|token|credentials?|secret|password)\b/i.test(s)) {
+      if (/\b(?:account_id|user_id|session_id|api_key|token|credentials?|secret|password|names and dates)\b/i.test(s)) {
         return true;
       }
-      // 3. Directive & preservation verbs (negative prohibitions + affirmative requirements + privacy/consent)
-      const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|CONSENT|DISCLOSE|NONDISCLOSURE|NON-DISCLOSURE|CONFIDENTIAL|SECRET|PRIVATE|PRIVACY|PROTECT|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|EXFILTRATE|LEAK)\b/i;
+      // 3. Directive & preservation verbs (negative prohibitions + affirmative requirements + privacy/consent + language/units)
+      const directiveKeywords = /\b(MUST NOT|MUST|NEVER|FORBIDDEN|DO NOT|DON'T|CANNOT|SHALL NOT|SHALL|PROHIBITED|STRICTLY|MANDATORY|REQUIRED|ALWAYS|ENSURE|CONSENT|DISCLOSE|NONDISCLOSURE|NON-DISCLOSURE|CONFIDENTIAL|SECRET|PRIVATE|PRIVACY|PROTECT|RETURN ONLY|OUTPUT ONLY|ONLY JSON|JSON ONLY|FORMAT AS|NO\s+[a-zA-Z0-9_-]+\s+(?:MAY|SHALL|CAN|MUST)|NO\s+CUSTOMER\s+DATA|MAY LEAVE THIS DEVICE|EXFILTRATE|LEAK|RESPOND IN|REPLY IN|WRITE IN|TRANSLATE TO|USE METRIC|USE\s+[a-zA-Z0-9_-]+\s+UNITS?|EXCLUDE|OMIT|DISALLOW|PRESERVE|RETAIN|KEEP|WITHOUT|AVOID|NAMES AND DATES EXACTLY)\b/i;
       if (directiveKeywords.test(s)) return true;
       return false;
     };
+
+    const directiveConjunctionSplitter = /\s+(?:and\s+|with\s+|,\s*|\s*;\s*)(?=(?:never\s+|do\s+not\s+|don't\s+|avoid\s+|without\s+|must\s+not\s+|shall\s+not\s+|cannot\s+|omit\s+|exclude\s+|disallow\s+|prohibit\s+|no\s+hallucinations?|do\s+not\s+disclose|never\s+disclose|never\s+send|must\s+(?!not\b)|shall\s+(?!not\b)|always\s+|strictly\s+|ensure\s+|reply\s+warmly\b|respond\s+in\s+|reply\s+in\s+|write\s+in\s+|translate\s+to\s+|use\s+metric\s+|use\s+[a-zA-Z0-9_-]+\s+units?|keep\s+|preserve\s+|retain\s+)\b)/i;
 
     for (const l of rawLines) {
       const trimmed = l.trim();
@@ -1058,10 +1060,13 @@ export function synthesizeSystemPrompt(rawOrOpts, maybeOpts) {
     for (const objLine of objectiveLines) {
       const rawSentences = objLine.split(/(?<=[.!?\u0964\u0965])\s+|\n+/).filter(Boolean);
       for (const s of rawSentences) {
-        const cleanM = s.trim().replace(/^[-*•\s]+/, "");
-        if (cleanM.length >= 3 && isMandatoryGoalDirective(cleanM)) {
-          if (!extractedConstraints.includes(cleanM)) {
-            extractedConstraints.push(cleanM);
+        const tokens = s.split(directiveConjunctionSplitter);
+        for (const tok of tokens) {
+          const cleanM = tok.trim().replace(/^[-*•\s]+/, "");
+          if (cleanM.length >= 3 && isMandatoryGoalDirective(cleanM)) {
+            if (!extractedConstraints.includes(cleanM)) {
+              extractedConstraints.push(cleanM);
+            }
           }
         }
       }
