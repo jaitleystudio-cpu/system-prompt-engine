@@ -13,7 +13,12 @@ export interface KeyEnv { publicKeys: Record<string, string>; allowTestKeys: boo
 
 const enc = new TextEncoder(); const dec = new TextDecoder();
 export const b64u = (b: Uint8Array) => { let s = ""; for (const x of b) s += String.fromCharCode(x); return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); };
-export const fromB64u = (s: string) => { if (!/^[A-Za-z0-9_-]*$/.test(s)) throw new Error("bad b64u"); const p = s.replace(/-/g, "+").replace(/_/g, "/"); return Uint8Array.from(atob(p + "=".repeat((4 - (p.length % 4)) % 4)), (c) => c.charCodeAt(0)); };
+/** Decodes base64url into a Uint8Array backed by a plain ArrayBuffer (what WebCrypto's BufferSource expects). */
+export const fromB64u = (s: string): Uint8Array<ArrayBuffer> => {
+  if (!/^[A-Za-z0-9_-]*$/.test(s)) throw new Error("bad b64u");
+  const p = s.replace(/-/g, "+").replace(/_/g, "/"); const bin = atob(p + "=".repeat((4 - (p.length % 4)) % 4));
+  const out = new Uint8Array(new ArrayBuffer(bin.length)); for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out;
+};
 
 /** Parses a Pro key from env values: SPE_PRO_PUBLIC_KEYS='{"kid":"<base64url raw 32-byte key>"}'. */
 export function keyEnvFrom(e: Record<string, string | undefined>): KeyEnv {
@@ -28,7 +33,7 @@ export async function verifyProKey(raw: string | null | undefined, env: KeyEnv):
   if (!key.startsWith(KEY_PREFIX) || key.length > 4096) return { ok: false, reason: "MALFORMED_KEY" };
   const parts = key.slice(KEY_PREFIX.length).split(".");
   if (parts.length !== 2) return { ok: false, reason: "MALFORMED_KEY" };
-  let payload: KeyPayload; let sig: Uint8Array; let body: Uint8Array;
+  let payload: KeyPayload; let sig: Uint8Array<ArrayBuffer>; let body: Uint8Array<ArrayBuffer>;
   try { body = fromB64u(parts[0]); sig = fromB64u(parts[1]); payload = JSON.parse(dec.decode(body)); } catch { return { ok: false, reason: "MALFORMED_KEY" }; }
   if (!payload || typeof payload !== "object" || typeof payload.kid !== "string" || typeof payload.sub !== "string" || !payload.sub || (payload.tier !== "pro" && payload.tier !== "team") || typeof payload.iat !== "number" || typeof payload.exp !== "number") return { ok: false, reason: "BAD_CLAIMS" };
   const isTest = payload.kid === TEST_KID;
