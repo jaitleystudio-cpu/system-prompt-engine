@@ -35,6 +35,12 @@ _QUALIFICATION_BY_PROVENANCE = {
     "EXTERNAL_COMMAND_UNATTESTED": {"BROWSER_PASS_PROVIDER_UNATTESTED", "BROWSER_REPAIRED_PROVIDER_UNATTESTED", "FAILED_BOUNDED_REPAIR", "INCONCLUSIVE_EXCEPTION"},
 }
 _EXPECTED_CHECKS = frozenset({"applicationVisible", "canvasVisible", "interactionWorking"})
+_EXPECTED_SCOPE = {
+    "selectors": ["#spe-app", "canvas#spe-stage", "#spe-interact"],
+    "interaction": "click increments window.speInteractionCount",
+    "errors": "zero page exceptions and relevant console errors in test window",
+    "network": "all browser requests blocked",
+}
 
 
 def _sha(data: str | bytes) -> str:
@@ -59,6 +65,8 @@ def _validate_observation(value: Any, idx: int) -> Mapping[str, Any]:
     _digest(obs.get("candidateDigest"), "candidate")
     if obs.get("evidenceKind") != _BROWSER:
         raise ValueError("INVALID_BROWSER_EVIDENCE_KIND")
+    if obs.get("testScope") != _EXPECTED_SCOPE:
+        raise ValueError("BROWSER_ACCEPTANCE_SCOPE_TAMPERED")
     errors = obs.get("errors")
     checks = _mapping(obs.get("checks"), "checks")
     if not isinstance(errors, list) or any(not isinstance(item, str) for item in errors):
@@ -92,6 +100,8 @@ def validate_recovery_manifest(
     record = _mapping(manifest, "manifest")
     if record.get("schema") != _R0_SCHEMA:
         raise ValueError("UNSUPPORTED_RECOVERY_SCHEMA")
+    if record.get("acceptance") != _EXPECTED_SCOPE:
+        raise ValueError("ACCEPTANCE_CONTRACT_CHANGED")
     if record.get("protectedGoal") != goal or record.get("protectedGoalDigest") != _sha(goal):
         raise ValueError("PROTECTED_GOAL_MISMATCH")
     if record.get("initialPromptDigest") != _sha(compiled_prompt):
