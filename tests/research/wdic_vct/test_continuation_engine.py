@@ -23,7 +23,7 @@ def engine():
 
 def test_parse_agent_report_text(engine):
     """
-    Verifies that raw text from an agent like Gilden or Cursor is accurately parsed.
+    Verifies that raw text from an agent like Gilden or Cursor is parsed as claims, not proof.
     """
     raw = (
         "TASK: Implement secure session recovery.\n"
@@ -46,7 +46,7 @@ def test_anti_omission_catches_untested_requirement(engine):
     The exact scenario from the paper:
     Agent implements session recovery and passes 126 tests.
     Report covers R-01 (serialization), but omits R-17 (stale fencing token rejection).
-    SPE must identify R-17 as UNVERIFIED despite the 126 passing tests.
+    SPE must identify BOTH as UNVERIFIED: reported passing tests are not receipts.
     """
     raw_report = (
         "TASK: Implement secure session recovery.\n"
@@ -67,16 +67,16 @@ def test_anti_omission_catches_untested_requirement(engine):
         current_commit="commit-abc1234"
     )
 
-    # 1. Verification results
-    assert summary.verified_count == 1
-    assert summary.unverified_count == 1
+    # 1. Untrusted report text is not an independently executed test.
+    assert summary.verified_count == 0
+    assert summary.unverified_count == 2
     assert summary.verdict == "DEFICIT_DETECTED"
-    assert "R-17" in summary.deficit.open_requirements
+    assert set(summary.deficit.open_requirements) == {"R-01", "R-17"}
 
-    # 2. Next Task Contract must target R-17 specifically
+    # 2. Next Task Contract must request evidence for the first open requirement.
     assert summary.next_contract is not None
-    assert "R-17" in summary.next_contract.task_title
-    assert "R-17" in summary.next_contract.objective
+    assert "R-01" in summary.next_contract.task_title
+    assert "R-01" in summary.next_contract.objective
     assert summary.next_contract.baseline_ref == "commit-abc1234"
     assert len(summary.next_contract.execution_steps) >= 3
 
@@ -142,10 +142,10 @@ def test_failing_tests_trigger_repair_priority(engine):
     assert "Repair Contradiction: TEST_REGRESSION" in summary.next_contract.task_title
 
 
-def test_all_requirements_verified_yields_qualified(engine):
+def test_all_requirements_claimed_passed_still_unverified_without_receipt(engine):
     """
-    When all required obligations are covered by passing tests,
-    the review emits QUALIFIED with no open deficit.
+    Even when a report says every required test passed, no execution receipt
+    exists in this research reviewer; QUALIFIED must not be fabricated.
     """
     raw_report = (
         "RESULT: All requirements implemented.\n"
@@ -160,8 +160,32 @@ def test_all_requirements_verified_yields_qualified(engine):
         required_requirements=["R-01", "R-02"]
     )
 
-    assert summary.verdict == "QUALIFIED"
-    assert summary.verified_count == 2
-    assert summary.unverified_count == 0
+    assert summary.verdict == "DEFICIT_DETECTED"
+    assert summary.verified_count == 0
+    assert summary.unverified_count == 2
     assert summary.contradicted_count == 0
-    assert summary.next_contract is None  # Nothing left to continue!
+    assert summary.next_contract is not None
+    assert set(summary.deficit.open_requirements) == {"R-01", "R-02"}
+
+
+def test_bare_r01_claim_without_execution_receipt_cannot_qualify(engine):
+    # Regression for the externally observed P0: "R-01 verified" prose.
+    text = "RESULT: completed\\nR-01 passed and verified\\n"
+    summary = engine.review_and_continue(text, ["R-01"])
+    assert summary.verdict == "DEFICIT_DETECTED"
+    assert summary.verified_count == 0
+    assert summary.unverified_count == 1
+    assert summary.next_contract is not None
+
+
+def test_claimed_exit_zero_and_many_passes_without_receipt_still_hold(engine):
+    text = "TESTS: 1000 passed. 0 failed.\\nEXIT CODE: 0\\nR-01 passed and asserted\\n"
+    summary = engine.review_and_continue(text, ["R-01"])
+    assert summary.verdict == "DEFICIT_DETECTED"
+    assert summary.verified_count == 0
+
+
+def test_empty_requirements_do_not_vacuously_qualify(engine):
+    summary = engine.review_and_continue("RESULT: done", [])
+    assert summary.verdict == "UNQUALIFIED_NO_REQUIREMENTS"
+    assert summary.verified_count == 0
