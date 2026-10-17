@@ -137,6 +137,7 @@ try {
     workerId: "test-controller-worker",
     dryRun: false,
     baseCommit: "dcd7df0f92d3eaa62d915418b5009e85844be922",
+    receiptOutputDir: testDir,
   });
 
   assert(receipt.receiptVersion === "1.0.0", "Receipt version is 1.0.0");
@@ -175,6 +176,7 @@ try {
     triggerType: "WATCHDOG_0300_IST",
     businessDate: "2026-10-18",
     workerId: "watchdog-worker",
+    receiptOutputDir: testDir,
   });
 
   assert(replayReceipt.stagesCompleted.includes("STAGE_A_TRIGGER_REFUSED"), "Watchdog trigger safely refused on already-completed date");
@@ -190,6 +192,7 @@ try {
     businessDate: "2026-10-19",
     workerId: "rollback-test-worker",
     forceRollbackTest: true,
+    receiptOutputDir: testDir,
   });
 
   assert(rollbackReceipt.finalVerdict === "ROLLED_BACK", `Rollback condition triggered ROLLED_BACK verdict (got ${rollbackReceipt.finalVerdict})`);
@@ -197,8 +200,50 @@ try {
   assert(rollbackReceipt.activeProductionPointer === rollbackReceipt.rollbackTargetPointer, "Active production pointer safely restored to rollback target");
   console.log("  ✓ PASS: Rollback drill safely restores active pointer to rollback target");
 
+  // ────────────────────────────────────────────────────────────────
+  // TEST GROUP 7: DEPLOYMENT WITNESS & PERMITTED RELEASE BOUNDARY (MAINT-P0-01)
+  // ────────────────────────────────────────────────────────────────
+  console.log("\n[GATE 7] Testing Deployment Witness & Permitted Auto-Release Boundary (MAINT-P0-01)...");
+
+  // 7A: Discovered routine changes without verified deployment witness must NOT claim RELEASED_PERMITTED
+  const unverifiedWitnessReceipt = await controller.executeMaintenanceCycle({
+    triggerType: "SCHEDULED_0217_IST",
+    businessDate: "2026-10-20",
+    workerId: "unverified-worker",
+    simulateDiscoveredChanges: 2,
+    receiptOutputDir: testDir,
+  });
+
+  assert(unverifiedWitnessReceipt.discoveredChangesCount === 2, "Discovered changes count is 2");
+  assert(unverifiedWitnessReceipt.finalVerdict === "NO_OP_CLEAN", `Missing deployment witness results in NO_OP_CLEAN (got ${unverifiedWitnessReceipt.finalVerdict})`);
+  assert(unverifiedWitnessReceipt.heldForHumanReviewCount === 2, "Candidate changes safely held for human review");
+  assert(unverifiedWitnessReceipt.permittedChangesApplied === 0, "Zero permitted changes applied without verified witness");
+  console.log("  ✓ PASS: Discovered changes without verified deployment witness are held for review (NO_OP_CLEAN)");
+
+  // 7B: Discovered changes with verified deployment witness receipt allow RELEASED_PERMITTED
+  const verifiedWitnessReceipt = await controller.executeMaintenanceCycle({
+    triggerType: "SCHEDULED_0217_IST",
+    businessDate: "2026-10-21",
+    workerId: "verified-deploy-worker",
+    simulateDiscoveredChanges: 2,
+    deploymentWitness: {
+      verified: true,
+      witnessReceiptHash: "witness_sha256_mock_digest",
+      deployedBy: "github-actions-verified-deployer",
+      deployedAtIso: new Date().toISOString(),
+    },
+    receiptOutputDir: testDir,
+  });
+
+  assert(verifiedWitnessReceipt.discoveredChangesCount === 2, "Discovered changes count is 2");
+  assert(verifiedWitnessReceipt.finalVerdict === "RELEASED_PERMITTED", "Verified deployment witness permits RELEASED_PERMITTED");
+  assert(verifiedWitnessReceipt.permittedChangesApplied === 2, "Permitted changes applied is 2");
+  assert(verifiedWitnessReceipt.heldForHumanReviewCount === 0, "Zero changes held when witness is verified");
+  assert(verifiedWitnessReceipt.activeProductionPointer.startsWith("rel-"), "Production pointer advanced to new release");
+  console.log("  ✓ PASS: Verified deployment witness permits RELEASED_PERMITTED and advances production pointer");
+
   console.log("\n==================================================================");
-  console.log("🎉 ALL 22 AUTONOMOUS MAINTENANCE CONTROLLER TESTS PASSED (100%)!");
+  console.log("🎉 ALL AUTONOMOUS MAINTENANCE CONTROLLER TESTS PASSED (100%)!");
   console.log("==================================================================");
 } finally {
   try {

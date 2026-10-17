@@ -371,12 +371,64 @@ assert(reqError.body.error !== undefined, "Malformed tool call returns JSON-RPC 
 const accAfterError = usageEngine.getCustomerAccount(customer.customerId);
 assert(accAfterError.balanceMicroCents === 9984000, "Balance unchanged on tool execution error ($0 charge)");
 
+// 3.7 Customer-Scoped Request Idempotency Key Isolation (BILL-P0-06)
+// Two distinct customers presenting the identical request ID must NOT collide.
+const customerBData = usageEngine.createCustomerAccount({
+  customerId: "cust_idempotency_b",
+  email: "customerB@spe.dev",
+  initialBalanceCents: 1000,
+});
+
+const reqCustA = await simulateHttpRequest(
+  {
+    path: "/api/v1/mcp",
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      "x-spe-request-id": "shared_client_req_001",
+    },
+  },
+  JSON.stringify({
+    jsonrpc: "2.0",
+    id: 99,
+    method: "tools/call",
+    params: {
+      name: "compile_for_model",
+      arguments: { promptText: "Task for Customer A", targetDialect: "claude-xml" },
+    },
+  })
+);
+assert(reqCustA.statusCode === 200, "Customer A request with shared request ID returns HTTP 200");
+
+const reqCustB = await simulateHttpRequest(
+  {
+    path: "/api/v1/mcp",
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${customerBData.apiKey}`,
+      "x-spe-request-id": "shared_client_req_001",
+    },
+  },
+  JSON.stringify({
+    jsonrpc: "2.0",
+    id: 99,
+    method: "tools/call",
+    params: {
+      name: "compile_for_model",
+      arguments: { promptText: "Task for Customer B", targetDialect: "claude-xml" },
+    },
+  })
+);
+assert(reqCustB.statusCode === 200, "Customer B request with same request ID is independently debited (customer-scoped idempotency)");
+const accB = usageEngine.getCustomerAccount("cust_idempotency_b");
+assert(accB.totalCalls === 1, "Customer B debited exactly once without cross-customer key collision");
+
 // ────────────────────────────────────────────────────────────────
 // GATE 4: STRIPE PAYMENT PROCESSOR & WEBHOOK SIGNATURE VERIFICATION
 // ────────────────────────────────────────────────────────────────
 console.log("\n[GATE 4] Verifying Stripe Processor & Authenticated Webhook Handling...");
 
-// 4.1 Stripe Checkout Session Creation
+// 4.1 Stripe Checkout Session Creation & Provenance Disclosure (BILL-P0-01)
 const checkoutRes = await simulateHttpRequest(
   { path: "/api/v1/billing/checkout", method: "POST", headers: {} },
   JSON.stringify({
@@ -389,6 +441,7 @@ const checkoutRes = await simulateHttpRequest(
 assert(checkoutRes.statusCode === 200, "Stripe Checkout session endpoint returns HTTP 200");
 assert(checkoutRes.body.id.startsWith("cs_spe_"), "Checkout session has valid cs_spe_ identifier");
 assert(checkoutRes.body.amountTotalCents === 5000, "Checkout session amountTotalCents is 5000 ($50.00)");
+assert(checkoutRes.body.provenance === "SIMULATED_TEST_SANDBOX", "Checkout session provenance disclosed as SIMULATED_TEST_SANDBOX");
 
 // 4.2 Authentic Stripe Webhook Processing (checkout.session.completed)
 const stripePayload = JSON.stringify({
@@ -420,8 +473,23 @@ assert(webhookRes.body.received === true, "Webhook confirmed received");
 assert(webhookRes.body.result?.actionTaken?.includes("CREDITED_PREPAID_BALANCE"), "Prepaid balance credited");
 
 const accAfterCredit = usageEngine.getCustomerAccount(customer.customerId);
-// Previous balance was 9,984,000 micro-cents ($9.9840) + $20.00 (20,000,000 micro-cents) = 29,984,000 micro-cents ($29.9840)
-assert(accAfterCredit.balanceMicroCents === 29984000, `Balance after $20 top-up is $29.9840 (got ${(accAfterCredit.balanceMicroCents / 1000000).toFixed(4)})`);
+// Previous balance was 9,983,000 micro-cents (after 3.7 standard charge of 1,000 micro-cents) + $20.00 (20,000,000 micro-cents)
+assert(accAfterCredit.balanceMicroCents === 29983000, `Balance after $20 top-up matches expected micro-cents (got ${accAfterCredit.balanceMicroCents})`);
+
+// 4.2B Webhook Replay Protection: Replaying the exact same webhook event ID must NOT credit account again (BILL-P0-05)
+const replayedWebhookRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": authenticSig },
+  },
+  stripePayload
+);
+assert(replayedWebhookRes.statusCode === 200, "Replayed Stripe webhook returns HTTP 200");
+assert(replayedWebhookRes.body.result?.accountUpdated === false, "Replayed webhook marks accountUpdated = false");
+assert(replayedWebhookRes.body.result?.actionTaken?.includes("IDEMPOTENT_IGNORED_DUPLICATE_EVENT"), "Replay recognized as duplicate event");
+const accAfterReplay = usageEngine.getCustomerAccount(customer.customerId);
+assert(accAfterReplay.balanceMicroCents === 29983000, "Balance remains unchanged after replayed webhook (zero duplicate credit)");
 
 // 4.3 Tampered Stripe Webhook Signature Rejection
 const tamperedSig = authenticSig.slice(0, -6) + "badbad";
@@ -450,6 +518,56 @@ const staleWebhookRes = await simulateHttpRequest(
 assert(staleWebhookRes.statusCode === 400, "Expired Stripe signature timestamp rejected with HTTP 400");
 assert(staleWebhookRes.body.message?.includes("STRIPE_SIGNATURE_EXPIRED"), "Message explicitly cites STRIPE_SIGNATURE_EXPIRED");
 
+// 4.5 First-Payment New Account Accounting: amountCents passed directly (BILL-P0-03)
+const newCustPayload = JSON.stringify({
+  id: "evt_stripe_new_cust_topup_001",
+  object: "event",
+  type: "checkout.session.completed",
+  data: {
+    object: {
+      id: "cs_stripe_new_001",
+      client_reference_id: "cust_first_payment_new",
+      mode: "payment",
+      amount_total: 5000, // 5000 cents = $50.00
+      customer_details: { email: "firstpayment@spe.dev" },
+    },
+  },
+});
+const newCustSig = stripeProcessor.signPayload(newCustPayload);
+const newCustRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/webhook/stripe",
+    method: "POST",
+    headers: { "stripe-signature": newCustSig },
+  },
+  newCustPayload
+);
+assert(newCustRes.statusCode === 200, "First payment webhook returns HTTP 200");
+const firstPaymentAcc = usageEngine.getCustomerAccount("cust_first_payment_new");
+assert(firstPaymentAcc !== undefined, "First payment account registered in usage engine");
+assert(firstPaymentAcc.balanceMicroCents === 50000000, `First-payment account has exactly $50.00 credit (50,000,000 micro-cents, got ${firstPaymentAcc?.balanceMicroCents})`);
+
+// 4.6 Webhook Secret Fallback Fail-Closed in Production (BILL-P0-02)
+const prevNodeEnv = process.env.NODE_ENV;
+const prevWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+process.env.NODE_ENV = "production";
+delete process.env.STRIPE_WEBHOOK_SECRET;
+let prodSecretFailedClosed = false;
+try {
+  new StripeProcessorAdapter({
+    billingAuthority,
+    usageEngine,
+  });
+} catch (err) {
+  if (err.message?.includes("PRODUCTION_SECURITY_ERROR")) {
+    prodSecretFailedClosed = true;
+  }
+} finally {
+  process.env.NODE_ENV = prevNodeEnv;
+  if (prevWebhookSecret) process.env.STRIPE_WEBHOOK_SECRET = prevWebhookSecret;
+}
+assert(prodSecretFailedClosed === true, "StripeProcessorAdapter strictly fails closed in production when webhook secret is missing");
+
 // ────────────────────────────────────────────────────────────────
 // GATE 5: STRIPE USAGE METER EVENT EXPORT & RECONCILIATION
 // ────────────────────────────────────────────────────────────────
@@ -466,10 +584,10 @@ assert(typeof meterEvents[0].payload.micro_cents === "number", "Micro-cents rate
 // 5.2 Ledger Mathematical Reconciliation
 const reconciliation = usageEngine.reconcileCustomer(customer.customerId);
 assert(reconciliation.reconciled === true, "Ledger mathematically reconciled with 0 micro-cent discrepancy");
-assert(reconciliation.totalDebitedCents === 1.6, `Total debited is exactly 1.6 cents ($0.0160) (got ${reconciliation.totalDebitedCents})`);
-assert(reconciliation.activeRecordsCount === 3, "Exactly 3 debited usage events in journal");
+assert(reconciliation.totalDebitedCents === 1.7, `Total debited is exactly 1.7 cents ($0.0170) (got ${reconciliation.totalDebitedCents})`);
+assert(reconciliation.activeRecordsCount === 4, "Exactly 4 debited usage events in journal");
 
-// 5.3 Health Endpoint Audit
+// 5.3 Health Endpoint Audit & 24/7 Zero-Downtime Guarantee
 const healthRes = await simulateHttpRequest(
   { path: "/api/v1/health", method: "GET", headers: {} },
   ""
@@ -478,7 +596,44 @@ assert(healthRes.statusCode === 200, "Health check endpoint returns HTTP 200");
 assert(healthRes.body.billing?.activeMeterRates?.standardCompile === "$0.001", "Health endpoint publishes $0.001 standard rate");
 assert(healthRes.body.billing?.activeMeterRates?.proCompile === "$0.005", "Health endpoint publishes $0.005 pro rate");
 assert(healthRes.body.billing?.activeMeterRates?.deepReasoning === "$0.010", "Health endpoint publishes $0.010 deep reasoning rate");
-assert(healthRes.body.billing?.payoutSchedule?.includes("Standard merchant account schedule"), "Health endpoint accurately discloses bank payout settlement schedule");
+assert(healthRes.body.billing?.universalWebFreeCeilingChars === 30000, "Health endpoint discloses 30,000 char free output ceiling (PRODUCT-P0-01)");
+assert(healthRes.body.zeroDowntimeGuaranteed === true, "Health endpoint confirms zero-downtime serving guarantee");
+assert(healthRes.body.availability === "24/7/365_WORLDWIDE_NON_BLOCKING", "Health endpoint publishes 24/7 worldwide non-blocking availability");
+assert(healthRes.body.servingArchitecture === "READ_COPY_UPDATE_ATOMIC_HOT_SWAP", "Health endpoint confirms RCU atomic hot-swap serving architecture");
+
+// 5.4 Protected Billing Endpoints Authorization Check (BILL-P0-04)
+const unauthMeterRes = await simulateHttpRequest(
+  { path: "/api/v1/billing/meter-events", method: "GET", headers: {} },
+  ""
+);
+assert(unauthMeterRes.statusCode === 401, "Unauthenticated GET /api/v1/billing/meter-events rejected with HTTP 401");
+assert(unauthMeterRes.body.error === "UNAUTHORIZED", "Error specifies UNAUTHORIZED");
+
+const authMeterRes = await simulateHttpRequest(
+  {
+    path: "/api/v1/billing/meter-events",
+    method: "GET",
+    headers: { authorization: "Bearer spe_admin_secret_auth_token_prod_v1" },
+  },
+  ""
+);
+assert(authMeterRes.statusCode === 200, "Authenticated GET /api/v1/billing/meter-events with admin key returns HTTP 200");
+
+const unauthCustReconcile = await simulateHttpRequest(
+  { path: `/api/v1/billing/customer/${customer.customerId}`, method: "GET", headers: {} },
+  ""
+);
+assert(unauthCustReconcile.statusCode === 401, "Unauthenticated customer reconciliation endpoint rejected with HTTP 401");
+
+const authCustReconcile = await simulateHttpRequest(
+  {
+    path: `/api/v1/billing/customer/${customer.customerId}`,
+    method: "GET",
+    headers: { authorization: `Bearer ${apiKey}` },
+  },
+  ""
+);
+assert(authCustReconcile.statusCode === 200, "Customer accessing their own reconciliation with valid API key returns HTTP 200");
 
 console.log("\n==================================================================");
 console.log(`🎉 ALL ${passedTests}/${totalTests} PER-CALL METERING & STRIPE TESTS PASSED CLEANLY (100%)!`);

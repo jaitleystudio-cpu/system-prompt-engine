@@ -24,6 +24,8 @@ import { sanitizeModelEntry, validateAndSealRegistryTransition } from "../modelA
 import type { TransitionAuditReport } from "../modelAtlas/sealedRegistryTransition.ts";
 import type { TemporalModelTruthLedger } from "../modelAtlas/temporalModelLedger.ts";
 
+export type ProbeProvenance = "SIMULATED_TEST" | "LIVE_PROVIDER_VERIFIED";
+
 export interface ModelApiProbeResult {
   readonly modelId: string;
   readonly executableApiId: string;
@@ -32,6 +34,7 @@ export interface ModelApiProbeResult {
   readonly latencyMs: number;
   readonly observedStatusCode: number;
   readonly supportedCapabilities: readonly string[];
+  readonly provenance: ProbeProvenance;
   readonly deprecationNotice?: {
     isRetired: boolean;
     effectiveDateIso: string;
@@ -135,12 +138,15 @@ export async function probeModelCallability(
     forceStatusCode?: number;
     latencyMs?: number;
     simulatedRetirement?: { isRetired: boolean; effectiveDateIso: string; supersedingModelId?: string };
+    provenance?: ProbeProvenance;
   }
 ): Promise<ModelApiProbeResult> {
   const isPinned = isPinnedApiIdentifier(executableApiId);
   const latencyMs = mockConfig?.latencyMs ?? 42;
   const observedStatusCode = mockConfig?.forceStatusCode ?? (mockConfig?.forceCallable === false ? 403 : 200);
   const accountCallable = observedStatusCode >= 200 && observedStatusCode < 300;
+  // Provenance must be explicit: SIMULATED_TEST vs LIVE_PROVIDER_VERIFIED (BRAIN-P0-02)
+  const provenance: ProbeProvenance = mockConfig?.provenance ?? "SIMULATED_TEST";
 
   const supportedCaps: string[] = [];
   if (model.capabilities.supportsThinking) supportedCaps.push("thinking");
@@ -155,6 +161,7 @@ export async function probeModelCallability(
     accountCallable,
     observedStatusCode,
     supportedCaps,
+    provenance,
     timestampIso: new Date().toISOString(),
   };
 
@@ -168,9 +175,38 @@ export async function probeModelCallability(
     latencyMs,
     observedStatusCode,
     supportedCapabilities: Object.freeze(supportedCaps),
+    provenance,
     deprecationNotice: mockConfig?.simulatedRetirement,
     probeReceiptDigest,
   });
+}
+
+/**
+ * Assesses whether a probe result can qualify a model for live production routing (BRAIN-P0-02).
+ * Non-negotiable invariant: A simulated HTTP 200 must NEVER qualify a live production model.
+ */
+export function isProductionModelQualifiable(
+  probe: ModelApiProbeResult
+): { qualifiable: boolean; reason?: string } {
+  if (probe.provenance === "SIMULATED_TEST") {
+    return {
+      qualifiable: false,
+      reason: "SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED: Simulated HTTP 200 probe cannot qualify a live model for production routing. LIVE_PROVIDER_VERIFIED witness required.",
+    };
+  }
+  if (!probe.accountCallable) {
+    return {
+      qualifiable: false,
+      reason: `ACCOUNT_NOT_CALLABLE: Probe returned non-callable status code ${probe.observedStatusCode}.`,
+    };
+  }
+  if (!probe.isPinnedVersion) {
+    return {
+      qualifiable: false,
+      reason: "ALIAS_NEQ_PINNED: Executable API identifier is a floating alias, not an immutable pinned version.",
+    };
+  }
+  return { qualifiable: true };
 }
 
 /**
@@ -259,10 +295,19 @@ export function promoteModelWithValidation(
   targetState: ModelLifecycleState,
   witnesses: readonly CapabilityWitness[],
   ledger?: TemporalModelTruthLedger,
-  currentState: ModelLifecycleState = "CALLABLE"
+  currentState: ModelLifecycleState = "CALLABLE",
+  options?: { requireLiveProvider?: boolean }
 ): ModelValidationOutcome {
   const errors: string[] = [];
   const warnings: string[] = [];
+
+  // Enforce BRAIN-P0-02: Simulated tests cannot qualify a live production model when requireLiveProvider is requested
+  if (options?.requireLiveProvider && targetState === "QUALIFIED") {
+    const hasSimulatedWitness = witnesses.some((w: any) => w.provenance === "SIMULATED_TEST");
+    if (hasSimulatedWitness) {
+      errors.push("SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED: Simulated witness cannot qualify a model for live production routing.");
+    }
+  }
 
   // 1. Validate Identifier
   const idValidation = validateModelIdentifier(model, executableApiId);

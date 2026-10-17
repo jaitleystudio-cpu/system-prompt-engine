@@ -31,6 +31,14 @@ import {
 } from "./durableMaintenanceLedger.ts";
 import { UsageMeteringEngine } from "../../server/usageMeteringEngine.ts";
 
+export interface MaintenanceDeploymentWitness {
+  readonly verified: boolean;
+  readonly witnessReceiptHash?: string;
+  readonly deployedBy?: string;
+  readonly deployedAtIso?: string;
+  readonly verificationEvidence?: string;
+}
+
 export interface MaintenanceExecutionOptions {
   triggerType?: MaintenanceTriggerType;
   businessDate?: string;
@@ -38,6 +46,11 @@ export interface MaintenanceExecutionOptions {
   dryRun?: boolean;
   baseCommit?: string;
   forceRollbackTest?: boolean;
+  deploymentWitness?: MaintenanceDeploymentWitness;
+  simulateDiscoveredChanges?: number;
+  receiptOutputDir?: string;
+  receiptFileName?: string;
+  writeReceiptToDisk?: boolean;
 }
 
 export interface DailyMaintenanceReceipt {
@@ -182,6 +195,10 @@ export class SpeMaintenanceController {
       specialistResults["security_and_dependencies"] = secResult;
       this.#ledger.recordSpecialistJob(jobId, fencingToken, secResult);
 
+      if (options.simulateDiscoveredChanges && options.simulateDiscoveredChanges > 0) {
+        discoveredChangesCount += options.simulateDiscoveredChanges;
+      }
+
       // ────────────────────────────────────────────────────────────────
       // STAGE C: PREPARE ISOLATED UPDATE
       // ────────────────────────────────────────────────────────────────
@@ -266,9 +283,17 @@ export class SpeMaintenanceController {
         finalVerdict = "ROLLED_BACK";
         rollbacksExecuted++;
       } else if (discoveredChangesCount > 0 && !isDryRun) {
-        finalVerdict = "RELEASED_PERMITTED";
-        permittedChangesApplied = discoveredChangesCount;
-        newProdPointer = `rel-${Date.now().toString(16).slice(0, 8)}`;
+        // MAINT-P0-01: Autonomous release strictly requires an explicit verified deployment witness receipt.
+        // If unverified or missing, candidate changes must be held for human review with zero false deployment claims.
+        if (options.deploymentWitness?.verified === true) {
+          finalVerdict = "RELEASED_PERMITTED";
+          permittedChangesApplied = discoveredChangesCount;
+          newProdPointer = `rel-${Date.now().toString(16).slice(0, 8)}`;
+        } else {
+          heldForHumanReviewCount = discoveredChangesCount;
+          permittedChangesApplied = 0;
+          finalVerdict = "NO_OP_CLEAN";
+        }
       } else {
         // No changes needed or dry run
         finalVerdict = "NO_OP_CLEAN";
@@ -285,11 +310,11 @@ export class SpeMaintenanceController {
         finalState: finalVerdict,
         newProductionPointer: finalVerdict === "RELEASED_PERMITTED" ? newProdPointer : undefined,
         isProductionDeployed: finalVerdict === "RELEASED_PERMITTED" && !isDryRun,
-        notes: `Maintenance run completed with verdict: ${finalVerdict}`,
+        notes: `Maintenance run completed with verdict: ${finalVerdict}${heldForHumanReviewCount > 0 ? ` (${heldForHumanReviewCount} changes held: unverified deployment witness)` : ""}`,
       });
 
       // Write receipt to disk
-      const outDir = resolve(findRepoRoot(), "proofs/generated");
+      const outDir = options.receiptOutputDir || resolve(findRepoRoot(), "proofs/generated");
       if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
       const receiptObj = this.#formatReceipt(
         jobId,
@@ -310,11 +335,13 @@ export class SpeMaintenanceController {
         finalReceipt.receiptDigest
       );
 
-      writeFileSync(
-        resolve(outDir, "DAILY_MAINTENANCE_RECEIPT.json"),
-        JSON.stringify(receiptObj, null, 2),
-        "utf8"
-      );
+      if (options.writeReceiptToDisk !== false) {
+        writeFileSync(
+          resolve(outDir, options.receiptFileName || "DAILY_MAINTENANCE_RECEIPT.json"),
+          JSON.stringify(receiptObj, null, 2),
+          "utf8"
+        );
+      }
 
       return receiptObj;
     } catch (err: any) {

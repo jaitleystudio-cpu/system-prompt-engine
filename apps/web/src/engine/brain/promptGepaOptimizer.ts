@@ -47,6 +47,10 @@ export interface GepaExperimentBudget {
   readonly minImprovementDelta: number; // e.g. +0.02 (2% gain required)
 }
 
+export type GepaEvaluationMethodology =
+  | "GEPA-INSPIRED_PROMPT_EXPERIMENT_HARNESS"
+  | "INDEPENDENT_REAL_MODEL_EVALUATION";
+
 export interface GepaExperimentOutcome {
   readonly experimentId: string;
   readonly timestampIso: string;
@@ -59,6 +63,8 @@ export interface GepaExperimentOutcome {
   readonly totalCandidatesEvaluated: number;
   readonly spendUsd: number;
   readonly experimentDigest: string;
+  readonly evaluationMethodology: GepaEvaluationMethodology;
+  readonly provenanceDisclosure: string;
 }
 
 /**
@@ -150,9 +156,17 @@ export function generateCandidateStrategies(
 }
 
 /**
- * Simulates rendering output with a prompt strategy against a test case.
- * Evaluates whether the prompt strategy actually includes the required system instructions,
- * patches, or script/format guards.
+ * [PROVENANCE: GEPA-INSPIRED_PROMPT_EXPERIMENT_HARNESS]
+ *
+ * NOTE: This default simulated renderer operates as a GEPA-INSPIRED_PROMPT_EXPERIMENT_HARNESS
+ * for isolated offline/air-gapped CI test verification ($0 cloud spend invariant).
+ * It evaluates whether candidate prompt strategies systematically incorporate required
+ * instructions, script invariants, and schema formatting guards.
+ *
+ * Epistemic boundary (BRAIN-P0-01):
+ * This default simulator does NOT establish independent real-world empirical proof on live
+ * external frontier models. For live production qualification, callers must provide a customRenderer
+ * executing matched live model runs against frozen holdout benchmarks with blinded adjudication.
  */
 export function renderStrategyOutput(
   strategy: PromptTemplateStrategy,
@@ -393,6 +407,14 @@ export async function runPromptGepaExperiment(
     finalSelectedStrategy = champion;
   }
 
+  const evaluationMethodology: GepaEvaluationMethodology = customRenderer
+    ? "INDEPENDENT_REAL_MODEL_EVALUATION"
+    : "GEPA-INSPIRED_PROMPT_EXPERIMENT_HARNESS";
+
+  const provenanceDisclosure = customRenderer
+    ? "Evaluated via custom independent real-model renderer on held-out tasks."
+    : "Evaluated via GEPA-INSPIRED_PROMPT_EXPERIMENT_HARNESS simulation. Does not constitute real-model proof.";
+
   const experimentPayload = {
     experimentId,
     timestampIso,
@@ -403,6 +425,8 @@ export async function runPromptGepaExperiment(
     searchStagnated,
     backtrackCount,
     spendUsd: 0,
+    evaluationMethodology,
+    provenanceDisclosure,
   };
 
   const experimentDigest = computeSha256(JSON.stringify(experimentPayload));
@@ -419,5 +443,7 @@ export async function runPromptGepaExperiment(
     totalCandidatesEvaluated: allStrategies.length,
     spendUsd: 0,
     experimentDigest,
+    evaluationMethodology,
+    provenanceDisclosure,
   });
 }

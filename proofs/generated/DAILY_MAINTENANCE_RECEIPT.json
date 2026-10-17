@@ -1,13 +1,13 @@
 {
   "receiptVersion": "1.0.0",
-  "jobId": "maint-2026-10-19-scheduled_0217_ist-1a149b73223",
-  "businessDate": "2026-10-19",
+  "jobId": "maint-2026-10-17-scheduled_0217_ist-1a149a72616",
+  "businessDate": "2026-10-17",
   "triggerType": "SCHEDULED_0217_IST",
   "clockIst": "02:17:00 IST",
   "clockUtc": "20:47:00 UTC",
   "executionMode": "PRODUCTION",
   "startingCommitSha": "dcd7df0f",
-  "fencingToken": 2,
+  "fencingToken": 1,
   "stagesCompleted": [
     "STAGE_A_FENCED_LEASE_ACQUIRED",
     "STAGE_B_DISCOVERY",
@@ -21,8 +21,8 @@
     "missed_run_watchdog": {
       "name": "missed_run_watchdog",
       "status": "PASSED",
-      "summary": "Run is on schedule for 2026-10-19.",
-      "executedAtIso": "2026-10-17T11:55:05.127Z"
+      "summary": "Run is on schedule for 2026-10-17.",
+      "executedAtIso": "2026-10-17T11:37:33.491Z"
     },
     "model_lifecycle_watcher": {
       "name": "model_lifecycle_watcher",
@@ -33,7 +33,7 @@
         "retiredHandledCount": 2,
         "allFallbacksRegistered": true
       },
-      "executedAtIso": "2026-10-17T11:55:05.127Z"
+      "executedAtIso": "2026-10-17T11:37:33.505Z"
     },
     "broken_link_repair": {
       "name": "broken_link_repair",
@@ -44,7 +44,7 @@
         "brokenLinksFound": 0,
         "aliasesApplied": 0
       },
-      "executedAtIso": "2026-10-17T11:55:05.128Z"
+      "executedAtIso": "2026-10-17T11:37:33.505Z"
     },
     "sitemap_freshness": {
       "name": "sitemap_freshness",
@@ -55,7 +55,7 @@
         "fingerprintsChanged": 0,
         "timestampsAdvanced": 0
       },
-      "executedAtIso": "2026-10-17T11:55:05.128Z"
+      "executedAtIso": "2026-10-17T11:37:33.506Z"
     },
     "security_and_dependencies": {
       "name": "security_and_dependencies",
@@ -66,7 +66,7 @@
         "secretScannedFiles": 340,
         "leakedSecretsFound": 0
       },
-      "executedAtIso": "2026-10-17T11:55:05.128Z"
+      "executedAtIso": "2026-10-17T11:37:33.566Z"
     },
     "semantic_regressions": {
       "name": "semantic_regressions",
@@ -78,7 +78,7 @@
         "multilingualSlicesPassed": 5,
         "regressionsDetected": 0
       },
-      "executedAtIso": "2026-10-17T11:55:05.129Z"
+      "executedAtIso": "2026-10-17T11:37:33.566Z"
     },
     "cost_circuit_breaker": {
       "name": "cost_circuit_breaker",
@@ -89,7 +89,7 @@
         "egressBytes": 0,
         "circuitBreakerTripped": false
       },
-      "executedAtIso": "2026-10-17T11:55:05.129Z"
+      "executedAtIso": "2026-10-17T11:37:33.567Z"
     },
     "billing_reconciliation": {
       "name": "billing_reconciliation",
@@ -100,7 +100,7 @@
         "totalUsageRecords": 0,
         "isReconciled": true
       },
-      "executedAtIso": "2026-10-17T11:55:05.129Z"
+      "executedAtIso": "2026-10-17T11:37:33.567Z"
     },
     "backup_restore_drill": {
       "name": "backup_restore_drill",
@@ -110,19 +110,19 @@
         "rollbackPointerValid": true,
         "restoreDrillPassed": true
       },
-      "executedAtIso": "2026-10-17T11:55:05.130Z"
+      "executedAtIso": "2026-10-17T11:37:33.645Z"
     }
   },
   "discoveredChangesCount": 0,
   "permittedChangesApplied": 0,
   "heldForHumanReviewCount": 0,
-  "rollbacksExecuted": 1,
-  "finalVerdict": "ROLLED_BACK",
+  "rollbacksExecuted": 0,
+  "finalVerdict": "NO_OP_CLEAN",
   "activeProductionPointer": "dcd7df0f",
   "rollbackTargetPointer": "dcd7df0f",
   "cloudComputeSpendUsd": 0,
   "zeroEgressPreserved": true,
   "truthDisclosure": "Daily maintenance receipt generated via single-authority coordinator. 'No change is a valid successful day' (NO_OP_CLEAN). Only routine metadata/link changes permit autonomous release; all pricing, merchant keys, and WASM pins remain strictly held for owner authorization.",
-  "receiptDigest": "d9c811544650ac3a1192c437b4668b7fc03ca37a7ba5b888dec8076973635969",
-  "completedAtIso": "2026-10-17T11:55:05.131Z"
+  "receiptDigest": "33c5f5ae1559371fe734e6a13e1e77d13fb00761fc007a4d5fa3445c85e5ea24",
+  "completedAtIso": "2026-10-17T11:37:33.646Z"
 }

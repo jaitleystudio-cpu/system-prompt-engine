@@ -46,6 +46,7 @@ import {
   isPinnedApiIdentifier,
   validateModelIdentifier,
   probeModelCallability,
+  isProductionModelQualifiable,
   resolveQualifiedFallback,
   promoteModelWithValidation,
   sealRegistryUpdate,
@@ -491,6 +492,7 @@ async function runBrainEvolutionBattery() {
   assert(gepaNoOpOutcome.selectedStrategy.strategyId === baseChampion.strategyId, "Incumbent champion safely retained");
   assert(gepaNoOpOutcome.spendUsd === 0, "Air-gapped prompt search executes with $0 cloud spend");
   assert(gepaNoOpOutcome.totalCandidatesEvaluated >= 3, "Evaluated champion, no-op baseline, and candidate variations");
+  assert(gepaNoOpOutcome.evaluationMethodology === "GEPA-INSPIRED_PROMPT_EXPERIMENT_HARNESS", "GEPA outcome explicitly records GEPA-INSPIRED_PROMPT_EXPERIMENT_HARNESS methodology");
 
   // 3D. Execution of GEPA experiment: Promoted new champion when candidate repairs failure diagnostic
   const promotionOraclePartitions = {
@@ -642,6 +644,17 @@ async function runBrainEvolutionBattery() {
   });
   assert(callabilityProbe.accountCallable === true, "Model probed and verified callable under account credentials");
   assert(callabilityProbe.isPinnedVersion === true, "Probe confirms pinned executable API version");
+  assert(callabilityProbe.provenance === "SIMULATED_TEST", "Default probe explicitly tags provenance as SIMULATED_TEST");
+
+  const unqualifiableCheck = isProductionModelQualifiable(callabilityProbe);
+  assert(unqualifiableCheck.qualifiable === false, "Simulated test probe is strictly unqualifiable for live production");
+  assert(unqualifiableCheck.reason.includes("SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED"), "Unqualifiable check cites SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED");
+
+  const liveProbe = await probeModelCallability(sampleModel, "claude-3-5-sonnet-20241022", {
+    forceCallable: true,
+    provenance: "LIVE_PROVIDER_VERIFIED",
+  });
+  assert(isProductionModelQualifiable(liveProbe).qualifiable === true, "LIVE_PROVIDER_VERIFIED probe qualifies for production");
 
   // 4D. Invariant: ABSENCE ≠ RETIREMENT
   const transientAbsenceProbe = await probeModelCallability(sampleModel, "claude-3-5-sonnet-20241022", {
@@ -758,6 +771,28 @@ async function runBrainEvolutionBattery() {
   assert(promotionOutcome.isValid === true, "Model promotes to QUALIFIED with verified capability witnesses");
   assert(promotionOutcome.isEligibleForRouting === true, "Model marked eligible for autonomous model routing");
   assert(ledger.getEntries().length === 1, "Lifecycle transition permanently logged in TemporalModelTruthLedger");
+
+  // Verify requireLiveProvider defense (BRAIN-P0-02): simulated witness cannot qualify model for production routing
+  const rejectedPromotion = promoteModelWithValidation(
+    sampleModel,
+    "claude-3-5-sonnet-20241022",
+    "QUALIFIED",
+    [
+      {
+        capability: "tool_calling",
+        passed: true,
+        probeTimestampIso: new Date().toISOString(),
+        latencyMs: 40,
+        witnessReceiptHash: "dummy_witness_hash",
+        provenance: "SIMULATED_TEST",
+      },
+    ],
+    ledger,
+    "CALLABLE",
+    { requireLiveProvider: true }
+  );
+  assert(rejectedPromotion.isValid === false, "Promotion strictly rejected when requireLiveProvider=true and witness has SIMULATED_TEST provenance");
+  assert(rejectedPromotion.errors.some((e) => e.includes("SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED")), "Promotion error cites SIMULATED_TEST_NEQ_PRODUCTION_QUALIFIED");
 
   // Legacy Model Promotion Invariant: Legacy model must NOT be marked eligible for autonomous routing
   const legacyModel = {

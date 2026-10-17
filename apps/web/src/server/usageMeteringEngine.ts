@@ -23,7 +23,7 @@
 
 import { createHash, randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
+import { dirname, resolve } from "node:path";
 
 // Micro-cents: 1 USD = 100 cents = 100,000 micro-cents.
 // 1 cent = 1,000 micro-cents.
@@ -172,10 +172,15 @@ export class UsageMeteringEngine {
   readonly #freeAllowanceBuckets = new Map<string, { count: number; resetAtMs: number }>();
 
   constructor(options: { storageAdapter?: UsageStorageAdapter; storageFilePath?: string } = {}) {
+    const isProduction = process.env.NODE_ENV === "production" || process.env.SPE_DURABLE_LEDGER === "true";
+    const defaultDurablePath = resolve(process.cwd(), "proofs/generated/SPE_PRODUCTION_USAGE_LEDGER.json");
+
     this.#storage =
       options.storageAdapter ??
       (options.storageFilePath
         ? new FileUsageStorageAdapter(options.storageFilePath)
+        : isProduction
+        ? new FileUsageStorageAdapter(process.env.SPE_USAGE_LEDGER_PATH || defaultDurablePath)
         : new InMemoryUsageStorageAdapter());
     this.reload();
   }
@@ -399,10 +404,12 @@ export class UsageMeteringEngine {
   /**
    * Checks idempotency: if request with idempotencyKey was already successfully billed,
    * returns the existing record to prevent duplicate billing.
+   * Scoped to customerId to prevent cross-customer replay collisions (BILL-P0-06).
    */
-  findIdempotentRecord(idempotencyKey?: string): MeteredUsageRecord | null {
+  findIdempotentRecord(idempotencyKey?: string, customerId?: string): MeteredUsageRecord | null {
     if (!idempotencyKey) return null;
-    const existingEvtId = this.#idempotencyIndex.get(idempotencyKey);
+    const keyToLookup = customerId ? `${customerId}:${idempotencyKey}` : idempotencyKey;
+    const existingEvtId = this.#idempotencyIndex.get(keyToLookup);
     if (!existingEvtId) return null;
     const record = this.#records.get(existingEvtId);
     return record ? { ...record } : null;
@@ -418,7 +425,7 @@ export class UsageMeteringEngine {
     idempotencyKey?: string
   ): MeteredUsageRecord {
     if (idempotencyKey) {
-      const existing = this.findIdempotentRecord(idempotencyKey);
+      const existing = this.findIdempotentRecord(idempotencyKey, customerId);
       if (existing) {
         return existing;
       }
@@ -462,7 +469,8 @@ export class UsageMeteringEngine {
 
     this.#records.set(eventId, record);
     if (idempotencyKey) {
-      this.#idempotencyIndex.set(idempotencyKey, eventId);
+      const scopedKey = `${customerId}:${idempotencyKey}`;
+      this.#idempotencyIndex.set(scopedKey, eventId);
     }
 
     this.flush();

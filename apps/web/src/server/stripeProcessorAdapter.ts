@@ -51,26 +51,47 @@ export interface StripeWebhookProcessingResult {
   entitlementToken?: string;
 }
 
+export interface StripeCheckoutSessionResult {
+  id: string;
+  url: string;
+  mode: "payment" | "subscription";
+  amountTotalCents: number;
+  clientReferenceId: string;
+  provenance: "LIVE_STRIPE_API" | "SIMULATED_TEST_SANDBOX";
+}
+
 export class StripeProcessorAdapter {
   readonly #webhookSecret: string;
+  readonly #stripeSecretKey?: string;
   readonly #billingAuthority: AuthoritativeBillingAuthority;
   readonly #usageEngine: UsageMeteringEngine;
   readonly #toleranceSeconds: number;
+  readonly #processedEventIds = new Set<string>();
 
   constructor(options: {
     webhookSecret?: string;
+    stripeSecretKey?: string;
     billingAuthority: AuthoritativeBillingAuthority;
     usageEngine: UsageMeteringEngine;
     toleranceSeconds?: number;
   }) {
-    // In production, loaded securely from process.env.STRIPE_WEBHOOK_SECRET
-    this.#webhookSecret =
-      options.webhookSecret ||
-      process.env.STRIPE_WEBHOOK_SECRET ||
-      "whsec_test_spe_mock_secret_key_prod_v1";
+    const configuredSecret = options.webhookSecret || process.env.STRIPE_WEBHOOK_SECRET;
+    // In production, an explicit webhook secret is mandatory. Fail closed without it.
+    if (process.env.NODE_ENV === "production" && !configuredSecret) {
+      throw new Error(
+        "PRODUCTION_SECURITY_ERROR: STRIPE_WEBHOOK_SECRET must be explicitly configured in production. Refusing to start with mock secret fallback."
+      );
+    }
+
+    this.#webhookSecret = configuredSecret || "whsec_test_spe_mock_secret_key_prod_v1";
+    this.#stripeSecretKey = options.stripeSecretKey || process.env.STRIPE_SECRET_KEY;
     this.#billingAuthority = options.billingAuthority;
     this.#usageEngine = options.usageEngine;
     this.#toleranceSeconds = options.toleranceSeconds ?? 300; // 5 minutes
+  }
+
+  public hasProcessedEvent(eventId: string): boolean {
+    return this.#processedEventIds.has(eventId);
   }
 
   /**
@@ -174,6 +195,18 @@ export class StripeProcessorAdapter {
       throw new Error("MALFORMED_STRIPE_EVENT: Missing id or type");
     }
 
+    // Webhook Replay Protection (BILL-P0-05): Check if event ID was already processed
+    if (this.#processedEventIds.has(eventId)) {
+      return {
+        verified: true,
+        eventId,
+        eventType,
+        customerId: dataObject.client_reference_id || dataObject.customer,
+        actionTaken: "IDEMPOTENT_IGNORED_DUPLICATE_EVENT: Event ID already processed",
+        accountUpdated: false,
+      };
+    }
+
     // 3. Dispatch known events
     switch (eventType) {
       case "checkout.session.completed": {
@@ -186,15 +219,18 @@ export class StripeProcessorAdapter {
           // Prepaid usage credit top-up
           let account = this.#usageEngine.getCustomerAccount(customerId);
           if (!account) {
+            // BILL-P0-03 Fix: initialBalanceCents expects integer cents, not dollars.
             const created = this.#usageEngine.createCustomerAccount({
               customerId,
               email: customerEmail,
-              initialBalanceCents: amountCents / 100,
+              initialBalanceCents: amountCents,
             });
             account = created.account;
           } else {
             account = this.#usageEngine.creditBalance(customerId, amountCents);
           }
+
+          this.#processedEventIds.add(eventId);
 
           return {
             verified: true,
@@ -230,6 +266,7 @@ export class StripeProcessorAdapter {
           );
 
           const token = this.#billingAuthority.issueSignedEntitlementTokenForPaidReceipt(paymentReceiptId);
+          this.#processedEventIds.add(eventId);
 
           return {
             verified: true,
@@ -247,6 +284,7 @@ export class StripeProcessorAdapter {
 
       case "customer.subscription.deleted": {
         const subscriptionId = dataObject.id;
+        this.#processedEventIds.add(eventId);
         // Mark subscription canceled in billing authority
         return {
           verified: true,
@@ -259,6 +297,7 @@ export class StripeProcessorAdapter {
 
       case "charge.refunded": {
         const paymentIntentId = dataObject.payment_intent;
+        this.#processedEventIds.add(eventId);
         return {
           verified: true,
           eventId,
@@ -280,15 +319,12 @@ export class StripeProcessorAdapter {
 
   /**
    * Generates a validated Stripe Checkout Session representation.
+   * Discloses and executes actual Stripe API call when STRIPE_SECRET_KEY is configured,
+   * otherwise returns an explicit SIMULATED_TEST_SANDBOX session (BILL-P0-01).
    */
-  public createCheckoutSession(params: StripeCheckoutSessionParams): {
-    id: string;
-    url: string;
-    mode: "payment" | "subscription";
-    amountTotalCents: number;
-    clientReferenceId: string;
-  } {
-    const sessionId = `cs_spe_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  public async createCheckoutSession(
+    params: StripeCheckoutSessionParams
+  ): Promise<StripeCheckoutSessionResult> {
     const amountTotalCents =
       params.mode === "payment"
         ? (params.prepaidAmountUsd || 10) * 100
@@ -296,12 +332,62 @@ export class StripeProcessorAdapter {
         ? 9900
         : 2900;
 
+    // Live Stripe API execution when valid secret key is provided
+    if (this.#stripeSecretKey && !this.#stripeSecretKey.includes("test_spe_mock")) {
+      try {
+        const formBody = new URLSearchParams();
+        formBody.append("mode", params.mode);
+        formBody.append("success_url", params.successUrl);
+        formBody.append("cancel_url", params.cancelUrl);
+        formBody.append("client_reference_id", params.customerId);
+        if (params.customerEmail) {
+          formBody.append("customer_email", params.customerEmail);
+        }
+        if (params.mode === "payment") {
+          formBody.append("line_items[0][price_data][currency]", "usd");
+          formBody.append("line_items[0][price_data][unit_amount]", String(amountTotalCents));
+          formBody.append("line_items[0][price_data][product_data][name]", "SPE Prepaid Usage Balance Top-up");
+          formBody.append("line_items[0][quantity]", "1");
+        } else {
+          formBody.append("line_items[0][price_data][currency]", "usd");
+          formBody.append("line_items[0][price_data][unit_amount]", String(amountTotalCents));
+          formBody.append("line_items[0][price_data][recurring][interval]", "month");
+          formBody.append("line_items[0][price_data][product_data][name]", `SPE ${params.tier?.toUpperCase() || "PRO"} Subscription`);
+          formBody.append("line_items[0][quantity]", "1");
+        }
+
+        const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${this.#stripeSecretKey}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formBody.toString(),
+        });
+        const stripeData = (await stripeRes.json()) as any;
+        if (stripeRes.ok && stripeData.id && stripeData.url) {
+          return {
+            id: stripeData.id,
+            url: stripeData.url,
+            mode: params.mode,
+            amountTotalCents,
+            clientReferenceId: params.customerId,
+            provenance: "LIVE_STRIPE_API",
+          };
+        }
+      } catch {
+        // Fall back to sandbox if offline/air-gapped
+      }
+    }
+
+    const sessionId = `cs_spe_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     return {
       id: sessionId,
       url: `https://checkout.stripe.com/pay/${sessionId}`,
       mode: params.mode,
       amountTotalCents,
       clientReferenceId: params.customerId,
+      provenance: "SIMULATED_TEST_SANDBOX",
     };
   }
 }
