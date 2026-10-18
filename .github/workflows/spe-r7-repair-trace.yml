@@ -1,0 +1,73 @@
+name: SPE R7 — Causal Repair Trace in Studio
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r7-repair-trace-studio-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-r6-studio-recovery-review-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r7-repair-trace.yml"
+      - "spe_runtime/portability/browser_recovery_lineage.py"
+      - "tests/portability/test_browser_recovery_lineage.py"
+      - "tests/portability/make_r7_studio_fixture.py"
+      - "apps/web/src/website-studio/recovery/**"
+      - "apps/web/scripts/test-spe-r7-repair-trace.mjs"
+      - "apps/web/src/website-studio/studio.css"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  r7-causal-lineage:
+    name: Chromium failure -> canonical .spe -> real Studio review
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install locked Studio dependencies and Python tests
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --disable-pip-version-check pytest
+      - name: Typecheck Studio
+        working-directory: apps/web
+        run: npx tsc --noEmit
+      - name: Install real Chromium
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Observe real Chromium crash and bounded deterministic repair
+        working-directory: apps/web
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r7-browser"
+          node scripts/test-spe-crash-recovery-browser.mjs
+      - name: Python .spe canonical lineage and adversarial tests
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r7-browser"
+          python -m pytest tests/portability/test_browser_recovery_lineage.py -q
+      - name: Produce canonical .spe from existing Python portability compiler
+        run: |
+          python -m tests.portability.make_r7_studio_fixture \
+            --evidence-dir "$RUNNER_TEMP/spe-r7-browser" \
+            --output-spe "$RUNNER_TEMP/spe-r7-canonical.spe"
+      - name: Verify live Studio displays exact bounded repair trace and rejects attacks
+        working-directory: apps/web
+        run: |
+          export SPE_R7_CANONICAL_FIXTURE="$RUNNER_TEMP/spe-r7-canonical.spe"
+          node --experimental-strip-types scripts/test-spe-r7-repair-trace.mjs
+          node --experimental-strip-types scripts/test-spe-r6-studio-recovery.mjs
+      - name: Confirm no model calls or deployment authority
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"
+          node apps/web/scripts/test-website-studio-ui-foundation.mjs

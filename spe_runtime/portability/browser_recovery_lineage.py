@@ -69,7 +69,9 @@ def _validate_observation(value: Any, idx: int) -> Mapping[str, Any]:
         raise ValueError("BROWSER_ACCEPTANCE_SCOPE_TAMPERED")
     errors = obs.get("errors")
     checks = _mapping(obs.get("checks"), "checks")
-    if not isinstance(errors, list) or any(not isinstance(item, str) for item in errors):
+    if not isinstance(errors, list) or len(errors) > 20 or any(
+        not isinstance(item, str) or len(item) > 2400 for item in errors
+    ):
         raise ValueError("INVALID_OBSERVATION_ERRORS")
     if set(checks) != _EXPECTED_CHECKS or any(type(value) is not bool for value in checks.values()):
         raise ValueError("INVALID_OBSERVATION_CHECKS")
@@ -176,6 +178,39 @@ def validate_recovery_manifest(
     elif saved is not None:
         raise ValueError("SAVED_ARTIFACT_WITHOUT_BROWSER_PASS")
 
+    # R7 is still an evidence projection within the existing execution_record,
+    # not a new .spe format or an execution authority. Full Prompt V2 was
+    # already produced by the R0 harness; preserve only bounded trace data.
+    repair_trace = None
+    if len(attempts) == 2:
+        repair = _mapping(record.get("repair"), "repair")
+        diagnosis = repair.get("diagnosis")
+        constraints = repair.get("constraints")
+        if diagnosis is not None or constraints is not None:
+            prompt_v2 = repair.get("prompt")
+            if not isinstance(prompt_v2, str) or not (0 < len(prompt_v2.encode("utf-8")) <= 16_000):
+                raise ValueError("OVERSIZED_OR_MISSING_REPAIR_PROMPT")
+            if not isinstance(diagnosis, str) or not (0 < len(diagnosis) <= 1000):
+                raise ValueError("INVALID_CAUSAL_DIAGNOSIS")
+            if not isinstance(constraints, list) or not (1 <= len(constraints) <= 12):
+                raise ValueError("INVALID_NEGATIVE_CONSTRAINTS")
+            if any(
+                not isinstance(x, str) or not (0 < len(x) <= 400) or x not in prompt_v2
+                for x in constraints
+            ):
+                raise ValueError("REPAIR_CONSTRAINT_NOT_IN_PROMPT")
+            if diagnosis not in prompt_v2:
+                raise ValueError("DIAGNOSIS_NOT_IN_REPAIR_PROMPT")
+            repair_trace = {
+                "schema": "spe.execution.repair-trace.v1",
+                "source_candidate_digest": observations[0]["candidateDigest"],
+                "prompt_v2_digest": _sha(prompt_v2),
+                "prompt_v2_text": prompt_v2,
+                "causal_hypothesis": diagnosis,
+                "targeted_constraints": list(constraints),
+                "source_kind": "SELF_REPORTED_REPAIR_PROMPT",
+                "execution_authority": "NONE",
+            }
     return {
         "manifest_digest": _sha(canonical_dumps(record)),
         "browser_passed_digest": saved_digest,
@@ -186,11 +221,16 @@ def validate_recovery_manifest(
                 "candidate_digest": obs["candidateDigest"],
                 "browser_pass_claim": obs["passed"],
                 "observed_error_count": len(obs["errors"]),
+                "diagnostic_excerpts": [message[:600] for message in obs["errors"][:6]],
+                "diagnostics_truncated": (
+                    len(obs["errors"]) > 6 or any(len(message) > 600 for message in obs["errors"])
+                ),
             }
             for attempt, obs in zip(attempts, observations)
         ],
         "claimed_provenance": provenance,
         "claimed_qualification": qualification,
+        "repair_trace": repair_trace,
     }
 
 
@@ -226,6 +266,7 @@ def attach_recovery_to_spe(
         "manifest_digest": evidence["manifest_digest"],
         "browser_passed_artifact_digest": evidence["browser_passed_digest"],
         "attempts": evidence["attempts"],
+        "repair_trace": evidence["repair_trace"],
         "known_limitations": [
             "No independent browser attestation",
             "No authenticated model-provider identity",
