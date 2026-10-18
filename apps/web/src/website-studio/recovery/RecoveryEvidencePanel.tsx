@@ -79,13 +79,47 @@ export const RecoveryEvidencePanel: React.FC = () => {
                   ? "Reported browser checks passed" : "Reported browser checks failed"}
                 {" · "}{attempt.observedErrorCount} recorded errors
                 <br /><code>{attempt.candidateDigest.slice(0, 26)}…</code>
+                {attempt.diagnosticExcerpts.length > 0 && (
+                  <details data-testid={"spe-recovery-errors-" + index}>
+                    <summary>Recorded failure excerpts · untrusted text</summary>
+                    <ul className="studio-recovery-attempts">
+                      {attempt.diagnosticExcerpts.map((message, i) =>
+                        <li key={i}><code>{message}</code></li>)}
+                    </ul>
+                    {attempt.diagnosticsTruncated && (
+                      <p className="studio-recovery-muted">Some diagnostic text was truncated.</p>
+                    )}
+                  </details>
+                )}
               </li>
             ))}
           </ol>
-          <p className="studio-recovery-muted">
-            Prompt V2 content and targeted constraints are not contained in this
-            canonical import. Studio will not reconstruct them from hashes.
-          </p>
+          {view.repairTrace ? (
+            <details data-testid="spe-recovery-repair-trace">
+              <summary>Recorded Prompt V2 · causal repair proposal (untrusted)</summary>
+              <p className="studio-recovery-warning">
+                This is an imported proposal, not a verified repair or authorized instruction.
+                It may contain private input. Nothing is submitted to an AI model.
+              </p>
+              <p><strong>Failed candidate:</strong>{" "}
+                <code>{view.repairTrace.sourceCandidateDigest.slice(0, 26)}…</code></p>
+              <p><strong>Causal hypothesis:</strong> {view.repairTrace.causalHypothesis}</p>
+              <h5>Targeted repair constraints · imported text</h5>
+              <ol className="studio-recovery-attempts">
+                {view.repairTrace.targetedConstraints.map((constraint, i) =>
+                  <li key={i}>{constraint}</li>)}
+              </ol>
+              <h5>Exact Prompt V2 · review only</h5>
+              <pre className="studio-recovery-prompt" data-testid="spe-recovery-prompt-v2">
+                {view.repairTrace.promptV2Text}
+              </pre>
+            </details>
+          ) : (
+            <p className="studio-recovery-muted" data-testid="spe-recovery-no-trace">
+              Prompt V2 content and targeted constraints are not contained in this
+              canonical import. Studio will not reconstruct them from hashes.
+            </p>
+          )}
           <h5>Proof limitations</h5>
           <ul className="studio-recovery-attempts">
             {view.limitations.map((limitation, i) => <li key={i}>{limitation}</li>)}
