@@ -47,6 +47,7 @@ export function readPrefs(): LayoutPrefs {
   try { const p = JSON.parse(localStorage.getItem(PREF_KEY) || "{}"); return { leftPinned: p.leftPinned !== false, rightPinned: typeof p.rightPinned === "boolean" ? p.rightPinned : wide }; } catch { return { leftPinned: true, rightPinned: wide }; }
 }
 const EDGE = 8;
+const PEEK_DELAY = 350;
 
 export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
   const [route, setRoute] = useState<ProRoute>(() => parseProPath(window.location.pathname));
@@ -59,6 +60,7 @@ export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
   const [prefs, setPrefs] = useState<LayoutPrefs>(readPrefs);
   const [leftPeek, setLeftPeek] = useState(false);
   const [rightPeek, setRightPeek] = useState(false);
+  const leftPeekRef = useRef(false); leftPeekRef.current = leftPeek;
   const [panelOpen, setPanelOpen] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [cwDrawerOpen, setCwDrawerOpen] = useState(false);
@@ -108,14 +110,20 @@ export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
     window.clearTimeout(hideT.current[side]);
     if (on || !delay) set(on); else hideT.current[side] = window.setTimeout(() => set(false), delay);
   }, []);
+  // Hover intent: the rail expands only after the pointer rests on it, so a click on a rail button
+  // (including Pin) always lands on the rail and is never swallowed by the expanding sidebar.
+  const peekIntent = useCallback((side: "l" | "r") => {
+    window.clearTimeout(hideT.current[side]);
+    hideT.current[side] = window.setTimeout(() => (side === "l" ? setLeftPeek : setRightPeek)(true), PEEK_DELAY);
+  }, []);
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       if (isMobile()) return;
-      if (!prefs.leftPinned && e.clientX <= EDGE) peek("l", true);
+      if (!prefs.leftPinned && !leftPeekRef.current && e.clientX <= EDGE) peekIntent("l");
       if (!prefs.rightPinned && e.clientX >= window.innerWidth - EDGE) peek("r", true);
     };
     window.addEventListener("mousemove", onMove); return () => window.removeEventListener("mousemove", onMove);
-  }, [prefs.leftPinned, prefs.rightPinned, peek]);
+  }, [prefs.leftPinned, prefs.rightPinned, peek, peekIntent]);
 
   const announce = useCallback((msg: string) => { setLive(""); requestAnimationFrame(() => setLive(msg)); setToast({ id: Date.now(), msg }); }, []);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(null), 3200); return () => clearTimeout(t); }, [toast]);
@@ -201,8 +209,9 @@ export default function ProStudioApp({ onExit }: { onExit?: () => void }) {
       <div className="ps" data-left={prefs.leftPinned ? "pinned" : "rail"} data-left-peek={leftPeek ? "1" : "0"} data-right={prefs.rightPinned ? "pinned" : "hidden"} data-right-peek={rightPeek ? "1" : "0"} data-panel={panelOpen ? "open" : "closed"}>
         <a className="ps-skip" href="#ps-main">Skip to workspace</a>
         <aside className="ps-side" aria-label="Pro Studio sidebar" data-testid="ps-left"
-          onMouseEnter={() => { if (!prefs.leftPinned) peek("l", true); }} onMouseLeave={() => { if (!prefs.leftPinned) peek("l", false, 280); }}
-          onFocus={() => { if (!prefs.leftPinned) peek("l", true); }} onBlur={(e) => { if (!prefs.leftPinned && !e.currentTarget.contains(e.relatedTarget as Node)) peek("l", false, 120); }}>
+          onMouseEnter={() => { if (!prefs.leftPinned) peekIntent("l"); }} onMouseLeave={() => { if (!prefs.leftPinned) peek("l", false, 280); }}
+          onPointerDownCapture={() => { if (!prefs.leftPinned && !leftPeek) window.clearTimeout(hideT.current.l); }}
+          onBlur={(e) => { if (!prefs.leftPinned && leftPeek && !e.currentTarget.contains(e.relatedTarget as Node)) peek("l", false, 120); }}>
           {prefs.leftPinned || leftPeek ? <SidebarContent {...sideProps} /> : <Rail onNew={newBlank} onPalette={() => setPaletteOpen(true)} onPin={toggleLeft} route={route} />}
         </aside>
         <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} label="Pro Studio menu" side="left">
@@ -260,7 +269,7 @@ function Rail({ onNew, onPalette, onPin, route }: { onNew: () => void; onPalette
 }
 
 function SidebarContent({ route, pinned, onPin, onPalette, onNew, theme, onTheme, onKeys, onExit, onRemoveKey, inDrawer }: { route: ProRoute; pinned: boolean; onPin: () => void; onPalette: () => void; onNew: () => void; theme: ThemePreference; onTheme: () => void; onKeys: () => void; onExit?: () => void; onRemoveKey: () => void; inDrawer?: boolean }) {
-  const { ws, setWs, go, access, announce, log, info, sync } = usePro();
+  const { ws, setWs, go, access, announce, log } = usePro();
   const ok = hasAccess(access);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const cur = route.kind === "tool" ? route.tool : route.kind === "home" ? "home" : null;
@@ -303,24 +312,38 @@ function SidebarContent({ route, pinned, onPin, onPalette, onNew, theme, onTheme
           )}
         </div>
       </nav>
-      <div className="ps-side-foot">
-        <div className={`ps-acct ps-acct--${access.state}`}>
-          <span className="ps-avatar" aria-hidden="true"><Icon name={access.state === "locked" ? "lock" : "releases"} size={16} /></span>
-          <span className="ps-acct-t"><b>{access.label}</b><small>{access.detail}</small></span>
-        </div>
-        {ok && <p className="ps-sync" data-testid="ps-sync" role="status" title={info?.storage === "memory" ? "Development storage: server memory, lost on restart." : undefined}>{SYNC_TEXT[sync]}{info?.storage === "memory" && <span className="ps-sync-dev" title="Development storage: server memory, lost on restart.">Dev storage · memory</span>}</p>}
-        <div className="ps-foot-row">
-          <button type="button" className="ps-sidebtn" onClick={onTheme} aria-label={`Theme: ${themeLabel(theme)}. Switch theme`}><Icon name={theme === "light" ? "sun" : "moon"} size={16} /> {themeLabel(theme)}</button>
-          <button type="button" className="ps-sidebtn" onClick={onKeys} aria-label="Keyboard shortcuts"><Icon name="keyboard" size={16} /> Keys</button>
-          <a className="ps-sidebtn" href="/pricing">Plans</a>
-          {getKey() && <button type="button" className="ps-sidebtn" onClick={onRemoveKey}>Remove key</button>}
-        </div>
-        <a className="ps-back" href="/" onClick={(e) => { if (onExit) { e.preventDefault(); onExit(); } }}><Icon name="back" size={14} /> Back to SPE</a>
-      </div>
+      <AccountChip theme={theme} onTheme={onTheme} onKeys={onKeys} onExit={onExit} onRemoveKey={onRemoveKey} />
     </div>
   );
 }
 
+const SYNC_SHORT: Record<SyncState, string> = { loading: "Loading…", idle: "Synced", saving: "Saving…", saved: "Saved", error: "Not saved" };
+function AccountChip({ theme, onTheme, onKeys, onExit, onRemoveKey }: { theme: ThemePreference; onTheme: () => void; onKeys: () => void; onExit?: () => void; onRemoveKey: () => void }) {
+  const { access, info, sync } = usePro(); const ok = hasAccess(access);
+  const [open, setOpen] = useState(false); const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (!open) return; const onDoc = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); }; const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); (ref.current?.querySelector(".ps-acct-btn") as HTMLElement | null)?.focus(); } }; document.addEventListener("mousedown", onDoc); document.addEventListener("keydown", onKey); return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); }; }, [open]);
+  const mem = info?.storage === "memory";
+  return (
+    <div className="ps-side-foot" ref={ref}>
+      {open && <div className="ps-pop" id="ps-acct-pop" role="group" aria-label="Account and settings">
+        <div className="ps-pop-acct"><b>{access.label}</b><small>{access.detail}</small></div>
+        {ok && <p className="ps-sync" data-testid="ps-sync" role="status">{SYNC_TEXT[sync]}{mem && <span className="ps-sync-dev">Dev storage · memory, lost on restart</span>}</p>}
+        <div className="ps-pop-sep" aria-hidden="true" />
+        <button type="button" className="ps-pop-i" onClick={onTheme} aria-label={`Theme: ${themeLabel(theme)}. Switch theme`}><Icon name={theme === "light" ? "sun" : "moon"} size={16} /><span>Theme</span><small>{themeLabel(theme)}</small></button>
+        <button type="button" className="ps-pop-i" onClick={() => { setOpen(false); onKeys(); }}><Icon name="keyboard" size={16} /><span>Keyboard shortcuts</span><small>?</small></button>
+        <a className="ps-pop-i" href="/pricing"><Icon name="releases" size={16} /><span>Plans</span></a>
+        {getKey() && <button type="button" className="ps-pop-i ps-pop-i--danger" onClick={() => { setOpen(false); onRemoveKey(); }}><Icon name="trash" size={16} /><span>Remove key from this browser</span></button>}
+        <div className="ps-pop-sep" aria-hidden="true" />
+        <a className="ps-pop-i" href="/" onClick={(e) => { if (onExit) { e.preventDefault(); onExit(); } }}><Icon name="back" size={16} /><span>Back to SPE</span></a>
+      </div>}
+      <button type="button" className={`ps-acct-btn ps-acct--${access.state}`} aria-expanded={open} aria-controls="ps-acct-pop" onClick={() => setOpen((o) => !o)} data-testid="acct-chip" aria-label={`Account and settings: ${access.label}${ok ? `, ${SYNC_SHORT[sync]}` : ""}`}>
+        <span className="ps-avatar" aria-hidden="true"><Icon name={access.state === "locked" ? "lock" : "shield"} size={15} /></span>
+        <span className="ps-acct-t"><b>{access.label}</b><small>{ok ? <><span className={`ps-sdot ps-sdot--${sync}`} aria-hidden="true" />{SYNC_SHORT[sync]}{mem ? " · dev storage" : ""}</> : "Not unlocked"}</small></span>
+        <Icon name="more" size={16} />
+      </button>
+    </div>
+  );
+}
 const SYNC_TEXT: Record<SyncState, string> = { loading: "Loading your workspace…", idle: "Workspace loaded from SPE Pro.", saving: "Saving…", saved: "Saved to SPE Pro.", error: "Couldn't save to SPE Pro. Changes are only on this page until the connection is back." };
 function SessionRow({ s }: { s: Session }) {
   const { ws, setWs, go, announce, log } = usePro();

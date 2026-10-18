@@ -2,7 +2,7 @@
 // server with crypto randomness) so the reviewer cannot tell which prompt wrote which answer.
 import { useState } from "react";
 import { usePro } from "../context.ts";
-import { ToolFrame, Field, ModelConnect } from "./Frame.tsx";
+import { ToolFrame, Field, ModelConnect, Empty } from "./Frame.tsx";
 import { proApi, byokReady } from "../api.ts";
 import { plainBlocks } from "../shared/workspace.ts";
 
@@ -40,7 +40,7 @@ export default function Blind() {
       {table("By category", rev.byCategory)}{table("By language", rev.byLanguage)}
       <ul className="ps-hint">{rev.rows.map((r) => <li key={r.caseId}>{r.caseId}: Answer 1 was {r.xIs}; you picked {r.pick ? PREF[r.pick] : "nothing"} → {r.winner}</li>)}</ul>
     </> : <p className="ps-hint">Pick the better answer for each pair, then reveal. Which prompt wrote which answer stays hidden until then.</p>}
-  </div>) : <div className="ps-empty ps-empty--inline"><p>Run both prompts on your model to start a blind review.</p></div>;
+  </div>) : <Empty>Run both prompts on your model to start a blind review.</Empty>;
 
   return (
     <ToolFrame id="blind" panel={panel} panelLabel="Result">
