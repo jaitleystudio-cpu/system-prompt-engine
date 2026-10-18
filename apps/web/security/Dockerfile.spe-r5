@@ -1,0 +1,25 @@
+# R5 acceptance container.  Browser 1.49.1 must match apps/web/package-lock.json.
+# This is a CI isolation proof, NOT a production multi-tenant hostile-code sandbox.
+FROM mcr.microsoft.com/playwright:v1.49.1-noble
+
+WORKDIR /opt/spe/apps/web
+COPY apps/web/package.json apps/web/package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
+
+# Deliberately copy only bounded acceptance modules. No repository mount,
+# credentials, Git metadata, provider plugins, or deployment SDKs in runtime.
+COPY apps/web/scripts/spe-crash-recovery-harness.mjs ./scripts/
+COPY apps/web/scripts/spe-recovery-journal-custody.mjs ./scripts/
+COPY apps/web/scripts/spe-recovery-reconciliation.mjs ./scripts/
+COPY apps/web/scripts/spe-recovery-receipt.mjs ./scripts/
+COPY apps/web/scripts/test-spe-crash-recovery-browser.mjs ./scripts/
+COPY apps/web/scripts/test-spe-recovery-interruption.mjs ./scripts/
+COPY apps/web/scripts/spe-r5-container-attestation.mjs ./scripts/
+
+ENV HOME=/tmp \
+    TMPDIR=/tmp \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+# Use non-root even when caller forgets --user.
+USER 1000:1000
+CMD ["node", "scripts/spe-r5-container-attestation.mjs"]

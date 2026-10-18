@@ -40,7 +40,8 @@ export class RootCauseRepairEngine {
   private maxIterationsAllowed = 3;
 
   /**
-   * Diagnoses root cause and prepares an isolated repair candidate with a mandatory failing test fixture.
+   * Prepares a proposed reproduction test and repair. This method does NOT execute tests.
+   * Reproduction may only be promoted after a separate, evidence-backed execution.
    */
   public diagnoseAndPrepareRepair(defect: {
     category: DefectCategory;
@@ -133,8 +134,8 @@ assert.ok(sitemapXmlContent.includes("<loc>https://systempromptengine.com${missi
       failingTestCode,
       failingTestBeforeFix: {
         testName: failingTestName,
-        failingOutput: `AssertionError: Reproduced ${defect.category}: ${defect.reportedSymptom}`,
-        reproduced: true,
+        failingOutput: "NOT_EXECUTED: reproduction test template generated; no execution result observed.",
+        reproduced: false,
       },
       minimalPatch: {
         targetFile,

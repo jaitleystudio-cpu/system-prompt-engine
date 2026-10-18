@@ -1,0 +1,45 @@
+name: SPE R0 — Browser Crash Recovery Proof
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-live-crash-recovery-r0-20261018
+  pull_request:
+    branches:
+      - main
+      - chatgpt/spe-evidence-truth-p0-20261018
+    paths:
+      - ".github/workflows/spe-r0-crash-recovery.yml"
+      - "apps/web/scripts/spe-crash-recovery-harness.mjs"
+      - "apps/web/scripts/test-spe-crash-recovery-browser.mjs"
+      - "apps/web/scripts/run-spe-live-crash-recovery.mjs"
+      - "apps/web/scripts/spe-ollama-recovery-adapter.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install locked web dependencies
+        working-directory: apps/web
+        run: npm ci
+      - name: Install Chromium for real browser observation
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Execute real Chromium crash and bounded repair fixture
+        working-directory: apps/web
+        run: node scripts/test-spe-crash-recovery-browser.mjs
+      - name: Confirm no live model is enabled in fixture
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"

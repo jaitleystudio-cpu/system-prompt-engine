@@ -1,0 +1,50 @@
+name: SPE R6 — Studio Recovery Evidence Review
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r6-studio-recovery-review-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-r5-contained-browser-ci-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r6-studio-recovery.yml"
+      - "apps/web/src/website-studio/Studio.tsx"
+      - "apps/web/src/website-studio/studio.css"
+      - "apps/web/src/website-studio/recovery/**"
+      - "apps/web/scripts/test-spe-r6-studio-recovery.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  studio-review-only:
+    name: Real Studio UI and hostile input refusal (no model calls)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install locked UI tooling
+        working-directory: apps/web
+        run: npm ci
+      - name: Typecheck Studio integration
+        working-directory: apps/web
+        run: npx tsc --noEmit
+      - name: Install Chromium
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Execute R6 Studio UI and 13 hostile import mutations
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-spe-r6-studio-recovery.mjs
+      - name: Confirm no model execution or production routing
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"
+          node apps/web/scripts/test-website-studio-ui-foundation.mjs

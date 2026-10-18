@@ -1,0 +1,79 @@
+name: SPE R8 — Host-Pinned Reviewer Trust
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r8-pinned-reviewer-studio-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-r7-repair-trace-studio-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r8-host-pinned-trust.yml"
+      - "spe_runtime/portability/browser_recovery_lineage.py"
+      - "apps/web/src/website-studio/Studio.tsx"
+      - "apps/web/src/website-studio/recovery/**"
+      - "apps/web/scripts/spe-r8-studio-test-entry.tsx"
+      - "apps/web/scripts/test-spe-r8-pinned-reviewer.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-reviewer:
+    name: Signed browser replay, bounded Studio review, no production root
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install locked packages and Python test runner
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --disable-pip-version-check pytest
+      - name: Typecheck trusted Studio integration
+        working-directory: apps/web
+        run: npx tsc --noEmit
+      - name: Install real Chromium
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Install stable Chrome for native Ed25519 WebCrypto verification
+        working-directory: apps/web
+        run: npx playwright install chrome
+      - name: R0 to R4 real-browser deterministic acceptance
+        working-directory: apps/web
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r8-browser"
+          node scripts/test-spe-crash-recovery-browser.mjs
+          node scripts/test-spe-recovery-interruption.mjs
+      - name: Verify canonical portability regressions
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r8-browser"
+          python -m pytest tests/portability/test_browser_recovery_lineage.py -q
+      - name: Generate existing canonical .spe fixture from observed browser test
+        run: |
+          python -m tests.portability.make_r7_studio_fixture \
+            --evidence-dir "$RUNNER_TEMP/spe-r8-browser" \
+            --output-spe "$RUNNER_TEMP/r8-recovered.spe"
+      - name: Verify R4 signature against host-pinned R8 key in real Studio
+        working-directory: apps/web
+        run: |
+          export SPE_R8_BROWSER_EVIDENCE_DIR="$RUNNER_TEMP/spe-r8-browser"
+          export SPE_R8_CANONICAL_FIXTURE="$RUNNER_TEMP/r8-recovered.spe"
+          export SPE_R7_CANONICAL_FIXTURE="$RUNNER_TEMP/r8-recovered.spe"
+          node --experimental-strip-types scripts/test-spe-r8-pinned-reviewer.mjs
+          node --experimental-strip-types scripts/test-spe-r7-repair-trace.mjs
+          node --experimental-strip-types scripts/test-spe-r6-studio-recovery.mjs
+      - name: No model keys, live calls, deploy or route promotion
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"
+          node apps/web/scripts/test-website-studio-ui-foundation.mjs

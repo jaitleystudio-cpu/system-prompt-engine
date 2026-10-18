@@ -8,6 +8,9 @@ import { BehaviorGraphEditor } from "./behavior/BehaviorGraphEditor.tsx";
 import { MotionBlockEditor } from "./motion/MotionBlockEditor.tsx";
 import { CameraDirectorPanel } from "./camera/CameraDirectorPanel.tsx";
 import { PerformanceDoctor } from "./performance/PerformanceDoctor.tsx";
+import { RecoveryEvidencePanel } from "./recovery/RecoveryEvidencePanel.tsx";
+import type { TrustedR8Reviewer } from "./recovery/trustedReceiptReview.ts";
+import type { TrustedR9PolicyAnchor } from "./recovery/reviewerTrustPolicy.ts";
 import { DataBindingInspector } from "./data/DataBindingInspector.tsx";
 import { WebsiteRenderer } from "./render/WebsiteRenderer.tsx";
 import { StudioExplore } from "./explore/StudioExplore.tsx";
@@ -21,9 +24,13 @@ import {
 
 export interface StudioProps {
   initialSpec?: WebsiteSpecV2;
+  /** Trusted host-owned reviewer policy, NEVER imported from a .spe or receipt. */
+  trustedRecoveryReviewer?: TrustedR8Reviewer;
+  /** Optional independently provisioned R9 root/policy anchor. Supersedes R8. */
+  trustedRecoveryPolicyAnchor?: TrustedR9PolicyAnchor;
 }
 
-export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
+export const Studio: React.FC<StudioProps> = ({ initialSpec, trustedRecoveryReviewer, trustedRecoveryPolicyAnchor }) => {
   const [history, setHistory] = useState<WebsiteSpecV2[]>(() => [
     initialSpec || createDefaultWebsiteSpecV2(),
   ]);
@@ -644,6 +651,9 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <PerformanceDoctor scene={spec.scene} />
+          {/* Review only: canonical .spe recovery evidence cannot mutate this site. */}
+          <RecoveryEvidencePanel trustedReviewer={trustedRecoveryReviewer}
+            trustPolicyAnchor={trustedRecoveryPolicyAnchor} />
 
           {/* Camera Director in Intelligence Sidebar */}
           <CameraDirectorPanel

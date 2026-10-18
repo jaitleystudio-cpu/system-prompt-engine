@@ -118,9 +118,11 @@ class WDICContinuationEngine:
         prohibited_files: Optional[List[str]] = None
     ) -> List[TaskClaim]:
         """
-        Audits claims claim-by-claim against frozen requirements.
-        Enforces Anti-Omission Law: A requirement is UNVERIFIED unless
-        explicit test evidence or assertions for it exist in the report.
+        Audits untrusted report text claim-by-claim against requirements.
+        This research-only inspector has NO independent execution-verifier input.
+        Consequently, text describing passing tests cannot promote a requirement
+        to VERIFIED. A verified path must be wired to the existing independent
+        receipt qualification authority, never inferred from prose.
         """
         claims: List[TaskClaim] = []
         prohibited_set = set(prohibited_files or [])
@@ -153,28 +155,24 @@ class WDICContinuationEngine:
             pattern = re.escape(req)
             is_mentioned = bool(re.search(pattern, report.raw_text, re.IGNORECASE))
 
-            # Does it have an explicit verified tag or dedicated test?
+            # Even an explicit "passed" statement is merely worker-authored prose.
+            # No independent, artifact-bound execution receipt is accepted here.
             has_explicit_test = bool(
                 re.search(rf"{pattern}.*?(?:passed|verified|covered|asserted)", report.raw_text, re.IGNORECASE)
             )
-
-            if is_mentioned and has_explicit_test and report.tests_failed == 0 and getattr(report, "exit_code", 0) == 0:
-                claims.append(TaskClaim(
-                    id=f"claim-{req}",
-                    requirement_id=req,
-                    description=f"Requirement {req} tested and verified",
-                    status=ClaimStatus.VERIFIED,
-                    evidence_details=f"Explicitly verified in test run ({report.tests_passed} passed)"
-                ))
-            else:
-                # Anti-Omission: Even if 126 tests passed, if req was not tested, it is UNVERIFIED!
-                claims.append(TaskClaim(
-                    id=f"claim-{req}",
-                    requirement_id=req,
-                    description=f"Requirement {req} has no admissible verification evidence in report",
-                    status=ClaimStatus.UNVERIFIED,
-                    evidence_details="Omission: No matching test receipt found in report"
-                ))
+            reason = (
+                "Reported passing tests are UNVERIFIED without an independently "
+                "qualified execution receipt bound to this requirement and artifact"
+                if is_mentioned and has_explicit_test
+                else "Omission: No admissible independent test receipt found"
+            )
+            claims.append(TaskClaim(
+                id=f"claim-{req}",
+                requirement_id=req,
+                description=f"Requirement {req} has no independently qualified evidence",
+                status=ClaimStatus.UNVERIFIED,
+                evidence_details=reason
+            ))
 
         return claims
 
@@ -285,10 +283,12 @@ class WDICContinuationEngine:
 
         if contradicted_count > 0:
             verdict = "BLOCKED_CONTRADICTION"
-        elif unverified_count > 0:
-            verdict = "DEFICIT_DETECTED"
+        elif not required_requirements:
+            verdict = "UNQUALIFIED_NO_REQUIREMENTS"
         else:
-            verdict = "QUALIFIED"
+            # This text-only research reviewer is not a proof authority.
+            # QUALIFIED is not reachable until the independent verifier is wired.
+            verdict = "DEFICIT_DETECTED"
 
         # Economic savings calculation:
         # A typical ChatGPT Pro conversation reviewing a report and generating next steps

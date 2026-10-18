@@ -1,0 +1,58 @@
+name: SPE R4 — Signed Browser Evidence
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r4-replay-receipt-binding-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-r3-evidence-reconciliation-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r4-signed-replay.yml"
+      - "apps/web/scripts/spe-recovery-receipt.mjs"
+      - "apps/web/scripts/test-spe-crash-recovery-browser.mjs"
+      - "apps/web/scripts/spe-recovery-reconciliation.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scoped-receipt-verification:
+    name: Pinned-key receipt tests and browser replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install locked dependencies and pytest
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --disable-pip-version-check pytest
+      - name: Verify original no-retry and SIGKILL law
+        working-directory: apps/web
+        run: node scripts/test-spe-recovery-interruption.mjs
+      - name: Install isolated Chromium
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: R4 signing/pinned trust checks in real-browser fixture
+        working-directory: apps/web
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r4-positive"
+          node scripts/test-spe-crash-recovery-browser.mjs
+      - name: Verify original canonical .spe evidence import and attack tests
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r4-positive"
+          python -m pytest tests/portability/test_browser_recovery_lineage.py -q
+      - name: Confirm real model is disabled in CI
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"

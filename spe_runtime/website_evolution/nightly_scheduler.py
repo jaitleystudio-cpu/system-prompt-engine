@@ -157,8 +157,11 @@ class NightlyEvolutionSchedulerPy:
             self.last_run_timestamp = str(now)
 
     def trigger_outage_alert(self, title: str, stack: str) -> Dict[str, Any]:
+        # There is no alert transport in this research scheduler. Preserve the
+        # incident record without claiming a notification was delivered.
         return {
-            "alert_dispatched": True,
+            "alert_dispatched": False,
+            "reason": "NOT_DISPATCHED_NO_ALERT_TRANSPORT",
             "incident_id": f"inc-py-{int(time.time())}",
             "title": title,
             "stack": stack,

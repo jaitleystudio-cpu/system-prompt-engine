@@ -72,7 +72,7 @@ export class ProofCarryingEvolutionController {
     }
 
     // 1. Silent-Failure Watchdog (When Errors Become Narratives 2026)
-    if (!proposal.failingTestBeforeFix.reproduced) {
+    if (proposal.failingTestBeforeFix?.reproduced !== true) {
       auditLog.push("Silent Failure Watchdog REJECT: Problem was not reproduced with a failing test before fix.");
       return {
         status: "REJECTED",
@@ -135,13 +135,16 @@ export class ProofCarryingEvolutionController {
       };
     }
 
-    // 6. Risk Level vs Autonomy Level Promotion
+    // 6. This legacy controller receives self-asserted booleans and digests, not
+    // independently authenticated execution receipts. It may stage candidates,
+    // but is not an authority to release them. Promotion belongs to the
+    // existing independent release-safety governor after external qualification.
     if (proposal.riskLevel === "LOW" && this.allowedAutoReleaseCategories.has(proposal.defectCategory)) {
-      auditLog.push("LOW RISK Allowlisted Mechanical Fix: Approved for L4 Limited Auto-Release.");
+      auditLog.push("LOW RISK candidate staged only: no independently authenticated execution/reproduction receipts are verified here. RELEASE_AUTHORITY_HOLD.");
       return {
-        status: "PROMOTED",
-        authorizedAutonomyLevel: "L4_LIMITED_AUTO_RELEASE",
-        authorizedForLiveDeploy: true,
+        status: "PATCH_PREPARED",
+        authorizedAutonomyLevel: "L3_QUALIFY",
+        authorizedForLiveDeploy: false,
         auditLog,
       };
     }
@@ -159,7 +162,8 @@ export class ProofCarryingEvolutionController {
   }
 
   /**
-   * Demonstrates forward rollback of a change proposal.
+   * Legacy rollback demonstration interface. No actual rollback executor is attached here.
+   * Fail closed: only an independently executed and verified rollback may report success.
    */
   public executeRollbackDemonstration(proposal: ProofCarryingChangeProposal): {
     success: boolean;
@@ -167,14 +171,14 @@ export class ProofCarryingEvolutionController {
     receiptId: string;
     details: string;
   } {
-    const restoredCommit = proposal.rollbackReference.snapshotCommit;
-    const receiptId = `rb-rcpt-${Date.now().toString(16)}`;
-
+    // A snapshot reference is a rollback *proposal*, not an execution receipt.
+    // In particular, do not mint a timestamp-based receipt without performing a rollback.
+    void proposal;
     return {
-      success: true,
-      restoredCommit,
-      receiptId,
-      details: `Rollback recipe executed cleanly. Restored base commit ${restoredCommit} without history rewriting (forward-only rollback).`,
+      success: false,
+      restoredCommit: "",
+      receiptId: "",
+      details: "NOT_EXECUTED: rollback was not performed. Supply an independently verified restore receipt before qualification.",
     };
   }
 }

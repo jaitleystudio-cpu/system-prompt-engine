@@ -1,0 +1,48 @@
+name: SPE P0 — Evidence Truth Regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/spe-evidence-truth-p0.yml"
+      - "spe_runtime/research/wdic_vct/**"
+      - "spe_runtime/website_evolution/**"
+      - "tests/research/wdic_vct/**"
+      - "tests/unit/test_autonomous_evolution.py"
+      - "apps/web/src/engine/evolution/**"
+      - "apps/web/scripts/test-unexecuted-proof-boundary.mjs"
+      - "apps/web/scripts/test-autonomous-evolution.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-truth:
+    name: No fabricated execution/rollback/qualification proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install focused Python test tool
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Verify R-01 and Python website-evolution evidence boundaries
+        run: python -m pytest tests/research/wdic_vct/test_continuation_engine.py tests/unit/test_autonomous_evolution.py -q
+
+      - name: Verify unexecuted reproduction and rollback fail closed
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-unexecuted-proof-boundary.mjs
+
+      - name: Run existing autonomous evolution regression battery
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-autonomous-evolution.mjs

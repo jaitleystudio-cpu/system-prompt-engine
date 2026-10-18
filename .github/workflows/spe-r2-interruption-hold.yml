@@ -1,0 +1,59 @@
+name: SPE R2 — Durable Interruption Hold
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r2-durable-interruption-hold-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-r1-canonical-recovery-lineage-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r2-interruption-hold.yml"
+      - "apps/web/scripts/spe-recovery-journal-custody.mjs"
+      - "apps/web/scripts/spe-crash-recovery-harness.mjs"
+      - "apps/web/scripts/test-spe-crash-recovery-browser.mjs"
+      - "apps/web/scripts/test-spe-recovery-interruption.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recovery-interruption:
+    name: Real-browser recovery plus SIGKILL/unknown-outcome hold
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install locked web and focused test dependencies
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --disable-pip-version-check pytest
+      - name: Exercise power-loss and concurrent dispatch controls
+        working-directory: apps/web
+        run: node scripts/test-spe-recovery-interruption.mjs
+      - name: Install real browser
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Exercise original R0 browser recovery and export observations
+        working-directory: apps/web
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r2-positive"
+          node scripts/test-spe-crash-recovery-browser.mjs
+      - name: Ensure evidence remains portable into canonical .spe
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r2-positive"
+          python -m pytest tests/portability/test_browser_recovery_lineage.py -q
+      - name: Assert no live model was authorized
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"

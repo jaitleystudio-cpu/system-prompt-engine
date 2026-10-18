@@ -1,0 +1,58 @@
+name: SPE R3 — Evidence Reconciliation Gate
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r3-evidence-reconciliation-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-r2-durable-interruption-hold-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r3-reconciliation.yml"
+      - "apps/web/scripts/spe-recovery-reconciliation.mjs"
+      - "apps/web/scripts/test-spe-recovery-interruption.mjs"
+      - "apps/web/scripts/test-spe-crash-recovery-browser.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  read-only-reconciliation:
+    name: No blind retry, fresh Chromium artifact replay, tamper holds
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install exact web dependency lock and pytest
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --disable-pip-version-check pytest
+      - name: Exercise killed-worker replay protection and manual holds
+        working-directory: apps/web
+        run: node scripts/test-spe-recovery-interruption.mjs
+      - name: Install Chromium
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Re-execute browser-passed bytes in independent fresh Chromium
+        working-directory: apps/web
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r3-positive"
+          node scripts/test-spe-crash-recovery-browser.mjs
+      - name: Ensure existing canonical .spe import remains compatible
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r3-positive"
+          python -m pytest tests/portability/test_browser_recovery_lineage.py -q
+      - name: No external model execution
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"

@@ -1,0 +1,84 @@
+name: SPE R9 — Offline Root Policy Rotation
+
+on:
+  push:
+    branches:
+      - chatgpt/spe-r9-anchored-key-rotation-20261018
+  pull_request:
+    branches:
+      - chatgpt/spe-r8-pinned-reviewer-studio-20261018
+      - main
+    paths:
+      - ".github/workflows/spe-r9-trust-rotation.yml"
+      - "apps/web/src/website-studio/recovery/reviewerTrustPolicy.ts"
+      - "apps/web/src/website-studio/recovery/RecoveryEvidencePanel.tsx"
+      - "apps/web/src/website-studio/Studio.tsx"
+      - "apps/web/scripts/spe-r9-studio-test-entry.tsx"
+      - "apps/web/scripts/test-spe-r9-reviewer-rotation.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rotation-revocation:
+    name: Signed policy / rotation / revocation / real Studio
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install locked Web and Python tests
+        run: |
+          npm --prefix apps/web ci
+          python -m pip install --disable-pip-version-check pytest
+      - name: Typecheck trusted Studio and policy gates
+        working-directory: apps/web
+        run: npx tsc --noEmit
+      - name: Install stable Chrome and fixture Chromium
+        working-directory: apps/web
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright install chrome
+      - name: Produce real-browser deterministic recovery observations
+        working-directory: apps/web
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r9-browser"
+          node scripts/test-spe-crash-recovery-browser.mjs
+          node scripts/test-spe-recovery-interruption.mjs
+      - name: Recheck existing canonical .spe portability and causal trace
+        run: |
+          export SPE_R0_CHROMIUM_EVIDENCE_DIR="$RUNNER_TEMP/spe-r9-browser"
+          python -m pytest tests/portability/test_browser_recovery_lineage.py -q
+          python -m tests.portability.make_r7_studio_fixture \
+            --evidence-dir "$RUNNER_TEMP/spe-r9-browser" \
+            --output-spe "$RUNNER_TEMP/spe-r9-recovery.spe"
+      - name: Verify signed R9 policy, revocation, trust-root and rollback attacks
+        working-directory: apps/web
+        run: |
+          export SPE_R9_BROWSER_EVIDENCE_DIR="$RUNNER_TEMP/spe-r9-browser"
+          export SPE_R9_CANONICAL_FIXTURE="$RUNNER_TEMP/spe-r9-recovery.spe"
+          node --experimental-strip-types scripts/test-spe-r9-reviewer-rotation.mjs
+      - name: Confirm previous R8-to-R6 browser and Studio gates remain green
+        working-directory: apps/web
+        run: |
+          export SPE_R8_BROWSER_EVIDENCE_DIR="$RUNNER_TEMP/spe-r9-browser"
+          export SPE_R8_CANONICAL_FIXTURE="$RUNNER_TEMP/spe-r9-recovery.spe"
+          export SPE_R7_CANONICAL_FIXTURE="$RUNNER_TEMP/spe-r9-recovery.spe"
+          node --experimental-strip-types scripts/test-spe-r8-pinned-reviewer.mjs
+          node --experimental-strip-types scripts/test-spe-r7-repair-trace.mjs
+          node --experimental-strip-types scripts/test-spe-r6-studio-recovery.mjs
+          node scripts/test-website-studio-ui-foundation.mjs
+      - name: Assert no model calls, deploy authority or reviewer secrets
+        run: |
+          test -z "$SPE_ALLOW_MODEL_EXECUTION"
+          test -z "$SPE_MODEL_COMMAND_JSON"
+          test -z "$OPENAI_API_KEY"
+          test -z "$GITHUB_TOKEN"
