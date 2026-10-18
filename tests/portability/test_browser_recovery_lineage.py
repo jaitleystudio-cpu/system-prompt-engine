@@ -87,7 +87,11 @@ def observation(html, passed):
 
 def fixture_manifest(directory: Path, *, repaired=True, provenance="FIXTURE"):
     directory.mkdir(parents=True, exist_ok=True)
-    repair_prompt = "FIX: MUST NOT reference sceneConfig unless defined."
+    repair_prompt = (
+        "SPE R7 evidence-bound diagnosis: sceneConfig undefined.\n"
+        "MUST NOT reference sceneConfig unless defined.\n"
+        "MUST NOT remove the canvas."
+    )
     first = observation(BROKEN, False)
     second = observation(REPAIRED if repaired else BROKEN, repaired)
     attempts = [
@@ -107,7 +111,15 @@ def fixture_manifest(directory: Path, *, repaired=True, provenance="FIXTURE"):
             if repaired else "FAILED_BOUNDED_REPAIR"
         ),
         "attempts": attempts,
-        "repair": {"prompt": repair_prompt, "sourceCandidateDigest": first["candidateDigest"]},
+        "repair": {
+            "prompt": repair_prompt,
+            "sourceCandidateDigest": first["candidateDigest"],
+            "diagnosis": "sceneConfig undefined.",
+            "constraints": [
+                "MUST NOT reference sceneConfig unless defined.",
+                "MUST NOT remove the canvas.",
+            ],
+        },
         "artifactDigest": second["candidateDigest"],
     }
     if repaired:
@@ -137,6 +149,16 @@ def test_canonical_artifact_preserved_and_roundtrips(tmp_path, fmt):
     assert er["attempts"][0]["browser_pass_claim"] is False
     assert er["attempts"][1]["browser_pass_claim"] is True
     assert er["known_limitations"]
+    assert er["repair_trace"]["schema"] == "spe.execution.repair-trace.v1"
+    assert er["repair_trace"]["source_candidate_digest"] == sha(BROKEN)
+    assert er["repair_trace"]["prompt_v2_digest"] == sha(manifest["repair"]["prompt"])
+    assert er["repair_trace"]["prompt_v2_text"] == manifest["repair"]["prompt"]
+    assert er["repair_trace"]["targeted_constraints"] == manifest["repair"]["constraints"]
+    assert er["repair_trace"]["execution_authority"] == "NONE"
+    assert er["attempts"][0]["diagnostic_excerpts"] == [
+        "ReferenceError: sceneConfig is not defined"
+    ]
+    assert er["attempts"][1]["diagnostic_excerpts"] == []
     assert "receipt" not in er
 
 
@@ -144,7 +166,8 @@ def test_canonical_artifact_preserved_and_roundtrips(tmp_path, fmt):
     "goal", "goalDigest", "promptDigest", "candidate", "repairSource",
     "repairPrompt", "fileBytes", "filePath", "savedDigest",
     "noScreenshot", "fakePass", "fakeModelQualification", "provenance",
-    "changedScope", "changedObservationScope",
+    "changedScope", "changedObservationScope", "missingConstraint",
+    "unboundDiagnosis", "hugePrompt", "unboundConstraint",
 ])
 def test_adversarial_recovery_import_rejects_false_claims(tmp_path, attack):
     original = fixture_spe()
@@ -180,6 +203,15 @@ def test_adversarial_recovery_import_rejects_false_claims(tmp_path, attack):
         manifest["acceptance"]["selectors"] = ["#spe-app"]
     elif attack == "changedObservationScope":
         manifest["attempts"][1]["observation"]["testScope"]["network"] = "external requests allowed"
+    elif attack == "missingConstraint":
+        manifest["repair"]["constraints"] = []
+    elif attack == "unboundDiagnosis":
+        manifest["repair"]["diagnosis"] = "invented root cause"
+    elif attack == "hugePrompt":
+        manifest["repair"]["prompt"] = "A" * 20000
+        manifest["attempts"][1]["promptDigest"] = sha(manifest["repair"]["prompt"])
+    elif attack == "unboundConstraint":
+        manifest["repair"]["constraints"].append("MUST NOT silently promote fake proof.")
     with pytest.raises(ValueError):
         attach_recovery_to_spe(original, manifest, tmp_path)
 
