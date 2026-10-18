@@ -182,7 +182,8 @@ try {
   page.on("pageerror", e => runtimeErrors.push(e.message));
   await page.goto(pathToFileURL(html).href, { waitUntil: "domcontentloaded" });
   await page.getByTestId("spe-recovery-evidence-panel").waitFor();
-  const initialSite = await page.evaluate(() => JSON.stringify(window.__studioState.spec));
+  const initialRenderedWebsite = await page.getByTestId("website-renderer").innerText();
+  const initialUndoDisabled = await page.getByTestId("studio-undo-btn").isDisabled();
   const file = (testId, name, raw) => page.getByTestId(testId).setInputFiles({
     name, mimeType: "application/json", buffer: Buffer.from(raw),
   });
@@ -199,9 +200,16 @@ try {
   await file("spe-r8-receipt-import", "revoked-reviewer.json", oldReceipt);
   // onReceipt clears policy, so re-supply the signed current policy.
   await file("spe-r9-policy-import", "current-policy-again.json", rotated.raw);
+  await page.waitForFunction(() =>
+    document.querySelector('[data-testid="spe-r8-verdict"]')?.textContent
+      ?.includes("UNVERIFIED HOLD · REVIEWER_KEY_REVOKED"),
+  );
   const hold = await verdict.textContent();
   assert.match(hold, /UNVERIFIED HOLD · REVIEWER_KEY_REVOKED/);
-  assert.equal(await page.evaluate(() => JSON.stringify(window.__studioState.spec)), initialSite);
+  assert.equal(await page.getByTestId("website-renderer").innerText(),
+    initialRenderedWebsite, "Recovery imports cannot change the rendered website content");
+  assert.equal(await page.getByTestId("studio-undo-btn").isDisabled(),
+    initialUndoDisabled, "Review imports cannot insert an undoable website edit");
   assert.deepEqual(runtimeErrors, []);
   await context.close();
   console.log("PASS R9: real Studio verifies current reviewer, revokes old, leaves website untouched");
