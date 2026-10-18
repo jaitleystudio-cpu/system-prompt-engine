@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { usePro, useProAction } from "../context.ts";
-import { ToolFrame, Field, commaList, ModelConnect } from "./Frame.tsx";
+import { ToolFrame, Field, commaList, ModelConnect, Empty } from "./Frame.tsx";
 import type { TestCase, DiffReport } from "../core/regression.ts";
 import { uid } from "../shared/constants.ts";
 import { plainBlocks } from "../shared/workspace.ts";
@@ -45,7 +45,7 @@ export default function Regression() {
     <table className="ps-table"><caption className="sr-only">Results per case</caption><thead><tr><th scope="col">Case</th><th scope="col">A</th><th scope="col">B</th><th scope="col">Change</th></tr></thead>
       <tbody>{rep.rows.map((r) => <tr key={r.id}><th scope="row">{r.name}<details><summary>{meta?.mode === "BYOK_MODEL" ? "Model answers" : "Simulated answers"}</summary>{[["A", r.a], ["B", r.b]].map(([v, x]) => x && typeof x === "object" ? <div key={v as string}><p className="ps-hint">Version {v as string}</p><pre className="ps-pre ps-pre--sm">{x.output}</pre><ul className="ps-hint">{x.checks.map((c, i) => <li key={i}>{c.pass ? "✓" : "✗"} {c.kind}: {c.detail}</li>)}</ul></div> : null)}</details></th>
         <td>{r.a ? <span className={`ps-pill ps-pill--${r.a.pass ? "pass" : "fail"}`}>{r.a.pass ? "Pass" : "Fail"}</span> : "–"}</td><td>{r.b ? <span className={`ps-pill ps-pill--${r.b.pass ? "pass" : "fail"}`}>{r.b.pass ? "Pass" : "Fail"}</span> : "–"}</td><td><span className={`ps-pill ps-pill--${r.change}`}>{LBL[r.change]}</span></td></tr>)}</tbody></table>
-  </div>) : <div className="ps-empty ps-empty--inline"><p>Run the suite to see the report.</p></div>;
+  </div>) : <Empty>Run the suite to see the report.</Empty>;
   return (
     <ToolFrame id="regression" panel={panel} panelLabel="Report" actions={<><button type="button" className="ps-btn" onClick={() => { setSt(exampleSuite()); setRep(null); announce("Example restored"); }}>Reset example</button><button type="button" className="ps-btn ps-btn--primary" onClick={() => void run()} disabled={busy} data-testid="reg-run">{busy ? "Running…" : mode === "byok" ? "Run on my model" : "Run suite (simulated)"}</button></>}>
       <div className="ps-seg" role="group" aria-label="Runner"><button type="button" aria-pressed={mode === "sim"} onClick={() => setMode("sim")}>Simulated runner</button><button type="button" aria-pressed={mode === "byok"} onClick={() => setMode("byok")}>My model (BYOK)</button></div>

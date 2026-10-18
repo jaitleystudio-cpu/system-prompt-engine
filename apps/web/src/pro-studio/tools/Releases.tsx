@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { usePro, useProAction, download, copyText } from "../context.ts";
-import { ToolFrame, Field } from "./Frame.tsx";
+import { ToolFrame, Field, About } from "./Frame.tsx";
 import { SEMVER } from "../shared/constants.ts";
 import { sessionTitle, plainBlocks } from "../shared/workspace.ts";
 import { proApi, ApiError } from "../api.ts";
@@ -29,7 +29,7 @@ export default function Releases() {
   </div>);
   return (
     <ToolFrame id="releases" panel={panel} panelLabel="Pack & verification">
-      <p className="ps-hint">Releases are signed by the SPE Pro service with its Ed25519 release key, so every pack from this service carries the same public key fingerprint. If the key is not configured on the server, signing is unavailable and says so.</p>
+      <About label="How signing works">Releases are signed by the SPE Pro service with its Ed25519 release key, so every pack from this service carries the same public key fingerprint. If the key is not configured on the server, signing is unavailable and says so.</About>
       <form className="ps-form" aria-label="Sign a release" onSubmit={async (e) => { e.preventDefault();
         if (!SEMVER.test(f.version.trim())) { setStatus({ ok: false, msg: "Version must look like 1.2.0." }); document.getElementById("rel-ver")?.focus(); return; }
         if (!f.prompt.trim()) { setStatus({ ok: false, msg: "Add the prompt to sign." }); document.getElementById("rel-p")?.focus(); return; }

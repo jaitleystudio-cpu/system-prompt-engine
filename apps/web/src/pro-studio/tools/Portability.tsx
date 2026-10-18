@@ -1,7 +1,7 @@
 // Cross-model check: the same compiled prompt and the same deterministic checks on up to four models.
 import { useEffect, useState } from "react";
 import { usePro } from "../context.ts";
-import { ToolFrame, Breakdown, StatusBadge, useProviders, type GroupRow } from "./Frame.tsx";
+import { ToolFrame, Breakdown, StatusBadge, useProviders, type GroupRow, Empty, About } from "./Frame.tsx";
 import { proApi } from "../api.ts";
 
 interface Row { provider: string; model: string; key: string }
@@ -30,11 +30,11 @@ export default function Portability() {
         <details><summary>Every check</summary><ul className="ps-list">{m.results.map((r, j) => <li key={j} className="ps-li"><div><b>{r.reqId} · {r.inputId}</b><small>{r.evidence}</small></div><StatusBadge s={r.status} /></li>)}</ul></details>
       </>}
     </section>)}
-  </div>) : <div className="ps-empty ps-empty--inline"><p>Results per model appear here, worst group first.</p></div>;
+  </div>) : <Empty>Results per model appear here, worst group first.</Empty>;
   return (
     <ToolFrame id="portability" panel={panel} panelLabel="Per model">
       {err && <p className="ps-err" role="alert">{err}</p>}
-      <p className="ps-hint">Checks whether a Living project's prompt keeps its protected requirements on other models. Each model uses your own key for that provider; keys are sent once and not stored. Requirements that need code execution follow the server's sandbox setting.</p>
+      <About label="How this works">Checks whether a Living project's prompt keeps its protected requirements on other models. Each model uses your own key for that provider; keys are sent once and not stored. Requirements that need code execution follow the server's sandbox setting.</About>
       {projects.length === 0 ? <div className="ps-empty ps-empty--inline"><p>Create a Living project first; its requirements and test inputs are what get checked.</p><button type="button" className="ps-btn ps-btn--primary" onClick={() => { go({ kind: "tool", tool: "living" }); runAction("living", "new"); }}>New Living project</button></div> : <>
         <div className="ps-field"><label htmlFor="pt-proj">Living project</label><select id="pt-proj" className="ps-inp" value={pid} onChange={(e) => setPid(e.target.value)}>{projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
         <fieldset className="ps-fieldset"><legend>Models (up to 4)</legend>
