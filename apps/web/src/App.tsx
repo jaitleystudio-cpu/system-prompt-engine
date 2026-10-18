@@ -1177,6 +1177,10 @@ export default function App() {
                 setView("code");
                 window.scrollTo(0, 0);
               }}
+              onProStudio={() => {
+                setView("pro-studio");
+                window.scrollTo(0, 0);
+              }}
             />
             <SeoContent onNavigate={setView} />
           </>

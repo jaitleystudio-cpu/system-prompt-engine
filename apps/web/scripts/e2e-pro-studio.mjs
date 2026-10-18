@@ -139,6 +139,23 @@ try {
   });
   await c1.close();
 
+  // 2b. Public homepage entry points (nav button + section CTA), direct load/refresh, back to SPE
+  const ce = await ctxFor(1440, 900, "dark", KEY_MODES); const h = await ce.newPage(); watch(h, "1440-home-entry");
+  await step("homepage section CTA opens Pro Studio (key present -> workspace)", async () => {
+    await h.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+    const cta = h.locator('[data-testid="home-cta-pro-studio"]'); await cta.waitFor({ timeout: 30000 }); await cta.scrollIntoViewIfNeeded(); await cta.click();
+    await h.waitForURL(/\/pro-studio$/); await h.locator("#ps-home-h").waitFor({ timeout: 15000 });
+  });
+  await step("direct load and refresh of /pro-studio/living work (SPA fallback)", async () => {
+    await h.goto(BASE + "/pro-studio/living"); await h.locator('[data-tool="living"]').waitFor({ timeout: 15000 });
+    await h.reload(); await h.locator('[data-tool="living"]').waitFor({ timeout: 15000 });
+  });
+  await step("Back to SPE returns to the public homepage", async () => {
+    await h.locator('[data-testid="acct-chip"]').click(); await h.getByRole("link", { name: "Back to SPE" }).click();
+    await h.waitForURL((u) => new URL(u).pathname === "/"); await h.locator('[data-testid="nav-pro-studio"]').first().waitFor({ timeout: 15000 });
+  });
+  await ce.close();
+
   // 3. Every tool renders at 1280 (light), plus key screens
   const c2 = await ctxFor(1280, 800, "light"); const q = await c2.newPage(); watch(q, "1280-light");
   for (const t of ["living", "blind", "portability", "studio", "blueprint", "regression", "releases", "code", "batch", "brand", "formats", "cost", "scanner", "audit", "library", "report"]) {
