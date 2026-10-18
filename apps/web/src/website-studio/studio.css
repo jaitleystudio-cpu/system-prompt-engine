@@ -190,3 +190,30 @@ textarea:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .studio-recovery-review * { transition: none; animation: none; }
 }
+
+/* R7 — raw repair text stays inert, bounded and scrollable. */
+.studio-recovery-prompt {
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 260px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--studio-border);
+  background: var(--studio-bg);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--studio-text-muted);
+}
+.studio-recovery-review details { max-width: 100%; overflow-wrap: anywhere; }
+.studio-recovery-review summary {
+  cursor: pointer;
+  min-height: 36px;
+  color: var(--studio-text);
+  font-size: 12px;
+}
+.studio-recovery-review details:focus-within {
+  outline: 1px solid var(--studio-border-active);
+  outline-offset: 2px;
+}
