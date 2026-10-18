@@ -9,6 +9,7 @@ import { MotionBlockEditor } from "./motion/MotionBlockEditor.tsx";
 import { CameraDirectorPanel } from "./camera/CameraDirectorPanel.tsx";
 import { PerformanceDoctor } from "./performance/PerformanceDoctor.tsx";
 import { RecoveryEvidencePanel } from "./recovery/RecoveryEvidencePanel.tsx";
+import type { TrustedR8Reviewer } from "./recovery/trustedReceiptReview.ts";
 import { DataBindingInspector } from "./data/DataBindingInspector.tsx";
 import { WebsiteRenderer } from "./render/WebsiteRenderer.tsx";
 import { StudioExplore } from "./explore/StudioExplore.tsx";
@@ -22,9 +23,11 @@ import {
 
 export interface StudioProps {
   initialSpec?: WebsiteSpecV2;
+  /** Trusted host-owned reviewer policy, NEVER imported from a .spe or receipt. */
+  trustedRecoveryReviewer?: TrustedR8Reviewer;
 }
 
-export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
+export const Studio: React.FC<StudioProps> = ({ initialSpec, trustedRecoveryReviewer }) => {
   const [history, setHistory] = useState<WebsiteSpecV2[]>(() => [
     initialSpec || createDefaultWebsiteSpecV2(),
   ]);
@@ -646,7 +649,7 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <PerformanceDoctor scene={spec.scene} />
           {/* Review only: canonical .spe recovery evidence cannot mutate this site. */}
-          <RecoveryEvidencePanel />
+          <RecoveryEvidencePanel trustedReviewer={trustedRecoveryReviewer} />
 
           {/* Camera Director in Intelligence Sidebar */}
           <CameraDirectorPanel
