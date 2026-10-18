@@ -162,7 +162,7 @@ export function parseRecoverySpeForReview(raw: string): RecoveryReviewView {
         ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(rawTrace.targeted_constraints.length) ||
         rawTrace.targeted_constraints.some((x: unknown) =>
           typeof x !== "string" || !x || x.length > 400 ||
-          !rawTrace.prompt_v2_text.includes(x)))
+          !String(rawTrace.prompt_v2_text).includes(x)))
       return error("INVALID_REPAIR_TRACE_OR_LINEAGE");
     repairTrace = Object.freeze({
       sourceCandidateDigest: rawTrace.source_candidate_digest,
