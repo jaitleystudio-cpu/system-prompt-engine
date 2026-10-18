@@ -149,7 +149,12 @@ try {
   });
   const verdict = page.getByTestId("spe-r8-verdict");
   await verdict.waitFor();
-  await assert.doesNotReject(verdict.getByText(/SIGNED BROWSER REPLAY VERIFIED/).waitFor());
+  await page.waitForFunction(() =>
+    document.querySelector('[data-testid="spe-r8-verdict"]')?.textContent
+      ?.includes("SIGNED BROWSER REPLAY VERIFIED"),
+    { timeout: 15000 },
+  );
+  assert.match(await verdict.textContent(), /SIGNED BROWSER REPLAY VERIFIED/);
   assert.match(await verdict.textContent(), /NOT AI PROVIDER PROOF/);
   assert.equal(await page.getByTestId("spe-r8-no-trust").count(), 0);
 
@@ -159,7 +164,12 @@ try {
   await page.getByTestId("spe-r8-receipt-import").setInputFiles({
     name: "forged.json", mimeType: "application/json", buffer: Buffer.from(forgedRaw),
   });
-  await page.getByTestId("spe-r8-verdict").getByText(/UNVERIFIED HOLD/).waitFor();
+  await page.waitForFunction(() =>
+    document.querySelector('[data-testid="spe-r8-verdict"]')?.textContent
+      ?.includes("UNVERIFIED HOLD"),
+    { timeout: 15000 },
+  );
+  assert.match(await verdict.textContent(), /UNVERIFIED HOLD/);
   assert.equal(await page.getByTestId("website-studio").count(), 1);
   assert.deepEqual(errors, [], "trusted-review display should not throw page errors");
   await ctx.close();
