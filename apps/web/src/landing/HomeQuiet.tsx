@@ -8,9 +8,11 @@ import { pathForView } from "../routing";
 export function HomeQuiet({
   onCreate,
   onCode,
+  onProStudio,
 }: {
   onCreate: () => void;
   onCode: () => void;
+  onProStudio?: () => void;
 }) {
   return (
     <section className="spe-home-quiet" aria-labelledby="home-quiet-title">
@@ -63,6 +65,19 @@ export function HomeQuiet({
             >
               Start with S-Code <span>↗</span>
             </a>
+            {onProStudio && (
+              <a
+                className="spe-ghost spe-home-pro-cta"
+                href={pathForView("pro-studio")}
+                data-testid="home-cta-pro-studio"
+                onClick={(event) => {
+                  event.preventDefault();
+                  onProStudio();
+                }}
+              >
+                Open Pro Studio <span>↗</span>
+              </a>
+            )}
           </div>
         </article>
       </div>

@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
 import { localMediaHostPlugin } from "./scripts/local-media-host-plugin.mjs";
 import { localOcrHostPlugin } from "./scripts/local-ocr-host-plugin.mjs";
+import { proApiPlugin } from "./pro-api/vitePlugin.ts";
 import { localExtractDesignPlugin } from "./scripts/local-extract-design-plugin.mjs";
 import { localMcpGatewayPlugin } from "./scripts/local-mcp-gateway-plugin.mjs";
 
@@ -28,6 +29,7 @@ export default defineConfig({
     localOcrHostPlugin(repoRoot),
     localExtractDesignPlugin(),
     localMcpGatewayPlugin(),
+    proApiPlugin(),
   ],
   define: {
     __SPE_BUILD_SHA__: JSON.stringify(buildSha),

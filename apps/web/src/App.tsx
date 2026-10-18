@@ -157,6 +157,7 @@ const SkillBuilderStudio = lazy(() =>
 const HeadToHeadCompare = lazy(() =>
   import("./pages/HeadToHeadCompare").then((m) => ({ default: m.HeadToHeadCompare }))
 );
+const ProStudioApp = lazy(() => import("./pro-studio/ProStudioApp.tsx"));
 const Pricing = lazy(() =>
   import("./pages/Pricing").then((m) => ({ default: m.Pricing }))
 );
@@ -1080,6 +1081,15 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  if (view === "pro-studio" && !notFound) {
+    // Pro Studio is a full-screen app shell with its own sidebar; the public site nav and footer are not shown.
+    return (
+      <Suspense fallback={<div className="spe-route-loading" role="status" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading Pro Studio…</div>}>
+        <ProStudioApp onExit={() => setView("home")} />
+      </Suspense>
+    );
+  }
+
   return (
     <>
       <SkipLink />
@@ -1183,6 +1193,10 @@ export default function App() {
               }}
               onCode={() => {
                 setView("code");
+                window.scrollTo(0, 0);
+              }}
+              onProStudio={() => {
+                setView("pro-studio");
                 window.scrollTo(0, 0);
               }}
             />
