@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { usePro, useProAction, copyText } from "../context.ts";
-import { ToolFrame, Field } from "./Frame.tsx";
+import { ToolFrame, Field, About } from "./Frame.tsx";
 import { proApi, useProQuery } from "../api.ts";
 import { sessionTitle, plainBlocks } from "../shared/workspace.ts";
 import type { ScanFinding } from "../core/scanner.ts";
@@ -29,13 +29,13 @@ export default function Scanner() {
     {fs.length > 0 && <div className="ps-row ps-wrap"><button type="button" className="ps-btn ps-btn--sm" onClick={async () => announce((await copyText(q.data?.redacted ?? "")) ? "Redacted copy copied" : "Copy was blocked")}>Copy redacted text</button>
       {src === "session" && active && <button type="button" className="ps-btn ps-btn--sm ps-btn--danger" onClick={() => void redactSession()}>Redact in session</button>}</div>}
     {q.error && <p className="ps-err" role="alert">{q.error}</p>}
-    <p className="ps-hint">Pattern matching only. It can miss secrets and can flag look-alikes. The text is scanned on the SPE Pro service and not stored.</p>
+    <About label="Limits">Pattern matching only. It can miss secrets and can flag look-alikes. The text is scanned on the SPE Pro service and not stored.</About>
   </div>);
   return (
     <ToolFrame id="scanner" panel={panel} panelLabel="Findings">
       <div className="ps-seg" role="group" aria-label="What to scan"><button type="button" aria-pressed={src === "session"} disabled={!active} onClick={() => setSrc("session")}>Current session</button><button type="button" aria-pressed={src === "paste"} onClick={() => setSrc("paste")}>Pasted text</button></div>
       {src === "paste" ? <Field label="Text to scan" id="scan-text"><textarea id="scan-text" className="ps-ta ps-mono" rows={10} value={text} onChange={(e) => setText(e.target.value)} placeholder="Paste a prompt, config or log" /></Field> : <pre className="ps-pre ps-pre--sm" tabIndex={0} aria-label="Session text being scanned">{body || "(empty session)"}</pre>}
-      <p className="ps-hint">Detects: private key blocks, AWS, OpenAI-style, Anthropic, GitHub, Slack and Google keys, JWTs, Luhn-valid card numbers, emails, phone numbers, IPv4, Indian PAN and IBAN.</p>
+      <About label="What it detects">Detects: private key blocks, AWS, OpenAI-style, Anthropic, GitHub, Slack and Google keys, JWTs, Luhn-valid card numbers, emails, phone numbers, IPv4, Indian PAN and IBAN.</About>
     </ToolFrame>
   );
 }
