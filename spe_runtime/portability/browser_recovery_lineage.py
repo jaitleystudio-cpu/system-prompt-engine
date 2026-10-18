@@ -154,6 +154,9 @@ def validate_recovery_manifest(
     if qualification == "INCONCLUSIVE_EXCEPTION" and final_pass:
         raise ValueError("EXCEPTION_DISPOSITION_MISMATCH")
 
+    checkpoint_digest = record.get("checkpointDigest")
+    if checkpoint_digest is not None:
+        _digest(checkpoint_digest, "checkpoint")
     saved = record.get("browserPassedArtifact")
     passed = [obs for obs in observations if obs["passed"]]
     saved_digest = None
@@ -213,6 +216,7 @@ def validate_recovery_manifest(
             }
     return {
         "manifest_digest": _sha(canonical_dumps(record)),
+        "checkpoint_digest": checkpoint_digest,
         "browser_passed_digest": saved_digest,
         "attempts": [
             {
@@ -273,6 +277,10 @@ def attach_recovery_to_spe(
             "No production release authority",
         ],
     }
+    # Optional R2 journal identity — never infer a missing checkpoint or
+    # attach unsigned provider authority to legacy .spe records.
+    if evidence["checkpoint_digest"] is not None:
+        result["execution_record"]["checkpoint_digest"] = evidence["checkpoint_digest"]
     result["integrity"] = compute_integrity(result)
     checked = roundtrip_spe_artifact(result)
     if not strict_equal(protected_intent_of(checked), protected_before):
