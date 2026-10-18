@@ -24,7 +24,11 @@ const keyId = "r8-ci-independent-reviewer";
 const audience = "spe-r8-studio-review";
 const operationId = "r8-fixture-operation";
 const dir = await mkdtemp(join(tmpdir(), "spe-r8-trust-"));
-const browser = await chromium.launch({ headless: true });
+// Playwright 1.49.1 bundles Chromium 131 (no unflagged Ed25519 WebCrypto).
+// Use installed stable Chrome >=137 for browser-native signature verification.
+const browser = await chromium.launch({ headless: true, channel: "chrome" });
+const chromeMajor = Number(browser.version().split(".")[0]);
+assert.ok(chromeMajor >= 137, "R8 browser verification requires native Ed25519 WebCrypto support");
 try {
   const issuanceTime = new Date();
   const outcome = await reviewRecoveryAndSign({
