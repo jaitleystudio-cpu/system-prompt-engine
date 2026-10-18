@@ -65,7 +65,7 @@ export default function CoWorkiePanel({ pinned, onPin, onClose, inDrawer }: { pi
         {!inDrawer && <button type="button" className="ps-iconbtn" onClick={onPin} aria-pressed={pinned} aria-label={pinned ? "Unpin CoWorkie (auto-hide)" : "Pin CoWorkie open"} title={pinned ? "Unpin (auto-hide)" : "Pin open"} data-testid="cw-pin"><Icon name="panel" /></button>}
         <button type="button" className="ps-iconbtn" onClick={onClose} aria-label="Close CoWorkie"><Icon name="close" /></button>
       </div>
-      <p className="ps-cw-ctx" data-testid="cw-context" title={context}>{context}</p>
+      <div className="ps-cw-ctxrow"><p className="ps-cw-ctx" data-testid="cw-context" title={context}><span className="sr-only">{context}</span><span aria-hidden="true" className="ps-cw-ctx-v"><Icon name={route.kind === "tool" ? route.tool : "home"} size={13} /><b>{where}</b>{state.sessionTitle ? <span>· {state.sessionTitle}</span> : <span className="ps-cw-ctx-m">· No session</span>}{state.projectName && <span>· {state.projectName}</span>}</span></p></div>
       <div className="ps-cw-log" aria-live="polite" aria-relevant="additions">
         {msgs.length === 0 && <div className="ps-cw-empty">
           <span className="ps-cw-logo ps-cw-logo--lg" aria-hidden="true"><Icon name="sparkles" size={22} /></span>

@@ -2,7 +2,7 @@
 // drives one attempt per request, and shows exactly what the verifier recorded.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePro, useProAction, download, slug } from "../context.ts";
-import { ToolFrame, Field, ModelConnect, StatusBadge } from "./Frame.tsx";
+import { ToolFrame, ModelConnect, StatusBadge, Empty, Stepper } from "./Frame.tsx";
 import { proApi, byokReady, ApiError } from "../api.ts";
 import { LivingTimeline } from "./LivingTimeline.tsx";
 import { Icon } from "../icons.tsx";
@@ -45,6 +45,7 @@ const DRIFT_DEMO: Draft = {
 };
 const toDraft = (p: LivingProject): Draft => ({ name: p.name, intent: p.intent, requirements: p.requirements, inputs: p.inputs, budget: p.budget });
 
+const TAB_LABEL = { result: "Result", ledger: "Proof ledger", repairs: "Repair checks", cert: "Certificate" } as const;
 export default function Living() {
   const { announce, byok, setByok, info } = usePro();
   const [list, setList] = useState<ListItem[]>([]);
@@ -52,6 +53,7 @@ export default function Living() {
   const [d, setD] = useState<Draft>(blank);
   const [editing, setEditing] = useState(true);
   const [err, setErr] = useState(""); const [busy, setBusy] = useState<"" | "save" | "run" | "stop">("");
+  const [tab, setTab] = useState<"result" | "ledger" | "repairs" | "cert">("result"); const [allProj, setAllProj] = useState(false);
   const [cert, setCert] = useState<Certificate | null>(null); const [certCheck, setCertCheck] = useState<{ ok: boolean; reasons: string[] } | null>(null);
   const stopRef = useRef(false);
   const demoReady = !!info?.simulatedProvider && info?.sandbox === "node-harness";
@@ -104,6 +106,8 @@ export default function Living() {
   const diffPre = (removed: string[], added: string[], testid?: string) => <pre className="ps-pre ps-diff ps-pre--sm" data-testid={testid}>{removed.map((l, i) => <del key={`d${i}`}><span className="sr-only">Removed: </span>{l}{"\n"}</del>)}{added.map((l, i) => <ins key={`a${i}`}><span className="sr-only">Added: </span>{l}{"\n"}</ins>)}</pre>;
   const rcTone = rc ? (rc.reason === "VERIFIED" ? "ok" : rc.reason === "USER_STOP" ? "warn" : "warn") : "warn";
 
+  const tabIds: ("result" | "ledger" | "repairs" | "cert")[] = rc?.scopedRepairs?.length ? ["result", "repairs", "ledger", "cert"] : ["result", "ledger", "cert"];
+  const curTab = tabIds.includes(tab) ? tab : "result";
   const run = p ? (<section className="ps-run" aria-labelledby="lv-run-h" data-testid="living-panel">
     <div className="ps-run-head">
       <h2 id="lv-run-h">Run</h2>
@@ -117,7 +121,10 @@ export default function Living() {
     </div>
     <LivingTimeline p={p} />
     {p.attempts.some((a) => a.simulated) && <p className="ps-badge-sim"><span className="ps-sim">SIMULATED</span><span>Model text is scripted by the development provider. Sandbox execution and checks are real.</span></p>}
-    {rc && <div className={`ps-verdict ps-verdict--${rcTone}`} role="status" data-testid="living-receipt">
+    <div className="ps-tabs" role="tablist" aria-label="Run evidence" onKeyDown={(e) => { const ids = tabIds; const k = ids.indexOf(curTab); const n = e.key === "ArrowRight" ? ids[(k + 1) % ids.length] : e.key === "ArrowLeft" ? ids[(k - 1 + ids.length) % ids.length] : null; if (n) { e.preventDefault(); setTab(n); document.getElementById(`lv-tab-${n}`)?.focus(); } }}>
+      {tabIds.map((t) => <button key={t} type="button" role="tab" id={`lv-tab-${t}`} aria-controls={`lv-tp-${t}`} aria-selected={curTab === t} tabIndex={curTab === t ? 0 : -1} data-testid={`lv-tab-${t}`} onClick={() => setTab(t)}>{TAB_LABEL[t]}{t === "ledger" && p.ledger.length > 0 && <span className="ps-tab-n">{p.ledger.length}</span>}{t === "repairs" && <span className={`ps-tab-n${rc?.scopedRepairs?.some((x) => x.verdict !== "ACCEPTED") ? " ps-tab-n--bad" : ""}`}>{rc?.scopedRepairs?.length ?? 0}</span>}{t === "result" && rc && <span className={`ps-dot ps-dot--${p.status}`} aria-hidden="true" />}</button>)}
+    </div>
+    <div className="ps-tabp" role="tabpanel" id="lv-tp-result" aria-labelledby="lv-tab-result" hidden={curTab !== "result"}>{rc ?     <div className={`ps-verdict ps-verdict--${rcTone}`} role="status" data-testid="living-receipt">
       <div className="ps-verdict-h"><Icon name={rc.reason === "VERIFIED" ? "check" : "alert"} size={16} />{rc.reason === "VERIFIED" ? "Verified" : rc.reason === "USER_STOP" ? "Stopped by you" : `Paused: ${rc.reason}`}</div>
       <p>{rc.message}</p>
       <ul className="ps-rc-grid" aria-label="Requirements by status">
@@ -127,29 +134,29 @@ export default function Living() {
       <p className="ps-meta"><span>Attempts {rc.attemptsUsed}/{rc.maxAttempts}</span><span>Tokens {rc.tokensUsed} ({rc.tokenSource.toLowerCase()})</span><span>Best attempt {rc.bestAttempt ?? "–"}</span></p>
       {!!rc.capturedErrors?.length && <div className="ps-stack" style={{ gap: 6 }}><h3 className="ps-eyebrow">Errors captured by the sandbox</h3><ul className="ps-cap-list" data-testid="captured-errors">{rc.capturedErrors.map((e, i) => <li key={i}><span className="ps-muted">Attempt {e.attempt} · {e.inputId}</span><code>{e.error}</code></li>)}</ul></div>}
       {rc.promptDiff && (rc.promptDiff.added.length > 0 || rc.promptDiff.removed.length > 0) && <details className="ps-details" data-testid="prompt-diff-details"><summary>Prompt V{rc.promptDiff.from} → V{rc.promptDiff.to} changes ({rc.promptDiff.added.length} added, {rc.promptDiff.removed.length} removed)</summary>{diffPre(rc.promptDiff.removed, rc.promptDiff.added, "prompt-diff")}</details>}
-    </div>}
-    {!!rc?.scopedRepairs?.length && <div className="ps-sect"><div className="ps-sect-h"><h3 className="ps-h3">Scoped repair checks</h3><span className="ps-hint">Was each fix confined to the failing call-site?</span></div>
-      <ul className="ps-scoped" data-testid="scoped-repairs">{rc.scopedRepairs.map((x, k) => <li key={k}>
+    </div> : <Empty icon="play">{running ? "Running… the receipt appears when the loop stops." : "Run the loop to get a receipt."}</Empty>}</div>
+    {tabIds.includes("repairs") && <div className="ps-tabp" role="tabpanel" id="lv-tp-repairs" aria-labelledby="lv-tab-repairs" hidden={curTab !== "repairs"}>    <div className="ps-stack" style={{ gap: 10 }}><p className="ps-hint">Was each fix confined to the failing call-site?</p>
+      <ul className="ps-scoped" data-testid="scoped-repairs">{(rc?.scopedRepairs ?? []).map((x, k) => <li key={k}>
         <div className="ps-scoped-h"><span className={`ps-badge ${x.verdict === "ACCEPTED" ? "ps-badge--ok" : "ps-badge--bad"}`}>{x.verdict === "ACCEPTED" ? "Accepted" : "Rejected: drift"}</span><b>Attempt {x.attempt}</b><code>{x.pin}</code></div>
         <p className="ps-meta"><span>{x.changed} line{x.changed === 1 ? "" : "s"} changed</span><span>{x.outsidePin} / {x.allowance} outside the pin</span><span>Regions: {x.touchedRegions || "none"}</span></p>
         <p className="ps-scoped-why">{x.reasons.join(" ") || "Inside the pinned region; imports, styling and features unchanged."}</p>
         <p className="ps-meta"><span>Kept checks: {x.preserved.join("; ") || "none"}</span>{x.regressions.length > 0 && <span className="ps-err">Regressed: {x.regressions.join(", ")}</span>}</p>
-      </li>)}</ul></div>}
-    <div className="ps-sect"><div className="ps-sect-h"><h3 className="ps-h3">Proof ledger</h3><span className="ps-hint">Latest status of each requirement on each input</span></div>
+      </li>)}</ul></div></div>}
+    <div className="ps-tabp" role="tabpanel" id="lv-tp-ledger" aria-labelledby="lv-tab-ledger" hidden={curTab !== "ledger"}>    <div className="ps-stack" style={{ gap: 10 }}><p className="ps-hint">Latest status of each requirement on each input.</p>
       {p.ledger.length === 0 ? <p className="ps-hint">Add requirements and test inputs.</p> : <ul className="ps-ledger" data-testid="living-ledger">{p.ledger.map((e) => { const q = p.requirements.find((x) => x.id === e.reqId); return <li key={`${e.reqId}-${e.inputId}`}>
         <span className="ps-ledger-t"><span className="ps-rid">{e.reqId}</span><span>{e.text}</span></span>
         <span className="ps-ledger-side"><span className="ps-tag">{e.inputId}</span><StatusBadge s={e.status} />{q?.check.kind === "manual" && e.status !== "NOT_RUN" && <><button type="button" className="ps-btn ps-btn--sm" onClick={() => void mark(e.reqId, "pass")}>Mark met</button><button type="button" className="ps-btn ps-btn--sm" onClick={() => void mark(e.reqId, "fail")}>Mark not met</button></>}</span>
         <span className="ps-ledger-ev">{e.evidence}</span></li>; })}</ul>}
       <details className="ps-details"><summary>How verification works</summary><p>Only deterministic checks and execution in the sandbox can produce Verified. A model saying “done” is never evidence. Unproven, skipped, simulated and not-run results never count as a pass. Human marks are labelled as human.</p></details>
-    </div>
-    <div className="ps-cert">
+    </div></div>
+    <div className="ps-tabp" role="tabpanel" id="lv-tp-cert" aria-labelledby="lv-tab-cert" hidden={curTab !== "cert"}><div className="ps-cert">
       <span className="ps-cert-i" aria-hidden="true"><Icon name="cert" size={18} /></span>
       <div className="ps-cert-t"><b>Proof certificate</b>
         {cert ? <p className="ps-hint" data-testid="cert-summary">Verdict <b>{cert.verdict}</b> · attempt {cert.attempt} · {cert.signed === "ED25519" ? "Ed25519-signed by this server" : "UNSIGNED (no release key on this server)"} · sha256 <code>{cert.certSha256.slice(0, 16)}…</code>{cert.simulated ? " · SIMULATED model" : ""}</p> : <p className="ps-hint">A portable record of this run that anyone can re-check.</p>}
         {certCheck && <p className={certCheck.ok ? "ps-ok" : "ps-err"} role="status" style={{ fontSize: 12.5 }}>{certCheck.ok ? "Independent re-check: the verifier re-ran every check on the stored outputs and agrees." : `Re-check failed: ${certCheck.reasons.join(" ")}`}</p>}
       </div>
       <div className="ps-row"><button type="button" className="ps-btn ps-btn--sm" disabled={!p.attempts.length} onClick={() => void getCert()} data-testid="living-cert">{cert ? "Recreate" : "Create certificate"}</button>{cert && <button type="button" className="ps-btn ps-btn--sm" onClick={() => download(`${slug(p.name)}-attempt-${cert.attempt}.proof.json`, JSON.stringify(cert, null, 2))}><Icon name="download" size={14} />Download</button>}</div>
-    </div>
+    </div></div>
   </section>) : null;
 
   return (
@@ -160,18 +167,24 @@ export default function Living() {
       <button type="button" className="ps-btn ps-btn--primary" onClick={() => startNew()}><Icon name="plus" size={14} />New project</button>
     </>}>
       {err && <p className="ps-err" role="alert" data-testid="living-err">{err}</p>}
-      {list.length > 0 && <nav aria-label="Living projects" className="ps-lv-list"><ul>{list.map((x) => <li key={x.id}><button type="button" className="ps-lv-proj" aria-pressed={p?.id === x.id} onClick={() => void open(x.id)}><b>{x.name}</b><small><span className={`ps-dot ps-dot--${x.status}`} aria-hidden="true" />{x.status} · {x.attempts} attempt{x.attempts === 1 ? "" : "s"}</small></button></li>)}</ul></nav>}
+      {list.length > 0 && <nav aria-label="Living projects" className="ps-lv-list"><ul>{(allProj ? list : list.slice(0, 6)).map((x) => <li key={x.id}><button type="button" className="ps-lv-proj" aria-pressed={p?.id === x.id} onClick={() => void open(x.id)}><b>{x.name}</b><small><span className={`ps-dot ps-dot--${x.status}`} aria-hidden="true" />{x.status} · {x.attempts} attempt{x.attempts === 1 ? "" : "s"}</small></button></li>)}</ul>{list.length > 6 && <button type="button" className="ps-btn ps-btn--sm ps-btn--ghost" onClick={() => setAllProj((v) => !v)}>{allProj ? "Show fewer" : `Show all ${list.length}`}</button>}</nav>}
       {d.inputs.some((x) => x.text.includes("[demo:")) && !demoReady && <p className="ps-warn">The flagship demo uses the simulated provider and the code sandbox, which are only switched on for development servers. On this server it will pause honestly instead of pretending.</p>}
 
       {editing ? (<form className="ps-form" aria-label="Living project definition" onSubmit={(e) => { e.preventDefault(); void save(); }}>
-        <fieldset className="ps-fieldset"><legend>Project</legend>
-          <div className="ps-cols"><Field label="Project name" id="lv-name"><input id="lv-name" className="ps-inp" value={d.name} maxLength={120} placeholder="e.g. Support reply bot" onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, name: v })); }} /></Field>
-            <div className="ps-cols"><Field label="Attempt cap (1–12)" id="lv-max"><input id="lv-max" className="ps-inp" type="number" min={1} max={12} value={d.budget.maxAttempts} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxAttempts: Number(v) } })); }} /></Field>
-              <Field label="Token budget" id="lv-tok"><input id="lv-tok" className="ps-inp" type="number" min={100} step={1000} value={d.budget.maxTokens} onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, budget: { ...dd.budget, maxTokens: Number(v) } })); }} /></Field></div></div>
-          <Field label="Goal (what the prompt must achieve)" id="lv-goal"><textarea id="lv-goal" className="ps-ta" rows={2} value={d.intent} placeholder="e.g. Answer billing questions in under 120 words" onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, intent: v })); }} /></Field>
-        </fieldset>
+        <div className="ps-lv-top">
+          <label htmlFor="lv-name" className="sr-only">Project name</label>
+          <input id="lv-name" className="ps-lv-name" value={d.name} maxLength={120} placeholder="Untitled project" onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, name: v })); }} />
+          <div className="ps-goalbox">
+            <label htmlFor="lv-goal" className="ps-eyebrow">Goal</label>
+            <textarea id="lv-goal" rows={3} value={d.intent} placeholder="What must the prompt achieve? e.g. Answer billing questions in under 120 words" onChange={(e) => { const v = e.target.value; setD((dd) => ({ ...dd, intent: v })); }} />
+            <div className="ps-goal-bar">
+              <div className="ps-goal-set"><label htmlFor="lv-max">Attempt cap</label><Stepper id="lv-max" label="attempt cap" value={d.budget.maxAttempts} min={1} max={12} onChange={(n) => setD((dd) => ({ ...dd, budget: { ...dd.budget, maxAttempts: n } }))} /></div>
+              <div className="ps-goal-set"><label htmlFor="lv-tok">Token budget</label><Stepper id="lv-tok" label="token budget" value={d.budget.maxTokens} min={100} step={1000} onChange={(n) => setD((dd) => ({ ...dd, budget: { ...dd.budget, maxTokens: n } }))} /></div>
+            </div>
+          </div>
+        </div>
         <fieldset className="ps-fieldset"><legend>Protected requirements <small>· {d.requirements.length} · a version that loses one fails</small></legend>
-          <ol className="ps-lv-reqs">{d.requirements.map((q, i) => <li key={i} className="ps-lv-req">
+          <ol className="ps-lv-reqs">{d.requirements.map((q, i) => <li key={i} className="ps-lv-req ps-reqrow"><span className="ps-rid" aria-hidden="true">{q.id || i + 1}</span>
             <label className="sr-only" htmlFor={`lv-rq-${i}`}>Requirement {i + 1}</label><input id={`lv-rq-${i}`} className="ps-inp" value={q.text} placeholder="e.g. Mention the 30-day refund window" onChange={(e) => setReq(i, { text: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-ck-${i}`}>Check for requirement {i + 1}</label><select id={`lv-ck-${i}`} className="ps-inp ps-inp--auto" value={q.check.kind} onChange={(e) => setReq(i, { check: { kind: e.target.value as CheckKind } })}>{(Object.keys(KIND_LABEL) as CheckKind[]).map((k) => <option key={k} value={k}>{KIND_LABEL[k]}</option>)}</select>
             {(NEEDS_VALUE.includes(q.check.kind) || q.check.kind === "runs_clean") && <><label className="sr-only" htmlFor={`lv-cv-${i}`}>{q.check.kind === "runs_clean" ? "Text the app must render (optional)" : "Check text"}</label><input id={`lv-cv-${i}`} className="ps-inp" value={q.check.value ?? ""} placeholder={q.check.kind === "runs_clean" ? "must render (optional)" : "text or pattern"} onChange={(e) => setReq(i, { check: { ...q.check, value: e.target.value } })} /></>}
@@ -183,7 +196,7 @@ export default function Living() {
           <div><button type="button" className="ps-btn ps-btn--sm ps-btn--ghost" onClick={() => setD((dd) => ({ ...dd, requirements: [...dd.requirements, { id: `r${Date.now().toString(36).slice(-4)}`, text: "", check: { kind: "contains", value: "" } }] }))}><Icon name="plus" size={14} />Add requirement</button></div>
         </fieldset>
         <fieldset className="ps-fieldset"><legend>Test inputs <small>· {d.inputs.length} · each attempt runs every input</small></legend>
-          <ol className="ps-lv-reqs">{d.inputs.map((x, i) => <li key={i} className="ps-lv-req">
+          <ol className="ps-lv-reqs">{d.inputs.map((x, i) => <li key={i} className="ps-lv-req ps-reqrow ps-reqrow--in"><span className="ps-rid" aria-hidden="true">{x.id || i + 1}</span>
             <label className="sr-only" htmlFor={`lv-in-${i}`}>Input {i + 1}</label><textarea id={`lv-in-${i}`} className="ps-ta" rows={2} value={x.text} placeholder="A real user message" onChange={(e) => setInp(i, { text: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-cat-${i}`}>Category</label><input id={`lv-cat-${i}`} className="ps-inp" value={x.category ?? ""} placeholder="category" onChange={(e) => setInp(i, { category: e.target.value })} />
             <label className="sr-only" htmlFor={`lv-lang-${i}`}>Language</label><input id={`lv-lang-${i}`} className="ps-inp ps-inp--num" value={x.language ?? ""} placeholder="lang" onChange={(e) => setInp(i, { language: e.target.value })} />
@@ -200,7 +213,7 @@ export default function Living() {
       </div>)}
 
       <section className="ps-runbar" aria-label="Model and run controls">
-        <ModelConnect idp="lv-mc" />
+        <ModelConnect idp="lv-mc" compact />
         <div className="ps-runbar-actions">
           <button type="button" className="ps-btn ps-btn--primary" disabled={running || busy === "save"} onClick={() => void runLoop()} data-testid="living-run">{running ? <><span className="ps-spinner" aria-hidden="true" />Running…</> : <><Icon name="play" size={14} />{p?.attempts.length ? "Continue loop" : "Run loop"}</>}</button>
           <button type="button" className="ps-btn" disabled={running} onClick={() => void runLoop(true)}>Run one attempt</button>

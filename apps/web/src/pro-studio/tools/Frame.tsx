@@ -21,6 +21,26 @@ export function ToolFrame({ id, actions, panel, panelLabel = "Output", layout, c
     </section>
   );
 }
+/** Background, limits and disclaimers live here, collapsed, instead of in the main flow. */
+export function About({ label = "How this works", children }: { label?: string; children: ReactNode }) {
+  return (<details className="ps-details ps-about"><summary><Icon name="info" size={14} />{label}</summary><div className="ps-about-b">{children}</div></details>);
+}
+/** Empty state for an output area. */
+export function Empty({ icon = "sparkles", title, children }: { icon?: string; title?: string; children: ReactNode }) {
+  return (<div className="ps-empty ps-empty--inline ps-empty--soft"><span className="ps-empty-i" aria-hidden="true"><Icon name={icon} size={18} /></span>{title && <h3>{title}</h3>}<p>{children}</p></div>);
+}
+/** A titled card section inside a tool. */
+export function Sec({ title, hint, actions, children, id }: { title: string; hint?: ReactNode; actions?: ReactNode; children: ReactNode; id?: string }) {
+  const hid = id ? `${id}-h` : undefined;
+  return (<section className="ps-sec" aria-labelledby={hid}><div className="ps-sec-h"><div><h2 id={hid}>{title}</h2>{hint && <p>{hint}</p>}</div>{actions && <div className="ps-row ps-wrap">{actions}</div>}</div>{children}</section>);
+}
+/** Number input with − / + buttons. The input keeps its id so labels and tests still find it. */
+export function Stepper({ id, value, min, max, step = 1, onChange, label }: { id: string; value: number; min: number; max?: number; step?: number; onChange: (n: number) => void; label: string }) {
+  const clamp = (n: number) => Math.max(min, max != null ? Math.min(max, n) : n);
+  return (<div className="ps-stepper"><button type="button" className="ps-step-b" aria-label={`Decrease ${label}`} disabled={value <= min} onClick={() => onChange(clamp(value - step))}>−</button>
+    <input id={id} className="ps-step-i" type="number" inputMode="numeric" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    <button type="button" className="ps-step-b" aria-label={`Increase ${label}`} disabled={max != null && value >= max} onClick={() => onChange(clamp(value + step))}>+</button></div>);
+}
 export function NeedSession({ what }: { what: string }) {
   const { go } = usePro();
   return (<div className="ps-empty ps-empty--inline ps-empty--hero"><span className="ps-empty-i" aria-hidden="true"><Icon name="studio" size={20} /></span><h2>No session open</h2><p>{what} works on a Prompt Studio session. Open or start one first.</p><div className="ps-row"><button type="button" className="ps-btn ps-btn--primary" onClick={() => go({ kind: "home" })}><Icon name="plus" size={14} />Start a session</button><button type="button" className="ps-btn" onClick={() => go({ kind: "tool", tool: "studio" })}>Open Prompt Studio</button></div></div>);
@@ -53,8 +73,29 @@ export function useProviders(): ProviderInfo[] {
 export function ModelConnect({ idp = "mc", compact }: { idp?: string; compact?: boolean }) {
   const { byok, setByok } = usePro(); const providers = useProviders();
   const p = providers.find((x) => x.id === byok.provider);
+  const about = (<details className="ps-details"><summary>About your key and costs</summary>
+        <p>{p?.note ? `${p.note} ` : ""}SPE pays nothing for model calls and never stores this key: it stays in this page's memory and is sent only with each run, then discarded by the server.{byok.provider === "mock" ? " Simulated runs prove nothing about a real model and are labelled SIMULATED." : ""}</p>
+      </details>);
+  if (compact) return (
+    <fieldset className="ps-mc ps-mc--compact" data-testid="model-connect">
+      <legend className="sr-only">Your model</legend>
+      <div className="ps-mc-row">
+        <span className="ps-mc-tag" title="Bring your own key: runs use your provider account">BYOK</span>
+        <div className="ps-mc-seg"><label htmlFor={`${idp}-prov`}>Provider</label>
+          <select id={`${idp}-prov`} value={byok.provider} onChange={(e) => setByok({ ...byok, provider: e.target.value })}>
+            {(providers.length ? providers : [{ id: "openai", label: "OpenAI", note: "" }]).map((x) => <option key={x.id} value={x.id}>{x.label}</option>)}
+          </select></div>
+        <div className="ps-mc-seg ps-mc-seg--grow"><label htmlFor={`${idp}-model`}>Model</label>
+          <input id={`${idp}-model`} className="ps-mono" value={byok.model} placeholder="exact model ID" onChange={(e) => setByok({ ...byok, model: e.target.value })} autoComplete="off" spellCheck={false} /></div>
+        {byok.provider !== "mock" && <div className="ps-mc-seg ps-mc-seg--grow"><label htmlFor={`${idp}-key`}>Key</label>
+          <input id={`${idp}-key`} className="ps-mono" type="password" value={byok.key} placeholder="your API key" onChange={(e) => setByok({ ...byok, key: e.target.value })} autoComplete="off" spellCheck={false} /></div>}
+        {byok.provider === "mock" && <span className="ps-sim">Simulated</span>}
+      </div>
+      {about}
+    </fieldset>
+  );
   return (
-    <fieldset className={`ps-mc${compact ? " ps-mc--compact" : ""}`} data-testid="model-connect">
+    <fieldset className="ps-mc" data-testid="model-connect">
       <legend>Your model <span className="ps-mc-tag">BYOK</span>{byok.provider === "mock" && <span className="ps-sim">Simulated</span>}</legend>
       <div className="ps-cols ps-cols--3">
         <div className="ps-field"><label htmlFor={`${idp}-prov`}>Provider</label>
@@ -66,9 +107,7 @@ export function ModelConnect({ idp = "mc", compact }: { idp?: string; compact?: 
         {byok.provider !== "mock" && <div className="ps-field"><label htmlFor={`${idp}-key`}>Provider key</label>
           <input id={`${idp}-key`} className="ps-inp ps-mono" type="password" value={byok.key} placeholder="your own API key" onChange={(e) => setByok({ ...byok, key: e.target.value })} autoComplete="off" spellCheck={false} /></div>}
       </div>
-      <details className="ps-details"><summary>About your key and costs</summary>
-        <p>{p?.note ? `${p.note} ` : ""}SPE pays nothing for model calls and never stores this key: it stays in this page's memory and is sent only with each run, then discarded by the server.{byok.provider === "mock" ? " Simulated runs prove nothing about a real model and are labelled SIMULATED." : ""}</p>
-      </details>
+      {about}
     </fieldset>
   );
 }
