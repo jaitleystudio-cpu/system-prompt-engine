@@ -3,6 +3,9 @@ import { parseRecoverySpeForReview, type RecoveryReviewView } from "./recoveryRe
 import {
   verifyR8ReceiptForSpe, type TrustedR8Reviewer, type R8Verdict,
 } from "./trustedReceiptReview.ts";
+import {
+  verifyR9ReceiptForSpe, type TrustedR9PolicyAnchor,
+} from "./reviewerTrustPolicy.ts";
 
 const MAX_BYTES = 256_000;
 
@@ -13,7 +16,26 @@ const MAX_BYTES = 256_000;
  */
 export const RecoveryEvidencePanel: React.FC<{
   trustedReviewer?: TrustedR8Reviewer;
-}> = ({ trustedReviewer }) => {
+  /** Host-owned offline root and current epoch pin. Overrides legacy R8. */
+  trustPolicyAnchor?: TrustedR9PolicyAnchor;
+}> = ({ trustedReviewer, trustPolicyAnchor }) => {
+  const [policyRaw, setPolicyRaw] = useState<string | null>(null);
+  const [policyError, setPolicyError] = useState<string | null>(null);
+  const onPolicy: React.ChangeEventHandler<HTMLInputElement> = async event => {
+    const file = event.currentTarget.files?.[0];
+    setPolicyRaw(null);
+    setPolicyError(null);
+    setVerification(null);
+    if (!file) return;
+    if (file.size <= 0 || file.size > 32000) {
+      setPolicyError("TRUST_POLICY_FILE_EMPTY_OR_TOO_LARGE");
+      event.currentTarget.value = "";
+      return;
+    }
+    try { setPolicyRaw(await file.text()); }
+    catch { setPolicyError("TRUST_POLICY_FILE_UNREADABLE"); }
+    finally { event.target.value = ""; }
+  };
   const [sourceRaw, setSourceRaw] = useState<string | null>(null);
   const [receiptRaw, setReceiptRaw] = useState<string | null>(null);
   const [verification, setVerification] = useState<R8Verdict | null>(null);
@@ -21,8 +43,11 @@ export const RecoveryEvidencePanel: React.FC<{
   useEffect(() => {
     let active = true;
     setVerification(null);
-    if (sourceRaw && receiptRaw) {
-      void verifyR8ReceiptForSpe(sourceRaw, receiptRaw, trustedReviewer)
+    if (sourceRaw && receiptRaw && (!trustPolicyAnchor || policyRaw)) {
+      const verificationWork = trustPolicyAnchor
+        ? verifyR9ReceiptForSpe(sourceRaw, receiptRaw, policyRaw!, trustPolicyAnchor)
+        : verifyR8ReceiptForSpe(sourceRaw, receiptRaw, trustedReviewer);
+      void verificationWork
         .then(result => { if (active) setVerification(result); })
         .catch(() => { if (active) setVerification({
           state: "UNVERIFIED_HOLD", reason: "VERIFIER_EXCEPTION",
@@ -32,12 +57,14 @@ export const RecoveryEvidencePanel: React.FC<{
         }); });
     }
     return () => { active = false; };
-  }, [sourceRaw, receiptRaw, trustedReviewer]);
+  }, [sourceRaw, receiptRaw, trustedReviewer, trustPolicyAnchor, policyRaw]);
   const onReceipt: React.ChangeEventHandler<HTMLInputElement> = async event => {
     const file = event.currentTarget.files?.[0];
     setReceiptRaw(null);
     setVerification(null);
     setReceiptError(null);
+    setPolicyRaw(null);
+    setPolicyError(null);
     if (!file) return;
     if (file.size <= 0 || file.size > 32_000) {
       setReceiptError("RECEIPT_FILE_EMPTY_OR_TOO_LARGE");
@@ -59,6 +86,8 @@ export const RecoveryEvidencePanel: React.FC<{
     setSourceRaw(null);
     setReceiptRaw(null);
     setReceiptError(null);
+    setPolicyRaw(null);
+    setPolicyError(null);
     setVerification(null);
     if (!file) return;
     if (file.size === 0 || file.size > MAX_BYTES) {
@@ -179,17 +208,43 @@ export const RecoveryEvidencePanel: React.FC<{
             data-testid="spe-r8-receipt-import" />
           {receiptError && <p role="alert" data-testid="spe-r8-receipt-error"
             className="studio-recovery-error">{receiptError}</p>}
-          {!trustedReviewer && (
+          {!trustedReviewer && !trustPolicyAnchor && (
             <p data-testid="spe-r8-no-trust" className="studio-recovery-warning">
               NO HOST-PINNED REVIEWER KEY · cryptographic verification unavailable.
             </p>
+          )}
+          {trustPolicyAnchor && (
+            <>
+              <h5>R9 offline-root reviewer policy · REVIEW ONLY</h5>
+              <p className="studio-recovery-muted">
+                A trusted host pins the offline-root public key, policy digest,
+                rotation predecessor, and minimum epoch. Imported policy files
+                never become trust roots or authorize execution.
+              </p>
+              <label htmlFor="spe-r9-policy-import" className="studio-recovery-muted">
+                Import separately signed current policy (maximum 32 KB)
+              </label>
+              <input id="spe-r9-policy-import" type="file" className="studio-input"
+                accept=".json,application/json" onChange={onPolicy}
+                aria-label="Import signed reviewer policy"
+                data-testid="spe-r9-policy-import" />
+              {policyError && <p role="alert" className="studio-recovery-error"
+                data-testid="spe-r9-policy-error">{policyError}</p>}
+              {!policyRaw && !policyError && (
+                <p data-testid="spe-r9-no-policy" className="studio-recovery-warning">
+                  UNVERIFIED HOLD · current signed policy required.
+                </p>
+              )}
+            </>
           )}
           {verification && (
             <p role="status" data-testid="spe-r8-verdict"
               className={verification.state === "SIGNATURE_VALID_REVIEW_ONLY"
                 ? "studio-recovery-muted" : "studio-recovery-warning"}>
               {verification.state === "SIGNATURE_VALID_REVIEW_ONLY"
-                ? "SIGNED BROWSER REPLAY VERIFIED against pinned key · REVIEW ONLY · NOT AI PROVIDER PROOF"
+                ? (trustPolicyAnchor
+                  ? "HOST-ANCHORED CURRENT POLICY + SIGNED BROWSER REPLAY VERIFIED · REVIEW ONLY · NOT AI PROVIDER PROOF"
+                  : "SIGNED BROWSER REPLAY VERIFIED against pinned key · REVIEW ONLY · NOT AI PROVIDER PROOF")
                 : "UNVERIFIED HOLD · " + verification.reason}
             </p>
           )}
@@ -205,6 +260,7 @@ export const RecoveryEvidencePanel: React.FC<{
               setView(null); setName(null); setProblem(null);
               setSourceRaw(null); setReceiptRaw(null);
               setReceiptError(null); setVerification(null);
+              setPolicyRaw(null); setPolicyError(null);
             }}>
             Clear imported review
           </button>
