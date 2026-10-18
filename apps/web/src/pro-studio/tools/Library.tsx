@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { usePro, download } from "../context.ts";
-import { ToolFrame, Field } from "./Frame.tsx";
+import { ToolFrame, Field, About } from "./Frame.tsx";
 import { proApi } from "../api.ts";
 import { uid } from "../shared/constants.ts";
 import { sessionTitle, newSession, plainBlocks } from "../shared/workspace.ts";
@@ -27,9 +27,9 @@ export default function Library() {
       <label className="ps-btn ps-btn--sm ps-file">Choose .spelib.json<input type="file" accept=".json,application/json" className="sr-only" onChange={async (e) => { const f = e.target.files?.[0]; e.target.value = ""; if (!f) return; if (f.size > 1.9 * 1024 * 1024) { setErr("File is larger than the 2 MB request limit."); return; } try { setImp(await proApi<ImportResult>("/library/import", { raw: await f.text() })); setErr(""); } catch (x) { setImp(null); setErr((x as Error).message); } }} /></label>
       {err && <p className="ps-err" role="alert">Import failed: {err}</p>}
       {imp && <div className={`ps-verdict ps-verdict--${imp.integrity === "match" ? "ok" : "bad"}`} data-testid="lib-import"><b>{imp.pack.name}: {imp.pack.sessions.length} sessions</b><p>{imp.integrity === "match" ? "SHA-256 matches: the file is unchanged since export." : "SHA-256 does not match: the file was edited after export. Review before importing."}</p><ul>{imp.pack.sessions.slice(0, 8).map((s, i) => <li key={i}>{s.title || "Untitled"}{s.project ? ` · ${s.project}` : ""}</li>)}</ul><button type="button" className="ps-btn ps-btn--sm ps-btn--primary" onClick={doImport}>Import as new sessions</button></div>}
-      <p className="ps-hint">The hash detects edits; it does not prove who made the file. For authorship use Signed Releases.</p>
+      <About label="What the hash proves">The hash detects edits; it does not prove who made the file. For authorship use Signed Releases.</About>
     </div>} panelLabel="Import">
-      <p className="ps-hint">Share many sessions as one file with your team. Packs are built and checked by the SPE Pro service; sessions keep their project folder names.</p>
+      <About>Share many sessions as one file with your team. Packs are built and checked by the SPE Pro service; sessions keep their project folder names.</About>
       <Field label="Pack name" id="lib-name"><input id="lib-name" className="ps-inp" value={name} onChange={(e) => setName(e.target.value)} /></Field>
       {ws.sessions.length === 0 ? <p className="ps-hint">No sessions to export yet.</p> : <fieldset className="ps-fieldset"><legend>Sessions to include ({sel.size} of {ws.sessions.length})</legend>
         <div className="ps-row"><button type="button" className="ps-btn ps-btn--sm" onClick={() => setSel(new Set(ws.sessions.map((s) => s.id)))}>All</button><button type="button" className="ps-btn ps-btn--sm" onClick={() => setSel(new Set())}>None</button></div>
