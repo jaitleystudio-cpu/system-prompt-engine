@@ -6,11 +6,11 @@
 @import "./fonts.css";
 
 .ps {
-  --bg: #0a0a0c; --bg-side: #0e0e11; --bg2: #131316; --bg3: #1b1b20; --bg4: #24242a;
+  --bg: #111215; --bg-side: #111215; --bg2: #1b1c20; --bg3: #24262a; --bg4: #2d2f34;
   --line: rgba(255,255,255,.075); --line2: rgba(255,255,255,.13); --field: #7a7a85;
-  --fg: #ededef; --fg2: #a3a3ad; --fg3: #8c8c96;
+  --fg: #ededef; --fg2: #a3a3ad; --fg3: #9b9ba6;
   --acc: #a5a9ff; --acc-strong: #7c80f7; --acc-bg: rgba(124,128,247,.14); --acc-line: rgba(165,169,255,.45);
-  --pri: #ededef; --pri-fg: #0a0a0c;
+  --pri: #ededef; --pri-fg: #111215;
   --ok: #5ee69a; --ok-bg: rgba(46,204,113,.12); --ok-line: rgba(94,230,154,.35);
   --bad: #ff8a8a; --bad-bg: rgba(255,99,99,.11); --bad-line: rgba(255,138,138,.35);
   --warn: #f5c451; --warn-bg: rgba(245,196,81,.11); --warn-line: rgba(245,196,81,.35);
@@ -794,3 +794,59 @@ a.ps-card:hover .ps-card-go { transform: translateX(2px); color: var(--fg); }
 .ps-reqrow--in > input { flex: 0 1 180px !important; min-width: 0; }
 .ps-attempt p.ps-ok { color: var(--fg2); display: flex; gap: 8px; align-items: baseline; }
 .ps-attempt p.ps-ok::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); flex: none; transform: translateY(-1px); }
+
+/* Workspace backdrop (r6, Gemini-style): near-black base with one large, soft deep-blue glow behind the hero and
+   composer, darker toward the edges. Dark theme only; the light theme keeps its flat base. Two pseudo-layers on the
+   centre column: ::before is the glow + vignette (fixed to the viewport, does not scroll with content), ::after is a
+   very faint static noise that dithers the gradient so it does not band. Peak glow is ~#1b2a66, so fg2 stays >= 5.3:1
+   and fg3 >= 4.8:1 on top of it (WCAG AA). Slow drift is disabled under prefers-reduced-motion. */
+.ps-main { isolation: isolate; }
+.ps-main::before, .ps-main::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: -1; }
+.ps-main::before {
+  background:
+    radial-gradient(ellipse 26% 18% at 42% 22%, rgba(8,9,14,.6) 0%, rgba(8,9,14,0) 100%),
+    radial-gradient(ellipse 30% 26% at 62% 36%, rgba(40,66,176,.18) 0%, rgba(40,66,176,0) 100%),
+    radial-gradient(ellipse 72% 58% at 50% 50%, rgba(30,56,180,.46) 0%, rgba(30,54,170,.40) 22%, rgba(24,42,130,.28) 44%, rgba(14,26,78,.14) 66%, rgba(11,22,64,0) 90%),
+    radial-gradient(ellipse 130% 115% at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,.34) 100%);
+  animation: ps-glow-drift 36s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.ps-main::after {
+  opacity: .05; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+.ps-top { background: transparent; border-bottom-color: transparent; }
+.ps-home::before { display: none; }
+.ps-composer { background: #1e1f22; border-radius: 28px; padding: 14px 12px 10px 22px; box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset, 0 1px 0 rgba(255,255,255,.04) inset, 0 18px 48px -18px rgba(0,0,0,.7); }
+.ps-composer:focus-within { box-shadow: 0 0 0 1px var(--acc-line) inset, 0 0 0 4px var(--acc-bg), 0 18px 48px -18px rgba(0,0,0,.7); }
+.ps-chip:not(.ps-chip--accent) { background: color-mix(in srgb, var(--bg2) 82%, transparent); }
+.ps-side, .ps-cw { border-color: rgba(255,255,255,.06); }
+/* Home surfaces let the glow through a little; text contrast is checked against the brightest blend. */
+.ps-home :is(.ps-card, .ps-recent button) { background: rgba(27,28,32,.66); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.ps-home .ps-feature .ps-card--hero { background: linear-gradient(160deg, rgba(64,68,190,.30) 0%, rgba(27,28,32,.66) 62%); }
+.ps-home :is(.ps-card, .ps-recent button):is(:hover) { background: rgba(36,38,42,.82); }
+@keyframes ps-glow-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(1.2%, -1%, 0) scale(1.03); }
+  100% { transform: translate3d(-1%, .8%, 0) scale(1.01); }
+}
+@media (max-width: 899px) {
+  .ps-main::before {
+    background:
+      radial-gradient(ellipse 75% 34% at 50% 44%, rgba(30,56,180,.44) 0%, rgba(30,54,170,.36) 24%, rgba(24,42,130,.22) 48%, rgba(14,26,78,.1) 70%, rgba(11,22,64,0) 90%),
+      radial-gradient(ellipse 130% 100% at 50% 42%, rgba(0,0,0,0) 50%, rgba(0,0,0,.4) 100%);
+  }
+  .ps-composer { border-radius: 24px; padding-left: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .ps-main::before { animation: none !important; transform: none; will-change: auto; } }
+:root[data-theme="light"] .ps .ps-main::before, :root[data-theme="light"] .ps .ps-main::after { display: none; }
+:root[data-theme="light"] .ps .ps-top { background: var(--bg); border-bottom-color: var(--line); }
+:root[data-theme="light"] .ps .ps-home::before { display: block; }
+:root[data-theme="light"] .ps .ps-composer { background: var(--bg2); box-shadow: 0 0 0 1px var(--line2) inset, var(--sh-2); }
+:root[data-theme="light"] .ps .ps-chip:not(.ps-chip--accent) { background: var(--bg2); }
+:root[data-theme="light"] .ps .ps-side, :root[data-theme="light"] .ps .ps-cw { border-color: var(--line); }
+:root[data-theme="light"] .ps .ps-home :is(.ps-card, .ps-recent button) { background: var(--bg2); -webkit-backdrop-filter: none; backdrop-filter: none; }
+:root[data-theme="light"] .ps .ps-home .ps-feature .ps-card--hero { background: linear-gradient(160deg, color-mix(in srgb, var(--acc-strong) 20%, var(--bg2)) 0%, var(--bg2) 62%); }
+:root[data-theme="light"] .ps .ps-home :is(.ps-card, .ps-recent button):hover { background: var(--bg3); }
+@media (forced-colors: active) { .ps-main::before, .ps-main::after { display: none; } }
