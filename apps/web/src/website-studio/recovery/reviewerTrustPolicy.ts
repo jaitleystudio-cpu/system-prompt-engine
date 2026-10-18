@@ -75,11 +75,6 @@ function dateWindow(start: unknown, end: unknown, now: Date, maxMs: number): boo
   return Number.isFinite(a) && Number.isFinite(b) && Number.isFinite(n) &&
     b > a && b - a <= maxMs && a <= n + 30000 && b >= n;
 }
-type SignedPolicy = {
-  signed: JsonRecord;
-  signatureAlgorithm: string;
-  signatureBase64: string;
-};
 async function selectR9Reviewer(
   policyText: string, receiptText: string,
   anchor: TrustedR9PolicyAnchor | undefined, now: Date,
@@ -114,7 +109,7 @@ async function selectR9Reviewer(
   ]) || signed.schema !== "spe.reviewer-trust-policy.v1" ||
       signed.policyId !== anchor.policyId || signed.audience !== anchor.audience ||
       !Number.isSafeInteger(signed.epoch) ||
-      signed.epoch < anchor.minimumEpoch ||
+      Number(signed.epoch) < anchor.minimumEpoch ||
       signed.previousPolicyDigest !== anchor.requiredPredecessorDigest ||
       !dateWindow(signed.validFrom, signed.validUntil, now, 30 * 86400000))
     return { error: "STALE_OR_MISMATCHED_POLICY_EPOCH" };
