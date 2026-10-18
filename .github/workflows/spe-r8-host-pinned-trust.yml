@@ -45,6 +45,9 @@ jobs:
       - name: Install real Chromium
         working-directory: apps/web
         run: npx playwright install --with-deps chromium
+      - name: Install stable Chrome for native Ed25519 WebCrypto verification
+        working-directory: apps/web
+        run: npx playwright install chrome
       - name: R0 to R4 real-browser deterministic acceptance
         working-directory: apps/web
         run: |
