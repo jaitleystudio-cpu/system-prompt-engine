@@ -29,6 +29,16 @@ export type BrowserObservationView = Readonly<{
   candidateDigest: string;
   browserPassClaim: boolean;
   observedErrorCount: number;
+  diagnosticExcerpts: readonly string[];
+  diagnosticsTruncated: boolean;
+}>;
+export type RepairTraceView = Readonly<{
+  sourceCandidateDigest: string;
+  promptV2Digest: string;
+  promptV2Text: string;
+  causalHypothesis: string;
+  targetedConstraints: readonly string[];
+  sourceKind: "SELF_REPORTED_REPAIR_PROMPT";
 }>;
 export type RecoveryReviewView = Readonly<{
   protectedGoalExcerpt: string;
@@ -42,7 +52,8 @@ export type RecoveryReviewView = Readonly<{
   artifactDigest: string | null;
   attempts: readonly BrowserObservationView[];
   limitations: readonly string[];
-  repairPromptAvailable: false;
+  repairPromptAvailable: boolean;
+  repairTrace: RepairTraceView | null;
   independentVerification: "NOT_PERFORMED_BY_STUDIO";
   projectBinding: "NOT_BOUND_TO_ACTIVE_SITE";
 }>;
@@ -93,12 +104,22 @@ export function parseRecoverySpeForReview(raw: string): RecoveryReviewView {
       return error("INVALID_ATTEMPT_ROW");
     if (attempt.browser_pass_claim && Number(attempt.observed_error_count) !== 0)
       return error("CONTRADICTORY_BROWSER_CLAIM");
+    const excerpts = attempt.diagnostic_excerpts === undefined ? [] : attempt.diagnostic_excerpts;
+    const truncated = attempt.diagnostics_truncated === undefined ? false : attempt.diagnostics_truncated;
+    if (!Array.isArray(excerpts) || excerpts.length > 6 ||
+        excerpts.some((x: unknown) => typeof x !== "string" || x.length > 600) ||
+        typeof truncated !== "boolean" ||
+        excerpts.length > Number(attempt.observed_error_count) ||
+        (Number(attempt.observed_error_count) === 0 && (excerpts.length !== 0 || truncated)))
+      return error("INVALID_DIAGNOSTIC_EXCERPTS");
     return Object.freeze({
       phase: attempt.phase as "INITIAL" | "REPAIR",
       promptDigest: attempt.prompt_digest,
       candidateDigest: attempt.candidate_digest,
       browserPassClaim: attempt.browser_pass_claim,
       observedErrorCount: Number(attempt.observed_error_count),
+      diagnosticExcerpts: Object.freeze([...excerpts] as string[]),
+      diagnosticsTruncated: truncated,
     });
   });
   if (attempts.length === 2 && attempts[0].browserPassClaim)
@@ -118,8 +139,42 @@ export function parseRecoverySpeForReview(raw: string): RecoveryReviewView {
       || claim.includes("REPAIRED") && attempts.length !== 2
       || claim.includes("PASS_") && attempts.length !== 1)
     return error("QUALIFICATION_HISTORY_CONTRADICTION");
-  // The Studio never copies, executes, or displays any imported HTML or
-  // code, and it never elevates the artifact's self-reported integrity field.
+  // Preserve the R6 legacy contract: older .spe imports legitimately lack
+  // detailed repair traces; never reconstruct unavailable details from hashes.
+  let repairTrace: RepairTraceView | null = null;
+  const rawTrace = execution.repair_trace;
+  if (rawTrace !== undefined && rawTrace !== null) {
+    if (!isRecord(rawTrace) || attempts.length !== 2 ||
+        rawTrace.schema !== "spe.execution.repair-trace.v1" ||
+        rawTrace.source_kind !== "SELF_REPORTED_REPAIR_PROMPT" ||
+        rawTrace.execution_authority !== "NONE" ||
+        !isDigest(rawTrace.source_candidate_digest) ||
+        rawTrace.source_candidate_digest !== attempts[0].candidateDigest ||
+        !isDigest(rawTrace.prompt_v2_digest) ||
+        rawTrace.prompt_v2_digest !== attempts[1].promptDigest ||
+        typeof rawTrace.prompt_v2_text !== "string" ||
+        new TextEncoder().encode(rawTrace.prompt_v2_text).length > 16000 ||
+        !rawTrace.prompt_v2_text ||
+        typeof rawTrace.causal_hypothesis !== "string" ||
+        !rawTrace.causal_hypothesis || rawTrace.causal_hypothesis.length > 1000 ||
+        !rawTrace.prompt_v2_text.includes(rawTrace.causal_hypothesis) ||
+        !Array.isArray(rawTrace.targeted_constraints) ||
+        ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(rawTrace.targeted_constraints.length) ||
+        rawTrace.targeted_constraints.some((x: unknown) =>
+          typeof x !== "string" || !x || x.length > 400 ||
+          !rawTrace.prompt_v2_text.includes(x)))
+      return error("INVALID_REPAIR_TRACE_OR_LINEAGE");
+    repairTrace = Object.freeze({
+      sourceCandidateDigest: rawTrace.source_candidate_digest,
+      promptV2Digest: rawTrace.prompt_v2_digest,
+      promptV2Text: rawTrace.prompt_v2_text,
+      causalHypothesis: rawTrace.causal_hypothesis,
+      targetedConstraints: Object.freeze([...rawTrace.targeted_constraints] as string[]),
+      sourceKind: "SELF_REPORTED_REPAIR_PROMPT",
+    });
+  }
+  // The Studio never executes imported HTML/code or elevates self-reported
+  // integrity or signature fields. Imported prompts are displayed only as text.
   return Object.freeze({
     protectedGoalExcerpt: clipped(parsed.user_request),
     protectedGoalIncluded: has(parsed, "user_request"),
@@ -132,7 +187,8 @@ export function parseRecoverySpeForReview(raw: string): RecoveryReviewView {
     artifactDigest: passedArtifact as string | null,
     attempts: Object.freeze(attempts),
     limitations: Object.freeze([...execution.known_limitations] as string[]),
-    repairPromptAvailable: false,
+    repairPromptAvailable: repairTrace !== null,
+    repairTrace,
     independentVerification: "NOT_PERFORMED_BY_STUDIO",
     projectBinding: "NOT_BOUND_TO_ACTIVE_SITE",
   });
