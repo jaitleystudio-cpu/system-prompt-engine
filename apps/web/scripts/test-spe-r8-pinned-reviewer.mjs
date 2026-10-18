@@ -149,12 +149,12 @@ try {
   });
   const verdict = page.getByTestId("spe-r8-verdict");
   await verdict.waitFor();
-  await page.waitForFunction(() =>
-    document.querySelector('[data-testid="spe-r8-verdict"]')?.textContent
-      ?.includes("SIGNED BROWSER REPLAY VERIFIED"),
-    { timeout: 15000 },
-  );
-  assert.match(await verdict.textContent(), /SIGNED BROWSER REPLAY VERIFIED/);
+  const actualVerdict = await verdict.textContent();
+  console.log("R8_STUDIO_VERDICT:", actualVerdict);
+  console.log("R8_STUDIO_CRYPTO:", await page.evaluate(() => ({
+    isSecureContext, subtle: Boolean(globalThis.crypto?.subtle),
+  })));
+  assert.match(actualVerdict, /SIGNED BROWSER REPLAY VERIFIED/);
   assert.match(await verdict.textContent(), /NOT AI PROVIDER PROOF/);
   assert.equal(await page.getByTestId("spe-r8-no-trust").count(), 0);
 
