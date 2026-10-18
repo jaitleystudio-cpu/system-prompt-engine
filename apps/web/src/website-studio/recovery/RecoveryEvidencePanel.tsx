@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { parseRecoverySpeForReview, type RecoveryReviewView } from "./recoveryReview.ts";
+import {
+  verifyR8ReceiptForSpe, type TrustedR8Reviewer, type R8Verdict,
+} from "./trustedReceiptReview.ts";
 
 const MAX_BYTES = 256_000;
 
@@ -8,7 +11,43 @@ const MAX_BYTES = 256_000;
  * rendering, execution, signature verification, release or project mutation.
  * This component is only available inside the pre-existing isolated Studio.
  */
-export const RecoveryEvidencePanel: React.FC = () => {
+export const RecoveryEvidencePanel: React.FC<{
+  trustedReviewer?: TrustedR8Reviewer;
+}> = ({ trustedReviewer }) => {
+  const [sourceRaw, setSourceRaw] = useState<string | null>(null);
+  const [receiptRaw, setReceiptRaw] = useState<string | null>(null);
+  const [verification, setVerification] = useState<R8Verdict | null>(null);
+  const [receiptError, setReceiptError] = useState<string | null>(null);
+  useEffect(() => {
+    let active = true;
+    setVerification(null);
+    if (sourceRaw && receiptRaw) {
+      void verifyR8ReceiptForSpe(sourceRaw, receiptRaw, trustedReviewer)
+        .then(result => { if (active) setVerification(result); })
+        .catch(() => { if (active) setVerification({
+          state: "UNVERIFIED_HOLD", reason: "VERIFIER_EXCEPTION",
+          authority: "NONE", modelIdentityProven: false,
+          providerOutcomeProven: false, browserExecutedByStudio: false,
+          retryAuthorized: false, deploymentAuthorized: false,
+        }); });
+    }
+    return () => { active = false; };
+  }, [sourceRaw, receiptRaw, trustedReviewer]);
+  const onReceipt: React.ChangeEventHandler<HTMLInputElement> = async event => {
+    const file = event.currentTarget.files?.[0];
+    setReceiptRaw(null);
+    setVerification(null);
+    setReceiptError(null);
+    if (!file) return;
+    if (file.size <= 0 || file.size > 32_000) {
+      setReceiptError("RECEIPT_FILE_EMPTY_OR_TOO_LARGE");
+      event.currentTarget.value = "";
+      return;
+    }
+    try { setReceiptRaw(await file.text()); }
+    catch { setReceiptError("RECEIPT_FILE_UNREADABLE"); }
+    finally { event.target.value = ""; }
+  };
   const [view, setView] = useState<RecoveryReviewView | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
@@ -17,6 +56,10 @@ export const RecoveryEvidencePanel: React.FC = () => {
     setView(null);
     setProblem(null);
     setName(null);
+    setSourceRaw(null);
+    setReceiptRaw(null);
+    setReceiptError(null);
+    setVerification(null);
     if (!file) return;
     if (file.size === 0 || file.size > MAX_BYTES) {
       setProblem("RECOVERY_FILE_EMPTY_OR_TOO_LARGE");
@@ -27,6 +70,7 @@ export const RecoveryEvidencePanel: React.FC = () => {
       const raw = await file.text();
       const reviewed = parseRecoverySpeForReview(raw);
       setView(reviewed);
+      setSourceRaw(raw);
       setName(file.name.slice(0, 80));
     } catch (err) {
       setProblem(err instanceof Error ? err.message : "RECOVERY_FILE_UNREADABLE");
@@ -120,6 +164,35 @@ export const RecoveryEvidencePanel: React.FC = () => {
               canonical import. Studio will not reconstruct them from hashes.
             </p>
           )}
+          <h5>R8 signed browser replay · optional independent review</h5>
+          <p className="studio-recovery-muted">
+            This verifies only a reviewer-signed, bounded browser replay. The reviewer
+            public key must be pinned by the trusted Studio host, never uploaded with
+            the receipt. Provider identity and release authority remain unproven.
+          </p>
+          <label htmlFor="spe-r8-receipt-import" className="studio-recovery-muted">
+            Import separate signed reviewer receipt (maximum 32 KB)
+          </label>
+          <input id="spe-r8-receipt-import" type="file" className="studio-input"
+            accept=".json,application/json" onChange={onReceipt}
+            aria-label="Import separate signed browser reviewer receipt"
+            data-testid="spe-r8-receipt-import" />
+          {receiptError && <p role="alert" data-testid="spe-r8-receipt-error"
+            className="studio-recovery-error">{receiptError}</p>}
+          {!trustedReviewer && (
+            <p data-testid="spe-r8-no-trust" className="studio-recovery-warning">
+              NO HOST-PINNED REVIEWER KEY · cryptographic verification unavailable.
+            </p>
+          )}
+          {verification && (
+            <p role="status" data-testid="spe-r8-verdict"
+              className={verification.state === "SIGNATURE_VALID_REVIEW_ONLY"
+                ? "studio-recovery-muted" : "studio-recovery-warning"}>
+              {verification.state === "SIGNATURE_VALID_REVIEW_ONLY"
+                ? "SIGNED BROWSER REPLAY VERIFIED against pinned key · REVIEW ONLY · NOT AI PROVIDER PROOF"
+                : "UNVERIFIED HOLD · " + verification.reason}
+            </p>
+          )}
           <h5>Proof limitations</h5>
           <ul className="studio-recovery-attempts">
             {view.limitations.map((limitation, i) => <li key={i}>{limitation}</li>)}
@@ -128,7 +201,11 @@ export const RecoveryEvidencePanel: React.FC = () => {
             NO RETRY · NO DEPLOY · NO EXECUTION AUTHORITY
           </p>
           <button type="button" className="studio-btn" data-testid="spe-recovery-clear"
-            onClick={() => { setView(null); setName(null); setProblem(null); }}>
+            onClick={() => {
+              setView(null); setName(null); setProblem(null);
+              setSourceRaw(null); setReceiptRaw(null);
+              setReceiptError(null); setVerification(null);
+            }}>
             Clear imported review
           </button>
         </div>
